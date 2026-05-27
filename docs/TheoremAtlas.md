@@ -1,0 +1,387 @@
+# Theorem Atlas
+
+Stage 1S records theorem/result families from the reference notes as a dependency map. Entries are not Lean proofs. A typed Lean `Prop` specification may exist only when the required objects already compile.
+
+## tail-event measurability statement
+- Book heading: `尾分布`
+- Informal statement: measurable real random variables have measurable upper, lower, and absolute tail events.
+- Target Lean statement: `tailEventMeasurabilityStatement`
+- Required objects: `IsRealRandomVariable`, `upperTailEvent`, `lowerTailEvent`, `absTailEvent`.
+- Required definitions: Stage 1A real-valued random variables and tail events.
+- Required bridge lemmas: `measurableSet_upperTailEvent`, `measurableSet_lowerTailEvent`, `measurableSet_absTailEvent`.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/Tail.lean`, `HighDimProb/BookStatements.lean`
+- Priority: v0.1
+
+## law/distribution map statement
+- Book heading: probability distribution/law vocabulary
+- Informal statement: the law of a random variable is Mathlib's pushforward measure.
+- Target Lean statement: `lawMapApplyStatement`, `realLawMapApplyStatement`
+- Required objects: `law`, `realLaw`, `Measure.map`.
+- Required definitions: Stage 1A law/distribution wrappers.
+- Required bridge lemmas: none for the specification itself.
+- Status: typed-prop
+- Blocker: proof wrapper around `Measure.map_apply` remains an object-layer TODO.
+- Target module: `HighDimProb/BookStatements.lean`
+- Priority: v0.1
+
+## expectation alias statement
+- Book heading: expectation vocabulary
+- Informal statement: `expect P X` is the raw Mathlib integral of `X` against `P`.
+- Target Lean statement: `expectAliasStatement`
+- Required objects: `expect`, integral notation.
+- Required definitions: Stage 1A expectation wrapper.
+- Required bridge lemmas: none for the specification itself.
+- Status: typed-prop
+- Blocker: integrability-aware expectation statements are deferred.
+- Target module: `HighDimProb/BookStatements.lean`
+- Priority: v0.1
+
+## tail probability wrapper statement
+- Book heading: `尾分布`
+- Informal statement: tail probability wrappers are direct measure applications to tail events.
+- Target Lean statement: `tailProbabilityWrapperStatement`
+- Required objects: `upperTailProb`, `lowerTailProb`, `absTailProb`.
+- Required definitions: Stage 1A tail probability wrappers.
+- Required bridge lemmas: none for the specification itself.
+- Status: typed-prop
+- Blocker: no blocker for the specification.
+- Target module: `HighDimProb/BookStatements.lean`
+- Priority: v0.1
+
+## tail integral identity for expectation
+- Book heading: `尾分布`, expectation/tail vocabulary
+- Informal statement: nonnegative expectations or moments can be represented by integrating tail probabilities.
+- Target Lean statement: blocked until a precise nonnegative/integrable formulation is chosen.
+- Required objects: `Measure`, `IsProbabilityMeasure`, `RealRandomVariable`, `expect`, tail probabilities.
+- Required definitions: nonnegative random-variable predicate or integrable real random variable.
+- Required bridge lemmas: tail-event measurability, integral/layer-cake bridge.
+- Status: blocked
+- Blocker: requires integration design beyond Stage 1A.
+- Target module: `HighDimProb/Moment.lean`
+- Priority: v0.2
+
+## Markov inequality
+- Book heading: `集中不等式`, classical probability inequalities
+- Informal statement: for a nonnegative random variable, the probability of exceeding a threshold is bounded by expectation divided by the threshold.
+- Target Lean statement: HighDimProb wrapper around Mathlib Markov inequalities.
+- Required objects: `Measure`, `IsProbabilityMeasure`, `RealRandomVariable`, `expect`, `upperTailProb`.
+- Required definitions: nonnegative/integrable random-variable vocabulary.
+- Required bridge lemmas: tail probability as measure of `{omega | t <= X omega}`.
+- Status: informal
+- Blocker: object-level integrability and nonnegativity wrappers are not stable.
+- Target module: `HighDimProb/Tail.lean`
+- Priority: v0.2
+
+## Chebyshev inequality
+- Book heading: `集中不等式`, classical probability inequalities
+- Informal statement: deviations from the mean are controlled by variance.
+- Target Lean statement: blocked until mean, variance, and absolute-deviation tail wrappers are stable.
+- Required objects: `expect`, `absTailProb`, variance/covariance vocabulary.
+- Required definitions: centeredness, finite second moment, variance.
+- Required bridge lemmas: absolute-tail measurability, variance algebra.
+- Status: blocked
+- Blocker: variance and finite-moment API is not ready.
+- Target module: `HighDimProb/Moment.lean`
+- Priority: v0.2
+
+## Jensen inequality
+- Book heading: `经典不等式`
+- Informal statement: convex functions move outside expectations in the standard direction.
+- Target Lean statement: HighDimProb usage examples around Mathlib Jensen inequalities.
+- Required objects: `expect`, convex functions, integrability.
+- Required definitions: integrable real/vector random-variable vocabulary.
+- Required bridge lemmas: expectation alias and Mathlib integral Jensen statement.
+- Status: informal
+- Blocker: no HighDimProb integrability wrapper yet.
+- Target module: `HighDimProb/Expectation.lean`
+- Priority: v0.2
+
+## Holder inequality
+- Book heading: `经典不等式`
+- Informal statement: products are bounded by conjugate `L^p` norms.
+- Target Lean statement: wrapper or examples around Mathlib Holder/mean inequality APIs.
+- Required objects: `MemLp`, `eLpNorm`, real random variables.
+- Required definitions: Lp wrapper layer.
+- Required bridge lemmas: product measurability and Lp norm notation.
+- Status: informal
+- Blocker: Stage 1A intentionally avoids Lp exponent abstraction.
+- Target module: `HighDimProb/Lp.lean`
+- Priority: v0.2
+
+## Minkowski inequality
+- Book heading: `经典不等式`
+- Informal statement: `L^p` seminorms satisfy a triangle inequality.
+- Target Lean statement: wrapper or examples around Mathlib Minkowski/eLpNorm APIs.
+- Required objects: `MemLp`, `eLpNorm`, addition of random variables.
+- Required definitions: Lp wrapper layer.
+- Required bridge lemmas: sum measurability and Lp norm notation.
+- Status: informal
+- Blocker: Stage 1A intentionally avoids Lp exponent abstraction.
+- Target module: `HighDimProb/Lp.lean`
+- Priority: v0.2
+
+## subGaussian definition equivalences
+- Book heading: `次高斯性质`, `次高斯随机变量`, `次高斯范数`
+- Informal statement: tail, moment, MGF, and Orlicz characterizations of subGaussian variables are equivalent up to constants.
+- Target Lean statement: blocked until a precise equivalence statement and constants are selected.
+- Required objects: real random variables, tail probabilities, moments, Mathlib MGF predicate, ψ₂ Orlicz control.
+- Required definitions: `SubGaussianTail`, `SubGaussianMoment`, `CenteredSubGaussianMGF`, `SubGaussianOrlicz`, `HasSubGaussianOrlicz`.
+- Required bridge lemmas: expectation of exponentials, tail/moment integration.
+- Status: blocked
+- Blocker: the four predicate forms exist, but no equivalence theorem or canonical predicate has been selected.
+- Target module: `HighDimProb/SubGaussian.lean`
+- Priority: v0.3
+
+## subExponential definition equivalences
+- Book heading: `次指数性质`, `次指数随机变量`, `次指数范数`
+- Informal statement: tail, moment, MGF, and Orlicz characterizations of subExponential variables are equivalent up to constants.
+- Target Lean statement: blocked until a precise equivalence statement and constants are selected.
+- Required objects: real random variables, tail probabilities, moments, exponential moments, ψ₁ Orlicz control.
+- Required definitions: `SubExponentialTail`, `SubExponentialMoment`, `CenteredSubExponentialMGF`, `SubExponentialOrlicz`, `HasSubExponentialOrlicz`.
+- Required bridge lemmas: expectation of exponentials, tail/moment integration.
+- Status: blocked
+- Blocker: the four predicate forms exist, but no equivalence theorem or canonical predicate has been selected.
+- Target module: `HighDimProb/SubExponential.lean`
+- Priority: v0.3
+
+## bounded random variable is subGaussian
+- Book heading: `次高斯分布的例子`
+- Informal statement: bounded real-valued random variables are subGaussian with scale controlled by the bound.
+- Target Lean statement: blocked until the target formulation is selected.
+- Required objects: boundedness, real random variables, subGaussian predicate forms.
+- Required definitions: bounded-a.s. predicate or pointwise bounded predicate.
+- Required bridge lemmas: boundedness to tail/MGF/Orlicz criterion.
+- Status: blocked
+- Blocker: subGaussian formulation predicates exist, but boundedness vocabulary and theorem proof are deferred.
+- Target module: `HighDimProb/SubGaussian.lean`
+- Priority: v0.3
+
+## centered subGaussian mgf characterization
+- Book heading: `中心化`, `次高斯性质`
+- Informal statement: a centered subGaussian variable has Gaussian-type MGF bounds, and conversely under suitable constants.
+- Target Lean statement: blocked until centeredness and constants are settled.
+- Required objects: `Centered`, `expect`, exponential function, `CenteredSubGaussianMGF`.
+- Required definitions: centeredness vocabulary and MGF-bound predicate.
+- Required bridge lemmas: centering and exponential integrability.
+- Status: blocked
+- Blocker: MGF predicate exists via Mathlib wrapper, but centeredness is still experimental and no theorem is assigned.
+- Target module: `HighDimProb/SubGaussian.lean`
+- Priority: v0.3
+
+## centered subExponential mgf characterization
+- Book heading: `次指数性质`, `中心化`
+- Informal statement: a centered subExponential variable admits local quadratic MGF control, and conversely under suitable constants.
+- Target Lean statement: blocked until centeredness and constants are settled.
+- Required objects: `Centered`, `expect`, exponential function, `CenteredSubExponentialMGF`.
+- Required definitions: centeredness vocabulary and local-MGF-bound predicate.
+- Required bridge lemmas: centering and exponential integrability.
+- Status: blocked
+- Blocker: local MGF predicate exists, but centeredness is still experimental and no theorem is assigned.
+- Target module: `HighDimProb/SubExponential.lean`
+- Priority: v0.3
+
+## subGaussian square is subExponential
+- Book heading: `次指数分布与次高斯分布的关系`
+- Informal statement: the square of a subGaussian random variable is subExponential.
+- Target Lean statement: blocked until the target formulations and square/product random-variable API are selected.
+- Required objects: subGaussian variables, subExponential variables, square random variable.
+- Required definitions: subGaussian and subExponential predicate forms.
+- Required bridge lemmas: square measurability and Orlicz/MGF estimates.
+- Status: blocked
+- Blocker: predicate forms exist, but product/square random-variable and equivalence theorem work is deferred.
+- Target module: `HighDimProb/SubExponential.lean`
+- Priority: v0.3
+
+## product of subGaussian variables is subExponential
+- Book heading: `次指数分布与次高斯分布的关系`
+- Informal statement: the product of two subGaussian random variables is subExponential.
+- Target Lean statement: blocked until both predicate layers and multiplication API are stable.
+- Required objects: subGaussian variables, subExponential variables, product random variable.
+- Required definitions: subGaussian and subExponential predicate forms.
+- Required bridge lemmas: product measurability and Orlicz/MGF estimates.
+- Status: blocked
+- Blocker: predicate forms exist, but product random-variable and equivalence theorem work is deferred.
+- Target module: `HighDimProb/SubExponential.lean`
+- Priority: v0.3
+
+## Bernstein inequality
+- Book heading: `伯恩斯坦不等式`
+- Informal statement: sums of independent centered subExponential variables satisfy Bernstein-type tail bounds.
+- Target Lean statement: blocked until independence, sums, centeredness, and a target subExponential formulation are stable.
+- Required objects: finite families of random variables, independence, centeredness, subExponential predicate.
+- Required definitions: finite-sum random-variable API.
+- Required bridge lemmas: independence and sum measurability bridges.
+- Status: blocked
+- Blocker: subExponential predicate forms exist, but the theorem is beyond the object layer.
+- Target module: `HighDimProb/SubExponential.lean`
+- Priority: v0.3
+
+## Hoeffding inequality
+- Book heading: `霍夫丁不等式`, `广义霍夫丁不等式一`, `广义霍夫丁不等式二`
+- Informal statement: sums of independent bounded or subGaussian centered variables have Gaussian-type tails.
+- Target Lean statement: blocked until finite sums and the target subGaussian formulation are selected.
+- Required objects: finite families, independence, boundedness, centeredness, subGaussian predicate forms.
+- Required definitions: finite-sum random-variable API.
+- Required bridge lemmas: sum measurability and variance/scale bookkeeping.
+- Status: blocked
+- Blocker: concentration inequalities are forbidden before theorem layer.
+- Target module: `HighDimProb/SubGaussian.lean`
+- Priority: v0.3
+
+## high-dimensional subGaussian vector characterizations
+- Book heading: `高维次高斯分布`, `次高斯范数`
+- Informal statement: a random vector is subGaussian when all one-dimensional marginals are subGaussian; the usual norm is a supremum over unit directions.
+- Target Lean statement: blocked until scalar equivalence theorems, ψ₂ gauges/norms, and unit-sphere vocabulary are available.
+- Required objects: `RandomVector`, `marginal`, `directionNorm`, scalar subGaussian predicate forms.
+- Required definitions: Stage 4D predicate forms `SubGaussianVectorOrlicz`, `HasSubGaussianVectorOrlicz`, `SubGaussianVectorTail`, `SubGaussianVectorMoment`, and `CenteredSubGaussianVectorMGF` exist.
+- Required bridge lemmas: scalar subGaussian equivalences, scaling of marginals, all-direction/unit-sphere equivalence.
+- Status: blocked
+- Blocker: Stage 4D only provides object-level predicate forms and does not define ψ₂ vector norms or prove equivalences.
+- Target module: `HighDimProb/SubGaussianVector.lean`
+- Priority: v0.2
+
+## random vector isotropic characterizations
+- Book heading: `各向同性`
+- Informal statement: isotropicity is characterized by identity covariance and by second moments of one-dimensional marginals.
+- Target Lean statement: blocked until integrability assumptions and exact equivalence directions are selected.
+- Required objects: `RandomVector`, `coord`, `linearForm`, `CenteredVector`, `covarianceMatrix`, `secondMomentMatrix`, expectation.
+- Required definitions: Stage 4A random-vector object layer, Stage 4B covariance vocabulary, and Stage 4C predicate forms `IsotropicSecondMoment`, `IsotropicSecondMomentMatrix`, `IsotropicCovariance`, and `IsotropicMarginal` exist.
+- Required bridge lemmas: coordinate covariance and inner-product moment identities.
+- Status: blocked
+- Blocker: equivalence proofs need covariance/second-moment algebra, finite-sum expansion of `linearForm`, and integrability or finite-second-moment hypotheses.
+- Target module: `HighDimProb/Isotropic.lean`
+- Priority: v0.2
+
+## covariance identity
+- Book heading: `高维空间的协方差矩阵`, `随机过程的协方差`
+- Informal statement: covariance can be expressed as a centered second moment and has standard bilinear identities.
+- Target Lean statement: blocked until integrability assumptions and exact theorem shape are selected.
+- Required objects: `RandomVector`, `coord`, `mean`, `secondMoment`, `covariance`, `secondMomentMatrix`, `covarianceMatrix`.
+- Required definitions: scalar and random-vector covariance vocabulary exists; process covariance remains future work.
+- Required bridge lemmas: algebra of Bochner integrals.
+- Status: blocked
+- Blocker: integrability and finite-second-moment assumptions are not yet part of the covariance API.
+- Target module: `HighDimProb/Covariance.lean`
+- Priority: v0.2
+
+## epsilon-net and operator norm bound
+- Book heading: `$\\varepsilon$-网与算子范数`
+- Informal statement: operator norm over a sphere can be controlled using an epsilon-net.
+- Target Lean statement: blocked until matrix/operator norm and sphere APIs are active.
+- Required objects: epsilon nets, matrices, operator norm, unit sphere.
+- Required definitions: Stage 5A Mathlib-backed net predicate `IsEpsilonNet` exists; random matrix and operator norm vocabulary remain future work.
+- Required bridge lemmas: finite net approximation and operator norm API.
+- Status: blocked
+- Blocker: operator norm, sphere, and random matrix abstractions are not active yet.
+- Target module: `HighDimProb/Nets.lean`
+- Priority: v0.2
+
+## covering-packing inequalities
+- Book heading: `覆盖数与填充数`
+- Informal statement: covering and packing numbers bound each other at related radii.
+- Target Lean statement: HighDimProb-facing wrapper around Mathlib covering/packing inequalities.
+- Required objects: `IsEpsilonNet`, `IsEpsilonSeparated`, `coveringNumber`, `externalCoveringNumber`, `packingNumber`.
+- Required definitions: Stage 5A Mathlib-backed metric entropy vocabulary exists.
+- Required bridge lemmas: radius conversion between HighDimProb real radii and Mathlib `ℝ≥0` radii.
+- Status: blocked
+- Blocker: theorem statement layer and radius bookkeeping are intentionally deferred to Stage 5B.
+- Target module: `HighDimProb/MetricEntropy.lean`
+- Priority: v0.2
+
+## metric entropy coding interpretation
+- Book heading: `度量熵`
+- Informal statement: logarithms of covering numbers quantify coding complexity up to radius changes.
+- Target Lean statement: blocked until a real-valued metric entropy convention is selected.
+- Required objects: `coveringNumber`, possible finite-cover hypothesis, real logarithm.
+- Required definitions: Stage 5A exposes Mathlib `ℕ∞` covering numbers; `metricEntropy` real-log wrapper is deferred.
+- Required bridge lemmas: finite/infinite count handling and base-change for logarithms.
+- Status: blocked
+- Blocker: no convention yet for `Real.log` of `ℕ∞` values.
+- Target module: `HighDimProb/MetricEntropy.lean`
+- Priority: v0.2
+
+## random matrix norm bound
+- Book heading: `带有次高斯元素矩阵的范数`, `次高斯矩阵的双侧界`
+- Informal statement: random matrices with independent subGaussian entries or rows have high-probability operator norm/singular value bounds.
+- Target Lean statement: blocked until random matrix, norm, independence, and subGaussian layers are stable.
+- Required objects: random matrices, matrix norms, independence, subGaussian predicates.
+- Required definitions: matrix-valued random-variable predicates and norm wrappers.
+- Required bridge lemmas: entry/row measurability and net-to-operator-norm bounds.
+- Status: blocked
+- Blocker: theorem is beyond object layer.
+- Target module: `HighDimProb/RandomMatrix.lean`
+- Priority: v0.3
+
+## Hanson-Wright inequality
+- Book heading: `Hanson-Wright不等式`
+- Informal statement: quadratic forms of independent centered subGaussian vectors concentrate around their mean.
+- Target Lean statement: blocked until quadratic-form, matrix norm, and subGaussian vector APIs are stable.
+- Required objects: `RandomVector`, matrices, quadratic forms, subGaussian coordinates.
+- Required definitions: Stage 4A random-vector object layer exists; Frobenius/operator norm wrappers remain future work.
+- Required bridge lemmas: quadratic-form measurability and moment/MGF estimates.
+- Status: blocked
+- Blocker: high-dimensional theorem layer is missing.
+- Target module: `HighDimProb/RandomMatrix.lean`
+- Priority: v0.3
+
+## Johnson-Lindenstrauss lemma
+- Book heading: `Johnson-Lindenstrauss引理`, `Johnson-Lindenstrauss嵌入`
+- Informal statement: suitable random projections preserve pairwise distances with high probability.
+- Target Lean statement: blocked until random projection and metric embedding vocabulary exists.
+- Required objects: random matrices, finite sets, Euclidean distances, probability events.
+- Required definitions: random projection model and distortion predicate.
+- Required bridge lemmas: matrix-vector measurability and concentration for fixed vectors.
+- Status: blocked
+- Blocker: random matrix and concentration layers are not ready.
+- Target module: `HighDimProb/RandomMatrix.lean`
+- Priority: v0.3
+
+## covariance estimation
+- Book heading: `协方差估计`, `一般协方差估计`, `低维分布的协方差估计`
+- Informal statement: empirical covariance of subGaussian samples approximates the population covariance with high probability.
+- Target Lean statement: blocked until empirical covariance and operator norm APIs exist.
+- Required objects: `RandomVector`, samples, covariance matrices, matrix norms.
+- Required definitions: empirical covariance matrix.
+- Required bridge lemmas: sample independence and matrix concentration.
+- Status: blocked
+- Blocker: random-vector object vocabulary exists, but covariance, random matrix, and theorem layers are missing.
+- Target module: `HighDimProb/Covariance.lean`
+- Priority: v0.3
+
+## generic chaining / Dudley inequality
+- Book heading: `Dudley积分不等式`, `通用链界`
+- Informal statement: expected suprema of subGaussian processes are controlled by entropy integrals or chaining functionals.
+- Target Lean statement: blocked until random-process, metric entropy, and Gaussian-width vocabulary are stable.
+- Required objects: random processes, subGaussian increments, covering numbers, gamma2 functional.
+- Required definitions: admissible sequences, entropy integral, process supremum.
+- Required bridge lemmas: measurability of suprema and entropy estimates.
+- Status: blocked
+- Blocker: random process and metric entropy layers need object-level work.
+- Target module: `HighDimProb/RandomProcess.lean`
+- Priority: v1.0
+
+## empirical process bounds
+- Book heading: `经验过程`, `经验过程与VC维数`, `一致大数定律`
+- Informal statement: uniform deviations of empirical averages are controlled by VC dimension, entropy, or chaining bounds.
+- Target Lean statement: blocked until empirical measure/process objects and complexity notions exist.
+- Required objects: samples, empirical measures, function classes, supremum deviations.
+- Required definitions: empirical measure and VC dimension vocabulary.
+- Required bridge lemmas: symmetrization and measurability of suprema.
+- Status: blocked
+- Blocker: empirical process object layer is not stable.
+- Target module: `HighDimProb/EmpiricalProcess.lean`
+- Priority: v1.0
+
+## signal recovery via M* bound
+- Book heading: `M*界`, `基于M*界的信号恢复`, `逃逸定理`
+- Informal statement: random measurements recover structured signals with error controlled by geometric width terms.
+- Target Lean statement: blocked until random matrices, convex geometry, Gaussian width, and optimization vocabulary exist.
+- Required objects: random matrices, kernels, Gaussian width, convex sets, recovery maps.
+- Required definitions: measurement model, recovery objective, feasible set.
+- Required bridge lemmas: M* bound and escape theorem.
+- Status: blocked
+- Blocker: late theorem layer with missing optimization infrastructure.
+- Target module: `HighDimProb/SignalRecovery.lean`
+- Priority: v1.0

@@ -1,0 +1,10 @@
+import HighDimProb.BookStatements
+
+open HighDimProb
+
+#check tailEventMeasurabilityStatement
+#check tailEventMeasurabilityStatement_holds
+#check lawMapApplyStatement
+#check realLawMapApplyStatement
+#check expectAliasStatement
+#check tailProbabilityWrapperStatement

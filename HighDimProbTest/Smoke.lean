@@ -1,0 +1,34 @@
+import HighDimProb
+
+open HighDimProb
+
+#check IsRandomVariable
+#check IsRealRandomVariable
+#check realLaw
+#check expect
+#check MemLpRealRandomVariable
+#check realLpNorm
+#check IntegrableRealRandomVariable
+#check HasFiniteMoment
+#check momentSeminorm
+#check OrliczBound
+#check Psi2Bound
+#check Psi1Bound
+#check HasFinitePsi2
+#check HasFinitePsi1
+#check SubGaussianTail
+#check SubGaussianMoment
+#check CenteredSubGaussianMGF
+#check SubGaussianOrlicz
+#check HasSubGaussianOrlicz
+#check SubExponentialTail
+#check SubExponentialMoment
+#check CenteredSubExponentialMGF
+#check SubExponentialOrlicz
+#check HasSubExponentialOrlicz
+#check lowerTailEvent
+#check upperTailEvent
+#check absTailEvent
+#check upperTailProb
+#check lowerTailProb
+#check absTailProb
