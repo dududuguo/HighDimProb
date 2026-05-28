@@ -16,6 +16,10 @@ jobs:
       - name: Set up Lean
         uses: leanprover/lean-action@v1
         with:
+          auto-config: false
+          build: false
+          test: false
+          lint: false
           use-github-cache: true
           use-mathlib-cache: true
 
@@ -24,4 +28,3 @@ jobs:
 
       - name: Test
         run: lake test
-

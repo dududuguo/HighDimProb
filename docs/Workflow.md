@@ -52,6 +52,21 @@ Step 10. Report:
 - no custom random variable structure unless explicitly approved
 - no optional dependencies unless explicitly approved
 - no fake Lean declarations for hard theorems
+- no `sorry`
+- no `admit`
+- no axioms
 - keep `lake build` passing after every round
 - keep `lake test` passing after every round
 - if `lake test` fails, fix tests or code before continuing
+
+## Stable vs Experimental Policy
+
+- Stable v0.1 modules are imported through `import HighDimProb`.
+- Experimental v0.2+ modules are imported through `import HighDimProb.Experimental`.
+- No module is promoted from experimental to stable without tests, docs, a `docs/Status.md` update, and a stable root import audit.
+
+## Theorem Atlas Policy
+
+- Unproved book results are documentation entries or typed `Prop` specifications.
+- Unproved book results are never Lean `theorem` or `lemma` declarations.
+- Theorem atlas status must be one of: `raw`, `informal`, `typed-prop`, `blocked`, `proven`.

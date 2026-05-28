@@ -2,6 +2,14 @@
 
 Stage 1S records theorem/result families from the reference notes as a dependency map. Entries are not Lean proofs. A typed Lean `Prop` specification may exist only when the required objects already compile.
 
+Unproved book results are documentation entries or typed `Prop` specifications. They are never Lean `theorem` or `lemma` declarations. The only allowed status values are:
+
+- `raw`
+- `informal`
+- `typed-prop`
+- `blocked`
+- `proven`
+
 ## tail-event measurability statement
 - Book heading: `尾分布`
 - Informal statement: measurable real random variables have measurable upper, lower, and absolute tail events.
@@ -49,6 +57,42 @@ Stage 1S records theorem/result families from the reference notes as a dependenc
 - Blocker: no blocker for the specification.
 - Target module: `HighDimProb/BookStatements.lean`
 - Priority: v0.1
+
+## upper-tail probability monotonicity
+- Book heading: tail distribution / concentration prerequisites
+- Informal statement: increasing the upper-tail threshold can only decrease the upper-tail probability.
+- Target Lean statement: `upperTailProb_antitone`
+- Required objects: `upperTailEvent`, `upperTailProb`, `RealRandomVariable`, `Measure`.
+- Required definitions: Stage 1A tail event and tail probability wrappers.
+- Required bridge lemmas: Mathlib `measure_mono`; the set inclusion follows by transitivity of `<=` on `Real`.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/Tail.lean`
+- Priority: v0.1 proof pilot
+
+## lower-tail probability monotonicity
+- Book heading: tail distribution / concentration prerequisites
+- Informal statement: increasing the lower-tail threshold can only increase the lower-tail probability.
+- Target Lean statement: `lowerTailProb_monotone`
+- Required objects: `lowerTailEvent`, `lowerTailProb`, `RealRandomVariable`, `Measure`.
+- Required definitions: Stage 1A tail event and tail probability wrappers.
+- Required bridge lemmas: Mathlib `measure_mono`; the set inclusion follows by transitivity of `<=` on `Real`.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/Tail.lean`
+- Priority: v0.1 proof pilot
+
+## absolute-tail probability monotonicity
+- Book heading: tail distribution / concentration prerequisites
+- Informal statement: increasing the absolute-tail threshold can only decrease the absolute-tail probability.
+- Target Lean statement: `absTailProb_antitone`
+- Required objects: `absTailEvent`, `absTailProb`, `RealRandomVariable`, `Measure`.
+- Required definitions: Stage 1A tail event and tail probability wrappers.
+- Required bridge lemmas: Mathlib `measure_mono`; the set inclusion follows by transitivity of `<=` on `Real`.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/Tail.lean`
+- Priority: v0.1 proof pilot
 
 ## tail integral identity for expectation
 - Book heading: `尾分布`, expectation/tail vocabulary
@@ -242,12 +286,45 @@ Stage 1S records theorem/result families from the reference notes as a dependenc
 - Target module: `HighDimProb/SubGaussianVector.lean`
 - Priority: v0.2
 
+## centered vector iff coordinatewise centered
+- Book heading: `高维空间的协方差矩阵`, `各向同性`
+- Informal statement: vector centeredness is exactly coordinatewise scalar centeredness.
+- Target Lean statement: `centeredVector_iff_forall_centered_coord`
+- Required objects: `RandomVector`, `coord`, `Centered`, `CenteredVector`.
+- Required bridge lemmas: none beyond definitional unfolding.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/Covariance.lean`
+- Priority: v0.2 proof pilot
+
+## centered random variable has mean zero
+- Book heading: `高维空间的协方差矩阵`, `中心化`
+- Informal statement: if a real random variable is integrable, then subtracting its mean produces a centered random variable.
+- Target Lean statement: `centered_centered`
+- Required objects: `expect`, `mean`, `centered`, `Centered`, `IntegrableRealRandomVariable`, probability measure convention.
+- Required bridge lemmas: Mathlib `integral_sub`, `integrable_const`, `integral_const`, and `[IsProbabilityMeasure P]` mass-one simplification.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/Covariance.lean`
+- Priority: v0.2 proof pilot
+
+## isotropic second-moment matrix iff entrywise formulation
+- Book heading: `各向同性`
+- Informal statement: the matrix identity `E[XXᵀ] = I` is equivalent to the coordinate identities `E[X_i X_j] = δᵢⱼ`.
+- Target Lean statement: `isotropicSecondMomentMatrix_iff_isotropicSecondMoment`
+- Required objects: `RandomVector`, `secondMomentMatrixEntry`, `secondMomentMatrix`, `IsotropicSecondMoment`, `IsotropicSecondMomentMatrix`.
+- Required bridge lemmas: Mathlib `Matrix.ext` and `Matrix.one_apply`.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/Isotropic.lean`
+- Priority: v0.2 proof pilot
+
 ## random vector isotropic characterizations
 - Book heading: `各向同性`
 - Informal statement: isotropicity is characterized by identity covariance and by second moments of one-dimensional marginals.
 - Target Lean statement: blocked until integrability assumptions and exact equivalence directions are selected.
 - Required objects: `RandomVector`, `coord`, `linearForm`, `CenteredVector`, `covarianceMatrix`, `secondMomentMatrix`, expectation.
-- Required definitions: Stage 4A random-vector object layer, Stage 4B covariance vocabulary, and Stage 4C predicate forms `IsotropicSecondMoment`, `IsotropicSecondMomentMatrix`, `IsotropicCovariance`, and `IsotropicMarginal` exist.
+- Required definitions: Stage 4A random-vector object layer, Stage 4B covariance vocabulary, Stage 4C predicate forms, and the Stage P2 matrix/entrywise second-moment bridge exist.
 - Required bridge lemmas: coordinate covariance and inner-product moment identities.
 - Status: blocked
 - Blocker: equivalence proofs need covariance/second-moment algebra, finite-sum expansion of `linearForm`, and integrability or finite-second-moment hypotheses.
@@ -266,63 +343,147 @@ Stage 1S records theorem/result families from the reference notes as a dependenc
 - Target module: `HighDimProb/Covariance.lean`
 - Priority: v0.2
 
+## maximal separated set is an epsilon-net
+- Book heading: `分离集与网`
+- Informal statement: a maximal epsilon-separated subset of `K` is an epsilon-net for `K`.
+- Target Lean statement: `isInternalEpsilonNet_of_maximalEpsilonSeparatedIn`
+- Required objects: `MaximalEpsilonSeparatedIn`, `IsEpsilonSeparated`, `IsEpsilonNet`, `IsInternalEpsilonNet`, `Set.Subset`.
+- Required definitions: Stage 5A net and separated-set vocabulary plus Stage P1 single-point maximality predicate.
+- Required bridge lemmas: Mathlib `Metric.isSeparated_insert_of_notMem` and the definitional wrappers `epsilonRadius` / `epsilonERadius`.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/Nets.lean`
+- Priority: v0.2
+
+## covering number upper bound from an epsilon-net
+- Book heading: `覆盖数`
+- Informal statement: any internal epsilon-net bounds the covering number by its cardinality.
+- Target Lean statement: `epsilonNetCoveringNumberStatement`
+- Required objects: `IsEpsilonNet`, `coveringNumber`, `Set.encard`.
+- Required definitions: Stage 5A Mathlib-backed covering number vocabulary.
+- Required bridge lemmas: Mathlib `Metric.IsCover.coveringNumber_le_encard` through the HighDimProb real-radius wrapper.
+- Status: typed-prop
+- Blocker: proof deferred; real-radius bridge lemmas are not added in Stage 5B.
+- Target module: `HighDimProb/MetricEntropyStatements.lean`
+- Priority: v0.2
+
+## covering-packing inequalities
+- Book heading: `覆盖数与填充数`
+- Informal statement: packing and covering numbers bound each other at related radii: `P(K, 2 eps) <= N(K, eps) <= P(K, eps)`.
+- Target Lean statement: `packingCoveringInequalityStatement`
+- Required objects: `IsEpsilonNet`, `IsEpsilonSeparated`, `coveringNumber`, `externalCoveringNumber`, `packingNumber`.
+- Required definitions: Stage 5A Mathlib-backed metric entropy vocabulary exists.
+- Required bridge lemmas: Mathlib `Metric.packingNumber_two_mul_le_externalCoveringNumber`, `Metric.externalCoveringNumber_le_coveringNumber`, `Metric.coveringNumber_le_packingNumber`, and real-radius conversion lemmas.
+- Status: typed-prop
+- Blocker: proof deferred; the statement typechecks, but no theorem wrapper is added in Stage 5B.
+- Target module: `HighDimProb/MetricEntropyStatements.lean`
+- Priority: v0.2
+
+## Euclidean ball covering number bounds
+- Book heading: `欧几里得球的覆盖数`
+- Informal statement: covering numbers of Euclidean balls are bounded above and below by standard volume-scale estimates.
+- Target Lean statement: blocked until Euclidean ball, finite-dimensional volume, and finite/infinite cardinal conventions are selected.
+- Required objects: Euclidean balls, `coveringNumber`, volume or cardinal estimates.
+- Required definitions: Euclidean-space bridge and finite-dimensional volume vocabulary.
+- Required bridge lemmas: volume comparison for balls and conversion from volume bounds to covering numbers.
+- Status: blocked
+- Blocker: Euclidean geometry and volume bridge layer are not active.
+- Target module: `HighDimProb/MetricEntropy.lean`
+- Priority: v0.3
+
+## Hamming cube covering and packing bounds
+- Book heading: `汉明立方体的覆盖数和填充数`
+- Informal statement: covering and packing estimates for the Hamming cube depend on a chosen finite cube representation and Hamming metric.
+- Target Lean statement: blocked until the Hamming cube and Hamming metric object layer is selected.
+- Required objects: finite binary cube, Hamming distance, covering and packing numbers.
+- Required definitions: Hamming cube representation and metric-space instance.
+- Required bridge lemmas: counting bounds for Hamming balls and separated subsets.
+- Status: blocked
+- Blocker: no Hamming cube metric vocabulary exists in HighDimProb.
+- Target module: `HighDimProb/MetricEntropy.lean`
+- Priority: v0.3
+
 ## epsilon-net and operator norm bound
 - Book heading: `$\\varepsilon$-网与算子范数`
 - Informal statement: operator norm over a sphere can be controlled using an epsilon-net.
 - Target Lean statement: blocked until matrix/operator norm and sphere APIs are active.
 - Required objects: epsilon nets, matrices, operator norm, unit sphere.
-- Required definitions: Stage 5A Mathlib-backed net predicate `IsEpsilonNet` exists; random matrix and operator norm vocabulary remain future work.
-- Required bridge lemmas: finite net approximation and operator norm API.
+- Required definitions: Stage 5A Mathlib-backed net predicate `IsEpsilonNet` exists; Stage 6A random matrix entries and actions exist; Stage 6B adds `operatorNorm`.
+- Required bridge lemmas: finite net approximation, unit-sphere cover bridge, Matrix-to-linear-map/L2 operator-norm bridge, and `operatorNorm` comparison lemmas.
 - Status: blocked
-- Blocker: operator norm, sphere, and random matrix abstractions are not active yet.
-- Target module: `HighDimProb/Nets.lean`
-- Priority: v0.2
+- Blocker: unit-sphere abstractions and operator-norm bridge lemmas are not active yet.
+- Target module: `HighDimProb/MetricEntropy.lean`
+- Priority: v0.3
 
-## covering-packing inequalities
-- Book heading: `覆盖数与填充数`
-- Informal statement: covering and packing numbers bound each other at related radii.
-- Target Lean statement: HighDimProb-facing wrapper around Mathlib covering/packing inequalities.
-- Required objects: `IsEpsilonNet`, `IsEpsilonSeparated`, `coveringNumber`, `externalCoveringNumber`, `packingNumber`.
-- Required definitions: Stage 5A Mathlib-backed metric entropy vocabulary exists.
-- Required bridge lemmas: radius conversion between HighDimProb real radii and Mathlib `ℝ≥0` radii.
+## metric entropy as log covering number
+- Book heading: `度量熵`
+- Informal statement: metric entropy is represented as the logarithm of the covering number.
+- Target Lean statement: blocked; `metricEntropyLogCoveringStatement` is not added.
+- Required objects: `coveringNumber`, real logarithm, finite-cover or infinity convention.
+- Required definitions: real-valued metric entropy wrapper.
+- Required bridge lemmas: conversion from Mathlib `ℕ∞` covering numbers to a finite real count before applying `Real.log`.
 - Status: blocked
-- Blocker: theorem statement layer and radius bookkeeping are intentionally deferred to Stage 5B.
+- Blocker: no convention yet for `Real.log` of `ℕ∞` values or infinite covering numbers.
 - Target module: `HighDimProb/MetricEntropy.lean`
 - Priority: v0.2
 
 ## metric entropy coding interpretation
 - Book heading: `度量熵`
 - Informal statement: logarithms of covering numbers quantify coding complexity up to radius changes.
-- Target Lean statement: blocked until a real-valued metric entropy convention is selected.
-- Required objects: `coveringNumber`, possible finite-cover hypothesis, real logarithm.
+- Target Lean statement: blocked until a real-valued metric entropy convention and coding vocabulary are selected.
+- Required objects: `coveringNumber`, possible finite-cover hypothesis, real logarithm, coding/bit-count vocabulary.
 - Required definitions: Stage 5A exposes Mathlib `ℕ∞` covering numbers; `metricEntropy` real-log wrapper is deferred.
-- Required bridge lemmas: finite/infinite count handling and base-change for logarithms.
+- Required bridge lemmas: finite/infinite count handling, base-change for logarithms, and coding interpretation lemmas.
 - Status: blocked
-- Blocker: no convention yet for `Real.log` of `ℕ∞` values.
+- Blocker: no real-log covering-number convention and no coding vocabulary exist yet.
 - Target module: `HighDimProb/MetricEntropy.lean`
-- Priority: v0.2
+- Priority: v0.3
 
-## random matrix norm bound
+## Dudley integral dependency on covering numbers
+- Book heading: `Dudley积分不等式`
+- Informal statement: Dudley-type bounds depend on integrals of square roots of logarithmic covering numbers.
+- Target Lean statement: blocked until random-process, entropy-integral, and real-valued metric entropy vocabulary are active.
+- Required objects: random processes, subGaussian increments, `coveringNumber`, entropy integral, real logarithm.
+- Required definitions: process supremum, entropy integral, and real-valued metric entropy convention.
+- Required bridge lemmas: measurability of process suprema, entropy integral estimates, and covering-number monotonicity.
+- Status: blocked
+- Blocker: random process theorem vocabulary, Gaussian-width/generic-chaining vocabulary, and metric entropy real-log convention are not active.
+- Target module: `HighDimProb/RandomProcess.lean`
+- Priority: v1.0
+
+## subGaussian random matrix norm bound
 - Book heading: `带有次高斯元素矩阵的范数`, `次高斯矩阵的双侧界`
 - Informal statement: random matrices with independent subGaussian entries or rows have high-probability operator norm/singular value bounds.
 - Target Lean statement: blocked until random matrix, norm, independence, and subGaussian layers are stable.
-- Required objects: random matrices, matrix norms, independence, subGaussian predicates.
-- Required definitions: matrix-valued random-variable predicates and norm wrappers.
-- Required bridge lemmas: entry/row measurability and net-to-operator-norm bounds.
+- Required objects: `RandomMatrix`, `matrixEntry`, `rowVector`, `matVec`, `operatorNorm`, independence, subGaussian predicates.
+- Required definitions: Stage 6A matrix-valued random-variable predicates, row/column views, action vocabulary, and entry/row subGaussian predicates exist; Stage 6B adds `operatorNorm`.
+- Required bridge lemmas: operator norm bridge lemmas, independent entries or rows, entry/row measurability, and net-to-operator-norm bounds.
 - Status: blocked
-- Blocker: theorem is beyond object layer.
+- Blocker: independence predicates and operator-norm proof bridges are deferred; theorem is beyond object layer.
 - Target module: `HighDimProb/RandomMatrix.lean`
+- Priority: v0.3
+
+## sample covariance concentration
+- Book heading: `协方差估计`, `一般协方差估计`
+- Informal statement: the empirical or sample covariance matrix of independent subGaussian samples concentrates around the population covariance.
+- Target Lean statement: blocked until independence, centered/empirical covariance conventions, and operator-norm theorem bridges exist.
+- Required objects: `RandomMatrix`, row samples, `sampleCovariance`, covariance matrix, `operatorNorm`, row subGaussian/isotropic assumptions.
+- Required definitions: Stage 6A row and assumption predicates exist; Stage 6B adds `sampleCovariance`, `gramMatrix`, and `operatorNorm`.
+- Required bridge lemmas: matrix multiplication/scaling convention, row independence, expectation/covariance bridge, and operator-norm bridge lemmas.
+- Status: blocked
+- Blocker: row independence, centered/empirical covariance conventions, and operator-norm proof bridges are deferred.
+- Target module: future `HighDimProb/RandomMatrix/SampleCovariance.lean`
 - Priority: v0.3
 
 ## Hanson-Wright inequality
 - Book heading: `Hanson-Wright不等式`
 - Informal statement: quadratic forms of independent centered subGaussian vectors concentrate around their mean.
 - Target Lean statement: blocked until quadratic-form, matrix norm, and subGaussian vector APIs are stable.
-- Required objects: `RandomVector`, matrices, quadratic forms, subGaussian coordinates.
-- Required definitions: Stage 4A random-vector object layer exists; Frobenius/operator norm wrappers remain future work.
-- Required bridge lemmas: quadratic-form measurability and moment/MGF estimates.
+- Required objects: `RandomVector`, deterministic or random matrices, `quadraticForm`, subGaussian coordinates, Frobenius/operator norms.
+- Required definitions: Stage 4A random-vector object layer exists; Stage 6A random matrix and Frobenius vocabulary exist; Stage 6B adds `quadraticForm`, `bilinearForm`, and `operatorNorm`.
+- Required bridge lemmas: independence assumptions, quadratic-form moment/MGF estimates, and Frobenius/operator-norm bridge lemmas.
 - Status: blocked
-- Blocker: high-dimensional theorem layer is missing.
+- Blocker: independence assumptions and analytic concentration infrastructure are missing.
 - Target module: `HighDimProb/RandomMatrix.lean`
 - Priority: v0.3
 
@@ -330,25 +491,49 @@ Stage 1S records theorem/result families from the reference notes as a dependenc
 - Book heading: `Johnson-Lindenstrauss引理`, `Johnson-Lindenstrauss嵌入`
 - Informal statement: suitable random projections preserve pairwise distances with high probability.
 - Target Lean statement: blocked until random projection and metric embedding vocabulary exists.
-- Required objects: random matrices, finite sets, Euclidean distances, probability events.
-- Required definitions: random projection model and distortion predicate.
-- Required bridge lemmas: matrix-vector measurability and concentration for fixed vectors.
+- Required objects: `RandomMatrix`, `matVec`, `operatorNorm`, finite sets, Euclidean distances, probability events.
+- Required definitions: Stage 6A matrix-vector action exists; Stage 6B adds `operatorNorm`; random projection model and distortion predicate remain future work.
+- Required bridge lemmas: fixed-vector concentration, norm preservation predicate, operator-norm/action bridge lemmas, and random projection scaling convention.
 - Status: blocked
-- Blocker: random matrix and concentration layers are not ready.
+- Blocker: random projection vocabulary and concentration layers are not ready.
 - Target module: `HighDimProb/RandomMatrix.lean`
 - Priority: v0.3
 
 ## covariance estimation
 - Book heading: `协方差估计`, `一般协方差估计`, `低维分布的协方差估计`
 - Informal statement: empirical covariance of subGaussian samples approximates the population covariance with high probability.
-- Target Lean statement: blocked until empirical covariance and operator norm APIs exist.
-- Required objects: `RandomVector`, samples, covariance matrices, matrix norms.
-- Required definitions: empirical covariance matrix.
-- Required bridge lemmas: sample independence and matrix concentration.
+- Target Lean statement: blocked until empirical covariance conventions, independence, and concentration APIs exist.
+- Required objects: `RandomVector`, `RandomMatrix`, samples, covariance matrices, `sampleCovariance`, matrix norms.
+- Required definitions: Stage 6A random matrix rows exist; Stage 6B adds uncentered `sampleCovariance` and `operatorNorm`.
+- Required bridge lemmas: sample independence, sample covariance algebra, centered/empirical covariance convention, and matrix concentration.
 - Status: blocked
-- Blocker: random-vector object vocabulary exists, but covariance, random matrix, and theorem layers are missing.
-- Target module: `HighDimProb/Covariance.lean`
+- Blocker: independence, centered/empirical covariance, and concentration infrastructure are not ready.
+- Target module: future `HighDimProb/RandomMatrix/SampleCovariance.lean`
 - Priority: v0.3
+
+## matrix Bernstein inequality
+- Book heading: `矩阵伯恩斯坦不等式`, `矩阵不等式`
+- Informal statement: sums of independent centered random matrices with bounded operator norm satisfy Bernstein-type spectral tail bounds.
+- Target Lean statement: blocked until symmetric/random matrix sums, operator norm, variance proxy, and matrix independence APIs exist.
+- Required objects: random matrices, symmetric matrix predicate, centered matrix variables, `operatorNorm`, variance proxy, independence.
+- Required definitions: Stage 6A random matrix object layer exists; Stage 6B adds `operatorNorm`; no symmetric random matrix or matrix-sum assumption layer exists yet.
+- Required bridge lemmas: matrix-valued measurability, operator-norm bridge lemmas, independence of matrix-valued variables, and self-adjoint dilation if rectangular variants are used.
+- Status: blocked
+- Blocker: theorem is beyond the object layer and requires symmetric/random-matrix-sum, operator-norm bridge, and independence infrastructure.
+- Target module: `HighDimProb/RandomMatrix.lean`
+- Priority: v0.4
+
+## matrix deviation inequality
+- Book heading: `一般协方差估计`, random matrix deviation estimates
+- Informal statement: empirical matrix deviations such as `sampleCovariance A - Sigma` are controlled in operator norm under sampling and moment assumptions.
+- Target Lean statement: blocked until centered empirical covariance, matrix subtraction/norm events, independence, and concentration APIs exist.
+- Required objects: `sampleCovariance`, `operatorNorm`, covariance matrices, random matrix rows, row assumptions.
+- Required definitions: Stage 6B adds uncentered sample covariance and operator-norm vocabulary.
+- Required bridge lemmas: sample covariance algebra, centered/empirical covariance convention, operator-norm measurability, row independence, and matrix concentration.
+- Status: blocked
+- Blocker: object vocabulary exists only at the uncentered level; theorem dependencies remain future work.
+- Target module: future `HighDimProb/RandomMatrix/SampleCovariance.lean`
+- Priority: v0.4
 
 ## generic chaining / Dudley inequality
 - Book heading: `Dudley积分不等式`, `通用链界`

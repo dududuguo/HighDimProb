@@ -24,6 +24,22 @@
 - Lean/mathlib obstruction: v0.2 high-dimensional modules are still experimental and may need representation or theorem-statement adjustments.
 - Future upgrade path: after public push, continue with Stage 5B or Stage 6A while keeping stable and experimental imports separate.
 
+## Infrastructure hardening
+
+- Concrete version chosen: Stage I0 hardens repository scaffolding, contribution workflow, CI, issue templates, and future-stage organization without changing Lean mathematical content.
+- Possible general version: begin Stage 5B theorem statements or Stage 6A random matrices immediately.
+- Reason for not generalizing yet: future contributors and model agents need explicit gates before adding new vocabulary or theorem statements.
+- Lean/mathlib obstruction: weak process boundaries can accidentally promote experimental APIs, add unsupported theorem declarations, or bypass Mathlib-first design.
+- Future upgrade path: use `docs/StageChecklist.md` and `docs/FutureScaffold.md` before starting each new stage.
+
+## Experimental promotion gate
+
+- Concrete version chosen: stable v0.1 modules are imported through `import HighDimProb`, while experimental v0.2+ modules are imported through `import HighDimProb.Experimental`.
+- Possible general version: expose all compiling modules through the root import.
+- Reason for not generalizing yet: experimental high-dimensional modules are partial and may still change.
+- Lean/mathlib obstruction: root import promotion creates downstream compatibility obligations and can hide missing tests or docs.
+- Future upgrade path: promote a module only after tests, docs, `docs/Status.md`, and a root import audit are complete.
+
 ## Mathlib-first rule
 
 - Concrete version chosen: Mathlib search is mandatory before new definitions.
@@ -144,6 +160,30 @@
 - Lean/mathlib obstruction: matrix-valued expectations, finite-second-moment assumptions, and positive-semidefinite facts need careful alignment with Mathlib matrix and integrability APIs.
 - Future upgrade path: Stage 4C can define isotropicity using `CenteredVector`, `secondMomentMatrix`, and `covarianceMatrix`; theorem work can later prove entrywise identities and PSD/symmetry facts.
 
+## Third proof pilot: centered vector coordinate bridge
+
+- Concrete version chosen: Stage P3 exposes `centeredVector_iff_forall_centered_coord` as the user-facing bridge from vector centeredness to coordinatewise scalar centeredness.
+- Possible general version: prove centeredness of the centered transform or covariance identities at the same time.
+- Reason for not generalizing yet: this pilot only tests the vector-coordinate API; expectation algebra and covariance identities remain separate theorem work.
+- Lean/mathlib obstruction: none; the bridge is definitional and did not require function extensionality or Mathlib search.
+- Future upgrade path: use this bridge in later covariance/isotropic theorem statements, then add expectation identities only with explicit integrability assumptions.
+
+## Fourth proof pilot: centered scalar operation
+
+- Concrete version chosen: Stage P4 proves `centered_centered` for integrable real random variables under `[IsProbabilityMeasure P]`.
+- Possible general version: add a full expectation algebra API with constant, add, sub, and scalar multiplication lemmas.
+- Reason for not generalizing yet: this pilot only needs the centered subtraction proof; broader expectation algebra should be introduced as downstream theorem work demands it.
+- Lean/mathlib obstruction: none; `IntegrableRealRandomVariable` unfolded cleanly to Mathlib `Integrable`, and probability mass-one simplification worked through `integral_const`.
+- Future upgrade path: add named HighDimProb wrappers such as `expect_const` or `expect_sub_const` only when repeated theorem statements need them.
+
+## Fifth proof pilot: tail probability monotonicity
+
+- Concrete version chosen: Stage P5 proves `upperTailProb_antitone`, `lowerTailProb_monotone`, and `absTailProb_antitone` directly from the tail event definitions.
+- Possible general version: add a reusable event-inclusion API for every tail-event variant before proving monotonicity.
+- Reason for not generalizing yet: the three proofs are one-line applications of Mathlib `measure_mono`, so named inclusion lemmas would be premature.
+- Lean/mathlib obstruction: none; tail wrappers unfolded transparently, ENNReal measure order worked through `measure_mono`, and no measurability assumptions were required.
+- Future upgrade path: add named tail-event inclusion lemmas only if Stage P6 or later concentration proofs reuse the same inclusions.
+
 ## Mathlib covariance reuse
 
 - Concrete version chosen: `covariance` and `variance` are aliases around Mathlib `ProbabilityTheory.covariance` and `ProbabilityTheory.variance`.
@@ -175,6 +215,14 @@
 - Reason for not generalizing yet: entrywise formulations avoid dependence on extensionality lemmas in basic API examples and match the coordinatewise random-vector representation.
 - Lean/mathlib obstruction: matrix equality is clean for declarations, but theorem work still typically unfolds to entries via `Matrix.one_apply`.
 - Future upgrade path: add bridge lemmas between entrywise and matrix forms when isotropic equivalence theorems are assigned.
+
+## Second proof pilot: isotropic matrix/entrywise bridge
+
+- Concrete version chosen: Stage P2 proves `isotropicSecondMomentMatrix_iff_isotropicSecondMoment` directly in `HighDimProb.Isotropic`.
+- Possible general version: prove all covariance, second-moment, and marginal isotropic characterizations together.
+- Reason for not generalizing yet: covariance and marginal equivalences need integration and finite-sum algebra, while the matrix/entrywise bridge is purely definitional.
+- Lean/mathlib obstruction: `Matrix.ext` and `Matrix.one_apply` worked cleanly, but unrestricted `simp` can recurse around matrix identity unfolding; the proof uses `simp only`.
+- Future upgrade path: keep this theorem as the stable bridge for later isotropic theorem statements, then add covariance and marginal bridges only with explicit assumptions.
 
 ## Isotropic canonical-name deferral
 
@@ -352,10 +400,114 @@
 - Lean/mathlib obstruction: Euclidean bounds and operator-norm net bounds need sphere, matrix norm, and random matrix APIs.
 - Future upgrade path: Stage 5B can add selected theorem statement wrappers around existing Mathlib inequalities.
 
+## Metric entropy statement layer
+
+- Concrete version chosen: Stage 5B adds typechecked `Prop` specifications for maximal separated nets, epsilon-net cardinality bounds, and packing-covering inequalities, while leaving proofs and deeper geometry blocked in the theorem atlas.
+- Possible general version: prove the Mathlib-backed covering/packing inequalities immediately and define a real-valued metric entropy function.
+- Reason for not generalizing yet: this stage is a statement layer; proof wrappers need real-radius conversion lemmas, and metric entropy needs a deliberate finite/infinite convention for `ℕ∞`.
+- Lean/mathlib obstruction: Mathlib uses `ℝ≥0` and `ℕ∞`, while HighDimProb-facing statements use real radii and should not hide negative-radius truncation or infinite covering numbers.
+- Future upgrade path: add focused bridge lemmas from `epsilonRadius`/`epsilonERadius` to Mathlib radii, then promote selected typed specifications to proved theorem wrappers when their proofs are available.
+
+## First proof pilot: maximal separated net
+
+- Concrete version chosen: Stage P1 introduces `MaximalEpsilonSeparatedIn` as a single-point-extension maximality predicate and proves `isInternalEpsilonNet_of_maximalEpsilonSeparatedIn`.
+- Possible general version: use only Mathlib's global `Maximal` predicate or cardinal-maximal `Metric.maximalSeparatedSet`.
+- Reason for not generalizing yet: the book proof is the elementary single-point insertion argument, and this local predicate is enough to test the HighDimProb net wrappers.
+- Lean/mathlib obstruction: no blocker was found; Mathlib's `Metric.IsCover` uses non-strict `edist <= radius`, `Metric.IsSeparated` uses strict `radius < edist`, and `Metric.isSeparated_insert_of_notMem` matches the proof.
+- Future upgrade path: keep deeper covering-number and packing-covering inequalities separate; add bridge proofs only when explicitly assigned.
+
 ## Random matrices
 
-- Concrete version chosen: `Ω → Matrix (Fin m) (Fin n) ℝ`.
-- Possible general version: matrices over arbitrary normed fields and index types.
-- Reason for not generalizing yet: high-dimensional probability applications start with real finite matrices.
-- Lean/mathlib obstruction: General matrix norm APIs require careful import and typeclass choices.
-- Future upgrade path: Add normed-field variants after real matrix examples compile.
+- Concrete version chosen: Stage 6A uses `RandomMatrix Omega m n := Omega -> Matrix (Fin m) (Fin n) Real`.
+- Possible general version: matrices over arbitrary index types, normed fields, or a bundled structure carrying entry measurability and independence assumptions.
+- Reason for not generalizing yet: the existing vector layer is concrete-first over `Fin n -> Real`, and book random-matrix results start with finite real `m x n` matrices.
+- Lean/mathlib obstruction: bundling would make entries, rows, columns, `Measure.map`, and finite-sum actions harder to reuse with the existing unbundled random-variable APIs.
+- Future upgrade path: add index-field generalizations only after row/column, sample-covariance, and theorem-statement requirements stabilize.
+
+## Random matrix folder abstraction
+
+- Concrete version chosen: `HighDimProb.RandomMatrix` is an aggregate over `Basic`, `RowsCols`, `Action`, `Norms`, and `Assumptions`.
+- Possible general version: keep all random-matrix declarations in one file.
+- Reason for not generalizing yet: random matrix theorem work will need separable imports for entries, rows, actions, norm vocabulary, and assumptions.
+- Lean/mathlib obstruction: one large module would force later theorem files to import assumptions and norm vocabulary when only entry or row APIs are needed.
+- Future upgrade path: add future submodules such as sample covariance or theorem statements under the same folder without promoting the aggregate to the stable root.
+
+## Random matrix rows and columns
+
+- Concrete version chosen: rows and columns are exposed as existing `RandomVector` values, with bridge lemmas from `IsRandomMatrix` to `IsRandomVector`.
+- Possible general version: define a separate random-row or random-column structure.
+- Reason for not generalizing yet: reusing `RandomVector` gives immediate access to `coord`, `marginal`, subGaussian-vector predicates, and isotropic predicates.
+- Lean/mathlib obstruction: separate row/column structures would duplicate the vector API and require bridge lemmas before any theorem could use them.
+- Future upgrade path: use these row and column views for Stage 6B sample covariance and later row-subGaussian random-matrix theorem statements.
+
+## Random matrix actions
+
+- Concrete version chosen: `matVec` and `vecMat` use explicit finite sums over `Fin` indices.
+- Possible general version: define all actions through Mathlib `Matrix.mulVec` and linear maps.
+- Reason for not generalizing yet: explicit sums match the existing `linearForm` style and make measurability proofs immediate from entrywise measurability.
+- Lean/mathlib obstruction: committing to a linear-map representation now would pull in operator-norm choices before the norm layer is ready.
+- Future upgrade path: add equivalence lemmas to `Matrix.mulVec` or linear-map actions when operator norm and Johnson-Lindenstrauss statements need them.
+
+## Random matrix norm deferral
+
+- Concrete version chosen: Stage 6A adds `frobeniusSq`, `frobeniusNorm`, and `entrywiseMaxAbs`, but does not define spectral/operator norm.
+- Possible general version: define `operatorNorm A := ||A||` using whatever matrix norm instance Mathlib provides.
+- Reason for not generalizing yet: the book operator norm is the induced spectral norm, while a generic matrix norm instance may be an entrywise Pi norm.
+- Lean/mathlib obstruction: a correct operator norm needs a deliberate Matrix-to-linear-map bridge and probably Euclidean-space conventions.
+- Future upgrade path: add an operator-norm submodule only after the matrix-to-linear-map representation and sphere/unit-vector API are chosen.
+
+## Random matrix independence deferral
+
+- Concrete version chosen: Stage 6A records entrywise, rowwise, centered, and isotropic assumptions, but does not define independent entries or independent rows.
+- Possible general version: immediately wrap Mathlib `iIndepFun` for matrix entries and rows.
+- Reason for not generalizing yet: independence conventions need careful choices about indexing, measurability assumptions, and whether rows or entries are primary.
+- Lean/mathlib obstruction: premature independence wrappers can conflict with later product-measure or row-sample APIs.
+- Future upgrade path: define independent entries and independent rows in a focused stage when theorem statements identify the exact Mathlib independence predicate to wrap.
+
+## Sample covariance deferral
+
+- Concrete version chosen: Stage 6A documents sample covariance as the next object cluster rather than defining it here.
+- Possible general version: define `(1 / m) A^T A` immediately for a data matrix.
+- Reason for not generalizing yet: sample covariance needs a choice between rows-as-samples, centered samples, empirical covariance, and scaling conventions.
+- Lean/mathlib obstruction: matrix multiplication is easy, but the statistical meaning depends on row/sample orientation and centering conventions.
+- Future upgrade path: Stage 6B should add sample covariance vocabulary with tests and theorem-atlas dependencies before covariance-estimation statements are promoted.
+
+## Stage 6B sample covariance representation
+
+- Concrete version chosen: `sampleCovarianceEntry A i j omega` is `(1 / (m : Real)) * sum k : Fin m, A omega k i * A omega k j`, and `sampleCovariance A` is assembled from these entries.
+- Possible general version: define sample covariance directly by `A omega` transposition and matrix multiplication.
+- Reason for not generalizing yet: explicit entries keep the row-as-samples convention visible and make entry measurability a small finite-sum bridge.
+- Lean/mathlib obstruction: no blocker for the entrywise vocabulary; the `m = 0` case remains the ordinary total-division value in Lean and is not used for statistical theorems.
+- Future upgrade path: add matrix-multiplication equivalence lemmas, centered empirical covariance, and nonzero sample-size hypotheses when covariance-estimation statements need them.
+
+## Stage 6B quadratic and bilinear forms
+
+- Concrete version chosen: `quadraticForm` and `bilinearForm` use explicit double sums over `Fin`.
+- Possible general version: define through `Matrix.mulVec`, dot products, or continuous linear maps.
+- Reason for not generalizing yet: the explicit-sum style matches `linearForm`, `matVec`, and sample-covariance entries, and makes measurability bridges immediate.
+- Lean/mathlib obstruction: no blocker for vocabulary or measurability; no Hanson-Wright, chaos, or trace identities are proved in this stage.
+- Future upgrade path: add equivalence lemmas to `Matrix.mulVec`/dot-product formulations before Hanson-Wright theorem statements.
+
+## Stage 6B operator norm bridge
+
+- Concrete version chosen: `operatorNorm A` uses Mathlib's `Matrix.Norms.L2Operator` scoped norm from `Mathlib.Analysis.CStarAlgebra.Matrix`.
+- Possible general version: use the default matrix norm or the `L^infty` operator norm.
+- Reason for not generalizing yet: the book's random-matrix bounds use the Euclidean spectral norm, so the wrapper must not silently pick the entrywise/Pi norm or the `L^infty` matrix norm.
+- Lean/mathlib obstruction: the norm declaration is available, but future proofs still need bridge lemmas to `Matrix.mulVec`, unit-sphere suprema, and measurability of `operatorNorm A`.
+- Future upgrade path: a focused bridge stage should prove or wrap the needed L2 operator norm lemmas before epsilon-net or random-matrix norm theorem statements are proved.
+
+## Root-to-branch module abstraction
+
+- Concrete version chosen: Stage I3 adds logical aggregate modules `Scalar`, `Vector`, `Geometry`, `Process`, and `Statements`.
+- Possible general version: physically move all flat files into branch directories immediately.
+- Reason for not generalizing yet: physical migration would create avoidable import churn while APIs are still stabilizing.
+- Lean/mathlib obstruction: broad moves can hide accidental stable-root promotion and make import regressions hard to isolate.
+- Future upgrade path: keep declarations in leaf modules, test branch aggregates, and migrate files physically only in a focused future stage after branch boundaries are proven by import tests.
+
+## Stable root after branch split
+
+- Concrete version chosen: `HighDimProb` imports `Init`, `Scalar`, and `Statements`.
+- Possible general version: make the stable root import every branch aggregate.
+- Reason for not generalizing yet: vector, geometry, random matrix, process, and signal-recovery APIs remain v0.2+ experimental.
+- Lean/mathlib obstruction: importing experimental branches from the stable root would create downstream compatibility obligations before theorem dependencies are settled.
+- Future upgrade path: promote a branch only after tests, docs, `docs/Status.md`, and a root import audit confirm it is stable.

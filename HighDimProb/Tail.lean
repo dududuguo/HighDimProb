@@ -110,4 +110,19 @@ theorem absTailProb_def {Ω : Type*} [MeasurableSpace Ω]
     absTailProb P X t = P (absTailEvent X t) :=
   rfl
 
+theorem upperTailProb_antitone {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) (X : RealRandomVariable Ω) {s t : ℝ} (hst : s ≤ t) :
+    upperTailProb P X t ≤ upperTailProb P X s :=
+  measure_mono fun _ hω => hst.trans hω
+
+theorem lowerTailProb_monotone {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) (X : RealRandomVariable Ω) {s t : ℝ} (hst : s ≤ t) :
+    lowerTailProb P X s ≤ lowerTailProb P X t :=
+  measure_mono fun _ hω => hω.trans hst
+
+theorem absTailProb_antitone {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) (X : RealRandomVariable Ω) {s t : ℝ} (hst : s ≤ t) :
+    absTailProb P X t ≤ absTailProb P X s :=
+  measure_mono fun _ hω => hst.trans hω
+
 end HighDimProb

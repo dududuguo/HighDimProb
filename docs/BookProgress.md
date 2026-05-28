@@ -17,8 +17,17 @@ Infrastructure:
 - Stage 4C isotropic random vector vocabulary
 - Stage 4D high-dimensional subGaussian random vector vocabulary
 - Stage 5A metric entropy / nets API alignment
+- Stage 5B covering/packing theorem statement layer
 - Stage M1 milestone closeout and audit
 - Stage P0 public push readiness
+- Stage P1 first proof pilot: maximal separated set gives an epsilon net
+- Stage P2 second proof pilot: isotropic matrix/entrywise bridge
+- Stage P3 third proof pilot: centered vector coordinate bridge
+- Stage P4 first analytic/probabilistic proof pilot: centered scalar operation
+- Stage P5 tail probability monotonicity proof pilot
+- Stage 6A random matrix object layer and folder abstraction
+- Stage 6B sample covariance vocabulary and matrix norm bridge audit
+- Stage I1 CSLib-inspired infrastructure alignment
 
 Processed:
 - probability space
@@ -45,20 +54,63 @@ Processed:
 - covering number vocabulary
 - packing number vocabulary
 - metric entropy vocabulary
+- maximal separated set theorem statement
+- covering/packing inequality theorem statement
+- covering number bound from epsilon-net statement
 - theorem atlas and statement layer
 - Milestone 1 audit documentation
 - public alpha contributor workflow documentation
+- Stage 5B statement-layer documentation only
+- Stage P1 first proof pilot completed
+- Stage P2 second proof pilot completed
+- Stage P3 third proof pilot completed
+- Stage P4 first analytic/probabilistic proof pilot completed
+- Stage P5 tail probability monotonicity proof pilot completed
+- Stage 6A random matrix object layer completed
+- Stage 6B sample covariance vocabulary completed
+- Stage I1 infrastructure alignment completed
 
 Scaffold exists, not processed as stable API:
-- random matrix vocabulary
 - random process vocabulary
 - Gaussian width placeholder vocabulary
 - empirical process vocabulary
 - signal recovery vocabulary
 
 Unprocessed:
-- random matrix
 - random process
 - Gaussian width
 - empirical process
 - signal recovery
+
+Processed as experimental object layer:
+- random matrix vocabulary
+- random matrix entries
+- row and column random vectors
+- deterministic matrix-vector actions
+- Frobenius norm vocabulary
+- entrywise max absolute value vocabulary
+- L2 operator norm vocabulary
+- Gram and row Gram matrix vocabulary
+- sample covariance vocabulary
+- quadratic and bilinear form vocabulary
+- centered-entry assumptions
+- subGaussian entry and row assumptions
+- isotropic row assumptions
+
+Processed at statement-layer level only:
+- packing-covering inequalities
+- Euclidean ball covering number bounds
+- Hamming cube covering/packing bounds
+- epsilon-net operator norm bound
+- metric entropy as log covering number
+- metric entropy coding interpretation
+- Dudley integral dependency on covering numbers
+
+Processed with proof:
+- maximal separated set is an epsilon-net
+- isotropic second-moment matrix iff entrywise formulation
+- centered vector iff coordinatewise centered
+- centered random variable has mean zero
+- upper-tail probability monotonicity
+- lower-tail probability monotonicity
+- absolute-tail probability monotonicity

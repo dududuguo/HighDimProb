@@ -1,12 +1,3 @@
-import HighDimProb.Basic
-import HighDimProb.ProbabilitySpace
-import HighDimProb.RandomVariable
-import HighDimProb.Distribution
-import HighDimProb.Expectation
-import HighDimProb.Lp
-import HighDimProb.Moment
-import HighDimProb.Orlicz
-import HighDimProb.Tail
-import HighDimProb.SubGaussian
-import HighDimProb.SubExponential
-import HighDimProb.BookStatements
+import HighDimProb.Init
+import HighDimProb.Scalar
+import HighDimProb.Statements

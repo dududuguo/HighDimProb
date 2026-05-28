@@ -1,6 +1,6 @@
 ---
 name: Object-layer task
-about: Add or refine vocabulary, wrappers, aliases, or examples
+about: Vocabulary for random matrices, Gaussian width, processes, empirical processes, or signal recovery
 title: "[Object layer] "
 labels: object-layer
 assignees: ""
@@ -8,20 +8,19 @@ assignees: ""
 
 ## Concept Cluster
 
-Name the one concept cluster this task covers.
+Pick one: random matrix object layer, Gaussian width vocabulary, random process vocabulary, empirical process vocabulary, or signal recovery vocabulary.
 
 ## Mathlib Search
 
-List the Mathlib declarations checked before implementation.
+List the Mathlib declarations checked first.
 
 ## Expected Output
 
-- Thin wrappers or aliases only where useful.
-- Tiny examples or `#check`s.
-- Documentation updates.
+- Thin wrappers, aliases, predicates, or examples.
+- API tests for public declarations.
+- Updates to status and roadmap docs.
 
 ## Checks
 
 - [ ] `lake build`
 - [ ] `lake test`
-

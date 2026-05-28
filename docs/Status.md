@@ -2,12 +2,12 @@
 
 Current version target: v0.1-alpha
 
-Current stage: Stage P0
+Current stage: Stage I3
 
-Current task: public push readiness
+Current task: root-to-branch module abstraction
 
 Milestone status:
-- Milestone 1 complete, preparing v0.1-alpha public push
+- Milestone 1 complete; root-to-branch module abstraction is being aligned before further mathematical expansion
 
 Workflow file:
 - docs/Workflow.md
@@ -48,6 +48,17 @@ Last known test status:
 - Stage 5A metric entropy / nets API alignment
 - Stage M1 milestone closeout and audit documentation
 - Stage P0 public push readiness
+- Stage I0 infrastructure scaffold hardening
+- Stage 5B covering/packing theorem statement layer
+- Stage P1 first proof pilot: maximal separated set gives epsilon net
+- Stage P2 second proof pilot: isotropic matrix/entrywise bridge
+- Stage P3 third proof pilot: centered vector coordinate bridge
+- Stage P4 centered scalar operation proof pilot
+- Stage P5 tail probability monotonicity proof pilot
+- Stage 6A random matrix infrastructure deepening and folder abstraction
+- Stage 6B sample covariance vocabulary and matrix norm bridge audit
+- Stage I1 CSLib-inspired infrastructure alignment
+- Stage I3 root-to-branch module abstraction
 
 Stage 1A implemented:
 - probability-space convention
@@ -166,6 +177,90 @@ Stage 5A implemented:
 - API regression tests for nets and metric entropy declarations
 - nets and metric entropy modules kept under `HighDimProb.Experimental`
 
+Stage 5B implemented:
+- theorem atlas entries for maximal separated sets, packing-covering inequalities, Euclidean ball bounds, Hamming cube bounds, epsilon-net operator norm bounds, metric entropy log/coding interpretations, and Dudley integral dependency
+- typed `Prop` specifications `maximalSeparatedNetStatement`, `epsilonNetCoveringNumberStatement`, and `packingCoveringInequalityStatement`
+- typed statement specifications are routed through the `HighDimProb.Statements` aggregate after Stage I3
+- API regression tests for metric entropy statement declarations
+- no covering/packing theorem proofs
+- no metric entropy real-log convention
+
+Stage P1 implemented:
+- single-point maximality predicate `MaximalEpsilonSeparatedIn`
+- proof `isInternalEpsilonNet_of_maximalEpsilonSeparatedIn`
+- API regression test for the proof pilot
+- theorem atlas status promoted from typed-prop to proven for maximal separated set is an epsilon-net
+- no probability inequalities, covering-number bounds, packing-covering inequalities, or random matrices
+
+Stage P2 implemented:
+- proof `isotropicSecondMomentMatrix_iff_isotropicSecondMoment`
+- API regression test for the isotropic proof pilot
+- theorem atlas status set to proven for the matrix/entrywise second-moment bridge
+- no probability inequalities, covariance PSD/symmetry theorem, norm concentration theorem, or random matrices
+
+Stage P3 implemented:
+- proof `centeredVector_iff_forall_centered_coord`
+- API regression test for the covariance proof pilot
+- theorem atlas status set to proven for the centered vector coordinate bridge
+- no probability inequalities, covariance identities, isotropic equivalence theorems beyond the coordinate bridge, or random matrices
+
+Stage P4 implemented:
+- proof `centered_centered`
+- reused Mathlib integrability and Bochner-integral lemmas through the existing `expect` / `mean` wrappers
+- API regression test for the centered scalar proof pilot
+- theorem atlas status set to proven for centered random variable has mean zero
+- no random matrices, concentration inequalities, subGaussian/subExponential equivalences, or covariance PSD/symmetry theorem
+
+Stage P5 implemented:
+- proof `upperTailProb_antitone`
+- proof `lowerTailProb_monotone`
+- proof `absTailProb_antitone`
+- reused Mathlib measure monotonicity through transparent tail probability wrappers
+- API regression test for the tail monotonicity proof pilot
+- stable public import checks for the new tail theorems
+- theorem atlas status set to proven for upper-tail, lower-tail, and absolute-tail probability monotonicity
+- no concentration inequalities, Markov/Chebyshev theorem, subGaussian equivalences, random matrices, or optional dependencies
+
+Stage 6A implemented:
+- refactored `HighDimProb.RandomMatrix` into an aggregate over `Basic`, `RowsCols`, `Action`, `Norms`, and `Assumptions`
+- concrete random matrix representation `Omega -> Matrix (Fin m) (Fin n) Real`
+- entry random variables and `IsRandomMatrix`
+- row and column random-vector views with measurability bridges
+- deterministic matrix-vector and transposed matrix-vector actions with measurability bridges
+- Frobenius squared norm, Frobenius norm, and entrywise max absolute value vocabulary
+- centered-entry, subGaussian-entry, subGaussian-row, and isotropic-row predicates
+- random matrix API regression tests split by submodule
+- random matrix module kept under `HighDimProb.Experimental`
+- no random matrix norm bounds, matrix Bernstein, Hanson-Wright, Johnson-Lindenstrauss, covariance estimation, optional dependencies, or stable root promotion
+
+Stage 6B implemented:
+- added `HighDimProb.RandomMatrix.SampleCovariance` for Gram, row Gram, and uncentered sample covariance entries/matrices
+- added entry measurability bridges for Gram, row Gram, and sample covariance entries
+- added `HighDimProb.RandomMatrix.QuadraticForm` for quadratic and bilinear form vocabulary
+- added measurability bridges for quadratic and bilinear forms
+- added `HighDimProb.RandomMatrix.OperatorNorm` using Mathlib's scoped L2 operator norm
+- updated the random matrix aggregate, experimental import checks, theorem atlas dependencies, and random matrix API tests
+- random matrix modules remain experimental and are not imported by the stable root
+- no covariance estimation, random matrix norm bound, Hanson-Wright, Johnson-Lindenstrauss, matrix Bernstein, optional dependency, or stable root promotion was added
+
+Stage I1 implemented:
+- added `HighDimProb.Init` as a root initialization module for shared Mathlib/probability imports and conventions
+- added repository organization and notation policy documents
+- added automation policy documentation for simp, proof-pilot feedback, and future tactics
+- updated contribution workflow with PR title categories and coordination policy
+- updated test policy for stable, experimental, proof-pilot, lint, and import hygiene
+- added a staged roadmap from M1 through M6
+- kept experimental modules out of the stable root import
+- no new mathematics, theorem proofs, optional dependencies, or CSLib dependency were added
+
+Stage I3 implemented:
+- added logical branch aggregate modules `HighDimProb.Scalar`, `HighDimProb.Vector`, `HighDimProb.Geometry`, `HighDimProb.Process`, and `HighDimProb.Statements`
+- updated `HighDimProb` to import only `Init`, `Scalar`, and `Statements`
+- updated `HighDimProb.Experimental` to import the experimental branch aggregates and keep v0.2+ APIs out of the stable root
+- added branch import regression tests
+- documented the module tree and physical migration policy
+- no files were physically moved, no new mathematics was added, and no experimental branch was promoted to the stable root
+
 Important existing declarations:
 - `IsRandomVariable`
 - `IsRealRandomVariable`
@@ -215,18 +310,21 @@ Important existing declarations:
 - `mean`
 - `centered`
 - `Centered`
+- `centered_centered`
 - `variance`
 - `covariance`
 - `secondMoment`
 - `meanVector`
 - `centeredVector`
 - `CenteredVector`
+- `centeredVector_iff_forall_centered_coord`
 - `secondMomentMatrixEntry`
 - `secondMomentMatrix`
 - `covarianceMatrixEntry`
 - `covarianceMatrix`
 - `IsotropicSecondMoment`
 - `IsotropicSecondMomentMatrix`
+- `isotropicSecondMomentMatrix_iff_isotropicSecondMoment`
 - `IsotropicCovariance`
 - `IsotropicMarginal`
 - `IsIsotropic`
@@ -242,9 +340,52 @@ Important existing declarations:
 - `IsEpsilonNet`
 - `IsInternalEpsilonNet`
 - `IsEpsilonSeparated`
+- `MaximalEpsilonSeparatedIn`
+- `isInternalEpsilonNet_of_maximalEpsilonSeparatedIn`
 - `externalCoveringNumber`
 - `coveringNumber`
 - `packingNumber`
+- `maximalSeparatedNetStatement`
+- `epsilonNetCoveringNumberStatement`
+- `packingCoveringInequalityStatement`
+- `RandomMatrix`
+- `matrixEntry`
+- `IsRandomMatrix`
+- `matrixEntry_apply`
+- `isRealRandomVariable_matrixEntry`
+- `rowVector`
+- `colVector`
+- `isRandomVector_rowVector`
+- `isRandomVector_colVector`
+- `matVec`
+- `vecMat`
+- `isRandomVector_matVec`
+- `isRandomVector_vecMat`
+- `frobeniusSq`
+- `frobeniusNorm`
+- `entrywiseMaxAbs`
+- `isRealRandomVariable_frobeniusSq`
+- `isRealRandomVariable_frobeniusNorm`
+- `SubGaussianEntriesOrlicz`
+- `SubGaussianEntriesTail`
+- `SubGaussianRowsOrlicz`
+- `IsotropicRowsSecondMoment`
+- `IsotropicRowsCovariance`
+- `CenteredEntries`
+- `gramMatrixEntry`
+- `gramMatrix`
+- `rowGramMatrixEntry`
+- `rowGramMatrix`
+- `sampleCovarianceEntry`
+- `sampleCovariance`
+- `isRealRandomVariable_gramMatrixEntry`
+- `isRealRandomVariable_rowGramMatrixEntry`
+- `isRealRandomVariable_sampleCovarianceEntry`
+- `quadraticForm`
+- `bilinearForm`
+- `isRealRandomVariable_quadraticForm`
+- `isRealRandomVariable_bilinearForm`
+- `operatorNorm`
 - `isRealRandomVariable_centered`
 - `isRandomVector_centeredVector`
 - `lowerTailEvent`
@@ -253,6 +394,9 @@ Important existing declarations:
 - `upperTailProb`
 - `lowerTailProb`
 - `absTailProb`
+- `upperTailProb_antitone`
+- `lowerTailProb_monotone`
+- `absTailProb_antitone`
 - `tailEventMeasurabilityStatement`
 - `lawMapApplyStatement`
 - `realLawMapApplyStatement`
@@ -265,41 +409,57 @@ Important existing declarations:
 
 ## Active
 
-Stage P0 is active in this round.
+Stage I3 is active in this round.
 
-Stage 5B is queued but not started in this round.
-
-Stage 6A is an alternative next safe task, but random matrices are not started in this round.
+Stage 6C is the next theorem-statement option after this round.
 
 Target files:
-- README.md
-- CONTRIBUTING.md
-- LICENSE
-- .github/ISSUE_TEMPLATE/
-- .github/workflows/ci.yml
-- docs/ContributorRoadmap.md
-- docs/Status.md
-- docs/Milestone1.md
-- docs/Workflow.md
-- docs/TheoremAtlas.md
+- HighDimProb/Scalar.lean
+- HighDimProb/Vector.lean
+- HighDimProb/Geometry.lean
+- HighDimProb/Process.lean
+- HighDimProb/Statements.lean
+- HighDimProb.lean
+- HighDimProb/Experimental.lean
+- HighDimProbTest/BranchImports.lean
+- HighDimProbTest.lean
+- HighDimProbTest/PublicImports.lean
+- HighDimProbTest/ExperimentalImports.lean
+- ORGANISATION.md
+- docs/ModuleTree.md
+- docs/AbstractionLog.md
 - docs/TestPlan.md
-- docs/TODO.md
+- docs/Status.md
 
 Expected test modules:
 - `HighDimProbTest.Smoke`
 - `HighDimProbTest.PublicImports`
+- `HighDimProbTest.BranchImports`
 - `HighDimProbTest.ExperimentalImports`
 - `HighDimProbTest.ProbabilityObjectAPI`
 - `HighDimProbTest.TailAPI`
+- `HighDimProbTest.TailProofsAPI`
 - `HighDimProbTest.LpMomentAPI`
 - `HighDimProbTest.OrliczAPI`
 - `HighDimProbTest.SubGaussianAPI`
 - `HighDimProbTest.SubExponentialAPI`
 - `HighDimProbTest.RandomVectorAPI`
 - `HighDimProbTest.CovarianceAPI`
+- `HighDimProbTest.CovarianceProofsAPI`
 - `HighDimProbTest.IsotropicAPI`
+- `HighDimProbTest.IsotropicProofsAPI`
 - `HighDimProbTest.SubGaussianVectorAPI`
+- `HighDimProbTest.RandomMatrixBasicAPI`
+- `HighDimProbTest.RandomMatrixRowsColsAPI`
+- `HighDimProbTest.RandomMatrixActionAPI`
+- `HighDimProbTest.RandomMatrixNormsAPI`
+- `HighDimProbTest.RandomMatrixAssumptionsAPI`
+- `HighDimProbTest.RandomMatrixSampleCovarianceAPI`
+- `HighDimProbTest.RandomMatrixQuadraticFormAPI`
+- `HighDimProbTest.RandomMatrixOperatorNormAPI`
 - `HighDimProbTest.NetsMetricEntropyAPI`
+- `HighDimProbTest.NetsProofsAPI`
+- `HighDimProbTest.MetricEntropyStatementsAPI`
 - `HighDimProbTest.BookStatements`
 - `HighDimProbTest.NoDeepMathYet`
 
@@ -309,13 +469,19 @@ Follow docs/Workflow.md exactly.
 
 Hard rules:
 - Do not translate the book linearly.
-- Do not implement new mathematical content in Stage P0.
-- Do not start Stage 5B yet.
-- Do not start random matrices yet.
-- Do not prove theorem statements.
-- Do not prove covering number bounds yet.
-- Do not prove packing-covering inequalities yet.
-- Do not prove epsilon-net operator norm bounds yet.
+- Do not prove random matrix norm bounds.
+- Do not prove matrix Bernstein.
+- Do not prove Hanson-Wright.
+- Do not prove Johnson-Lindenstrauss.
+- Do not prove covariance estimation.
+- Do not promote random matrix modules to stable root import.
+- Do not prove concentration inequalities.
+- Do not prove subGaussian/subExponential equivalences.
+- Do not prove covariance PSD/symmetry.
+- Do not implement new mathematical content.
+- Do not prove new theorems.
+- Do not physically move files unless absolutely necessary.
+- Do not write unproved results as `theorem` or `lemma`.
 - Do not add optional dependencies.
 - Do not create a custom probability universe.
 - Do not create a custom random variable structure.
@@ -355,12 +521,34 @@ Processed:
 - covering number vocabulary
 - packing number vocabulary
 - metric entropy vocabulary
+- maximal separated set theorem statement
+- covering number bound from epsilon-net statement
+- packing-covering inequality statement
+- Euclidean ball covering bounds theorem atlas entry
+- Hamming cube covering/packing theorem atlas entry
+- epsilon-net operator norm theorem atlas entry
+- metric entropy log/coding theorem atlas entries
+- Dudley integral dependency theorem atlas entry
+- maximal separated set gives epsilon net proof pilot
+- isotropic second-moment matrix/entrywise proof pilot
+- centered vector coordinate bridge proof pilot
+- centered scalar operation proof pilot
+- tail probability monotonicity proof pilot
+- random matrix object layer
+- random matrix row and column vocabulary
+- random matrix action vocabulary
+- random matrix Frobenius and entrywise norm vocabulary
+- random matrix L2 operator norm vocabulary
+- Gram and row Gram matrix vocabulary
+- sample covariance vocabulary
+- quadratic and bilinear form vocabulary
+- random matrix centered, subGaussian, and isotropic assumption predicates
+- root-to-branch module abstraction
 
 Currently processing:
-- public push readiness
+- root-to-branch module abstraction
 
 Not yet processed:
-- random matrix
 - random process
 - Gaussian width
 - empirical process
@@ -368,16 +556,10 @@ Not yet processed:
 
 ## Blocked
 
-No current public-push blocker.
+No current Stage I3 build blocker. Physical file migration, random matrix theorem bridge work, scalar concentration proof work, and future lint/import minimization remain future stages.
 
 Theorem statements blocked by missing infrastructure are tracked in docs/TheoremAtlas.md.
 
 ## Next safe task
 
-Next safe task after push:
-
-Stage 5B — covering/packing theorem statement layer.
-
-Alternative next safe task:
-
-Stage 6A — random matrix object layer.
+Stage 6C - random matrix theorem statement layer.

@@ -1,4 +1,5 @@
 import HighDimProb.Expectation
+import HighDimProb.Lp
 import HighDimProb.RandomVector
 
 /-!
@@ -59,6 +60,19 @@ def centeredVector {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
 abbrev CenteredVector {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
     (P : Measure Ω) (X : RandomVector Ω n) : Prop :=
   ∀ i : Fin n, Centered P (coord X i)
+
+theorem centeredVector_iff_forall_centered_coord {Ω : Type*} [MeasurableSpace Ω]
+    {n : ℕ} (P : Measure Ω) (X : RandomVector Ω n) :
+    CenteredVector P X ↔ ∀ i : Fin n, Centered P (coord X i) :=
+  Iff.rfl
+
+theorem centered_centered {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    [IsProbabilityMeasure P] (X : RealRandomVariable Ω)
+    (hX : IntegrableRealRandomVariable P X) :
+    Centered P (centered P X) := by
+  dsimp [Centered, centered, mean, expect]
+  rw [integral_sub hX (integrable_const (∫ ω, X ω ∂P))]
+  simp
 
 /-- Entry of the uncentered second moment matrix `E[X Xᵀ]`. -/
 abbrev secondMomentMatrixEntry {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}

@@ -1,4 +1,4 @@
-import Mathlib
+import HighDimProb.Init
 
 /-!
 # HighDimProb basic vocabulary

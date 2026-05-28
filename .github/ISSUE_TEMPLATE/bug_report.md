@@ -1,25 +1,24 @@
 ---
 name: Bug report
-about: Report a broken import, failed build, or API regression
+about: Build, test, import, or documentation inconsistency
 title: "[Bug] "
-labels: bug
 assignees: ""
+labels: bug
 ---
 
 ## Problem
 
-Describe the failure.
+Choose one: build failure, test failure, import failure, or documentation inconsistency.
 
 ## Reproduction
 
-Include the command or Lean snippet.
+Include the command, import, or document section.
 
 ## Expected Behavior
 
-Describe what should compile or work.
+Describe what should compile, pass, import, or match.
 
 ## Environment
 
 - Lean toolchain:
 - Command run:
-

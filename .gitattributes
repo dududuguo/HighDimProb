@@ -1,0 +1,10 @@
+# Keep text files with LF line endings across platforms.
+* text=auto eol=lf
+
+# Never normalize binary artifacts.
+*.zip binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary

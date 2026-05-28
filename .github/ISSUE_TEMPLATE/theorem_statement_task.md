@@ -1,6 +1,6 @@
 ---
 name: Theorem statement task
-about: Add documentation or typed Prop statements for future theorems
+about: Theorem atlas entries, typed Prop specifications, or missing dependency analysis
 title: "[Theorem statement] "
 labels: theorem-statement
 assignees: ""
@@ -8,19 +8,19 @@ assignees: ""
 
 ## Theorem Family
 
-Name the book/result family.
-
-## Dependencies
-
-List the object-layer declarations needed to state it.
+Name the book result or theorem family.
 
 ## Scope
 
-- Do not add unproved `theorem` or `lemma` declarations.
-- Use docs or typed `abbrev ...Statement : Prop` only when the vocabulary already exists.
+- Translate the result into `docs/TheoremAtlas.md`.
+- Add a typed `Prop` specification only if dependencies exist.
+- Identify missing dependencies when the statement is blocked.
+
+## Rule
+
+Do not add unproved Lean `theorem` or `lemma` declarations.
 
 ## Checks
 
 - [ ] `lake build`
 - [ ] `lake test`
-

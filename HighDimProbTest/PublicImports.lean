@@ -1,16 +1,7 @@
 import HighDimProb
-import HighDimProb.Basic
-import HighDimProb.ProbabilitySpace
-import HighDimProb.RandomVariable
-import HighDimProb.Distribution
-import HighDimProb.Expectation
-import HighDimProb.Lp
-import HighDimProb.Moment
-import HighDimProb.Orlicz
-import HighDimProb.SubGaussian
-import HighDimProb.SubExponential
-import HighDimProb.Tail
-import HighDimProb.BookStatements
+import HighDimProb.Init
+import HighDimProb.Scalar
+import HighDimProb.Statements
 
 open HighDimProb
 
@@ -40,4 +31,9 @@ open HighDimProb
 #check SubExponentialOrlicz
 #check HasSubExponentialOrlicz
 #check absTailEvent
+#check upperTailProb_antitone
+#check lowerTailProb_monotone
+#check absTailProb_antitone
 #check tailEventMeasurabilityStatement
+#check maximalSeparatedNetStatement
+#check packingCoveringInequalityStatement

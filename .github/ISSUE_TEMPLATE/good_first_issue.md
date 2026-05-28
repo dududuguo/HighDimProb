@@ -1,6 +1,6 @@
 ---
 name: Good first issue
-about: Small documentation, example, or API test task
+about: Small examples, tests, docs, TermMap cleanup, or typed statement additions
 title: "[Good first issue] "
 labels: good first issue
 assignees: ""
@@ -8,16 +8,15 @@ assignees: ""
 
 ## Task
 
-Describe the small change.
+Choose one small task: examples, tests, docs cleanup, `docs/TermMap.md` cleanup, or typed statement additions.
 
 ## Scope
 
-- No new mathematical content unless explicitly listed.
-- Add or update tests if a public declaration is touched.
-- Update docs if terminology changes.
+- Keep the change narrow.
+- Do not add new mathematical content unless the issue explicitly says so.
+- Add or update tests for any public declaration touched.
 
 ## Checks
 
 - [ ] `lake build`
 - [ ] `lake test`
-

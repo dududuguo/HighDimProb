@@ -50,6 +50,19 @@ theorem isotropicSecondMomentMatrix_iff {Ω : Type*} [MeasurableSpace Ω] {n : �
     IsotropicSecondMomentMatrix P X ↔ secondMomentMatrix P X = 1 :=
   Iff.rfl
 
+theorem isotropicSecondMomentMatrix_iff_isotropicSecondMoment {Ω : Type*}
+    [MeasurableSpace Ω] {n : ℕ} (P : Measure Ω) (X : RandomVector Ω n) :
+    IsotropicSecondMomentMatrix P X ↔ IsotropicSecondMoment P X := by
+  constructor
+  · intro h i j
+    have hM : secondMomentMatrix P X = 1 := h
+    have hentry := congrArg (fun M : Matrix (Fin n) (Fin n) ℝ => M i j) hM
+    simpa only [secondMomentMatrix, Matrix.one_apply] using hentry
+  · intro h
+    change secondMomentMatrix P X = 1
+    exact Matrix.ext fun i j => by
+      simpa only [secondMomentMatrix, Matrix.one_apply] using h i j
+
 theorem isotropicCovariance_iff {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
     (P : Measure Ω) (X : RandomVector Ω n) :
     IsotropicCovariance P X ↔

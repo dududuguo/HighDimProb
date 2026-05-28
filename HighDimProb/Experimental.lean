@@ -1,13 +1,7 @@
-import HighDimProb.RandomVector
-import HighDimProb.Covariance
-import HighDimProb.Isotropic
-import HighDimProb.SubGaussianVector
-import HighDimProb.Nets
-import HighDimProb.MetricEntropy
+import HighDimProb.Vector
+import HighDimProb.Geometry
 import HighDimProb.RandomMatrix
-import HighDimProb.RandomProcess
-import HighDimProb.GaussianWidth
-import HighDimProb.EmpiricalProcess
+import HighDimProb.Process
 import HighDimProb.SignalRecovery
 import HighDimProb.Tactic
 
