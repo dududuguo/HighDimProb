@@ -1,5 +1,6 @@
 import HighDimProb.Vector
 import HighDimProb.Geometry
+import HighDimProb.Concentration
 import HighDimProb.RandomMatrix
 import HighDimProb.Process
 import HighDimProb.SignalRecovery

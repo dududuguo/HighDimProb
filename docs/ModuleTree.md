@@ -22,6 +22,7 @@ The stable root is intentionally narrow. It should expose the v0.1 scalar probab
 
 - `HighDimProb.Vector`
 - `HighDimProb.Geometry`
+- `HighDimProb.Concentration`
 - `HighDimProb.RandomMatrix`
 - `HighDimProb.Process`
 - `HighDimProb.SignalRecovery`
@@ -31,13 +32,32 @@ These modules remain experimental until they pass the promotion checklist: tests
 
 ## Branch Modules
 
-- `HighDimProb.Scalar`: one-dimensional probability infrastructure.
+- `HighDimProb.Scalar`: one-dimensional probability infrastructure, including scalar centering and variance leaves.
+- `HighDimProb.Concentration`: experimental scalar concentration proof spine.
 - `HighDimProb.Vector`: finite-dimensional random-vector infrastructure.
 - `HighDimProb.Geometry`: nets, metric entropy, covering/packing statements, and Gaussian-width vocabulary.
 - `HighDimProb.RandomMatrix`: random-matrix object and vocabulary submodules.
 - `HighDimProb.Process`: random-process and empirical-process vocabulary.
 - `HighDimProb.Statements`: typed theorem statement specifications and theorem-atlas bridge modules.
 - `HighDimProb.Tactic`: reserved for lightweight project automation.
+
+## Branch Tree
+
+```text
+HighDimProb
+- Init (stable)
+- Scalar (stable)
+- Concentration (experimental)
+- Vector (experimental)
+- Geometry (experimental)
+- RandomMatrix (experimental physical branch)
+- Process (experimental / reserved)
+- Statements (stable for typed specs)
+- Tactic (reserved)
+- Experimental (experimental aggregate)
+```
+
+Planned leaves for these branches are tracked in `docs/LeafPlan.md`. Ownership, dependency, and promotion rules are tracked in `docs/BranchRegistry.md`.
 
 ## Leaf Declaration Policy
 
@@ -47,7 +67,6 @@ Each new public declaration needs at least one `#check` or tiny example test. Ea
 
 ## Physical File Migration Policy
 
-Logical aggregate modules are introduced first. Existing flat files are not physically moved in Stage I3.
+Logical aggregate modules are introduced first. Existing flat files are not physically moved in Stage I3 or Stage I4.
 
-Physical folder migration may happen later only after APIs stabilize and after import tests show the logical branch boundaries are correct. Migration rounds must preserve names where possible, update imports, and keep `lake build` and `lake test` passing.
-
+Physical folder migration may happen later only after APIs stabilize and after import tests show the logical branch boundaries are correct. Migration rounds must preserve names where possible, update imports, and keep `lake build` and `lake test` passing. The migration order and rules are tracked in `docs/PhysicalMigrationPlan.md`.

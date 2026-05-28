@@ -36,6 +36,10 @@ open HighDimProb
 #check SubGaussianVectorTail
 #check SubGaussianVectorMoment
 #check CenteredSubGaussianVectorMGF
+#check markov_inequality_nonneg
+#check markov_inequality
+#check chebyshev_inequality
+#check chebyshev_inequality_prob
 #check RandomMatrix
 #check matrixEntry
 #check IsRandomMatrix

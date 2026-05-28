@@ -109,26 +109,28 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 ## Markov inequality
 - Book heading: `集中不等式`, classical probability inequalities
 - Informal statement: for a nonnegative random variable, the probability of exceeding a threshold is bounded by expectation divided by the threshold.
-- Target Lean statement: HighDimProb wrapper around Mathlib Markov inequalities.
-- Required objects: `Measure`, `IsProbabilityMeasure`, `RealRandomVariable`, `expect`, `upperTailProb`.
-- Required definitions: nonnegative/integrable random-variable vocabulary.
-- Required bridge lemmas: tail probability as measure of `{omega | t <= X omega}`.
-- Status: informal
-- Blocker: object-level integrability and nonnegativity wrappers are not stable.
-- Target module: `HighDimProb/Tail.lean`
-- Priority: v0.2
+- Target Lean statement: `markov_inequality_nonneg`; user-facing alias `markov_inequality`
+- Required objects: `Measure`, `RealRandomVariable`, `expect`, `upperTailProb`, `IntegrableRealRandomVariable`.
+- Required definitions: pointwise nonnegative real random variable hypothesis and positive threshold.
+- Required bridge lemmas: `lintegral_ofReal_eq_ofReal_expect`, Mathlib `MeasureTheory.meas_ge_le_lintegral_div`.
+- Status: proven
+- Blocker: none for the pointwise nonnegative integrable formulation. A reusable a.e.-nonnegative formulation remains future API work.
+- API cleanup status: Stage G1B adds the short alias and keeps the lintegral-to-real-expectation bridge explicit.
+- Target module: `HighDimProb/Concentration/Markov.lean`
+- Priority: scalar concentration proof spine
 
 ## Chebyshev inequality
 - Book heading: `集中不等式`, classical probability inequalities
 - Informal statement: deviations from the mean are controlled by variance.
-- Target Lean statement: blocked until mean, variance, and absolute-deviation tail wrappers are stable.
-- Required objects: `expect`, `absTailProb`, variance/covariance vocabulary.
-- Required definitions: centeredness, finite second moment, variance.
-- Required bridge lemmas: absolute-tail measurability, variance algebra.
-- Status: blocked
-- Blocker: variance and finite-moment API is not ready.
-- Target module: `HighDimProb/Moment.lean`
-- Priority: v0.2
+- Target Lean statement: `chebyshev_inequality`; probability-facing wrapper `chebyshev_inequality_prob`
+- Required objects: `absTailProb`, `centered`, `variance`, `MemLpRealRandomVariable`.
+- Required definitions: finite second moment through `MemLpRealRandomVariable P X 2`.
+- Required bridge lemmas: Mathlib `ProbabilityTheory.meas_ge_le_variance_div_sq`.
+- Status: proven
+- Blocker: none for the finite-measure `L^2` formulation. Centered-variable and variance vocabulary now lives in scalar leaf modules rather than the vector-heavy covariance module.
+- API cleanup status: Stage G1B adds the `[IsProbabilityMeasure P]` wrapper and removes the direct `HighDimProb.Covariance` import from Chebyshev.
+- Target module: `HighDimProb/Concentration/Chebyshev.lean`
+- Priority: scalar concentration proof spine
 
 ## Jensen inequality
 - Book heading: `经典不等式`

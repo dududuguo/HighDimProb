@@ -28,6 +28,8 @@ Infrastructure:
 - Stage 6A random matrix object layer and folder abstraction
 - Stage 6B sample covariance vocabulary and matrix norm bridge audit
 - Stage I1 CSLib-inspired infrastructure alignment
+- Stage G1A scalar tail concentration foundations
+- Stage G1B scalar concentration API cleanup
 
 Processed:
 - probability space
@@ -69,6 +71,8 @@ Processed:
 - Stage 6A random matrix object layer completed
 - Stage 6B sample covariance vocabulary completed
 - Stage I1 infrastructure alignment completed
+- Stage G1A scalar tail concentration foundations completed
+- Stage G1B scalar concentration API cleanup completed
 
 Scaffold exists, not processed as stable API:
 - random process vocabulary
@@ -114,3 +118,6 @@ Processed with proof:
 - upper-tail probability monotonicity
 - lower-tail probability monotonicity
 - absolute-tail probability monotonicity
+- Markov inequality for pointwise nonnegative integrable real random variables
+- Chebyshev inequality for finite-measure `L^2` real random variables
+- Chebyshev probability-measure wrapper

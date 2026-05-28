@@ -29,6 +29,7 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/OrliczAPI.lean`: downstream-style Orlicz and ψ-bound vocabulary examples.
 - `HighDimProbTest/SubGaussianAPI.lean`: downstream-style subGaussian predicate-form examples.
 - `HighDimProbTest/SubExponentialAPI.lean`: downstream-style subExponential predicate-form examples.
+- `HighDimProbTest/ConcentrationAPI.lean`: checks scalar concentration bridge lemmas, Markov/Chebyshev wrappers, and probability-facing concentration aliases.
 - `HighDimProbTest/RandomVectorAPI.lean`: downstream-style random-vector object-layer examples.
 - `HighDimProbTest/CovarianceAPI.lean`: downstream-style covariance and centered-vector vocabulary examples.
 - `HighDimProbTest/CovarianceProofsAPI.lean`: checks the centered-vector coordinate and centered-scalar proof-pilot declarations.
@@ -65,13 +66,14 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 ## API Regression Policy
 
 - Stable public API is tested through `import HighDimProb`.
+- Scalar centering and variance leaves are tested through the stable public import path and through covariance compatibility tests.
 - Every stable module must have public import or focused stable API tests.
 - Scaffold modules are tested only through `import HighDimProb.Experimental`.
 - Every experimental module must have experimental import or focused experimental API tests.
 - Every stage must keep stable and experimental imports separated.
 - Any promotion from experimental to stable must be intentional and audited.
 - Every new public module must get one test file or an explicit addition to an existing test file.
-- Every branch aggregate module must have import tests.
+- Every branch aggregate module, including reserved aggregates, must have import tests.
 - Every new public declaration must get at least one `#check` or tiny example.
 - Every proof pilot needs a proof-focused test file checking the new proof declarations.
 - Every random matrix submodule must have its own API test file before theorem work depends on it.

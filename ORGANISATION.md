@@ -21,6 +21,9 @@ Stable modules expose the Milestone 1 probability object layer. Experimental mod
 ## Branch Modules
 
 - `HighDimProb/Scalar.lean`: one-dimensional probability infrastructure.
+- `HighDimProb/Scalar/Centering.lean`: scalar mean, centeredness, and centering bridge lemmas.
+- `HighDimProb/Scalar/Variance.lean`: scalar variance, covariance, and second-moment wrappers.
+- `HighDimProb/Concentration.lean`: experimental scalar concentration proof spine.
 - `HighDimProb/Vector.lean`: finite-dimensional random-vector infrastructure.
 - `HighDimProb/Geometry.lean`: nets, metric entropy, covering/packing statements, and Gaussian-width vocabulary.
 - `HighDimProb/RandomMatrix.lean`: random-matrix aggregate over its subdirectory.
@@ -62,6 +65,9 @@ Tests live under `HighDimProbTest/`.
 - `docs/Automation.md`: automation and simp policy.
 - `docs/Roadmap.md`: staged project roadmap.
 - `docs/ModuleTree.md`: root-to-branch module layout and migration policy.
+- `docs/BranchRegistry.md`: branch ownership, dependencies, forbidden scope, and promotion criteria.
+- `docs/LeafPlan.md`: planned leaf modules for each branch.
+- `docs/PhysicalMigrationPlan.md`: future physical migration order and rules.
 
 ## Promotion Policy
 

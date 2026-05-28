@@ -19,7 +19,7 @@ Stable v0.1 modules are imported through:
 import HighDimProb
 ```
 
-This covers the probability object layer: probability-space conventions, real-valued random variables, laws, expectation, tail events and probabilities, Lp and moment vocabulary, Orlicz bounds, scalar subGaussian and subExponential predicate forms, and typed statement specifications supported by current objects.
+This covers the probability object layer: probability-space conventions, real-valued random variables, laws, expectation, scalar centering and variance wrappers, tail events and probabilities, Lp and moment vocabulary, Orlicz bounds, scalar subGaussian and subExponential predicate forms, and typed statement specifications supported by current objects.
 
 ## Experimental API
 
@@ -29,7 +29,7 @@ Experimental v0.2+ modules are imported through:
 import HighDimProb.Experimental
 ```
 
-This currently includes high-dimensional vocabulary such as random vectors, covariance, isotropicity, subGaussian vector predicates, nets, metric entropy, and future scaffolds. Do not promote an experimental module to the stable root import without tests, docs, a status update, and a root import audit.
+This currently includes high-dimensional vocabulary such as random vectors, covariance, isotropicity, subGaussian vector predicates, nets, metric entropy, and experimental scalar concentration wrappers. Do not promote an experimental module to the stable root import without tests, docs, a status update, and a root import audit.
 
 ## How to Contribute
 

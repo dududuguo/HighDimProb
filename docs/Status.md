@@ -2,12 +2,12 @@
 
 Current version target: v0.1-alpha
 
-Current stage: Stage I3
+Current stage: Stage G1B
 
-Current task: root-to-branch module abstraction
+Current task: scalar concentration API cleanup
 
 Milestone status:
-- Milestone 1 complete; root-to-branch module abstraction is being aligned before further mathematical expansion
+- Milestone 1 complete; scalar concentration proof spine has begun and its first API cleanup is complete
 
 Workflow file:
 - docs/Workflow.md
@@ -59,6 +59,9 @@ Last known test status:
 - Stage 6B sample covariance vocabulary and matrix norm bridge audit
 - Stage I1 CSLib-inspired infrastructure alignment
 - Stage I3 root-to-branch module abstraction
+- Stage I4 branch registry and reserved module plan
+- Stage G1A scalar tail concentration foundations
+- Stage G1B scalar concentration API cleanup
 
 Stage 1A implemented:
 - probability-space convention
@@ -261,6 +264,39 @@ Stage I3 implemented:
 - documented the module tree and physical migration policy
 - no files were physically moved, no new mathematics was added, and no experimental branch was promoted to the stable root
 
+Stage I4 implemented:
+- added `docs/BranchRegistry.md` for branch ownership, dependencies, forbidden scope, promotion criteria, and next safe tasks
+- added `docs/LeafPlan.md` for planned future leaf modules under each branch
+- added `docs/PhysicalMigrationPlan.md` for future one-branch-at-a-time physical migration
+- added reserved experimental aggregate `HighDimProb.Concentration`
+- routed `HighDimProb.Concentration` through `HighDimProb.Experimental`, not through the stable root
+- updated branch import tests to cover `HighDimProb.Concentration` and `HighDimProb.RandomMatrix` explicitly
+- no existing files were physically moved, no new mathematics was added, and no experimental branch was promoted to the stable root
+
+Stage G1A implemented:
+- created `HighDimProb/Concentration/Basic.lean`, `HighDimProb/Concentration/Markov.lean`, and `HighDimProb/Concentration/Chebyshev.lean`
+- proved reusable tail-event inclusion bridge lemmas
+- proved `expect_nonneg_of_nonneg`
+- proved `lintegral_ofReal_eq_ofReal_expect`
+- proved `markov_inequality_nonneg`
+- proved `integrable_centered`
+- proved `chebyshev_inequality`
+- reused Mathlib lintegral Markov and variance-form Chebyshev inequalities
+- added concentration API tests and experimental import checks
+- did not prove Hoeffding, Bernstein, subGaussian/subExponential equivalences, random matrix results, or optional dependencies
+
+Stage G1B implemented:
+- added `HighDimProb.Scalar.Centering` for scalar `mean`, `centered`, `Centered`, centering measurability, centered integrability, and `centered_centered`
+- added `HighDimProb.Scalar.Variance` for scalar `variance`, `covariance`, and `secondMoment`
+- updated `HighDimProb.Scalar` to import the scalar centering and variance leaves
+- updated `HighDimProb.Covariance` to import scalar leaves and keep vector covariance vocabulary as its owned content
+- removed the direct `HighDimProb.Covariance` import from `HighDimProb.Concentration.Chebyshev`
+- changed `expect_nonneg_of_nonneg` to remove its unused integrability argument and added `expect_nonneg_of_nonneg_integrable` as a compatibility form
+- added user-facing `markov_inequality` alias
+- added probability-facing `chebyshev_inequality_prob`
+- updated concentration, covariance, public import, branch import, and experimental import tests
+- did not prove Hoeffding, Bernstein, subGaussian/subExponential equivalences, random matrix results, or optional dependencies
+
 Important existing declarations:
 - `IsRandomVariable`
 - `IsRealRandomVariable`
@@ -397,6 +433,17 @@ Important existing declarations:
 - `upperTailProb_antitone`
 - `lowerTailProb_monotone`
 - `absTailProb_antitone`
+- `upperTailEvent_subset_of_le`
+- `lowerTailEvent_subset_of_le`
+- `absTailEvent_subset_of_le`
+- `expect_nonneg_of_nonneg`
+- `expect_nonneg_of_nonneg_integrable`
+- `lintegral_ofReal_eq_ofReal_expect`
+- `markov_inequality_nonneg`
+- `markov_inequality`
+- `integrable_centered`
+- `chebyshev_inequality`
+- `chebyshev_inequality_prob`
 - `tailEventMeasurabilityStatement`
 - `lawMapApplyStatement`
 - `realLawMapApplyStatement`
@@ -409,26 +456,32 @@ Important existing declarations:
 
 ## Active
 
-Stage I3 is active in this round.
+Stage G1B is active in this round.
 
-Stage 6C is the next theorem-statement option after this round.
+Stage G1C is the next scalar concentration option after this round.
 
 Target files:
+- HighDimProb/Scalar/Centering.lean
+- HighDimProb/Scalar/Variance.lean
 - HighDimProb/Scalar.lean
-- HighDimProb/Vector.lean
-- HighDimProb/Geometry.lean
-- HighDimProb/Process.lean
-- HighDimProb/Statements.lean
-- HighDimProb.lean
-- HighDimProb/Experimental.lean
-- HighDimProbTest/BranchImports.lean
+- HighDimProb/Covariance.lean
+- HighDimProb/Concentration.lean
+- HighDimProb/Concentration/Basic.lean
+- HighDimProb/Concentration/Markov.lean
+- HighDimProb/Concentration/Chebyshev.lean
+- HighDimProbTest/ConcentrationAPI.lean
 - HighDimProbTest.lean
 - HighDimProbTest/PublicImports.lean
+- HighDimProbTest/BranchImports.lean
 - HighDimProbTest/ExperimentalImports.lean
-- ORGANISATION.md
-- docs/ModuleTree.md
+- HighDimProbTest/CovarianceProofsAPI.lean
+- docs/TheoremAtlas.md
+- docs/BookProgress.md
+- docs/TermMap.md
 - docs/AbstractionLog.md
+- docs/TODO.md
 - docs/TestPlan.md
+- docs/BranchRegistry.md
 - docs/Status.md
 
 Expected test modules:
@@ -443,6 +496,7 @@ Expected test modules:
 - `HighDimProbTest.OrliczAPI`
 - `HighDimProbTest.SubGaussianAPI`
 - `HighDimProbTest.SubExponentialAPI`
+- `HighDimProbTest.ConcentrationAPI`
 - `HighDimProbTest.RandomVectorAPI`
 - `HighDimProbTest.CovarianceAPI`
 - `HighDimProbTest.CovarianceProofsAPI`
@@ -475,12 +529,12 @@ Hard rules:
 - Do not prove Johnson-Lindenstrauss.
 - Do not prove covariance estimation.
 - Do not promote random matrix modules to stable root import.
-- Do not prove concentration inequalities.
+- Do not prove Hoeffding or Bernstein yet.
 - Do not prove subGaussian/subExponential equivalences.
 - Do not prove covariance PSD/symmetry.
-- Do not implement new mathematical content.
-- Do not prove new theorems.
-- Do not physically move files unless absolutely necessary.
+- Do not implement mathematical content outside scalar concentration API cleanup.
+- Do not prove theorem families beyond existing Markov/Chebyshev cleanup wrappers in this round.
+- Do not move vector or random-matrix files physically in this round.
 - Do not write unproved results as `theorem` or `lemma`.
 - Do not add optional dependencies.
 - Do not create a custom probability universe.
@@ -544,11 +598,21 @@ Processed:
 - quadratic and bilinear form vocabulary
 - random matrix centered, subGaussian, and isotropic assumption predicates
 - root-to-branch module abstraction
+- branch registry and reserved module plan
+- reserved scalar concentration branch aggregate
+- scalar tail concentration foundations
+- scalar concentration API cleanup
+- Markov inequality
+- Chebyshev inequality
 
 Currently processing:
-- root-to-branch module abstraction
+- scalar concentration API cleanup
 
 Not yet processed:
+- a.e.-nonnegative Markov wrapper
+- Chernoff inequality
+- Hoeffding inequality
+- Bernstein inequality
 - random process
 - Gaussian width
 - empirical process
@@ -556,10 +620,10 @@ Not yet processed:
 
 ## Blocked
 
-No current Stage I3 build blocker. Physical file migration, random matrix theorem bridge work, scalar concentration proof work, and future lint/import minimization remain future stages.
+No current Stage G1B build blocker. A.e.-nonnegative Markov, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
 
 Theorem statements blocked by missing infrastructure are tracked in docs/TheoremAtlas.md.
 
 ## Next safe task
 
-Stage 6C - random matrix theorem statement layer.
+Stage G1C - Orlicz-to-tail implication pilot.

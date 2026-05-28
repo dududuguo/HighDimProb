@@ -1,6 +1,8 @@
 import HighDimProb.Scalar
+import HighDimProb.Concentration
 import HighDimProb.Vector
 import HighDimProb.Geometry
+import HighDimProb.RandomMatrix
 import HighDimProb.Process
 import HighDimProb.Statements
 import HighDimProb.Experimental
@@ -11,8 +13,11 @@ open HighDimProb
 #check ProbabilityMeasure
 #check RealRandomVariable
 #check expect
+#check centered
+#check variance
 #check upperTailProb
 #check SubGaussianTail
+#check markov_inequality
 #check RandomVector
 #check covarianceMatrix
 #check IsotropicSecondMoment
@@ -28,4 +33,3 @@ open HighDimProb
 #check RandomMatrix
 #check matrixEntry
 #check MeasurementMap
-

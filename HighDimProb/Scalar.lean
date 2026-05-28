@@ -6,6 +6,8 @@ import HighDimProb.Expectation
 import HighDimProb.Tail
 import HighDimProb.Lp
 import HighDimProb.Moment
+import HighDimProb.Scalar.Centering
+import HighDimProb.Scalar.Variance
 import HighDimProb.Orlicz
 import HighDimProb.SubGaussian
 import HighDimProb.SubExponential
@@ -15,4 +17,3 @@ import HighDimProb.SubExponential
 
 Aggregate module for one-dimensional probability infrastructure.
 -/
-

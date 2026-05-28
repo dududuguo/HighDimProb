@@ -511,3 +511,31 @@
 - Reason for not generalizing yet: vector, geometry, random matrix, process, and signal-recovery APIs remain v0.2+ experimental.
 - Lean/mathlib obstruction: importing experimental branches from the stable root would create downstream compatibility obligations before theorem dependencies are settled.
 - Future upgrade path: promote a branch only after tests, docs, `docs/Status.md`, and a root import audit confirm it is stable.
+
+## Branch registry and reserved modules
+
+- Concrete version chosen: Stage I4 adds `docs/BranchRegistry.md`, `docs/LeafPlan.md`, `docs/PhysicalMigrationPlan.md`, and a reserved `HighDimProb.Concentration` aggregate.
+- Possible general version: start implementing Markov, Chebyshev, and concentration theorem leaves immediately.
+- Reason for not generalizing yet: the repository needs stable branch ownership and reserved import paths before new proof families are added.
+- Lean/mathlib obstruction: concentration proofs will need expectation, integrability, tail-event, Lp, Orlicz, and MGF bridge choices; planning the branch avoids mixing those choices into unrelated modules.
+- Future upgrade path: Stage G1A may begin the scalar concentration proof spine under the reserved Concentration branch, while random matrix theorem statements remain under RandomMatrix/Statements.
+
+## Scalar tail concentration foundations
+
+- Concrete version chosen: Stage G1A physically starts the new `HighDimProb/Concentration/` branch with `Basic`, `Markov`, and `Chebyshev` leaves.
+- Possible general version: prove Chernoff, Hoeffding, Bernstein, and subGaussian/subExponential equivalence theorems in the same pass.
+- Reason for not generalizing yet: Markov and Chebyshev test the expectation, tail-event, lintegral, variance, and finite-measure interfaces without requiring independence or MGF infrastructure.
+- Lean/mathlib obstruction: Markov is naturally a lintegral theorem in Mathlib, so `lintegral_ofReal_eq_ofReal_expect` is needed to return to `expect`; Chebyshev reused Mathlib's variance theorem but required targeted `change` because broad `simp` loops around covariance/variance notation.
+- Future upgrade path: add an a.e.-nonnegative Markov wrapper and split scalar `centered`/`variance` vocabulary out of the vector-heavy `Covariance` module before deeper scalar concentration proofs.
+
+## Scalar concentration API cleanup
+
+- Concrete version chosen: Stage G1B moves scalar `mean`, `centered`, `Centered`, `centered_centered`, `integrable_centered`, `variance`, `covariance`, and `secondMoment` into `HighDimProb.Scalar.Centering` and `HighDimProb.Scalar.Variance`.
+- Possible general version: leave all scalar covariance vocabulary in `HighDimProb.Covariance` and add concentration-local aliases.
+- Reason for not generalizing yet: concentration-local aliases would create duplicate names or duplicate meanings, while the scalar branch is the right owner for one-dimensional centering and variance vocabulary.
+- Compatibility decision: `HighDimProb.Covariance` imports the scalar leaves and keeps the vector covariance API in place, so existing imports still expose the old names.
+- Chebyshev decision: `HighDimProb.Concentration.Chebyshev` no longer imports the vector-heavy covariance module; it uses scalar variance leaves and adds `chebyshev_inequality_prob` for the common `[IsProbabilityMeasure P]` convention.
+- Markov decision: `expect_nonneg_of_nonneg` drops its unused integrability argument, while `expect_nonneg_of_nonneg_integrable` preserves the old call shape. `markov_inequality` is a short alias for the pointwise-nonnegative theorem.
+- Lean/mathlib obstruction: the real-expectation Markov wrapper still depends on the lintegral theorem plus `lintegral_ofReal_eq_ofReal_expect`; an a.e.-nonnegative Markov wrapper needs a deliberate a.e. API rather than a pointwise hypothesis.
+- Automation note: moving `centered_centered` exposed a broad-simp recursion, so the proof now uses explicit `measureReal_def`, `measure_univ`, and `ENNReal.toReal_one` rewrites.
+- Future upgrade path: add a.e.-nonnegative Markov, a centered Chebyshev corollary if needed, and namespace policy before adding more concentration families.

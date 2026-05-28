@@ -10,6 +10,9 @@ open HighDimProb
 #check IsRealRandomVariable
 #check law
 #check expect
+#check mean
+#check centered
+#check variance
 #check MemLpRealRandomVariable
 #check realLpNorm
 #check IntegrableRealRandomVariable
