@@ -2,7 +2,7 @@
 
 HighDimProb is a Lean 4 package for high-dimensional probability foundations. It is a Mathlib-compatible ergonomic layer: reuse Mathlib first, then add small wrappers, aliases, predicates, examples, and theorem-statement specifications where they help downstream formalization.
 
-Current status: Milestone 1 / v0.1-alpha. The stable API is the probability object layer. The high-dimensional object layer is experimental and partial.
+Current status: Milestone 2 sprint in progress on top of v0.1-alpha. The stable API is the scalar probability object layer. The high-dimensional and concentration proof layers remain experimental.
 
 ## Build and Test
 
@@ -29,7 +29,7 @@ Experimental v0.2+ modules are imported through:
 import HighDimProb.Experimental
 ```
 
-This currently includes high-dimensional vocabulary such as random vectors, covariance, isotropicity, subGaussian vector predicates, nets, metric entropy, and experimental scalar concentration wrappers. Do not promote an experimental module to the stable root import without tests, docs, a status update, and a root import audit.
+This currently includes high-dimensional vocabulary such as random vectors, covariance, isotropicity, subGaussian vector predicates, nets, metric entropy, random matrices, and experimental scalar concentration wrappers. The concentration branch includes Markov/Chebyshev, fixed-scale Orlicz-to-tail implications, fixed-scale tail-to-Orlicz reverse implications, and an implication-graph module. Do not promote an experimental module to the stable root import without tests, docs, a status update, and a root import audit.
 
 ## How to Contribute
 
@@ -43,6 +43,8 @@ Start with:
 - `NOTATION.md`
 - `docs/Automation.md`
 - `docs/Roadmap.md`
+- `docs/ScalarImplicationGraph.md`
+- `docs/AssumptionVocabulary.md`
 - `CONTRIBUTING.md`
 
 Pick exactly one small task. Search Mathlib first. Implement object-level vocabulary only unless the task explicitly asks for a theorem proof. Add tests, update docs, then run `lake build` and `lake test`.

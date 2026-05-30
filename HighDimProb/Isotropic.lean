@@ -70,6 +70,12 @@ theorem isotropicCovariance_iff {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
         ∀ i j : Fin n, covarianceMatrixEntry P X i j = if i = j then 1 else 0 :=
   Iff.rfl
 
+/-- Covariance-form isotropicity includes coordinatewise centeredness. -/
+theorem IsotropicCovariance.centeredVector {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
+    {P : Measure Ω} {X : RandomVector Ω n} (hX : IsotropicCovariance P X) :
+    CenteredVector P X :=
+  hX.1
+
 theorem isotropicMarginal_iff {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
     (P : Measure Ω) (X : RandomVector Ω n) :
     IsotropicMarginal P X ↔

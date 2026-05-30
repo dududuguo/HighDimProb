@@ -22,12 +22,12 @@ It is a planning document, not a request to physically move existing files.
 - Import path: `HighDimProb.Concentration`
 - Status: experimental
 - Purpose: scalar concentration theorem proof spine.
-- Current modules: `Concentration.Basic`, `Concentration.Markov`, `Concentration.Chebyshev`.
-- Planned leaf modules: a.e.-nonnegative `Markov` extensions, centered/specialized `Chebyshev` extensions, `Chernoff`, `Hoeffding`, `Bernstein`, `OrliczToTail`, `SubGaussianImplications`, `SubExponentialImplications`.
+- Current modules: `Concentration.Basic`, `Concentration.Markov`, `Concentration.Chebyshev`, `Concentration.OrliczToTail`, `Concentration.TailToOrlicz`, `Concentration.Implications`.
+- Planned leaf modules: a.e.-nonnegative `Markov` extensions, centered/specialized `Chebyshev` extensions, `Chernoff`, `Hoeffding`, `Bernstein`, moment formulation links, MGF formulation links, finite-gauge implication links.
 - Dependencies: `Scalar`, `Tail`, `Expectation`, `Lp`, `Orlicz`, `SubGaussian`, `SubExponential`.
 - Forbidden scope: random matrix concentration, Hanson-Wright, and covariance estimation.
 - Promotion criteria: focused theorem statements/proofs, proof-pilot tests, docs, status update, and stable-root import audit.
-- Next safe tasks: a.e.-nonnegative Markov wrapper; centered Chebyshev corollary; Chernoff statement planning.
+- Next safe tasks: Stage G2A moment formulation implication pilot; a.e.-nonnegative Markov wrapper; centered Chebyshev corollary.
 
 ## Vector
 
@@ -61,12 +61,12 @@ It is a planning document, not a request to physically move existing files.
 - Import path: `HighDimProb.RandomMatrix`
 - Status: experimental physical branch
 - Purpose: random matrix object layer and theorem prerequisites.
-- Current modules: `RandomMatrix.Basic`, `RandomMatrix.RowsCols`, `RandomMatrix.Action`, `RandomMatrix.Norms`, `RandomMatrix.Assumptions`, `RandomMatrix.SampleCovariance`, `RandomMatrix.QuadraticForm`, `RandomMatrix.OperatorNorm`.
+- Current modules: `RandomMatrix.Basic`, `RandomMatrix.RowsCols`, `RandomMatrix.Action`, `RandomMatrix.Norms`, `RandomMatrix.Assumptions`, `RandomMatrix.SampleCovariance`, `RandomMatrix.QuadraticForm`, `RandomMatrix.OperatorNorm`, `RandomMatrix.Statements`.
 - Planned leaf modules: `Independence`, `SampleCovarianceTheorems`, `MatrixDeviationStatements`, `MatrixBernsteinStatements`, `HansonWrightStatements`, `JLStatements`, `CovarianceEstimationStatements`, `OperatorNormNetBridge`.
 - Dependencies: `Scalar`, `Vector`, `Geometry`, Mathlib matrices, finite sums, and scoped L2 operator norm APIs.
 - Forbidden scope: proving matrix concentration before scalar concentration and geometry prerequisites are ready.
 - Promotion criteria: submodule API tests, theorem atlas dependencies, docs, status update, and stable-root import audit.
-- Next safe tasks: Stage 6C random matrix theorem statement layer; operator norm bridge design.
+- Next safe tasks: Stage RM2 random matrix algebra bridge cleanup; Stage RM1 random matrix assumption vocabulary implementation; operator norm bridge design.
 
 ## Process
 
@@ -87,7 +87,7 @@ It is a planning document, not a request to physically move existing files.
 - Import path: `HighDimProb.Statements`
 - Status: stable for typed specs, not theorem proofs
 - Purpose: typed `Prop` statement layer and theorem atlas bridge.
-- Current modules: `BookStatements`, `MetricEntropyStatements`.
+- Current modules: `BookStatements`, `MetricEntropyStatements`, and branch-owned typed statement modules such as `RandomMatrix.Statements`.
 - Planned leaf modules: `ConcentrationStatements`, `RandomMatrixStatements`, `GaussianWidthStatements`, `ProcessStatements`, `RecoveryStatements`.
 - Dependencies: current object-layer branches needed to type each specification.
 - Forbidden scope: unproved theorem/lemma declarations and axioms.

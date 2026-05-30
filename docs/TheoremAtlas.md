@@ -132,6 +132,54 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Target module: `HighDimProb/Concentration/Chebyshev.lean`
 - Priority: scalar concentration proof spine
 
+## psi2 Orlicz bound implies subGaussian tail
+- Book heading: `次高斯性质`, `次高斯范数`, Orlicz characterization
+- Informal statement: if the exponential-square Orlicz bound holds at scale `K`, then the absolute tail has Gaussian decay with the same scale and constant `2`.
+- Target Lean statement: `subGaussianTail_of_psi2Bound`
+- Required objects: `Psi2Bound`, `SubGaussianTail`, `absTailProb`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
+- Required definitions: ψ₂ bound via shifted exponential `lintegral`, two-sided absolute-tail predicate, positive scale.
+- Required bridge lemmas: `lintegral_exp_sq_div_le_two_of_psi2Bound`, Mathlib `MeasureTheory.meas_ge_le_lintegral_div`, exponential monotonicity, square monotonicity, `ENNReal.ofReal` division bridge.
+- Status: proven
+- Blocker: none for the probability-measure/measurable-variable formulation. The full equivalence theorem and gauge/norm formulations remain future work.
+- Target module: `HighDimProb/Concentration/OrliczToTail.lean`
+- Priority: scalar concentration proof spine
+
+## psi1 Orlicz bound implies subExponential tail
+- Book heading: `次指数性质`, `次指数范数`, Orlicz characterization
+- Informal statement: if the exponential-linear Orlicz bound holds at scale `K`, then the absolute tail has exponential decay with the same scale and constant `2`.
+- Target Lean statement: `subExponentialTail_of_psi1Bound`
+- Required objects: `Psi1Bound`, `SubExponentialTail`, `absTailProb`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
+- Required definitions: ψ₁ bound via shifted exponential `lintegral`, two-sided absolute-tail predicate, positive scale.
+- Required bridge lemmas: `lintegral_exp_abs_div_le_two_of_psi1Bound`, Mathlib `MeasureTheory.meas_ge_le_lintegral_div`, exponential monotonicity, `ENNReal.ofReal` division bridge.
+- Status: proven
+- Blocker: none for the probability-measure/measurable-variable formulation. The full equivalence theorem and gauge/norm formulations remain future work.
+- Target module: `HighDimProb/Concentration/OrliczToTail.lean`
+- Priority: scalar concentration proof spine
+
+## subGaussian tail implies psi2 Orlicz bound
+- Book heading: subGaussian Orlicz characterization
+- Informal statement: a two-sided subGaussian tail bound at scale `K` should imply a shifted exponential-square Orlicz bound at scale `2 * K`.
+- Target Lean statement: `psi2Bound_of_subGaussianTail`.
+- Required objects: `SubGaussianTail`, `Psi2Bound`, `absTailProb`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
+- Required definitions: shifted `Psi2Bound` lintegral, absolute-tail probability, positive scale from the tail predicate.
+- Required bridge lemmas: `lintegral_exp_quarter_sub_one_le_of_exp_tail`, `lintegral_exp_sq_div_four_sub_one_le_of_subGaussianTail`, Mathlib layer-cake formula, and Mathlib improper integral evaluation for exponential decay.
+- Status: proven
+- Blocker: none for the fixed-scale `2 * K` formulation with explicit measurability.
+- Target module: `HighDimProb/Concentration/TailToOrlicz.lean`
+- Priority: scalar concentration proof spine
+
+## subExponential tail implies psi1 Orlicz bound
+- Book heading: subExponential Orlicz characterization
+- Informal statement: a two-sided subExponential tail bound at scale `K` should imply a shifted exponential-linear Orlicz bound at scale `3 * K`.
+- Target Lean statement: `psi1Bound_of_subExponentialTail`.
+- Required objects: `SubExponentialTail`, `Psi1Bound`, `absTailProb`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
+- Required definitions: shifted `Psi1Bound` lintegral, absolute-tail probability, positive scale from the tail predicate.
+- Required bridge lemmas: `lintegral_exp_third_sub_one_le_of_exp_tail`, `lintegral_exp_abs_div_three_sub_one_le_of_subExponentialTail`, Mathlib layer-cake formula, and Mathlib improper integral evaluation for exponential decay.
+- Status: proven
+- Blocker: none for the fixed-scale `3 * K` formulation with explicit measurability.
+- Target module: `HighDimProb/Concentration/TailToOrlicz.lean`
+- Priority: scalar concentration proof spine
+
 ## Jensen inequality
 - Book heading: `经典不等式`
 - Informal statement: convex functions move outside expectations in the standard direction.
@@ -173,10 +221,10 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Informal statement: tail, moment, MGF, and Orlicz characterizations of subGaussian variables are equivalent up to constants.
 - Target Lean statement: blocked until a precise equivalence statement and constants are selected.
 - Required objects: real random variables, tail probabilities, moments, Mathlib MGF predicate, ψ₂ Orlicz control.
-- Required definitions: `SubGaussianTail`, `SubGaussianMoment`, `CenteredSubGaussianMGF`, `SubGaussianOrlicz`, `HasSubGaussianOrlicz`.
+- Required definitions: `SubGaussianTail`, `SubGaussianMoment`, `CenteredSubGaussianMGF`, `SubGaussianOrlicz`, `HasSubGaussianOrlicz`; Stage G1C proves the ψ₂-to-tail direction.
 - Required bridge lemmas: expectation of exponentials, tail/moment integration.
 - Status: blocked
-- Blocker: the four predicate forms exist, but no equivalence theorem or canonical predicate has been selected.
+- Blocker: fixed-scale `Psi2Bound -> SubGaussianTail` and `SubGaussianTail -> Psi2Bound (2*K)` are proven, but moment/MGF connections, finite-gauge variants, gauge/norm objects, and canonical predicate choice remain future work.
 - Target module: `HighDimProb/SubGaussian.lean`
 - Priority: v0.3
 
@@ -185,10 +233,10 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Informal statement: tail, moment, MGF, and Orlicz characterizations of subExponential variables are equivalent up to constants.
 - Target Lean statement: blocked until a precise equivalence statement and constants are selected.
 - Required objects: real random variables, tail probabilities, moments, exponential moments, ψ₁ Orlicz control.
-- Required definitions: `SubExponentialTail`, `SubExponentialMoment`, `CenteredSubExponentialMGF`, `SubExponentialOrlicz`, `HasSubExponentialOrlicz`.
+- Required definitions: `SubExponentialTail`, `SubExponentialMoment`, `CenteredSubExponentialMGF`, `SubExponentialOrlicz`, `HasSubExponentialOrlicz`; Stage G1C proves the ψ₁-to-tail direction and Stage S2 proves the fixed-scale tail-to-ψ₁ direction.
 - Required bridge lemmas: expectation of exponentials, tail/moment integration.
 - Status: blocked
-- Blocker: the four predicate forms exist, but no equivalence theorem or canonical predicate has been selected.
+- Blocker: fixed-scale `Psi1Bound -> SubExponentialTail` and `SubExponentialTail -> Psi1Bound (3*K)` are proven, but moment/MGF connections, finite-gauge variants, gauge/norm objects, and canonical predicate choice remain future work.
 - Target module: `HighDimProb/SubExponential.lean`
 - Priority: v0.3
 
@@ -408,13 +456,13 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 ## epsilon-net and operator norm bound
 - Book heading: `$\\varepsilon$-网与算子范数`
 - Informal statement: operator norm over a sphere can be controlled using an epsilon-net.
-- Target Lean statement: blocked until matrix/operator norm and sphere APIs are active.
+- Target Lean statement: `epsilonNetOperatorNormStatement`.
 - Required objects: epsilon nets, matrices, operator norm, unit sphere.
 - Required definitions: Stage 5A Mathlib-backed net predicate `IsEpsilonNet` exists; Stage 6A random matrix entries and actions exist; Stage 6B adds `operatorNorm`.
 - Required bridge lemmas: finite net approximation, unit-sphere cover bridge, Matrix-to-linear-map/L2 operator-norm bridge, and `operatorNorm` comparison lemmas.
-- Status: blocked
-- Blocker: unit-sphere abstractions and operator-norm bridge lemmas are not active yet.
-- Target module: `HighDimProb/MetricEntropy.lean`
+- Status: typed-prop
+- Blocker: proof bridge lemmas are not active yet; the typed statement uses the existing function-space unit sphere and Mathlib L2 matrix norm convention.
+- Target module: `HighDimProb/RandomMatrix/Statements.lean`
 - Priority: v0.3
 
 ## metric entropy as log covering number
@@ -456,13 +504,13 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 ## subGaussian random matrix norm bound
 - Book heading: `带有次高斯元素矩阵的范数`, `次高斯矩阵的双侧界`
 - Informal statement: random matrices with independent subGaussian entries or rows have high-probability operator norm/singular value bounds.
-- Target Lean statement: blocked until random matrix, norm, independence, and subGaussian layers are stable.
+- Target Lean statement: blocked until random matrix independence and high-probability assumption vocabulary exist.
 - Required objects: `RandomMatrix`, `matrixEntry`, `rowVector`, `matVec`, `operatorNorm`, independence, subGaussian predicates.
 - Required definitions: Stage 6A matrix-valued random-variable predicates, row/column views, action vocabulary, and entry/row subGaussian predicates exist; Stage 6B adds `operatorNorm`.
 - Required bridge lemmas: operator norm bridge lemmas, independent entries or rows, entry/row measurability, and net-to-operator-norm bounds.
 - Status: blocked
 - Blocker: independence predicates and operator-norm proof bridges are deferred; theorem is beyond object layer.
-- Target module: `HighDimProb/RandomMatrix.lean`
+- Target module: future `HighDimProb/RandomMatrix/Statements.lean`
 - Priority: v0.3
 
 ## sample covariance concentration
@@ -474,19 +522,19 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Required bridge lemmas: matrix multiplication/scaling convention, row independence, expectation/covariance bridge, and operator-norm bridge lemmas.
 - Status: blocked
 - Blocker: row independence, centered/empirical covariance conventions, and operator-norm proof bridges are deferred.
-- Target module: future `HighDimProb/RandomMatrix/SampleCovariance.lean`
+- Target module: future `HighDimProb/RandomMatrix/Statements.lean`
 - Priority: v0.3
 
 ## Hanson-Wright inequality
 - Book heading: `Hanson-Wright不等式`
 - Informal statement: quadratic forms of independent centered subGaussian vectors concentrate around their mean.
-- Target Lean statement: blocked until quadratic-form, matrix norm, and subGaussian vector APIs are stable.
+- Target Lean statement: blocked until independence-coordinate and centered-vector assumption vocabulary is available.
 - Required objects: `RandomVector`, deterministic or random matrices, `quadraticForm`, subGaussian coordinates, Frobenius/operator norms.
 - Required definitions: Stage 4A random-vector object layer exists; Stage 6A random matrix and Frobenius vocabulary exist; Stage 6B adds `quadraticForm`, `bilinearForm`, and `operatorNorm`.
 - Required bridge lemmas: independence assumptions, quadratic-form moment/MGF estimates, and Frobenius/operator-norm bridge lemmas.
 - Status: blocked
 - Blocker: independence assumptions and analytic concentration infrastructure are missing.
-- Target module: `HighDimProb/RandomMatrix.lean`
+- Target module: future `HighDimProb/RandomMatrix/Statements.lean`
 - Priority: v0.3
 
 ## Johnson-Lindenstrauss lemma
@@ -498,7 +546,7 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Required bridge lemmas: fixed-vector concentration, norm preservation predicate, operator-norm/action bridge lemmas, and random projection scaling convention.
 - Status: blocked
 - Blocker: random projection vocabulary and concentration layers are not ready.
-- Target module: `HighDimProb/RandomMatrix.lean`
+- Target module: future `HighDimProb/RandomMatrix/Statements.lean`
 - Priority: v0.3
 
 ## covariance estimation
@@ -510,7 +558,7 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Required bridge lemmas: sample independence, sample covariance algebra, centered/empirical covariance convention, and matrix concentration.
 - Status: blocked
 - Blocker: independence, centered/empirical covariance, and concentration infrastructure are not ready.
-- Target module: future `HighDimProb/RandomMatrix/SampleCovariance.lean`
+- Target module: future `HighDimProb/RandomMatrix/Statements.lean`
 - Priority: v0.3
 
 ## matrix Bernstein inequality
@@ -522,7 +570,7 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Required bridge lemmas: matrix-valued measurability, operator-norm bridge lemmas, independence of matrix-valued variables, and self-adjoint dilation if rectangular variants are used.
 - Status: blocked
 - Blocker: theorem is beyond the object layer and requires symmetric/random-matrix-sum, operator-norm bridge, and independence infrastructure.
-- Target module: `HighDimProb/RandomMatrix.lean`
+- Target module: future `HighDimProb/RandomMatrix/Statements.lean`
 - Priority: v0.4
 
 ## matrix deviation inequality
@@ -534,7 +582,7 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Required bridge lemmas: sample covariance algebra, centered/empirical covariance convention, operator-norm measurability, row independence, and matrix concentration.
 - Status: blocked
 - Blocker: object vocabulary exists only at the uncentered level; theorem dependencies remain future work.
-- Target module: future `HighDimProb/RandomMatrix/SampleCovariance.lean`
+- Target module: future `HighDimProb/RandomMatrix/Statements.lean`
 - Priority: v0.4
 
 ## generic chaining / Dudley inequality
@@ -572,3 +620,99 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Blocker: late theorem layer with missing optimization infrastructure.
 - Target module: `HighDimProb/SignalRecovery.lean`
 - Priority: v1.0
+
+## a.e.-nonnegative Markov inequality
+- Book heading: scalar concentration foundations
+- Informal statement: if a real random variable is integrable and nonnegative almost everywhere, then its upper tail is bounded by its expectation divided by a positive threshold.
+- Target Lean statement: `markov_inequality_ae_nonneg`
+- Required objects: `upperTailProb`, `expect`, `IntegrableRealRandomVariable`, `Filter.Eventually`, `ae`.
+- Required definitions: Stage G1A/G1B concentration branch and Stage S3 a.e. lintegral-expectation bridge.
+- Required bridge lemmas: `lintegral_ofReal_eq_ofReal_expect_ae_nonneg`, Mathlib `MeasureTheory.meas_ge_le_lintegral_div`.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/Concentration/Markov.lean`
+- Priority: small proof battery
+
+## scalar variance nonnegativity
+- Book heading: scalar variance and Chebyshev prerequisites
+- Informal statement: scalar variance is nonnegative.
+- Target Lean statement: `variance_nonneg`
+- Required objects: `variance`, `RealRandomVariable`, `Measure`.
+- Required definitions: scalar variance wrapper around Mathlib variance.
+- Required bridge lemmas: Mathlib `ProbabilityTheory.variance_nonneg`.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/Scalar/Variance.lean`
+- Priority: small proof battery
+
+## centered variance invariance
+- Book heading: scalar variance and centered random variables
+- Informal statement: subtracting the mean from a measurable scalar random variable preserves its variance.
+- Target Lean statement: `variance_centered_eq_variance`
+- Required objects: `centered`, `variance`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
+- Required definitions: scalar centering and variance leaves.
+- Required bridge lemmas: Mathlib `ProbabilityTheory.variance_sub_const`.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/Scalar/Variance.lean`
+- Priority: small proof battery
+
+## explicit epsilon-net bounds covering number
+- Book heading: covering numbers and nets
+- Informal statement: an explicit epsilon-net bounds the corresponding covering number by the cardinality of its centers.
+- Target Lean statement: `externalCoveringNumber_le_encard_of_isEpsilonNet`, `externalCoveringNumber_le_card_of_isEpsilonNet`, `coveringNumber_le_encard_of_isInternalEpsilonNet`, `coveringNumber_le_card_of_isInternalEpsilonNet`
+- Required objects: `IsEpsilonNet`, `IsInternalEpsilonNet`, `externalCoveringNumber`, `coveringNumber`, `Set.encard`, `Set.ncard`.
+- Required definitions: Stage 5A Mathlib-backed nets and metric entropy wrappers.
+- Required bridge lemmas: Mathlib `Metric.IsCover.externalCoveringNumber_le_encard`, `Metric.IsCover.coveringNumber_le_encard`, and finite-cardinality coercion through `Set.Finite.cast_ncard_eq`.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/MetricEntropy.lean`
+- Priority: small proof battery
+
+## isotropic covariance implies centered vector
+- Book heading: isotropic random vectors
+- Informal statement: covariance-form isotropicity includes vector centeredness.
+- Target Lean statement: `IsotropicCovariance.centeredVector`
+- Required objects: `IsotropicCovariance`, `CenteredVector`.
+- Required definitions: covariance-form isotropic predicate.
+- Required bridge lemmas: none; this is the first projection of the predicate.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/Isotropic.lean`
+- Priority: small proof battery
+
+## Frobenius square nonnegativity
+- Book heading: random matrix norm vocabulary
+- Informal statement: the squared Frobenius norm random variable is nonnegative pointwise.
+- Target Lean statement: `frobeniusSq_nonneg`
+- Required objects: `RandomMatrix`, `frobeniusSq`.
+- Required definitions: explicit finite-sum Frobenius-square vocabulary.
+- Required bridge lemmas: Mathlib/Lean finite-sum nonnegativity and `sq_nonneg`.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/RandomMatrix/Norms.lean`
+- Priority: small proof battery
+
+## sample covariance diagonal nonnegativity
+- Book heading: sample covariance vocabulary
+- Informal statement: diagonal entries of the uncentered sample covariance matrix are nonnegative, including the empty-row case.
+- Target Lean statement: `sampleCovarianceEntry_diag_nonneg`
+- Required objects: `RandomMatrix`, `sampleCovarianceEntry`, `gramMatrixEntry`.
+- Required definitions: row-as-samples uncentered sample covariance.
+- Required bridge lemmas: finite-sum nonnegativity, `sq_nonneg`, and nonnegativity of `(1 / (m : Real))`.
+- Status: proven
+- Blocker: none.
+- Target module: `HighDimProb/RandomMatrix/SampleCovariance.lean`
+- Priority: small proof battery
+
+## sample covariance quadratic form nonnegativity
+- Book heading: sample covariance and PSD prerequisites
+- Informal statement: the quadratic form of the uncentered sample covariance matrix should be nonnegative.
+- Target Lean statement: `quadraticForm_sampleCovariance_nonneg`
+- Required objects: `sampleCovariance`, `quadraticForm`, finite sums.
+- Required definitions: sample covariance and quadratic form vocabulary.
+- Required bridge lemmas: a finite-sum algebra identity rewriting `x^T ((1/m) A^T A) x` as `(1/m) * sum k, (sum i, A k i * x i)^2`.
+- Status: blocked
+- Blocker: the needed reindexing/distributivity bridge between the explicit double-sum quadratic form and row-dot-square form is not implemented.
+- Target module: future `HighDimProb/RandomMatrix/SampleCovarianceTheorems.lean` or `HighDimProb/RandomMatrix/QuadraticForm.lean`
+- Priority: Stage RM2

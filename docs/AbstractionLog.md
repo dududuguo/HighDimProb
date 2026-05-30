@@ -539,3 +539,71 @@
 - Lean/mathlib obstruction: the real-expectation Markov wrapper still depends on the lintegral theorem plus `lintegral_ofReal_eq_ofReal_expect`; an a.e.-nonnegative Markov wrapper needs a deliberate a.e. API rather than a pointwise hypothesis.
 - Automation note: moving `centered_centered` exposed a broad-simp recursion, so the proof now uses explicit `measureReal_def`, `measure_univ`, and `ENNReal.toReal_one` rewrites.
 - Future upgrade path: add a.e.-nonnegative Markov, a centered Chebyshev corollary if needed, and namespace policy before adding more concentration families.
+
+## Orlicz-to-tail implication pilot
+
+- Concrete version chosen: Stage G1C adds `HighDimProb.Concentration.OrliczToTail` with ψ₂-to-subGaussian-tail and ψ₁-to-subExponential-tail implications.
+- Possible general version: prove the full tail, moment, MGF, and Orlicz equivalence theorem family with optimized constants.
+- Reason for not generalizing yet: this stage is only an implication pilot; the bound predicates and tail predicates already align well enough for the forward direction, while reverse directions and gauge/norm objects need separate design.
+- Probability assumption: `Psi2Bound` and `Psi1Bound` do not control total mass when the shifted integrand vanishes, so the implication theorems explicitly require `[IsProbabilityMeasure P]`.
+- Measurability assumption: `Psi2Bound` and `Psi1Bound` are integral-bound predicates, not random-variable predicates, so the implication theorems explicitly require `IsRealRandomVariable P X`.
+- Markov interface decision: the proofs use Mathlib's `MeasureTheory.meas_ge_le_lintegral_div` directly rather than the real-expectation Markov wrapper, because the Orlicz layer is already stated in `lintegral` form.
+- Constant decision: the shifted definitions `exp(...) - 1` give exponential moment bounds with constant `2` by `lintegral_add_right` and probability mass one, matching the existing tail predicates.
+- Lean/mathlib obstruction: `fun_prop` did not handle the reducible `RealRandomVariable` alias robustly in the exponential measurability goals, so the proof uses explicit `Measurable.norm`, `div_const`, `pow_const`, and `Real.measurable_exp` composition.
+- Future upgrade path: add reverse tail-to-Orlicz directions, gauge/norm definitions, MGF/moment connections, and a namespace policy before attempting full subGaussian/subExponential equivalence theorems.
+
+## Tail-to-Orlicz reverse implication pilot
+
+- Concrete version chosen: Stage G1D adds `HighDimProb.Concentration.TailToOrlicz` with typed `Prop` targets for `SubGaussianTail -> Psi2Bound` at scale `2 * K` and `SubExponentialTail -> Psi1Bound` at scale `3 * K`.
+- Possible general version: prove both reverse implications immediately and package them with the Stage G1C forward implications as an equivalence graph.
+- Reason for not generalizing yet: the reverse direction is a genuine tail-integration theorem, not a small wrapper around Markov.
+- Layer-cake decision: Mathlib's `MeasureTheory.lintegral_eq_lintegral_meas_le` is exposed through `lintegral_ofReal_eq_lintegral_tail` so future proofs can start from a HighDimProb-facing tail integral identity.
+- Constant decision: the target constants remain `2 * K` for psi2 and `3 * K` for psi1; no larger constant was introduced.
+- Lean/mathlib obstruction: the primary proof needed a specialized exponential-tail integral estimate plus event transformations and real/ENNReal coercion lemmas for the shifted Orlicz integrand.
+- Secondary target decision: the psi1 reverse direction was left as a typed target during G1D, then completed in Sprint S2 after the layer-cake pattern was validated.
+- Future upgrade path: use the fixed-scale proof graph before attempting finite-gauge variants, moment links, or MGF links.
+
+## Layer-cake / tail-integral bridge infrastructure
+
+- Concrete version chosen: Stage G1D-fix and Sprint S2 prove the reusable bridges `lintegral_exp_quarter_sub_one_le_of_exp_tail` and `lintegral_exp_third_sub_one_le_of_exp_tail`, plus the fixed-scale theorems `psi2Bound_of_subGaussianTail` and `psi1Bound_of_subExponentialTail`.
+- Possible general version: develop a full library of tail integration, moment-from-tail formulas, and all Orlicz reverse implications at once.
+- Reason for not generalizing yet: the fixed-scale ψ₂/ψ₁ reverse implications need only two specialized exponential-tail calculus lemmas; moment-from-tail and gauge/norm results deserve a separate design.
+- Layer-cake decision: the proofs use Mathlib's general layer-cake formula with derivative weights `(1/4) * exp(s/4)` and `(1/3) * exp(s/3)`, avoiding direct `log`/`sqrt` transformations of shifted Orlicz integrands.
+- Integral decision: the concrete bounds reduce to `∫_0^∞ (1/2) exp(-(3/4)t) dt <= 1` and `∫_0^∞ (2/3) exp(-(2/3)t) dt <= 1`, using Mathlib's `integral_exp_mul_Ioi`.
+- Constant decision: the requested scales `2 * K` and `3 * K` are proved exactly; no larger constants were introduced.
+- Remaining obstruction: finite-gauge variants, moment links, and MGF links are not yet implemented.
+- Future upgrade path: consolidate the fixed-scale scalar implication graph, then choose between moment formulation or random-matrix assumption vocabulary as the next branch.
+
+## Sprint S2 scalar implication graph consolidation
+
+- Concrete version chosen: Sprint S2 adds `HighDimProb.Concentration.Implications` as an import-only collection point for proved Orlicz/tail arrows and documents the graph in `docs/ScalarImplicationGraph.md`.
+- Possible general version: define canonical `SubGaussian` and `SubExponential` predicates immediately.
+- Reason for not generalizing yet: moment, MGF, and finite-gauge links are still TODO, so a canonical predicate would overstate the current proof coverage.
+- Lean/mathlib obstruction: no obstruction for the fixed-scale tail/Orlicz arrows; future graph edges will need moment-from-tail and MGF infrastructure.
+- Future upgrade path: add moment formulation links under a focused Stage G2A before choosing canonical predicates.
+
+## Sprint S2 random matrix statement layer initialization
+
+- Concrete version chosen: Sprint S2 adds `HighDimProb.RandomMatrix.Statements` and only the typed statement `epsilonNetOperatorNormStatement`.
+- Possible general version: encode all random-matrix theorem families as Lean `abbrev ...Statement : Prop` declarations now.
+- Reason for not generalizing yet: most theorem families require assumptions that are not expressible yet, especially independent entries, iid rows, symmetric random matrices, PSD/order vocabulary, and high-probability statement conventions.
+- Lean/mathlib obstruction: the deterministic epsilon-net/operator-norm statement can type using `IsEpsilonNet`, function-space unit sphere notation, and Mathlib's L2 matrix norm; probabilistic random-matrix theorem statements need a richer assumption layer first.
+- Future upgrade path: implement random-matrix independence and order vocabulary before promoting blocked theorem groups to typed Prop statements.
+
+## Sprint S2 assumption vocabulary audit
+
+- Concrete version chosen: Sprint S2 records scalar, vector, and matrix assumptions in `docs/AssumptionVocabulary.md` without implementing independence.
+- Possible general version: add public independence predicates immediately.
+- Reason for not generalizing yet: Mathlib independence APIs need careful finite-indexed wrapper choices, and a premature public predicate would constrain random matrix theorem statements.
+- Lean/mathlib obstruction: independent entries, iid rows, symmetric random matrices, and PSD random matrices require separate API decisions.
+- Future upgrade path: Stage RM1 should implement the highest-priority random-matrix assumptions with focused tests before matrix concentration statement work resumes.
+
+## Sprint S3 small branch proof battery
+
+- Concrete version chosen: Stage S3 proves small reusable lemmas across concentration, scalar variance, metric entropy, isotropic vectors, and random matrices without starting large theorem families.
+- Tail/concentration result: `markov_inequality_ae_nonneg` reuses the existing pointwise tail event but relaxes the nonnegativity needed for the lintegral-to-expectation bridge to an a.e. hypothesis.
+- Scalar variance result: `variance_nonneg` and `variance_centered_eq_variance` show that scalar-owned centering/variance leaves can wrap Mathlib variance facts without importing vector covariance infrastructure.
+- Geometry result: explicit-net covering-number wrappers work cleanly when the external/internal net distinction is kept visible.
+- Vector/isotropic result: `IsotropicCovariance.centeredVector` is only a definitional projection, confirming the covariance-form predicate exposes its centeredness assumption cleanly.
+- Random-matrix result: `frobeniusSq_nonneg` and `sampleCovarianceEntry_diag_nonneg` are straightforward with explicit finite sums; the quadratic-form sample-covariance nonnegativity stretch needs a separate finite-sum algebra bridge.
+- Future upgrade path: Stage RM2 should add reusable row-dot-product and finite-sum rearrangement lemmas before PSD-style sample covariance facts are attempted.

@@ -11,6 +11,7 @@ variable (P : Measure Ω)
 variable (X : RandomVector Ω n)
 
 #check isotropicSecondMomentMatrix_iff_isotropicSecondMoment
+#check IsotropicCovariance.centeredVector
 #check (isotropicSecondMomentMatrix_iff_isotropicSecondMoment P X :
   IsotropicSecondMomentMatrix P X ↔ IsotropicSecondMoment P X)
 

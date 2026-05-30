@@ -18,6 +18,10 @@ open HighDimProb
 #check upperTailProb
 #check SubGaussianTail
 #check markov_inequality
+#check subGaussianTail_of_psi2Bound
+#check psi2Bound_of_subGaussianTail
+#check psi1Bound_of_subExponentialTail
+#check psi2BoundOfSubGaussianTailStatement
 #check RandomVector
 #check covarianceMatrix
 #check IsotropicSecondMoment

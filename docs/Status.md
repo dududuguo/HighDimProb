@@ -2,12 +2,12 @@
 
 Current version target: v0.1-alpha
 
-Current stage: Stage G1B
+Current stage: Stage S3
 
-Current task: scalar concentration API cleanup
+Current task: small branch proof battery
 
 Milestone status:
-- Milestone 1 complete; scalar concentration proof spine has begun and its first API cleanup is complete
+- Small reusable proof battery completed across scalar concentration, centering/variance, geometry, vector/isotropic, and random matrix branches.
 
 Workflow file:
 - docs/Workflow.md
@@ -16,7 +16,7 @@ Project path:
 - /Users/dudu/research/HighDimProb
 
 Reference notes:
-- /Users/dudu/research/HighDimProb/高维概率及其在数据科学中的应用.md
+- /Users/dudu/research/HighDimProb/高维概率及其在数据科学中的应�?md
 
 Last known build status:
 - `lake build` passes
@@ -38,7 +38,7 @@ Last known test status:
 - Stage 1C public API boundary and scaffold cleanup
 - Stage 1R README workflow and future-work documentation
 - Stage 2A Lp and moment vocabulary
-- Stage 2B Orlicz / ψ₁ / ψ₂ definition layer
+- Stage 2B Orlicz / ψ�?/ ψ�?definition layer
 - Stage 3A subGaussian predicate layer
 - Stage 3B subExponential predicate layer
 - Stage 4A random vector object layer
@@ -62,6 +62,11 @@ Last known test status:
 - Stage I4 branch registry and reserved module plan
 - Stage G1A scalar tail concentration foundations
 - Stage G1B scalar concentration API cleanup
+- Stage G1C Orlicz-to-tail implication pilot
+- Stage G1D tail-to-Orlicz reverse implication proof pilot
+- Stage G1D-fix layer-cake / tail-integral bridge infrastructure
+- Milestone Sprint S2 scalar concentration proof spine + random matrix statement layer
+- Milestone Sprint S3 small branch proof battery
 
 Stage 1A implemented:
 - probability-space convention
@@ -129,7 +134,7 @@ Stage 3B implemented:
 - API regression tests for subExponential declarations
 
 Stage 4A implemented:
-- finite-dimensional random-vector alias using `Ω → Fin n → ℝ`
+- finite-dimensional random-vector alias using `Ω �?Fin n �?ℝ`
 - coordinatewise random-vector measurability predicate
 - coordinate random-variable wrapper and bridge lemmas
 - finite linear marginal wrapper and measurability bridge
@@ -297,6 +302,52 @@ Stage G1B implemented:
 - updated concentration, covariance, public import, branch import, and experimental import tests
 - did not prove Hoeffding, Bernstein, subGaussian/subExponential equivalences, random matrix results, or optional dependencies
 
+Stage G1C implemented:
+- added `HighDimProb/Concentration/OrliczToTail.lean`
+- proved `lintegral_exp_sq_div_le_two_of_psi2Bound`
+- proved `lintegral_exp_abs_div_le_two_of_psi1Bound`
+- proved `subGaussianTail_of_psi2Bound`
+- proved `subExponentialTail_of_psi1Bound`
+- used Mathlib's lintegral Markov inequality directly because the Orlicz predicates are lintegral bounds
+- kept measurability explicit through `IsRealRandomVariable P X`
+- kept probability mass one explicit through `[IsProbabilityMeasure P]`
+- added Orlicz-to-tail API tests
+- did not prove reverse implications, moment/MGF equivalences, Hoeffding, Bernstein, random matrix results, or optional dependencies
+
+Stage G1D implemented:
+- added `HighDimProb/Concentration/TailToOrlicz.lean`
+- exposed `lintegral_ofReal_eq_lintegral_tail` as a HighDimProb-facing layer-cake bridge
+- added typed `Prop` targets `psi2BoundOfSubGaussianTailStatement` and `psi1BoundOfSubExponentialTailStatement`
+- kept the target constants `2 * K` for psi2 and `3 * K` for psi1
+- recorded the initial blocker: a dedicated exponential-tail integral calculation and ENNReal/real coercion bridge infrastructure
+- added Tail-to-Orlicz API tests
+- did not prove the reverse implications, full equivalence theorems, Hoeffding, Bernstein, random matrix results, or optional dependencies
+
+Stage G1D-fix implemented:
+- proved `lintegral_half_exp_neg_three_quarters_le_one`
+- proved `integral_quarter_exp_quarter`
+- proved `lintegral_exp_quarter_sub_one_le_of_exp_tail`
+- proved `lintegral_exp_sq_div_four_sub_one_le_of_subGaussianTail`
+- proved `psi2Bound_of_subGaussianTail` with scale `2 * K`
+- proved `lintegral_two_thirds_exp_neg_two_thirds_le_one`
+- proved `integral_third_exp_third`
+- proved `lintegral_exp_third_sub_one_le_of_exp_tail`
+- proved `lintegral_exp_abs_div_three_sub_one_le_of_subExponentialTail`
+- proved `psi1Bound_of_subExponentialTail` with scale `3 * K`
+- updated Tail-to-Orlicz API tests and concentration import checks
+- did not prove full equivalence theorems, Hoeffding, Bernstein, random matrix results, or optional dependencies
+
+Milestone Sprint S2 implemented:
+- completed fixed-scale scalar Orlicz/tail implication graph in both directions for ψ�?and ψ�?predicates
+- added `HighDimProb.Concentration.Implications`
+- added `docs/ScalarImplicationGraph.md`
+- hardened concentration aggregate tests
+- added `HighDimProb.RandomMatrix.Statements`
+- added typed statement `epsilonNetOperatorNormStatement`
+- added `HighDimProbTest.RandomMatrixStatementsAPI`
+- added `docs/AssumptionVocabulary.md`
+- documented blocked random-matrix theorem families by missing assumption vocabulary
+
 Important existing declarations:
 - `IsRandomVariable`
 - `IsRealRandomVariable`
@@ -444,6 +495,17 @@ Important existing declarations:
 - `integrable_centered`
 - `chebyshev_inequality`
 - `chebyshev_inequality_prob`
+- `lintegral_exp_sq_div_le_two_of_psi2Bound`
+- `lintegral_exp_abs_div_le_two_of_psi1Bound`
+- `subGaussianTail_of_psi2Bound`
+- `subExponentialTail_of_psi1Bound`
+- `lintegral_exp_quarter_sub_one_le_of_exp_tail`
+- `lintegral_exp_third_sub_one_le_of_exp_tail`
+- `lintegral_exp_sq_div_four_sub_one_le_of_subGaussianTail`
+- `lintegral_exp_abs_div_three_sub_one_le_of_subExponentialTail`
+- `psi2Bound_of_subGaussianTail`
+- `psi1Bound_of_subExponentialTail`
+- `epsilonNetOperatorNormStatement`
 - `tailEventMeasurabilityStatement`
 - `lawMapApplyStatement`
 - `realLawMapApplyStatement`
@@ -456,33 +518,36 @@ Important existing declarations:
 
 ## Active
 
-Stage G1B is active in this round.
+Stage S3 is active in this round.
 
-Stage G1C is the next scalar concentration option after this round.
+Stage RM2 is the next random-matrix algebra cleanup option after this round.
 
 Target files:
-- HighDimProb/Scalar/Centering.lean
-- HighDimProb/Scalar/Variance.lean
-- HighDimProb/Scalar.lean
-- HighDimProb/Covariance.lean
-- HighDimProb/Concentration.lean
+- HighDimProb/Tail.lean
 - HighDimProb/Concentration/Basic.lean
 - HighDimProb/Concentration/Markov.lean
-- HighDimProb/Concentration/Chebyshev.lean
-- HighDimProbTest/ConcentrationAPI.lean
+- HighDimProb/Scalar/Centering.lean
+- HighDimProb/Scalar/Variance.lean
+- HighDimProb/Nets.lean
+- HighDimProb/MetricEntropy.lean
+- HighDimProb/Isotropic.lean
+- HighDimProb/RandomMatrix/Norms.lean
+- HighDimProb/RandomMatrix/SampleCovariance.lean
 - HighDimProbTest.lean
-- HighDimProbTest/PublicImports.lean
-- HighDimProbTest/BranchImports.lean
-- HighDimProbTest/ExperimentalImports.lean
+- HighDimProbTest/ConcentrationAPI.lean
+- HighDimProbTest/TailProofsAPI.lean
 - HighDimProbTest/CovarianceProofsAPI.lean
+- HighDimProbTest/IsotropicProofsAPI.lean
+- HighDimProbTest/NetsMetricEntropyAPI.lean
+- HighDimProbTest/RandomMatrixProofsAPI.lean
 - docs/TheoremAtlas.md
 - docs/BookProgress.md
 - docs/TermMap.md
 - docs/AbstractionLog.md
 - docs/TODO.md
 - docs/TestPlan.md
-- docs/BranchRegistry.md
 - docs/Status.md
+- docs/SmallProofBattery.md
 
 Expected test modules:
 - `HighDimProbTest.Smoke`
@@ -497,6 +562,9 @@ Expected test modules:
 - `HighDimProbTest.SubGaussianAPI`
 - `HighDimProbTest.SubExponentialAPI`
 - `HighDimProbTest.ConcentrationAPI`
+- `HighDimProbTest.OrliczToTailAPI`
+- `HighDimProbTest.TailToOrliczAPI`
+- `HighDimProbTest.ConcentrationImplicationsAPI`
 - `HighDimProbTest.RandomVectorAPI`
 - `HighDimProbTest.CovarianceAPI`
 - `HighDimProbTest.CovarianceProofsAPI`
@@ -511,6 +579,8 @@ Expected test modules:
 - `HighDimProbTest.RandomMatrixSampleCovarianceAPI`
 - `HighDimProbTest.RandomMatrixQuadraticFormAPI`
 - `HighDimProbTest.RandomMatrixOperatorNormAPI`
+- `HighDimProbTest.RandomMatrixStatementsAPI`
+- `HighDimProbTest.RandomMatrixProofsAPI`
 - `HighDimProbTest.NetsMetricEntropyAPI`
 - `HighDimProbTest.NetsProofsAPI`
 - `HighDimProbTest.MetricEntropyStatementsAPI`
@@ -532,8 +602,8 @@ Hard rules:
 - Do not prove Hoeffding or Bernstein yet.
 - Do not prove subGaussian/subExponential equivalences.
 - Do not prove covariance PSD/symmetry.
-- Do not implement mathematical content outside scalar concentration API cleanup.
-- Do not prove theorem families beyond existing Markov/Chebyshev cleanup wrappers in this round.
+- Do not implement mathematical content outside the S3 small proof battery scope.
+- Do not prove theorem families beyond small reusable branch lemmas in this round.
 - Do not move vector or random-matrix files physically in this round.
 - Do not write unproved results as `theorem` or `lemma`.
 - Do not add optional dependencies.
@@ -560,8 +630,8 @@ Processed:
 - Lp norm
 - moments
 - Orlicz norm vocabulary
-- ψ₂ norm vocabulary
-- ψ₁ norm vocabulary
+- ψ�?norm vocabulary
+- ψ�?norm vocabulary
 - subGaussian random variable definitions
 - subExponential random variable definitions
 - random vector object layer
@@ -588,6 +658,9 @@ Processed:
 - centered vector coordinate bridge proof pilot
 - centered scalar operation proof pilot
 - tail probability monotonicity proof pilot
+- a.e.-nonnegative Markov wrapper
+- scalar variance nonnegativity
+- centered variance invariance under centering
 - random matrix object layer
 - random matrix row and column vocabulary
 - random matrix action vocabulary
@@ -604,12 +677,27 @@ Processed:
 - scalar concentration API cleanup
 - Markov inequality
 - Chebyshev inequality
+- ψ�?Orlicz bound implies subGaussian tail
+- ψ�?Orlicz bound implies subExponential tail
+- tail-to-Orlicz reverse implication typed targets
+- layer-cake tail integral bridge
+- ψ�?tail-to-Orlicz reverse implication
+- ψ�?tail-to-Orlicz reverse implication
+- scalar Orlicz/tail implication graph
+- random matrix theorem statement layer
+- deterministic epsilon-net operator norm typed statement
+- random matrix assumption vocabulary audit
+- small branch proof battery
 
 Currently processing:
-- scalar concentration API cleanup
+- Sprint S3 closeout
 
 Not yet processed:
-- a.e.-nonnegative Markov wrapper
+- random matrix finite-sum algebra bridges for sample covariance quadratic forms
+- full subGaussian/subExponential equivalence theorems
+- moment formulation implication links
+- MGF formulation implication links
+- finite-gauge Orlicz variants
 - Chernoff inequality
 - Hoeffding inequality
 - Bernstein inequality
@@ -620,10 +708,14 @@ Not yet processed:
 
 ## Blocked
 
-No current Stage G1B build blocker. A.e.-nonnegative Markov, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
+No current Stage S3 build blocker. The stretch theorem `quadraticForm_sampleCovariance_nonneg` is deferred because it needs a reusable finite-sum algebra bridge rewriting `x^T ((1/m) A^T A) x` as `(1/m) * sum k, (sum i, A k i * x i)^2`.
+
+Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Finite-gauge variants, moment/MGF connectors, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
+
+Random matrix theorem statements are blocked except `epsilonNetOperatorNormStatement` because independent entries, iid rows, symmetric random matrices, PSD/order vocabulary, and high-probability theorem syntax are not yet implemented.
 
 Theorem statements blocked by missing infrastructure are tracked in docs/TheoremAtlas.md.
 
 ## Next safe task
 
-Stage G1C - Orlicz-to-tail implication pilot.
+Stage RM2 - random matrix algebra bridge cleanup.

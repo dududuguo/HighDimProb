@@ -16,6 +16,8 @@
 - Hoeffding
 - Bernstein
 - OrliczToTail
+- TailToOrlicz
+- Implications
 - SubGaussianImplications
 - SubExponentialImplications
 
@@ -39,6 +41,8 @@
 ## RandomMatrix
 
 - Independence
+- Statements
+- SampleCovarianceAlgebra
 - SampleCovarianceTheorems
 - OperatorNormNetBridge
 - MatrixDeviationStatements

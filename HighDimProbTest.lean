@@ -9,6 +9,9 @@ import HighDimProbTest.OrliczAPI
 import HighDimProbTest.SubGaussianAPI
 import HighDimProbTest.SubExponentialAPI
 import HighDimProbTest.ConcentrationAPI
+import HighDimProbTest.OrliczToTailAPI
+import HighDimProbTest.TailToOrliczAPI
+import HighDimProbTest.ConcentrationImplicationsAPI
 import HighDimProbTest.RandomVectorAPI
 import HighDimProbTest.CovarianceAPI
 import HighDimProbTest.CovarianceProofsAPI
@@ -23,6 +26,8 @@ import HighDimProbTest.RandomMatrixAssumptionsAPI
 import HighDimProbTest.RandomMatrixSampleCovarianceAPI
 import HighDimProbTest.RandomMatrixQuadraticFormAPI
 import HighDimProbTest.RandomMatrixOperatorNormAPI
+import HighDimProbTest.RandomMatrixStatementsAPI
+import HighDimProbTest.RandomMatrixProofsAPI
 import HighDimProbTest.NetsMetricEntropyAPI
 import HighDimProbTest.NetsProofsAPI
 import HighDimProbTest.MetricEntropyStatementsAPI

@@ -54,6 +54,17 @@ theorem lintegral_ofReal_eq_ofReal_expect {Omega : Type*} [MeasurableSpace Omega
     (∫⁻ omega, ENNReal.ofReal (X omega) ∂P) = ENNReal.ofReal (expect P X) := by
   rw [← ofReal_integral_eq_lintegral_ofReal hX (ae_of_all P hX_nonneg)]
 
+/--
+For an a.e.-nonnegative integrable real random variable, its `lintegral`
+through `ENNReal.ofReal` is the `ENNReal.ofReal` of its HighDimProb expectation.
+-/
+theorem lintegral_ofReal_eq_ofReal_expect_ae_nonneg {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} (X : RealRandomVariable Omega)
+    (hX : IntegrableRealRandomVariable P X)
+    (hX_nonneg : Filter.Eventually (fun omega => 0 <= X omega) (ae P)) :
+    (∫⁻ omega, ENNReal.ofReal (X omega) ∂P) = ENNReal.ofReal (expect P X) := by
+  rw [← ofReal_integral_eq_lintegral_ofReal hX hX_nonneg]
+
 end
 
 end HighDimProb

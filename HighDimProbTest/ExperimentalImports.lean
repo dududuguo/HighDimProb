@@ -40,6 +40,17 @@ open HighDimProb
 #check markov_inequality
 #check chebyshev_inequality
 #check chebyshev_inequality_prob
+#check lintegral_exp_sq_div_le_two_of_psi2Bound
+#check lintegral_exp_abs_div_le_two_of_psi1Bound
+#check subGaussianTail_of_psi2Bound
+#check subExponentialTail_of_psi1Bound
+#check lintegral_ofReal_eq_lintegral_tail
+#check lintegral_exp_sq_div_four_sub_one_le_of_subGaussianTail
+#check psi2Bound_of_subGaussianTail
+#check lintegral_exp_abs_div_three_sub_one_le_of_subExponentialTail
+#check psi1Bound_of_subExponentialTail
+#check psi2BoundOfSubGaussianTailStatement
+#check psi1BoundOfSubExponentialTailStatement
 #check RandomMatrix
 #check matrixEntry
 #check IsRandomMatrix
@@ -76,6 +87,7 @@ open HighDimProb
 #check isRealRandomVariable_quadraticForm
 #check isRealRandomVariable_bilinearForm
 #check operatorNorm
+#check epsilonNetOperatorNormStatement
 #check epsilonRadius
 #check epsilonERadius
 #check IsEpsilonNet

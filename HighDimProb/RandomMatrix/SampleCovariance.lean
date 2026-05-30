@@ -105,6 +105,15 @@ theorem isRealRandomVariable_sampleCovarianceEntry {Omega : Type*} [MeasurableSp
   dsimp [IsRealRandomVariable, IsRandomVariable, sampleCovarianceEntry]
   exact (isRealRandomVariable_gramMatrixEntry hA i j).const_mul (1 / (m : Real))
 
+/-- Diagonal entries of the uncentered sample covariance are nonnegative. -/
+theorem sampleCovarianceEntry_diag_nonneg {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (A : RandomMatrix Omega m n) (i : Fin n) (omega : Omega) :
+    0 <= sampleCovarianceEntry A i i omega := by
+  dsimp [sampleCovarianceEntry, gramMatrixEntry]
+  exact mul_nonneg (one_div_nonneg.mpr (Nat.cast_nonneg m))
+    (Finset.sum_nonneg fun k _ => by
+      simpa [pow_two] using sq_nonneg (A omega k i))
+
 end
 
 end HighDimProb

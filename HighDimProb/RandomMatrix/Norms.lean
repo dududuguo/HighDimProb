@@ -50,6 +50,14 @@ theorem entrywiseMaxAbs_apply {Omega : Type*} [MeasurableSpace Omega] {m n : Nat
         (fun ij : Fin m × Fin n => nnnorm (A omega ij.1 ij.2)) : NNReal) :=
   rfl
 
+/-- Squared Frobenius norm is nonnegative pointwise. -/
+theorem frobeniusSq_nonneg {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (A : RandomMatrix Omega m n) (omega : Omega) :
+    0 <= frobeniusSq A omega := by
+  dsimp [frobeniusSq]
+  exact Finset.sum_nonneg fun _ _ =>
+    Finset.sum_nonneg fun _ _ => sq_nonneg _
+
 /-- Squared Frobenius norm of an `IsRandomMatrix` is a real random variable. -/
 theorem isRealRandomVariable_frobeniusSq {Omega : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} {m n : Nat} {A : RandomMatrix Omega m n}

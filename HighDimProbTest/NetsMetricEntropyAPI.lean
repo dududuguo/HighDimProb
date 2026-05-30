@@ -17,6 +17,10 @@ variable (ε : ℝ)
 #check externalCoveringNumber
 #check coveringNumber
 #check packingNumber
+#check externalCoveringNumber_le_encard_of_isEpsilonNet
+#check coveringNumber_le_encard_of_isInternalEpsilonNet
+#check externalCoveringNumber_le_card_of_isEpsilonNet
+#check coveringNumber_le_card_of_isInternalEpsilonNet
 
 example :
     IsEpsilonNet K N ε = Metric.IsCover (epsilonRadius ε) K N :=
@@ -41,5 +45,11 @@ example :
 example :
     packingNumber K ε = Metric.packingNumber (epsilonRadius ε) K :=
   rfl
+
+#check fun (hN : IsEpsilonNet K N ε) =>
+  externalCoveringNumber_le_encard_of_isEpsilonNet hN
+
+#check fun (hN : IsInternalEpsilonNet K N ε) =>
+  coveringNumber_le_encard_of_isInternalEpsilonNet hN
 
 end

@@ -30,6 +30,11 @@ Infrastructure:
 - Stage I1 CSLib-inspired infrastructure alignment
 - Stage G1A scalar tail concentration foundations
 - Stage G1B scalar concentration API cleanup
+- Stage G1C Orlicz-to-tail implication pilot
+- Stage G1D tail-to-Orlicz reverse implication proof pilot
+- Stage G1D-fix layer-cake / tail-integral bridge infrastructure
+- Milestone Sprint S2 scalar concentration proof spine + random matrix statement layer
+- Milestone Sprint S3 small branch proof battery
 
 Processed:
 - probability space
@@ -73,6 +78,19 @@ Processed:
 - Stage I1 infrastructure alignment completed
 - Stage G1A scalar tail concentration foundations completed
 - Stage G1B scalar concentration API cleanup completed
+- Stage G1C Orlicz-to-tail implication pilot completed
+- Stage G1D tail-to-Orlicz reverse implication proof pilot processed as proof-boundary; fixed-scale reverse bridges completed in S2
+- Stage G1D-fix layer-cake / tail-integral bridge infrastructure completed
+- Stage S2.1 tail-to-Orlicz bridge infrastructure completed
+- Stage S2.2 scalar implication graph consolidation completed
+- Stage S2.3 scalar concentration API hardening completed
+- Stage S2.4 random matrix theorem statement layer initialized
+- Stage S2.5 missing assumption vocabulary audit completed
+- Stage S3.1 tail/concentration small proofs completed
+- Stage S3.2 scalar centering/variance small proofs completed
+- Stage S3.3 geometry/nets small proofs completed
+- Stage S3.4 random vector/isotropic small proofs completed
+- Stage S3.5 random matrix small proofs completed
 
 Scaffold exists, not processed as stable API:
 - random process vocabulary
@@ -106,11 +124,17 @@ Processed at statement-layer level only:
 - Euclidean ball covering number bounds
 - Hamming cube covering/packing bounds
 - epsilon-net operator norm bound
+- deterministic epsilon-net operator norm typed statement
 - metric entropy as log covering number
 - metric entropy coding interpretation
 - Dudley integral dependency on covering numbers
+- random matrix theorem statement layer initialized, with most matrix theorem groups blocked pending assumption vocabulary
 
 Processed with proof:
+- subGaussian tail implies psi2 Orlicz bound with scale `2 * K`
+- subExponential tail implies psi1 Orlicz bound with scale `3 * K`
+- layer-cake bridge for nonnegative real random variables
+- exponential-tail to exponential-moment bridge
 - maximal separated set is an epsilon-net
 - isotropic second-moment matrix iff entrywise formulation
 - centered vector iff coordinatewise centered
@@ -121,3 +145,15 @@ Processed with proof:
 - Markov inequality for pointwise nonnegative integrable real random variables
 - Chebyshev inequality for finite-measure `L^2` real random variables
 - Chebyshev probability-measure wrapper
+- a.e.-nonnegative Markov inequality
+- scalar variance nonnegativity
+- centered variance invariance under centering
+- explicit epsilon-net covering-number bridges
+- covariance-form isotropicity implies centered vector
+- Frobenius-square nonnegativity
+- sample-covariance diagonal nonnegativity
+- ψ₂ Orlicz bound implies subGaussian tail
+- ψ₁ Orlicz bound implies subExponential tail
+
+Blocked during Stage S3:
+- `quadraticForm_sampleCovariance_nonneg` is deferred pending a finite-sum algebra bridge from the explicit double-sum quadratic form to a sum of squared row dot products.

@@ -30,6 +30,9 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/SubGaussianAPI.lean`: downstream-style subGaussian predicate-form examples.
 - `HighDimProbTest/SubExponentialAPI.lean`: downstream-style subExponential predicate-form examples.
 - `HighDimProbTest/ConcentrationAPI.lean`: checks scalar concentration bridge lemmas, Markov/Chebyshev wrappers, and probability-facing concentration aliases.
+- `HighDimProbTest/OrliczToTailAPI.lean`: checks ψ₂/ψ₁ Orlicz-to-tail implication declarations and their lintegral moment bridges.
+- `HighDimProbTest/TailToOrliczAPI.lean`: checks the tail-to-Orlicz typed targets, layer-cake bridges, and proved ψ₂ reverse implication.
+- `HighDimProbTest/ConcentrationImplicationsAPI.lean`: checks the proved scalar Orlicz/tail implication graph through `HighDimProb.Concentration.Implications`.
 - `HighDimProbTest/RandomVectorAPI.lean`: downstream-style random-vector object-layer examples.
 - `HighDimProbTest/CovarianceAPI.lean`: downstream-style covariance and centered-vector vocabulary examples.
 - `HighDimProbTest/CovarianceProofsAPI.lean`: checks the centered-vector coordinate and centered-scalar proof-pilot declarations.
@@ -44,6 +47,8 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/RandomMatrixSampleCovarianceAPI.lean`: checks Gram, row Gram, and sample covariance vocabulary declarations.
 - `HighDimProbTest/RandomMatrixQuadraticFormAPI.lean`: checks quadratic and bilinear form vocabulary declarations.
 - `HighDimProbTest/RandomMatrixOperatorNormAPI.lean`: checks the experimental L2 operator-norm wrapper.
+- `HighDimProbTest/RandomMatrixStatementsAPI.lean`: checks random-matrix theorem statement declarations that are currently honest to type.
+- `HighDimProbTest/RandomMatrixProofsAPI.lean`: checks small random-matrix proof declarations such as Frobenius-square and sample-covariance diagonal nonnegativity.
 - `HighDimProbTest/NetsMetricEntropyAPI.lean`: downstream-style Mathlib-backed nets, covering, and packing examples.
 - `HighDimProbTest/NetsProofsAPI.lean`: checks the first net proof-pilot declarations.
 - `HighDimProbTest/BookStatements.lean`: checks typed statement specifications.
@@ -76,7 +81,12 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - Every branch aggregate module, including reserved aggregates, must have import tests.
 - Every new public declaration must get at least one `#check` or tiny example.
 - Every proof pilot needs a proof-focused test file checking the new proof declarations.
+- Every small proof battery lemma must be covered by an existing proof/API test file or a new focused proof test file.
+- Every Orlicz-to-tail bridge must have API tests for both the implication theorem and the supporting exponential-moment bridge.
+- Every tail-to-Orlicz module must test typed targets, public tail-integral bridges, and any proved reverse implication.
+- Every concentration implication graph module must test the collected theorem names without introducing canonical predicates prematurely.
 - Every random matrix submodule must have its own API test file before theorem work depends on it.
+- Random-matrix statement modules should `#check` only typed `Prop` specifications; blocked theorem families remain documentation entries.
 - Tests should import public modules the way downstream users would.
 - Tests should catch broken names, broken imports, wrong abstraction choices, and unusable APIs.
 - Keep tests separate from main package code.
@@ -85,7 +95,7 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 
 ## Current Limits
 
-No theorem-heavy tests before the object layer stabilizes. Do not test Hoeffding, Bernstein, subGaussian equivalences, random matrix bounds, Johnson-Lindenstrauss, Hanson-Wright, generic chaining, empirical process bounds, or signal recovery guarantees yet.
+No theorem-heavy tests before the object layer stabilizes. Do not test Hoeffding, Bernstein, full subGaussian/subExponential equivalences, random matrix bounds, Johnson-Lindenstrauss, Hanson-Wright, generic chaining, empirical process bounds, or signal recovery guarantees yet.
 
 ## Future Lint
 

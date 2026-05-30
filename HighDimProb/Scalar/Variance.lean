@@ -53,6 +53,21 @@ theorem secondMoment_def {Ω : Type*} [MeasurableSpace Ω]
     secondMoment P X Y = expect P (fun ω => X ω * Y ω) :=
   rfl
 
+/-- Scalar variance is nonnegative. -/
+theorem variance_nonneg {Ω : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) (X : RealRandomVariable Ω) :
+    0 <= variance P X := by
+  exact ProbabilityTheory.variance_nonneg X P
+
+/-- Centering a measurable scalar random variable preserves its variance. -/
+theorem variance_centered_eq_variance {Ω : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω} [IsProbabilityMeasure P] (X : RealRandomVariable Ω)
+    (hX : IsRealRandomVariable P X) :
+    variance P (centered P X) = variance P X := by
+  change ProbabilityTheory.variance (fun omega => X omega - mean P X) P =
+    ProbabilityTheory.variance X P
+  exact ProbabilityTheory.variance_sub_const hX.aestronglyMeasurable (mean P X)
+
 end
 
 end HighDimProb
