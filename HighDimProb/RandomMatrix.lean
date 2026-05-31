@@ -5,6 +5,7 @@ import HighDimProb.RandomMatrix.Norms
 import HighDimProb.RandomMatrix.Assumptions
 import HighDimProb.RandomMatrix.SampleCovariance
 import HighDimProb.RandomMatrix.QuadraticForm
+import HighDimProb.RandomMatrix.Algebra
 import HighDimProb.RandomMatrix.OperatorNorm
 import HighDimProb.RandomMatrix.Statements
 

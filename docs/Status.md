@@ -2,21 +2,21 @@
 
 Current version target: v0.1-alpha
 
-Current stage: Stage S3
+Current stage: Stage G2F-cleanup
 
-Current task: small branch proof battery
+Current task: library abstraction and code-trace cleanup after sharp natural-exponent moment bridge
 
 Milestone status:
-- Small reusable proof battery completed across scalar concentration, centering/variance, geometry, vector/isotropic, and random matrix branches.
+- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, and sharp natural-exponent predicate bridges are complete.
 
 Workflow file:
 - docs/Workflow.md
 
 Project path:
-- /Users/dudu/research/HighDimProb
+- C:\Users\11388\reserach\HighDimProb
 
 Reference notes:
-- /Users/dudu/research/HighDimProb/高维概率及其在数据科学中的应�?md
+- C:\Users\11388\reserach\HighDimProb\高维概率及其在数据科学中的应用.md
 
 Last known build status:
 - `lake build` passes
@@ -38,7 +38,7 @@ Last known test status:
 - Stage 1C public API boundary and scaffold cleanup
 - Stage 1R README workflow and future-work documentation
 - Stage 2A Lp and moment vocabulary
-- Stage 2B Orlicz / ψ�?/ ψ�?definition layer
+- Stage 2B Orlicz / ψ�?/ ψ�?definition layer
 - Stage 3A subGaussian predicate layer
 - Stage 3B subExponential predicate layer
 - Stage 4A random vector object layer
@@ -67,6 +67,18 @@ Last known test status:
 - Stage G1D-fix layer-cake / tail-integral bridge infrastructure
 - Milestone Sprint S2 scalar concentration proof spine + random matrix statement layer
 - Milestone Sprint S3 small branch proof battery
+- Stage G1E Boole inequality / finite union bound proof
+- Stage RM2 random matrix finite-sum algebra bridge cleanup
+- Stage LLN0-LLN1 weak law scaffold and sample mean vocabulary
+- Stage C1 abstraction cleanup after scalar concentration and random-matrix proof spine
+- Stage G2A scalar absolute natural-moment implication pilot
+- Stage G2B all-natural-exponent absolute moment bound
+- Stage G2C absMomentNat-to-realLpNorm bridge
+- Stage G2D sharpen subGaussian natural-moment growth
+- Stage G2E sharp subGaussian moment tail-integral/Gamma estimate design
+- Stage G2E-fix deterministic real inequality proof for sharp moment growth
+- Stage G2F connect sharp natural-exponent moment theorem to `SubGaussianMoment` interface
+- Stage G2F-cleanup library abstraction and code-trace cleanup
 
 Stage 1A implemented:
 - probability-space convention
@@ -134,7 +146,7 @@ Stage 3B implemented:
 - API regression tests for subExponential declarations
 
 Stage 4A implemented:
-- finite-dimensional random-vector alias using `Ω �?Fin n �?ℝ`
+- finite-dimensional random-vector alias using `Ω �?Fin n �?ℝ`
 - coordinatewise random-vector measurability predicate
 - coordinate random-variable wrapper and bridge lemmas
 - finite linear marginal wrapper and measurability bridge
@@ -337,8 +349,76 @@ Stage G1D-fix implemented:
 - updated Tail-to-Orlicz API tests and concentration import checks
 - did not prove full equivalence theorems, Hoeffding, Bernstein, random matrix results, or optional dependencies
 
+Stage G1E implemented:
+- proved `measure_biUnion_le` as a HighDimProb-facing finite union bound / Boole inequality.
+- reused Mathlib `MeasureTheory.measure_biUnion_finset_le`.
+- kept the theorem in `HighDimProb/ProbabilitySpace.lean` as stable probability infrastructure.
+- no measurability assumptions are required because the underlying Mathlib theorem is outer-measure subadditivity.
+- no Borel-Cantelli, Hoeffding, Bernstein, or random matrix norm bounds were added.
+
+Stage RM2 implemented:
+- proved `quadraticForm_sampleCovariance_eq_sum_sq` with normal form `(1 / (m : Real)) * sum k, (sum i, A omega k i * x i)^2`.
+- proved `quadraticForm_sampleCovariance_nonneg` without any positive-dimension assumption, including the `m = 0` total-division edge case.
+- added `HighDimProb.RandomMatrix.Algebra` and imported it from `HighDimProb.RandomMatrix`.
+- reused `Finset.mul_sum`, `Finset.sum_mul`, `Finset.sum_comm`, targeted `Finset.sum_congr`, `ring`, `sq_nonneg`, and `one_div_nonneg`.
+- did not prove random matrix norm bounds, Hanson-Wright, Johnson-Lindenstrauss, or optional dependency theorem families.
+
+Stage LLN0-LLN1 implemented:
+- added experimental `HighDimProb.LimitTheorems` with `LimitTheorems.Basic` and `LimitTheorems.WeakLaw`.
+- defined `sampleSum`, `sampleMean`, and `sampleMeanCentered` for finite samples indexed by `Fin n` without assuming `0 < n`.
+- proved sample sum/mean measurability and integrability bridges from coordinate assumptions.
+- added typed `Prop` specifications `weakLawChebyshevBoundStatement` and `weakLawFiniteVarianceStatement` only; no WLLN theorem proof was claimed.
+- reused Mathlib `Finset.measurable_sum`, `integrable_finset_sum`, `Integrable.const_mul`, and `MeasureTheory.TendstoInMeasure`.
+- did not prove SLLN, Kolmogorov SLLN, Borel-Cantelli, Hoeffding, Bernstein, or measure-theoretic convergence theorem proofs.
+
+Stage C1 implemented:
+- added `HighDimProb.Concentration.LayerCake` as the reusable import boundary for existing layer-cake and exponential-tail calculus helpers.
+- kept public scalar concentration implication theorem names stable and documented the fixed-scale Orlicz/tail graph.
+- added `rowDot`, row-dot nonnegativity helpers, and `quadraticForm_sampleCovariance_eq_scaled_sum_rowDot_sq` for random-matrix algebra reuse.
+- added `HighDimProb.LimitTheorems.Assumptions` with Mathlib-backed scalar independence, pairwise independence, identical-distribution, and iid vocabulary.
+- did not prove Hoeffding, Bernstein, full WLLN, random matrix norm bounds, Hanson-Wright, Johnson-Lindenstrauss, or optional dependency theorem families.
+
+Stage G2C implemented:
+- proved `lintegral_enorm_rpow_nat_eq_absMomentNat`, identifying the Mathlib `eLpNorm` natural-exponent integrand with `absMomentNat`.
+- proved `memLp_of_finiteAbsMomentNat` for `q != 0`, with explicit `IsRealRandomVariable P X` measurability.
+- added first- and second-moment convenience wrappers `memLp_one_of_finiteAbsMomentNat_one` and `memLp_two_of_finiteAbsMomentNat_two`.
+- proved `realLpNorm_nat_le_of_absMomentNat_le_ennreal` and `realLpNorm_nat_le_of_absMomentNat_le`.
+- added `SubGaussianMomentNat` and proved `subGaussianMomentNat_of_psi2Bound` and `subGaussianMomentNat_of_subGaussianTail` with the existing factorial constants.
+- did not prove the sharp `sqrt(q)` moment-growth theorem, MGF links, Hoeffding, Bernstein, or full subGaussian equivalence.
+
+Stage G2D implemented:
+- proved `realLpNorm_nat_le_linear_of_psi2Bound` with constant `8` for natural `q >= 1`.
+- proved `realLpNorm_nat_le_linear_of_subGaussianTail` with constant `16`, using the existing `K -> 2*K` tail-to-ψ₂ scale loss.
+- reused `Nat.factorial_le_pow`, `Real.rpow_le_rpow`, `Real.mul_rpow`, `Real.rpow_mul`, `Real.exp_one_lt_three`, and the existing `absMomentNat -> realLpNorm` bridge.
+- documented that the factorial-root route only yields linear `q`; sharp `sqrt(q)` growth remains blocked by missing direct tail-integral/Gamma moment estimates.
+
+Stage G2E implemented:
+- added typed proof-plan declarations `powLeSqrtGrowthMulExpSqStatement`, `sqrtMomentGrowthOfPsi2Statement`, and `sqrtMomentGrowthOfSubGaussianTailStatement`.
+- kept the proved constants unchanged: linear `8` for `Psi2Bound`, linear `16` for `SubGaussianTail`; sharp typed targets use intended constants `8` and `16`.
+- found that Mathlib has layer-cake and Gamma integral formulas, but the missing bridge is a reusable deterministic optimization or Gamma upper-bound lemma yielding `sqrt(q)`.
+- did not prove the sharp `sqrt(q)` theorem.
+
+Stage G2E-fix implemented:
+- added `HighDimProb.Analysis.RealInequalities` as a small deterministic helper leaf.
+- proved `pow_le_two_sqrt_mul_exp_sq`, a stronger constant-`2` version of the deterministic envelope; `powLeSqrtGrowthMulExpSq` is kept as a constant-`4` compatibility wrapper.
+- proved `absMomentNat_le_sqrt_growth_of_psi2Bound` with bound `(4*K*sqrt q)^q`.
+- proved `realLpNorm_nat_le_sqrt_of_psi2Bound` with constant `4` and `realLpNorm_nat_le_sqrt_of_subGaussianTail` with constant `8`.
+- proved the typed statement wrappers `sqrtMomentGrowthOfPsi2` and `sqrtMomentGrowthOfSubGaussianTail`.
+
+Stage G2F implemented:
+- inspected `SubGaussianMoment`; it quantifies over all finite `p : ENNReal`, while the proved sharp theorem is natural-exponent only.
+- added `SubGaussianMomentNatSqrt` as a non-breaking sharp natural-exponent real-Lp predicate.
+- proved `subGaussianMomentNatSqrt_of_psi2Bound` with scale `4 * K`.
+- proved `subGaussianMomentNatSqrt_of_subGaussianTail` with scale `8 * K`.
+- left the existing factorial-growth `SubGaussianMomentNat` predicate and the full real-exponent `SubGaussianMoment` predicate unchanged.
+
+Stage G2F-cleanup implemented:
+- updated the concentration implication aggregate documentation so it accurately owns tail/Orlicz arrows while moment arrows stay in `MomentImplications`.
+- rephrased old typed-target comments as compatibility statement wrappers after the sharper theorems were proved.
+- added aggregate import checks for `SubGaussianMomentNatSqrt` and its bridge theorems.
+- refreshed local path/status wording and removed stale "sharp target remains only typed" documentation.
 Milestone Sprint S2 implemented:
-- completed fixed-scale scalar Orlicz/tail implication graph in both directions for ψ�?and ψ�?predicates
+- completed fixed-scale scalar Orlicz/tail implication graph in both directions for ψ�?and ψ�?predicates
 - added `HighDimProb.Concentration.Implications`
 - added `docs/ScalarImplicationGraph.md`
 - hardened concentration aggregate tests
@@ -361,6 +441,24 @@ Important existing declarations:
 - `IntegrableRealRandomVariable`
 - `HasFiniteMoment`
 - `momentSeminorm`
+- `absMomentNat`
+- `finiteAbsMomentNat`
+- `SubGaussianMomentNat`
+- `SubGaussianMomentNatSqrt`
+- `lintegral_enorm_rpow_nat_eq_absMomentNat`
+- `memLp_of_finiteAbsMomentNat`
+- `memLp_one_of_finiteAbsMomentNat_one`
+- `memLp_two_of_finiteAbsMomentNat_two`
+- `realLpNorm_nat_le_of_absMomentNat_le_ennreal`
+- `realLpNorm_nat_le_of_absMomentNat_le`
+- `realLpNorm_nat_le_linear_of_psi2Bound`
+- `realLpNorm_nat_le_linear_of_subGaussianTail`
+- `realLpNorm_nat_le_sqrt_of_psi2Bound`
+- `realLpNorm_nat_le_sqrt_of_subGaussianTail`
+- `subGaussianMomentNat_of_psi2Bound`
+- `subGaussianMomentNat_of_subGaussianTail`
+- `subGaussianMomentNatSqrt_of_psi2Bound`
+- `subGaussianMomentNatSqrt_of_subGaussianTail`
 - `OrliczFunction`
 - `psiPower`
 - `psi1Function`
@@ -484,6 +582,7 @@ Important existing declarations:
 - `upperTailProb_antitone`
 - `lowerTailProb_monotone`
 - `absTailProb_antitone`
+- `measure_biUnion_le`
 - `upperTailEvent_subset_of_le`
 - `lowerTailEvent_subset_of_le`
 - `absTailEvent_subset_of_le`
@@ -506,11 +605,36 @@ Important existing declarations:
 - `psi2Bound_of_subGaussianTail`
 - `psi1Bound_of_subExponentialTail`
 - `epsilonNetOperatorNormStatement`
+- `quadraticForm_sampleCovariance_eq_sum_sq`
+- `quadraticForm_sampleCovariance_nonneg`
 - `tailEventMeasurabilityStatement`
 - `lawMapApplyStatement`
 - `realLawMapApplyStatement`
 - `expectAliasStatement`
 - `tailProbabilityWrapperStatement`
+- `sampleSum`
+- `sampleMean`
+- `sampleMeanCentered`
+- `isRealRandomVariable_sampleSum`
+- `isRealRandomVariable_sampleMean`
+- `integrable_sampleSum`
+- `integrable_sampleMean`
+- `weakLawChebyshevBoundStatement`
+- `weakLawFiniteVarianceStatement`
+- `rowDot`
+- `rowDot_sq_nonneg`
+- `sum_rowDot_sq_nonneg`
+- `quadraticForm_sampleCovariance_eq_scaled_sum_rowDot_sq`
+- `IndependentSample`
+- `PairwiseIndependentFinSample`
+- `IdenticallyDistributedSample`
+- `IidSample`
+- `IndependentFinSample`
+- `IdenticallyDistributedFinSample`
+- `IidFinSample`
+- `IndependentSequence`
+- `IdenticallyDistributedSequence`
+- `IidSequence`
 - `measurableSet_upperTailEvent`
 - `measurableSet_lowerTailEvent`
 - `measurableSet_absTailEvent`
@@ -518,28 +642,37 @@ Important existing declarations:
 
 ## Active
 
-Stage S3 is active in this round.
+Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, and Stage G2F-cleanup are complete in this round.
 
-Stage RM2 is the next random-matrix algebra cleanup option after this round.
+Stage G2C proves the natural absolute-moment bridge to `MemLp` and `realLpNorm`, and records the factorial-growth natural subGaussian moment predicate. Stage G2E-fix sharpens the natural-exponent real-Lp growth to `sqrt(q)`, and Stage G2F connects it to the new `SubGaussianMomentNatSqrt` interface. The full real-exponent `SubGaussianMoment` connector remains deferred.
 
 Target files:
-- HighDimProb/Tail.lean
-- HighDimProb/Concentration/Basic.lean
-- HighDimProb/Concentration/Markov.lean
-- HighDimProb/Scalar/Centering.lean
-- HighDimProb/Scalar/Variance.lean
-- HighDimProb/Nets.lean
-- HighDimProb/MetricEntropy.lean
-- HighDimProb/Isotropic.lean
-- HighDimProb/RandomMatrix/Norms.lean
-- HighDimProb/RandomMatrix/SampleCovariance.lean
-- HighDimProbTest.lean
-- HighDimProbTest/ConcentrationAPI.lean
-- HighDimProbTest/TailProofsAPI.lean
-- HighDimProbTest/CovarianceProofsAPI.lean
-- HighDimProbTest/IsotropicProofsAPI.lean
-- HighDimProbTest/NetsMetricEntropyAPI.lean
+- HighDimProb/Concentration.lean
+- HighDimProb/Concentration/LayerCake.lean
+- HighDimProb/Concentration/Implications.lean
+- HighDimProb/Concentration/MomentImplications.lean
+- HighDimProb/ProbabilitySpace.lean
+- HighDimProb/RandomMatrix/Algebra.lean
+- HighDimProb/RandomMatrix.lean
+- HighDimProb/LimitTheorems.lean
+- HighDimProb/LimitTheorems/Basic.lean
+- HighDimProb/LimitTheorems/WeakLaw.lean
+- HighDimProb/LimitTheorems/Assumptions.lean
+- HighDimProb/Experimental.lean
+- HighDimProbTest/ProbabilityObjectAPI.lean
+- HighDimProbTest/MomentImplicationsAPI.lean
+- HighDimProbTest/PublicImports.lean
+- HighDimProbTest/LayerCakeAPI.lean
+- HighDimProbTest/ConcentrationImplicationsAPI.lean
 - HighDimProbTest/RandomMatrixProofsAPI.lean
+- HighDimProbTest/LimitTheoremsAPI.lean
+- HighDimProbTest/ExperimentalImports.lean
+- HighDimProbTest/BranchImports.lean
+- HighDimProbTest.lean
+- docs/LLNPlan.md
+- docs/IndependencePlan.md
+- docs/ScalarImplicationGraph.md
+- docs/ModuleTree.md
 - docs/TheoremAtlas.md
 - docs/BookProgress.md
 - docs/TermMap.md
@@ -548,6 +681,8 @@ Target files:
 - docs/TestPlan.md
 - docs/Status.md
 - docs/SmallProofBattery.md
+- docs/BranchRegistry.md
+- docs/LeafPlan.md
 
 Expected test modules:
 - `HighDimProbTest.Smoke`
@@ -564,6 +699,7 @@ Expected test modules:
 - `HighDimProbTest.ConcentrationAPI`
 - `HighDimProbTest.OrliczToTailAPI`
 - `HighDimProbTest.TailToOrliczAPI`
+- `HighDimProbTest.LayerCakeAPI`
 - `HighDimProbTest.ConcentrationImplicationsAPI`
 - `HighDimProbTest.RandomVectorAPI`
 - `HighDimProbTest.CovarianceAPI`
@@ -625,13 +761,14 @@ Processed:
 - expectation
 - tail event
 - tail probability
+- finite union bound / Boole inequality
 - theorem atlas and statement layer
 - tail-event measurability bridge lemmas
 - Lp norm
 - moments
 - Orlicz norm vocabulary
-- ψ�?norm vocabulary
-- ψ�?norm vocabulary
+- ψ�?norm vocabulary
+- ψ�?norm vocabulary
 - subGaussian random variable definitions
 - subExponential random variable definitions
 - random vector object layer
@@ -677,25 +814,38 @@ Processed:
 - scalar concentration API cleanup
 - Markov inequality
 - Chebyshev inequality
-- ψ�?Orlicz bound implies subGaussian tail
-- ψ�?Orlicz bound implies subExponential tail
+- ψ�?Orlicz bound implies subGaussian tail
+- ψ�?Orlicz bound implies subExponential tail
 - tail-to-Orlicz reverse implication typed targets
 - layer-cake tail integral bridge
-- ψ�?tail-to-Orlicz reverse implication
-- ψ�?tail-to-Orlicz reverse implication
+- ψ�?tail-to-Orlicz reverse implication
+- ψ�?tail-to-Orlicz reverse implication
 - scalar Orlicz/tail implication graph
+- concentration layer-cake import boundary
 - random matrix theorem statement layer
 - deterministic epsilon-net operator norm typed statement
 - random matrix assumption vocabulary audit
 - small branch proof battery
+- random matrix row-dot algebra helpers
+- scalar sample independence/iid assumption wrappers
+- scalar absolute natural-moment implication pilot
+- all-natural absolute-moment factorial bound
+- natural absolute-moment to `MemLp` / `realLpNorm` bridge
+- factorial-growth natural subGaussian moment predicate
+- crude linear `realLpNorm` growth from ψ₂ and subGaussian-tail control
+- sharp natural-exponent `realLpNorm <= C*K*sqrt(q)` growth
+- sharp natural-exponent subGaussian moment predicate bridge
 
 Currently processing:
-- Sprint S3 closeout
+- Stage G2F-cleanup closeout after library abstraction and code-trace cleanup
 
 Not yet processed:
-- random matrix finite-sum algebra bridges for sample covariance quadratic forms
+- LLN variance-of-sample-mean proof bridge
+- variance-of-finite-sample-sum bridge
+- convergence-in-probability HighDimProb alias/wrapper
+- sample covariance PSD / symmetry statement layer
 - full subGaussian/subExponential equivalence theorems
-- moment formulation implication links
+- real-exponent `SubGaussianMoment` / `SubExponentialMoment` formulation links
 - MGF formulation implication links
 - finite-gauge Orlicz variants
 - Chernoff inequality
@@ -708,9 +858,9 @@ Not yet processed:
 
 ## Blocked
 
-No current Stage S3 build blocker. The stretch theorem `quadraticForm_sampleCovariance_nonneg` is deferred because it needs a reusable finite-sum algebra bridge rewriting `x^T ((1/m) A^T A) x` as `(1/m) * sum k, (sum i, A k i * x i)^2`.
+No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, or Stage G2F-cleanup build blocker. The finite union bound is proved, the sample-covariance quadratic-form bridge/nonnegativity theorems are proved, the weak-law scaffold now includes sample-mean vocabulary, scalar assumption wrappers, and honest typed statements, and the scalar moment branch proves fixed-exponent absolute-moment bridges, all-natural absolute moments with factorial constants, natural moment-to-Lp bridges, crude linear real-Lp growth, natural-exponent sharp `sqrt(q)` real-Lp growth, and sharp natural-exponent predicate bridges.
 
-Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Finite-gauge variants, moment/MGF connectors, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
+Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Stage G2A proves Psi2Bound -> absMomentNat q=2, SubGaussianTail -> absMomentNat q=2, and the analogous first-moment psi1/subExponential pilot. Stage G2B proves Psi2Bound/SubGaussianTail -> absMomentNat q for all natural q with a crude factorial constant. Stage G2C proves `finiteAbsMomentNat -> MemLp`, quantitative `absMomentNat -> realLpNorm`, and the factorial-growth `SubGaussianMomentNat` wrappers. Stage G2D proves the linear `realLpNorm <= C*K*q` consequence. Stage G2E records the sharp route as typed targets, Stage G2E-fix proves the deterministic envelope plus natural-exponent sqrt-growth moment bounds, and Stage G2F packages those bounds as `SubGaussianMomentNatSqrt`. The full `SubGaussianMoment` connector is still blocked by the gap from natural exponents to arbitrary finite `ENNReal` exponents; Mathlib has `eLpNorm_le_eLpNorm_of_exponent_le`, but HighDimProb still needs a ceiling/`ENNReal.toReal`/sqrt comparison bridge before this should be promoted. Finite-gauge variants, MGF connectors, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
 
 Random matrix theorem statements are blocked except `epsilonNetOperatorNormStatement` because independent entries, iid rows, symmetric random matrices, PSD/order vocabulary, and high-probability theorem syntax are not yet implemented.
 
@@ -718,4 +868,4 @@ Theorem statements blocked by missing infrastructure are tracked in docs/Theorem
 
 ## Next safe task
 
-Stage RM2 - random matrix algebra bridge cleanup.
+Stage G2F-cleanup-proof - natural-to-real exponent bridge design for `SubGaussianMoment`.

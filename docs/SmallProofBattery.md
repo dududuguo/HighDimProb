@@ -23,6 +23,8 @@ Stage S3 tested whether existing branch APIs support small reusable proofs witho
 - `IsotropicCovariance.centeredVector`
 - `frobeniusSq_nonneg`
 - `sampleCovarianceEntry_diag_nonneg`
+- `quadraticForm_sampleCovariance_eq_sum_sq`
+- `quadraticForm_sampleCovariance_nonneg`
 
 ## Existing Proofs Reused
 
@@ -34,11 +36,11 @@ Stage S3 tested whether existing branch APIs support small reusable proofs witho
 - `isotropicSecondMomentMatrix_iff_isotropicSecondMoment`
 - `isInternalEpsilonNet_of_maximalEpsilonSeparatedIn`
 
-## Blocked Stretch Proof
+## Resolved Stretch Proof
 
 - `quadraticForm_sampleCovariance_nonneg`
 
-Blocker: the current explicit definitions need a bridge rewriting the quadratic form of `sampleCovariance A` into a scaled sum of squared row dot products. This should be handled in a focused random-matrix algebra stage, not hidden inside a proof battery.
+Resolution: Stage RM2 added `quadraticForm_sampleCovariance_eq_sum_sq`, rewriting the quadratic form of `sampleCovariance A` into `(1 / (m : Real)) * sum k, (sum i, A omega k i * x i)^2`, and then proved nonnegativity without a positive-dimension assumption.
 
 ## Infrastructure Lessons
 
@@ -46,8 +48,8 @@ Blocker: the current explicit definitions need a bridge rewriting the quadratic 
 - Scalar centering and variance are now well placed in scalar-owned leaves.
 - Covering-number bridge lemmas should keep external and internal net APIs separate.
 - Random matrix diagonal and Frobenius nonnegativity proofs are easy with explicit finite sums.
-- PSD-style random matrix facts need a reusable finite-sum algebra layer.
+- PSD-style random matrix facts now have a first reusable finite-sum algebra layer for sample covariance quadratic forms.
 
 ## Ready For Deeper Work
 
-Scalar concentration and metric entropy bridges are ready for narrower follow-up lemmas. Random matrix sample-covariance PSD facts should wait for Stage RM2 algebra bridge cleanup.
+Scalar concentration and metric entropy bridges are ready for narrower follow-up lemmas. Random matrix sample-covariance PSD/symmetry statements can now build on the Stage RM2 algebra bridge.

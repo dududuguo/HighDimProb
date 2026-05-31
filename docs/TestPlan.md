@@ -22,17 +22,20 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/PublicImports.lean`: imports stable public modules individually.
 - `HighDimProbTest/BranchImports.lean`: imports every branch aggregate and checks representative declarations.
 - `HighDimProbTest/ExperimentalImports.lean`: imports experimental scaffold modules through `HighDimProb.Experimental`.
-- `HighDimProbTest/ProbabilityObjectAPI.lean`: downstream-style probability object examples.
+- `HighDimProbTest/ProbabilityObjectAPI.lean`: downstream-style probability object examples, including the finite union bound.
 - `HighDimProbTest/TailAPI.lean`: downstream-style tail event and tail probability examples.
 - `HighDimProbTest/TailProofsAPI.lean`: checks the tail probability monotonicity proof-pilot declarations.
 - `HighDimProbTest/LpMomentAPI.lean`: downstream-style Lp and moment vocabulary examples.
+- `HighDimProbTest/RealInequalitiesAPI.lean`: checks deterministic real-analysis helpers for sharp moment growth.
 - `HighDimProbTest/OrliczAPI.lean`: downstream-style Orlicz and ψ-bound vocabulary examples.
 - `HighDimProbTest/SubGaussianAPI.lean`: downstream-style subGaussian predicate-form examples.
 - `HighDimProbTest/SubExponentialAPI.lean`: downstream-style subExponential predicate-form examples.
 - `HighDimProbTest/ConcentrationAPI.lean`: checks scalar concentration bridge lemmas, Markov/Chebyshev wrappers, and probability-facing concentration aliases.
+- `HighDimProbTest/LayerCakeAPI.lean`: checks the reusable layer-cake and exponential-tail calculus import boundary.
 - `HighDimProbTest/OrliczToTailAPI.lean`: checks ψ₂/ψ₁ Orlicz-to-tail implication declarations and their lintegral moment bridges.
 - `HighDimProbTest/TailToOrliczAPI.lean`: checks the tail-to-Orlicz typed targets, layer-cake bridges, and proved ψ₂ reverse implication.
 - `HighDimProbTest/ConcentrationImplicationsAPI.lean`: checks the proved scalar Orlicz/tail implication graph through `HighDimProb.Concentration.Implications`.
+- `HighDimProbTest/MomentImplicationsAPI.lean`: checks natural absolute-moment vocabulary, fixed-exponent and all-natural-exponent moment implication theorems, finiteness corollaries, natural moment-to-`MemLp`/`realLpNorm` bridges, crude linear and sharp sqrt real-Lp growth theorems, `SubGaussianMomentNat`, `SubGaussianMomentNatSqrt`, sharp natural-exponent predicate bridges, and the sharp typed statement wrappers.
 - `HighDimProbTest/RandomVectorAPI.lean`: downstream-style random-vector object-layer examples.
 - `HighDimProbTest/CovarianceAPI.lean`: downstream-style covariance and centered-vector vocabulary examples.
 - `HighDimProbTest/CovarianceProofsAPI.lean`: checks the centered-vector coordinate and centered-scalar proof-pilot declarations.
@@ -48,7 +51,8 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/RandomMatrixQuadraticFormAPI.lean`: checks quadratic and bilinear form vocabulary declarations.
 - `HighDimProbTest/RandomMatrixOperatorNormAPI.lean`: checks the experimental L2 operator-norm wrapper.
 - `HighDimProbTest/RandomMatrixStatementsAPI.lean`: checks random-matrix theorem statement declarations that are currently honest to type.
-- `HighDimProbTest/RandomMatrixProofsAPI.lean`: checks small random-matrix proof declarations such as Frobenius-square and sample-covariance diagonal nonnegativity.
+- `HighDimProbTest/RandomMatrixProofsAPI.lean`: checks small random-matrix proof declarations such as Frobenius-square nonnegativity, sample-covariance diagonal nonnegativity, row-dot helpers, and the sample-covariance quadratic-form algebra/nonnegativity bridge.
+- `HighDimProbTest/LimitTheoremsAPI.lean`: checks experimental limit-theorem sample mean vocabulary, finite-sum measurability/integrability bridges, independence/iid assumption wrappers, and weak-law typed statements.
 - `HighDimProbTest/NetsMetricEntropyAPI.lean`: downstream-style Mathlib-backed nets, covering, and packing examples.
 - `HighDimProbTest/NetsProofsAPI.lean`: checks the first net proof-pilot declarations.
 - `HighDimProbTest/BookStatements.lean`: checks typed statement specifications.
@@ -71,6 +75,7 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 ## API Regression Policy
 
 - Stable public API is tested through `import HighDimProb`.
+- Stable probability infrastructure such as `measure_biUnion_le` is checked through both public imports and downstream-style probability object examples.
 - Scalar centering and variance leaves are tested through the stable public import path and through covariance compatibility tests.
 - Every stable module must have public import or focused stable API tests.
 - Scaffold modules are tested only through `import HighDimProb.Experimental`.
@@ -85,6 +90,7 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - Every Orlicz-to-tail bridge must have API tests for both the implication theorem and the supporting exponential-moment bridge.
 - Every tail-to-Orlicz module must test typed targets, public tail-integral bridges, and any proved reverse implication.
 - Every concentration implication graph module must test the collected theorem names without introducing canonical predicates prematurely.
+- Every moment-implication pilot must test the moment normal form, constants, Lp bridge declarations, and any typed all-exponent statement separately from full equivalence theorem tests.
 - Every random matrix submodule must have its own API test file before theorem work depends on it.
 - Random-matrix statement modules should `#check` only typed `Prop` specifications; blocked theorem families remain documentation entries.
 - Tests should import public modules the way downstream users would.

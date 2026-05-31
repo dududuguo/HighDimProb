@@ -7,6 +7,7 @@ open HighDimProb
 
 #check Event
 #check ProbabilityMeasure
+#check measure_biUnion_le
 #check IsRealRandomVariable
 #check law
 #check expect

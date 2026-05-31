@@ -88,6 +88,14 @@
 - Lean/mathlib obstruction: Bundling would create coercion and instance friction.
 - Future upgrade path: Add optional bundled wrappers only if repeated examples justify them.
 
+## Finite union bound
+
+- Concrete version chosen: Stage G1E exposes `measure_biUnion_le` in `HighDimProb.ProbabilitySpace` as a stable wrapper around Mathlib finite subadditivity.
+- Possible general version: create a concentration-specific union-bound module or prove the result from disjointization.
+- Reason for not generalizing yet: Mathlib already proves the exact finite `Finset` union bound for arbitrary measures, so a probability-facing wrapper is enough.
+- Lean/mathlib obstruction: none; the Mathlib theorem works for all sets through outer-measure subadditivity and does not require measurability hypotheses.
+- Future upgrade path: add countable union-bound wrappers only in a separate focused stage, without starting Borel-Cantelli or concentration theorem families.
+
 ## Random variables
 
 - Concrete version chosen: bare functions `Ω → E` with separate `Measurable` assumptions.
@@ -480,6 +488,14 @@
 - Lean/mathlib obstruction: no blocker for the entrywise vocabulary; the `m = 0` case remains the ordinary total-division value in Lean and is not used for statistical theorems.
 - Future upgrade path: add matrix-multiplication equivalence lemmas, centered empirical covariance, and nonzero sample-size hypotheses when covariance-estimation statements need them.
 
+## Stage RM2 sample covariance algebra bridge
+
+- Concrete version chosen: `quadraticForm_sampleCovariance_eq_sum_sq` rewrites `quadraticForm (sampleCovariance A) x omega` to `(1 / (m : Real)) * sum k, (sum i, A omega k i * x i)^2`.
+- Possible general version: introduce a full row-dot/inner-product API or prove the identity through abstract matrix multiplication.
+- Reason for not generalizing yet: the current random-matrix definitions are entrywise finite sums, and the focused bridge only needs distributivity and finite-sum reindexing.
+- Lean/mathlib obstruction: no blocker; `Finset.mul_sum`, `Finset.sum_mul`, and `Finset.sum_comm` are enough with targeted `ring` normalization of scalar terms.
+- Future upgrade path: Stage RM3 can layer PSD/symmetry statements on top of the proven row-dot-square identity without starting matrix norm bounds or random-matrix concentration.
+
 ## Stage 6B quadratic and bilinear forms
 
 - Concrete version chosen: `quadraticForm` and `bilinearForm` use explicit double sums over `Fin`.
@@ -605,5 +621,93 @@
 - Scalar variance result: `variance_nonneg` and `variance_centered_eq_variance` show that scalar-owned centering/variance leaves can wrap Mathlib variance facts without importing vector covariance infrastructure.
 - Geometry result: explicit-net covering-number wrappers work cleanly when the external/internal net distinction is kept visible.
 - Vector/isotropic result: `IsotropicCovariance.centeredVector` is only a definitional projection, confirming the covariance-form predicate exposes its centeredness assumption cleanly.
-- Random-matrix result: `frobeniusSq_nonneg` and `sampleCovarianceEntry_diag_nonneg` are straightforward with explicit finite sums; the quadratic-form sample-covariance nonnegativity stretch needs a separate finite-sum algebra bridge.
-- Future upgrade path: Stage RM2 should add reusable row-dot-product and finite-sum rearrangement lemmas before PSD-style sample covariance facts are attempted.
+- Random-matrix result: `frobeniusSq_nonneg` and `sampleCovarianceEntry_diag_nonneg` are straightforward with explicit finite sums; Stage RM2 later resolved the quadratic-form sample-covariance stretch via a finite-sum algebra bridge.
+- Future upgrade path: Stage RM3 should add PSD/symmetry statement layers on top of the row-dot-square identity before any random matrix norm bounds are attempted.
+
+## Limit theorem scaffold
+
+- Concrete version chosen: Stage LLN0-LLN1 adds an experimental `HighDimProb.LimitTheorems` branch with `sampleSum`, `sampleMean`, and `sampleMeanCentered` over `Fin n`.
+- Possible general version: define sequence-valued random samples, iid bundles, convergence-in-probability aliases, and WLLN theorem proofs immediately.
+- Reason for not generalizing yet: WLLN needs independence/iid vocabulary, variance-of-sum theorems, square-integrability bridges, and convergence-in-probability conventions that should be selected deliberately.
+- Chebyshev decision: `weakLawChebyshevBoundStatement` is a typed `Prop` target with explicit variance/mean hypotheses, not a fake theorem.
+- Convergence decision: `weakLawFiniteVarianceStatement` uses Mathlib `MeasureTheory.TendstoInMeasure` directly rather than introducing a HighDimProb alias before the surrounding API is known.
+- Lean/mathlib obstruction: finite-sum measurability and integrability are easy through `Finset.measurable_sum`, `integrable_finset_sum`, and `Integrable.const_mul`; theorem proof blockers are structural rather than local.
+- Future upgrade path: add independence/iid assumption wrappers and variance-of-sum/mean-of-sample-mean bridge lemmas before proving the Chebyshev WLLN bound.
+
+## Stage C1 abstraction cleanup
+
+- Concentration decision: `HighDimProb.Concentration.LayerCake` is now the public import boundary for reusable layer-cake and exponential-tail calculus helpers. The declaration bodies remain in `TailToOrlicz` for name stability; future physical movement should preserve theorem names.
+- Scalar implication decision: `HighDimProb.Concentration.Implications` remains the collection point for the fixed-scale Orlicz/tail graph and explicitly avoids canonical `SubGaussian`/`SubExponential` predicates until moment and MGF links are proved.
+- Random-matrix decision: `rowDot` and row-dot-square helper lemmas were added on top of the existing sample-covariance finite-sum proof, with `quadraticForm_sampleCovariance_eq_sum_sq` kept as the compatibility normal form.
+- LLN decision: `HighDimProb.LimitTheorems.Assumptions` adds thin wrappers around Mathlib `iIndepFun`, `IndepFun`, and `IdentDistrib` for scalar finite samples and sequences only.
+- Lean/mathlib obstruction: Mathlib already has the core independence and variance-sum objects, but HighDimProb still lacks wrappers connecting them to `sampleMean`, `variance`, common mean/variance assumptions, and convergence-in-probability naming.
+- Future upgrade path: Stage G2A should tackle moment formulation links for scalar concentration, while WLLN proof work should first add variance-of-sample-mean bridge lemmas over the new assumption vocabulary.
+
+## Stage G2A moment implication pilot
+
+- Concrete version chosen: Stage G2A adds `HighDimProb.Concentration.MomentImplications` with an `ENNReal` natural absolute-moment normal form `absMomentNat`.
+- Possible general version: prove `SubGaussianTail -> SubGaussianMoment` directly for Mathlib `eLpNorm` and all real/ENNReal exponents with optimized constants.
+- Reason for not generalizing yet: the full theorem needs all-exponent layer-cake or Gamma/exponential-integral infrastructure plus a bridge from absolute natural moments back to `realLpNorm`.
+- Moment normal form: the proved theorem uses natural exponent `q = 2` and `lintegral` of `ENNReal.ofReal (|X|^q)`, not the existing real-Lp seminorm predicate.
+- Constant decision: `Psi2Bound P X K` gives `absMomentNat P X 2 <= ofReal (K^2)`, and `SubGaussianTail P X K` gives the fixed-scale bound `ofReal ((2*K)^2)` through `psi2Bound_of_subGaussianTail`.
+- Stretch decision: the same elementary pattern also proves `Psi1Bound P X K -> absMomentNat P X 1 <= ofReal K` and `SubExponentialTail P X K -> absMomentNat P X 1 <= ofReal (3*K)`.
+- Lean/mathlib obstruction: no blocker for fixed exponents `1` and `2`; broad moment growth remains blocked by missing reusable all-exponent integral estimates and coercion bridges between `ENNReal` moments and `eLpNorm`.
+- Future upgrade path: Stage G2B should prove an all-natural-exponent absolute-moment bound before attempting the full `SubGaussianMoment` real-Lp formulation.
+
+## Stage G2B all-natural absolute moments
+
+- Concrete version chosen: Stage G2B proves an all-natural-exponent absolute-moment bound with factorial growth, not the sharp `sqrt(q)` growth theorem.
+- Possible general version: prove `absMomentNat P X q <= ofReal ((C*K*sqrt q)^q)` and then bridge it directly to `realLpNorm` / `SubGaussianMoment`.
+- Reason for not generalizing yet: the factorial theorem is available from elementary Mathlib exponential-series estimates, while sharp `sqrt(q)` growth needs either a tighter real optimization lemma or a Gamma/layer-cake moment integral.
+- Probability assumption: all-`q` uses `[IsProbabilityMeasure P]` because the proof passes through the unshifted exponential-square moment bound `lintegral_exp_sq_div_le_two_of_psi2Bound`; a shifted ψ₂ bound alone does not control low moments on arbitrary infinite measures.
+- Constant decision: `Psi2Bound P X K` gives `absMomentNat P X q <= ofReal (exp(1/4) * K^q * q!) * 2`; `SubGaussianTail P X K` uses the existing scale loss `K -> 2*K`.
+- Lean/mathlib reuse: `Real.pow_div_factorial_le_exp` supplies `a^q / q! <= exp a`; the elementary inequality `a <= a^2 + 1/4` converts this to exponential-square control.
+- Future upgrade path: after Stage G2C's bridge, sharpen the natural moment bound to `sqrt(q)` growth before proving the existing `SubGaussianMoment` predicate.
+
+## Stage G2C natural moment to Lp bridge
+
+- Concrete version chosen: Stage G2C proves the natural-exponent bridge from `absMomentNat` to Mathlib `MemLp` and `realLpNorm`, then names the currently proved factorial-growth predicate as `SubGaussianMomentNat`.
+- Possible general version: prove the book's sharp `SubGaussianMoment` predicate directly for all finite `ENNReal` exponents.
+- Reason for not generalizing yet: the available all-natural moment estimate is factorial-growth; converting it to the sharp `K * sqrt p` real-`Lp` predicate would require a new sharp moment estimate, not just an Lp coercion bridge.
+- Measurability decision: `memLp_of_finiteAbsMomentNat` requires `IsRealRandomVariable P X` explicitly because `finiteAbsMomentNat` records only lintegral finiteness and does not bundle `AEStronglyMeasurable`.
+- Exponent decision: the bridge requires `q != 0`; the `q = 0` `MemLp` case is purely measurability-oriented and is not the book's moment norm.
+- Normal form decision: `lintegral_enorm_rpow_nat_eq_absMomentNat` is the finite-sum/coercion-free equality between Mathlib's `eLpNorm` integrand `‖X ω‖ₑ ^ (q : Real)` and `∫⁻ ω, ofReal (|X ω|^q)`.
+- Lean/mathlib reuse: the proof uses `eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top`, `eLpNorm_eq_lintegral_rpow_enorm_toReal`, `ENNReal.rpow_natCast`, `ofReal_norm_eq_enorm`, `ENNReal.ofReal_pow`, and `ENNReal.rpow_le_rpow`.
+- Future upgrade path: sharpen the natural subGaussian moment bound to `sqrt(q)` growth before proving `SubGaussianMoment` from tails or ψ₂ bounds.
+
+## Stage G2D natural moment linear growth
+
+- Concrete version chosen: Stage G2D derives the best clean `realLpNorm` consequence currently available from the factorial estimate: `Psi2Bound P X K` gives `realLpNorm P X q <= 8*K*q`, and `SubGaussianTail P X K` gives `16*K*q` after the existing `K -> 2*K` scale loss.
+- Possible general version: prove the book-style `realLpNorm P X q <= C*K*sqrt(q)` theorem from tails or ψ₂ control.
+- Reason for not generalizing yet: the existing proof path has normal form `2 * exp(1/4) * K^q * q!`; taking `q`th roots and using `q! <= q^q` only yields linear growth.
+- Constant decision: the numeric `8` absorbs `(2*exp(1/4))^(1/q)` using Mathlib's `Real.exp_one_lt_three`; the tail theorem doubles the scale and therefore uses `16`.
+- Lean/mathlib reuse: `Nat.factorial_le_pow`, `Real.rpow_le_rpow`, `Real.mul_rpow`, `Real.rpow_mul`, `ENNReal.ofReal_mul`, and the existing `realLpNorm_nat_le_of_absMomentNat_le` bridge.
+- Future upgrade path: prove a direct sharp tail-integral/Gamma moment estimate instead of passing through the factorial bound.
+
+## Stage G2E sharp moment route design
+
+- Concrete version chosen: record the sharp route as typed `Prop` targets, not unproved theorems: `powLeSqrtGrowthMulExpSqStatement`, `sqrtMomentGrowthOfPsi2Statement`, and `sqrtMomentGrowthOfSubGaussianTailStatement`.
+- Possible general version: prove either the deterministic envelope `x^q <= (4*sqrt q)^q * exp(x^2/4)` or a layer-cake/Gamma estimate for Gaussian tails, then derive the real-`Lp` `sqrt(q)` theorem.
+- Reason for not generalizing yet: Mathlib has the Gamma integral formula and layer-cake APIs, but the needed reusable upper bound on the Gamma expression, or the equivalent calculus optimization lemma, is not packaged in the current HighDimProb abstraction layer.
+- Constant decision: the deterministic route targets envelope constant `4`; the real-`Lp` typed statements reserve constants `8` for `Psi2Bound` and `16` for `SubGaussianTail` after the existing `K -> 2*K` scale loss.
+- Lean/mathlib reuse: searched and retained Mathlib's `MeasureTheory.lintegral_eq_lintegral_meas_le`, `integral_rpow_mul_exp_neg_rpow`, `integral_rpow_mul_exp_neg_mul_rpow`, `Real.Gamma` formulas, Gaussian integrability lemmas, and `Real.rpow`/`Real.sqrt` algebra as candidate infrastructure.
+- Future upgrade path: Stage G2E-fix chooses the deterministic route first; Gamma upper bounds remain optional future infrastructure.
+
+## Stage G2E-fix deterministic real inequality
+
+- Concrete version chosen: add `HighDimProb.Analysis.RealInequalities` with only the real helpers needed for sharp subGaussian natural-moment growth.
+- Possible general version: a larger real-analysis library for Gamma estimates, Gaussian moments, and calculus optimization.
+- Reason for not generalizing yet: the deterministic proof using `log y <= y^2` is enough for the current probability bridge and avoids building a Gamma upper-bound layer.
+- Constant decision: `pow_le_two_sqrt_mul_exp_sq` proves `x^q <= (2*sqrt q)^q * exp(x^2/4)` for `x >= 0`, `q >= 1`; the probability theorems use constants `4` for `Psi2Bound` and `8` for `SubGaussianTail`.
+- Lean/mathlib reuse: `Real.log_le_self`, `Real.log_le_iff_le_exp`, `Real.log_pow`, `Real.exp_le_exp`, `Real.sq_sqrt`, `field_simp`, `ring`, and existing `lintegral_exp_sq_div_le_two_of_psi2Bound` / `realLpNorm_nat_le_of_absMomentNat_le`.
+- Future upgrade path: connect the natural-exponent sqrt theorem to the existing `SubGaussianMoment` predicate, whose exponent is an `ENNReal` rather than a natural number.
+
+## Stage G2F sharp natural moment interface
+
+- Concrete version chosen: add `SubGaussianMomentNatSqrt` as a new natural-exponent real-`Lp` predicate and prove ψ₂/tail bridges into it.
+- Possible general version: prove `Psi2Bound -> SubGaussianMoment` directly for every finite `p : ENNReal`.
+- Reason for not generalizing yet: the proved sharp theorem is only at natural exponents, while `SubGaussianMoment` quantifies over all finite `ENNReal` exponents; forcing the bridge now would hide a genuine exponent-conversion theorem.
+- Compatibility decision: keep the existing factorial-growth `SubGaussianMomentNat` name and meaning unchanged; the sharp natural predicate is a supplement, not a breaking rename.
+- Constant decision: `subGaussianMomentNatSqrt_of_psi2Bound` uses scale `4*K`, and `subGaussianMomentNatSqrt_of_subGaussianTail` uses scale `8*K` after the existing `K -> 2*K` tail-to-ψ₂ loss.
+- Lean/mathlib reuse: the stage reuses `realLpNorm_nat_le_sqrt_of_psi2Bound`, `realLpNorm_nat_le_sqrt_of_subGaussianTail`, simple positivity, and ring normalization; Mathlib `eLpNorm_le_eLpNorm_of_exponent_le` was identified as likely future infrastructure for all-real-exponent promotion.
+- Future upgrade path: Stage G2F-cleanup should design the natural-to-real exponent bridge around ceiling, `ENNReal.toReal`, and sqrt comparisons before attempting `subGaussianMoment_of_psi2Bound`.

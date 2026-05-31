@@ -23,6 +23,17 @@ theorem isProbability_iff {Ω : Type*} [MeasurableSpace Ω] (P : ProbabilityMeas
     IsProbability P ↔ IsProbabilityMeasure P :=
   Iff.rfl
 
+/--
+Finite union bound / Boole inequality for a finite family of events.
+
+This is a HighDimProb-facing wrapper around Mathlib's finite subadditivity
+lemma for measures. It does not require the events to be measurable.
+-/
+theorem measure_biUnion_le {Ω ι : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) (s : Finset ι) (A : ι → Event Ω) :
+    P (⋃ i ∈ s, A i) ≤ ∑ i ∈ s, P (A i) :=
+  MeasureTheory.measure_biUnion_finset_le s A
+
 example {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P] :
     IsProbabilityMeasure P :=
   inferInstance

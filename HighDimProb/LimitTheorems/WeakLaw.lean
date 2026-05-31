@@ -1,0 +1,52 @@
+import HighDimProb.LimitTheorems.Basic
+import HighDimProb.Concentration.Chebyshev
+import Mathlib.MeasureTheory.Function.ConvergenceInMeasure
+
+/-!
+# Weak law of large numbers statement layer
+
+This module records typed weak-law targets backed by the current sample-mean,
+tail, variance, and convergence-in-measure vocabulary. The statements are
+specifications only; independence, iid, and variance-of-sum infrastructure are
+not available yet.
+-/
+
+namespace HighDimProb
+
+open MeasureTheory Filter
+open scoped Topology
+
+noncomputable section
+
+/--
+Typed target for the Chebyshev route to a finite-variance weak law.
+
+The hypotheses are intentionally explicit placeholders: future stages should
+prove the displayed bound from finite variance plus independence/covariance
+assumptions, rather than fake iid infrastructure here.
+-/
+abbrev weakLawChebyshevBoundStatement {Omega : Type*} [MeasurableSpace Omega]
+    (P : Measure Omega) [IsProbabilityMeasure P] {n : Nat}
+    (X : Fin n -> RealRandomVariable Omega) (mu sigmaSq eps : Real) : Prop :=
+  0 < eps ->
+    MemLpRealRandomVariable P (sampleMean X) 2 ->
+      mean P (sampleMean X) = mu ->
+        variance P (sampleMean X) <= sigmaSq / (n : Real) ->
+          absTailProb P (sampleMeanCentered X mu) eps <=
+            ENNReal.ofReal (sigmaSq / ((n : Real) * eps ^ 2))
+
+/--
+Typed target for finite-variance weak convergence in probability of sample means.
+
+This uses Mathlib's `TendstoInMeasure` as the current convergence-in-probability
+vocabulary. A proof is deferred until the project has sequence-level sample
+families, independence/iid wrappers, and variance-of-sum facts.
+-/
+abbrev weakLawFiniteVarianceStatement {Omega : Type*} [MeasurableSpace Omega]
+    (P : Measure Omega) [IsProbabilityMeasure P]
+    (X : (n : Nat) -> Fin n -> RealRandomVariable Omega) (mu : Real) : Prop :=
+  TendstoInMeasure P (fun n => sampleMean (X n)) Filter.atTop (fun _ => mu)
+
+end
+
+end HighDimProb

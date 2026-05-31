@@ -58,6 +58,18 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Target module: `HighDimProb/BookStatements.lean`
 - Priority: v0.1
 
+## finite union bound / Boole inequality
+- Book heading: Probability and Measure, finite subadditivity / Boole's inequality
+- Informal statement: for a finite family of events, the measure of their union is at most the sum of their measures.
+- Target Lean statement: `measure_biUnion_le`
+- Required objects: `Measure`, `Event`, `Finset`, finite indexed unions.
+- Required definitions: Stage 1A probability-space and event vocabulary.
+- Required bridge lemmas: Mathlib `MeasureTheory.measure_biUnion_finset_le`.
+- Status: proven
+- Blocker: none. The theorem is stated for arbitrary measures and does not require event measurability.
+- Target module: `HighDimProb/ProbabilitySpace.lean`
+- Priority: stable probability infrastructure
+
 ## upper-tail probability monotonicity
 - Book heading: tail distribution / concentration prerequisites
 - Informal statement: increasing the upper-tail threshold can only decrease the upper-tail probability.
@@ -132,6 +144,30 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Target module: `HighDimProb/Concentration/Chebyshev.lean`
 - Priority: scalar concentration proof spine
 
+## weak law Chebyshev sample mean bound
+- Book heading: weak law of large numbers via Chebyshev
+- Informal statement: the deviation probability of a finite sample mean is bounded by a variance-over-sample-size term.
+- Target Lean statement: `weakLawChebyshevBoundStatement`
+- Required objects: `sampleMean`, `sampleMeanCentered`, `absTailProb`, `mean`, `variance`, `MemLpRealRandomVariable`.
+- Required definitions: Stage LLN0-LLN1 sample mean vocabulary.
+- Required bridge lemmas: future expectation-of-sum, variance-of-sum, and covariance-zero/independence bridges.
+- Status: typed-prop
+- Blocker: scalar independence/iid vocabulary now exists in `LimitTheorems.Assumptions`, but variance-of-sum, square-integrability, and mean-of-sample-mean bridges are not implemented.
+- Target module: `HighDimProb/LimitTheorems/WeakLaw.lean`
+- Priority: LLN scaffold
+
+## weak law finite-variance convergence in probability
+- Book heading: weak law of large numbers
+- Informal statement: finite-variance sample means converge in probability to the common mean.
+- Target Lean statement: `weakLawFiniteVarianceStatement`
+- Required objects: `sampleMean`, sequence of finite samples, Mathlib `TendstoInMeasure`.
+- Required definitions: Stage LLN0-LLN1 limit-theorem branch scaffold.
+- Required bridge lemmas: Chebyshev sample mean bound tending to zero, plus the blockers listed above.
+- Status: typed-prop
+- Blocker: Stage C1 adds scalar independence/iid wrappers, but HighDimProb still lacks variance-of-sum/sample-mean bridge lemmas and a probability-convergence alias/proof layer.
+- Target module: `HighDimProb/LimitTheorems/WeakLaw.lean`
+- Priority: LLN scaffold
+
 ## psi2 Orlicz bound implies subGaussian tail
 - Book heading: `次高斯性质`, `次高斯范数`, Orlicz characterization
 - Informal statement: if the exponential-square Orlicz bound holds at scale `K`, then the absolute tail has Gaussian decay with the same scale and constant `2`.
@@ -162,7 +198,7 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Target Lean statement: `psi2Bound_of_subGaussianTail`.
 - Required objects: `SubGaussianTail`, `Psi2Bound`, `absTailProb`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
 - Required definitions: shifted `Psi2Bound` lintegral, absolute-tail probability, positive scale from the tail predicate.
-- Required bridge lemmas: `lintegral_exp_quarter_sub_one_le_of_exp_tail`, `lintegral_exp_sq_div_four_sub_one_le_of_subGaussianTail`, Mathlib layer-cake formula, and Mathlib improper integral evaluation for exponential decay.
+- Required bridge lemmas: `lintegral_exp_quarter_sub_one_le_of_exp_tail`, `lintegral_exp_sq_div_four_sub_one_le_of_subGaussianTail`, Mathlib layer-cake formula, and Mathlib improper integral evaluation for exponential decay; Stage C1 exposes the generic helpers through `HighDimProb.Concentration.LayerCake`.
 - Status: proven
 - Blocker: none for the fixed-scale `2 * K` formulation with explicit measurability.
 - Target module: `HighDimProb/Concentration/TailToOrlicz.lean`
@@ -174,11 +210,62 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Target Lean statement: `psi1Bound_of_subExponentialTail`.
 - Required objects: `SubExponentialTail`, `Psi1Bound`, `absTailProb`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
 - Required definitions: shifted `Psi1Bound` lintegral, absolute-tail probability, positive scale from the tail predicate.
-- Required bridge lemmas: `lintegral_exp_third_sub_one_le_of_exp_tail`, `lintegral_exp_abs_div_three_sub_one_le_of_subExponentialTail`, Mathlib layer-cake formula, and Mathlib improper integral evaluation for exponential decay.
+- Required bridge lemmas: `lintegral_exp_third_sub_one_le_of_exp_tail`, `lintegral_exp_abs_div_three_sub_one_le_of_subExponentialTail`, Mathlib layer-cake formula, and Mathlib improper integral evaluation for exponential decay; Stage C1 exposes the generic helpers through `HighDimProb.Concentration.LayerCake`.
 - Status: proven
 - Blocker: none for the fixed-scale `3 * K` formulation with explicit measurability.
 - Target module: `HighDimProb/Concentration/TailToOrlicz.lean`
 - Priority: scalar concentration proof spine
+
+## subGaussian tail implies second absolute natural moment
+- Book heading: subGaussian moment characterization
+- Informal statement: a two-sided subGaussian tail bound at scale `K` controls the second absolute moment, with the current fixed-scale proof giving constant `(2*K)^2`.
+- Target Lean statement: `absMomentNat_two_le_of_subGaussianTail`; finiteness corollary `finiteAbsMomentNat_two_of_subGaussianTail`.
+- Required objects: `SubGaussianTail`, `Psi2Bound`, `absMomentNat`, `finiteAbsMomentNat`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
+- Required definitions: natural absolute moment as `lintegral` of `ENNReal.ofReal (|X|^q)`.
+- Required bridge lemmas: `psi2Bound_of_subGaussianTail`, `absMomentNat_two_le_of_psi2Bound`, `Real.add_one_le_exp`, `lintegral_mono`, `lintegral_const_mul'`, and `ENNReal.ofReal_mul`.
+- Status: proven
+- Blocker: none for the natural exponent `q = 2`; Stage G2E-fix now proves the natural-exponent `sqrt(q)` real-`Lp` growth bridge.
+- Target module: `HighDimProb/Concentration/MomentImplications.lean`
+- Priority: Stage G2A scalar concentration proof spine
+
+## subGaussian tail implies all-natural moment growth
+- Book heading: subGaussian moment characterization
+- Informal statement: a two-sided subGaussian tail bound controls all natural absolute moments. The current theorem proves a crude factorial-growth absolute-moment bound, and the sharp natural-exponent real-`Lp` / predicate bridge is proved separately.
+- Target Lean statement: `absMomentNat_le_of_subGaussianTail`; finiteness corollary `finiteAbsMomentNat_of_subGaussianTail`; sharp natural-exponent targets `absMomentNat_le_sqrt_growth_of_psi2Bound`, `realLpNorm_nat_le_sqrt_of_psi2Bound`, `realLpNorm_nat_le_sqrt_of_subGaussianTail`, `SubGaussianMomentNatSqrt`, `subGaussianMomentNatSqrt_of_psi2Bound`, `subGaussianMomentNatSqrt_of_subGaussianTail`, `sqrtMomentGrowthOfPsi2`, and `sqrtMomentGrowthOfSubGaussianTail`.
+- Required objects: `SubGaussianTail`, `Psi2Bound`, `absMomentNat`, `finiteAbsMomentNat`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
+- Required definitions: natural absolute moment normal form and explicit constant convention.
+- Required bridge lemmas: `abs_pow_le_exp_sq_factorial`, `absMomentNat_le_of_psi2Bound`, `psi2Bound_of_subGaussianTail`, `lintegral_exp_sq_div_le_two_of_psi2Bound`, Mathlib `Real.pow_div_factorial_le_exp`, and the deterministic helpers `pow_le_two_sqrt_mul_exp_sq`, `pow_le_two_mul_scale_sqrt_mul_exp_sq_div`, and `powLeSqrtGrowthMulExpSq`.
+- Status: proven for factorial growth, for natural-exponent sharp `sqrt(q)` real-Lp growth, and for the sharp natural-exponent predicate wrapper.
+- Constant: factorial bound `absMomentNat P X q <= ENNReal.ofReal (Real.exp (1/4) * (2*K)^q * q!) * 2`; sharp bounds `absMomentNat P X q <= ENNReal.ofReal ((4*K*sqrt q)^q)`, `realLpNorm <= 4*K*sqrt q` from `Psi2Bound`, `realLpNorm <= 8*K*sqrt q` from `SubGaussianTail`, and predicate scales `SubGaussianMomentNatSqrt (4*K)` / `SubGaussianMomentNatSqrt (8*K)`.
+- Blocker: no blocker for natural exponents `q >= 1`; the remaining book predicate connector is the real-exponent `SubGaussianMoment` formulation.
+- Target module: `HighDimProb/Concentration/MomentImplications.lean`
+- Priority: Stage G2B
+
+## absolute natural moment to Lp bridge
+- Book heading: `Lp范数`, subGaussian moment characterization
+- Informal statement: for a nonzero natural exponent `q`, finiteness or a bound on `E |X|^q` yields the corresponding Mathlib `L^q` membership and extended `L^q` seminorm bound.
+- Target Lean statement: `memLp_of_finiteAbsMomentNat`; quantitative wrappers `realLpNorm_nat_le_of_absMomentNat_le_ennreal` and `realLpNorm_nat_le_of_absMomentNat_le`; linear-growth wrappers `realLpNorm_nat_le_linear_of_psi2Bound` and `realLpNorm_nat_le_linear_of_subGaussianTail`; sqrt-growth wrappers `realLpNorm_nat_le_sqrt_of_psi2Bound` and `realLpNorm_nat_le_sqrt_of_subGaussianTail`; natural predicate wrappers `SubGaussianMomentNat`, `SubGaussianMomentNatSqrt`, `subGaussianMomentNat_of_psi2Bound`, `subGaussianMomentNat_of_subGaussianTail`, `subGaussianMomentNatSqrt_of_psi2Bound`, and `subGaussianMomentNatSqrt_of_subGaussianTail`.
+- Required objects: `absMomentNat`, `finiteAbsMomentNat`, `MemLpRealRandomVariable`, `realLpNorm`, `IsRealRandomVariable`, `Psi2Bound`, `SubGaussianTail`.
+- Required definitions: natural absolute moment normal form as a `lintegral`; Mathlib `ENNReal` exponent convention for `MemLp` and `eLpNorm`.
+- Required bridge lemmas: `lintegral_enorm_rpow_nat_eq_absMomentNat`, Mathlib `eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top`, `eLpNorm_eq_lintegral_rpow_enorm_toReal`, `ENNReal.rpow_natCast`, `ENNReal.ofReal_pow`, `ENNReal.rpow_le_rpow`, `Nat.factorial_le_pow`, `Real.rpow_le_rpow`, `Real.mul_rpow`, and `Real.exp_one_lt_three`.
+- Status: proven
+- Constant/formulation: `realLpNorm P X (q : ENNReal) <= B^(1/q)` in `ENNReal` form, plus a real-bound corollary with right side `ENNReal.ofReal (B^(1/q))`; the factorial bound yields linear constants `8`/`16`, and the deterministic envelope now yields sqrt constants `4` for `Psi2Bound` and `8` for `SubGaussianTail`, packaged as `SubGaussianMomentNatSqrt (4*K)` and `(8*K)`.
+- Blocker: no blocker for natural exponents `q != 0`; the remaining sharp book predicate `SubGaussianMoment` needs a bridge from natural exponents to its real-`ENNReal` exponent formulation.
+- Target module: `HighDimProb/Concentration/MomentImplications.lean`
+- Priority: Stage G2C
+
+## deterministic power-exponential envelope
+- Book heading: subGaussian moment characterization
+- Informal statement: for `x >= 0` and natural `q >= 1`, powers are dominated by a Gaussian exponential envelope, `x^q <= (C*sqrt q)^q * exp(x^2/4)`.
+- Target Lean statement: `pow_le_two_sqrt_mul_exp_sq`; constant-`4` wrapper `pow_le_four_sqrt_mul_exp_sq`; typed-target wrapper `powLeSqrtGrowthMulExpSq`.
+- Required objects: real logarithm, exponential, square root, natural powers.
+- Required definitions: small helper branch `HighDimProb.Analysis.RealInequalities`.
+- Required bridge lemmas: `log_le_sq_of_nonneg`, `pow_le_exp_nat_mul_sq`, Mathlib `Real.log_le_self`, `Real.log_le_iff_le_exp`, `Real.log_pow`, `Real.exp_le_exp`, and `Real.sq_sqrt`.
+- Status: proven
+- Constant/formulation: proved with constant `2`, which implies the earlier constant-`4` target.
+- Blocker: none for natural exponents; real-exponent variants are future theorem work if needed by `SubGaussianMoment`.
+- Target module: `HighDimProb/Analysis/RealInequalities.lean`
+- Priority: Stage G2E-fix
 
 ## Jensen inequality
 - Book heading: `经典不等式`
@@ -224,7 +311,7 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Required definitions: `SubGaussianTail`, `SubGaussianMoment`, `CenteredSubGaussianMGF`, `SubGaussianOrlicz`, `HasSubGaussianOrlicz`; Stage G1C proves the ψ₂-to-tail direction.
 - Required bridge lemmas: expectation of exponentials, tail/moment integration.
 - Status: blocked
-- Blocker: fixed-scale `Psi2Bound -> SubGaussianTail` and `SubGaussianTail -> Psi2Bound (2*K)` are proven, but moment/MGF connections, finite-gauge variants, gauge/norm objects, and canonical predicate choice remain future work.
+- Blocker: fixed-scale `Psi2Bound -> SubGaussianTail`, `SubGaussianTail -> Psi2Bound (2*K)`, all-natural factorial moment bounds, natural moment-to-`realLpNorm` bridges, natural-exponent sharp `sqrt(q)` growth, and `SubGaussianMomentNatSqrt` bridges are proven. Real-exponent `SubGaussianMoment`, MGF connections, finite-gauge variants, gauge/norm objects, and canonical predicate choice remain future work.
 - Target module: `HighDimProb/SubGaussian.lean`
 - Priority: v0.3
 
@@ -708,11 +795,11 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 ## sample covariance quadratic form nonnegativity
 - Book heading: sample covariance and PSD prerequisites
 - Informal statement: the quadratic form of the uncentered sample covariance matrix should be nonnegative.
-- Target Lean statement: `quadraticForm_sampleCovariance_nonneg`
+- Target Lean statements: `quadraticForm_sampleCovariance_eq_sum_sq`, `quadraticForm_sampleCovariance_nonneg`
 - Required objects: `sampleCovariance`, `quadraticForm`, finite sums.
 - Required definitions: sample covariance and quadratic form vocabulary.
-- Required bridge lemmas: a finite-sum algebra identity rewriting `x^T ((1/m) A^T A) x` as `(1/m) * sum k, (sum i, A k i * x i)^2`.
-- Status: blocked
-- Blocker: the needed reindexing/distributivity bridge between the explicit double-sum quadratic form and row-dot-square form is not implemented.
-- Target module: future `HighDimProb/RandomMatrix/SampleCovarianceTheorems.lean` or `HighDimProb/RandomMatrix/QuadraticForm.lean`
+- Required bridge lemmas: finite-sum distributivity/reindexing using `Finset.mul_sum`, `Finset.sum_mul`, and `Finset.sum_comm`.
+- Status: proven
+- Blocker: none. Stage RM2 proves the row-dot-square normal form `(1 / (m : Real)) * sum k, (sum i, A omega k i * x i)^2` and derives nonnegativity without assuming `0 < m`.
+- Target module: `HighDimProb/RandomMatrix/Algebra.lean`
 - Priority: Stage RM2

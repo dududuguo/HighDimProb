@@ -8,8 +8,15 @@
 - TailBridges
 - IntegrabilityBridges
 
+## Analysis
+
+- RealInequalities
+- GammaBounds
+- GaussianMomentBounds
+
 ## Concentration
 
+- LayerCake
 - Markov
 - Chebyshev
 - Chernoff
@@ -41,6 +48,7 @@
 ## RandomMatrix
 
 - Independence
+- Algebra
 - Statements
 - SampleCovarianceAlgebra
 - SampleCovarianceTheorems
@@ -59,6 +67,17 @@
 - EmpiricalMeasure
 - EmpiricalProcessBounds
 - VC
+
+## LimitTheorems
+
+- Basic
+- WeakLaw
+- Assumptions
+- SampleMean
+- ConvergenceInProbability
+- Independence
+- VarianceSums
+- StrongLawStatements
 
 ## Statements
 

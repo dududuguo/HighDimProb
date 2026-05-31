@@ -24,6 +24,7 @@ The stable root is intentionally narrow. It should expose the v0.1 scalar probab
 - `HighDimProb.Geometry`
 - `HighDimProb.Concentration`
 - `HighDimProb.RandomMatrix`
+- `HighDimProb.LimitTheorems`
 - `HighDimProb.Process`
 - `HighDimProb.SignalRecovery`
 - `HighDimProb.Tactic`
@@ -33,10 +34,11 @@ These modules remain experimental until they pass the promotion checklist: tests
 ## Branch Modules
 
 - `HighDimProb.Scalar`: one-dimensional probability infrastructure, including scalar centering and variance leaves.
-- `HighDimProb.Concentration`: experimental scalar concentration proof spine.
+- `HighDimProb.Concentration`: experimental scalar concentration proof spine, including `LayerCake`, `Markov`, `Chebyshev`, `OrliczToTail`, `TailToOrlicz`, and `Implications`.
 - `HighDimProb.Vector`: finite-dimensional random-vector infrastructure.
 - `HighDimProb.Geometry`: nets, metric entropy, covering/packing statements, and Gaussian-width vocabulary.
-- `HighDimProb.RandomMatrix`: random-matrix object and vocabulary submodules.
+- `HighDimProb.RandomMatrix`: random-matrix object, algebra helper, and vocabulary submodules.
+- `HighDimProb.LimitTheorems`: experimental weak-law scaffold with sample means, weak-law typed statements, and assumption vocabulary.
 - `HighDimProb.Process`: random-process and empirical-process vocabulary.
 - `HighDimProb.Statements`: typed theorem statement specifications and theorem-atlas bridge modules.
 - `HighDimProb.Tactic`: reserved for lightweight project automation.
@@ -51,6 +53,7 @@ HighDimProb
 - Vector (experimental)
 - Geometry (experimental)
 - RandomMatrix (experimental physical branch)
+- LimitTheorems (experimental / reserved)
 - Process (experimental / reserved)
 - Statements (stable for typed specs)
 - Tactic (reserved)
