@@ -34,11 +34,15 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/LayerCakeAPI.lean`: checks the reusable layer-cake and exponential-tail calculus import boundary.
 - `HighDimProbTest/OrliczToTailAPI.lean`: checks ψ₂/ψ₁ Orlicz-to-tail implication declarations and their lintegral moment bridges.
 - `HighDimProbTest/TailToOrliczAPI.lean`: checks the tail-to-Orlicz typed targets, layer-cake bridges, and proved ψ₂ reverse implication.
-- `HighDimProbTest/ConcentrationImplicationsAPI.lean`: checks the proved scalar Orlicz/tail implication graph through `HighDimProb.Concentration.Implications`.
+- `HighDimProbTest/ConcentrationImplicationsAPI.lean`: checks the proved scalar Orlicz/tail, natural-moment, MGF, independent-sum, and weighted-Rademacher implication names through `HighDimProb.Concentration.Implications`.
 - `HighDimProbTest/MomentImplicationsAPI.lean`: checks natural absolute-moment vocabulary, fixed-exponent and all-natural-exponent moment implication theorems, finiteness corollaries, natural moment-to-`MemLp`/`realLpNorm` bridges, crude linear and sharp sqrt real-Lp growth theorems, `SubGaussianMomentNat`, `SubGaussianMomentNatSqrt`, sharp natural-exponent predicate bridges, and the sharp typed statement wrappers.
 - `HighDimProbTest/MGFImplicationsAPI.lean`: checks the proof-friendly MGF lintegral predicate, the Mathlib-backed MGF bridge, one-sided Chernoff bounds, two-sided tail from MGF, and composed MGF-to-ψ₂/natural-moment corollaries.
+- `HighDimProbTest/SubGaussianSumsAPI.lean`: checks independent finite subGaussian sum measurability helpers, Mathlib MGF proxy wrappers, unweighted and weighted centered-MGF theorems, and their tail corollaries.
 - Stage M3 strengthens `HighDimProbTest/ConcentrationImplicationsAPI.lean` so the aggregate implication import checks the tail/Orlicz, natural-moment, and MGF arrows together.
-- `HighDimProbTest/RademacherAPI.lean`: checks the canonical Bool Rademacher PMF, measure, variable, MGF theorem, and tail corollary.
+- `HighDimProbTest/RademacherAPI.lean`: checks the canonical Bool Rademacher PMF, measure, probability-measure instance, variable, measurability lemma, interval bound, zero-mean lemma, MGF theorem, and tail corollary.
+- `HighDimProbTest/RademacherFamilyAPI.lean`: checks the finite product Rademacher measure/PMF, coordinate family, coordinate measurability, pointwise bounds, zero mean, and coordinate independence.
+- `HighDimProbTest/RademacherSumsAPI.lean`: checks weighted finite Rademacher sums, measurability, zero-weight helpers, weighted-coordinate independence, term MGF proxies, the finite-sum MGF proxy, the HighDimProb centered-MGF theorem, the derived subGaussian tail theorem, the explicit Hoeffding bound, and the positive-variance alias.
+- Stage H4 audits the Rademacher/Hoeffding mini-domain and confirms focused plus aggregate tests cover every public declaration in the atom, family, and weighted-sum leaves.
 - `HighDimProbTest/RandomVectorAPI.lean`: downstream-style random-vector object-layer examples.
 - `HighDimProbTest/CovarianceAPI.lean`: downstream-style covariance and centered-vector vocabulary examples.
 - `HighDimProbTest/CovarianceProofsAPI.lean`: checks the centered-vector coordinate and centered-scalar proof-pilot declarations.
@@ -106,7 +110,7 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 
 ## Current Limits
 
-No theorem-heavy tests before the object layer stabilizes. Do not test Hoeffding, Bernstein, full subGaussian/subExponential equivalences, random matrix bounds, Johnson-Lindenstrauss, Hanson-Wright, generic chaining, empirical process bounds, or signal recovery guarantees yet.
+No theorem-heavy tests before the object layer stabilizes. The weighted Rademacher Hoeffding specialization is now tested; do not test general bounded-variable Hoeffding, Bernstein, full subGaussian/subExponential equivalences, random matrix bounds, Johnson-Lindenstrauss, Hanson-Wright, generic chaining, empirical process bounds, or signal recovery guarantees yet.
 
 ## Future Lint
 

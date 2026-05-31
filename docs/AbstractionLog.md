@@ -717,7 +717,7 @@
 - Concrete version chosen: close the scalar subGaussian proof spine as a documentation, import, and API-test milestone, not as a new theorem stage.
 - Possible general version: prove a full equivalence theorem family and introduce a canonical `SubGaussian` predicate.
 - Reason for not generalizing yet: reverse MGF, full real-exponent `SubGaussianMoment`, and finite-gauge/norm variants are still missing.
-- Import decision: `HighDimProb.Concentration.Implications` now re-exports the proved tail/Orlicz, natural-moment, and MGF implication leaves; theorem ownership remains in the focused leaf files.
+- Import decision: `HighDimProb.Concentration.Implications` now re-exports the proved tail/Orlicz, natural-moment, MGF, and weighted Rademacher sum implication leaves; theorem ownership remains in the focused leaf files.
 - Documentation decision: `docs/ScalarImplicationGraph.md` is table-driven so constants, statuses, and theorem names can be audited without reading proof files.
 - Future upgrade path: the next deep proof route should target the reverse MGF bridge before any canonical predicate consolidation.
 
@@ -729,6 +729,75 @@
 - Mathlib reuse: Mathlib has Bernoulli PMFs and a bounded zero-mean subGaussian MGF lemma, but no HighDimProb-facing Rademacher theorem.
 - Constant decision: the MGF scale is `1`; the existing MGF-to-tail bridge yields tail scale `2`.
 - Future upgrade path: weighted finite Rademacher sums should reuse Mathlib `HasSubgaussianMGF.add_of_indepFun` or a finite-sum wrapper once independence is packaged.
+
+## Stage H0 Rademacher / Hoeffding readiness cleanup
+
+- Concrete version chosen: keep the existing one-sign Rademacher atom unchanged and make the next branch plan explicit in `docs/RademacherPlan.md`.
+- Possible general version: start weighted Rademacher sums or a full Hoeffding theorem immediately.
+- Reason for not generalizing yet: the next proof needs finite product signs, coordinate independence, and MGF factorization; starting the inequality before those APIs are stable would mix object design with theorem proof.
+- Audit decision: `HighDimProbTest/RademacherAPI.lean` is the focused test for the atom declarations, while branch and experimental import tests keep aggregate imports checked.
+- Mathlib reuse found: Bernoulli PMFs and Hoeffding/subGaussian MGF lemmas exist; finite product and independence packaging remains the design point.
+- Future upgrade path: Stage H2A should introduce the smallest finite product Rademacher family infrastructure needed for weighted sums.
+
+## Stage H2A finite Rademacher product family
+
+- Concrete version chosen: define `rademacherVectorMeasure n` as `Measure.pi (fun _ : Fin n => rademacherMeasure)` on `Fin n -> Bool`.
+- PMF decision: expose `rademacherVectorPMF n` as `(rademacherVectorMeasure n).toPMF`, with `rademacherVectorPMF_toMeasure` proving it returns the product measure.
+- Possible general version: build a general finite product PMF combinator or a broad independent-sign distribution hierarchy.
+- Reason for not generalizing yet: Mathlib's independence theorem is already phrased for `Measure.pi`, and H2B only needs canonical product signs before weighted sums.
+- Independence decision: prove `iIndepFun_rademacherCoord` now because it is direct from `ProbabilityTheory.iIndepFun_pi`.
+- Lean/mathlib reuse: `Measure.pi`, `Measure.toPMF`, `Measure.toPMF_toMeasure`, `measurePreserving_eval`, `MeasurePreserving.map_eq`, `MeasureTheory.integral_map`, and `ProbabilityTheory.iIndepFun_pi`.
+- Future upgrade path: H2B should use this coordinate family to define weighted sums and prove the centered MGF bound, without introducing Hoeffding tails yet.
+
+## Stage H2B weighted finite Rademacher sum MGF
+
+- Concrete version chosen: add `HighDimProb.Concentration.RademacherSums` for the weighted sum and its MGF theorem, while keeping the finite product distribution facts in `Distributions.RademacherFamily`.
+- Possible general version: prove a broad independent-sum concentration theorem or a reusable product-integral MGF factorization API.
+- Reason for not generalizing yet: Mathlib already has `ProbabilityTheory.HasSubgaussianMGF.sum_of_iIndepFun`, which gives exactly the variance-proxy addition needed for finite independent sums.
+- MGF normal form decision: expose both the Mathlib proxy theorem `hasSubgaussianMGF_weightedRademacherSum` with proxy `sum_i a_i^2` and the HighDimProb predicate theorem `centeredSubGaussianMGF_weightedRademacherSum` with scale `sqrt (sum_i a_i^2)`.
+- Zero-scale decision: the HighDimProb theorem assumes `0 < sum_i a_i^2` because `CenteredSubGaussianMGF` requires a strictly positive scale. The all-zero-weight vector should be handled separately in the Hoeffding tail stage.
+- Lean/mathlib reuse: `ProbabilityTheory.HasSubgaussianMGF.sum_of_iIndepFun`, `ProbabilityTheory.HasSubgaussianMGF.const_mul`, `ProbabilityTheory.iIndepFun.comp`, and the H2A coordinate independence theorem.
+- Future upgrade path: Stage H3 derives the Rademacher Hoeffding tail by composing the weighted-sum MGF theorem with the existing MGF-to-tail bridge.
+
+## Stage H3 finite Rademacher Hoeffding tail
+
+- Concrete version chosen: add the Rademacher-specific tail theorem and explicit Hoeffding restatement in `HighDimProb.Concentration.RademacherSums`.
+- Possible general version: a bounded-variable Hoeffding theorem for arbitrary independent centered variables.
+- Reason for not generalizing yet: the current branch has canonical finite Rademacher signs and a complete MGF bridge; bounded-variable assumptions and independent-sum interfaces need separate design.
+- Constant decision: compose `centeredSubGaussianMGF_weightedRademacherSum` with `subGaussianTail_of_centeredSubGaussianMGF`, producing tail scale `2 * sqrt (sum_i a_i^2)` and explicit denominator `4 * sum_i a_i^2`.
+- Zero-scale decision: theorems assume `0 < sum_i a_i^2`; the all-zero vector is a predicate-design cleanup because `SubGaussianTail` requires strictly positive scales.
+- Lean/mathlib reuse: the proof reuses the existing MGF-to-tail theorem and uses `Real.sq_sqrt` plus ring normalization for the denominator.
+- Future upgrade path: Stage H4 closes the branch by auditing docs/imports/tests and recording the zero-scale cleanup as a small API task.
+
+## Stage H4 Rademacher / Hoeffding branch closeout
+
+- Concrete version chosen: close the finite Rademacher concentration branch as an experimental mini-domain with `docs/RademacherMilestone.md`, import audits, and API coverage checks.
+- Possible general version: start general bounded-variable Hoeffding or independent finite subGaussian sums immediately.
+- Reason for not generalizing yet: the branch closeout should freeze the constants and import boundary before widening theorem scope.
+- Import decision: keep the branch experimental; `HighDimProb.Distributions` owns atom/family objects, `HighDimProb.Concentration` owns weighted sums and tail consequences, and `HighDimProb` stable root remains unchanged.
+- Test decision: focused tests cover every public declaration in the atom, family, and weighted-sum leaves; aggregate tests check discoverability.
+- Future upgrade path: after the zero-weight cleanup, the next route should factor the independent finite subGaussian sum MGF pattern out of the Rademacher specialization.
+
+## Stage H2-cleanup weighted Rademacher zero-weight case
+
+- Concrete version chosen: keep the existing positive-square-sum MGF/tail/Hoeffding theorems unchanged and add explicit zero-weight helper theorems.
+- Possible general version: redesign `CenteredSubGaussianMGF` and `SubGaussianTail` to allow zero scale.
+- Reason for not generalizing yet: the current scalar implication graph assumes strictly positive scales, and changing predicate meanings would affect many existing theorem statements.
+- Zero-case decision: prove the weighted sum is identically zero under either `forall i, a i = 0` or `sum_i a_i^2 = 0`, and prove absolute-tail probability is zero for strictly positive thresholds.
+- Naming decision: add `hoeffding_rademacher_sum_of_pos_variance` as a user-facing alias that makes the positive-square-sum assumption explicit.
+- Lean/mathlib reuse: `Finset.sum_eq_zero_iff_of_nonneg`, `sq_nonneg`, `sq_eq_zero_iff`, tail-event definitions, and `measure_empty`.
+- Future upgrade path: Stage H5 should factor the independent finite subGaussian sum MGF pattern out of the Rademacher specialization.
+
+## Stage H5 independent finite subGaussian sum MGF
+
+- Concrete version chosen: add `HighDimProb.Concentration.SubGaussianSums` as the general scalar independent-sum MGF leaf.
+- Possible general version: immediately prove general bounded-variable Hoeffding or a broad independent concentration hierarchy.
+- Reason for not generalizing yet: the current proof only needs centered subGaussian MGF assumptions and Mathlib finite-sum independence; bounded-variable Hoeffding needs a separate lemma sourcing MGF control from bounded centered variables.
+- Index decision: expose both Finset helper theorems and `[Fintype ι]` user-facing wrappers.
+- Weighted decision: prove the weighted theorem in the same stage because Mathlib `HasSubgaussianMGF.const_mul` and `iIndepFun.comp` make it a direct extension of the unweighted theorem.
+- Scale decision: unweighted scale is `sqrt (sum_i K_i^2)` and weighted scale is `sqrt (sum_i (a_i*K_i)^2)`, each with a positive proxy-sum assumption because HighDimProb MGF/tail predicates require strictly positive scales.
+- Lean/mathlib reuse: `ProbabilityTheory.HasSubgaussianMGF.sum_of_iIndepFun`, `ProbabilityTheory.HasSubgaussianMGF.const_mul`, `ProbabilityTheory.iIndepFun.comp`, `Finset.measurable_sum`, and existing `subGaussianTail_of_centeredSubGaussianMGF`.
+- Future upgrade path: Stage H6 should prove the bounded centered variable MGF lemma, then derive the general Hoeffding finite-sum theorem by composing with this new independent-sum layer.
 
 ## Milestone Sprint S4 MGF implication branch
 

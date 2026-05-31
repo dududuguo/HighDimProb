@@ -21,7 +21,11 @@
 - Chebyshev
 - Chernoff
 - MGF
+- SubGaussianSums
+- RademacherSums
 - Hoeffding
+  - Rademacher specialization: implemented in `RademacherSums`
+  - General bounded-variable form: planned after the independent finite subGaussian sum MGF layer
 - Bernstein
 - OrliczToTail
 - TailToOrlicz
@@ -33,7 +37,7 @@
 ## Distributions
 
 - Rademacher
-- RademacherSums
+- RademacherProduct
 - BernoulliAtoms
 - BoundedSigns
 

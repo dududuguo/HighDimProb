@@ -2,6 +2,8 @@ import HighDimProb.Concentration.OrliczToTail
 import HighDimProb.Concentration.TailToOrlicz
 import HighDimProb.Concentration.MomentImplications
 import HighDimProb.Concentration.MGF
+import HighDimProb.Concentration.SubGaussianSums
+import HighDimProb.Concentration.RademacherSums
 
 /-!
 # Scalar implication graph
@@ -23,6 +25,8 @@ Current proved arrows:
 * `SubExponentialTail -> Psi1Bound` with scale loss `K -> 3 * K`
 * natural-exponent factorial and sharp `sqrt(q)` moment links
 * `CenteredSubGaussianMGF -> SubGaussianTail/Psi2Bound/SubGaussianMomentNatSqrt`
+* independent finite centered subGaussian sums satisfy centered MGF and tail control
+* finite weighted Rademacher sums satisfy centered MGF control and Hoeffding tails
 
 The full real-exponent `SubGaussianMoment` theorem and reverse MGF formulation
 links remain TODO. This module intentionally keeps the proof theorem names from

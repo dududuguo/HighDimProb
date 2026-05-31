@@ -44,6 +44,13 @@ Infrastructure:
 - Stage G2F sharp natural-exponent moment interface bridge
 - Stage G2F-cleanup abstraction and code-trace cleanup
 - Milestone Sprint S4 MGF branch and subGaussian implication closure
+- Stage H0 Rademacher/Hoeffding branch readiness cleanup
+- Stage H2A finite product Rademacher family infrastructure
+- Stage H2B weighted finite Rademacher sum MGF
+- Stage H3 finite Rademacher Hoeffding tail bound
+- Stage H4 Rademacher/Hoeffding branch closeout
+- Stage H2-cleanup weighted Rademacher zero-weight cleanup
+- Stage H5 independent finite subGaussian sum MGF
 - Milestone Sprint S2 scalar concentration proof spine + random matrix statement layer
 - Milestone Sprint S3 small branch proof battery
 
@@ -115,6 +122,13 @@ Processed:
 - Stage G2F sharp natural-exponent moment interface bridge completed
 - Stage G2F-cleanup abstraction and code-trace cleanup completed
 - Milestone Sprint S4 MGF branch completed through forward MGF-to-tail/Orlicz/moment composition
+- Stage H0 Rademacher/Hoeffding readiness cleanup completed
+- Stage H2A finite product Rademacher family infrastructure completed
+- Stage H2B weighted finite Rademacher sum MGF completed
+- Stage H3 finite Rademacher Hoeffding tail bound completed
+- Stage H4 Rademacher/Hoeffding branch closeout completed
+- Stage H2-cleanup weighted Rademacher zero-weight cleanup completed
+- Stage H5 independent finite subGaussian sum MGF completed
 
 Scaffold exists, not processed as stable API:
 - random process vocabulary
@@ -177,6 +191,13 @@ Processed with proof:
 - psi2 and subGaussian-tail bounds imply `SubGaussianMomentNat` with factorial growth
 - psi2 and subGaussian-tail bounds imply `SubGaussianMomentNatSqrt` with constants `4` and `8`
 - centered subGaussian MGF control implies one-sided Chernoff tails, two-sided `SubGaussianTail (2*K)`, `Psi2Bound (4*K)`, and `SubGaussianMomentNatSqrt (16*K)`
+- finite weighted Rademacher sums have Mathlib MGF proxy `sum_i a_i^2` and HighDimProb centered subGaussian MGF scale `sqrt (sum_i a_i^2)` when that scale is positive
+- finite weighted Rademacher sums have two-sided subGaussian tails and an explicit Hoeffding bound under `0 < sum_i a_i^2`
+- the finite Rademacher concentration branch is closed out as an experimental mini-domain in `docs/RademacherMilestone.md`
+- zero-weight weighted Rademacher sums are proved to be the zero random variable, and their strictly positive absolute tails have probability zero
+- independent finite centered subGaussian sums have MGF scale `sqrt (sum_i K_i^2)` under positive proxy sum
+- independent finite weighted centered subGaussian sums have MGF scale `sqrt (sum_i (a_i*K_i)^2)` under positive weighted proxy sum
+- the corresponding unweighted and weighted finite-sum tail corollaries are proved by composition with the MGF-to-tail bridge
 - psi1/subExponential bounds imply first absolute natural-moment bounds
 - layer-cake bridge for nonnegative real random variables
 - exponential-tail to exponential-moment bridge
@@ -275,8 +296,8 @@ Resolved in Milestone Sprint S4:
 Resolved in Stage M3:
 - `docs/Milestone3.md` closes the scalar subGaussian proof spine as an experimental milestone.
 - `docs/ScalarImplicationGraph.md` is now table-driven and separates proven arrows, typed compatibility wrappers, and blocked reverse directions.
-- `HighDimProb.Concentration.Implications` re-exports the current scalar implication graph, including moment and MGF arrows, without changing theorem meanings.
-- Reverse MGF, full real-exponent `SubGaussianMoment`, subExponential MGF, Hoeffding, and Bernstein remain future work.
+- `HighDimProb.Concentration.Implications` re-exports the current scalar implication graph, including moment, MGF, and weighted Rademacher sum arrows, without changing theorem meanings.
+- Reverse MGF, full real-exponent `SubGaussianMoment`, subExponential MGF, general bounded-variable Hoeffding, and Bernstein remain future work.
 
 Resolved in Stage H1:
 - `HighDimProb.Distributions.Rademacher` defines the canonical symmetric Rademacher variable on `Bool`.
@@ -284,3 +305,45 @@ Resolved in Stage H1:
 - `centeredSubGaussianMGF_rademacher` proves MGF subGaussian control with scale `1`.
 - `subGaussianTail_rademacher` derives the two-sided tail predicate with scale `2`.
 - The proof reuses Mathlib's bounded zero-mean subGaussian MGF lemma instead of proving a weighted-sum Hoeffding theorem.
+
+Resolved in Stage H0:
+- `docs/RademacherPlan.md` records the Rademacher/Hoeffding branch plan.
+- `HighDimProbTest/RademacherAPI.lean` audits all current one-sign Rademacher atom declarations.
+- The active deep-proof direction has reached the finite weighted Rademacher Hoeffding tail specialization.
+
+Resolved in Stage H2A:
+- `HighDimProb.Distributions.RademacherFamily` defines the finite product Rademacher measure on `Fin n -> Bool`.
+- `rademacherVectorPMF` is the PMF induced from the product measure via `Measure.toPMF`.
+- `rademacherCoord` and `rademacherVector` expose coordinate signs as scalar and vector-valued functions.
+- Coordinate measurability, pointwise `[-1,1]` bounds, zero mean, and `iIndepFun_rademacherCoord` are proved.
+- Weighted Rademacher Hoeffding tails are handled in the concentration leaf; general bounded-variable Hoeffding remains future work.
+
+Resolved in Stage H2B:
+- `HighDimProb.Concentration.RademacherSums` defines `weightedRademacherSum a := fun omega => sum i, a i * rademacherCoord i omega`.
+- `isRealRandomVariable_weightedRademacherSum` proves measurability of the finite weighted sum.
+- `hasSubgaussianMGF_weightedRademacherSum` proves the Mathlib MGF proxy `sum_i a_i^2` by reusing `ProbabilityTheory.HasSubgaussianMGF.sum_of_iIndepFun`.
+- `centeredSubGaussianMGF_weightedRademacherSum` exposes the HighDimProb MGF predicate at scale `sqrt (sum_i a_i^2)` under `0 < sum_i a_i^2`.
+
+Resolved in Stage H3:
+- `subGaussianTail_weightedRademacherSum` composes the weighted-sum MGF theorem with the existing MGF-to-tail bridge.
+- The resulting tail scale is `2 * sqrt (sum_i a_i^2)` under `0 < sum_i a_i^2`.
+- `hoeffding_rademacher_sum` exposes the explicit bound `2 * exp (-(t^2 / (4 * sum_i a_i^2)))` for `t >= 0`.
+- The all-zero-weight vector remains incompatible with exact scale-0 predicate wrappers, but direct zero-weight helper theorems are handled in Stage H2-cleanup.
+
+Resolved in Stage H4:
+- `docs/RademacherMilestone.md` summarizes the canonical atom, finite product family, weighted sums, MGF/tail/Hoeffding constants, tests, blockers, and next theorem family.
+- Import audit keeps the Rademacher branch experimental: distributions through `HighDimProb.Distributions`, sums/tails through `HighDimProb.Concentration`, and both through `HighDimProb.Experimental`.
+- Theorem-name audit confirms the public Rademacher/Hoeffding declarations are discoverable through focused API tests and aggregate import tests.
+
+Resolved in Stage H2-cleanup:
+- `weightedRademacherSum_eq_zero_of_forall_eq_zero` proves the direct all-zero-weight function equality.
+- `weightedRademacherSum_eq_zero_of_sum_sq_eq_zero` proves the finite square-sum zero version using nonnegativity of squares.
+- `absTailProb_weightedRademacherSum_eq_zero_of_forall_eq_zero_of_pos` and `absTailProb_weightedRademacherSum_eq_zero_of_sum_sq_eq_zero_of_pos` prove zero absolute-tail probability for every `0 < t`.
+- `hoeffding_rademacher_sum_of_pos_variance` makes the positive-variance assumption explicit without changing the existing `hoeffding_rademacher_sum` theorem.
+
+Resolved in Stage H5:
+- `HighDimProb.Concentration.SubGaussianSums` factors the independent finite-sum MGF pattern out of the Rademacher specialization.
+- `centeredSubGaussianMGF_sum_of_iIndepFun_of_pos` proves the unweighted finite-index theorem with scale `sqrt (sum_i K_i^2)`.
+- `centeredSubGaussianMGF_weighted_sum_of_iIndepFun_of_pos` proves the weighted theorem with scale `sqrt (sum_i (a_i*K_i)^2)`.
+- `subGaussianTail_sum_of_iIndepFun_of_pos` and `subGaussianTail_weighted_sum_of_iIndepFun_of_pos` derive tail scales `2 * sqrt (...)`.
+- The proof reuses Mathlib `ProbabilityTheory.HasSubgaussianMGF.sum_of_iIndepFun` and `ProbabilityTheory.iIndepFun`; no custom product expectation factorization was introduced.

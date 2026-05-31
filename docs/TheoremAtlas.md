@@ -37,9 +37,92 @@ future directions.
 - Required bridge lemmas: Mathlib `ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero`, `PMF.integral_eq_sum`, and the pointwise interval lemma `rademacher_mem_Icc`.
 - Status: proven
 - Constant: MGF scale `1`; tail corollary `subGaussianTail_rademacher` has scale `2` by the existing MGF-to-tail bridge.
-- Blocker: weighted finite Rademacher sums still need finite-family independence and MGF-addition packaging.
+- Blocker: none for the one-sign atom; weighted finite-sum tails are now handled in `HighDimProb.Concentration.RademacherSums`.
 - Target module: `HighDimProb/Distributions/Rademacher.lean`
 - Priority: experimental concentration infrastructure
+
+## Rademacher / Hoeffding branch readiness
+- Book heading: Rademacher variables / Hoeffding prerequisites
+- Informal statement: the one-sign Rademacher atom is ready; the next theorem work needs finite product signs and weighted-sum MGF infrastructure.
+- Target Lean statement: none in Stage H0; this is a roadmap and API audit stage.
+- Required objects already proved: `rademacherPMF`, `rademacherMeasure`, `rademacher`, `centeredSubGaussianMGF_rademacher`, `subGaussianTail_rademacher`.
+- Planned dependencies: finite product measure on `Fin n -> Bool`, coordinate independence, product/MGF factorization, and finite-sum exponential algebra.
+- Status: informal
+- Blocker: none for the readiness audit; the finite family, weighted MGF, and positive-square-sum Hoeffding tail are now implemented.
+- Plan document: `docs/RademacherPlan.md`
+- Priority: active deep-proof direction
+
+## Finite product Rademacher family
+- Book heading: Rademacher variables / Hoeffding prerequisites
+- Informal statement: the coordinate signs on `Fin n -> Bool` under the product Rademacher measure are measurable, mean-zero, bounded in `[-1, 1]`, and independent.
+- Target Lean statements: `rademacherVectorMeasure`, `rademacherVectorPMF`, `rademacherCoord`, `rademacherVector`, `isRealRandomVariable_rademacherCoord`, `integral_rademacherCoord`, `iIndepFun_rademacherCoord`.
+- Required objects: `Measure.pi`, `Measure.toPMF`, `Measure.toPMF_toMeasure`, `measurePreserving_eval`, `ProbabilityTheory.iIndepFun_pi`.
+- Required definitions: canonical one-sign `rademacherMeasure` and `rademacher`.
+- Required bridge lemmas: `rademacher_mem_Icc`, `integral_rademacher`, Mathlib product-measure coordinate projection.
+- Status: proven
+- Constant: coordinate values remain in `[-1, 1]`; each coordinate has mean `0`.
+- Blocker: none for the finite product family itself.
+- Target module: `HighDimProb/Distributions/RademacherFamily.lean`
+- Priority: active H2 branch infrastructure
+
+## Weighted finite Rademacher sum MGF
+- Book heading: Rademacher variables / Hoeffding prerequisites
+- Informal statement: a finite weighted sum of independent Rademacher signs is centered subGaussian with variance proxy `sum_i a_i^2`.
+- Target Lean statements: `weightedRademacherSum`, `isRealRandomVariable_weightedRademacherSum`, `hasSubgaussianMGF_weightedRademacherSum`, `centeredSubGaussianMGF_weightedRademacherSum`.
+- Required objects: `rademacherVectorMeasure`, `rademacherCoord`, `iIndepFun_rademacherCoord`, `CenteredSubGaussianMGF`, Mathlib `ProbabilityTheory.HasSubgaussianMGF`.
+- Required bridge lemmas: `hasSubgaussianMGF_rademacherCoord`, `iIndepFun_weightedRademacherTerms`, `hasSubgaussianMGF_weightedRademacherTerm`, Mathlib `ProbabilityTheory.HasSubgaussianMGF.sum_of_iIndepFun`.
+- Status: proven
+- Constant: exact Mathlib MGF proxy `sum_i a_i^2`; HighDimProb scale `sqrt (sum_i a_i^2)` under the explicit assumption `0 < sum_i a_i^2`.
+- Blocker: the all-zero-weight vector cannot satisfy the current `CenteredSubGaussianMGF` predicate at scale `0` because that predicate requires a strictly positive scale; zero-sum helper theorems now cover the degenerate random variable directly.
+- Target module: `HighDimProb/Concentration/RademacherSums.lean`
+- Priority: active H2 branch infrastructure
+
+## Finite Rademacher Hoeffding tail
+- Book heading: Rademacher variables / Hoeffding inequality
+- Informal statement: a finite weighted sum of independent Rademacher signs has two-sided Gaussian tail decay with variance proxy `sum_i a_i^2`.
+- Target Lean statements: `subGaussianTail_weightedRademacherSum`, `hoeffding_rademacher_sum`.
+- Required objects: `weightedRademacherSum`, `centeredSubGaussianMGF_weightedRademacherSum`, `subGaussianTail_of_centeredSubGaussianMGF`, `SubGaussianTail`, `absTailProb`.
+- Required bridge lemmas: existing MGF-to-tail implication and `Real.sq_sqrt` denominator normalization.
+- Status: proven
+- Constant: tail scale `2 * sqrt (sum_i a_i^2)`; explicit bound `2 * exp (-(t^2 / (4 * sum_i a_i^2)))`.
+- Blocker: unrestricted exact-scale `SubGaussianTail` statement remains a zero-scale predicate issue when `sum_i a_i^2 = 0`; separate zero-tail helper theorems are proven.
+- Target module: `HighDimProb/Concentration/RademacherSums.lean`
+- Priority: active H3 branch theorem
+
+## Weighted Rademacher zero-weight cleanup
+- Book heading: Rademacher variables / Hoeffding edge cases
+- Informal statement: if all weights vanish, or equivalently the finite sum of squared weights is zero, the weighted Rademacher sum is the zero random variable and its strictly positive absolute tails have probability zero.
+- Target Lean statements: `weightedRademacherSum_eq_zero_of_forall_eq_zero`, `weightedRademacherSum_eq_zero_of_sum_sq_eq_zero`, `absTailProb_weightedRademacherSum_eq_zero_of_forall_eq_zero_of_pos`, `absTailProb_weightedRademacherSum_eq_zero_of_sum_sq_eq_zero_of_pos`, `hoeffding_rademacher_sum_of_pos_variance`.
+- Required objects: `weightedRademacherSum`, `absTailProb`, `Finset.sum_eq_zero_iff_of_nonneg`, `sq_eq_zero_iff`.
+- Status: proven
+- Constant: zero-tail theorem applies only for `0 < t`; the positive-variance Hoeffding denominator remains `4 * sum_i a_i^2`.
+- Sharpness note: constants are inherited from the current MGF-to-tail bridge and are not claimed optimal.
+- Blocker: exact `SubGaussianTail` or `CenteredSubGaussianMGF` at scale `0` remains impossible with the current positive-scale predicates.
+- Target module: `HighDimProb/Concentration/RademacherSums.lean`
+- Priority: H2-cleanup
+
+## Independent finite subGaussian sum MGF
+- Book heading: subGaussian sums / Hoeffding prerequisites
+- Informal statement: a finite sum of independent centered subGaussian real variables is centered subGaussian with variance proxy equal to the sum of the individual variance proxies.
+- Target Lean statements: `centeredSubGaussianMGF_sum_of_iIndepFun_of_pos`, `centeredSubGaussianMGF_weighted_sum_of_iIndepFun_of_pos`, `subGaussianTail_sum_of_iIndepFun_of_pos`, `subGaussianTail_weighted_sum_of_iIndepFun_of_pos`.
+- Required objects: `CenteredSubGaussianMGF`, `SubGaussianTail`, `ProbabilityTheory.iIndepFun`, finite sums, deterministic scalar weights.
+- Required bridge lemmas: `hasSubgaussianMGF_finset_sum_of_iIndepFun`, `iIndepFun_weighted_of_iIndepFun`, `hasSubgaussianMGF_weighted_of_centeredSubGaussianMGF`, Mathlib `ProbabilityTheory.HasSubgaussianMGF.sum_of_iIndepFun`, and `ProbabilityTheory.HasSubgaussianMGF.const_mul`.
+- Status: proven
+- Constant: unweighted MGF scale `sqrt (sum_i K_i^2)` under `0 < sum_i K_i^2`; weighted MGF scale `sqrt (sum_i (a_i*K_i)^2)` under `0 < sum_i (a_i*K_i)^2`; tail scale doubles by the existing MGF-to-tail bridge.
+- Blocker: exact zero-scale predicate wrappers remain unavailable because `CenteredSubGaussianMGF` and `SubGaussianTail` require positive scales; zero-scale cases should be handled by separate direct lemmas when needed.
+- Target module: `HighDimProb/Concentration/SubGaussianSums.lean`
+- Priority: Stage H5
+
+## Rademacher / Hoeffding branch closeout
+- Book heading: Rademacher variables / Hoeffding prerequisites
+- Informal statement: the finite Rademacher concentration branch is documented, tested, and exposed through experimental aggregates.
+- Target Lean statement: none; this is a milestone/import audit.
+- Required objects: canonical atom, finite product family, weighted sum MGF theorem, weighted tail theorem, and explicit Hoeffding theorem.
+- Status: proven documentation milestone
+- Constants: recorded in `docs/RademacherMilestone.md`.
+- Blocker: all-zero exact-scale predicate wrapper remains a future predicate-design cleanup; direct zero-sum and zero-tail helper theorems are proven.
+- Target module: documentation plus existing Rademacher leaves.
+- Priority: H4 closeout
 
 ## tail-event measurability statement
 - Book heading: `尾分布`
@@ -432,13 +515,13 @@ future directions.
 
 ## Hoeffding inequality
 - Book heading: `霍夫丁不等式`, `广义霍夫丁不等式一`, `广义霍夫丁不等式二`
-- Informal statement: sums of independent bounded or subGaussian centered variables have Gaussian-type tails.
-- Target Lean statement: blocked until finite sums and the target subGaussian formulation are selected.
+- Informal statement: sums of independent bounded or subGaussian centered variables have Gaussian-type tails. The finite weighted Rademacher specialization is now proven separately.
+- Target Lean statement: general bounded-variable Hoeffding remains blocked; Rademacher specialization uses `hoeffding_rademacher_sum`.
 - Required objects: finite families, independence, boundedness, centeredness, subGaussian predicate forms.
 - Required definitions: finite-sum random-variable API.
 - Required bridge lemmas: sum measurability and variance/scale bookkeeping.
-- Status: blocked
-- Blocker: concentration inequalities are forbidden before theorem layer.
+- Status: blocked for the general theorem; proven for weighted finite Rademacher sums.
+- Blocker: the general theorem still needs a bounded-variable independent-sum MGF layer.
 - Target module: `HighDimProb/SubGaussian.lean`
 - Priority: v0.3
 

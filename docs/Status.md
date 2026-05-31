@@ -2,12 +2,12 @@
 
 Current version target: v0.1-alpha
 
-Current stage: Stage H1
+Current stage: Stage H5
 
-Current task: Rademacher subGaussian MGF proof
+Current task: independent finite subGaussian sum MGF
 
 Milestone status:
-- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, and the canonical Rademacher MGF atom are complete.
+- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, and independent finite subGaussian sum MGF are complete.
 
 Workflow file:
 - docs/Workflow.md
@@ -81,6 +81,13 @@ Last known test status:
 - Stage G2F-cleanup library abstraction and code-trace cleanup
 - Stage M3 scalar subGaussian proof spine closeout
 - Stage H1 Rademacher subGaussian MGF proof
+- Stage H0 Rademacher/Hoeffding branch readiness cleanup
+- Stage H2A finite product Rademacher family infrastructure
+- Stage H2B weighted finite Rademacher sum MGF
+- Stage H3 finite Rademacher Hoeffding tail bound
+- Stage H4 Rademacher/Hoeffding branch closeout
+- Stage H2-cleanup weighted Rademacher zero-weight cleanup
+- Stage H5 independent finite subGaussian sum MGF
 
 Stage 1A implemented:
 - probability-space convention
@@ -443,6 +450,58 @@ Stage H1 implemented:
 - proved `centeredSubGaussianMGF_rademacher` with scale `1`.
 - derived `subGaussianTail_rademacher` with scale `2` by the existing MGF-to-tail bridge.
 - added `HighDimProbTest/RademacherAPI.lean`.
+
+Stage H0 implemented:
+- audited `HighDimProb.Distributions.Rademacher`, `HighDimProb.Distributions`, `HighDimProb.Concentration.MGF`, and `HighDimProb.Concentration.Implications`.
+- confirmed the canonical Rademacher atom declarations exist and are covered by `HighDimProbTest/RademacherAPI.lean`.
+- added `docs/RademacherPlan.md` for the H0/H2A/H2B/H3/H4 branch route.
+- recorded finite product Rademacher families, coordinate independence, product expectation/MGF factorization, finite-sum exponential algebra, and constant bookkeeping as the next blockers.
+
+Stage H2A implemented:
+- added `HighDimProb.Distributions.RademacherFamily`.
+- defined `rademacherVectorMeasure n` as the finite product measure `Measure.pi (fun _ : Fin n => rademacherMeasure)`.
+- defined `rademacherVectorPMF n` as the PMF induced from `rademacherVectorMeasure n`.
+- defined `rademacherCoord` and `rademacherVector`.
+- proved coordinate measurability, pointwise `[-1,1]` bounds, coordinate mean zero, and `iIndepFun_rademacherCoord`.
+- added `HighDimProbTest/RademacherFamilyAPI.lean`.
+
+Stage H2B implemented:
+- added `HighDimProb.Concentration.RademacherSums`.
+- defined `weightedRademacherSum a` as `fun omega => sum i, a i * rademacherCoord i omega`.
+- proved `isRealRandomVariable_weightedRademacherSum`.
+- proved `hasSubgaussianMGF_rademacherCoord`, `iIndepFun_weightedRademacherTerms`, and `hasSubgaussianMGF_weightedRademacherTerm`.
+- proved `hasSubgaussianMGF_weightedRademacherSum` with Mathlib MGF proxy `sum_i a_i^2`.
+- proved `centeredSubGaussianMGF_weightedRademacherSum` with scale `sqrt (sum_i a_i^2)` under `0 < sum_i a_i^2`.
+- added `HighDimProbTest/RademacherSumsAPI.lean`.
+
+Stage H3 implemented:
+- proved `subGaussianTail_weightedRademacherSum` by composing the weighted-sum MGF theorem with `subGaussianTail_of_centeredSubGaussianMGF`.
+- proved `hoeffding_rademacher_sum`, the explicit two-sided bound with denominator `4 * sum_i a_i^2`, under `0 < sum_i a_i^2`.
+- updated Rademacher sum API, implication, branch, and experimental import checks.
+- recorded the all-zero-weight vector as a zero-scale predicate cleanup issue, not a blocker for the positive-square-sum Hoeffding theorem.
+
+Stage H4 implemented:
+- added `docs/RademacherMilestone.md` as the finite Rademacher concentration closeout summary.
+- audited import boundaries: stable root unchanged; `HighDimProb.Distributions` exposes atom/family; `HighDimProb.Concentration` exposes weighted sums and tail/Hoeffding corollaries; `HighDimProb.Experimental` exposes both aggregates.
+- audited theorem-name discoverability for the atom, family, weighted-sum MGF, weighted tail, and explicit Hoeffding declarations.
+- confirmed focused API tests and aggregate import tests cover the public Rademacher/Hoeffding declarations.
+
+Stage H2-cleanup implemented:
+- proved `weightedRademacherSum_eq_zero_of_forall_eq_zero`.
+- proved `weightedRademacherSum_eq_zero_of_sum_sq_eq_zero` using finite sums of nonnegative squares.
+- proved `absTailProb_weightedRademacherSum_eq_zero_of_forall_eq_zero_of_pos`.
+- proved `absTailProb_weightedRademacherSum_eq_zero_of_sum_sq_eq_zero_of_pos`.
+- added `hoeffding_rademacher_sum_of_pos_variance` as a user-facing alias for the existing positive-square-sum theorem.
+- documented that exact scale-0 `CenteredSubGaussianMGF`/`SubGaussianTail` wrappers remain unavailable because those predicates require positive scales.
+
+Stage H5 implemented:
+- added `HighDimProb.Concentration.SubGaussianSums`.
+- proved `hasSubgaussianMGF_finset_sum_of_iIndepFun` and `centeredSubGaussianMGF_finset_sum_of_iIndepFun_of_pos`.
+- proved `centeredSubGaussianMGF_sum_of_iIndepFun_of_pos` with scale `sqrt (sum_i K_i^2)`.
+- proved deterministic-weight independence and MGF helpers: `iIndepFun_weighted_of_iIndepFun`, `hasSubgaussianMGF_weighted_of_centeredSubGaussianMGF`, and `hasSubgaussianMGF_finset_weighted_sum_of_iIndepFun`.
+- proved `centeredSubGaussianMGF_weighted_sum_of_iIndepFun_of_pos` with scale `sqrt (sum_i (a_i*K_i)^2)`.
+- proved `subGaussianTail_sum_of_iIndepFun_of_pos` and `subGaussianTail_weighted_sum_of_iIndepFun_of_pos` by composing with `subGaussianTail_of_centeredSubGaussianMGF`.
+- updated `HighDimProb.Concentration`, `HighDimProb.Concentration.Implications`, focused API tests, and aggregate import checks.
 Milestone Sprint S2 implemented:
 - completed fixed-scale scalar Orlicz/tail implication graph in both directions for ψ�?and ψ�?predicates
 - added `HighDimProb.Concentration.Implications`
@@ -665,10 +724,24 @@ Important existing declarations:
 - `measurableSet_lowerTailEvent`
 - `measurableSet_absTailEvent`
 - `tailEventMeasurabilityStatement_holds`
+- `isRealRandomVariable_finset_sum`
+- `isRealRandomVariable_finset_weighted_sum`
+- `hasSubgaussianMGF_finset_sum_of_iIndepFun`
+- `centeredSubGaussianMGF_finset_sum_of_iIndepFun_of_pos`
+- `centeredSubGaussianMGF_sum_of_iIndepFun_of_pos`
+- `subGaussianTail_finset_sum_of_iIndepFun_of_pos`
+- `subGaussianTail_sum_of_iIndepFun_of_pos`
+- `iIndepFun_weighted_of_iIndepFun`
+- `hasSubgaussianMGF_weighted_of_centeredSubGaussianMGF`
+- `hasSubgaussianMGF_finset_weighted_sum_of_iIndepFun`
+- `centeredSubGaussianMGF_finset_weighted_sum_of_iIndepFun_of_pos`
+- `centeredSubGaussianMGF_weighted_sum_of_iIndepFun_of_pos`
+- `subGaussianTail_finset_weighted_sum_of_iIndepFun_of_pos`
+- `subGaussianTail_weighted_sum_of_iIndepFun_of_pos`
 
 ## Active
 
-Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, and Stage M3 are complete.
+Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage M3, Stage H1, Stage H0, Stage H2A, Stage H2B, Stage H3, Stage H4, Stage H2-cleanup, and Stage H5 are complete.
 
 The scalar subGaussian forward spine is closed for this milestone:
 `CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`.
@@ -680,8 +753,11 @@ Target files:
 - HighDimProb/Concentration/Implications.lean
 - HighDimProb/Concentration/MomentImplications.lean
 - HighDimProb/Concentration/MGF.lean
+- HighDimProb/Concentration/SubGaussianSums.lean
+- HighDimProb/Concentration/RademacherSums.lean
 - HighDimProb/Distributions.lean
 - HighDimProb/Distributions/Rademacher.lean
+- HighDimProb/Distributions/RademacherFamily.lean
 - HighDimProb/ProbabilitySpace.lean
 - HighDimProb/RandomMatrix/Algebra.lean
 - HighDimProb/RandomMatrix.lean
@@ -696,7 +772,10 @@ Target files:
 - HighDimProbTest/LayerCakeAPI.lean
 - HighDimProbTest/ConcentrationImplicationsAPI.lean
 - HighDimProbTest/MGFImplicationsAPI.lean
+- HighDimProbTest/SubGaussianSumsAPI.lean
 - HighDimProbTest/RademacherAPI.lean
+- HighDimProbTest/RademacherFamilyAPI.lean
+- HighDimProbTest/RademacherSumsAPI.lean
 - HighDimProbTest/RandomMatrixProofsAPI.lean
 - HighDimProbTest/LimitTheoremsAPI.lean
 - HighDimProbTest/ExperimentalImports.lean
@@ -704,6 +783,8 @@ Target files:
 - HighDimProbTest.lean
 - docs/LLNPlan.md
 - docs/IndependencePlan.md
+- docs/RademacherPlan.md
+- docs/RademacherMilestone.md
 - docs/ScalarImplicationGraph.md
 - docs/Milestone3.md
 - docs/ModuleTree.md
@@ -736,7 +817,10 @@ Expected test modules:
 - `HighDimProbTest.LayerCakeAPI`
 - `HighDimProbTest.ConcentrationImplicationsAPI`
 - `HighDimProbTest.MGFImplicationsAPI`
+- `HighDimProbTest.SubGaussianSumsAPI`
 - `HighDimProbTest.RademacherAPI`
+- `HighDimProbTest.RademacherFamilyAPI`
+- `HighDimProbTest.RademacherSumsAPI`
 - `HighDimProbTest.RandomVectorAPI`
 - `HighDimProbTest.CovarianceAPI`
 - `HighDimProbTest.CovarianceProofsAPI`
@@ -771,7 +855,7 @@ Hard rules:
 - Do not prove Johnson-Lindenstrauss.
 - Do not prove covariance estimation.
 - Do not promote random matrix modules to stable root import.
-- Do not prove Hoeffding or Bernstein yet.
+- Do not prove general bounded-variable Hoeffding or Bernstein yet.
 - Do not prove subGaussian/subExponential equivalences.
 - Do not prove covariance PSD/symmetry.
 - Do not implement mathematical content outside the S3 small proof battery scope.
@@ -874,9 +958,16 @@ Processed:
 - forward centered-MGF-to-tail/psi2/natural-moment implication spine
 - Milestone 3 scalar implication graph closeout
 - canonical Bool Rademacher MGF and tail corollary
+- Rademacher/Hoeffding branch readiness plan
+- finite product Rademacher family infrastructure
+- weighted finite Rademacher sum MGF
+- weighted finite Rademacher Hoeffding tail bound
+- Rademacher/Hoeffding branch closeout
+- weighted Rademacher zero-weight cleanup
+- independent finite subGaussian sum MGF
 
 Currently processing:
-- Stage H1 Rademacher subGaussian MGF proof
+- none; Stage H5 is complete
 
 Not yet processed:
 - LLN variance-of-sample-mean proof bridge
@@ -888,8 +979,7 @@ Not yet processed:
 - reverse/source MGF formulation implication links
 - finite-gauge Orlicz variants
 - independent-sum Chernoff inequality variants
-- weighted finite Rademacher sum MGF
-- Hoeffding inequality
+- general bounded-variable Hoeffding inequality
 - Bernstein inequality
 - random process
 - Gaussian width
@@ -898,11 +988,13 @@ Not yet processed:
 
 ## Blocked
 
-Stage H1 has no build blocker. The remaining local blocker for the
-Hoeffding/Rademacher branch is weighted finite Rademacher sums, which need
-finite-family independence and MGF-addition packaging.
+Stage H5 has no build blocker. Independent finite centered subGaussian sums and
+deterministically weighted sums now have MGF and tail closure theorems under
+positive proxy-sum assumptions. Exact scale-0 `SubGaussianTail` and
+`CenteredSubGaussianMGF` wrappers remain unavailable because those predicates
+require strictly positive scales.
 
-No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, or Sprint S4 build blocker. The finite union bound is proved, the sample-covariance quadratic-form bridge/nonnegativity theorems are proved, the weak-law scaffold now includes sample-mean vocabulary, scalar assumption wrappers, and honest typed statements, and the scalar moment/MGF branch proves fixed-exponent absolute-moment bridges, all-natural absolute moments with factorial constants, natural moment-to-Lp bridges, crude linear real-Lp growth, natural-exponent sharp `sqrt(q)` real-Lp growth, sharp natural-exponent predicate bridges, and forward MGF-to-tail/ψ₂/moment composition.
+No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage H0, Stage H2A, Stage H2B, Stage H2-cleanup, Stage H3, Stage H4, or Stage H5 build blocker. The finite union bound is proved, the sample-covariance quadratic-form bridge/nonnegativity theorems are proved, the weak-law scaffold now includes sample-mean vocabulary, scalar assumption wrappers, and honest typed statements, and the scalar moment/MGF branch proves fixed-exponent absolute-moment bridges, all-natural absolute moments with factorial constants, natural moment-to-Lp bridges, crude linear real-Lp growth, natural-exponent sharp `sqrt(q)` real-Lp growth, sharp natural-exponent predicate bridges, forward MGF-to-tail/ψ₂/moment composition, the weighted finite Rademacher Hoeffding specialization, and independent finite subGaussian sum MGF/tail closure.
 
 Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Stage G2A proves Psi2Bound -> absMomentNat q=2, SubGaussianTail -> absMomentNat q=2, and the analogous first-moment psi1/subExponential pilot. Stage G2B proves Psi2Bound/SubGaussianTail -> absMomentNat q for all natural q with a crude factorial constant. Stage G2C proves `finiteAbsMomentNat -> MemLp`, quantitative `absMomentNat -> realLpNorm`, and the factorial-growth `SubGaussianMomentNat` wrappers. Stage G2D proves the linear `realLpNorm <= C*K*q` consequence. Stage G2E records the sharp route as typed targets, Stage G2E-fix proves the deterministic envelope plus natural-exponent sqrt-growth moment bounds, Stage G2F packages those bounds as `SubGaussianMomentNatSqrt`, and Sprint S4 proves `CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`. The full `SubGaussianMoment` connector is still blocked by the gap from natural exponents to arbitrary finite `ENNReal` exponents; Mathlib has `eLpNorm_le_eLpNorm_of_exponent_le`, but HighDimProb still needs a ceiling/`ENNReal.toReal`/sqrt comparison bridge before this should be promoted. Finite-gauge variants, reverse/source MGF connectors, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
 
@@ -912,4 +1004,4 @@ Theorem statements blocked by missing infrastructure are tracked in docs/Theorem
 
 ## Next safe task
 
-Stage H2 - weighted finite Rademacher sum MGF.
+Stage H6 - Hoeffding lemma for bounded centered variables.

@@ -4,6 +4,7 @@ open HighDimProb
 
 #check rademacherPMF
 #check rademacherMeasure
+#check instIsProbabilityMeasure_rademacherMeasure
 #check rademacher
 #check isRealRandomVariable_rademacher
 #check rademacher_mem_Icc

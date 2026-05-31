@@ -1,0 +1,15 @@
+import HighDimProb.Distributions.RademacherFamily
+
+open HighDimProb
+
+#check rademacherVectorPMF
+#check rademacherVectorMeasure
+#check instIsProbabilityMeasure_rademacherVectorMeasure
+#check rademacherVectorPMF_toMeasure
+#check rademacherCoord
+#check rademacherVector
+#check rademacherVector_apply
+#check isRealRandomVariable_rademacherCoord
+#check rademacherCoord_mem_Icc
+#check integral_rademacherCoord
+#check iIndepFun_rademacherCoord

@@ -7,6 +7,8 @@ import HighDimProb.Concentration.TailToOrlicz
 import HighDimProb.Concentration.Implications
 import HighDimProb.Concentration.MomentImplications
 import HighDimProb.Concentration.MGF
+import HighDimProb.Concentration.SubGaussianSums
+import HighDimProb.Concentration.RademacherSums
 
 /-!
 # Concentration branch

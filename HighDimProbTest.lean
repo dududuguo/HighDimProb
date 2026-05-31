@@ -16,7 +16,10 @@ import HighDimProbTest.TailToOrliczAPI
 import HighDimProbTest.ConcentrationImplicationsAPI
 import HighDimProbTest.MomentImplicationsAPI
 import HighDimProbTest.MGFImplicationsAPI
+import HighDimProbTest.SubGaussianSumsAPI
 import HighDimProbTest.RademacherAPI
+import HighDimProbTest.RademacherFamilyAPI
+import HighDimProbTest.RademacherSumsAPI
 import HighDimProbTest.RandomVectorAPI
 import HighDimProbTest.CovarianceAPI
 import HighDimProbTest.CovarianceProofsAPI

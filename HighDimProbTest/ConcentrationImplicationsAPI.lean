@@ -18,6 +18,15 @@ open MeasureTheory
 #check subGaussianTail_of_centeredSubGaussianMGF
 #check psi2Bound_of_centeredSubGaussianMGF
 #check subGaussianMomentNatSqrt_of_centeredSubGaussianMGF
+#check centeredSubGaussianMGF_sum_of_iIndepFun_of_pos
+#check centeredSubGaussianMGF_weighted_sum_of_iIndepFun_of_pos
+#check subGaussianTail_sum_of_iIndepFun_of_pos
+#check subGaussianTail_weighted_sum_of_iIndepFun_of_pos
+#check weightedRademacherSum
+#check centeredSubGaussianMGF_weightedRademacherSum
+#check subGaussianTail_weightedRademacherSum
+#check hoeffding_rademacher_sum
+#check hoeffding_rademacher_sum_of_pos_variance
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 variable {P : Measure Ω} [IsProbabilityMeasure P]

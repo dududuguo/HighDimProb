@@ -13,6 +13,9 @@ declarations and which are still missing. It is a planning document only.
 | square-integrable | `MemLpRealRandomVariable P X 2` | optional named alias | `MemLp X 2 P` | `HighDimProb.Lp` | low | Chebyshev uses the current wrapper. |
 | centered | `Centered P X` | none | integral zero | `HighDimProb.Scalar.Centering` | done | Scalar centering is re-exported for concentration. |
 | variance finite | none | named finite-variance predicate | `MemLp X 2 P` / variance | `HighDimProb.Scalar.Variance` | medium | Decide whether finite variance is `MemLp 2` or a variance-specific predicate. |
+| independent Rademacher coordinates | `iIndepFun_rademacherCoord` | weighted-sum assumption wrapper optional later | `ProbabilityTheory.iIndepFun_pi` | `HighDimProb.Distributions.RademacherFamily` | done for canonical product signs | Applies only to the canonical product Rademacher space `Fin n -> Bool`, not arbitrary scalar samples. |
+| independent weighted Rademacher terms | `iIndepFun_weightedRademacherTerms` | no assumption wrapper; deterministic weights are parameters | `ProbabilityTheory.iIndepFun.comp` | `HighDimProb.Concentration.RademacherSums` | done for canonical product signs | Used by `hasSubgaussianMGF_weightedRademacherSum`; not a generic independent-sum API. |
+| independent centered subGaussian family | direct hypothesis `ProbabilityTheory.iIndepFun X P` | optional HighDimProb concentration assumption wrapper | `ProbabilityTheory.iIndepFun` | `HighDimProb.Concentration.SubGaussianSums` | done for finite MGF sums | Stage H5 proves finite unweighted and weighted MGF/tail closure from this direct Mathlib assumption; it does not bundle measurability or moment assumptions. |
 
 ## Vector
 

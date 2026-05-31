@@ -21,10 +21,17 @@ Remaining scalar blockers:
 - SubExponential natural-moment and local-MGF implication branches.
 - Canonical `SubGaussian` and `SubExponential` predicates remain deferred.
 
-Stage H1 update:
+Stage H0 Rademacher/Hoeffding branch update:
 
 - Done: canonical Bool Rademacher variable, MGF scale `1`, and tail scale `2`.
-- Remaining: weighted finite Rademacher sum MGF, independence packaging for finite signs, and Hoeffding statement layer.
+- Done: readiness plan and API audit for the Rademacher atom.
+- Done: finite product Rademacher measure/PMF, coordinate family, coordinate measurability, zero mean, and coordinate independence.
+- Done: weighted finite Rademacher sum MGF with variance proxy `sum_i a_i^2`, using Mathlib's independent subGaussian finite-sum theorem.
+- Done: weighted finite Rademacher tail and explicit Hoeffding bound under `0 < sum_i a_i^2`.
+- Done: branch closeout in `docs/RademacherMilestone.md`.
+- Done: zero-weight helper theorems for the all-zero-weight vector and zero square-sum case.
+- Done: independent finite centered subGaussian sum MGF and tail closure, including deterministic weighted sums.
+- Remaining: only a broader predicate-design cleanup if exact `SubGaussianTail`/MGF statements at scale `0` are ever desired.
 
 ## Object-Layer Tasks
 
@@ -77,8 +84,13 @@ Stage H1 update:
 
 | Theorem group | Informal goal | Dependencies | Difficulty | Reason not implemented now |
 |---|---|---|---|---|
-| Classical inequalities beyond Markov/Chebyshev | Formalize Chernoff, Hoeffding, Bernstein, Bennett, bounded differences, and related scalar concentration bounds. | Mathlib analysis/order APIs, MGF and independence APIs | medium/hard | Markov, Chebyshev, and the one-sided Chernoff tail bound from centered subGaussian MGF control are proved; Hoeffding, Bernstein, Bennett, bounded differences, and independent-sum variants remain future theorem work. |
-| Weighted finite Rademacher sum MGF | Prove subGaussian MGF control for finite weighted sums of independent Rademacher signs. | `rademacher`, `CenteredSubGaussianMGF`, finite sums, independence, Mathlib subGaussian MGF addition | medium/hard | Stage H1 proves only the canonical one-sign atom; finite-sum independence packaging remains future work. |
+| Classical inequalities beyond Markov/Chebyshev | Formalize Chernoff, Hoeffding, Bernstein, Bennett, bounded differences, and related scalar concentration bounds. | Mathlib analysis/order APIs, MGF and independence APIs | medium/hard | Markov, Chebyshev, Chernoff tails from centered subGaussian MGF control, and the weighted Rademacher Hoeffding specialization are proved; general bounded-variable Hoeffding, Bernstein, Bennett, bounded differences, and independent-sum variants remain future theorem work. |
+| Finite product Rademacher family | Build the minimal probability space and coordinate projections for independent Rademacher signs indexed by `Fin n`. | `PMF.bernoulli`, finite product PMF/measure APIs, coordinate maps, independence | done | Implemented in Stage H2A using product measure and Mathlib `iIndepFun_pi`. |
+| Weighted finite Rademacher sum MGF | Prove subGaussian MGF control for finite weighted sums of independent Rademacher signs. | `rademacherCoord`, `iIndepFun_rademacherCoord`, finite sums, independence, Mathlib subGaussian MGF addition | done | Implemented in Stage H2B as `hasSubgaussianMGF_weightedRademacherSum` and `centeredSubGaussianMGF_weightedRademacherSum`; the HighDimProb predicate theorem assumes positive square-sum because its scale parameter is strictly positive. |
+| Weighted finite Rademacher Hoeffding tail | Derive two-sided tails and explicit Hoeffding form for weighted product Rademacher sums. | `centeredSubGaussianMGF_weightedRademacherSum`, `subGaussianTail_of_centeredSubGaussianMGF`, finite-sum square normalization | done | Implemented in Stage H3 as `subGaussianTail_weightedRademacherSum` and `hoeffding_rademacher_sum` under `0 < sum_i a_i^2`; direct all-zero helper theorems are handled in Stage H2-cleanup. |
+| Rademacher/Hoeffding branch closeout | Make the finite Rademacher concentration branch coherent as an experimental mini-domain. | import audit, API tests, theorem atlas, implication graph | done | Implemented in Stage H4 via `docs/RademacherMilestone.md` and docs/test audits. |
+| Weighted Rademacher zero-weight cleanup | Provide direct helper theorems for the degenerate all-zero weighted sum case. | finite sums of nonnegative squares, tail-event definitions | done | Implemented in Stage H2-cleanup as zero-function and positive-threshold zero-tail helper theorems; exact scale-0 predicate wrappers remain intentionally unavailable. |
+| Independent finite subGaussian sum MGF | Prove closure of independent centered subGaussian MGF control under finite unweighted and weighted sums. | `CenteredSubGaussianMGF`, `ProbabilityTheory.iIndepFun`, Mathlib finite-sum MGF theorem | done | Implemented in Stage H5 as `centeredSubGaussianMGF_sum_of_iIndepFun_of_pos`, `centeredSubGaussianMGF_weighted_sum_of_iIndepFun_of_pos`, and tail corollaries; positive proxy-sum assumptions remain because current predicates require positive scales. |
 | Centered Chebyshev corollary | Add a simpler corollary for already-centered variables if downstream proofs need it. | `Centered`, `chebyshev_inequality_prob`, variance API | easy/medium | Stage G1B keeps only the existing variance-form theorem and probability wrapper. |
 | Weak law Chebyshev bound | Prove the finite-variance sample-mean bound from Chebyshev once assumptions and variance algebra are available. | `sampleMean`, `chebyshev_inequality_prob`, variance of sums, common mean/variance assumptions | medium/hard | Stage LLN0-LLN1 adds only `weakLawChebyshevBoundStatement`; proof is blocked by missing independence/iid and variance-of-sum infrastructure. |
 | Weak law convergence in probability | Prove sample means converge in probability to the common mean. | `TendstoInMeasure`, sample mean bounds tending to zero | medium/hard | Stage LLN0-LLN1 adds only `weakLawFiniteVarianceStatement`; no HighDimProb convergence-in-probability wrapper yet. |
@@ -118,7 +130,7 @@ Stage H1 update:
 | Bounded random variables are subGaussian | Prove bounded real variables satisfy an appropriate subGaussian formulation. | boundedness predicate, centeredness or centering, subGaussian forms | medium/hard | Requires formulation choice and proof work. |
 | Centered subGaussian MGF characterization | Relate centeredness and MGF-style subGaussian control. | centeredness, expectation, `CenteredSubGaussianMGF` | hard | Centeredness/covariance layer is still experimental. |
 | Centered subExponential MGF characterization | Relate centeredness and local-MGF-style subExponential control. | centeredness, expectation, `CenteredSubExponentialMGF` | hard | Centeredness/covariance layer is still experimental. |
-| Sums of independent subGaussian variables | Prove closure or scale bounds for independent sums. | independence, finite sums, MGF/tail forms | hard | Future theorem layer. |
+| Sums of independent subGaussian variables | Prove closure or scale bounds for independent sums. | independence, finite sums, MGF/tail forms | done for centered MGF source | Stage H5 proves unweighted and weighted finite-sum MGF/tail closure from `CenteredSubGaussianMGF`; reverse/source MGF assumptions and zero-scale predicate redesign remain future work. |
 | SubGaussian square is subExponential | Prove that the square of a subGaussian variable satisfies a subExponential formulation. | subGaussian forms, subExponential forms, product/square random variables | hard | Requires equivalence and product/measurability infrastructure. |
 | Product of subGaussian variables is subExponential | Prove products of subGaussian variables satisfy a subExponential formulation. | subGaussian forms, subExponential forms, product random variables | hard | Requires product measurability and Orlicz/MGF estimates. |
 | Bernstein inequality | Prove Bernstein-type bounds for sums of independent centered subExponential variables. | independence, finite sums, centeredness, subExponential forms | hard | Explicitly not part of the object layer. |

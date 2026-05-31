@@ -1,0 +1,18 @@
+import HighDimProb.Concentration.RademacherSums
+
+open HighDimProb
+
+#check weightedRademacherSum
+#check isRealRandomVariable_weightedRademacherSum
+#check weightedRademacherSum_eq_zero_of_forall_eq_zero
+#check weightedRademacherSum_eq_zero_of_sum_sq_eq_zero
+#check absTailProb_weightedRademacherSum_eq_zero_of_forall_eq_zero_of_pos
+#check absTailProb_weightedRademacherSum_eq_zero_of_sum_sq_eq_zero_of_pos
+#check hasSubgaussianMGF_rademacherCoord
+#check iIndepFun_weightedRademacherTerms
+#check hasSubgaussianMGF_weightedRademacherTerm
+#check hasSubgaussianMGF_weightedRademacherSum
+#check centeredSubGaussianMGF_weightedRademacherSum
+#check subGaussianTail_weightedRademacherSum
+#check hoeffding_rademacher_sum
+#check hoeffding_rademacher_sum_of_pos_variance
