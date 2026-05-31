@@ -53,6 +53,14 @@ open HighDimProb
 #check psi1BoundOfSubExponentialTailStatement
 #check SubGaussianMomentNatSqrt
 #check subGaussianMomentNatSqrt_of_subGaussianTail
+#check CenteredSubGaussianMGFLIntegral
+#check upperTailProb_le_exp_neg_sq_of_centeredSubGaussianMGF
+#check subGaussianTail_of_centeredSubGaussianMGF
+#check psi2Bound_of_centeredSubGaussianMGF
+#check subGaussianMomentNatSqrt_of_centeredSubGaussianMGF
+#check rademacher
+#check centeredSubGaussianMGF_rademacher
+#check subGaussianTail_rademacher
 #check RandomMatrix
 #check matrixEntry
 #check IsRandomMatrix

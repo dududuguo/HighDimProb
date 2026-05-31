@@ -341,8 +341,8 @@
 - Concrete version chosen: `CenteredSubGaussianMGF` wraps Mathlib `ProbabilityTheory.HasSubgaussianMGF` with scale `K ^ 2`.
 - Possible general version: state the MGF form directly using `expect P (fun ω => Real.exp (λ * X ω))`.
 - Reason for not generalizing yet: dependency-first policy prefers Mathlib's existing MGF predicate, which already includes exponential integrability.
-- Lean/mathlib obstruction: a raw expectation inequality would omit the integrability structure that Mathlib's MGF API already tracks.
-- Future upgrade path: add raw expectation-facing bridge lemmas only after the MGF formulation is used in theorem statements.
+- Lean/mathlib obstruction: a raw expectation inequality would omit the integrability structure that Mathlib's MGF API already tracks; HighDimProb tail probabilities are `ENNReal`, so Chernoff proofs also benefit from a lintegral-facing auxiliary predicate.
+- Future upgrade path: add raw expectation-facing bridge lemmas only after a theorem genuinely needs them; the current forward implication path uses `CenteredSubGaussianMGFLIntegral`.
 
 ## SubExponential predicate forms
 
@@ -711,3 +711,31 @@
 - Constant decision: `subGaussianMomentNatSqrt_of_psi2Bound` uses scale `4*K`, and `subGaussianMomentNatSqrt_of_subGaussianTail` uses scale `8*K` after the existing `K -> 2*K` tail-to-ψ₂ loss.
 - Lean/mathlib reuse: the stage reuses `realLpNorm_nat_le_sqrt_of_psi2Bound`, `realLpNorm_nat_le_sqrt_of_subGaussianTail`, simple positivity, and ring normalization; Mathlib `eLpNorm_le_eLpNorm_of_exponent_le` was identified as likely future infrastructure for all-real-exponent promotion.
 - Future upgrade path: Stage G2F-cleanup should design the natural-to-real exponent bridge around ceiling, `ENNReal.toReal`, and sqrt comparisons before attempting `subGaussianMoment_of_psi2Bound`.
+
+## Stage M3 scalar subGaussian proof spine closeout
+
+- Concrete version chosen: close the scalar subGaussian proof spine as a documentation, import, and API-test milestone, not as a new theorem stage.
+- Possible general version: prove a full equivalence theorem family and introduce a canonical `SubGaussian` predicate.
+- Reason for not generalizing yet: reverse MGF, full real-exponent `SubGaussianMoment`, and finite-gauge/norm variants are still missing.
+- Import decision: `HighDimProb.Concentration.Implications` now re-exports the proved tail/Orlicz, natural-moment, and MGF implication leaves; theorem ownership remains in the focused leaf files.
+- Documentation decision: `docs/ScalarImplicationGraph.md` is table-driven so constants, statuses, and theorem names can be audited without reading proof files.
+- Future upgrade path: the next deep proof route should target the reverse MGF bridge before any canonical predicate consolidation.
+
+## Stage H1 Rademacher MGF atom
+
+- Concrete version chosen: define a canonical Rademacher variable on `Bool` with `PMF.bernoulli (1/2)` as the measure.
+- Possible general version: a full distribution API for arbitrary Rademacher variables or almost-sure two-point sign variables.
+- Reason for not generalizing yet: the next proof branch only needs one atomic example before finite weighted Rademacher sums.
+- Mathlib reuse: Mathlib has Bernoulli PMFs and a bounded zero-mean subGaussian MGF lemma, but no HighDimProb-facing Rademacher theorem.
+- Constant decision: the MGF scale is `1`; the existing MGF-to-tail bridge yields tail scale `2`.
+- Future upgrade path: weighted finite Rademacher sums should reuse Mathlib `HasSubgaussianMGF.add_of_indepFun` or a finite-sum wrapper once independence is packaged.
+
+## Milestone Sprint S4 MGF implication branch
+
+- Concrete version chosen: add `HighDimProb.Concentration.MGF` as the owner of forward MGF-to-tail/Orlicz/moment composition, while keeping `CenteredSubGaussianMGF` itself in the scalar predicate file.
+- Possible general version: prove the full tail/Orlicz/moment/MGF equivalence family and promote a canonical `SubGaussian` predicate.
+- Reason for not generalizing yet: S4 proves only the forward centered-MGF path; reverse MGF implications, finite gauges, and full real-exponent moment links are still independent theorem projects.
+- MGF normal form decision: `CenteredSubGaussianMGFLIntegral` states `∫⁻ exp(lambda * X) <= exp(K^2 * lambda^2)`, a looser but book-style ENNReal bound obtained from Mathlib's `HasSubgaussianMGF` convention.
+- Constant decision: one-sided Chernoff tails use denominator `4*K^2`, the two-sided tail scale is `2*K`, the induced ψ₂ scale is `4*K`, and the induced natural sqrt-moment scale is `16*K`.
+- Lean/mathlib reuse: the proofs use Mathlib `HasSubgaussianMGF` for exponential integrability, `MeasureTheory.ofReal_integral_eq_lintegral_ofReal`, `MeasureTheory.meas_ge_le_lintegral_div`, `measure_union_le`, and existing HighDimProb tail-to-Orlicz and moment bridges.
+- Future upgrade path: prove reverse MGF links or source the MGF predicate from ψ₂/tail hypotheses in a separate stage; do not collapse predicate forms until those directions are available.

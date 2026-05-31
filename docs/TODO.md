@@ -1,5 +1,31 @@
 # HighDimProb TODO
 
+## Stage M3 Scalar Closeout TODO Audit
+
+The forward scalar subGaussian proof spine is closed as an experimental
+milestone:
+
+- `CenteredSubGaussianMGF -> SubGaussianTail (2*K)`.
+- `CenteredSubGaussianMGF -> Psi2Bound (4*K)`.
+- `CenteredSubGaussianMGF -> SubGaussianMomentNatSqrt (16*K)`.
+- `Psi2Bound` / `SubGaussianTail` sharp natural-exponent `realLpNorm`
+  growth is proved.
+
+Remaining scalar blockers:
+
+- Reverse/source MGF bridge:
+  `SubGaussianTail` / `Psi2Bound` / natural moment control to
+  `CenteredSubGaussianMGF`.
+- Full real-exponent `SubGaussianMoment` bridge over all finite `ENNReal`
+  exponents.
+- SubExponential natural-moment and local-MGF implication branches.
+- Canonical `SubGaussian` and `SubExponential` predicates remain deferred.
+
+Stage H1 update:
+
+- Done: canonical Bool Rademacher variable, MGF scale `1`, and tail scale `2`.
+- Remaining: weighted finite Rademacher sum MGF, independence packaging for finite signs, and Hoeffding statement layer.
+
 ## Object-Layer Tasks
 
 | Task | Informal goal | Dependencies | Difficulty | Reason not implemented now |
@@ -51,7 +77,8 @@
 
 | Theorem group | Informal goal | Dependencies | Difficulty | Reason not implemented now |
 |---|---|---|---|---|
-| Classical inequalities beyond Markov/Chebyshev | Formalize Chernoff, Hoeffding, Bernstein, Bennett, bounded differences, and related scalar concentration bounds. | Mathlib analysis/order APIs, MGF and independence APIs | medium/hard | Markov and Chebyshev are proved; exponential and independence-based inequalities remain future theorem work. |
+| Classical inequalities beyond Markov/Chebyshev | Formalize Chernoff, Hoeffding, Bernstein, Bennett, bounded differences, and related scalar concentration bounds. | Mathlib analysis/order APIs, MGF and independence APIs | medium/hard | Markov, Chebyshev, and the one-sided Chernoff tail bound from centered subGaussian MGF control are proved; Hoeffding, Bernstein, Bennett, bounded differences, and independent-sum variants remain future theorem work. |
+| Weighted finite Rademacher sum MGF | Prove subGaussian MGF control for finite weighted sums of independent Rademacher signs. | `rademacher`, `CenteredSubGaussianMGF`, finite sums, independence, Mathlib subGaussian MGF addition | medium/hard | Stage H1 proves only the canonical one-sign atom; finite-sum independence packaging remains future work. |
 | Centered Chebyshev corollary | Add a simpler corollary for already-centered variables if downstream proofs need it. | `Centered`, `chebyshev_inequality_prob`, variance API | easy/medium | Stage G1B keeps only the existing variance-form theorem and probability wrapper. |
 | Weak law Chebyshev bound | Prove the finite-variance sample-mean bound from Chebyshev once assumptions and variance algebra are available. | `sampleMean`, `chebyshev_inequality_prob`, variance of sums, common mean/variance assumptions | medium/hard | Stage LLN0-LLN1 adds only `weakLawChebyshevBoundStatement`; proof is blocked by missing independence/iid and variance-of-sum infrastructure. |
 | Weak law convergence in probability | Prove sample means converge in probability to the common mean. | `TendstoInMeasure`, sample mean bounds tending to zero | medium/hard | Stage LLN0-LLN1 adds only `weakLawFiniteVarianceStatement`; no HighDimProb convergence-in-probability wrapper yet. |
@@ -64,11 +91,11 @@
 | Natural-to-real exponent moment bridge | Extend natural-exponent `realLpNorm` bounds to all finite `p : ENNReal` for the full `SubGaussianMoment` predicate. | `SubGaussianMoment`, `SubGaussianMomentNatSqrt`, `eLpNorm_le_eLpNorm_of_exponent_le`, `ENNReal.toReal`, `Nat.ceil`, `Real.sqrt` | medium/hard | Needed before proving `subGaussianMoment_of_psi2Bound`; requires ceiling and sqrt comparison infrastructure, not a change to existing definitions. |
 | ψ₂ gauge properties | Prove basic monotonicity, scaling, and finite-gauge facts for the ψ₂ bound formulation. | `Psi2Bound`, future gauge definition | medium/hard | Gauge object is not implemented yet. |
 | ψ₁ gauge properties | Prove basic monotonicity, scaling, and finite-gauge facts for the ψ₁ bound formulation. | `Psi1Bound`, future gauge definition | medium/hard | Gauge object is not implemented yet. |
-| ψ₂ to subGaussian connectors | Connect `Psi2Bound` / finite ψ₂ control to tail, moment, and MGF subGaussian formulations. | Orlicz, moments, MGF, tail predicates | hard | Fixed-scale tail/Orlicz directions, all-natural factorial moments, `SubGaussianMomentNat`, `SubGaussianMomentNatSqrt`, natural moment-to-`realLpNorm` bridges, crude linear bounds, and sharp natural sqrt bounds are proven; finite-gauge variants, real-exponent `SubGaussianMoment`, and MGF connections remain future work. |
+| ψ₂ to subGaussian connectors | Connect `Psi2Bound` / finite ψ₂ control to tail, moment, and MGF subGaussian formulations. | Orlicz, moments, MGF, tail predicates | hard | Fixed-scale tail/Orlicz directions, all-natural factorial moments, `SubGaussianMomentNat`, `SubGaussianMomentNatSqrt`, natural moment-to-`realLpNorm` bridges, crude linear bounds, sharp natural sqrt bounds, and forward `CenteredSubGaussianMGF -> tail/ψ₂/moment` composition are proven; finite-gauge variants, real-exponent `SubGaussianMoment`, and reverse/source MGF connections remain future work. |
 | ψ₁ to subExponential connectors | Connect `Psi1Bound` / finite ψ₁ control to tail, moment, and MGF subExponential formulations. | Orlicz, moments, MGF, tail predicates | hard | Fixed-scale tail and Orlicz directions are proven; finite-gauge variants, moments, and MGF connections remain future theorem work. |
 | Tail-to-Orlicz reverse implications | Prove tail bounds imply ψ₂/ψ₁ Orlicz bounds, with documented constants. | `SubGaussianTail`, `SubExponentialTail`, `Psi2Bound`, `Psi1Bound`, `lintegral_ofReal_eq_lintegral_tail`, tail integration | done for fixed-scale predicates | Stage S2.1 proves `SubGaussianTail -> Psi2Bound (2*K)` and `SubExponentialTail -> Psi1Bound (3*K)`; finite-gauge, moment, and MGF variants remain. |
 | Orlicz finite-scale wrappers | Derive finite-tail predicates from `HasFinitePsi2` and `HasFinitePsi1` once gauge/scale selection conventions are clear. | `HasFinitePsi2`, `HasFinitePsi1`, existential scales | medium | Stage G1C proves fixed-scale implications only. |
-| SubGaussian equivalence theorem | Tail, MGF, moments, and Orlicz definitions are equivalent up to constants. | Orlicz norms, moments, concentration lemmas | hard | Future theorem layer. |
+| SubGaussian equivalence theorem | Tail, MGF, moments, and Orlicz definitions are equivalent up to constants. | Orlicz norms, moments, concentration lemmas | hard | Forward MGF-to-tail/ψ₂/natural-moment links are proved, but reverse MGF links, finite-gauge norms, and full real-exponent `SubGaussianMoment` remain future theorem layers. |
 | SubExponential equivalence theorem | Tail, MGF, moments, and Orlicz definitions are equivalent up to constants. | Orlicz norms, moments, concentration lemmas | hard | Future theorem layer. |
 | Equivalence of isotropic formulations | Prove covariance identity and marginal second-moment characterizations of isotropicity. | `IsotropicSecondMoment`, `IsotropicCovariance`, `IsotropicMarginal`, covariance matrix, centered vector, `linearForm` | hard | Stage P2 proves only the matrix/entrywise second-moment bridge; covariance and marginal bridges remain theorem work. |
 | Second-moment identity iff marginal identity | Prove entrywise second-moment isotropicity is equivalent to the marginal second-moment identity. | `IsotropicSecondMoment`, `IsotropicMarginal`, finite sums | hard | Requires bilinear expansion of finite linear marginals under expectation. |

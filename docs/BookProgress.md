@@ -43,6 +43,7 @@ Infrastructure:
 - Stage G2E-fix deterministic real inequality proof for sharp moment growth
 - Stage G2F sharp natural-exponent moment interface bridge
 - Stage G2F-cleanup abstraction and code-trace cleanup
+- Milestone Sprint S4 MGF branch and subGaussian implication closure
 - Milestone Sprint S2 scalar concentration proof spine + random matrix statement layer
 - Milestone Sprint S3 small branch proof battery
 
@@ -113,6 +114,7 @@ Processed:
 - Stage G2E-fix deterministic inequality and natural sqrt moment growth completed
 - Stage G2F sharp natural-exponent moment interface bridge completed
 - Stage G2F-cleanup abstraction and code-trace cleanup completed
+- Milestone Sprint S4 MGF branch completed through forward MGF-to-tail/Orlicz/moment composition
 
 Scaffold exists, not processed as stable API:
 - random process vocabulary
@@ -174,6 +176,7 @@ Processed with proof:
 - sharp natural-exponent `sqrt(q)` moment-growth route proved through a deterministic real inequality
 - psi2 and subGaussian-tail bounds imply `SubGaussianMomentNat` with factorial growth
 - psi2 and subGaussian-tail bounds imply `SubGaussianMomentNatSqrt` with constants `4` and `8`
+- centered subGaussian MGF control implies one-sided Chernoff tails, two-sided `SubGaussianTail (2*K)`, `Psi2Bound (4*K)`, and `SubGaussianMomentNatSqrt (16*K)`
 - psi1/subExponential bounds imply first absolute natural-moment bounds
 - layer-cake bridge for nonnegative real random variables
 - exponential-tail to exponential-moment bridge
@@ -261,3 +264,23 @@ Resolved in Stage G2F-cleanup:
 - Concentration implication aggregate documentation now states the ownership boundary: tail/Orlicz arrows in `Implications`, moment arrows in `MomentImplications`.
 - Old "typed target" comments for already-proved sharp natural-exponent statements were rewritten as compatibility wrappers.
 - Branch and experimental import tests now check `SubGaussianMomentNatSqrt` directly.
+
+Resolved in Milestone Sprint S4:
+- `CenteredSubGaussianMGFLIntegral` adds a proof-friendly ENNReal MGF formulation.
+- `centeredSubGaussianMGFLIntegral_of_centeredSubGaussianMGF` bridges the existing Mathlib-backed MGF predicate to the lintegral normal form under explicit measurability.
+- `upperTailProb_le_exp_neg_sq_of_centeredSubGaussianMGF` and `lowerTailProb_le_exp_neg_sq_of_centeredSubGaussianMGF` prove one-sided Chernoff tails with exponent denominator `4*K^2`.
+- `subGaussianTail_of_centeredSubGaussianMGF` proves two-sided tail control with scale `2*K`.
+- `psi2Bound_of_centeredSubGaussianMGF` and `subGaussianMomentNatSqrt_of_centeredSubGaussianMGF` close the forward MGF-to-Orlicz/moment path by composition.
+
+Resolved in Stage M3:
+- `docs/Milestone3.md` closes the scalar subGaussian proof spine as an experimental milestone.
+- `docs/ScalarImplicationGraph.md` is now table-driven and separates proven arrows, typed compatibility wrappers, and blocked reverse directions.
+- `HighDimProb.Concentration.Implications` re-exports the current scalar implication graph, including moment and MGF arrows, without changing theorem meanings.
+- Reverse MGF, full real-exponent `SubGaussianMoment`, subExponential MGF, Hoeffding, and Bernstein remain future work.
+
+Resolved in Stage H1:
+- `HighDimProb.Distributions.Rademacher` defines the canonical symmetric Rademacher variable on `Bool`.
+- `rademacherMeasure` is the `PMF.bernoulli (1/2)` measure on `Bool`.
+- `centeredSubGaussianMGF_rademacher` proves MGF subGaussian control with scale `1`.
+- `subGaussianTail_rademacher` derives the two-sided tail predicate with scale `2`.
+- The proof reuses Mathlib's bounded zero-mean subGaussian MGF lemma instead of proving a weighted-sum Hoeffding theorem.

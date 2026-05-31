@@ -1,6 +1,7 @@
 import HighDimProb.Vector
 import HighDimProb.Geometry
 import HighDimProb.Concentration
+import HighDimProb.Distributions
 import HighDimProb.RandomMatrix
 import HighDimProb.LimitTheorems
 import HighDimProb.Process

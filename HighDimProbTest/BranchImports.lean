@@ -1,6 +1,7 @@
 import HighDimProb.Scalar
 import HighDimProb.Analysis
 import HighDimProb.Concentration
+import HighDimProb.Distributions
 import HighDimProb.Vector
 import HighDimProb.Geometry
 import HighDimProb.RandomMatrix
@@ -32,6 +33,11 @@ open HighDimProb
 #check subGaussianMomentNatOfSubGaussianTailStatement
 #check SubGaussianMomentNatSqrt
 #check subGaussianMomentNatSqrt_of_psi2Bound
+#check CenteredSubGaussianMGFLIntegral
+#check subGaussianTail_of_centeredSubGaussianMGF
+#check psi2Bound_of_centeredSubGaussianMGF
+#check centeredSubGaussianMGF_rademacher
+#check subGaussianTail_rademacher
 #check RandomVector
 #check covarianceMatrix
 #check IsotropicSecondMoment

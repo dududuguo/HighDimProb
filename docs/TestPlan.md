@@ -36,6 +36,9 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/TailToOrliczAPI.lean`: checks the tail-to-Orlicz typed targets, layer-cake bridges, and proved ψ₂ reverse implication.
 - `HighDimProbTest/ConcentrationImplicationsAPI.lean`: checks the proved scalar Orlicz/tail implication graph through `HighDimProb.Concentration.Implications`.
 - `HighDimProbTest/MomentImplicationsAPI.lean`: checks natural absolute-moment vocabulary, fixed-exponent and all-natural-exponent moment implication theorems, finiteness corollaries, natural moment-to-`MemLp`/`realLpNorm` bridges, crude linear and sharp sqrt real-Lp growth theorems, `SubGaussianMomentNat`, `SubGaussianMomentNatSqrt`, sharp natural-exponent predicate bridges, and the sharp typed statement wrappers.
+- `HighDimProbTest/MGFImplicationsAPI.lean`: checks the proof-friendly MGF lintegral predicate, the Mathlib-backed MGF bridge, one-sided Chernoff bounds, two-sided tail from MGF, and composed MGF-to-ψ₂/natural-moment corollaries.
+- Stage M3 strengthens `HighDimProbTest/ConcentrationImplicationsAPI.lean` so the aggregate implication import checks the tail/Orlicz, natural-moment, and MGF arrows together.
+- `HighDimProbTest/RademacherAPI.lean`: checks the canonical Bool Rademacher PMF, measure, variable, MGF theorem, and tail corollary.
 - `HighDimProbTest/RandomVectorAPI.lean`: downstream-style random-vector object-layer examples.
 - `HighDimProbTest/CovarianceAPI.lean`: downstream-style covariance and centered-vector vocabulary examples.
 - `HighDimProbTest/CovarianceProofsAPI.lean`: checks the centered-vector coordinate and centered-scalar proof-pilot declarations.
@@ -91,6 +94,8 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - Every tail-to-Orlicz module must test typed targets, public tail-integral bridges, and any proved reverse implication.
 - Every concentration implication graph module must test the collected theorem names without introducing canonical predicates prematurely.
 - Every moment-implication pilot must test the moment normal form, constants, Lp bridge declarations, and any typed all-exponent statement separately from full equivalence theorem tests.
+- Every MGF implication pilot must test the lintegral normal form, one-sided tail constants, two-sided tail scale, and composition corollaries without adding a canonical subGaussian predicate.
+- Every distribution atom used by concentration proofs must have a focused API test and must remain experimental unless promoted through a root import audit.
 - Every random matrix submodule must have its own API test file before theorem work depends on it.
 - Random-matrix statement modules should `#check` only typed `Prop` specifications; blocked theorem families remain documentation entries.
 - Tests should import public modules the way downstream users would.

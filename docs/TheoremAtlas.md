@@ -10,6 +10,37 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - `blocked`
 - `proven`
 
+## Milestone 3 scalar implication closeout
+
+This audit separates proved theorem families from typed statements and blocked
+future directions.
+
+| Family | Status | Main declarations |
+|---|---|---|
+| `Psi2Bound -> SubGaussianTail` | proven | `subGaussianTail_of_psi2Bound` |
+| `SubGaussianTail -> Psi2Bound` | proven | `psi2Bound_of_subGaussianTail` |
+| natural-exponent subGaussian `sqrt(q)` growth | proven | `realLpNorm_nat_le_sqrt_of_psi2Bound`, `realLpNorm_nat_le_sqrt_of_subGaussianTail`, `SubGaussianMomentNatSqrt` |
+| `CenteredSubGaussianMGF -> one-sided Chernoff tails` | proven | `upperTailProb_le_exp_neg_sq_of_centeredSubGaussianMGF`, `lowerTailProb_le_exp_neg_sq_of_centeredSubGaussianMGF` |
+| `CenteredSubGaussianMGF -> SubGaussianTail/Psi2Bound/SubGaussianMomentNatSqrt` | proven | `subGaussianTail_of_centeredSubGaussianMGF`, `psi2Bound_of_centeredSubGaussianMGF`, `subGaussianMomentNatSqrt_of_centeredSubGaussianMGF` |
+| `Psi1Bound <-> SubExponentialTail` with scale loss in reverse | proven | `subExponentialTail_of_psi1Bound`, `psi1Bound_of_subExponentialTail` |
+| sharp natural-exponent statement wrappers | proven wrappers over already-proved theorems | `sqrtMomentGrowthOfPsi2`, `sqrtMomentGrowthOfSubGaussianTail` |
+| full real-exponent `SubGaussianMoment` bridge | blocked | needs natural-to-finite-`ENNReal` exponent bridge |
+| reverse/source MGF implication | blocked | future reverse MGF bridge |
+| canonical `SubGaussian` / `SubExponential` equivalence package | blocked | requires reverse MGF, real-exponent moment, and formulation choice |
+
+## Rademacher subGaussian MGF
+- Book heading: Rademacher variables / bounded random variable MGF / Hoeffding prerequisites
+- Informal statement: a symmetric Rademacher random variable has centered subGaussian MGF control.
+- Target Lean statement: `centeredSubGaussianMGF_rademacher`
+- Required objects: `PMF.bernoulli`, `rademacherMeasure`, `rademacher`, `CenteredSubGaussianMGF`.
+- Required definitions: canonical Bool Rademacher variable and its probability measure.
+- Required bridge lemmas: Mathlib `ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero`, `PMF.integral_eq_sum`, and the pointwise interval lemma `rademacher_mem_Icc`.
+- Status: proven
+- Constant: MGF scale `1`; tail corollary `subGaussianTail_rademacher` has scale `2` by the existing MGF-to-tail bridge.
+- Blocker: weighted finite Rademacher sums still need finite-family independence and MGF-addition packaging.
+- Target module: `HighDimProb/Distributions/Rademacher.lean`
+- Priority: experimental concentration infrastructure
+
 ## tail-event measurability statement
 - Book heading: `尾分布`
 - Informal statement: measurable real random variables have measurable upper, lower, and absolute tail events.
@@ -308,10 +339,10 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - Informal statement: tail, moment, MGF, and Orlicz characterizations of subGaussian variables are equivalent up to constants.
 - Target Lean statement: blocked until a precise equivalence statement and constants are selected.
 - Required objects: real random variables, tail probabilities, moments, Mathlib MGF predicate, ψ₂ Orlicz control.
-- Required definitions: `SubGaussianTail`, `SubGaussianMoment`, `CenteredSubGaussianMGF`, `SubGaussianOrlicz`, `HasSubGaussianOrlicz`; Stage G1C proves the ψ₂-to-tail direction.
+- Required definitions: `SubGaussianTail`, `SubGaussianMoment`, `CenteredSubGaussianMGF`, `SubGaussianOrlicz`, `HasSubGaussianOrlicz`; fixed-scale tail/Orlicz, natural moment, and MGF-to-tail directions now have proved bridges.
 - Required bridge lemmas: expectation of exponentials, tail/moment integration.
 - Status: blocked
-- Blocker: fixed-scale `Psi2Bound -> SubGaussianTail`, `SubGaussianTail -> Psi2Bound (2*K)`, all-natural factorial moment bounds, natural moment-to-`realLpNorm` bridges, natural-exponent sharp `sqrt(q)` growth, and `SubGaussianMomentNatSqrt` bridges are proven. Real-exponent `SubGaussianMoment`, MGF connections, finite-gauge variants, gauge/norm objects, and canonical predicate choice remain future work.
+- Blocker: fixed-scale `Psi2Bound -> SubGaussianTail`, `SubGaussianTail -> Psi2Bound (2*K)`, all-natural factorial moment bounds, natural moment-to-`realLpNorm` bridges, natural-exponent sharp `sqrt(q)` growth, `SubGaussianMomentNatSqrt` bridges, and `CenteredSubGaussianMGF -> SubGaussianTail/Psi2Bound/SubGaussianMomentNatSqrt` are proven. Real-exponent `SubGaussianMoment`, reverse MGF connections, finite-gauge variants, gauge/norm objects, and canonical predicate choice remain future work.
 - Target module: `HighDimProb/SubGaussian.lean`
 - Priority: v0.3
 
@@ -342,13 +373,13 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 ## centered subGaussian mgf characterization
 - Book heading: `中心化`, `次高斯性质`
 - Informal statement: a centered subGaussian variable has Gaussian-type MGF bounds, and conversely under suitable constants.
-- Target Lean statement: blocked until centeredness and constants are settled.
+- Target Lean statement: forward implication theorem family is proved for the existing MGF predicate; reverse/centering equivalence remains blocked.
 - Required objects: `Centered`, `expect`, exponential function, `CenteredSubGaussianMGF`.
 - Required definitions: centeredness vocabulary and MGF-bound predicate.
-- Required bridge lemmas: centering and exponential integrability.
-- Status: blocked
-- Blocker: MGF predicate exists via Mathlib wrapper, but centeredness is still experimental and no theorem is assigned.
-- Target module: `HighDimProb/SubGaussian.lean`
+- Required bridge lemmas: `CenteredSubGaussianMGFLIntegral`, lintegral Markov, absolute-tail union bridge, and existing tail-to-Orlicz / moment composition.
+- Status: proven for the forward MGF-to-tail direction; blocked for reverse characterization.
+- Blocker: `CenteredSubGaussianMGF -> SubGaussianTail (2*K)`, `Psi2Bound (4*K)`, and `SubGaussianMomentNatSqrt (16*K)` are proved. The converse direction and an independent proof that a centered variable satisfies the MGF predicate from other formulations are not proved.
+- Target module: `HighDimProb/Concentration/MGF.lean`
 - Priority: v0.3
 
 ## centered subExponential mgf characterization

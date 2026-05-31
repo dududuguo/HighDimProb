@@ -7,6 +7,17 @@ open MeasureTheory
 #check psi2Bound_of_subGaussianTail
 #check subExponentialTail_of_psi1Bound
 #check psi1Bound_of_subExponentialTail
+#check realLpNorm_nat_le_sqrt_of_psi2Bound
+#check realLpNorm_nat_le_sqrt_of_subGaussianTail
+#check subGaussianMomentNatSqrt_of_psi2Bound
+#check subGaussianMomentNatSqrt_of_subGaussianTail
+#check CenteredSubGaussianMGFLIntegral
+#check centeredSubGaussianMGFLIntegral_of_centeredSubGaussianMGF
+#check upperTailProb_le_exp_neg_sq_of_centeredSubGaussianMGF
+#check lowerTailProb_le_exp_neg_sq_of_centeredSubGaussianMGF
+#check subGaussianTail_of_centeredSubGaussianMGF
+#check psi2Bound_of_centeredSubGaussianMGF
+#check subGaussianMomentNatSqrt_of_centeredSubGaussianMGF
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 variable {P : Measure Ω} [IsProbabilityMeasure P]

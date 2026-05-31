@@ -2,12 +2,12 @@
 
 Current version target: v0.1-alpha
 
-Current stage: Stage G2F-cleanup
+Current stage: Stage H1
 
-Current task: library abstraction and code-trace cleanup after sharp natural-exponent moment bridge
+Current task: Rademacher subGaussian MGF proof
 
 Milestone status:
-- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, and sharp natural-exponent predicate bridges are complete.
+- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, and the canonical Rademacher MGF atom are complete.
 
 Workflow file:
 - docs/Workflow.md
@@ -79,6 +79,8 @@ Last known test status:
 - Stage G2E-fix deterministic real inequality proof for sharp moment growth
 - Stage G2F connect sharp natural-exponent moment theorem to `SubGaussianMoment` interface
 - Stage G2F-cleanup library abstraction and code-trace cleanup
+- Stage M3 scalar subGaussian proof spine closeout
+- Stage H1 Rademacher subGaussian MGF proof
 
 Stage 1A implemented:
 - probability-space convention
@@ -417,6 +419,30 @@ Stage G2F-cleanup implemented:
 - rephrased old typed-target comments as compatibility statement wrappers after the sharper theorems were proved.
 - added aggregate import checks for `SubGaussianMomentNatSqrt` and its bridge theorems.
 - refreshed local path/status wording and removed stale "sharp target remains only typed" documentation.
+
+Milestone Sprint S4 implemented:
+- added `HighDimProb.Concentration.MGF` and `CenteredSubGaussianMGFLIntegral`.
+- proved `centeredSubGaussianMGFLIntegral_of_centeredSubGaussianMGF`.
+- proved one-sided Chernoff upper and lower tails from both the lintegral MGF predicate and the existing Mathlib-backed MGF predicate.
+- proved `subGaussianTail_of_centeredSubGaussianMGF` with scale `2*K`.
+- proved `psi2Bound_of_centeredSubGaussianMGF` with scale `4*K`.
+- proved `subGaussianMomentNatSqrt_of_centeredSubGaussianMGF` with scale `16*K`.
+- added `HighDimProbTest/MGFImplicationsAPI.lean`.
+
+Stage M3 implemented:
+- added `docs/Milestone3.md` as the scalar subGaussian proof spine closeout summary.
+- converted `docs/ScalarImplicationGraph.md` to a table-driven audit of proved and blocked scalar implication arrows.
+- updated `HighDimProb.Concentration.Implications` to re-export tail/Orlicz, natural-moment, and MGF implication leaves.
+- strengthened aggregate implication API tests so public theorem names are discoverable through the implication import.
+- recorded reverse MGF, full real-exponent `SubGaussianMoment`, subExponential MGF, Hoeffding, and Bernstein as future work.
+
+Stage H1 implemented:
+- added experimental `HighDimProb.Distributions` and `HighDimProb.Distributions.Rademacher`.
+- defined `rademacherPMF`, `rademacherMeasure`, and `rademacher` on `Bool`.
+- proved `isRealRandomVariable_rademacher`, `rademacher_mem_Icc`, and `integral_rademacher`.
+- proved `centeredSubGaussianMGF_rademacher` with scale `1`.
+- derived `subGaussianTail_rademacher` with scale `2` by the existing MGF-to-tail bridge.
+- added `HighDimProbTest/RademacherAPI.lean`.
 Milestone Sprint S2 implemented:
 - completed fixed-scale scalar Orlicz/tail implication graph in both directions for ψ�?and ψ�?predicates
 - added `HighDimProb.Concentration.Implications`
@@ -642,15 +668,20 @@ Important existing declarations:
 
 ## Active
 
-Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, and Stage G2F-cleanup are complete in this round.
+Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, and Stage M3 are complete.
 
-Stage G2C proves the natural absolute-moment bridge to `MemLp` and `realLpNorm`, and records the factorial-growth natural subGaussian moment predicate. Stage G2E-fix sharpens the natural-exponent real-Lp growth to `sqrt(q)`, and Stage G2F connects it to the new `SubGaussianMomentNatSqrt` interface. The full real-exponent `SubGaussianMoment` connector remains deferred.
+The scalar subGaussian forward spine is closed for this milestone:
+`CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`.
+The full real-exponent `SubGaussianMoment` connector and reverse/source MGF links remain deferred.
 
 Target files:
 - HighDimProb/Concentration.lean
 - HighDimProb/Concentration/LayerCake.lean
 - HighDimProb/Concentration/Implications.lean
 - HighDimProb/Concentration/MomentImplications.lean
+- HighDimProb/Concentration/MGF.lean
+- HighDimProb/Distributions.lean
+- HighDimProb/Distributions/Rademacher.lean
 - HighDimProb/ProbabilitySpace.lean
 - HighDimProb/RandomMatrix/Algebra.lean
 - HighDimProb/RandomMatrix.lean
@@ -664,6 +695,8 @@ Target files:
 - HighDimProbTest/PublicImports.lean
 - HighDimProbTest/LayerCakeAPI.lean
 - HighDimProbTest/ConcentrationImplicationsAPI.lean
+- HighDimProbTest/MGFImplicationsAPI.lean
+- HighDimProbTest/RademacherAPI.lean
 - HighDimProbTest/RandomMatrixProofsAPI.lean
 - HighDimProbTest/LimitTheoremsAPI.lean
 - HighDimProbTest/ExperimentalImports.lean
@@ -672,6 +705,7 @@ Target files:
 - docs/LLNPlan.md
 - docs/IndependencePlan.md
 - docs/ScalarImplicationGraph.md
+- docs/Milestone3.md
 - docs/ModuleTree.md
 - docs/TheoremAtlas.md
 - docs/BookProgress.md
@@ -701,6 +735,8 @@ Expected test modules:
 - `HighDimProbTest.TailToOrliczAPI`
 - `HighDimProbTest.LayerCakeAPI`
 - `HighDimProbTest.ConcentrationImplicationsAPI`
+- `HighDimProbTest.MGFImplicationsAPI`
+- `HighDimProbTest.RademacherAPI`
 - `HighDimProbTest.RandomVectorAPI`
 - `HighDimProbTest.CovarianceAPI`
 - `HighDimProbTest.CovarianceProofsAPI`
@@ -835,9 +871,12 @@ Processed:
 - crude linear `realLpNorm` growth from ψ₂ and subGaussian-tail control
 - sharp natural-exponent `realLpNorm <= C*K*sqrt(q)` growth
 - sharp natural-exponent subGaussian moment predicate bridge
+- forward centered-MGF-to-tail/psi2/natural-moment implication spine
+- Milestone 3 scalar implication graph closeout
+- canonical Bool Rademacher MGF and tail corollary
 
 Currently processing:
-- Stage G2F-cleanup closeout after library abstraction and code-trace cleanup
+- Stage H1 Rademacher subGaussian MGF proof
 
 Not yet processed:
 - LLN variance-of-sample-mean proof bridge
@@ -846,9 +885,10 @@ Not yet processed:
 - sample covariance PSD / symmetry statement layer
 - full subGaussian/subExponential equivalence theorems
 - real-exponent `SubGaussianMoment` / `SubExponentialMoment` formulation links
-- MGF formulation implication links
+- reverse/source MGF formulation implication links
 - finite-gauge Orlicz variants
-- Chernoff inequality
+- independent-sum Chernoff inequality variants
+- weighted finite Rademacher sum MGF
 - Hoeffding inequality
 - Bernstein inequality
 - random process
@@ -858,9 +898,13 @@ Not yet processed:
 
 ## Blocked
 
-No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, or Stage G2F-cleanup build blocker. The finite union bound is proved, the sample-covariance quadratic-form bridge/nonnegativity theorems are proved, the weak-law scaffold now includes sample-mean vocabulary, scalar assumption wrappers, and honest typed statements, and the scalar moment branch proves fixed-exponent absolute-moment bridges, all-natural absolute moments with factorial constants, natural moment-to-Lp bridges, crude linear real-Lp growth, natural-exponent sharp `sqrt(q)` real-Lp growth, and sharp natural-exponent predicate bridges.
+Stage H1 has no build blocker. The remaining local blocker for the
+Hoeffding/Rademacher branch is weighted finite Rademacher sums, which need
+finite-family independence and MGF-addition packaging.
 
-Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Stage G2A proves Psi2Bound -> absMomentNat q=2, SubGaussianTail -> absMomentNat q=2, and the analogous first-moment psi1/subExponential pilot. Stage G2B proves Psi2Bound/SubGaussianTail -> absMomentNat q for all natural q with a crude factorial constant. Stage G2C proves `finiteAbsMomentNat -> MemLp`, quantitative `absMomentNat -> realLpNorm`, and the factorial-growth `SubGaussianMomentNat` wrappers. Stage G2D proves the linear `realLpNorm <= C*K*q` consequence. Stage G2E records the sharp route as typed targets, Stage G2E-fix proves the deterministic envelope plus natural-exponent sqrt-growth moment bounds, and Stage G2F packages those bounds as `SubGaussianMomentNatSqrt`. The full `SubGaussianMoment` connector is still blocked by the gap from natural exponents to arbitrary finite `ENNReal` exponents; Mathlib has `eLpNorm_le_eLpNorm_of_exponent_le`, but HighDimProb still needs a ceiling/`ENNReal.toReal`/sqrt comparison bridge before this should be promoted. Finite-gauge variants, MGF connectors, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
+No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, or Sprint S4 build blocker. The finite union bound is proved, the sample-covariance quadratic-form bridge/nonnegativity theorems are proved, the weak-law scaffold now includes sample-mean vocabulary, scalar assumption wrappers, and honest typed statements, and the scalar moment/MGF branch proves fixed-exponent absolute-moment bridges, all-natural absolute moments with factorial constants, natural moment-to-Lp bridges, crude linear real-Lp growth, natural-exponent sharp `sqrt(q)` real-Lp growth, sharp natural-exponent predicate bridges, and forward MGF-to-tail/ψ₂/moment composition.
+
+Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Stage G2A proves Psi2Bound -> absMomentNat q=2, SubGaussianTail -> absMomentNat q=2, and the analogous first-moment psi1/subExponential pilot. Stage G2B proves Psi2Bound/SubGaussianTail -> absMomentNat q for all natural q with a crude factorial constant. Stage G2C proves `finiteAbsMomentNat -> MemLp`, quantitative `absMomentNat -> realLpNorm`, and the factorial-growth `SubGaussianMomentNat` wrappers. Stage G2D proves the linear `realLpNorm <= C*K*q` consequence. Stage G2E records the sharp route as typed targets, Stage G2E-fix proves the deterministic envelope plus natural-exponent sqrt-growth moment bounds, Stage G2F packages those bounds as `SubGaussianMomentNatSqrt`, and Sprint S4 proves `CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`. The full `SubGaussianMoment` connector is still blocked by the gap from natural exponents to arbitrary finite `ENNReal` exponents; Mathlib has `eLpNorm_le_eLpNorm_of_exponent_le`, but HighDimProb still needs a ceiling/`ENNReal.toReal`/sqrt comparison bridge before this should be promoted. Finite-gauge variants, reverse/source MGF connectors, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
 
 Random matrix theorem statements are blocked except `epsilonNetOperatorNormStatement` because independent entries, iid rows, symmetric random matrices, PSD/order vocabulary, and high-probability theorem syntax are not yet implemented.
 
@@ -868,4 +912,4 @@ Theorem statements blocked by missing infrastructure are tracked in docs/Theorem
 
 ## Next safe task
 
-Stage G2F-cleanup-proof - natural-to-real exponent bridge design for `SubGaussianMoment`.
+Stage H2 - weighted finite Rademacher sum MGF.

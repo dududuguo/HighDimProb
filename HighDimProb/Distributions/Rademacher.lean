@@ -1,0 +1,96 @@
+import HighDimProb.Concentration.MGF
+import Mathlib.Probability.ProbabilityMassFunction.Constructions
+import Mathlib.Probability.ProbabilityMassFunction.Integrals
+
+/-!
+# Canonical Rademacher variable
+
+This file provides the minimal distribution-level atom needed before finite
+Rademacher-sum and Hoeffding-style stages: the symmetric Rademacher variable on
+`Bool`, with the uniform Bernoulli measure.
+-/
+
+namespace HighDimProb
+
+open MeasureTheory ProbabilityTheory
+
+noncomputable section
+
+/-- The symmetric Bernoulli PMF on `Bool`. -/
+def rademacherPMF : PMF Bool :=
+  PMF.bernoulli (1 / 2 : NNReal) (by norm_num)
+
+/-- The canonical probability measure for a symmetric Rademacher variable. -/
+def rademacherMeasure : Measure Bool :=
+  rademacherPMF.toMeasure
+
+instance instIsProbabilityMeasure_rademacherMeasure :
+    IsProbabilityMeasure rademacherMeasure :=
+  PMF.toMeasure.isProbabilityMeasure _
+
+/-- The canonical Rademacher random variable on `Bool`: `true -> 1`, `false -> -1`. -/
+def rademacher : RealRandomVariable Bool :=
+  fun b => if b then (1 : Real) else -1
+
+/-- The canonical Rademacher variable is measurable. -/
+theorem isRealRandomVariable_rademacher :
+    IsRealRandomVariable rademacherMeasure rademacher := by
+  unfold IsRealRandomVariable IsRandomVariable rademacher
+  fun_prop
+
+/-- The canonical Rademacher variable is pointwise contained in `[-1, 1]`. -/
+theorem rademacher_mem_Icc (b : Bool) :
+    Set.Icc (-1 : Real) 1 (rademacher b) := by
+  have hval : Or (rademacher b = 1) (rademacher b = -1) := by
+    cases b <;> simp [rademacher]
+  rcases hval with hval | hval
+  rw [hval]
+  constructor <;> norm_num
+  rw [hval]
+  constructor <;> norm_num
+
+/-- The canonical Rademacher variable has mean zero. -/
+theorem integral_rademacher :
+    MeasureTheory.integral rademacherMeasure rademacher = 0 := by
+  unfold rademacherMeasure rademacherPMF rademacher
+  rw [PMF.integral_eq_sum]
+  simp [PMF.bernoulli_apply]
+  norm_num
+
+/--
+The canonical symmetric Rademacher variable is centered subGaussian in the MGF
+sense with scale `1`.
+
+This uses Mathlib's bounded zero-mean MGF lemma with interval `[-1, 1]`.
+-/
+theorem centeredSubGaussianMGF_rademacher :
+    CenteredSubGaussianMGF rademacherMeasure rademacher 1 := by
+  have hm : AEMeasurable rademacher rademacherMeasure := by
+    exact isRealRandomVariable_rademacher.aemeasurable
+  have hb :
+      Filter.Eventually
+        (fun b => Set.Icc (-1 : Real) 1 (rademacher b)) (ae rademacherMeasure) := by
+    exact ae_of_all rademacherMeasure rademacher_mem_Icc
+  have hsub :=
+    ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero
+      (X := rademacher) (a := (-1 : Real)) (b := 1) hm hb integral_rademacher
+  exact And.intro zero_lt_one (by
+    convert hsub using 1
+    ext
+    norm_num [Real.norm_eq_abs]
+    rfl)
+
+/--
+The canonical Rademacher variable satisfies the existing two-sided
+subGaussian-tail predicate with scale `2`, by composition through the MGF
+bridge.
+-/
+theorem subGaussianTail_rademacher :
+    SubGaussianTail rademacherMeasure rademacher 2 := by
+  simpa using
+    (subGaussianTail_of_centeredSubGaussianMGF
+      isRealRandomVariable_rademacher centeredSubGaussianMGF_rademacher)
+
+end
+
+end HighDimProb

@@ -1,4 +1,5 @@
-import HighDimProb.Concentration.Implications
+import HighDimProb.Concentration.OrliczToTail
+import HighDimProb.Concentration.TailToOrlicz
 import HighDimProb.Analysis.RealInequalities
 import Mathlib.Analysis.Complex.ExponentialBounds
 

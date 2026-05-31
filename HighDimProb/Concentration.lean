@@ -6,6 +6,7 @@ import HighDimProb.Concentration.OrliczToTail
 import HighDimProb.Concentration.TailToOrlicz
 import HighDimProb.Concentration.Implications
 import HighDimProb.Concentration.MomentImplications
+import HighDimProb.Concentration.MGF
 
 /-!
 # Concentration branch

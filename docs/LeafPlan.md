@@ -20,13 +20,22 @@
 - Markov
 - Chebyshev
 - Chernoff
+- MGF
 - Hoeffding
 - Bernstein
 - OrliczToTail
 - TailToOrlicz
+- MomentImplications
 - Implications
 - SubGaussianImplications
 - SubExponentialImplications
+
+## Distributions
+
+- Rademacher
+- RademacherSums
+- BernoulliAtoms
+- BoundedSigns
 
 ## Vector
 

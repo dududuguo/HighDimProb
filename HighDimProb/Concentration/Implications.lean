@@ -1,15 +1,18 @@
 import HighDimProb.Concentration.OrliczToTail
 import HighDimProb.Concentration.TailToOrlicz
+import HighDimProb.Concentration.MomentImplications
+import HighDimProb.Concentration.MGF
 
 /-!
-# Scalar tail/Orlicz implication graph
+# Scalar implication graph
 
-This module is the small collection point for proved scalar Orlicz/tail
-implications.  Moment-growth implication theorems live in
-`HighDimProb.Concentration.MomentImplications`, which imports this module.
+This module is the collection point for proved scalar concentration implication
+theorems. The owning leaves remain `OrliczToTail`, `TailToOrlicz`,
+`MomentImplications`, and `MGF`; this aggregate re-exports those theorem names
+for downstream users who want the current implication graph through one import.
 
 HighDimProb deliberately does not introduce canonical `SubGaussian` or
-`SubExponential` predicates; the formulation-specific predicates stay separate
+`SubExponential` predicates. The formulation-specific predicates stay separate
 until the moment, MGF, and finite-gauge links are broad enough.
 
 Current proved arrows:
@@ -18,13 +21,12 @@ Current proved arrows:
 * `SubGaussianTail -> Psi2Bound` with scale loss `K -> 2 * K`
 * `Psi1Bound -> SubExponentialTail`
 * `SubExponentialTail -> Psi1Bound` with scale loss `K -> 3 * K`
+* natural-exponent factorial and sharp `sqrt(q)` moment links
+* `CenteredSubGaussianMGF -> SubGaussianTail/Psi2Bound/SubGaussianMomentNatSqrt`
 
-Natural-exponent factorial and sharp `sqrt(q)` moment links live in
-`HighDimProb.Concentration.MomentImplications`, including the
-`SubGaussianMomentNatSqrt` interface.  The full real-exponent
-`SubGaussianMoment` theorem and MGF formulation links remain TODO.
-This module intentionally keeps the proof theorem names from the owning leaves
-instead of adding canonical `SubGaussian` or `SubExponential` predicates.
+The full real-exponent `SubGaussianMoment` theorem and reverse MGF formulation
+links remain TODO. This module intentionally keeps the proof theorem names from
+the owning leaves instead of adding canonical predicates.
 -/
 
 namespace HighDimProb

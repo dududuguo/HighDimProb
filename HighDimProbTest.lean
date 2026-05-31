@@ -15,6 +15,8 @@ import HighDimProbTest.OrliczToTailAPI
 import HighDimProbTest.TailToOrliczAPI
 import HighDimProbTest.ConcentrationImplicationsAPI
 import HighDimProbTest.MomentImplicationsAPI
+import HighDimProbTest.MGFImplicationsAPI
+import HighDimProbTest.RademacherAPI
 import HighDimProbTest.RandomVectorAPI
 import HighDimProbTest.CovarianceAPI
 import HighDimProbTest.CovarianceProofsAPI
