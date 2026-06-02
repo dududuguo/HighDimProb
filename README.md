@@ -11,6 +11,20 @@ lake build
 lake test
 ```
 
+## Theory Roadmap Submodule
+
+The external theory-side knowledge graph is mounted as a Git submodule:
+
+```bash
+git submodule update --init --recursive
+```
+
+It lives at `external/theory-roadmap/` and tracks the separate
+`dududuguo/highdimprob-theory-roadmap` repository. This submodule contains the
+source-reference roadmap for future formalization. The main repository's
+`knowledge_graph/` namespace, if added later, is reserved for the Lean code
+graph: modules, declarations, imports, tests, and API exposure.
+
 ## Stable API
 
 Stable v0.1 modules are imported through:

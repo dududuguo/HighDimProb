@@ -1,0 +1,3 @@
+[submodule "external/theory-roadmap"]
+	path = external/theory-roadmap
+	url = https://github.com/dududuguo/highdimprob-theory-roadmap.git
