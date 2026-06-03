@@ -3,6 +3,9 @@
 This workflow runs **after** each successful integration and periodically
 as a batch process. It is the mechanism by which the system improves over time.
 
+Learning is advisory. It cannot relax `docs/Workflow.md`, skip mandatory
+reviews, skip documentation tracking, or replace `lake build` / `lake test`.
+
 ## Trigger
 
 - Post-integration: after any concept reaches `INTEGRATED`
@@ -39,7 +42,7 @@ as a batch process. It is the mechanism by which the system improves over time.
 │                                                              │
 │  2b. Definition Pattern Extraction                           │
 │      Scan definitions for typeclass recipes:                 │
-│        - `IsSubGaussian` → predicate + properties            │
+│        - existing subGaussian predicate forms → usage rules  │
 │        - `HasMGF` → structure + proof                        │
 │      Generalize to parameterized templates                   │
 │                                                              │
@@ -77,8 +80,8 @@ as a batch process. It is the mechanism by which the system improves over time.
 │                                                              │
 │  3d. Fast-Path Detection                                     │
 │      Rank transitions by first-attempt success rate          │
-│      if rate > 0.9 for ≥5 consecutive → mark as fast-path    │
-│      Future concepts at same depth can skip intermediate gates│
+│      if rate > 0.9 for ≥5 consecutive → preload context      │
+│      Future concepts still pass all mandatory repo gates      │
 │                                                              │
 │  3e. Generate Growth Proposals                               │
 │      Bundle proposals with evidence                          │
@@ -114,6 +117,11 @@ post_integration:
     - fsm_updater.update_metrics(concept_id)
     - knowledge_base.prune_check()
     - orchestator.unblock_dependents(concept_id)
+    - verify_workflow_artifacts(
+        docs_status_updated=true,
+        lake_build_passed=true,
+        lake_test_passed=true
+      )
 ```
 
 ## Periodic Batch

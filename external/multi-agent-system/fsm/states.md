@@ -140,10 +140,10 @@ responsible agents, and a timeout.
 
 | Property | Value |
 |----------|-------|
-| **Description** | Proof verification: are there `sorry` gaps? |
+| **Description** | Proof and policy verification: no forbidden placeholders, fake theorems, or import-boundary breaches |
 | **Entry criteria** | Code is `APPROVED` |
-| **Exit criteria** | Proof status determined (complete / gaps found) |
-| **Responsible agent** | ProofCompleter (detects `sorry`) |
+| **Exit criteria** | Proof/policy status determined (complete / rejected / needs human) |
+| **Responsible agent** | ProofCompleter (checks completeness and repository policy) |
 | **Timeout** | 30 min |
 | **On timeout** | → `STUCK` |
 
@@ -151,8 +151,8 @@ responsible agents, and a timeout.
 
 | Property | Value |
 |----------|-------|
-| **Description** | All proofs are complete (no `sorry`) |
-| **Entry criteria** | Zero `sorry` in module |
+| **Description** | All proofs are complete and repository policy checks pass |
+| **Entry criteria** | Zero forbidden placeholders and no unproved theorem/lemma declarations |
 | **Exit criteria** | Integration dispatched |
 | **Responsible agent** | QualityGate |
 | **Timeout** | None |
@@ -161,9 +161,9 @@ responsible agents, and a timeout.
 
 | Property | Value |
 |----------|-------|
-| **Description** | Proofs contain `sorry` or incomplete reasoning |
-| **Entry criteria** | `sorry` count > 0 |
-| **Exit criteria** | Gap analysis produced; fix strategy selected |
+| **Description** | A proposed theorem is incomplete, out of scope, or contains forbidden placeholder content |
+| **Entry criteria** | Forbidden token found, compiler exposes an unfinished proof, or reviewer rejects an unproved theorem |
+| **Exit criteria** | Unit is fully proved, converted to a typed statement/doc blocker, or escalated |
 | **Responsible agent** | ProofCompleter, Translator (gap filling) |
 | **Max cycles** | 5 per gap |
 | **On max cycles** | → `NEEDS_HUMAN` |
@@ -172,9 +172,9 @@ responsible agents, and a timeout.
 
 | Property | Value |
 |----------|-------|
-| **Description** | Merging verified module into the codebase |
+| **Description** | Preparing verified changes for the main repository |
 | **Entry criteria** | Code is `VERIFIED` |
-| **Exit criteria** | PR created / branch merged; codebase-memory re-indexed |
+| **Exit criteria** | Full `lake build` and `lake test` pass; docs/tests/imports updated; optional re-index completed |
 | **Responsible agent** | Orchestrator, CodebaseMemory |
 | **Timeout** | 20 min |
 | **On timeout** | → `STUCK` |
@@ -183,8 +183,8 @@ responsible agents, and a timeout.
 
 | Property | Value |
 |----------|-------|
-| **Description** | Module is part of the codebase |
-| **Entry criteria** | Merge complete; knowledge graph updated |
+| **Description** | Change is accepted under the main repository workflow |
+| **Entry criteria** | Human or repository workflow accepts the verified working-tree changes |
 | **Exit criteria** | End state; next concept unblocked |
 | **Responsible agent** | Orchestrator (triggers dependency re-check) |
 | **Timeout** | None |
@@ -207,8 +207,8 @@ responsible agents, and a timeout.
 
 | Property | Value |
 |----------|-------|
-| **Description** | Intentionally skipped (e.g., out of scope for current milestone) |
-| **Entry criteria** | Orchestrator marks concept as skip |
+| **Description** | Intentionally deferred as out of scope for the current milestone |
+| **Entry criteria** | Orchestrator records a scoped deferral with a reason in project tracking docs |
 | **Exit criteria** | Manually re-queued |
 | **Responsible agent** | Orchestrator |
 
@@ -247,7 +247,7 @@ responsible agents, and a timeout.
 | Property | Value |
 |----------|-------|
 | **Description** | Successful formalization analyzed; patterns saved to Knowledge Base |
-| **Entry criteria** | Concept reaches `INTEGRATED` |
+| **Entry criteria** | Concept reaches `INTEGRATED` under the repository workflow |
 | **Exit criteria** | Patterns stored; FSM growth analysis triggered |
 | **Responsible agent** | PatternLearner |
 | **Timeout** | 15 min |

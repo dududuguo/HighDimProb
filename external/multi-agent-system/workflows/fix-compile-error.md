@@ -39,7 +39,7 @@ Compiler returns non-zero exit code.
 │    - unsolved_goals →      │  │    NEEDS_HUMAN               │
 │      fill_tactic_gap       │  │                               │
 │    - import_error →        │  │                               │
-│      update_lakefile       │  │                               │
+│      check import path     │  │                               │
 │    - tactic_failure →      │  │                               │
 │      replace_tactic        │  │                               │
 └──────────────┬─────────────┘  └──────────────────────────────┘
@@ -95,7 +95,7 @@ fix_history:
       result: resolved
     - error: {class: "synthesize_placeholder", line: 67, col: 5}
       strategy: add_instance
-      action: "Added `[MeasureSpace Ω]` to theorem arguments"
+      action: "Added the missing `[MeasurableSpace Ω]` assumption already required by the API"
       result: resolved
   outcome: COMPILED
 ```
@@ -118,7 +118,7 @@ If a fix introduces new errors:
 | `synthesize_placeholder` | `failed to synthesize instance {Class}` | 1. add arg 2. open namespace 3. add instance |
 | `unsolved_goals` | `unsolved goals: {goals}` | 1. add proof 2. add hypothesis 3. restructure theorem |
 | `tactic_failure` | `{tactic} failed to find a contradiction` | 1. add hypotheses 2. use different tactic 3. restructure |
-| `import_error` | `module not found` | 1. add to lakefile 2. check path 3. check spelling |
+| `import_error` | `module not found` | 1. check path 2. check spelling 3. check aggregate import policy |
 | `kernel_error` | `type mismatch in definition` | 1. check recursive calls 2. add type annotation 3. restructure |
 | `structural_mismatch` | Wrong argument count / binder mismatch | 1. restructure call 2. re-translate from source |
 

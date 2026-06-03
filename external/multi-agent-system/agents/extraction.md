@@ -14,6 +14,11 @@ translated into Lean4 for a given concept.
 - Concept descriptor from topology sort
 - Source location hints from `roadmap/roadmap_digest.md`
 
+Roadmap module names such as `HighDimProb.H.*` are theory-side labels. They are
+not automatically valid module paths in this repository. The extractor must
+produce a mapping proposal to existing HighDimProb branches instead of assuming
+the roadmap path should be created.
+
 ### Process
 
 1. Load the source documents relevant to the concept
@@ -40,7 +45,11 @@ translated into Lean4 for a given concept.
 ```yaml
 manifest:
   concept: "subgaussian-subexponential"
-  lean_module: "HighDimProb.H.Concentration.SubGaussian"
+  roadmap_target: "HighDimProb.H.Concentration.SubGaussian"
+  candidate_modules:
+    - "HighDimProb.SubGaussian"
+    - "HighDimProb.Concentration.MGF"
+    - "HighDimProb.Concentration.Implications"
   generated_at: "2026-06-03T..."
   source_documents:
     - "Concentration_inequalities.md"
@@ -48,11 +57,12 @@ manifest:
   units:
     - id: "sg-def-1"
       type: definition
-      statement: "A random variable X is subGaussian if E[exp(λX)] ≤ exp(λ²σ²/2) for all λ"
+      statement: "Choose the existing subGaussian formulation needed for this source statement"
       source_location: "Concentration_inequalities.md:5120-5140"
       dependencies: []  # within this concept
       priority: P0
       statement_hash: "sha256:..."
+      repository_policy: "do not introduce a canonical SubGaussian predicate"
 
     - id: "sg-thm-1"
       type: theorem
@@ -61,6 +71,7 @@ manifest:
       dependencies: ["sg-def-1"]
       priority: P1
       statement_hash: "sha256:..."
+      allowed_outputs: ["complete_proof", "typed_prop_statement", "blocked_doc_entry"]
 
     - id: "sg-prop-1"
       type: proposition

@@ -3,6 +3,12 @@
 How the multi-agent system queries and updates the codebase knowledge graph
 at `external/codebase-memory/HighDimProb.db`.
 
+The examples below are templates. Do not hard-code a project name or path from
+this file. First call `list_projects` or index the local repository, then use
+the actual project name reported by the tool. The checked-in metadata currently
+records the project as `HighDimProb`, while live MCP state may need indexing
+before any query works.
+
 ## Query Patterns
 
 ### 1. Dependency Resolution (DependencyResolver)
@@ -11,11 +17,11 @@ Check if a dependency is already formalized:
 
 ```
 search_graph(
-  project="workspace-projects-HighDimProb",
-  name_pattern="IsSubGaussian",
+  project="{actual_project_name}",
+  name_pattern="SubGaussianTail|CenteredSubGaussianMGF",
   label="Function"
 )
-→ if result_count > 0: dependency is INTEGRATED
+→ if result_count > 0: dependency candidate exists in the codebase
 ```
 
 ### 2. Name Collision Detection (IntegrationReviewer)
@@ -24,7 +30,7 @@ Before integrating a new declaration, check for name conflicts:
 
 ```
 search_graph(
-  project="workspace-projects-HighDimProb",
+  project="{actual_project_name}",
   name_pattern="{new_declaration_name}",
   label="Function"
 )
@@ -38,9 +44,8 @@ Sample existing declarations to infer naming conventions:
 
 ```
 search_graph(
-  project="workspace-projects-HighDimProb",
+  project="{actual_project_name}",
   label="Function",
-  is_exported=true,
   limit=20
 )
 → analyze naming patterns: UpperCamelCase, prefix conventions, etc.
@@ -52,7 +57,7 @@ Find which module defines a used symbol:
 
 ```
 query_graph(
-  project="workspace-projects-HighDimProb",
+  project="{actual_project_name}",
   query="MATCH (f:Function {name: 'chernoffBound'})-[r:DEFINES]-(m:Module) RETURN m.name"
 )
 → "HighDimProb.Concentration.Basic"
@@ -64,7 +69,7 @@ Find existing lemmas that could be used instead of re-proving:
 
 ```
 trace_path(
-  project="workspace-projects-HighDimProb",
+  project="{actual_project_name}",
   function_name="{goal_conclusion}",
   direction="inbound",
   depth=2
@@ -80,7 +85,7 @@ dependencies (to ensure no breakage):
 
 ```
 trace_path(
-  project="workspace-projects-HighDimProb",
+  project="{actual_project_name}",
   function_name="{dependency_name}",
   direction="inbound",
   depth=3
@@ -97,7 +102,7 @@ For each unit in manifest:
   search_graph(name_pattern=unit.statement_hash_derived_name)
 
 Missing units → coverage gaps
-Present units → already formalized (skip or compare)
+Present units → already formalized (avoid duplicate or compare statements)
 ```
 
 ### 8. Architecture Conformance
@@ -105,7 +110,7 @@ Present units → already formalized (skip or compare)
 Check that the new module's layer matches the architecture:
 
 ```
-get_architecture(project="workspace-projects-HighDimProb", aspects=["layers"])
+get_architecture(project="{actual_project_name}", aspects=["layers"])
 → new module should be in the expected layer (entry, core, internal)
 ```
 
@@ -120,8 +125,8 @@ After a concept is `INTEGRATED`, the codebase graph must be re-indexed:
 ```yaml
 post_integration:
   - action: index_repository
-    project: "workspace-projects-HighDimProb"
-    path: "/workspace/projects/HighDimProb"
+    project: "{actual_project_name}"
+    path: "{repo_path}"
     reason: "New module {lean_module} integrated"
 ```
 
@@ -162,7 +167,7 @@ manage_adr(
     "concept": "subgaussian-subexponential",
     "source_document": "Concentration_inequalities.md",
     "source_section": "2.1",
-    "lean_module": "HighDimProb.Concentration.SubGaussian",
+    "lean_module": "HighDimProb.Concentration.MGF",
     "status": "formalized"
   }]
 )
@@ -172,24 +177,24 @@ This creates a traceable link: **source theorem → Lean4 formalization**.
 
 ### Cross-Referencing
 
-For each formalized theorem, add a comment in the Lean code pointing
-back to the source:
+For each formalized theorem, prefer a short docstring note only when it helps
+traceability. Do not add placeholder theorem statements.
 
 ```lean4
 /--
 Theorem 2.1 from [Concentration Inequalities].
 Source: `external/theory-roadmap/sources/Concentration_inequalities.md:5145`
 
-SubGaussian tail bound: P(|X| ≥ t) ≤ 2 exp(-t²/(2σ²))
+MGF-to-tail bridge for the existing `CenteredSubGaussianMGF` predicate.
 -/
-theorem subGaussian_tail_bound ...
+#check subGaussianTail_of_centeredSubGaussianMGF
 ```
 
 The codebase-memory graph can then search for these annotations:
 
 ```
 search_code(
-  project="workspace-projects-HighDimProb",
+  project="{actual_project_name}",
   pattern="Concentration_inequalities.md"
 )
 → all formalizations derived from that source

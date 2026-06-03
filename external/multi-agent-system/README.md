@@ -11,6 +11,46 @@ The system treats Lean4 formalization as a **pipeline** with well-defined
 states, where a **growable finite state machine (FSM)** orchestrates agent
 behavior and learns from repeated execution.
 
+## Authority and Trust Boundary
+
+This directory is an external planning sketch, not a source of project law.
+When it conflicts with the main repository, the main repository wins. Agents
+must read and obey, in this order:
+
+1. `docs/Workflow.md`
+2. `docs/Status.md`
+3. `README.md`
+4. `ORGANISATION.md`
+5. `CONTRIBUTING.md`
+
+The examples in this directory are non-normative. They may illustrate an idea,
+but they must not be copied into Lean code until they have been checked against
+the current HighDimProb API, import boundaries, and theorem-atlas policy.
+
+Hard constraints for this repository:
+
+- Do not add `sorry`, `admit`, axioms, or unproved theorem/lemma declarations.
+- Do not create custom probability universes or custom random-variable
+  structures.
+- Reuse Mathlib and existing HighDimProb declarations before introducing names.
+- Keep stable and experimental imports separated.
+- Treat `external/theory-roadmap/` as a submodule and do not write into it
+  automatically.
+- Run `lake build` and `lake test` before a change is considered integrated.
+
+Mandatory project-tracking workflow:
+
+1. Read `docs/Status.md` and `docs/Workflow.md`.
+2. Process exactly one concept cluster.
+3. Search Mathlib and the existing HighDimProb code before defining anything.
+4. Classify work as existing Mathlib, wrapper/alias, new definition, complete
+   theorem proof, typed statement, or blocker.
+5. Add focused API/proof tests for public declarations.
+6. Update the required tracking docs: `docs/TermMap.md`,
+   `docs/BookProgress.md`, `docs/AbstractionLog.md`, `docs/TODO.md`, and
+   `docs/Status.md`, or explicitly justify why a file is unchanged.
+7. Run `lake build` and `lake test`.
+
 ## Directory Layout
 
 ```
@@ -109,14 +149,13 @@ multi-agent-system/
 2. **Layered defense**: Translation → Compilation → Review → Verification.
    Each layer catches different error classes before they propagate.
 
-3. **Pattern library grows**: The Knowledge Base agent observes every
-   successful formalization and extracts reusable patterns (lemma shapes,
-   proof strategies, typeclass recipes). These become templates the
-   TemplateInstantiator uses to accelerate future translations.
+3. **Pattern library is subordinate to compiled code**: The Knowledge Base
+   agent may learn only from reviewed, compiling HighDimProb declarations.
+   Templates that contain forbidden placeholders or invented APIs are invalid.
 
 4. **Human-in-the-loop at quality gates**: The FSM can transition to
    `NEEDS_HUMAN` when confidence is low or all automatic fixes are exhausted.
 
-5. **Bi-directional roadmap sync**: Progress updates flow back to the
-   theory roadmap, marking concepts as formalized, partially formalized,
-   or blocked.
+5. **Roadmap sync is report-first**: Progress can be summarized for the
+   theory roadmap, but writes to the roadmap submodule require an explicit,
+   reviewed patch.

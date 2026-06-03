@@ -2,6 +2,11 @@
 
 End-to-end workflow for formalizing one concept from the theory roadmap.
 
+This workflow is valid only as a specialization of the main repository
+workflow. Every run must follow `docs/Workflow.md` exactly: read status first,
+process one concept cluster only, search Mathlib before defining anything,
+update project tracking docs, then run `lake build` and `lake test`.
+
 ## Trigger
 
 Orchestrator selects a concept from the topological queue.
@@ -10,14 +15,23 @@ Orchestrator selects a concept from the topological queue.
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│ 1. DEPENDENCY CHECK                                          │
-│    DependencyResolver checks all deps are INTEGRATED         │
+│ 1. REPOSITORY WORKFLOW CHECK                                 │
+│    Read docs/Status.md and docs/Workflow.md                  │
+│    Select exactly one concept cluster                        │
+│    Search Mathlib and existing HighDimProb APIs first        │
+│    if scope is too broad → DEFERRED / NEEDS_HUMAN            │
+└────────────────────────────┬─────────────────────────────────┘
+                             │ workflow ok
+                             ▼
+┌──────────────────────────────────────────────────────────────┐
+│ 2. DEPENDENCY CHECK                                          │
+│    DependencyResolver checks all deps are accepted in repo   │
 │    if no → BLOCKED, return                                   │
 └────────────────────────────┬─────────────────────────────────┘
                              │ deps ok
                              ▼
 ┌──────────────────────────────────────────────────────────────┐
-│ 2. EXTRACTION                                                │
+│ 3. EXTRACTION                                                │
 │    ConceptExtractor reads source documents                   │
 │    TheoremLocator pinpoints exact theorem locations          │
 │    → Produces: Formalization Manifest                        │
@@ -25,18 +39,20 @@ Orchestrator selects a concept from the topological queue.
                              │ manifest
                              ▼
 ┌──────────────────────────────────────────────────────────────┐
-│ 3. TRANSLATION                                               │
+│ 4. TRANSLATION                                               │
 │    Translator loads context:                                 │
 │      - Knowledge Base patterns & templates                   │
 │      - Existing codebase style & conventions                 │
-│    TemplateInstantiator pre-fills matching templates         │
-│    Translator generates .lean file                           │
-│    → Produces: .lean module(s)                               │
+│      - Main repository rules and current Status              │
+│    TemplateInstantiator pre-fills only trusted templates     │
+│    Translator generates complete proofs, definitions, or     │
+│    typed Prop statements; never placeholder theorems         │
+│    → Produces: scoped patch proposal                         │
 └────────────────────────────┬─────────────────────────────────┘
                              │ .lean file
                              ▼
 ┌──────────────────────────────────────────────────────────────┐
-│ 4. COMPILATION                                               │
+│ 5. COMPILATION                                               │
 │    Compiler runs `lake build`                                │
 │    if ok → COMPILED, go to 6                                │
 │    if errors → COMPILE_ERROR, go to 5                       │
@@ -46,7 +62,7 @@ Orchestrator selects a concept from the topological queue.
               │ ok                          │ errors
               ▼                             ▼
 ┌──────────────────────┐    ┌──────────────────────────────────┐
-│ 6. REVIEW            │    │ 5. FIXING                        │
+│ 6. REVIEW            │    │ 5a. FIXING                       │
 │                      │    │    SyntaxFixer classifies errors │
 │                      │    │    Applies fix strategy           │
 │                      │    │    → back to 4 (max 3 cycles)    │
@@ -84,22 +100,26 @@ Orchestrator selects a concept from the topological queue.
            │
            ▼
 ┌──────────────────────────────────────────────────────────────┐
-│ 7a. Proof verification                                       │
-│    ProofCompleter scans for `sorry`                           │
-│    if none → VERIFIED                                        │
-│    if sorry found → PROOF_GAP                                │
+│ 7a. Proof and policy verification                            │
+│    ProofCompleter scans for forbidden placeholders, fake      │
+│    theorems, invented APIs, and import-boundary breaches      │
+│    if clean and proofs complete → VERIFIED                   │
+│    if not → PROOF_GAP / CHANGES_REQUESTED                    │
 │                                                              │
-│    PROOF_GAP → fill gaps → back to verification (max 5/gap)  │
+│    PROOF_GAP → complete proof or downgrade to typed Prop/doc │
 │    if exhausted → NEEDS_HUMAN                                │
 └────────────────────────────┬─────────────────────────────────┘
                              │ verified
                              ▼
 ┌──────────────────────────────────────────────────────────────┐
-│ 8. INTEGRATION                                               │
-│    Create branch, commit .lean file                          │
-│    Run full `lake build` (all modules)                       │
-│    Re-index codebase-memory graph                            │
-│    Update theory roadmap status                              │
+│ 8. PROJECT TRACKING AND INTEGRATION                          │
+│    Update required tracking docs:                            │
+│      docs/TermMap.md, docs/BookProgress.md,                  │
+│      docs/AbstractionLog.md, docs/TODO.md, docs/Status.md    │
+│    Add focused API/proof tests for public declarations       │
+│    Run full `lake build` and `lake test`                     │
+│    Optionally re-index codebase-memory graph                 │
+│    Do not write to external submodules automatically         │
 │    → INTEGRATED                                              │
 └────────────────────────────┬─────────────────────────────────┘
                              │ integrated
@@ -161,6 +181,6 @@ Orchestrator → PatternLearner:  learn(concept, history)
 | Compile error, known class | SyntaxFixer applies known fix | 3 | NEEDS_HUMAN |
 | Compile error, unknown class | Classify → add to KB → retry | 2 | NEEDS_HUMAN |
 | Review changes requested | Apply changes → re-translate | 3 | NEEDS_HUMAN |
-| Proof gap, trivial | ProofCompleter tactics | 5 | skip gap, flag |
-| Proof gap, deep | Decompose → attempt sub-goals | 3 | NEEDS_HUMAN |
-| Integration merge conflict | Rebase on current main | 3 | NEEDS_HUMAN |
+| Proof gap, trivial | Complete the proof and recompile | 5 | convert to typed statement or NEEDS_HUMAN |
+| Proof gap, deep | Decompose only if in current scope | 3 | typed statement / blocked doc entry / NEEDS_HUMAN |
+| Integration conflict | Stop and ask for human direction before rebasing or merging | 1 | NEEDS_HUMAN |

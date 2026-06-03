@@ -11,7 +11,8 @@ maintains the global work queue, and makes escalation decisions.
 2. **Dependency checking**: Before dequeuing a concept, verify all dependencies are `INTEGRATED`
 3. **Task dispatch**: Assign concept to the appropriate agent based on current FSM state
 4. **State transition**: Update concept state on agent completion, validate guard conditions
-5. **Progress tracking**: Update theory roadmap with formalization status
+5. **Progress tracking**: Report formalization status. Do not write into the
+   theory-roadmap submodule without an explicit reviewed patch.
 6. **Escalation**: Transition to `NEEDS_HUMAN` when automatic retries are exhausted
 7. **FSM growth approval**: Review and approve/reject FSM growth proposals from FSMUpdater
 
@@ -70,14 +71,21 @@ Orchestrator communicates with agents via structured task descriptors:
 task:
   task_id: "uuid"
   concept: "subgaussian-subexponential"
-  lean_module: "HighDimProb.H.Concentration.SubGaussian"
+  roadmap_target: "HighDimProb.H.Concentration.SubGaussian"
   state: TRANSLATING
   context:
     source_documents: ["Concentration_inequalities.md", "High-Dimensional_Probability.md"]
     source_locations: [list of (file, line_range) tuples]
     dependencies_integrated: ["basic-concentration"]
     known_patterns: ["mgf_bound", "tail_bound_from_mgf"]  # from Knowledge Base
-    existing_codebase_modules: ["HighDimProb.SubGaussian.lean"]
+    candidate_codebase_modules:
+      - "HighDimProb.SubGaussian"
+      - "HighDimProb.Concentration.MGF"
+      - "HighDimProb.Concentration.Implications"
+    repository_rules:
+      - "no sorry/admit/axioms"
+      - "no invented canonical SubGaussian predicate"
+      - "no custom probability universe or random-variable structure"
   deadline: "2026-06-04T00:00:00Z"
   max_retries: 3
 ```

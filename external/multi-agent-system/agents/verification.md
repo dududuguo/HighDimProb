@@ -8,8 +8,10 @@ Runs `lake build` on the module and captures the full error/warning output.
 
 ### Process
 
-1. Ensure module is registered in `lakefile.lean`
-2. Run `lake build HighDimProb.Concentration.SubGaussian`
+1. Resolve the module through the current Lake library layout. New files under
+   `HighDimProb/` do not need per-module `lakefile.lean` registration.
+2. Run the narrowest useful build target first, then full `lake build` and
+   `lake test`
 3. Parse output:
    - Exit code 0 → `COMPILED`
    - Exit code ≠ 0 → `COMPILE_ERROR`, extract error list
@@ -20,13 +22,13 @@ Runs `lake build` on the module and captures the full error/warning output.
 | Error Class | Example | Typical Fix Agent |
 |-------------|---------|-------------------|
 | `type_mismatch` | `has type ℝ but is expected to have type ℕ` | SyntaxFixer |
-| `unknown_identifier` | `unknown identifier 'subGaussian'` | SyntaxFixer (add import) |
+| `unknown_identifier` | `unknown identifier 'SubGaussianTail'` | SyntaxFixer (add import or correct existing name) |
 | `synthesize_placeholder` | `failed to synthesize instance ToAdd` | SyntaxFixer |
 | `unsolved_goals` | `unsolved goals: ⊢ 0 < σ` | ProofCompleter |
 | `structural_mismatch` | Wrong number of arguments | Translator (re-translate) |
 | `tactic_failure` | `linarith failed to find a contradiction` | ProofCompleter |
 | `kernel_error` | Definitional equality failure | Translator |
-| `import_error` | Module not found in lakefile | DependencyReviewer |
+| `import_error` | Module import path not found | DependencyReviewer |
 | `unclassified` | Unknown error pattern | FSMUpdater (learn new error type) |
 
 ### Output
@@ -91,19 +93,24 @@ Fixes compilation errors that are syntactic or type-level (not proof gaps).
 
 ### Role
 
-Fills in `sorry` gaps in proofs. Triggered at `VERIFYING` state.
+Checks proof completeness under the main repository rules. It may attempt to
+finish a local proof only when no forbidden placeholder has been introduced and
+the theorem is already in scope. It does not permit placeholder-based drafts.
 
 ### Process
 
-1. Scan module for `sorry` and `admit`
-2. For each gap:
+1. Scan module for forbidden tokens: `sorry`, `admit`, `axiom`, and unapproved
+   theorem/lemma declarations for unproved book results
+2. If any forbidden token is present, reject the translation and route it back
+   to a complete proof, typed `Prop` statement, or documentation-only blocker
+3. For each ordinary unsolved proof obligation from compiler output:
    a. Extract the goal type
    b. Extract the local context (hypotheses available)
    c. Search Knowledge Base for similar proof patterns
    d. Attempt to fill using tactic synthesis
-   e. If gap has nested `sorry`, recurse from innermost
-3. Re-compile to verify
-4. Repeat until `sorry` count is 0 or retries exhausted
+4. Re-compile to verify
+5. Repeat until the theorem is fully proved or the unit is downgraded to a
+   statement specification / blocker
 
 ### Gap Prioritization
 
@@ -113,7 +120,7 @@ Fills in `sorry` gaps in proofs. Triggered at `VERIFYING` state.
 | Structural (e.g., unpack a definition) | P1 | `unfold` + `simp` |
 | Algebraic (e.g., re-arrange inequality) | P2 | `nlinarith` or `positivity` |
 | Analytical (e.g., integral bound) | P3 | Decompose with known lemmas |
-| Deep (e.g., novel proof idea needed) | P4 | `NEEDS_HUMAN` |
+| Deep (e.g., novel proof idea needed) | P4 | Convert to typed statement or `NEEDS_HUMAN` |
 
 ### Max Cycles
 
@@ -125,15 +132,14 @@ Fills in `sorry` gaps in proofs. Triggered at `VERIFYING` state.
 
 ```yaml
 proof_status:
-  status: proof_gap
-  sorry_count: 3
-  admit_count: 0
-  gaps:
-    - location: "SubGaussian.lean:78:4"
+  status: rejected_placeholder
+  forbidden_tokens: []
+  incomplete_goals:
+    - location: "MGF.lean:78:4"
       goal: "∫ exp (λ * X) ∂μ ≤ exp (λ^2 * σ^2 / 2)"
-      context: ["hX : IsSubGaussian X σ", "hλpos : λ > 0"]
+      context: ["hX : CenteredSubGaussianMGF P X K", "hλpos : λ > 0"]
       attempts: 2
       max_attempts: 5
       difficulty: "analytical"
-      suggestion: "Use `hX` definition and non-negativity of exp"
+      suggestion: "Use existing MGF bridge lemmas or defer as a typed statement"
 ```

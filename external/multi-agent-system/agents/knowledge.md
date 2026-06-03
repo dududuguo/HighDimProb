@@ -5,7 +5,9 @@
 ### Role
 
 Persistent store of patterns, templates, known solutions, and failure→fix
-mappings. Grows with every successful (and failed) formalization.
+mappings. It is subordinate to the main repository: entries are trusted only
+when they come from reviewed, compiling HighDimProb code or from explicitly
+marked anti-patterns.
 
 ### Data Structures
 
@@ -13,20 +15,28 @@ mappings. Grows with every successful (and failed) formalization.
 
 ```yaml
 patterns:
-  - id: "sg-def-template-1"
-    description: "SubGaussian definition as typeclass predicate"
+  - id: "sg-existing-forms"
+    description: "Existing scalar subGaussian predicate forms"
     domain: "concentration"
-    unit_type: definition
-    math_pattern: "X is subGaussian if E[exp(λX)] ≤ exp(λ²σ²/2) ∀λ"
+    unit_type: vocabulary
+    math_pattern: "subGaussian control should choose an existing formulation"
     lean_template: |
-      def IsSubGaussian {Ω : Type} [MeasureSpace Ω] (X : Ω → ℝ) (σ : ℝ) : Prop :=
-        ∀ λ : ℝ, ∫ ω, Real.exp (λ * X ω) ∂μ ≤ Real.exp (λ^2 * σ^2 / 2)
+      -- Use one of the existing names; do not introduce a canonical predicate.
+      #check SubGaussianTail
+      #check SubGaussianMoment
+      #check CenteredSubGaussianMGF
+      #check SubGaussianOrlicz
     usage_count: 4
     success_rate: 0.85
     added_at: "2026-06-03T00:00:00Z"
     last_used: "2026-06-03T12:00:00Z"
-    tags: ["subGaussian", "MGF", "definition"]
+    tags: ["subGaussian", "MGF", "existing-api"]
 ```
+
+Invalid entries must be stored as anti-patterns, not templates. Examples:
+inventing `IsSubGaussian`, using `[MeasureSpace Ω]` in place of the current
+`[MeasurableSpace Ω]` plus `Measure Ω` convention, adding `sorry`, or creating
+custom probability/random-variable structures.
 
 #### Template Store
 
@@ -72,7 +82,7 @@ failure_fix_map:
 
 ```
 QUERY(pattern_type="definition", domain="concentration", math_pattern~="subGaussian")
-  → [sg-def-template-1 (0.92), sg-def-template-2 (0.65)]
+  → [sg-existing-forms (0.99)]
 
 QUERY(error_class="type_mismatch", context="ℝ vs ℕ")
   → [insert_coercion (0.92)]
@@ -100,19 +110,22 @@ Runs after a concept reaches `INTEGRATED`.
 ### Process
 
 1. Load the successful `.lean` file and its compile/fix/review history
-2. Diff against existing Knowledge Base entries to avoid duplicates
+2. Diff against existing Knowledge Base entries and current Lean declarations
+   to avoid duplicates and invented names
 3. Abstract concrete identifiers into parameters
-4. Assign confidence based on similarity to existing patterns
-5. Submit to Knowledge Base via `store_pattern` / `store_template`
+4. Assign confidence based on similarity to existing reviewed patterns
+5. Reject anything containing forbidden placeholders or unapproved structures
+6. Submit to Knowledge Base via `store_pattern` / `store_template`
 
 ### Pattern Generalization
 
 ```
-Concrete:  ∀ λ : ℝ, ∫ ω, Real.exp (λ * X ω) ∂μ ≤ Real.exp (λ^2 * σ^2 / 2)
-Abstract:  ∀ {param}, ∫ {integrand} ∂μ ≤ {bound_expr}
+Concrete:  CenteredSubGaussianMGF P X K
+Abstract:  existing_predicate_form P X K
 
 Match:     ∀ λ > 0, ∫ x, exp(λ * f x) ∂ν ≤ exp(λ^2 * C^2 / 2)
-Abstract:  ∀ {param}, ∫ {integrand} ∂{measure} ≤ {bound_expr}
+Abstract:  possible theorem target, but only if translated through existing
+           HighDimProb vocabulary and fully proved
 ```
 
 The generalized pattern captures the **structure** while the template
@@ -133,7 +146,9 @@ Monitors the FSM's performance and proposes growth operations.
 3. **Propose operation**: If a trigger fires, generate a growth proposal
 4. **Validate**: Simulate the proposed FSM on the last 10 concepts
 5. **Submit**: Send proposal to Orchestrator for approval
-6. **Apply**: If approved, update `fsm/states.md` and `fsm/transitions.md`
+6. **Apply**: If approved by a human maintainer, prepare an ordinary patch to
+   `fsm/states.md` and `fsm/transitions.md`. The updater must not silently edit
+   repository files.
 
 ### Monitoring Metrics
 

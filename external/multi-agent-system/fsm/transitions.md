@@ -24,14 +24,14 @@ REVIEWING ──[timeout / partial]──▶ NEEDS_HUMAN
 CHANGES_REQUESTED ──[changes applied]──▶ TRANSLATING
 CHANGES_REQUESTED ──[cycles exhausted]──▶ NEEDS_HUMAN
 APPROVED ──[dispatch]──▶ VERIFYING
-VERIFYING ──[no sorry]──▶ VERIFIED
-VERIFYING ──[sorry found]──▶ PROOF_GAP
+VERIFYING ──[policy + proof checks pass]──▶ VERIFIED
+VERIFYING ──[placeholder / incomplete theorem / policy breach]──▶ PROOF_GAP
 VERIFYING ──[timeout]──▶ STUCK
-PROOF_GAP ──[gap filled]──▶ VERIFYING
+PROOF_GAP ──[complete proof or downgraded statement]──▶ VERIFYING
 PROOF_GAP ──[cycles exhausted]──▶ NEEDS_HUMAN
 VERIFIED ──[dispatch]──▶ INTEGRATING
-INTEGRATING ──[merged]──▶ INTEGRATED
-INTEGRATING ──[merge conflict]──▶ STUCK
+INTEGRATING ──[build+test+docs accepted]──▶ INTEGRATED
+INTEGRATING ──[integration conflict]──▶ STUCK
 INTEGRATED ──[pattern extraction]──▶ PATTERN_EXTRACTED
 PATTERN_EXTRACTED ──[done]──▶ (terminal)
 
@@ -57,7 +57,7 @@ guard:
 guard:
   - files_exist: all(file.path.exists() for file in output_files)
   - syntax_check: run `lean --syntax-only` → exit 0
-  - imports_valid: all(import is resolvable in lakefile)
+  - imports_valid: all(imports resolve through the current Lake module graph)
 ```
 
 ### COMPILING → COMPILED
@@ -89,8 +89,25 @@ guard:
 ### VERIFYING → VERIFIED
 ```yaml
 guard:
-  - no_sorry: grep -c "sorry" {module} == 0
-  - no_admit: grep -c "admit" {module} == 0
+  - no_sorry: no `sorry` token in Lean sources
+  - no_admit: no `admit` token in Lean sources
+  - no_axiom: no new axioms
+  - no_fake_theorem: unproved book results are not declared as theorem/lemma
+  - workflow_docs_checked: docs/Workflow.md and docs/Status.md were read
+  - one_cluster_only: change stays within the selected concept cluster
+  - mathlib_first: existing Mathlib and HighDimProb APIs were searched first
+```
+
+### INTEGRATING → INTEGRATED
+```yaml
+guard:
+  - status_updated: docs/Status.md updated with stage/result/next safe task
+  - docs_updated: relevant TermMap/BookProgress/AbstractionLog/TODO updates made or explicitly justified as unnecessary
+  - tests_added: public declarations have focused #check/example tests
+  - build_ok: lake build -> exit 0
+  - test_ok: lake test -> exit 0
+  - stable_boundary_ok: stable root imports changed only after audit
+  - submodule_clean: external submodules are not dirtied unless explicitly approved
 ```
 
 ### Any state → NEEDS_HUMAN

@@ -4,6 +4,10 @@ Review is a **multi-dimensional gate** that runs after compilation succeeds.
 All review dimensions execute in **parallel**, and every dimension must return
 `approved` for the concept to proceed to verification.
 
+This gate is mandatory. A fast path may preload context, but it must not skip
+math review, dependency review, placeholder checks, documentation tracking, or
+the required build/test commands.
+
 ---
 
 ## MathReviewer
@@ -79,7 +83,7 @@ and idiom usage.
 | Namespace usage | Is `namespace` properly scoped? | Medium |
 | Open scoping | Are `open` commands appropriately scoped? | Low |
 | Line length | ≤ 100 characters? | Low |
-| Avoid `sorry` in non-proof code | Definitions shouldn't use `sorry` | High |
+| No placeholders | No `sorry`, `admit`, axioms, or fake theorem declarations anywhere | Critical |
 | Explicit arguments | Are typeclass arguments explicit vs implicit? | Low |
 
 ### Process
@@ -103,7 +107,7 @@ Lean4 code. No missing theorems, no missing definitions.
 | Check | Description | Severity |
 |-------|-------------|----------|
 | Manifest completeness | All manifest units have a corresponding Lean4 declaration | Critical |
-| Proof coverage | Theorems have proofs (may be `sorry`, tracked separately) | High |
+| Proof coverage | Theorems have complete proofs; unproved results are typed `Prop` specs or docs | Critical |
 | Extra definitions | Does the Lean code define things not in the manifest? | Low |
 | Missing corollaries | Were corollaries skipped? | Medium |
 
@@ -128,7 +132,7 @@ Ensures the module's import structure is correct and minimal.
 | Required imports present | All used symbols are imported | Critical |
 | No unused imports | No imports for unused modules | Low |
 | Circular dependency | Would this module create an import cycle? | Critical |
-| Lakefile updated | Is the new module listed in lakefile.lean? | High |
+| Aggregate/import tests updated | Are root/branch aggregates and tests updated when needed? | High |
 | Dependency order | Do imports follow project convention (outer→inner)? | Low |
 
 ### Process
@@ -161,7 +165,7 @@ no conflicting theorems, no naming collisions.
 
 1. Query codebase-memory: `search_graph(name_pattern="{name}")` for each declaration
 2. For name collisions:
-   - If statements are equivalent → skip (redundant)
+   - If statements are equivalent → avoid duplicate declaration
    - If statements differ → flag as conflict
 3. Check notation declarations against codebase-memory USAGE graph
 
@@ -188,6 +192,9 @@ aggregated_review:
 ```
 
 Decision rule:
-- Any dimension returns `changes_requested` with Critical severity → `CHANGES_REQUESTED`
-- Any dimension returns `changes_requested` with only Low severity → `APPROVED` (with warnings)
-- All dimensions return `approved` → `APPROVED`
+- Any Critical severity finding -> `CHANGES_REQUESTED`
+- Any placeholder, invented API, unproved theorem, stable/experimental boundary
+  breach, or failed build/test -> `CHANGES_REQUESTED`
+- Low-severity style findings may be warnings only when they do not affect
+  mathematics, API boundaries, or repository policy
+- All dimensions return `approved` -> `APPROVED`

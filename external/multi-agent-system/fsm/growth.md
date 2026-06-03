@@ -10,6 +10,10 @@ formalizing concepts. This document defines how growth happens.
 3. **New error classes** discovered during formalization need new recovery paths
 4. **Project conventions** solidify over time and need encoding as guards
 
+Growth is advisory in this repository. It must not weaken the main workflow:
+`docs/Status.md` and `docs/Workflow.md` are still read first, docs tracking is
+still updated, and `lake build` plus `lake test` remain mandatory.
+
 ## Growth Triggers
 
 ### 1. Repeated State Pairs
@@ -60,7 +64,8 @@ When a transition path dominates for similar concepts:
 TRIGGER: (TRANSLATING → TRANSLATED → COMPILING → COMPILED) on first attempt
          for 3+ concepts of same depth
 ACTION:  Mark path as "fast track" for that depth
-         Skip intermediate review gates (or use lighter review)
+         Preload known context and candidate lemmas
+         Do not skip review, docs, build, or test gates
 ```
 
 ## Growth Operations
@@ -165,15 +170,18 @@ All growth operations are logged to `fsm/growth_log.json`:
 | Operation | Automatic? | Requires Approval? |
 |-----------|------------|---------------------|
 | `split_state` | Semi-auto | Yes (human reviews split) |
-| `merge_states` | Auto | No (if confidence > 0.8) |
+| `merge_states` | No | Yes |
 | `insert_state` | Semi-auto | Yes (structural change) |
-| `add_transition` | Auto | No |
-| `deprecate_path` | Auto | No |
+| `add_transition` | No | Yes |
+| `deprecate_path` | No | Yes |
 
 ## Growth Constraints
 
 1. **Max states**: ≤ 50 (prevent FSM bloat)
 2. **Max depth**: ≤ 10 transitions from QUEUED to INTEGRATED
-3. **Convergence**: After each growth operation, run 5 test formalizations to validate
+3. **Convergence**: After each growth operation, run full repository checks and
+   validate on focused examples
 4. **Reversibility**: Every growth operation must be reversible (store previous FSM version)
 5. **No silent removal**: States can be deprecated but never deleted without human sign-off
+6. **No workflow weakening**: Growth cannot remove mandatory status/doc updates,
+   reviews, `lake build`, or `lake test`
