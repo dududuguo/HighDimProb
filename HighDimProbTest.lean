@@ -2,6 +2,7 @@ import HighDimProbTest.Smoke
 import HighDimProbTest.PublicImports
 import HighDimProbTest.BranchImports
 import HighDimProbTest.ProbabilityObjectAPI
+import HighDimProbTest.UnionBoundAPI
 import HighDimProbTest.TailAPI
 import HighDimProbTest.TailProofsAPI
 import HighDimProbTest.LpMomentAPI
@@ -17,6 +18,7 @@ import HighDimProbTest.ConcentrationImplicationsAPI
 import HighDimProbTest.MomentImplicationsAPI
 import HighDimProbTest.MGFImplicationsAPI
 import HighDimProbTest.SubGaussianSumsAPI
+import HighDimProbTest.HoeffdingAPI
 import HighDimProbTest.RademacherAPI
 import HighDimProbTest.RademacherFamilyAPI
 import HighDimProbTest.RademacherSumsAPI

@@ -9,7 +9,8 @@ Lean import boundary:
 - `HighDimProb.Concentration.Implications` re-exports the current scalar
   implication graph.
 - Owning proof leaves remain `OrliczToTail`, `TailToOrlicz`,
-  `MomentImplications`, `MGF`, `SubGaussianSums`, and `RademacherSums`.
+  `MomentImplications`, `MGF`, `SubGaussianSums`, `RademacherSums`, and
+  `Hoeffding`.
 - Reusable layer-cake and exponential-tail calculus helpers are available
   through `HighDimProb.Concentration.LayerCake`.
 
@@ -44,6 +45,11 @@ Lean import boundary:
 | independent finite `CenteredSubGaussianMGF P (X i) (K i)` | centered MGF of `sum_i a_i X_i` | `sqrt(sum_i (a_i*K_i)^2)` | proven under positive weighted proxy sum | `centeredSubGaussianMGF_weighted_sum_of_iIndepFun_of_pos` |
 | independent finite centered MGF family | tail of `sum_i X_i` | `2*sqrt(sum_i K_i^2)` | proven under positive proxy sum | `subGaussianTail_sum_of_iIndepFun_of_pos` |
 | independent finite centered MGF family | tail of `sum_i a_i X_i` | `2*sqrt(sum_i (a_i*K_i)^2)` | proven under positive weighted proxy sum | `subGaussianTail_weighted_sum_of_iIndepFun_of_pos` |
+| bounded centered `X` with `X in Icc a b` a.e. | `CenteredSubGaussianMGF P X ((b-a)/2)` | `(b-a)/2` | proven under `0 < b-a` | `centeredSubGaussianMGF_of_ae_mem_Icc_of_centered` |
+| bounded centered `X` with pointwise `X in Icc a b` | `CenteredSubGaussianMGF P X ((b-a)/2)` | `(b-a)/2` | proven under `0 < b-a` | `centeredSubGaussianMGF_of_forall_mem_Icc_of_centered` |
+| independent finite bounded centered family | centered MGF of `sum_i X_i` | `sqrt(sum_i ((b_i-a_i)/2)^2)` | proven under positive proxy sum | `centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered` |
+| independent finite bounded centered family | tail of `sum_i X_i` | `2*sqrt(sum_i ((b_i-a_i)/2)^2)` | proven under positive proxy sum | `subGaussianTail_sum_of_iIndepFun_bounded_centered` |
+| independent finite bounded centered family | explicit Hoeffding bound | denominator `sum_i (b_i-a_i)^2` | proven under positive proxy sum | `hoeffding_sum_bounded_centered` |
 | canonical Bool Rademacher | `CenteredSubGaussianMGF rademacherMeasure rademacher 1` | `1` | proven | `centeredSubGaussianMGF_rademacher` |
 | canonical Bool Rademacher | `SubGaussianTail rademacherMeasure rademacher 2` | `2` | proven | `subGaussianTail_rademacher` |
 | finite product Rademacher coordinates | `iIndepFun` coordinate family | exact | proven | `iIndepFun_rademacherCoord` |
@@ -54,9 +60,9 @@ Lean import boundary:
 | zero weighted Rademacher sum | strictly positive absolute tails have probability `0` | exact for `0 < t` | proven | `absTailProb_weightedRademacherSum_eq_zero_of_sum_sq_eq_zero_of_pos` |
 | zero weighted Rademacher sum | unrestricted exact-scale tail predicate | scale `0` not accepted | blocked by predicate design | `SubGaussianTail` requires positive scale |
 
-Stage H5 factors the independent finite subGaussian sum MGF layer out of the
-Rademacher specialization. The next safe theorem family is the bounded centered
-variable Hoeffding lemma.
+Stage H6 sources centered MGF control from bounded centered variables and
+composes it with the Stage H5 independent finite-sum layer. The next safe
+theorem family is deterministic weighted bounded Hoeffding.
 | typed sqrt-growth compatibility | looser statement wrappers | `8*K`, `16*K` | proven wrappers | `sqrtMomentGrowthOfPsi2`, `sqrtMomentGrowthOfSubGaussianTail` |
 | tail / Orlicz / moment | `CenteredSubGaussianMGF` | TBD | blocked | reverse MGF bridge |
 | natural-exponent moment | full `SubGaussianMoment` over finite `ENNReal` exponents | TBD | blocked | real-exponent bridge |

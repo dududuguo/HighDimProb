@@ -28,6 +28,9 @@ family are now available and tested:
 - `weightedRademacherSum_eq_zero_of_sum_sq_eq_zero`
 - `absTailProb_weightedRademacherSum_eq_zero_of_sum_sq_eq_zero_of_pos`
 - `hoeffding_rademacher_sum_of_pos_variance`
+- `centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered`
+- `subGaussianTail_sum_of_iIndepFun_bounded_centered`
+- `hoeffding_sum_bounded_centered`
 
 One-sign representation choice: `Bool` with `PMF.bernoulli (1 / 2)`, using `true -> 1` and `false -> -1`.
 
@@ -45,6 +48,8 @@ so the measure remains aligned with Mathlib's product-measure independence API.
 | H2B | Weighted Rademacher sum MGF from independent signs. | complete |
 | H3 | Rademacher Hoeffding tail bound by composing MGF and tail bridges. | complete |
 | H4 | Branch closeout: imports, theorem atlas, implication graph, and tests. | complete |
+| H5 | Factor independent finite subGaussian sum MGF and tail closure. | complete |
+| H6 | Finite Hoeffding theorem for independent bounded centered variables. | complete |
 
 Milestone closeout: see `docs/RademacherMilestone.md`.
 
@@ -70,6 +75,7 @@ Milestone closeout: see `docs/RademacherMilestone.md`.
 
 ## Scope Guard
 
-The branch should not generalize to bounded-variable Hoeffding, Bernstein,
-random-matrix bounds, or reverse MGF results before the Rademacher/Hoeffding
-closeout records the current constants and zero-scale edge case.
+The Rademacher/Hoeffding closeout has recorded the constants and zero-scale edge
+case. The bounded centered unweighted Hoeffding theorem is now complete in
+Stage H6; the next safe widening is deterministic weighted bounded Hoeffding,
+not Bernstein, random-matrix bounds, or reverse MGF results.

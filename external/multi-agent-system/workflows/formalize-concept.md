@@ -39,6 +39,19 @@ Orchestrator selects a concept from the topological queue.
                              │ manifest
                              ▼
 ┌──────────────────────────────────────────────────────────────┐
+│ 3a. REUSE + SOURCE VALIDATION                                │
+│    Query Mathlib and existing HighDimProb declarations       │
+│    Produce: MathlibReuseReport and declaration search notes  │
+│    Validate OCR/KG theorem text against source locations     │
+│    Produce: SourceValidationReport                           │
+│    Classify action: reuse, wrapper/test/docs, proof, typed   │
+│    statement, blocker, correction, or quarantine             │
+│    Log KG corrections/quarantines before translation         │
+│    if source/action is unsafe → DEFERRED / NEEDS_HUMAN       │
+└────────────────────────────┬─────────────────────────────────┘
+                             │ validated action
+                             ▼
+┌──────────────────────────────────────────────────────────────┐
 │ 4. TRANSLATION                                               │
 │    Translator loads context:                                 │
 │      - Knowledge Base patterns & templates                   │
@@ -144,7 +157,18 @@ Orchestrator → ConceptExtractor:  extract(concept, source_docs)
   TheoremLocator → ConceptExtractor: {location}              [×N]
   ConceptExtractor → Orchestrator:  {manifest}
 
-Orchestrator → Translator:  translate(manifest)
+Orchestrator → REUSE_SOURCE_VALIDATING:
+  validate_reuse_and_source(manifest)
+  KnowledgeBase / DependencyResolver:
+    search Mathlib candidates and existing HighDimProb declarations
+  TheoremLocator:
+    compare OCR/KG statement with source locations
+  Orchestrator:
+    record MathlibReuseReport, SourceValidationReport, action classification,
+    and KG correction/quarantine entries when needed
+
+Orchestrator → Translator:
+  translate(manifest, reuse_report, source_validation_report, action_classification)
   Translator → KnowledgeBase:  query(pattern_type, domain)    [×N]
   KnowledgeBase → Translator:  [matching patterns/templates]  [×N]
   Translator → Translator:  TemplateInstantiator.fill(template, params)  [×N]
@@ -177,6 +201,7 @@ Orchestrator → PatternLearner:  learn(concept, history)
 | Failure Point | Recovery | Max Retries | Escalation |
 |---------------|----------|-------------|------------|
 | Extraction timeout | Re-extract with narrower source scope | 2 | NEEDS_HUMAN |
+| Reuse/source validation mismatch | Correct KG entry, quarantine unit, or narrow to wrapper/test/docs action | 1 | DEFERRED / NEEDS_HUMAN |
 | Translation produces empty file | Re-translate with different template selection | 2 | NEEDS_HUMAN |
 | Compile error, known class | SyntaxFixer applies known fix | 3 | NEEDS_HUMAN |
 | Compile error, unknown class | Classify → add to KB → retry | 2 | NEEDS_HUMAN |

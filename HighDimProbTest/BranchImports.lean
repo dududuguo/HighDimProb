@@ -39,6 +39,9 @@ open HighDimProb
 #check centeredSubGaussianMGF_sum_of_iIndepFun_of_pos
 #check centeredSubGaussianMGF_weighted_sum_of_iIndepFun_of_pos
 #check subGaussianTail_sum_of_iIndepFun_of_pos
+#check centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered
+#check subGaussianTail_sum_of_iIndepFun_bounded_centered
+#check hoeffding_sum_bounded_centered
 #check centeredSubGaussianMGF_rademacher
 #check subGaussianTail_rademacher
 #check rademacherVectorMeasure

@@ -23,6 +23,7 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/BranchImports.lean`: imports every branch aggregate and checks representative declarations.
 - `HighDimProbTest/ExperimentalImports.lean`: imports experimental scaffold modules through `HighDimProb.Experimental`.
 - `HighDimProbTest/ProbabilityObjectAPI.lean`: downstream-style probability object examples, including the finite union bound.
+- `HighDimProbTest/UnionBoundAPI.lean`: focused finite union-bound API examples, including a `Fin n`/`Finset.univ` specialization.
 - `HighDimProbTest/TailAPI.lean`: downstream-style tail event and tail probability examples.
 - `HighDimProbTest/TailProofsAPI.lean`: checks the tail probability monotonicity proof-pilot declarations.
 - `HighDimProbTest/LpMomentAPI.lean`: downstream-style Lp and moment vocabulary examples.
@@ -35,9 +36,11 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/OrliczToTailAPI.lean`: checks ψ₂/ψ₁ Orlicz-to-tail implication declarations and their lintegral moment bridges.
 - `HighDimProbTest/TailToOrliczAPI.lean`: checks the tail-to-Orlicz typed targets, layer-cake bridges, and proved ψ₂ reverse implication.
 - `HighDimProbTest/ConcentrationImplicationsAPI.lean`: checks the proved scalar Orlicz/tail, natural-moment, MGF, independent-sum, and weighted-Rademacher implication names through `HighDimProb.Concentration.Implications`.
+- Stage H6 strengthens `HighDimProbTest/ConcentrationImplicationsAPI.lean` so the aggregate implication import also checks the bounded centered Hoeffding names.
 - `HighDimProbTest/MomentImplicationsAPI.lean`: checks natural absolute-moment vocabulary, fixed-exponent and all-natural-exponent moment implication theorems, finiteness corollaries, natural moment-to-`MemLp`/`realLpNorm` bridges, crude linear and sharp sqrt real-Lp growth theorems, `SubGaussianMomentNat`, `SubGaussianMomentNatSqrt`, sharp natural-exponent predicate bridges, and the sharp typed statement wrappers.
 - `HighDimProbTest/MGFImplicationsAPI.lean`: checks the proof-friendly MGF lintegral predicate, the Mathlib-backed MGF bridge, one-sided Chernoff bounds, two-sided tail from MGF, and composed MGF-to-ψ₂/natural-moment corollaries.
 - `HighDimProbTest/SubGaussianSumsAPI.lean`: checks independent finite subGaussian sum measurability helpers, Mathlib MGF proxy wrappers, unweighted and weighted centered-MGF theorems, and their tail corollaries.
+- `HighDimProbTest/HoeffdingAPI.lean`: checks the bounded centered one-variable MGF wrappers, finite-sum MGF theorem, tail corollary, and explicit Hoeffding bound.
 - Stage M3 strengthens `HighDimProbTest/ConcentrationImplicationsAPI.lean` so the aggregate implication import checks the tail/Orlicz, natural-moment, and MGF arrows together.
 - `HighDimProbTest/RademacherAPI.lean`: checks the canonical Bool Rademacher PMF, measure, probability-measure instance, variable, measurability lemma, interval bound, zero-mean lemma, MGF theorem, and tail corollary.
 - `HighDimProbTest/RademacherFamilyAPI.lean`: checks the finite product Rademacher measure/PMF, coordinate family, coordinate measurability, pointwise bounds, zero mean, and coordinate independence.
@@ -82,7 +85,7 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 ## API Regression Policy
 
 - Stable public API is tested through `import HighDimProb`.
-- Stable probability infrastructure such as `measure_biUnion_le` is checked through both public imports and downstream-style probability object examples.
+- Stable probability infrastructure such as `measure_biUnion_le` is checked through public imports, downstream-style probability object examples, and the focused union-bound API module.
 - Scalar centering and variance leaves are tested through the stable public import path and through covariance compatibility tests.
 - Every stable module must have public import or focused stable API tests.
 - Scaffold modules are tested only through `import HighDimProb.Experimental`.
@@ -99,6 +102,7 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - Every concentration implication graph module must test the collected theorem names without introducing canonical predicates prematurely.
 - Every moment-implication pilot must test the moment normal form, constants, Lp bridge declarations, and any typed all-exponent statement separately from full equivalence theorem tests.
 - Every MGF implication pilot must test the lintegral normal form, one-sided tail constants, two-sided tail scale, and composition corollaries without adding a canonical subGaussian predicate.
+- Every bounded-variable Hoeffding theorem must have focused API checks and aggregate implication-import checks for its public theorem names.
 - Every distribution atom used by concentration proofs must have a focused API test and must remain experimental unless promoted through a root import audit.
 - Every random matrix submodule must have its own API test file before theorem work depends on it.
 - Random-matrix statement modules should `#check` only typed `Prop` specifications; blocked theorem families remain documentation entries.
@@ -110,7 +114,7 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 
 ## Current Limits
 
-No theorem-heavy tests before the object layer stabilizes. The weighted Rademacher Hoeffding specialization is now tested; do not test general bounded-variable Hoeffding, Bernstein, full subGaussian/subExponential equivalences, random matrix bounds, Johnson-Lindenstrauss, Hanson-Wright, generic chaining, empirical process bounds, or signal recovery guarantees yet.
+No theorem-heavy tests before the object layer stabilizes. The weighted Rademacher Hoeffding specialization and finite unweighted bounded-variable Hoeffding theorem are now tested; do not test weighted bounded-variable Hoeffding, Bernstein, full subGaussian/subExponential equivalences, random matrix bounds, Johnson-Lindenstrauss, Hanson-Wright, generic chaining, empirical process bounds, or signal recovery guarantees yet.
 
 ## Future Lint
 

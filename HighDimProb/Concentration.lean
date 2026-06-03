@@ -9,6 +9,7 @@ import HighDimProb.Concentration.MomentImplications
 import HighDimProb.Concentration.MGF
 import HighDimProb.Concentration.SubGaussianSums
 import HighDimProb.Concentration.RademacherSums
+import HighDimProb.Concentration.Hoeffding
 
 /-!
 # Concentration branch

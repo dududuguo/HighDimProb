@@ -1,0 +1,77 @@
+{
+  "run_id": "mvp-kg-to-lean",
+  "generated_at": "2026-06-03",
+  "selection_policy": "Use requested theorem-level concepts when present; otherwise select closest theory KG concept or section nodes and record the mapping.",
+  "selected": [
+    {
+      "requested_concept": "Markov inequality",
+      "kg_mapping": {
+        "primary_node_id": "concept:basic-concentration",
+        "primary_node_title": "Markov, Chebyshev, Chernoff and exponential tail tools",
+        "exact_theorem_node_found": false,
+        "mapping_reason": "The KG has a broad concentration-tools node with Markov and Chebyshev keywords, but no separate Markov theorem node."
+      },
+      "source_evidence": [
+        "external/theory-roadmap/sources/High-Dimensional_Probability.md:950",
+        "external/theory-roadmap/sources/High-Dimensional_Probability.md:953",
+        "Random_Matrices.md:2004",
+        "Random_Matrices.md:2007"
+      ],
+      "lean_mapping": [
+        "HighDimProb.Concentration.Markov.markov_inequality_nonneg",
+        "HighDimProb.Concentration.Markov.markov_inequality",
+        "HighDimProb.Concentration.Markov.markov_inequality_ae_nonneg"
+      ],
+      "status": "already_proven"
+    },
+    {
+      "requested_concept": "Chebyshev inequality",
+      "kg_mapping": {
+        "primary_node_id": "concept:basic-concentration",
+        "primary_node_title": "Markov, Chebyshev, Chernoff and exponential tail tools",
+        "exact_theorem_node_found": false,
+        "mapping_reason": "The KG has a broad concentration-tools node with Chebyshev keyword evidence, but no separate Chebyshev theorem node."
+      },
+      "source_evidence": [
+        "external/theory-roadmap/sources/High-Dimensional_Probability.md:972",
+        "external/theory-roadmap/sources/High-Dimensional_Probability.md:975",
+        "Random_Matrices.md:2018",
+        "Random_Matrices.md:2021"
+      ],
+      "lean_mapping": [
+        "HighDimProb.Concentration.Chebyshev.chebyshev_inequality",
+        "HighDimProb.Concentration.Chebyshev.chebyshev_inequality_prob"
+      ],
+      "status": "already_proven"
+    },
+    {
+      "requested_concept": "Orlicz psi2 bound implies subGaussian tail",
+      "kg_mapping": {
+        "primary_node_id": "concept:subgaussian-subexponential",
+        "primary_node_title": "subGaussian and subExponential random variables",
+        "supporting_node_id": "concept:moments-lp-orlicz",
+        "supporting_node_title": "moments, Lp norms and Orlicz controls",
+        "exact_theorem_node_found": false,
+        "mapping_reason": "The theorem spans the KG's Orlicz-control and subGaussian concept clusters; no exact implication theorem node exists."
+      },
+      "source_evidence": [
+        "external/theory-roadmap/sources/High-Dimensional_Probability.md:1821",
+        "external/theory-roadmap/sources/High-Dimensional_Probability.md:1838",
+        "external/theory-roadmap/sources/High-Dimensional_Probability.md:1873",
+        "external/theory-roadmap/sources/High-Dimensional_Probability.md:1877",
+        "external/theory-roadmap/sources/High-Dimensional_Probability.md:1919",
+        "external/theory-roadmap/sources/High-Dimensional_Probability.md:1922",
+        "external/theory-roadmap/sources/High-Dimensional_Probability.md:1947",
+        "external/theory-roadmap/sources/High-Dimensional_Probability.md:1953"
+      ],
+      "lean_mapping": [
+        "HighDimProb.Orlicz.Psi2Bound",
+        "HighDimProb.SubGaussian.SubGaussianTail",
+        "HighDimProb.Concentration.OrliczToTail.lintegral_exp_sq_div_le_two_of_psi2Bound",
+        "HighDimProb.Concentration.OrliczToTail.subGaussianTail_of_psi2Bound"
+      ],
+      "status": "already_proven"
+    }
+  ]
+}
+

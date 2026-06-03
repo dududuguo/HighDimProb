@@ -799,6 +799,16 @@
 - Lean/mathlib reuse: `ProbabilityTheory.HasSubgaussianMGF.sum_of_iIndepFun`, `ProbabilityTheory.HasSubgaussianMGF.const_mul`, `ProbabilityTheory.iIndepFun.comp`, `Finset.measurable_sum`, and existing `subGaussianTail_of_centeredSubGaussianMGF`.
 - Future upgrade path: Stage H6 should prove the bounded centered variable MGF lemma, then derive the general Hoeffding finite-sum theorem by composing with this new independent-sum layer.
 
+## Stage H6 finite Hoeffding theorem for bounded centered variables
+
+- Concrete version chosen: add `HighDimProb.Concentration.Hoeffding` with the one-variable bounded centered MGF wrapper, the finite independent-sum MGF theorem, the tail corollary, and an explicit unweighted Hoeffding bound.
+- Possible general version: prove deterministic weighted bounded Hoeffding in the same stage, add lower-level Finset helper versions, or redesign exact zero-scale predicates.
+- Reason for not generalizing yet: the unweighted theorem exercises the bounded-variable source lemma and the Stage H5 composition path; the weighted theorem is a direct but separate bookkeeping task with a new denominator normal form.
+- Boundedness decision: expose both an a.e.-bounded theorem and a pointwise-bounded convenience wrapper. The a.e. form matches Mathlib's source lemma; the pointwise form uses `ae_of_all`.
+- Constant decision: one variable has MGF scale `(b-a)/2`; finite sums use `sqrt (sum_i ((b_i-a_i)/2)^2)`; the existing MGF-to-tail bridge doubles this scale and the explicit theorem normalizes the denominator to `sum_i (b_i-a_i)^2`.
+- Lean/mathlib reuse: `ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero`, Stage H5's `centeredSubGaussianMGF_sum_of_iIndepFun_of_pos` and `subGaussianTail_sum_of_iIndepFun_of_pos`, `Real.sq_sqrt`, `Finset.mul_sum`, and ring normalization.
+- Future upgrade path: Stage H7 should prove the deterministic weighted bounded Hoeffding theorem, reusing the same one-variable source theorem and Stage H5 weighted finite-sum layer.
+
 ## Milestone Sprint S4 MGF implication branch
 
 - Concrete version chosen: add `HighDimProb.Concentration.MGF` as the owner of forward MGF-to-tail/Orlicz/moment composition, while keeping `CenteredSubGaussianMGF` itself in the scalar predicate file.

@@ -9,7 +9,8 @@ importable mini-domain.
 - `HighDimProb.Distributions` exposes the canonical Rademacher atom and finite
   product family.
 - `HighDimProb.Concentration` exposes the weighted-sum MGF and Hoeffding tail
-  specializations.
+  specializations; later H5/H6 stages also expose independent subGaussian sums
+  and bounded centered Hoeffding through this aggregate.
 - `HighDimProb.Experimental` exposes both aggregates.
 
 ## Proven Spine
@@ -47,8 +48,8 @@ importable mini-domain.
 - The all-zero weight vector is still not expressible as an exact-scale
   HighDimProb `CenteredSubGaussianMGF` or `SubGaussianTail` theorem at scale
   `0`, because both predicates require strictly positive scales.
-- General bounded-variable Hoeffding is not part of this branch. It still needs
-  an independent finite subGaussian or bounded-variable sum abstraction.
+- Finite unweighted bounded-variable Hoeffding is now handled in Stage H6.
+  Deterministic weighted bounded Hoeffding remains a separate focused task.
 - Bernstein, bounded differences, random matrix concentration, and reverse MGF
   implications remain separate theorem families.
 
@@ -63,4 +64,4 @@ importable mini-domain.
 
 ## Next Theorem Family
 
-Recommended next safe task: Stage H5 -- independent finite subGaussian sum MGF.
+Recommended next safe task after H6: Stage H7 -- weighted bounded Hoeffding.

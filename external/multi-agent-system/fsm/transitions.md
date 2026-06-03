@@ -6,7 +6,10 @@
 QUEUED ──[assign]──▶ EXTRACTING
 EXTRACTING ──[manifest ready]──▶ EXTRACTED
 EXTRACTING ──[timeout]──▶ STUCK
-EXTRACTED ──[dispatch]──▶ TRANSLATING
+EXTRACTED ──[dispatch reuse/source gate]──▶ REUSE_SOURCE_VALIDATING
+REUSE_SOURCE_VALIDATING ──[reports complete]──▶ TRANSLATING
+REUSE_SOURCE_VALIDATING ──[source mismatch / unsafe action]──▶ DEFERRED
+REUSE_SOURCE_VALIDATING ──[timeout]──▶ STUCK
 TRANSLATING ──[file(s) written]──▶ TRANSLATED
 TRANSLATING ──[timeout / empty output]──▶ STUCK
 TRANSLATED ──[dispatch]──▶ COMPILING
@@ -50,6 +53,25 @@ guard:
   - manifest_non_empty: count(units) > 0
   - source_locations_valid: all(unit.source_ref is resolvable)
   - no_duplicates: len(units) == len(set(unit.statement_hash for unit in units))
+```
+
+### REUSE_SOURCE_VALIDATING → TRANSLATING
+```yaml
+guard:
+  - mathlib_reuse_report_complete: existing Mathlib candidates were searched and recorded
+  - existing_declaration_search_complete: HighDimProb/codebase-memory search was recorded
+  - source_validation_report_complete: OCR/KG statement was checked against source locations
+  - action_classified:
+      one_of:
+        - existing_mapping_only
+        - wrapper_or_test_or_docs_update
+        - complete_proof
+        - typed_statement
+        - documentation_blocker
+        - correction_or_quarantine
+  - kg_corrections_logged_if_needed: corrections/quarantines are written before translation
+  - no_lean_generated_before_gate: output_files is empty until this gate passes
+  - translator_input_scoped: manifest units and selected action remain within one concept cluster
 ```
 
 ### TRANSLATING → TRANSLATED
@@ -96,6 +118,7 @@ guard:
   - workflow_docs_checked: docs/Workflow.md and docs/Status.md were read
   - one_cluster_only: change stays within the selected concept cluster
   - mathlib_first: existing Mathlib and HighDimProb APIs were searched first
+  - reuse_source_gate_complete: reports and action classification were recorded before translation
 ```
 
 ### INTEGRATING → INTEGRATED

@@ -25,7 +25,8 @@
 - RademacherSums
 - Hoeffding
   - Rademacher specialization: implemented in `RademacherSums`
-  - General bounded-variable form: planned after the independent finite subGaussian sum MGF layer
+  - Finite unweighted bounded-variable form: implemented in `Hoeffding`
+  - Weighted bounded-variable form: planned as Stage H7
 - Bernstein
 - OrliczToTail
 - TailToOrlicz

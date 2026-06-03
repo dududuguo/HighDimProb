@@ -1,0 +1,81 @@
+{
+  "run_id": "mvp-kg-to-lean-v1",
+  "date": "2026-06-03",
+  "actions": [
+    {
+      "id": "pre_report_mathlib_reuse",
+      "type": "validation_report",
+      "status": "completed",
+      "path": "external/validation/mvp-kg-to-lean-v1/mathlib_reuse_report.md",
+      "before_lean_modification": true
+    },
+    {
+      "id": "pre_report_source_validation",
+      "type": "validation_report",
+      "status": "completed",
+      "path": "external/validation/mvp-kg-to-lean-v1/source_validation_report.md",
+      "before_trusting_ocr_statement": true
+    },
+    {
+      "id": "union_bound_api_test",
+      "type": "lean_test",
+      "status": "completed",
+      "paths": [
+        "HighDimProbTest/UnionBoundAPI.lean",
+        "HighDimProbTest.lean"
+      ],
+      "node": "B"
+    },
+    {
+      "id": "testplan_update",
+      "type": "documentation",
+      "status": "completed",
+      "paths": [
+        "docs/TestPlan.md"
+      ],
+      "node": "B"
+    },
+    {
+      "id": "mas_reuse_source_validating_gate",
+      "type": "workflow_patch",
+      "status": "completed",
+      "paths": [
+        "external/multi-agent-system/fsm/states.md",
+        "external/multi-agent-system/fsm/transitions.md",
+        "external/multi-agent-system/workflows/formalize-concept.md",
+        "external/multi-agent-system/workflows/continuous-learning.md"
+      ]
+    },
+    {
+      "id": "verification",
+      "type": "commands",
+      "status": "completed",
+      "commands": [
+        "lake env lean HighDimProbTest/UnionBoundAPI.lean",
+        "lake build",
+        "lake test",
+        "rg forbidden-token audit on HighDimProb and HighDimProbTest"
+      ],
+      "results": {
+        "narrow_lean": "passed",
+        "lake_build": "passed",
+        "lake_test": "passed",
+        "forbidden_token_audit": "no Lean-source matches"
+      }
+    },
+    {
+      "id": "codebase_memory_sync",
+      "type": "knowledge_graph",
+      "status": "completed",
+      "project": "C-Users-User-research-HighDimProb",
+      "results": {
+        "before_nodes": 729,
+        "before_edges": 1889,
+        "after_nodes": 729,
+        "after_edges": 1889,
+        "persistence": "artifact written to .codebase-memory/graph.db.zst",
+        "adr": "updated"
+      }
+    }
+  ]
+}

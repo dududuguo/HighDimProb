@@ -4,14 +4,16 @@ import HighDimProb.Concentration.MomentImplications
 import HighDimProb.Concentration.MGF
 import HighDimProb.Concentration.SubGaussianSums
 import HighDimProb.Concentration.RademacherSums
+import HighDimProb.Concentration.Hoeffding
 
 /-!
 # Scalar implication graph
 
 This module is the collection point for proved scalar concentration implication
 theorems. The owning leaves remain `OrliczToTail`, `TailToOrlicz`,
-`MomentImplications`, and `MGF`; this aggregate re-exports those theorem names
-for downstream users who want the current implication graph through one import.
+`MomentImplications`, `MGF`, `SubGaussianSums`, `RademacherSums`, and
+`Hoeffding`; this aggregate re-exports those theorem names for downstream users
+who want the current implication graph through one import.
 
 HighDimProb deliberately does not introduce canonical `SubGaussian` or
 `SubExponential` predicates. The formulation-specific predicates stay separate
@@ -27,6 +29,8 @@ Current proved arrows:
 * `CenteredSubGaussianMGF -> SubGaussianTail/Psi2Bound/SubGaussianMomentNatSqrt`
 * independent finite centered subGaussian sums satisfy centered MGF and tail control
 * finite weighted Rademacher sums satisfy centered MGF control and Hoeffding tails
+* bounded centered variables and finite independent bounded centered sums satisfy
+  Hoeffding MGF, tail, and explicit two-sided tail bounds
 
 The full real-exponent `SubGaussianMoment` theorem and reverse MGF formulation
 links remain TODO. This module intentionally keeps the proof theorem names from

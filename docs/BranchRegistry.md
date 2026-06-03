@@ -35,12 +35,12 @@ It is a planning document, not a request to physically move existing files.
 - Import path: `HighDimProb.Concentration`
 - Status: experimental
 - Purpose: scalar concentration theorem proof spine.
-- Current modules: `Concentration.Basic`, `Concentration.Markov`, `Concentration.Chebyshev`, `Concentration.LayerCake`, `Concentration.OrliczToTail`, `Concentration.TailToOrlicz`, `Concentration.MomentImplications`, `Concentration.MGF`, `Concentration.SubGaussianSums`, `Concentration.RademacherSums`, `Concentration.Implications`.
-- Planned leaf modules: centered/specialized `Chebyshev` extensions, reverse MGF formulation links, subExponential MGF links, general bounded-variable `Hoeffding`, `Bernstein`, finite-gauge implication links.
+- Current modules: `Concentration.Basic`, `Concentration.Markov`, `Concentration.Chebyshev`, `Concentration.LayerCake`, `Concentration.OrliczToTail`, `Concentration.TailToOrlicz`, `Concentration.MomentImplications`, `Concentration.MGF`, `Concentration.SubGaussianSums`, `Concentration.RademacherSums`, `Concentration.Hoeffding`, `Concentration.Implications`.
+- Planned leaf modules: centered/specialized `Chebyshev` extensions, reverse MGF formulation links, subExponential MGF links, weighted bounded-variable `Hoeffding`, `Bernstein`, finite-gauge implication links.
 - Dependencies: `Scalar`, `Tail`, `Expectation`, `Lp`, `Orlicz`, `SubGaussian`, `SubExponential`.
 - Forbidden scope: random matrix concentration, Hanson-Wright, and covariance estimation.
 - Promotion criteria: focused theorem statements/proofs, proof-pilot tests, docs, status update, and stable-root import audit.
-- Next safe tasks: Stage H6 Hoeffding lemma for bounded centered variables; reverse MGF and subExponential MGF remain later scalar routes.
+- Next safe tasks: Stage H7 weighted bounded Hoeffding theorem; reverse MGF and subExponential MGF remain later scalar routes.
 
 ## Distributions
 
@@ -53,7 +53,7 @@ It is a planning document, not a request to physically move existing files.
 - Dependencies: `Scalar`, `Concentration.MGF`, Mathlib PMF and distribution APIs.
 - Forbidden scope: a broad probability distribution hierarchy, independent-sum concentration theorems, and canonical subGaussian predicates.
 - Promotion criteria: focused API tests, theorem atlas entries, status updates, and stable-root import audit.
-- Next safe tasks: Stage H6 bounded centered variable Hoeffding should consume the concentration leaf rather than extending distribution atoms.
+- Next safe tasks: Stage H7 weighted bounded Hoeffding should consume the concentration leaf rather than extending distribution atoms.
 
 ## Vector
 

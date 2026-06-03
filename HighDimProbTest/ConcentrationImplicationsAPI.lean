@@ -27,6 +27,11 @@ open MeasureTheory
 #check subGaussianTail_weightedRademacherSum
 #check hoeffding_rademacher_sum
 #check hoeffding_rademacher_sum_of_pos_variance
+#check centeredSubGaussianMGF_of_ae_mem_Icc_of_centered
+#check centeredSubGaussianMGF_of_forall_mem_Icc_of_centered
+#check centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered
+#check subGaussianTail_sum_of_iIndepFun_bounded_centered
+#check hoeffding_sum_bounded_centered
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 variable {P : Measure Ω} [IsProbabilityMeasure P]

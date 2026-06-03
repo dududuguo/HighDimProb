@@ -8,3 +8,5 @@ lakefile.olean
 *.so
 .DS_Store
 compress-project.ps1
+dist/
+scripts/

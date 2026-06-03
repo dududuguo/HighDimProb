@@ -34,17 +34,28 @@ responsible agents, and a timeout.
 |----------|-------|
 | **Description** | Formalizable units identified, ready for translation |
 | **Entry criteria** | Extraction manifest is non-empty and validated |
-| **Exit criteria** | Translator agent picks up the manifest |
+| **Exit criteria** | Reuse/source-validation gate picks up the manifest |
 | **Responsible agent** | Orchestrator (validation gate) |
 | **Timeout** | None |
 | **On timeout** | N/A |
+
+### REUSE_SOURCE_VALIDATING
+
+| Property | Value |
+|----------|-------|
+| **Description** | Mathlib-first and source-validation gate before any translation or Lean edits |
+| **Entry criteria** | Concept is `EXTRACTED`; extraction manifest has resolvable source locations |
+| **Exit criteria** | Mathlib reuse report, existing declaration search, source validation report, action classification, and KG correction/quarantine decision are recorded |
+| **Responsible agent** | Orchestrator, DependencyResolver, TheoremLocator, KnowledgeBase, IntegrationReviewer |
+| **Timeout** | 30 min |
+| **On timeout** | -> `STUCK`, log: "reuse/source validation timed out for {concept}" |
 
 ### TRANSLATING
 
 | Property | Value |
 |----------|-------|
 | **Description** | Generating Lean4 code for each unit in the manifest |
-| **Entry criteria** | Manifest available; templates loaded from Knowledge Base |
+| **Entry criteria** | Manifest available; `REUSE_SOURCE_VALIDATING` gate passed; templates loaded from Knowledge Base |
 | **Exit criteria** | `.lean` file(s) written; syntax check passed |
 | **Responsible agent** | Translator, TemplateInstantiator |
 | **Timeout** | 60 min per file |

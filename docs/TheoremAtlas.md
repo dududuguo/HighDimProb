@@ -113,6 +113,18 @@ future directions.
 - Target module: `HighDimProb/Concentration/SubGaussianSums.lean`
 - Priority: Stage H5
 
+## Bounded centered Hoeffding theorem
+- Book heading: Hoeffding inequality for bounded centered variables
+- Informal statement: a centered real variable bounded a.e. in `[a,b]` is centered subGaussian, and a finite independent family of such variables satisfies MGF, two-sided tail, and explicit Hoeffding bounds.
+- Target Lean statements: `centeredSubGaussianMGF_of_ae_mem_Icc_of_centered`, `centeredSubGaussianMGF_of_forall_mem_Icc_of_centered`, `centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered`, `subGaussianTail_sum_of_iIndepFun_bounded_centered`, `hoeffding_sum_bounded_centered`.
+- Required objects: `Centered`, `CenteredSubGaussianMGF`, `SubGaussianTail`, `ProbabilityTheory.iIndepFun`, `Set.Icc`, finite sums, `absTailProb`.
+- Required bridge lemmas: Mathlib `ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero`, Stage H5 `centeredSubGaussianMGF_sum_of_iIndepFun_of_pos`, Stage H5 `subGaussianTail_sum_of_iIndepFun_of_pos`, and denominator normalization by `Real.sq_sqrt` plus finite-sum algebra.
+- Status: proven
+- Constant: one-variable MGF scale `(b-a)/2`; finite MGF scale `sqrt (sum_i ((b_i-a_i)/2)^2)`; tail scale `2 * sqrt (sum_i ((b_i-a_i)/2)^2)`; explicit denominator `sum_i (b_i-a_i)^2`.
+- Blocker: none for the unweighted finite theorem under positive half-width proxy sum; deterministic weighted bounded Hoeffding is deferred to Stage H7.
+- Target module: `HighDimProb/Concentration/Hoeffding.lean`
+- Priority: Stage H6
+
 ## Rademacher / Hoeffding branch closeout
 - Book heading: Rademacher variables / Hoeffding prerequisites
 - Informal statement: the finite Rademacher concentration branch is documented, tested, and exposed through experimental aggregates.
@@ -515,15 +527,15 @@ future directions.
 
 ## Hoeffding inequality
 - Book heading: `霍夫丁不等式`, `广义霍夫丁不等式一`, `广义霍夫丁不等式二`
-- Informal statement: sums of independent bounded or subGaussian centered variables have Gaussian-type tails. The finite weighted Rademacher specialization is now proven separately.
-- Target Lean statement: general bounded-variable Hoeffding remains blocked; Rademacher specialization uses `hoeffding_rademacher_sum`.
-- Required objects: finite families, independence, boundedness, centeredness, subGaussian predicate forms.
-- Required definitions: finite-sum random-variable API.
-- Required bridge lemmas: sum measurability and variance/scale bookkeeping.
-- Status: blocked for the general theorem; proven for weighted finite Rademacher sums.
-- Blocker: the general theorem still needs a bounded-variable independent-sum MGF layer.
-- Target module: `HighDimProb/SubGaussian.lean`
-- Priority: v0.3
+- Informal statement: sums of independent bounded centered variables have Gaussian-type tails. The finite weighted Rademacher specialization and the finite unweighted bounded centered theorem are now proven separately.
+- Target Lean statement: `hoeffding_sum_bounded_centered`; weighted Rademacher specialization uses `hoeffding_rademacher_sum`.
+- Required objects: finite families, independence, interval boundedness, centeredness, subGaussian MGF and tail predicate forms.
+- Required definitions: finite-sum random-variable API and bounded-centered MGF source wrapper.
+- Required bridge lemmas: Mathlib bounded centered MGF theorem, Stage H5 independent finite-sum MGF/tail layer, and finite-sum denominator normalization.
+- Status: proven for finite unweighted bounded centered sums and weighted finite Rademacher sums; weighted bounded-variable Hoeffding remains future work.
+- Blocker: deterministic weighted bounded-variable denominator bookkeeping is not yet packaged; exact scale-0 predicate wrappers remain unavailable.
+- Target module: `HighDimProb/Concentration/Hoeffding.lean`
+- Priority: Stage H6 complete; Stage H7 should target the weighted bounded theorem.
 
 ## high-dimensional subGaussian vector characterizations
 - Book heading: `高维次高斯分布`, `次高斯范数`

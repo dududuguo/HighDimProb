@@ -51,6 +51,7 @@ Infrastructure:
 - Stage H4 Rademacher/Hoeffding branch closeout
 - Stage H2-cleanup weighted Rademacher zero-weight cleanup
 - Stage H5 independent finite subGaussian sum MGF
+- Stage H6 finite Hoeffding theorem for bounded centered variables
 - Milestone Sprint S2 scalar concentration proof spine + random matrix statement layer
 - Milestone Sprint S3 small branch proof battery
 
@@ -129,6 +130,7 @@ Processed:
 - Stage H4 Rademacher/Hoeffding branch closeout completed
 - Stage H2-cleanup weighted Rademacher zero-weight cleanup completed
 - Stage H5 independent finite subGaussian sum MGF completed
+- Stage H6 finite Hoeffding theorem for bounded centered variables completed
 
 Scaffold exists, not processed as stable API:
 - random process vocabulary
@@ -198,6 +200,8 @@ Processed with proof:
 - independent finite centered subGaussian sums have MGF scale `sqrt (sum_i K_i^2)` under positive proxy sum
 - independent finite weighted centered subGaussian sums have MGF scale `sqrt (sum_i (a_i*K_i)^2)` under positive weighted proxy sum
 - the corresponding unweighted and weighted finite-sum tail corollaries are proved by composition with the MGF-to-tail bridge
+- bounded centered real variables with a.e. interval bounds have centered subGaussian MGF scale `(b-a)/2`
+- independent finite bounded centered sums have MGF scale `sqrt (sum_i ((b_i-a_i)/2)^2)`, tail scale `2 * sqrt (...)`, and explicit Hoeffding denominator `sum_i (b_i-a_i)^2`
 - psi1/subExponential bounds imply first absolute natural-moment bounds
 - layer-cake bridge for nonnegative real random variables
 - exponential-tail to exponential-moment bridge
@@ -297,7 +301,7 @@ Resolved in Stage M3:
 - `docs/Milestone3.md` closes the scalar subGaussian proof spine as an experimental milestone.
 - `docs/ScalarImplicationGraph.md` is now table-driven and separates proven arrows, typed compatibility wrappers, and blocked reverse directions.
 - `HighDimProb.Concentration.Implications` re-exports the current scalar implication graph, including moment, MGF, and weighted Rademacher sum arrows, without changing theorem meanings.
-- Reverse MGF, full real-exponent `SubGaussianMoment`, subExponential MGF, general bounded-variable Hoeffding, and Bernstein remain future work.
+- Reverse MGF, full real-exponent `SubGaussianMoment`, subExponential MGF, weighted bounded-variable Hoeffding, and Bernstein remain future work.
 
 Resolved in Stage H1:
 - `HighDimProb.Distributions.Rademacher` defines the canonical symmetric Rademacher variable on `Bool`.
@@ -316,7 +320,7 @@ Resolved in Stage H2A:
 - `rademacherVectorPMF` is the PMF induced from the product measure via `Measure.toPMF`.
 - `rademacherCoord` and `rademacherVector` expose coordinate signs as scalar and vector-valued functions.
 - Coordinate measurability, pointwise `[-1,1]` bounds, zero mean, and `iIndepFun_rademacherCoord` are proved.
-- Weighted Rademacher Hoeffding tails are handled in the concentration leaf; general bounded-variable Hoeffding remains future work.
+- Weighted Rademacher Hoeffding tails are handled in the concentration leaf; Stage H6 now handles finite unweighted bounded-variable Hoeffding, while the deterministic weighted bounded theorem remains future work.
 
 Resolved in Stage H2B:
 - `HighDimProb.Concentration.RademacherSums` defines `weightedRademacherSum a := fun omega => sum i, a i * rademacherCoord i omega`.
@@ -347,3 +351,11 @@ Resolved in Stage H5:
 - `centeredSubGaussianMGF_weighted_sum_of_iIndepFun_of_pos` proves the weighted theorem with scale `sqrt (sum_i (a_i*K_i)^2)`.
 - `subGaussianTail_sum_of_iIndepFun_of_pos` and `subGaussianTail_weighted_sum_of_iIndepFun_of_pos` derive tail scales `2 * sqrt (...)`.
 - The proof reuses Mathlib `ProbabilityTheory.HasSubgaussianMGF.sum_of_iIndepFun` and `ProbabilityTheory.iIndepFun`; no custom product expectation factorization was introduced.
+
+Resolved in Stage H6:
+- `HighDimProb.Concentration.Hoeffding` packages Mathlib's bounded centered one-variable MGF theorem behind HighDimProb's `Centered` and `CenteredSubGaussianMGF` interfaces.
+- `centeredSubGaussianMGF_of_ae_mem_Icc_of_centered` proves the a.e.-bounded wrapper with scale `(b-a)/2`; `centeredSubGaussianMGF_of_forall_mem_Icc_of_centered` gives the pointwise-bounded convenience wrapper.
+- `centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered` composes the one-variable wrapper with Stage H5's independent finite-sum theorem.
+- `subGaussianTail_sum_of_iIndepFun_bounded_centered` derives tail scale `2 * sqrt (sum_i ((b_i-a_i)/2)^2)`.
+- `hoeffding_sum_bounded_centered` exposes the explicit two-sided bound with denominator `sum_i (b_i-a_i)^2`.
+- The weighted bounded Hoeffding version is the next safe task; exact scale-0 cases remain a predicate-design issue.

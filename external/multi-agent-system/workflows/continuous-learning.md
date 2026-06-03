@@ -18,6 +18,11 @@ reviews, skip documentation tracking, or replace `lake build` / `lake test`.
 │ 1. COLLECT                                                    │
 │    Gather all artifacts from the just-completed concept:     │
 │      - Extraction manifest                                   │
+│      - Mathlib reuse report                                  │
+│      - Existing declaration search notes                     │
+│      - Source validation report                              │
+│      - Action classification manifest                        │
+│      - KG corrections or quarantines                         │
 │      - Generated .lean file                                  │
 │      - Compile history (all attempts)                        │
 │      - Fix history (all fixes applied)                       │
@@ -57,6 +62,13 @@ reviews, skip documentation tracking, or replace `lake build` / `lake test`.
 │        - "always fails when... [condition]"                  │
 │      Tag patterns with confidence                            │
 │      Store as anti-patterns (negative examples)              │
+│                                                              │
+│  2e. Reuse/Source Gate Learning                              │
+│      Compare action classification with final integration:   │
+│        - existing mapping reused                             │
+│        - wrapper/test/docs action sufficient                 │
+│        - source correction or quarantine needed              │
+│      Store successful gate patterns without relaxing reviews │
 └────────────────────────────┬─────────────────────────────────┘
                              │
                              ▼
@@ -119,6 +131,10 @@ post_integration:
     - orchestator.unblock_dependents(concept_id)
     - verify_workflow_artifacts(
         docs_status_updated=true,
+        mathlib_reuse_report_present=true,
+        source_validation_report_present=true,
+        action_manifest_present=true,
+        kg_corrections_checked=true,
         lake_build_passed=true,
         lake_test_passed=true
       )
