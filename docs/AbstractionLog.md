@@ -807,7 +807,27 @@
 - Boundedness decision: expose both an a.e.-bounded theorem and a pointwise-bounded convenience wrapper. The a.e. form matches Mathlib's source lemma; the pointwise form uses `ae_of_all`.
 - Constant decision: one variable has MGF scale `(b-a)/2`; finite sums use `sqrt (sum_i ((b_i-a_i)/2)^2)`; the existing MGF-to-tail bridge doubles this scale and the explicit theorem normalizes the denominator to `sum_i (b_i-a_i)^2`.
 - Lean/mathlib reuse: `ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero`, Stage H5's `centeredSubGaussianMGF_sum_of_iIndepFun_of_pos` and `subGaussianTail_sum_of_iIndepFun_of_pos`, `Real.sq_sqrt`, `Finset.mul_sum`, and ring normalization.
-- Future upgrade path: Stage H7 should prove the deterministic weighted bounded Hoeffding theorem, reusing the same one-variable source theorem and Stage H5 weighted finite-sum layer.
+- Future upgrade path: Stage H7 should first prove the non-centered Wikipedia-form corollary by centering each bounded variable; deterministic weighted bounded Hoeffding should follow as a separate denominator-bookkeeping stage.
+
+## Stage H6-sharp sharp finite Hoeffding constant
+
+- Concrete version chosen: keep `CenteredSubGaussianMGF`, `SubGaussianTail`, `Psi2Bound`, and the existing scalar implication graph unchanged, and add Hoeffding-specific sharp Chernoff helpers in `HighDimProb.Concentration.Hoeffding`.
+- Possible general version: redesign the global subGaussian scale convention or add a new public MGF proxy-variance predicate for all future MGF implications.
+- Reason for not generalizing yet: the current predicates and implication theorems are already documented with conservative constants; changing them would silently alter existing theorem meanings and force a broad compatibility audit.
+- Helper decision: no new predicate was introduced. The public helpers take the direct eighth-MGF hypothesis `E exp(lambda*Y) <= exp(lambda^2*V/8)` and prove sharp one-sided and two-sided tail bounds under `0 < V`.
+- Constant decision: `hoeffding_sum_bounded_centered` remains the conservative bound with exponent `-t^2 / sum_i (b_i-a_i)^2`; `hoeffding_sum_bounded_centered_sharp` proves the classical/Wikipedia exponent `-2*t^2 / sum_i (b_i-a_i)^2`.
+- Lean/mathlib reuse: the proof reuses Mathlib's bounded centered MGF theorem and `ProbabilityTheory.HasSubgaussianMGF.sum_of_iIndepFun`; the tail step uses local ENNReal Markov/Chernoff algebra and the existing absolute-tail subset/union helper.
+- Future upgrade path: Stage H7 should prove the non-centered Wikipedia-form corollary by centering each bounded variable and reusing the sharp centered theorem. The deterministic weighted bounded theorem should then use the same sharp local route with denominator `sum_i (c_i * (b_i-a_i))^2`.
+
+## Stage H7 non-centered Hoeffding corollary
+
+- Concrete version chosen: derive `hoeffding_sum_bounded` by centering each bounded variable, shifting the interval bounds, and applying `hoeffding_sum_bounded_centered_sharp`.
+- Possible general version: prove weighted and non-centered bounded Hoeffding together, or introduce a new global MGF proxy-variance predicate.
+- Reason for not generalizing yet: the requested theorem only needs unweighted centering infrastructure, and changing global subGaussian conventions would silently affect existing theorem meanings.
+- Helper decision: add `expect_finset_sum`, `iIndepFun_centered_of_iIndepFun`, `ae_mem_Icc_centered_of_ae_mem_Icc`, and `sum_centered_eq_sum_sub_expect_sum` as small public helpers because they describe reusable centering facts without creating a new predicate layer.
+- Constant decision: `hoeffding_sum_bounded` matches the classical/Wikipedia exponent `-2*t^2 / sum_i (b_i-a_i)^2` for `sum_i X_i - E[sum_i X_i]`; `hoeffding_sum_bounded_centered` remains the conservative centered API, and `hoeffding_sum_bounded_centered_sharp` remains the sharp centered API.
+- Lean/mathlib reuse: `MeasureTheory.integral_finset_sum`, `ProbabilityTheory.iIndepFun.comp`, finite-sum subtraction algebra, and the Stage H6-sharp centered theorem.
+- Future upgrade path: Stage H8 should prove deterministic weighted bounded Hoeffding with the weighted denominator normal form.
 
 ## Milestone Sprint S4 MGF implication branch
 

@@ -66,6 +66,8 @@ open HighDimProb
 #check centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered
 #check subGaussianTail_sum_of_iIndepFun_bounded_centered
 #check hoeffding_sum_bounded_centered
+#check hoeffding_sum_bounded_centered_sharp
+#check hoeffding_sum_bounded
 #check rademacher
 #check centeredSubGaussianMGF_rademacher
 #check subGaussianTail_rademacher

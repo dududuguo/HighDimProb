@@ -37,10 +37,12 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/TailToOrliczAPI.lean`: checks the tail-to-Orlicz typed targets, layer-cake bridges, and proved ψ₂ reverse implication.
 - `HighDimProbTest/ConcentrationImplicationsAPI.lean`: checks the proved scalar Orlicz/tail, natural-moment, MGF, independent-sum, and weighted-Rademacher implication names through `HighDimProb.Concentration.Implications`.
 - Stage H6 strengthens `HighDimProbTest/ConcentrationImplicationsAPI.lean` so the aggregate implication import also checks the bounded centered Hoeffding names.
+- Stage H6-sharp strengthens the focused and aggregate Hoeffding checks so the sharp eighth-MGF helpers, the sharp `hoeffding_sum_bounded_centered_sharp` theorem, and the existing conservative `hoeffding_sum_bounded_centered` theorem remain discoverable together.
+- Stage H7 strengthens the focused and aggregate Hoeffding checks so the centering infrastructure helpers and the non-centered `hoeffding_sum_bounded` theorem are discoverable together with the older centered APIs.
 - `HighDimProbTest/MomentImplicationsAPI.lean`: checks natural absolute-moment vocabulary, fixed-exponent and all-natural-exponent moment implication theorems, finiteness corollaries, natural moment-to-`MemLp`/`realLpNorm` bridges, crude linear and sharp sqrt real-Lp growth theorems, `SubGaussianMomentNat`, `SubGaussianMomentNatSqrt`, sharp natural-exponent predicate bridges, and the sharp typed statement wrappers.
 - `HighDimProbTest/MGFImplicationsAPI.lean`: checks the proof-friendly MGF lintegral predicate, the Mathlib-backed MGF bridge, one-sided Chernoff bounds, two-sided tail from MGF, and composed MGF-to-ψ₂/natural-moment corollaries.
 - `HighDimProbTest/SubGaussianSumsAPI.lean`: checks independent finite subGaussian sum measurability helpers, Mathlib MGF proxy wrappers, unweighted and weighted centered-MGF theorems, and their tail corollaries.
-- `HighDimProbTest/HoeffdingAPI.lean`: checks the bounded centered one-variable MGF wrappers, finite-sum MGF theorem, tail corollary, and explicit Hoeffding bound.
+- `HighDimProbTest/HoeffdingAPI.lean`: checks the bounded centered one-variable MGF wrappers, finite-sum MGF theorem, tail corollary, conservative explicit Hoeffding bound, sharp eighth-MGF helpers, sharp centered explicit Hoeffding bound, finite-sum centering helpers, and sharp non-centered explicit Hoeffding bound.
 - Stage M3 strengthens `HighDimProbTest/ConcentrationImplicationsAPI.lean` so the aggregate implication import checks the tail/Orlicz, natural-moment, and MGF arrows together.
 - `HighDimProbTest/RademacherAPI.lean`: checks the canonical Bool Rademacher PMF, measure, probability-measure instance, variable, measurability lemma, interval bound, zero-mean lemma, MGF theorem, and tail corollary.
 - `HighDimProbTest/RademacherFamilyAPI.lean`: checks the finite product Rademacher measure/PMF, coordinate family, coordinate measurability, pointwise bounds, zero mean, and coordinate independence.
@@ -103,6 +105,7 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - Every moment-implication pilot must test the moment normal form, constants, Lp bridge declarations, and any typed all-exponent statement separately from full equivalence theorem tests.
 - Every MGF implication pilot must test the lintegral normal form, one-sided tail constants, two-sided tail scale, and composition corollaries without adding a canonical subGaussian predicate.
 - Every bounded-variable Hoeffding theorem must have focused API checks and aggregate implication-import checks for its public theorem names.
+- Every sharp Hoeffding constant helper must be tested beside the theorem that consumes it, and the older conservative theorem must stay checked in the same round.
 - Every distribution atom used by concentration proofs must have a focused API test and must remain experimental unless promoted through a root import audit.
 - Every random matrix submodule must have its own API test file before theorem work depends on it.
 - Random-matrix statement modules should `#check` only typed `Prop` specifications; blocked theorem families remain documentation entries.
@@ -114,7 +117,7 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 
 ## Current Limits
 
-No theorem-heavy tests before the object layer stabilizes. The weighted Rademacher Hoeffding specialization and finite unweighted bounded-variable Hoeffding theorem are now tested; do not test weighted bounded-variable Hoeffding, Bernstein, full subGaussian/subExponential equivalences, random matrix bounds, Johnson-Lindenstrauss, Hanson-Wright, generic chaining, empirical process bounds, or signal recovery guarantees yet.
+No theorem-heavy tests before the object layer stabilizes. The weighted Rademacher Hoeffding specialization and finite unweighted bounded-variable Hoeffding theorem are now tested, including the sharp classical/Wikipedia centered and non-centered constants; do not test weighted bounded-variable Hoeffding before Stage H8, Bernstein, full subGaussian/subExponential equivalences, random matrix bounds, Johnson-Lindenstrauss, Hanson-Wright, generic chaining, empirical process bounds, or signal recovery guarantees yet.
 
 ## Future Lint
 

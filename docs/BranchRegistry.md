@@ -40,7 +40,7 @@ It is a planning document, not a request to physically move existing files.
 - Dependencies: `Scalar`, `Tail`, `Expectation`, `Lp`, `Orlicz`, `SubGaussian`, `SubExponential`.
 - Forbidden scope: random matrix concentration, Hanson-Wright, and covariance estimation.
 - Promotion criteria: focused theorem statements/proofs, proof-pilot tests, docs, status update, and stable-root import audit.
-- Next safe tasks: Stage H7 weighted bounded Hoeffding theorem; reverse MGF and subExponential MGF remain later scalar routes.
+- Next safe tasks: Stage H8 weighted bounded Hoeffding theorem; reverse MGF and subExponential MGF remain later scalar routes.
 
 ## Distributions
 
@@ -53,7 +53,7 @@ It is a planning document, not a request to physically move existing files.
 - Dependencies: `Scalar`, `Concentration.MGF`, Mathlib PMF and distribution APIs.
 - Forbidden scope: a broad probability distribution hierarchy, independent-sum concentration theorems, and canonical subGaussian predicates.
 - Promotion criteria: focused API tests, theorem atlas entries, status updates, and stable-root import audit.
-- Next safe tasks: Stage H7 weighted bounded Hoeffding should consume the concentration leaf rather than extending distribution atoms.
+- Next safe tasks: Stage H8 weighted bounded Hoeffding should consume the concentration leaf rather than extending distribution atoms.
 
 ## Vector
 

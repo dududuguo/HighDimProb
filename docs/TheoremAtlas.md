@@ -113,17 +113,17 @@ future directions.
 - Target module: `HighDimProb/Concentration/SubGaussianSums.lean`
 - Priority: Stage H5
 
-## Bounded centered Hoeffding theorem
-- Book heading: Hoeffding inequality for bounded centered variables
-- Informal statement: a centered real variable bounded a.e. in `[a,b]` is centered subGaussian, and a finite independent family of such variables satisfies MGF, two-sided tail, and explicit Hoeffding bounds.
-- Target Lean statements: `centeredSubGaussianMGF_of_ae_mem_Icc_of_centered`, `centeredSubGaussianMGF_of_forall_mem_Icc_of_centered`, `centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered`, `subGaussianTail_sum_of_iIndepFun_bounded_centered`, `hoeffding_sum_bounded_centered`.
-- Required objects: `Centered`, `CenteredSubGaussianMGF`, `SubGaussianTail`, `ProbabilityTheory.iIndepFun`, `Set.Icc`, finite sums, `absTailProb`.
-- Required bridge lemmas: Mathlib `ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero`, Stage H5 `centeredSubGaussianMGF_sum_of_iIndepFun_of_pos`, Stage H5 `subGaussianTail_sum_of_iIndepFun_of_pos`, and denominator normalization by `Real.sq_sqrt` plus finite-sum algebra.
+## Bounded Hoeffding theorem
+- Book heading: Hoeffding inequality for bounded variables
+- Informal statement: a centered real variable bounded a.e. in `[a,b]` is centered subGaussian, a finite independent centered family satisfies conservative and sharp two-sided Hoeffding tails, and a finite independent non-centered bounded family satisfies the sharp classical/Wikipedia bound around `E[sum_i X_i]`.
+- Target Lean statements: `centeredSubGaussianMGF_of_ae_mem_Icc_of_centered`, `centeredSubGaussianMGF_of_forall_mem_Icc_of_centered`, `centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered`, `subGaussianTail_sum_of_iIndepFun_bounded_centered`, `hoeffding_sum_bounded_centered`, `upperTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth`, `lowerTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth`, `absTailProb_le_two_mul_exp_neg_two_mul_sq_div_of_mgf_eighth`, `hoeffding_sum_bounded_centered_sharp`, `expect_finset_sum`, `iIndepFun_centered_of_iIndepFun`, `ae_mem_Icc_centered_of_ae_mem_Icc`, `sum_centered_eq_sum_sub_expect_sum`, `hoeffding_sum_bounded`.
+- Required objects: `Centered`, `CenteredSubGaussianMGF`, `SubGaussianTail`, `ProbabilityTheory.iIndepFun`, `Set.Icc`, `IntegrableRealRandomVariable`, `expect`, finite sums, `absTailProb`.
+- Required bridge lemmas: Mathlib `ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero`, Stage H5 `centeredSubGaussianMGF_sum_of_iIndepFun_of_pos`, Stage H5 `subGaussianTail_sum_of_iIndepFun_of_pos`, the Hoeffding-specific eighth-MGF Chernoff helpers, `MeasureTheory.integral_finset_sum`, `ProbabilityTheory.iIndepFun.comp`, and denominator normalization by `Real.sq_sqrt` plus finite-sum algebra.
 - Status: proven
-- Constant: one-variable MGF scale `(b-a)/2`; finite MGF scale `sqrt (sum_i ((b_i-a_i)/2)^2)`; tail scale `2 * sqrt (sum_i ((b_i-a_i)/2)^2)`; explicit denominator `sum_i (b_i-a_i)^2`.
-- Blocker: none for the unweighted finite theorem under positive half-width proxy sum; deterministic weighted bounded Hoeffding is deferred to Stage H7.
+- Constant: one-variable MGF scale `(b-a)/2`; finite MGF scale `sqrt (sum_i ((b_i-a_i)/2)^2)`; the existing generic MGF-to-`SubGaussianTail` path gives the conservative explicit exponent `-(t^2 / sum_i (b_i-a_i)^2)`, while the sharp Hoeffding-specific Chernoff path gives `-(2*t^2 / sum_i (b_i-a_i)^2)` for both centered sums and non-centered sums around `E[sum_i X_i]`.
+- Blocker: none for the unweighted finite centered and non-centered theorems under the visible positive denominator assumption; the non-centered theorem keeps integrability explicit for expectation linearity. Deterministic weighted bounded Hoeffding is deferred to Stage H8.
 - Target module: `HighDimProb/Concentration/Hoeffding.lean`
-- Priority: Stage H6
+- Priority: Stage H6, Stage H6-sharp, and Stage H7 complete
 
 ## Rademacher / Hoeffding branch closeout
 - Book heading: Rademacher variables / Hoeffding prerequisites
@@ -527,15 +527,15 @@ future directions.
 
 ## Hoeffding inequality
 - Book heading: `霍夫丁不等式`, `广义霍夫丁不等式一`, `广义霍夫丁不等式二`
-- Informal statement: sums of independent bounded centered variables have Gaussian-type tails. The finite weighted Rademacher specialization and the finite unweighted bounded centered theorem are now proven separately.
-- Target Lean statement: `hoeffding_sum_bounded_centered`; weighted Rademacher specialization uses `hoeffding_rademacher_sum`.
-- Required objects: finite families, independence, interval boundedness, centeredness, subGaussian MGF and tail predicate forms.
-- Required definitions: finite-sum random-variable API and bounded-centered MGF source wrapper.
-- Required bridge lemmas: Mathlib bounded centered MGF theorem, Stage H5 independent finite-sum MGF/tail layer, and finite-sum denominator normalization.
-- Status: proven for finite unweighted bounded centered sums and weighted finite Rademacher sums; weighted bounded-variable Hoeffding remains future work.
+- Informal statement: sums of independent bounded variables have Gaussian-type tails around their expectation. The finite weighted Rademacher specialization, the finite unweighted bounded centered theorem, and the finite unweighted non-centered Wikipedia-form theorem are now proven separately.
+- Target Lean statement: `hoeffding_sum_bounded`; sharp centered API remains `hoeffding_sum_bounded_centered_sharp`; conservative centered API remains `hoeffding_sum_bounded_centered`; weighted Rademacher specialization uses `hoeffding_rademacher_sum`.
+- Required objects: finite families, independence, interval boundedness, centeredness/centering, integrability for finite expectation linearity, subGaussian MGF and tail predicate forms.
+- Required definitions: finite-sum random-variable API, bounded-centered MGF source wrapper, scalar centering API, and `expect` finite-sum bridge.
+- Required bridge lemmas: Mathlib bounded centered MGF theorem, Stage H5 independent finite-sum MGF/tail layer, the local eighth-MGF Chernoff optimization, finite-sum denominator normalization, `MeasureTheory.integral_finset_sum`, and `ProbabilityTheory.iIndepFun.comp`.
+- Status: proven for finite unweighted bounded centered sums with both conservative and sharp constants, for finite unweighted bounded non-centered sums with the sharp Wikipedia constant around `E[sum_i X_i]`, and for weighted finite Rademacher sums; deterministic weighted bounded-variable Hoeffding remains future work.
 - Blocker: deterministic weighted bounded-variable denominator bookkeeping is not yet packaged; exact scale-0 predicate wrappers remain unavailable.
 - Target module: `HighDimProb/Concentration/Hoeffding.lean`
-- Priority: Stage H6 complete; Stage H7 should target the weighted bounded theorem.
+- Priority: Stage H7 complete; Stage H8 should target the weighted bounded theorem.
 
 ## high-dimensional subGaussian vector characterizations
 - Book heading: `高维次高斯分布`, `次高斯范数`

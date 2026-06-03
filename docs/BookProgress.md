@@ -52,6 +52,8 @@ Infrastructure:
 - Stage H2-cleanup weighted Rademacher zero-weight cleanup
 - Stage H5 independent finite subGaussian sum MGF
 - Stage H6 finite Hoeffding theorem for bounded centered variables
+- Stage H6-sharp sharp finite Hoeffding theorem for bounded centered variables
+- Stage H7 non-centered Wikipedia-form Hoeffding corollary
 - Milestone Sprint S2 scalar concentration proof spine + random matrix statement layer
 - Milestone Sprint S3 small branch proof battery
 
@@ -131,6 +133,8 @@ Processed:
 - Stage H2-cleanup weighted Rademacher zero-weight cleanup completed
 - Stage H5 independent finite subGaussian sum MGF completed
 - Stage H6 finite Hoeffding theorem for bounded centered variables completed
+- Stage H6-sharp sharp finite Hoeffding theorem for bounded centered variables completed
+- Stage H7 non-centered Wikipedia-form Hoeffding corollary completed
 
 Scaffold exists, not processed as stable API:
 - random process vocabulary
@@ -202,6 +206,8 @@ Processed with proof:
 - the corresponding unweighted and weighted finite-sum tail corollaries are proved by composition with the MGF-to-tail bridge
 - bounded centered real variables with a.e. interval bounds have centered subGaussian MGF scale `(b-a)/2`
 - independent finite bounded centered sums have MGF scale `sqrt (sum_i ((b_i-a_i)/2)^2)`, tail scale `2 * sqrt (...)`, and explicit Hoeffding denominator `sum_i (b_i-a_i)^2`
+- independent finite bounded centered sums also have the sharp classical/Wikipedia explicit Hoeffding exponent `-2*t^2 / sum_i (b_i-a_i)^2` by a Hoeffding-specific Chernoff optimization, while the old conservative theorem remains available
+- independent finite non-centered bounded sums have the exact Wikipedia-form tail around `E[sum_i X_i]` with exponent `-2*t^2 / sum_i (b_i-a_i)^2`; this uses explicit integrability for finite expectation linearity
 - psi1/subExponential bounds imply first absolute natural-moment bounds
 - layer-cake bridge for nonnegative real random variables
 - exponential-tail to exponential-moment bridge
@@ -301,7 +307,7 @@ Resolved in Stage M3:
 - `docs/Milestone3.md` closes the scalar subGaussian proof spine as an experimental milestone.
 - `docs/ScalarImplicationGraph.md` is now table-driven and separates proven arrows, typed compatibility wrappers, and blocked reverse directions.
 - `HighDimProb.Concentration.Implications` re-exports the current scalar implication graph, including moment, MGF, and weighted Rademacher sum arrows, without changing theorem meanings.
-- Reverse MGF, full real-exponent `SubGaussianMoment`, subExponential MGF, weighted bounded-variable Hoeffding, and Bernstein remain future work.
+- Reverse MGF, full real-exponent `SubGaussianMoment`, subExponential MGF, deterministic weighted bounded-variable Hoeffding, and Bernstein remain future work.
 
 Resolved in Stage H1:
 - `HighDimProb.Distributions.Rademacher` defines the canonical symmetric Rademacher variable on `Bool`.
@@ -320,7 +326,7 @@ Resolved in Stage H2A:
 - `rademacherVectorPMF` is the PMF induced from the product measure via `Measure.toPMF`.
 - `rademacherCoord` and `rademacherVector` expose coordinate signs as scalar and vector-valued functions.
 - Coordinate measurability, pointwise `[-1,1]` bounds, zero mean, and `iIndepFun_rademacherCoord` are proved.
-- Weighted Rademacher Hoeffding tails are handled in the concentration leaf; Stage H6 now handles finite unweighted bounded-variable Hoeffding, while the deterministic weighted bounded theorem remains future work.
+- Weighted Rademacher Hoeffding tails are handled in the concentration leaf; Stages H6, H6-sharp, and H7 now handle finite unweighted bounded-variable Hoeffding, while the deterministic weighted bounded theorem remains future work.
 
 Resolved in Stage H2B:
 - `HighDimProb.Concentration.RademacherSums` defines `weightedRademacherSum a := fun omega => sum i, a i * rademacherCoord i omega`.
@@ -358,4 +364,20 @@ Resolved in Stage H6:
 - `centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered` composes the one-variable wrapper with Stage H5's independent finite-sum theorem.
 - `subGaussianTail_sum_of_iIndepFun_bounded_centered` derives tail scale `2 * sqrt (sum_i ((b_i-a_i)/2)^2)`.
 - `hoeffding_sum_bounded_centered` exposes the explicit two-sided bound with denominator `sum_i (b_i-a_i)^2`.
-- The weighted bounded Hoeffding version is the next safe task; exact scale-0 cases remain a predicate-design issue.
+- The non-centered and weighted bounded Hoeffding versions are separate tasks; exact scale-0 cases remain a predicate-design issue.
+
+Resolved in Stage H6-sharp:
+- `upperTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth`, `lowerTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth`, and `absTailProb_le_two_mul_exp_neg_two_mul_sq_div_of_mgf_eighth` prove the sharp Chernoff tail form from the local eighth-MGF hypothesis `E exp(lambda*Y) <= exp(lambda^2*V/8)`.
+- `hoeffding_sum_bounded_centered_sharp` exposes the classical/Wikipedia finite bounded centered Hoeffding bound with exponent `-(2*t^2 / sum_i (b_i-a_i)^2)`.
+- The existing conservative theorem `hoeffding_sum_bounded_centered` and the generic `SubGaussianTail` / `Psi2Bound` / scalar implication graph meanings are unchanged.
+- The constant issue is documented as a convention mismatch: the generic HighDimProb MGF-to-tail bridge intentionally produces a conservative `SubGaussianTail` scale, while the sharp theorem optimizes the Hoeffding MGF bound directly.
+- Stage H7 can now derive the non-centered Wikipedia-form corollary by centering each variable and reusing the sharp centered theorem.
+
+Resolved in Stage H7:
+- `expect_finset_sum` records finite expectation linearity for integrable real random variables.
+- `iIndepFun_centered_of_iIndepFun` preserves independence after subtracting deterministic means.
+- `ae_mem_Icc_centered_of_ae_mem_Icc` shifts a.e. interval bounds to centered variables.
+- `sum_centered_eq_sum_sub_expect_sum` proves the exact identity between `sum_i centered X_i` and `sum_i X_i - E[sum_i X_i]`.
+- `hoeffding_sum_bounded` exposes the sharp non-centered classical/Wikipedia bound around `expect P (fun omega => sum_i X_i omega)` with exponent `-(2*t^2 / sum_i (b_i-a_i)^2)`.
+- The conservative centered theorem, sharp centered theorem, and global `CenteredSubGaussianMGF` / `SubGaussianTail` / `Psi2Bound` meanings are unchanged.
+- Stage H8 is the next safe task for deterministic weighted bounded Hoeffding.

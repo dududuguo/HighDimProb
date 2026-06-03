@@ -32,6 +32,8 @@ open MeasureTheory
 #check centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered
 #check subGaussianTail_sum_of_iIndepFun_bounded_centered
 #check hoeffding_sum_bounded_centered
+#check hoeffding_sum_bounded_centered_sharp
+#check hoeffding_sum_bounded
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 variable {P : Measure Ω} [IsProbabilityMeasure P]

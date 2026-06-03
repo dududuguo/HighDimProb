@@ -31,6 +31,7 @@ family are now available and tested:
 - `centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered`
 - `subGaussianTail_sum_of_iIndepFun_bounded_centered`
 - `hoeffding_sum_bounded_centered`
+- `hoeffding_sum_bounded_centered_sharp`
 
 One-sign representation choice: `Bool` with `PMF.bernoulli (1 / 2)`, using `true -> 1` and `false -> -1`.
 
@@ -50,6 +51,8 @@ so the measure remains aligned with Mathlib's product-measure independence API.
 | H4 | Branch closeout: imports, theorem atlas, implication graph, and tests. | complete |
 | H5 | Factor independent finite subGaussian sum MGF and tail closure. | complete |
 | H6 | Finite Hoeffding theorem for independent bounded centered variables. | complete |
+| H6-sharp | Sharp classical/Wikipedia finite bounded centered Hoeffding constant. | complete |
+| H7 | Non-centered Wikipedia-form finite bounded Hoeffding corollary. | complete |
 
 Milestone closeout: see `docs/RademacherMilestone.md`.
 
@@ -76,6 +79,8 @@ Milestone closeout: see `docs/RademacherMilestone.md`.
 ## Scope Guard
 
 The Rademacher/Hoeffding closeout has recorded the constants and zero-scale edge
-case. The bounded centered unweighted Hoeffding theorem is now complete in
-Stage H6; the next safe widening is deterministic weighted bounded Hoeffding,
-not Bernstein, random-matrix bounds, or reverse MGF results.
+case. The bounded centered unweighted Hoeffding theorem now has both the
+conservative Stage H6 API theorem and the sharp Stage H6-sharp classical
+constant, and Stage H7 adds the sharp non-centered Wikipedia-form theorem
+around `E[sum_i X_i]`; the next safe widening is deterministic weighted bounded
+Hoeffding, not Bernstein, random-matrix bounds, or reverse MGF results.

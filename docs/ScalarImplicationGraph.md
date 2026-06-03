@@ -49,7 +49,11 @@ Lean import boundary:
 | bounded centered `X` with pointwise `X in Icc a b` | `CenteredSubGaussianMGF P X ((b-a)/2)` | `(b-a)/2` | proven under `0 < b-a` | `centeredSubGaussianMGF_of_forall_mem_Icc_of_centered` |
 | independent finite bounded centered family | centered MGF of `sum_i X_i` | `sqrt(sum_i ((b_i-a_i)/2)^2)` | proven under positive proxy sum | `centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered` |
 | independent finite bounded centered family | tail of `sum_i X_i` | `2*sqrt(sum_i ((b_i-a_i)/2)^2)` | proven under positive proxy sum | `subGaussianTail_sum_of_iIndepFun_bounded_centered` |
-| independent finite bounded centered family | explicit Hoeffding bound | denominator `sum_i (b_i-a_i)^2` | proven under positive proxy sum | `hoeffding_sum_bounded_centered` |
+| independent finite bounded centered family | conservative explicit Hoeffding bound through existing `SubGaussianTail` API | exponent `-t^2 / sum_i (b_i-a_i)^2` | proven under positive proxy sum | `hoeffding_sum_bounded_centered` |
+| eighth-variance MGF bound `E exp(lambda*Y) <= exp(lambda^2*V/8)` | sharp one-sided and two-sided tails | exponent `-2*t^2/V` | proven under `0 < V` | `upperTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth`, `lowerTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth`, `absTailProb_le_two_mul_exp_neg_two_mul_sq_div_of_mgf_eighth` |
+| independent finite bounded centered family | sharp classical/Wikipedia Hoeffding bound | exponent `-2*t^2 / sum_i (b_i-a_i)^2` | proven under positive denominator | `hoeffding_sum_bounded_centered_sharp` |
+| finite integrable independent bounded family | centering infrastructure for `sum_i X_i - E[sum_i X_i]` | exact finite-sum expectation and centered-sum identity | proven | `expect_finset_sum`, `iIndepFun_centered_of_iIndepFun`, `ae_mem_Icc_centered_of_ae_mem_Icc`, `sum_centered_eq_sum_sub_expect_sum` |
+| independent finite bounded family | sharp non-centered classical/Wikipedia Hoeffding bound for `sum_i X_i - E[sum_i X_i]` | exponent `-2*t^2 / sum_i (b_i-a_i)^2` | proven under positive denominator and explicit integrability | `hoeffding_sum_bounded` |
 | canonical Bool Rademacher | `CenteredSubGaussianMGF rademacherMeasure rademacher 1` | `1` | proven | `centeredSubGaussianMGF_rademacher` |
 | canonical Bool Rademacher | `SubGaussianTail rademacherMeasure rademacher 2` | `2` | proven | `subGaussianTail_rademacher` |
 | finite product Rademacher coordinates | `iIndepFun` coordinate family | exact | proven | `iIndepFun_rademacherCoord` |
@@ -61,8 +65,14 @@ Lean import boundary:
 | zero weighted Rademacher sum | unrestricted exact-scale tail predicate | scale `0` not accepted | blocked by predicate design | `SubGaussianTail` requires positive scale |
 
 Stage H6 sources centered MGF control from bounded centered variables and
-composes it with the Stage H5 independent finite-sum layer. The next safe
-theorem family is deterministic weighted bounded Hoeffding.
+composes it with the Stage H5 independent finite-sum layer. Stage H6-sharp
+keeps the existing conservative `SubGaussianTail` bridge unchanged and proves
+the classical/Wikipedia factor `2` by a Hoeffding-specific Chernoff
+optimization. Stage H7 centers a non-centered bounded family locally, proves
+the exact finite-sum expectation identity, and reuses the sharp centered theorem
+without changing `CenteredSubGaussianMGF`, `SubGaussianTail`, or `Psi2Bound`.
+The next safe theorem family is deterministic weighted bounded Hoeffding in
+Stage H8.
 | typed sqrt-growth compatibility | looser statement wrappers | `8*K`, `16*K` | proven wrappers | `sqrtMomentGrowthOfPsi2`, `sqrtMomentGrowthOfSubGaussianTail` |
 | tail / Orlicz / moment | `CenteredSubGaussianMGF` | TBD | blocked | reverse MGF bridge |
 | natural-exponent moment | full `SubGaussianMoment` over finite `ENNReal` exponents | TBD | blocked | real-exponent bridge |

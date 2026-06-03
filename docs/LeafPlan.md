@@ -25,8 +25,8 @@
 - RademacherSums
 - Hoeffding
   - Rademacher specialization: implemented in `RademacherSums`
-  - Finite unweighted bounded-variable form: implemented in `Hoeffding`
-  - Weighted bounded-variable form: planned as Stage H7
+  - Finite unweighted bounded-variable form: conservative, sharp centered, and sharp non-centered versions implemented in `Hoeffding`
+  - Weighted bounded-variable form: planned as Stage H8
 - Bernstein
 - OrliczToTail
 - TailToOrlicz
