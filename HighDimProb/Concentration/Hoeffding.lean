@@ -1,11 +1,12 @@
 import HighDimProb.Concentration.SubGaussianSums
 
 /-!
-# Hoeffding bounds for bounded centered variables
+# Hoeffding bounds for bounded variables
 
 This file packages Mathlib's one-variable Hoeffding lemma for bounded centered
 real random variables with the existing HighDimProb finite independent-sum MGF
-and tail infrastructure.
+and tail infrastructure, including sharp centered, non-centered, and
+deterministic weighted finite-sum forms.
 -/
 
 namespace HighDimProb
@@ -100,6 +101,48 @@ theorem sum_centered_eq_sum_sub_expect_sum {Ω ι : Type*}
             rw [Finset.sum_sub_distrib]
     _ = (∑ i : ι, X i ω) -
         expect P (fun ω => ∑ i : ι, X i ω) := by
+            rw [hsum_expect]
+
+/--
+The weighted sum of centered variables is the weighted sum minus its
+expectation, for finite integrable families.
+-/
+theorem sum_weighted_centered_eq_weighted_sum_sub_expect_weighted_sum
+    {Ω ι : Type*} [MeasurableSpace Ω] [Fintype ι] {P : Measure Ω}
+    {X : ι → RealRandomVariable Ω} (c : ι → ℝ)
+    (hX : ∀ i : ι, IntegrableRealRandomVariable P (X i)) :
+    (fun ω => ∑ i : ι, c i * centered P (X i) ω) =
+      fun ω => (∑ i : ι, c i * X i ω) -
+        expect P (fun ω => ∑ i : ι, c i * X i ω) := by
+  have hsum_expect :
+      expect P (fun ω => ∑ i : ι, c i * X i ω) =
+        ∑ i : ι, c i * mean P (X i) := by
+    calc
+      expect P (fun ω => ∑ i : ι, c i * X i ω)
+          = ∑ i : ι, ∫ ω, c i * X i ω ∂P := by
+              change (∫ ω, ∑ i : ι, c i * X i ω ∂P) =
+                ∑ i : ι, ∫ ω, c i * X i ω ∂P
+              exact MeasureTheory.integral_finset_sum Finset.univ
+                (fun i _hi => (hX i).const_mul (c i))
+      _ = ∑ i : ι, c i * mean P (X i) := by
+              apply Finset.sum_congr rfl
+              intro i _hi
+              change (∫ ω, c i * X i ω ∂P) = c i * (∫ ω, X i ω ∂P)
+              rw [MeasureTheory.integral_const_mul]
+  funext ω
+  calc
+    (∑ i : ι, c i * centered P (X i) ω)
+        = ∑ i : ι, (c i * X i ω - c i * mean P (X i)) := by
+            apply Finset.sum_congr rfl
+            intro i _hi
+            change c i * (X i ω - mean P (X i)) =
+              c i * X i ω - c i * mean P (X i)
+            ring
+    _ = (∑ i : ι, c i * X i ω) -
+        ∑ i : ι, c i * mean P (X i) := by
+            rw [Finset.sum_sub_distrib]
+    _ = (∑ i : ι, c i * X i ω) -
+        expect P (fun ω => ∑ i : ι, c i * X i ω) := by
             rw [hsum_expect]
 
 /--
@@ -352,8 +395,8 @@ theorem subGaussianTail_sum_of_iIndepFun_bounded_centered
           (hX i) (hmem i) (hcentered i) (hwidth i))
 
 /--
-Explicit HighDimProb-facing Hoeffding bound for finite independent sums of
-bounded centered variables.
+Conservative, non-sharp HighDimProb-facing Hoeffding bound for finite
+independent sums of bounded centered variables.
 
 The denominator is `sum_i (b_i - a_i)^2`. This follows from the half-width MGF
 scale and the existing MGF-to-tail bridge, so it is a conservative two-sided
@@ -391,8 +434,8 @@ theorem hoeffding_sum_bounded_centered
   simpa [hden] using htail
 
 /--
-Sharp HighDimProb-facing Hoeffding bound for finite independent sums of
-bounded centered variables.
+Sharp centered Hoeffding bound for finite independent sums of bounded centered
+variables.
 
 This theorem keeps the existing conservative `SubGaussianTail` API unchanged.
 It uses the sharper Hoeffding-specific MGF constant, optimizing
@@ -472,8 +515,97 @@ theorem hoeffding_sum_bounded_centered_sharp
       hsumX hpos hsharp_mgf ht
 
 /--
-Sharp non-centered Hoeffding inequality for finite independent bounded real
-variables.
+Sharp centered weighted Hoeffding bound for finite independent sums of bounded
+centered variables with deterministic real weights.
+
+The denominator is `sum_i c_i^2 * (b_i-a_i)^2`. Negative and zero weights are
+handled through the existing weighted finite-sum MGF theorem, whose proxy uses
+the squared weighted half-widths.
+-/
+theorem hoeffding_weighted_sum_bounded_centered_sharp
+    {Ω ι : Type*} [MeasurableSpace Ω] [Fintype ι]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : ι → RealRandomVariable Ω} {a b c : ι → ℝ}
+    (hpos : 0 < ∑ i : ι, (c i) ^ 2 * (b i - a i) ^ 2)
+    (hIndep : ProbabilityTheory.iIndepFun X P)
+    (hX : ∀ i : ι, IsRealRandomVariable P (X i))
+    (hmem : ∀ i : ι, ∀ᵐ ω ∂P, X i ω ∈ Set.Icc (a i) (b i))
+    (hcentered : ∀ i : ι, Centered P (X i))
+    (hwidth : ∀ i : ι, 0 < b i - a i)
+    {t : ℝ} (ht : 0 ≤ t) :
+    absTailProb P (fun ω => ∑ i : ι, c i * X i ω) t ≤
+      ENNReal.ofReal
+        (2 * Real.exp
+          (-(2 * t ^ 2 / ∑ i : ι, (c i) ^ 2 * (b i - a i) ^ 2))) := by
+  have hhalf_eq :
+      (∑ i : ι, (c i * ((b i - a i) / 2)) ^ 2) =
+        (∑ i : ι, (c i) ^ 2 * (b i - a i) ^ 2) / 4 := by
+    calc
+      (∑ i : ι, (c i * ((b i - a i) / 2)) ^ 2)
+          = ∑ i : ι, ((c i) ^ 2 * (b i - a i) ^ 2) / 4 := by
+              apply Finset.sum_congr rfl
+              intro i _hi
+              ring
+      _ = (∑ i : ι, (c i) ^ 2 * (b i - a i) ^ 2) / 4 := by
+              rw [Finset.sum_div]
+  have hhalf_pos :
+      0 < ∑ i : ι, (c i * ((b i - a i) / 2)) ^ 2 := by
+    rw [hhalf_eq]
+    exact div_pos hpos (by norm_num)
+  have hMGF :=
+    centeredSubGaussianMGF_weighted_sum_of_iIndepFun_of_pos
+      (P := P) (X := X) (K := fun i : ι => (b i - a i) / 2) c
+      hhalf_pos hIndep
+      (fun i =>
+        centeredSubGaussianMGF_of_ae_mem_Icc_of_centered
+          (P := P) (X := X i) (a := a i) (b := b i)
+          (hX i) (hmem i) (hcentered i) (hwidth i))
+  have hsumX : IsRealRandomVariable P (fun ω => ∑ i : ι, c i * X i ω) :=
+    isRealRandomVariable_finset_weighted_sum
+      (P := P) (s := Finset.univ) c (X := X)
+      (fun i _hi => hX i)
+  have hsharp_mgf :
+      ∀ lambda : ℝ,
+        (∫⁻ ω, ENNReal.ofReal
+          (Real.exp (lambda * (∑ i : ι, c i * X i ω))) ∂P) ≤
+          ENNReal.ofReal
+            (Real.exp
+              (lambda ^ 2 * (∑ i : ι, (c i) ^ 2 * (b i - a i) ^ 2) / 8)) := by
+    intro lambda
+    have h_nonneg :
+        0 ≤ᵐ[P] fun ω => Real.exp (lambda * (∑ i : ι, c i * X i ω)) :=
+      ae_of_all P fun _ => (Real.exp_pos _).le
+    have h_lintegral :
+        (∫⁻ ω, ENNReal.ofReal
+          (Real.exp (lambda * (∑ i : ι, c i * X i ω))) ∂P) =
+          ENNReal.ofReal
+            (ProbabilityTheory.mgf
+              (fun ω => ∑ i : ι, c i * X i ω) P lambda) := by
+      rw [ProbabilityTheory.mgf]
+      exact (MeasureTheory.ofReal_integral_eq_lintegral_ofReal
+        (hMGF.2.integrable_exp_mul lambda) h_nonneg).symm
+    have hS_nonneg :
+        0 ≤ ∑ i : ι, (c i * ((b i - a i) / 2)) ^ 2 :=
+      le_of_lt hhalf_pos
+    have h_exp_arg :
+        (Real.sqrt (∑ i : ι, (c i * ((b i - a i) / 2)) ^ 2)) ^ 2 *
+            lambda ^ 2 / 2 ≤
+          lambda ^ 2 * (∑ i : ι, (c i) ^ 2 * (b i - a i) ^ 2) / 8 := by
+      rw [Real.sq_sqrt hS_nonneg, hhalf_eq]
+      ring_nf
+      exact le_rfl
+    rw [h_lintegral]
+    exact ENNReal.ofReal_le_ofReal
+      ((hMGF.2.mgf_le lambda).trans (Real.exp_le_exp.mpr h_exp_arg))
+  exact
+    absTailProb_le_two_mul_exp_neg_two_mul_sq_div_of_mgf_eighth
+      (P := P) (Y := fun ω => ∑ i : ι, c i * X i ω)
+      (V := ∑ i : ι, (c i) ^ 2 * (b i - a i) ^ 2) (t := t)
+      hsumX hpos hsharp_mgf ht
+
+/--
+Non-centered classical/Wikipedia-style finite Hoeffding inequality for finite
+independent bounded real variables.
 
 This is the classical/Wikipedia form: the deviation is measured from
 `E[sum_i X_i]`. The proof centers each variable, applies
@@ -532,6 +664,72 @@ theorem hoeffding_sum_bounded
       ht
   have hsum_centered :=
     sum_centered_eq_sum_sub_expect_sum (P := P) (X := X) hInt
+  rw [hsum_centered] at hcentered_bound
+  rw [hden_centered] at hcentered_bound
+  exact hcentered_bound
+
+/--
+Sharp non-centered weighted Hoeffding inequality for finite independent bounded
+real variables with deterministic real weights.
+
+This is the weighted classical/Wikipedia form around
+`E[sum_i c_i X_i]`, with denominator `sum_i c_i^2 * (b_i-a_i)^2`.
+-/
+theorem hoeffding_weighted_sum_bounded
+    {Ω ι : Type*} [MeasurableSpace Ω] [Fintype ι]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : ι → RealRandomVariable Ω} {a b c : ι → ℝ}
+    (hpos : 0 < ∑ i : ι, (c i) ^ 2 * (b i - a i) ^ 2)
+    (hIndep : ProbabilityTheory.iIndepFun X P)
+    (hX : ∀ i : ι, IsRealRandomVariable P (X i))
+    (hInt : ∀ i : ι, IntegrableRealRandomVariable P (X i))
+    (hmem : ∀ i : ι, ∀ᵐ ω ∂P, X i ω ∈ Set.Icc (a i) (b i))
+    (hwidth : ∀ i : ι, 0 < b i - a i)
+    {t : ℝ} (ht : 0 ≤ t) :
+    absTailProb P
+      (fun ω => (∑ i : ι, c i * X i ω) -
+        expect P (fun ω => ∑ i : ι, c i * X i ω)) t ≤
+      ENNReal.ofReal
+        (2 * Real.exp
+          (-(2 * t ^ 2 / ∑ i : ι, (c i) ^ 2 * (b i - a i) ^ 2))) := by
+  have hden_centered :
+      (∑ i : ι, (c i) ^ 2 *
+          ((b i - mean P (X i)) - (a i - mean P (X i))) ^ 2) =
+        ∑ i : ι, (c i) ^ 2 * (b i - a i) ^ 2 := by
+    apply Finset.sum_congr rfl
+    intro i _hi
+    ring
+  have hpos_centered :
+      0 < ∑ i : ι, (c i) ^ 2 *
+          ((b i - mean P (X i)) - (a i - mean P (X i))) ^ 2 := by
+    rw [hden_centered]
+    exact hpos
+  have hwidth_centered :
+      ∀ i : ι, 0 < (b i - mean P (X i)) - (a i - mean P (X i)) := by
+    intro i
+    have hdiff :
+        (b i - mean P (X i)) - (a i - mean P (X i)) = b i - a i := by
+      ring
+    rw [hdiff]
+    exact hwidth i
+  have hcentered_bound :=
+    hoeffding_weighted_sum_bounded_centered_sharp
+      (P := P) (X := fun i : ι => centered P (X i))
+      (a := fun i : ι => a i - mean P (X i))
+      (b := fun i : ι => b i - mean P (X i))
+      (c := c)
+      hpos_centered
+      (iIndepFun_centered_of_iIndepFun (P := P) (X := X) hIndep)
+      (fun i => isRealRandomVariable_centered (P := P) (X := X i) (hX i))
+      (fun i =>
+        ae_mem_Icc_centered_of_ae_mem_Icc
+          (P := P) (X := X i) (a := a i) (b := b i) (hmem i))
+      (fun i => centered_centered (P := P) (X i) (hInt i))
+      hwidth_centered
+      ht
+  have hsum_centered :=
+    sum_weighted_centered_eq_weighted_sum_sub_expect_weighted_sum
+      (P := P) (X := X) c hInt
   rw [hsum_centered] at hcentered_bound
   rw [hden_centered] at hcentered_bound
   exact hcentered_bound

@@ -23,10 +23,15 @@ future directions.
 | `CenteredSubGaussianMGF -> one-sided Chernoff tails` | proven | `upperTailProb_le_exp_neg_sq_of_centeredSubGaussianMGF`, `lowerTailProb_le_exp_neg_sq_of_centeredSubGaussianMGF` |
 | `CenteredSubGaussianMGF -> SubGaussianTail/Psi2Bound/SubGaussianMomentNatSqrt` | proven | `subGaussianTail_of_centeredSubGaussianMGF`, `psi2Bound_of_centeredSubGaussianMGF`, `subGaussianMomentNatSqrt_of_centeredSubGaussianMGF` |
 | `Psi1Bound <-> SubExponentialTail` with scale loss in reverse | proven | `subExponentialTail_of_psi1Bound`, `psi1Bound_of_subExponentialTail` |
-| sharp natural-exponent statement wrappers | proven wrappers over already-proved theorems | `sqrtMomentGrowthOfPsi2`, `sqrtMomentGrowthOfSubGaussianTail` |
-| full real-exponent `SubGaussianMoment` bridge | blocked | needs natural-to-finite-`ENNReal` exponent bridge |
+| subExponential finite-sum MGF and Bernstein infrastructure | proven | `centeredSubExponentialMGF_sum_mgf_bound_of_iIndepFun_maxScale`, `centeredSubExponentialMGFLIntegral_sum_mgf_bound_of_iIndepFun_maxScale`, `centeredSubExponentialMGFLIntegral_weighted_sum_mgf_bound_of_iIndepFun_maxScale`, `bernstein_sum_subExponential`, `bernstein_weighted_sum_subExponential` |
+| scalar concentration theorem-family closeout | proven | `docs/ScalarConcentrationMilestone.md`, `HighDimProbTest.ScalarConcentrationMilestoneAPI` |
+| scalar concentration branch final closure | proven | `docs/ConcentrationLeafAudit.md`, `docs/ScalarConcentrationTheoremIndex.md`, `docs/ConcentrationTestCoverage.md`, `docs/Milestone-ScalarConcentration.md` |
+| raw-predicate scalar Bernstein statement variants | typed-prop | `bernstein_subExponential_sum_statement`, `bernstein_subExponential_weighted_sum_statement` |
+| sharp natural-exponent statement wrappers | proven | `sqrtMomentGrowthOfPsi2`, `sqrtMomentGrowthOfSubGaussianTail` |
+| full real-exponent `SubGaussianMoment` bridge | proven | `realLpNorm_le_natCeil_of_realExponent`, `sqrt_natCeil_toReal_le_two_sqrt`, `realLpNorm_le_sqrt_of_psi2Bound`, `realLpNorm_le_sqrt_of_subGaussianTail`, `subGaussianMoment_of_psi2Bound`, `subGaussianMoment_of_subGaussianTail` |
+| full real-exponent `SubExponentialMoment` bridge | proven | `abs_pow_le_exp_linear_factorial`, `absMomentNat_le_of_psi1Bound`, `realLpNorm_le_linear_of_psi1Bound`, `realLpNorm_le_linear_of_subExponentialTail`, `subExponentialMoment_of_psi1Bound`, `subExponentialMoment_of_subExponentialTail` |
 | reverse/source MGF implication | blocked | future reverse MGF bridge |
-| canonical `SubGaussian` / `SubExponential` equivalence package | blocked | requires reverse MGF, real-exponent moment, and formulation choice |
+| canonical `SubGaussian` / `SubExponential` equivalence package | blocked | requires reverse/source MGF links, finite-gauge variants, and formulation choice |
 
 ## Rademacher subGaussian MGF
 - Book heading: Rademacher variables / bounded random variable MGF / Hoeffding prerequisites
@@ -115,15 +120,26 @@ future directions.
 
 ## Bounded Hoeffding theorem
 - Book heading: Hoeffding inequality for bounded variables
-- Informal statement: a centered real variable bounded a.e. in `[a,b]` is centered subGaussian, a finite independent centered family satisfies conservative and sharp two-sided Hoeffding tails, and a finite independent non-centered bounded family satisfies the sharp classical/Wikipedia bound around `E[sum_i X_i]`.
-- Target Lean statements: `centeredSubGaussianMGF_of_ae_mem_Icc_of_centered`, `centeredSubGaussianMGF_of_forall_mem_Icc_of_centered`, `centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered`, `subGaussianTail_sum_of_iIndepFun_bounded_centered`, `hoeffding_sum_bounded_centered`, `upperTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth`, `lowerTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth`, `absTailProb_le_two_mul_exp_neg_two_mul_sq_div_of_mgf_eighth`, `hoeffding_sum_bounded_centered_sharp`, `expect_finset_sum`, `iIndepFun_centered_of_iIndepFun`, `ae_mem_Icc_centered_of_ae_mem_Icc`, `sum_centered_eq_sum_sub_expect_sum`, `hoeffding_sum_bounded`.
+- Informal statement: a centered real variable bounded a.e. in `[a,b]` is centered subGaussian, a finite independent centered family satisfies conservative and sharp two-sided Hoeffding tails, a finite independent non-centered bounded family satisfies the sharp classical/Wikipedia bound around `E[sum_i X_i]`, and deterministic weighted versions satisfy the sharp denominator `sum_i c_i^2 * (b_i-a_i)^2`.
+- Target Lean statements: `centeredSubGaussianMGF_of_ae_mem_Icc_of_centered`, `centeredSubGaussianMGF_of_forall_mem_Icc_of_centered`, `centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered`, `subGaussianTail_sum_of_iIndepFun_bounded_centered`, `hoeffding_sum_bounded_centered`, `upperTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth`, `lowerTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth`, `absTailProb_le_two_mul_exp_neg_two_mul_sq_div_of_mgf_eighth`, `hoeffding_sum_bounded_centered_sharp`, `expect_finset_sum`, `iIndepFun_centered_of_iIndepFun`, `ae_mem_Icc_centered_of_ae_mem_Icc`, `sum_centered_eq_sum_sub_expect_sum`, `hoeffding_sum_bounded`, `sum_weighted_centered_eq_weighted_sum_sub_expect_weighted_sum`, `hoeffding_weighted_sum_bounded_centered_sharp`, `hoeffding_weighted_sum_bounded`.
 - Required objects: `Centered`, `CenteredSubGaussianMGF`, `SubGaussianTail`, `ProbabilityTheory.iIndepFun`, `Set.Icc`, `IntegrableRealRandomVariable`, `expect`, finite sums, `absTailProb`.
 - Required bridge lemmas: Mathlib `ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero`, Stage H5 `centeredSubGaussianMGF_sum_of_iIndepFun_of_pos`, Stage H5 `subGaussianTail_sum_of_iIndepFun_of_pos`, the Hoeffding-specific eighth-MGF Chernoff helpers, `MeasureTheory.integral_finset_sum`, `ProbabilityTheory.iIndepFun.comp`, and denominator normalization by `Real.sq_sqrt` plus finite-sum algebra.
 - Status: proven
-- Constant: one-variable MGF scale `(b-a)/2`; finite MGF scale `sqrt (sum_i ((b_i-a_i)/2)^2)`; the existing generic MGF-to-`SubGaussianTail` path gives the conservative explicit exponent `-(t^2 / sum_i (b_i-a_i)^2)`, while the sharp Hoeffding-specific Chernoff path gives `-(2*t^2 / sum_i (b_i-a_i)^2)` for both centered sums and non-centered sums around `E[sum_i X_i]`.
-- Blocker: none for the unweighted finite centered and non-centered theorems under the visible positive denominator assumption; the non-centered theorem keeps integrability explicit for expectation linearity. Deterministic weighted bounded Hoeffding is deferred to Stage H8.
+- Constant: one-variable MGF scale `(b-a)/2`; finite MGF scale `sqrt (sum_i ((b_i-a_i)/2)^2)`; the existing generic MGF-to-`SubGaussianTail` path gives the conservative explicit exponent `-(t^2 / sum_i (b_i-a_i)^2)`, while the sharp Hoeffding-specific Chernoff path gives `-(2*t^2 / sum_i (b_i-a_i)^2)` for centered, non-centered, weighted centered, and weighted non-centered sums. The weighted denominator is `sum_i c_i^2 * (b_i-a_i)^2`.
+- Blocker: none for the finite centered, non-centered, weighted centered, and weighted non-centered theorems under visible positive denominator assumptions; the non-centered theorems keep integrability explicit for expectation linearity.
 - Target module: `HighDimProb/Concentration/Hoeffding.lean`
-- Priority: Stage H6, Stage H6-sharp, and Stage H7 complete
+- Priority: Stage H6, Stage H6-sharp, Stage H7, and Stage H8 complete
+
+## Hoeffding branch milestone closeout
+- Book heading: Hoeffding inequality for bounded variables
+- Informal statement: the finite unweighted Hoeffding theorem family is documented, tested, and exposed through the concentration aggregates as a coherent experimental milestone.
+- Target Lean statement: none; this is a milestone/import/API audit.
+- Required objects: Rademacher atom, weighted Rademacher sum specialization, independent finite subGaussian sums, centered bounded Hoeffding, non-centered classical Hoeffding, and deterministic weighted bounded Hoeffding.
+- Status: proven
+- Constants: recorded in `docs/HoeffdingMilestone.md`; `hoeffding_sum_bounded_centered` remains the conservative `2 exp(-t^2/V)` theorem, while `hoeffding_sum_bounded_centered_sharp`, `hoeffding_sum_bounded`, `hoeffding_weighted_sum_bounded_centered_sharp`, and `hoeffding_weighted_sum_bounded` use the classical `2 exp(-2*t^2/V)` exponent with the appropriate unweighted or weighted denominator.
+- Blocker: none for the completed bounded Hoeffding milestone. Zero-width cleanup and one-sided forms remain future refinements.
+- Target module: documentation plus existing Hoeffding and implication aggregate leaves.
+- Priority: Stage H8 complete; Stage H9 should close out the full Hoeffding branch.
 
 ## Rademacher / Hoeffding branch closeout
 - Book heading: Rademacher variables / Hoeffding prerequisites
@@ -357,28 +373,40 @@ future directions.
 ## subGaussian tail implies all-natural moment growth
 - Book heading: subGaussian moment characterization
 - Informal statement: a two-sided subGaussian tail bound controls all natural absolute moments. The current theorem proves a crude factorial-growth absolute-moment bound, and the sharp natural-exponent real-`Lp` / predicate bridge is proved separately.
-- Target Lean statement: `absMomentNat_le_of_subGaussianTail`; finiteness corollary `finiteAbsMomentNat_of_subGaussianTail`; sharp natural-exponent targets `absMomentNat_le_sqrt_growth_of_psi2Bound`, `realLpNorm_nat_le_sqrt_of_psi2Bound`, `realLpNorm_nat_le_sqrt_of_subGaussianTail`, `SubGaussianMomentNatSqrt`, `subGaussianMomentNatSqrt_of_psi2Bound`, `subGaussianMomentNatSqrt_of_subGaussianTail`, `sqrtMomentGrowthOfPsi2`, and `sqrtMomentGrowthOfSubGaussianTail`.
+- Target Lean statement: `absMomentNat_le_of_subGaussianTail`; finiteness corollary `finiteAbsMomentNat_of_subGaussianTail`; sharp natural-exponent targets `absMomentNat_le_sqrt_growth_of_psi2Bound`, `realLpNorm_nat_le_sqrt_of_psi2Bound`, `realLpNorm_nat_le_sqrt_of_subGaussianTail`, `SubGaussianMomentNatSqrt`, `subGaussianMomentNatSqrt_of_psi2Bound`, `subGaussianMomentNatSqrt_of_subGaussianTail`, `sqrtMomentGrowthOfPsi2`, `sqrtMomentGrowthOfSubGaussianTail`, and the full finite-`ENNReal` bridges `subGaussianMoment_of_psi2Bound` / `subGaussianMoment_of_subGaussianTail`.
 - Required objects: `SubGaussianTail`, `Psi2Bound`, `absMomentNat`, `finiteAbsMomentNat`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
 - Required definitions: natural absolute moment normal form and explicit constant convention.
 - Required bridge lemmas: `abs_pow_le_exp_sq_factorial`, `absMomentNat_le_of_psi2Bound`, `psi2Bound_of_subGaussianTail`, `lintegral_exp_sq_div_le_two_of_psi2Bound`, Mathlib `Real.pow_div_factorial_le_exp`, and the deterministic helpers `pow_le_two_sqrt_mul_exp_sq`, `pow_le_two_mul_scale_sqrt_mul_exp_sq_div`, and `powLeSqrtGrowthMulExpSq`.
-- Status: proven for factorial growth, for natural-exponent sharp `sqrt(q)` real-Lp growth, and for the sharp natural-exponent predicate wrapper.
-- Constant: factorial bound `absMomentNat P X q <= ENNReal.ofReal (Real.exp (1/4) * (2*K)^q * q!) * 2`; sharp bounds `absMomentNat P X q <= ENNReal.ofReal ((4*K*sqrt q)^q)`, `realLpNorm <= 4*K*sqrt q` from `Psi2Bound`, `realLpNorm <= 8*K*sqrt q` from `SubGaussianTail`, and predicate scales `SubGaussianMomentNatSqrt (4*K)` / `SubGaussianMomentNatSqrt (8*K)`.
-- Blocker: no blocker for natural exponents `q >= 1`; the remaining book predicate connector is the real-exponent `SubGaussianMoment` formulation.
+- Status: proven for factorial growth, natural-exponent sharp `sqrt(q)` real-Lp growth, the sharp natural-exponent predicate wrapper, and the full finite-`ENNReal` `SubGaussianMoment` bridge.
+- Constant: factorial bound `absMomentNat P X q <= ENNReal.ofReal (Real.exp (1/4) * (2*K)^q * q!) * 2`; sharp bounds `absMomentNat P X q <= ENNReal.ofReal ((4*K*sqrt q)^q)`, `realLpNorm <= 4*K*sqrt q` from `Psi2Bound`, `realLpNorm <= 8*K*sqrt q` from `SubGaussianTail`, natural predicate scales `SubGaussianMomentNatSqrt (4*K)` / `SubGaussianMomentNatSqrt (8*K)`, and full `SubGaussianMoment` scales `8*K` / `16*K`.
+- Blocker: none for natural exponents `q >= 1` or full finite `p : ENNReal` moment growth from `Psi2Bound`/`SubGaussianTail`.
 - Target module: `HighDimProb/Concentration/MomentImplications.lean`
 - Priority: Stage G2B
 
 ## absolute natural moment to Lp bridge
 - Book heading: `Lp范数`, subGaussian moment characterization
 - Informal statement: for a nonzero natural exponent `q`, finiteness or a bound on `E |X|^q` yields the corresponding Mathlib `L^q` membership and extended `L^q` seminorm bound.
-- Target Lean statement: `memLp_of_finiteAbsMomentNat`; quantitative wrappers `realLpNorm_nat_le_of_absMomentNat_le_ennreal` and `realLpNorm_nat_le_of_absMomentNat_le`; linear-growth wrappers `realLpNorm_nat_le_linear_of_psi2Bound` and `realLpNorm_nat_le_linear_of_subGaussianTail`; sqrt-growth wrappers `realLpNorm_nat_le_sqrt_of_psi2Bound` and `realLpNorm_nat_le_sqrt_of_subGaussianTail`; natural predicate wrappers `SubGaussianMomentNat`, `SubGaussianMomentNatSqrt`, `subGaussianMomentNat_of_psi2Bound`, `subGaussianMomentNat_of_subGaussianTail`, `subGaussianMomentNatSqrt_of_psi2Bound`, and `subGaussianMomentNatSqrt_of_subGaussianTail`.
+- Target Lean statement: `memLp_of_finiteAbsMomentNat`; quantitative wrappers `realLpNorm_nat_le_of_absMomentNat_le_ennreal` and `realLpNorm_nat_le_of_absMomentNat_le`; linear-growth wrappers `realLpNorm_nat_le_linear_of_psi2Bound` and `realLpNorm_nat_le_linear_of_subGaussianTail`; sqrt-growth wrappers `realLpNorm_nat_le_sqrt_of_psi2Bound`, `realLpNorm_nat_le_sqrt_of_subGaussianTail`, `realLpNorm_le_sqrt_of_psi2Bound`, and `realLpNorm_le_sqrt_of_subGaussianTail`; natural predicate wrappers `SubGaussianMomentNat`, `SubGaussianMomentNatSqrt`, `subGaussianMomentNat_of_psi2Bound`, `subGaussianMomentNat_of_subGaussianTail`, `subGaussianMomentNatSqrt_of_psi2Bound`, `subGaussianMomentNatSqrt_of_subGaussianTail`, `subGaussianMoment_of_psi2Bound`, and `subGaussianMoment_of_subGaussianTail`.
 - Required objects: `absMomentNat`, `finiteAbsMomentNat`, `MemLpRealRandomVariable`, `realLpNorm`, `IsRealRandomVariable`, `Psi2Bound`, `SubGaussianTail`.
 - Required definitions: natural absolute moment normal form as a `lintegral`; Mathlib `ENNReal` exponent convention for `MemLp` and `eLpNorm`.
-- Required bridge lemmas: `lintegral_enorm_rpow_nat_eq_absMomentNat`, Mathlib `eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top`, `eLpNorm_eq_lintegral_rpow_enorm_toReal`, `ENNReal.rpow_natCast`, `ENNReal.ofReal_pow`, `ENNReal.rpow_le_rpow`, `Nat.factorial_le_pow`, `Real.rpow_le_rpow`, `Real.mul_rpow`, and `Real.exp_one_lt_three`.
+- Required bridge lemmas: `lintegral_enorm_rpow_nat_eq_absMomentNat`, Mathlib `eLpNorm_lt_top_iff_lintegral_rpow_enorm_lt_top`, `eLpNorm_eq_lintegral_rpow_enorm_toReal`, `eLpNorm_le_eLpNorm_of_exponent_le`, `ENNReal.rpow_natCast`, `ENNReal.ofReal_pow`, `ENNReal.ofReal_toReal`, `ENNReal.toReal_mono`, `ENNReal.rpow_le_rpow`, `Nat.ceil`, `Nat.le_ceil`, `Nat.ceil_lt_add_one`, `Nat.factorial_le_pow`, `Real.sqrt_le_sqrt`, `Real.sqrt_mul`, `Real.rpow_le_rpow`, `Real.mul_rpow`, and `Real.exp_one_lt_three`.
 - Status: proven
-- Constant/formulation: `realLpNorm P X (q : ENNReal) <= B^(1/q)` in `ENNReal` form, plus a real-bound corollary with right side `ENNReal.ofReal (B^(1/q))`; the factorial bound yields linear constants `8`/`16`, and the deterministic envelope now yields sqrt constants `4` for `Psi2Bound` and `8` for `SubGaussianTail`, packaged as `SubGaussianMomentNatSqrt (4*K)` and `(8*K)`.
-- Blocker: no blocker for natural exponents `q != 0`; the remaining sharp book predicate `SubGaussianMoment` needs a bridge from natural exponents to its real-`ENNReal` exponent formulation.
+- Constant/formulation: `realLpNorm P X (q : ENNReal) <= B^(1/q)` in `ENNReal` form, plus a real-bound corollary with right side `ENNReal.ofReal (B^(1/q))`; the factorial bound yields linear constants `8`/`16`; the deterministic envelope yields natural sqrt constants `4` for `Psi2Bound` and `8` for `SubGaussianTail`; the finite-`ENNReal` bridge uses ceiling monotonicity and yields `SubGaussianMoment` scales `8*K` and `16*K`.
+- Blocker: no blocker for natural exponents `q != 0` or finite real/`ENNReal` subGaussian moment growth from `Psi2Bound`/`SubGaussianTail`.
 - Target module: `HighDimProb/Concentration/MomentImplications.lean`
 - Priority: Stage G2C
+
+## subExponential natural and real moment bridge
+- Book heading: subExponential moment characterization
+- Informal statement: psi1 Orlicz control gives linear moment growth, and subExponential tail control gives the same after the existing tail-to-psi1 scale loss.
+- Target Lean statement: `abs_pow_le_exp_linear_factorial`; natural absolute-moment wrappers `absMomentNat_le_of_psi1Bound` and `absMomentNat_le_of_subExponentialTail`; natural real-Lp wrappers `realLpNorm_nat_le_linear_of_psi1Bound` and `realLpNorm_nat_le_linear_of_subExponentialTail`; finite-`ENNReal` wrappers `realLpNorm_le_linear_of_psi1Bound`, `realLpNorm_le_linear_of_subExponentialTail`, `subExponentialMoment_of_psi1Bound`, and `subExponentialMoment_of_subExponentialTail`.
+- Required objects: `Psi1Bound`, `SubExponentialTail`, `SubExponentialMoment`, `absMomentNat`, `realLpNorm`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
+- Required bridge lemmas: Mathlib `Real.pow_div_factorial_le_exp`, `Nat.factorial_le_pow`, `Real.rpow_le_rpow`, `Real.mul_rpow`, Mathlib Lp exponent monotonicity, `ENNReal.toReal_mono`, `Nat.ceil`, `Nat.ceil_lt_add_one`, and the existing `lintegral_exp_abs_div_le_two_of_psi1Bound` / `psi1Bound_of_subExponentialTail`.
+- Status: proven
+- Constant/formulation: `Psi1Bound P X K` gives `absMomentNat <= 2*K^q*q!`, `realLpNorm_q <= 8*K*q`, finite-exponent `realLpNorm_p <= 16*K*p.toReal`, and `SubExponentialMoment P X (16*K)`. `SubExponentialTail P X K` first becomes `Psi1Bound P X (3*K)`, giving natural real-Lp constant `24*K*q`, finite-exponent constant `48*K*p.toReal`, and `SubExponentialMoment P X (48*K)`.
+- Blocker: none for all natural `q >= 1` or finite `p : ENNReal` under psi1/tail hypotheses. Reverse MGF/source-formulation links remain future work.
+- Target module: `HighDimProb/Concentration/MomentImplications.lean`
+- Priority: Stage M-real-2
 
 ## deterministic power-exponential envelope
 - Book heading: subGaussian moment characterization
@@ -389,7 +417,8 @@ future directions.
 - Required bridge lemmas: `log_le_sq_of_nonneg`, `pow_le_exp_nat_mul_sq`, Mathlib `Real.log_le_self`, `Real.log_le_iff_le_exp`, `Real.log_pow`, `Real.exp_le_exp`, and `Real.sq_sqrt`.
 - Status: proven
 - Constant/formulation: proved with constant `2`, which implies the earlier constant-`4` target.
-- Blocker: none for natural exponents; real-exponent variants are future theorem work if needed by `SubGaussianMoment`.
+- Blocker: none for natural exponents; finite-`ENNReal` moment variants are now
+  handled downstream by `MomentImplications`, not by this deterministic helper.
 - Target module: `HighDimProb/Analysis/RealInequalities.lean`
 - Priority: Stage G2E-fix
 
@@ -437,7 +466,7 @@ future directions.
 - Required definitions: `SubGaussianTail`, `SubGaussianMoment`, `CenteredSubGaussianMGF`, `SubGaussianOrlicz`, `HasSubGaussianOrlicz`; fixed-scale tail/Orlicz, natural moment, and MGF-to-tail directions now have proved bridges.
 - Required bridge lemmas: expectation of exponentials, tail/moment integration.
 - Status: blocked
-- Blocker: fixed-scale `Psi2Bound -> SubGaussianTail`, `SubGaussianTail -> Psi2Bound (2*K)`, all-natural factorial moment bounds, natural moment-to-`realLpNorm` bridges, natural-exponent sharp `sqrt(q)` growth, `SubGaussianMomentNatSqrt` bridges, and `CenteredSubGaussianMGF -> SubGaussianTail/Psi2Bound/SubGaussianMomentNatSqrt` are proven. Real-exponent `SubGaussianMoment`, reverse MGF connections, finite-gauge variants, gauge/norm objects, and canonical predicate choice remain future work.
+- Blocker: fixed-scale `Psi2Bound -> SubGaussianTail`, `SubGaussianTail -> Psi2Bound (2*K)`, all-natural factorial moment bounds, natural moment-to-`realLpNorm` bridges, natural-exponent sharp `sqrt(q)` growth, `SubGaussianMomentNatSqrt` bridges, full finite-`ENNReal` `SubGaussianMoment` bridges, and `CenteredSubGaussianMGF -> SubGaussianTail/Psi2Bound/SubGaussianMomentNatSqrt` are proven. Reverse MGF connections, finite-gauge variants, gauge/norm objects, and canonical predicate choice remain future work.
 - Target module: `HighDimProb/SubGaussian.lean`
 - Priority: v0.3
 
@@ -446,10 +475,10 @@ future directions.
 - Informal statement: tail, moment, MGF, and Orlicz characterizations of subExponential variables are equivalent up to constants.
 - Target Lean statement: blocked until a precise equivalence statement and constants are selected.
 - Required objects: real random variables, tail probabilities, moments, exponential moments, ψ₁ Orlicz control.
-- Required definitions: `SubExponentialTail`, `SubExponentialMoment`, `CenteredSubExponentialMGF`, `SubExponentialOrlicz`, `HasSubExponentialOrlicz`; Stage G1C proves the ψ₁-to-tail direction and Stage S2 proves the fixed-scale tail-to-ψ₁ direction.
+- Required definitions: `SubExponentialTail`, `SubExponentialMoment`, `CenteredSubExponentialMGF`, `SubExponentialOrlicz`, `HasSubExponentialOrlicz`; fixed-scale tail/Orlicz and the full finite-`ENNReal` moment bridge now have proved connectors.
 - Required bridge lemmas: expectation of exponentials, tail/moment integration.
 - Status: blocked
-- Blocker: fixed-scale `Psi1Bound -> SubExponentialTail` and `SubExponentialTail -> Psi1Bound (3*K)` are proven, but moment/MGF connections, finite-gauge variants, gauge/norm objects, and canonical predicate choice remain future work.
+- Blocker: fixed-scale `Psi1Bound -> SubExponentialTail`, `SubExponentialTail -> Psi1Bound (3*K)`, all-natural factorial moment bounds, natural real-Lp growth, and full finite-`ENNReal` `SubExponentialMoment` bridges are proven. MGF/source connections, finite-gauge variants, gauge/norm objects, and canonical predicate choice remain future work.
 - Target module: `HighDimProb/SubExponential.lean`
 - Priority: v0.3
 
@@ -473,20 +502,27 @@ future directions.
 - Required definitions: centeredness vocabulary and MGF-bound predicate.
 - Required bridge lemmas: `CenteredSubGaussianMGFLIntegral`, lintegral Markov, absolute-tail union bridge, and existing tail-to-Orlicz / moment composition.
 - Status: proven for the forward MGF-to-tail direction; blocked for reverse characterization.
-- Blocker: `CenteredSubGaussianMGF -> SubGaussianTail (2*K)`, `Psi2Bound (4*K)`, and `SubGaussianMomentNatSqrt (16*K)` are proved. The converse direction and an independent proof that a centered variable satisfies the MGF predicate from other formulations are not proved.
+- Blocker: `CenteredSubGaussianMGF -> SubGaussianTail (2*K)`,
+  `Psi2Bound (4*K)`, and `SubGaussianMomentNatSqrt (16*K)` are proved; the
+  full `SubGaussianMoment (32*K)` route is available by composing
+  `psi2Bound_of_centeredSubGaussianMGF` with
+  `subGaussianMoment_of_psi2Bound`, though no direct wrapper is exposed. The
+  converse direction and an independent proof that a centered variable satisfies
+  the MGF predicate from other formulations are not proved.
 - Target module: `HighDimProb/Concentration/MGF.lean`
 - Priority: v0.3
 
 ## centered subExponential mgf characterization
 - Book heading: `次指数性质`, `中心化`
-- Informal statement: a centered subExponential variable admits local quadratic MGF control, and conversely under suitable constants.
-- Target Lean statement: blocked until centeredness and constants are settled.
+- Informal statement: a centered subExponential variable admits local quadratic MGF control, composes under independent finite sums, and conversely under suitable constants.
+- Target Lean statement: Stage B1 adds `CenteredSubExponentialMGFLIntegral`, the conservative finite-sum MGF theorem family `centeredSubExponentialMGF_sum_mgf_bound_of_iIndepFun` / `centeredSubExponentialMGF_sum_of_iIndepFun_of_pos`, and Stage B1-fix proves the normalized raw and lintegral finite-sum bounds `centeredSubExponentialMGF_sum_mgf_bound_of_iIndepFun_maxScale` and `centeredSubExponentialMGFLIntegral_sum_mgf_bound_of_iIndepFun_maxScale`.
 - Required objects: `Centered`, `expect`, exponential function, `CenteredSubExponentialMGF`.
-- Required definitions: centeredness vocabulary and local-MGF-bound predicate.
-- Required bridge lemmas: centering and exponential integrability.
-- Status: blocked
-- Blocker: local MGF predicate exists, but centeredness is still experimental and no theorem is assigned.
-- Target module: `HighDimProb/SubExponential.lean`
+- Required definitions: centeredness vocabulary, local-MGF-bound predicate, and proof-friendly lintegral predicate.
+- Required bridge lemmas: finite MGF product over `ProbabilityTheory.iIndepFun`, local-domain comparison through `maxScale`, and the lintegral-to-raw MGF bridge.
+- Status: proven
+- Proven local pieces: raw expectation-level finite sums, reusable `maxScale` / `varianceProxy` vocabulary, lintegral finite-sum MGF from the stronger lintegral predicate, and local lintegral Chernoff tails.
+- Blocker: the raw predicate still does not imply the stronger lintegral predicate; the proved full Bernstein theorem sources the lintegral predicate, while a future raw-to-lintegral bridge would support raw-predicate variants.
+- Target module: `HighDimProb/Concentration/SubExponentialSums.lean`
 - Priority: v0.3
 
 ## subGaussian square is subExponential
@@ -516,26 +552,54 @@ future directions.
 ## Bernstein inequality
 - Book heading: `伯恩斯坦不等式`
 - Informal statement: sums of independent centered subExponential variables satisfy Bernstein-type tail bounds.
-- Target Lean statement: blocked until independence, sums, centeredness, and a target subExponential formulation are stable.
+- Target Lean statement: Stage B2 proves the finite-sum lintegral-predicate theorem `bernstein_sum_subExponential`. Stage B3 proves the deterministic weighted theorem `bernstein_weighted_sum_subExponential`. Raw-predicate statement targets remain `bernstein_subExponential_sum_statement` and `bernstein_subExponential_weighted_sum_statement`.
 - Required objects: finite families of random variables, independence, centeredness, subExponential predicate.
-- Required definitions: finite-sum random-variable API.
-- Required bridge lemmas: independence and sum measurability bridges.
-- Status: blocked
-- Blocker: subExponential predicate forms exist, but the theorem is beyond the object layer.
-- Target module: `HighDimProb/SubExponential.lean`
+- Required definitions: finite-sum MGF vocabulary, `varianceProxy K = sum_i K_i^2`, `maxScale K`, weighted proxies `weightedVarianceProxy c K` and `weightedMaxScale c K`, max-scale domains, and `subExponentialBernsteinRate`.
+- Required bridge lemmas: independent finite MGF product, lintegral finite-sum bridges, weighted scalar-multiple MGF bounds, small-regime Chernoff optimization, large-regime endpoint optimization, and min-form comparison.
+- Status: proven
+- Proven local pieces: local one-variable lintegral Chernoff, finite-sum quadratic small-deviation bound under `0 <= t` and `t <= 2 * varianceProxy K / maxScale K`, large-regime one-/two-sided bounds under `2 * varianceProxy K / maxScale K <= t`, the full unweighted min-form theorem with constant `1/4`, and the deterministic weighted min-form theorem with the same constant.
+- Planning label: Stage B3 complete
+- Blocker: raw-predicate Bernstein variants remain future work; the scalar lintegral-predicate min-form theorems have no current blocker.
+- Target module: `HighDimProb/Concentration/Bernstein.lean`
 - Priority: v0.3
+
+## scalar concentration theorem family closeout
+- Book heading: scalar concentration inequalities
+- Informal statement: Markov/Chebyshev/Boole, scalar subGaussian/subExponential implication arrows, Rademacher/Hoeffding families, scalar Bernstein, and weighted scalar Bernstein are documented and import-tested as one experimental concentration milestone.
+- Target Lean statement: no new theorem; Stage SC-closeout adds `HighDimProbTest.ScalarConcentrationMilestoneAPI` as a direct `import HighDimProb.Concentration` audit, Stage SC-final adds the leaf/theorem/test/milestone documentation closure, and Stage SC-final-update refreshes the closeout after the full moment bridges.
+- Required objects: existing scalar concentration theorem families.
+- Required definitions: existing tail probability, Orlicz, moment, MGF, finite-sum, max-scale, and variance-proxy vocabulary.
+- Required bridge lemmas: none new; this stage audits existing imports and tests.
+- Status: proven
+- Proven local pieces: the milestone document `docs/ScalarConcentrationMilestone.md` records theorem-family tables, constants, import paths, conservative versus sharp theorem names, and remaining TODOs. Stage SC-final adds `docs/ConcentrationLeafAudit.md`, `docs/ScalarConcentrationTheoremIndex.md`, `docs/ConcentrationTestCoverage.md`, and `docs/Milestone-ScalarConcentration.md`; Stage SC-final-update records the full subGaussian and subExponential finite-`ENNReal` moment bridges in those closeout docs.
+- Blocker: raw-predicate Bernstein variants, full equivalence packages, and
+  matrix/random-process concentration remain future work. The real-exponent
+  subGaussian and subExponential moment links are proved.
+- Target module: documentation plus `HighDimProbTest/ScalarConcentrationMilestoneAPI.lean`.
+- Priority: Stage SC-final-update complete.
 
 ## Hoeffding inequality
 - Book heading: `霍夫丁不等式`, `广义霍夫丁不等式一`, `广义霍夫丁不等式二`
-- Informal statement: sums of independent bounded variables have Gaussian-type tails around their expectation. The finite weighted Rademacher specialization, the finite unweighted bounded centered theorem, and the finite unweighted non-centered Wikipedia-form theorem are now proven separately.
-- Target Lean statement: `hoeffding_sum_bounded`; sharp centered API remains `hoeffding_sum_bounded_centered_sharp`; conservative centered API remains `hoeffding_sum_bounded_centered`; weighted Rademacher specialization uses `hoeffding_rademacher_sum`.
+- Informal statement: sums of independent bounded variables have Gaussian-type tails around their expectation. The finite weighted Rademacher specialization, the finite unweighted bounded centered theorem, the finite unweighted non-centered Wikipedia-form theorem, and deterministic weighted bounded centered/non-centered theorems are now proven separately.
+- Target Lean statement: `hoeffding_sum_bounded`; weighted API uses `hoeffding_weighted_sum_bounded`; sharp centered APIs are `hoeffding_sum_bounded_centered_sharp` and `hoeffding_weighted_sum_bounded_centered_sharp`; conservative centered API remains `hoeffding_sum_bounded_centered`; weighted Rademacher specialization uses `hoeffding_rademacher_sum`.
 - Required objects: finite families, independence, interval boundedness, centeredness/centering, integrability for finite expectation linearity, subGaussian MGF and tail predicate forms.
 - Required definitions: finite-sum random-variable API, bounded-centered MGF source wrapper, scalar centering API, and `expect` finite-sum bridge.
 - Required bridge lemmas: Mathlib bounded centered MGF theorem, Stage H5 independent finite-sum MGF/tail layer, the local eighth-MGF Chernoff optimization, finite-sum denominator normalization, `MeasureTheory.integral_finset_sum`, and `ProbabilityTheory.iIndepFun.comp`.
-- Status: proven for finite unweighted bounded centered sums with both conservative and sharp constants, for finite unweighted bounded non-centered sums with the sharp Wikipedia constant around `E[sum_i X_i]`, and for weighted finite Rademacher sums; deterministic weighted bounded-variable Hoeffding remains future work.
-- Blocker: deterministic weighted bounded-variable denominator bookkeeping is not yet packaged; exact scale-0 predicate wrappers remain unavailable.
+- Status: proven for finite unweighted bounded centered sums with both conservative and sharp constants, for finite unweighted bounded non-centered sums with the sharp Wikipedia constant around `E[sum_i X_i]`, for deterministic weighted bounded centered and non-centered sums, and for weighted finite Rademacher sums.
+- Blocker: exact scale-0 predicate wrappers remain unavailable; this does not block the weighted theorem because it assumes a positive total denominator.
 - Target module: `HighDimProb/Concentration/Hoeffding.lean`
-- Priority: Stage H7 complete; Stage H8 should target the weighted bounded theorem.
+- Priority: Stage H8 complete; Stage H9 should close out the Hoeffding branch.
+
+## Weighted bounded Hoeffding theorem
+- Book heading: `广义霍夫丁不等式`
+- Informal statement: deterministic weighted sums of independent bounded variables satisfy the classical bounded Hoeffding denominator `sum_i c_i^2 * (b_i-a_i)^2`.
+- Target Lean statements: `hoeffding_weighted_sum_bounded_centered_sharp`, `hoeffding_weighted_sum_bounded`.
+- Required objects: Stage H5 weighted finite-sum MGF closure, Stage H6 bounded centered MGF source wrapper, Stage H6-sharp eighth-MGF Chernoff helpers, and Stage H7 centering infrastructure for the non-centered form.
+- Status: proven
+- Constant: exponent `-2*t^2 / (sum_i c_i^2 * (b_i-a_i)^2)`; arbitrary real weights are handled through squared weighted half-widths, including negative and zero weights under the positive total denominator assumption.
+- Blocker: none for the centered or non-centered weighted theorem.
+- Target module: `HighDimProb/Concentration/Hoeffding.lean`
+- Priority: Stage H8 complete.
 
 ## high-dimensional subGaussian vector characterizations
 - Book heading: `高维次高斯分布`, `次高斯范数`

@@ -2,7 +2,7 @@
 
 HighDimProb is a Lean 4 package for high-dimensional probability foundations. It is a Mathlib-compatible ergonomic layer: reuse Mathlib first, then add small wrappers, aliases, predicates, examples, and theorem-statement specifications where they help downstream formalization.
 
-Current status: finite Rademacher/Hoeffding branch closeout on top of v0.1-alpha. The stable API is the scalar probability object layer. The high-dimensional and concentration proof layers remain experimental.
+Current status: scalar concentration branch closure on top of v0.1-alpha. The stable API is the scalar probability object layer. The high-dimensional and concentration proof layers remain experimental.
 
 ## Build and Test
 
@@ -33,7 +33,11 @@ Stable v0.1 modules are imported through:
 import HighDimProb
 ```
 
-This covers the probability object layer: probability-space conventions, real-valued random variables, laws, expectation, scalar centering and variance wrappers, tail events and probabilities, Lp and moment vocabulary, Orlicz bounds, scalar subGaussian and subExponential predicate forms, and typed statement specifications supported by current objects.
+This covers the reviewed scalar object layer: probability-space conventions,
+real-valued random variables, laws, expectation, scalar centering and variance
+wrappers, tail events and probabilities, Lp and moment vocabulary, Orlicz
+bounds, scalar subGaussian and subExponential predicate forms, and typed
+statement specifications supported by current objects.
 
 ## Experimental API
 
@@ -43,7 +47,24 @@ Experimental v0.2+ modules are imported through:
 import HighDimProb.Experimental
 ```
 
-This currently includes high-dimensional vocabulary such as random vectors, covariance, isotropicity, subGaussian vector predicates, nets, metric entropy, random matrices, and experimental scalar concentration wrappers. The concentration branch includes Markov/Chebyshev, fixed-scale Orlicz-to-tail implications, fixed-scale tail-to-Orlicz reverse implications, sharp natural-exponent subGaussian moment growth, forward MGF-to-tail/Orlicz/moment links, finite Rademacher product/sum concentration, and an implication-graph module. Do not promote an experimental module to the stable root import without tests, docs, a status update, and a root import audit.
+This currently includes high-dimensional vocabulary such as random vectors, covariance, isotropicity, subGaussian vector predicates, nets, metric entropy, random matrices, and experimental scalar concentration wrappers. The concentration branch includes Markov/Chebyshev, fixed-scale Orlicz-to-tail implications, fixed-scale tail-to-Orlicz reverse implications, sharp natural-exponent subGaussian moment growth, forward MGF-to-tail/Orlicz/moment links, finite Rademacher product/sum concentration, finite bounded-variable Hoeffding with documented conservative, sharp, and weighted constants, subExponential finite-sum MGF infrastructure, local quadratic Bernstein, scalar Bernstein min-form tails including deterministic weighted sums, and a final milestone/leaf/test audit. Do not promote an experimental module to the stable root import without tests, docs, a status update, and a root import audit.
+
+## Scalar Concentration Milestone
+
+The scalar concentration branch is closed for the current milestone and remains
+available as:
+
+```lean
+import HighDimProb.Concentration
+```
+
+It proves Markov/Chebyshev/Boole, scalar Orlicz/tail/moment/MGF implication
+arrows, full finite-`ENNReal` moment bridges for fixed-scale subGaussian and
+subExponential formulations, Rademacher and Hoeffding theorem families,
+subExponential finite-sum MGF infrastructure, local Bernstein, scalar Bernstein
+min-form, and weighted scalar Bernstein. Future work includes reverse/source
+MGF links, finite-gauge variants, raw-predicate Bernstein, matrix Bernstein,
+Hanson-Wright, and WLLN/SLLN proof branches.
 
 ## How to Contribute
 

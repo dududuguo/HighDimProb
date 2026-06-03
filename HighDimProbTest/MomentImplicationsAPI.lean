@@ -32,8 +32,24 @@ open scoped ENNReal
 #check subGaussianMomentNat_of_subGaussianTail
 #check subGaussianMomentNatSqrt_of_psi2Bound
 #check subGaussianMomentNatSqrt_of_subGaussianTail
+#check realLpNorm_le_natCeil_of_realExponent
+#check sqrt_natCeil_toReal_le_two_sqrt
+#check realLpNorm_le_sqrt_of_psi2Bound
+#check realLpNorm_le_sqrt_of_subGaussianTail
+#check subGaussianMoment_of_psi2Bound
+#check subGaussianMoment_of_subGaussianTail
+#check natCeil_toReal_le_two_mul_toReal
+#check abs_pow_le_exp_linear_factorial
 #check absMomentNat_one_le_of_psi1Bound
 #check absMomentNat_one_le_of_subExponentialTail
+#check absMomentNat_le_of_psi1Bound
+#check absMomentNat_le_of_subExponentialTail
+#check realLpNorm_nat_le_linear_of_psi1Bound
+#check realLpNorm_nat_le_linear_of_subExponentialTail
+#check realLpNorm_le_linear_of_psi1Bound
+#check realLpNorm_le_linear_of_subExponentialTail
+#check subExponentialMoment_of_psi1Bound
+#check subExponentialMoment_of_subExponentialTail
 #check subGaussianMomentNatOfSubGaussianTailStatement
 #check powLeSqrtGrowthMulExpSqStatement
 #check powLeSqrtGrowthMulExpSq
@@ -48,6 +64,7 @@ variable {X : RealRandomVariable Omega}
 variable {K : Real}
 variable {B : Real}
 variable {q : Nat}
+variable {p : ENNReal}
 
 #check fun (hpsi : Psi2Bound P X K) =>
   absMomentNat_le_of_psi2Bound
@@ -83,6 +100,15 @@ variable {q : Nat}
   subGaussianMomentNatSqrt_of_psi2Bound
     (P := P) (X := X) (K := K) hpsi
 
+#check fun (hX : IsRealRandomVariable P X) (hpsi : Psi2Bound P X K)
+    (hp : 1 <= p) (hp_ne_top : Not (p = (Top.top : ENNReal))) =>
+  realLpNorm_le_sqrt_of_psi2Bound
+    (P := P) (X := X) (K := K) hX hpsi hp hp_ne_top
+
+#check fun (hX : IsRealRandomVariable P X) (hpsi : Psi2Bound P X K) =>
+  subGaussianMoment_of_psi2Bound
+    (P := P) (X := X) (K := K) hX hpsi
+
 #check fun (hX : IsRealRandomVariable P X) (hTail : SubGaussianTail P X K) =>
   absMomentNat_two_le_of_subGaussianTail
     (P := P) (X := X) (K := K) hX hTail
@@ -117,6 +143,50 @@ variable {q : Nat}
   subGaussianMomentNatSqrt_of_subGaussianTail
     (P := P) (X := X) (K := K) hX hTail
 
+#check fun (hX : IsRealRandomVariable P X) (hTail : SubGaussianTail P X K)
+    (hp : 1 <= p) (hp_ne_top : Not (p = (Top.top : ENNReal))) =>
+  realLpNorm_le_sqrt_of_subGaussianTail
+    (P := P) (X := X) (K := K) hX hTail hp hp_ne_top
+
+#check fun (hX : IsRealRandomVariable P X) (hTail : SubGaussianTail P X K) =>
+  subGaussianMoment_of_subGaussianTail
+    (P := P) (X := X) (K := K) hX hTail
+
 #check fun (hX : IsRealRandomVariable P X) (hTail : SubExponentialTail P X K) =>
   absMomentNat_one_le_of_subExponentialTail
+    (P := P) (X := X) (K := K) hX hTail
+
+#check fun (hpsi : Psi1Bound P X K) =>
+  absMomentNat_le_of_psi1Bound
+    (P := P) (X := X) (K := K) hpsi q
+
+#check fun (hX : IsRealRandomVariable P X) (hTail : SubExponentialTail P X K) =>
+  absMomentNat_le_of_subExponentialTail
+    (P := P) (X := X) (K := K) hX hTail q
+
+#check fun (hpsi : Psi1Bound P X K) (hq : 1 ≤ q) =>
+  realLpNorm_nat_le_linear_of_psi1Bound
+    (P := P) (X := X) (K := K) (q := q) hpsi hq
+
+#check fun (hX : IsRealRandomVariable P X) (hTail : SubExponentialTail P X K)
+    (hq : 1 ≤ q) =>
+  realLpNorm_nat_le_linear_of_subExponentialTail
+    (P := P) (X := X) (K := K) (q := q) hX hTail hq
+
+#check fun (hX : IsRealRandomVariable P X) (hpsi : Psi1Bound P X K)
+    (hp : 1 <= p) (hp_ne_top : Not (p = (Top.top : ENNReal))) =>
+  realLpNorm_le_linear_of_psi1Bound
+    (P := P) (X := X) (K := K) hX hpsi hp hp_ne_top
+
+#check fun (hX : IsRealRandomVariable P X) (hpsi : Psi1Bound P X K) =>
+  subExponentialMoment_of_psi1Bound
+    (P := P) (X := X) (K := K) hX hpsi
+
+#check fun (hX : IsRealRandomVariable P X) (hTail : SubExponentialTail P X K)
+    (hp : 1 <= p) (hp_ne_top : Not (p = (Top.top : ENNReal))) =>
+  realLpNorm_le_linear_of_subExponentialTail
+    (P := P) (X := X) (K := K) hX hTail hp hp_ne_top
+
+#check fun (hX : IsRealRandomVariable P X) (hTail : SubExponentialTail P X K) =>
+  subExponentialMoment_of_subExponentialTail
     (P := P) (X := X) (K := K) hX hTail

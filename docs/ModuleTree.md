@@ -34,7 +34,7 @@ These modules remain experimental until they pass the promotion checklist: tests
 ## Branch Modules
 
 - `HighDimProb.Scalar`: one-dimensional probability infrastructure, including scalar centering and variance leaves.
-- `HighDimProb.Concentration`: experimental scalar concentration proof spine, including `LayerCake`, `Markov`, `Chebyshev`, `OrliczToTail`, `TailToOrlicz`, and `Implications`.
+- `HighDimProb.Concentration`: experimental scalar concentration proof spine, including `Basic`, `Markov`, `Chebyshev`, `LayerCake`, `OrliczToTail`, `TailToOrlicz`, `MomentImplications`, `MGF`, `Implications`, `SubGaussianSums`, `RademacherSums`, `Hoeffding`, `MaxScale`, `SubExponentialSums`, and `Bernstein`.
 - `HighDimProb.Vector`: finite-dimensional random-vector infrastructure.
 - `HighDimProb.Geometry`: nets, metric entropy, covering/packing statements, and Gaussian-width vocabulary.
 - `HighDimProb.RandomMatrix`: random-matrix object, algebra helper, and vocabulary submodules.
@@ -61,6 +61,15 @@ HighDimProb
 ```
 
 Planned leaves for these branches are tracked in `docs/LeafPlan.md`. Ownership, dependency, and promotion rules are tracked in `docs/BranchRegistry.md`.
+
+## Stage SC-final Import Decision
+
+`HighDimProb.Concentration` remains experimental after scalar concentration
+closure. The theorem-family surface is indexed and tested, but stable-root
+promotion is deferred because reverse/source MGF links, finite-gauge variants,
+full equivalence packaging, and the raw-predicate Bernstein bridge remain
+incomplete. The fixed-scale subGaussian and subExponential full moment bridges
+are proved.
 
 ## Leaf Declaration Policy
 

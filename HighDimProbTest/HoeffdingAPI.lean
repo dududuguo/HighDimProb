@@ -8,6 +8,7 @@ open HighDimProb
 #check iIndepFun_centered_of_iIndepFun
 #check ae_mem_Icc_centered_of_ae_mem_Icc
 #check sum_centered_eq_sum_sub_expect_sum
+#check sum_weighted_centered_eq_weighted_sum_sub_expect_weighted_sum
 #check centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered
 #check subGaussianTail_sum_of_iIndepFun_bounded_centered
 #check upperTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth
@@ -16,3 +17,5 @@ open HighDimProb
 #check hoeffding_sum_bounded_centered
 #check hoeffding_sum_bounded_centered_sharp
 #check hoeffding_sum_bounded
+#check hoeffding_weighted_sum_bounded_centered_sharp
+#check hoeffding_weighted_sum_bounded

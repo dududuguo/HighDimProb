@@ -712,11 +712,29 @@
 - Lean/mathlib reuse: the stage reuses `realLpNorm_nat_le_sqrt_of_psi2Bound`, `realLpNorm_nat_le_sqrt_of_subGaussianTail`, simple positivity, and ring normalization; Mathlib `eLpNorm_le_eLpNorm_of_exponent_le` was identified as likely future infrastructure for all-real-exponent promotion.
 - Future upgrade path: Stage G2F-cleanup should design the natural-to-real exponent bridge around ceiling, `ENNReal.toReal`, and sqrt comparisons before attempting `subGaussianMoment_of_psi2Bound`.
 
+## Stage M-real-1 real-exponent SubGaussianMoment bridge
+
+- Concrete version chosen: keep `SubGaussianMomentNatSqrt` unchanged and add a separate ceiling/monotonicity bridge from natural exponents to the existing finite-`ENNReal` `SubGaussianMoment` predicate.
+- Possible general version: prove the moment formulation from tail or Orlicz control by a direct real-exponent integral calculation, with sharper constants.
+- Compatibility decision: no existing theorem meanings changed; the new public bridge theorems are `subGaussianMoment_of_psi2Bound` and `subGaussianMoment_of_subGaussianTail`.
+- Constant decision: the natural constants `4*K` and `8*K` become `8*K` and `16*K` because `sqrt(ceil p.toReal) <= 2 * sqrt(p.toReal)`.
+- Lean/mathlib reuse: reuse Mathlib `MeasureTheory.eLpNorm_le_eLpNorm_of_exponent_le`, `ENNReal.ofReal_toReal`, `ENNReal.toReal_mono`, `Nat.le_ceil`, `Nat.ceil_lt_add_one`, `Real.sqrt_le_sqrt`, and `Real.sqrt_mul`.
+- Follow-up path: Stage M-real-2 repeats the exponent-monotonicity pattern for the subExponential real-moment interface; after that, the remaining work is reverse/source MGF and full equivalence packaging.
+
+## Stage M-real-2 real-exponent SubExponentialMoment bridge
+
+- Concrete version chosen: keep `SubExponentialMoment` unchanged and prove the missing all-natural psi1 factorial moment route, then reuse the natural-ceiling/Lp monotonicity bridge for finite `ENNReal` exponents.
+- Possible general version: introduce a separate natural-exponent subExponential moment predicate before proving the full interface.
+- Reason for not adding a predicate: the existing `SubExponentialMoment` interface is compatible, and the public theorem family can expose the natural intermediate lemmas directly.
+- Compatibility decision: no theorem meanings changed; `Psi1Bound -> SubExponentialMoment` uses scale `16*K`, while `SubExponentialTail -> SubExponentialMoment` uses scale `48*K` after the existing `3*K` tail-to-psi1 loss.
+- Lean/mathlib reuse: reuse Mathlib `Real.pow_div_factorial_le_exp`, `Nat.factorial_le_pow`, `Real.rpow_le_rpow`, `Real.mul_rpow`, `MeasureTheory.eLpNorm_le_eLpNorm_of_exponent_le`, `ENNReal.toReal_mono`, `Nat.ceil`, and the existing psi1 exponential-integral bridge.
+- Future upgrade path: Stage SC-final-update should refresh the scalar milestone/index now that both subGaussian and subExponential moment bridges are complete.
+
 ## Stage M3 scalar subGaussian proof spine closeout
 
 - Concrete version chosen: close the scalar subGaussian proof spine as a documentation, import, and API-test milestone, not as a new theorem stage.
 - Possible general version: prove a full equivalence theorem family and introduce a canonical `SubGaussian` predicate.
-- Reason for not generalizing yet: reverse MGF, full real-exponent `SubGaussianMoment`, and finite-gauge/norm variants are still missing.
+- Reason for not generalizing yet: at M3 time, reverse MGF, full real-exponent `SubGaussianMoment`, and finite-gauge/norm variants were still missing; Stage M-real-1 later resolves the full moment bridge.
 - Import decision: `HighDimProb.Concentration.Implications` now re-exports the proved tail/Orlicz, natural-moment, MGF, and weighted Rademacher sum implication leaves; theorem ownership remains in the focused leaf files.
 - Documentation decision: `docs/ScalarImplicationGraph.md` is table-driven so constants, statuses, and theorem names can be audited without reading proof files.
 - Future upgrade path: the next deep proof route should target the reverse MGF bridge before any canonical predicate consolidation.
@@ -829,11 +847,97 @@
 - Lean/mathlib reuse: `MeasureTheory.integral_finset_sum`, `ProbabilityTheory.iIndepFun.comp`, finite-sum subtraction algebra, and the Stage H6-sharp centered theorem.
 - Future upgrade path: Stage H8 should prove deterministic weighted bounded Hoeffding with the weighted denominator normal form.
 
+## Stage H7-closeout Hoeffding branch milestone cleanup
+
+- Concrete version chosen: close the finite Hoeffding theorem family with `docs/HoeffdingMilestone.md`, import checks, API-test coverage, and documentation consistency updates.
+- Possible general version: start weighted bounded Hoeffding immediately after the non-centered theorem.
+- Reason for not generalizing yet: the unweighted theorem family now has multiple constants and entry points; documenting the conservative, sharp centered, and non-centered roles before adding weights prevents theorem-meaning drift.
+- Constant decision: keep `hoeffding_sum_bounded_centered` as the conservative generic-subGaussian-pipeline theorem with exponent `-t^2/V`; keep `hoeffding_sum_bounded_centered_sharp` and `hoeffding_sum_bounded` as the sharp `-2*t^2/V` Hoeffding forms.
+- Import/test decision: `HighDimProb.Concentration` and `HighDimProb.Concentration.Implications` remain the aggregate experimental imports; focused and aggregate API tests check the theorem family, one-sided sharp helpers, and centering helpers.
+- Future upgrade path: Stage H8 should prove deterministic weighted bounded Hoeffding without changing existing theorem meanings.
+
+## Stage H8 weighted bounded Hoeffding theorem
+
+- Concrete version chosen: prove both `hoeffding_weighted_sum_bounded_centered_sharp` and `hoeffding_weighted_sum_bounded` in `HighDimProb.Concentration.Hoeffding`.
+- Possible general version: reduce directly to the unweighted theorem by defining `Y_i = c_i * X_i` and proving interval bounds for each transformed variable.
+- Reason for not using that reduction: zero weights are allowed by the target theorem, but the existing unweighted theorem requires every interval width to be positive; `c_i = 0` would make the transformed interval width zero even when the total weighted denominator is positive.
+- Constant decision: use the weighted finite-sum MGF proxy `sum_i (c_i * ((b_i-a_i)/2))^2`, normalize it to `(sum_i c_i^2 * (b_i-a_i)^2) / 4`, and apply the existing eighth-MGF Chernoff helper to get exponent `-2*t^2 / (sum_i c_i^2 * (b_i-a_i)^2)`.
+- Negative-weight decision: arbitrary real weights are handled by Mathlib's `HasSubgaussianMGF.const_mul` through the existing weighted MGF theorem; signs disappear into squares, so no case split on `0 <= c_i` is needed.
+- Centering decision: add the small public helper `sum_weighted_centered_eq_weighted_sum_sub_expect_weighted_sum`, mirroring the H7 unweighted centering helper under explicit integrability.
+- Future upgrade path: Stage H9 should close out the Hoeffding branch documentation and import/test surface after the weighted theorem.
+
+## Stage B1 subExponential finite-sum and Bernstein scaffold
+
+- Concrete version chosen: add `HighDimProb.Concentration.SubExponentialSums` and `HighDimProb.Concentration.Bernstein` with a proved raw finite-sum MGF product theorem, a proof-friendly lintegral MGF predicate, local one-variable Chernoff tails, and typed `Prop` Bernstein statement targets.
+- Possible general version: prove the full scalar Bernstein min-form tail bound for independent centered subExponential variables in one step.
+- Reason for not generalizing yet: the existing `CenteredSubExponentialMGF` is an expectation-level predicate, so it composes over independent sums through Mathlib `iIndepFun.mgf_sum`, but it does not bundle the lintegral/integrability data needed for ENNReal tail proofs.
+- Domain decision: the raw finite-sum theorem exposes an explicit `Kmax` domain `|lambda| <= 1 / Kmax`; the packaged predicate theorem uses conservative scale `sqrt (sum_i K_i^2)` and therefore the smaller domain `1 / sqrt (sum_i K_i^2)`.
+- Constant decision: local Chernoff uses `exp (-(t^2 / (4*K^2)))` under `0 <= t` and `t <= K`; full Bernstein statements use an explicit positive placeholder `cBernstein`.
+- Future upgrade path: Stage B1-fix resolves the lintegral finite-sum product theorem and reusable max-scale vocabulary; Stage B2 proves the full scalar min-form under the lintegral predicate.
+
+## Stage B1-fix subExponential max-scale infrastructure
+
+- Concrete version chosen: add `HighDimProb.Concentration.MaxScale` with real-valued `maxScale K` implemented as the coercion of `Finset.univ.sup (fun i => Real.toNNReal (K i))`, plus `varianceProxy K := sum_i K_i^2`.
+- Possible general version: build a generic finite real maximum API or use subtype-indexed positive scales throughout the concentration branch.
+- Reason for not generalizing yet: the Bernstein branch only needs a domain controller for positive subExponential scales, so a small `Real.toNNReal`-backed helper avoids overbuilding order theory around finite real maxima.
+- Mathlib reuse: `Finset.le_sup`, `Finset.single_le_sum`, `Real.toNNReal`, `ProbabilityTheory.iIndepFun.mgf_sum`, `ProbabilityTheory.iIndepFun.integrable_exp_mul_sum`, `MeasureTheory.lintegral_ofReal_ne_top_iff_integrable`, and `MeasureTheory.ofReal_integral_eq_lintegral_ofReal`.
+- Constant decision: normalized finite-sum MGF uses domain `|lambda| <= 1 / maxScale K` and exponent `varianceProxy K * lambda^2`; the local quadratic Bernstein corollary uses `t <= 2 * varianceProxy K / maxScale K` and exponent denominator `4 * varianceProxy K`.
+- Future upgrade path: Stage B2 adds the large-deviation/linear-regime optimization and full scalar min-form theorem; raw-predicate and weighted variants remain separate future work.
+
+## Stage B2 scalar Bernstein min-form
+
+- Concrete version chosen: prove generic one-sided and two-sided min-form Chernoff bounds for any local lintegral MGF bound with variance proxy `V` and max-scale `B`, then instantiate them for finite independent `CenteredSubExponentialMGFLIntegral` sums via the B1-fix finite-sum MGF bridge.
+- Possible general version: build an abstract Chernoff optimizer API for arbitrary convex MGF envelopes and derive Bernstein as one instance.
+- Reason for not generalizing yet: the scalar Bernstein branch only needs the two explicit choices `lambda = t/(2V)` and `lambda = 1/B`; a generic optimizer would add proof overhead without serving the current theorem.
+- Lean/mathlib reuse: `MeasureTheory.meas_ge_le_lintegral_div`, `Real.exp_le_exp`, `min_le_left`, `min_le_right`, `by_cases`, `field_simp`, `nlinarith`, `measure_union_le`, and the B1-fix lintegral finite-sum MGF theorem.
+- Constant decision: the proved min-form uses `1/4 * min (t^2/V) (t/B)`. The small regime reuses exponent `-t^2/(4V)`, and the large regime proves exponent `-t/(2B)` before weakening to the `1/4` min-form.
+- Future upgrade path: Stage B3 proves the weighted scalar Bernstein theorem with weighted variance proxy and max-scale vocabulary, reusing the generic B2 min-form helper; later Bernstein work should focus on raw-predicate bridges.
+
+## Stage SC-closeout scalar concentration theorem family
+
+- Concrete version chosen: add `docs/ScalarConcentrationMilestone.md`, update the scalar implication aggregate to re-export subExponential/Bernstein leaves, and add `HighDimProbTest.ScalarConcentrationMilestoneAPI` as a direct `import HighDimProb.Concentration` audit.
+- Possible general version: continue immediately to weighted Bernstein or a larger concentration theorem family.
+- Reason for not generalizing yet: Hoeffding and Bernstein now have multiple entry points and constants; documenting the stable theorem meanings before the next theorem branch reduces accidental API drift.
+- Import/test decision: `HighDimProb.Concentration` is the experimental aggregate for the full scalar concentration theorem family; `HighDimProb.Concentration.Implications` is the scalar implication graph aggregate and now includes subExponential/Bernstein leaves.
+- Constant decision: no constants are changed. The milestone document explicitly separates conservative Hoeffding, sharp Hoeffding, local Bernstein, and full Bernstein min-form constants.
+- Future upgrade path: after Stage B3, the safe follow-up is scalar concentration final closeout rather than another theorem family.
+
+## Stage B3 weighted scalar Bernstein theorem
+
+- Concrete version chosen: prove deterministic weighted scalar Bernstein under `CenteredSubExponentialMGFLIntegral` assumptions using `weightedVarianceProxy c K` and `weightedMaxScale c K`.
+- Possible general version: package every weighted variable `c_i * X_i` as a new `CenteredSubExponentialMGFLIntegral` variable with scale `|c_i| * K_i`.
+- Reason for not using that packaging: the predicate requires a strictly positive scale, while the theorem should allow individual zero weights under positive total weighted proxies.
+- MGF decision: prove scalar-multiple raw and lintegral MGF bounds with the original one-variable scale and domain `|lambda * c_i| <= 1 / K_i`, then prove the weighted finite-sum MGF product directly.
+- Independence decision: reuse the existing `iIndepFun_weighted_of_iIndepFun` helper from the subGaussian-sum branch for deterministic scalar multiplication.
+- Constant decision: reuse the Stage B2 generic min-form theorem unchanged, giving `1/4 * subExponentialBernsteinRate t (weightedVarianceProxy c K) (weightedMaxScale c K)`.
+- Future upgrade path: raw-predicate Bernstein variants need a raw-to-lintegral bridge or equivalent source assumptions; matrix Bernstein and Hanson-Wright remain separate future branches.
+
+## Stage SC-final scalar concentration branch closure
+
+- Concrete version chosen: close the branch with a leaf audit, theorem index, test coverage map, and milestone document instead of adding another theorem family.
+- Possible general version: promote `HighDimProb.Concentration` into the stable root after the current theorem families compile and are tested.
+- Reason for not promoting: the branch still has deliberate gaps in reverse/source MGF implications, subExponential equivalence, exact scale-zero predicates, and raw-predicate Bernstein.
+- Import decision: keep `HighDimProb.Concentration` and `HighDimProb.Distributions` experimental; keep `HighDimProb` as the stable scalar object-layer root.
+- Test decision: no complex examples are added in SC-final because the indexed public theorem names already have focused `#check` coverage and aggregate import checks.
+- Next-branch decision: Option C is resolved by Stage M-real-1, Stage M-real-2 resolves the analogous subExponential real-moment bridge, and Stage SC-final-update refreshes the scalar milestone docs.
+
+## Stage SC-final-update scalar concentration closeout after moment bridges
+
+- Concrete version chosen: update documentation, theorem index, test coverage map, and aggregate API checks after the full real/`ENNReal` subGaussian and subExponential moment bridges, without proving new theorem families.
+- Possible general version: start matrix Bernstein, Hanson-Wright, WLLN/SLLN, or full equivalence packages immediately.
+- Reason for not generalizing yet: the scalar theorem surface changed through the moment bridges; closeout docs need to stop advertising those bridges as future blockers before a larger branch starts.
+- Import decision: `HighDimProb.Concentration` remains experimental but reaches the full moment bridge theorem names through `Concentration.MomentImplications` and `Concentration.Implications`.
+- Test decision: focused `MomentImplicationsAPI` and aggregate `ConcentrationImplicationsAPI`/`ScalarConcentrationMilestoneAPI` checks cover `realLpNorm` finite-exponent bridges and full `SubGaussianMoment`/`SubExponentialMoment` wrappers.
+- Future upgrade path: choose exactly one next major branch; the remaining scalar-only work is reverse/source MGF links, finite-gauge variants, raw-predicate Bernstein, and full equivalence packaging.
+
 ## Milestone Sprint S4 MGF implication branch
 
 - Concrete version chosen: add `HighDimProb.Concentration.MGF` as the owner of forward MGF-to-tail/Orlicz/moment composition, while keeping `CenteredSubGaussianMGF` itself in the scalar predicate file.
 - Possible general version: prove the full tail/Orlicz/moment/MGF equivalence family and promote a canonical `SubGaussian` predicate.
-- Reason for not generalizing yet: S4 proves only the forward centered-MGF path; reverse MGF implications, finite gauges, and full real-exponent moment links are still independent theorem projects.
+- Reason for not generalizing yet: S4 proved only the forward centered-MGF
+  path. Reverse MGF implications and finite gauges remain independent theorem
+  projects; the full real-exponent moment links are now resolved by
+  Stages M-real-1 and M-real-2.
 - MGF normal form decision: `CenteredSubGaussianMGFLIntegral` states `∫⁻ exp(lambda * X) <= exp(K^2 * lambda^2)`, a looser but book-style ENNReal bound obtained from Mathlib's `HasSubgaussianMGF` convention.
 - Constant decision: one-sided Chernoff tails use denominator `4*K^2`, the two-sided tail scale is `2*K`, the induced ψ₂ scale is `4*K`, and the induced natural sqrt-moment scale is `16*K`.
 - Lean/mathlib reuse: the proofs use Mathlib `HasSubgaussianMGF` for exponential integrability, `MeasureTheory.ofReal_integral_eq_lintegral_ofReal`, `MeasureTheory.meas_ge_le_lintegral_div`, `measure_union_le`, and existing HighDimProb tail-to-Orlicz and moment bridges.

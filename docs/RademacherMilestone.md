@@ -66,4 +66,6 @@ importable mini-domain.
 
 ## Next Theorem Family
 
-Recommended next safe task after H7: Stage H8 -- weighted bounded Hoeffding.
+Stage H8 weighted bounded Hoeffding is complete. Scalar concentration closeout
+and the Stage M-real-1/M-real-2 moment bridges are complete; the next major
+branch should be chosen separately from the Rademacher mini-domain.

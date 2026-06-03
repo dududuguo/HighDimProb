@@ -1,8 +1,9 @@
 # Milestone 3: Scalar SubGaussian Proof Spine Closeout
 
-Milestone 3 closes the current scalar concentration spine as a coherent
-experimental milestone. It does not claim full subGaussian equivalence and does
-not start reverse MGF, Hoeffding, or Bernstein.
+Milestone 3 closes the earlier scalar subGaussian spine as a coherent
+experimental milestone. It does not claim full subGaussian equivalence and did
+not start reverse MGF, Hoeffding, or Bernstein. Later scalar concentration
+families are closed in `docs/Milestone-ScalarConcentration.md`.
 
 ## Scalar Concentration Branch Status
 
@@ -61,13 +62,18 @@ The concentration branch now contains reusable scalar foundations:
 - Reverse/source MGF bridge:
   `SubGaussianTail` / `Psi2Bound` / moment control to
   `CenteredSubGaussianMGF`.
-- Full `SubGaussianMoment` bridge over all finite `ENNReal` exponents.
-- SubExponential moment and local-MGF implication branches.
+- Full `SubGaussianMoment` bridge over all finite `ENNReal` exponents is
+  resolved by Stage M-real-1.
+- SubExponential local-MGF/source implication branches. Fixed-scale
+  subExponential moment links are resolved by Stage M-real-2.
 - Canonical `SubGaussian` / `SubExponential` predicates remain deferred until
-  the reverse and real-exponent links are proved.
-- Hoeffding, Bernstein, and independent-sum concentration remain future work.
+  the reverse/source links and equivalence-package choices are proved.
+- Later Hoeffding, Bernstein, and independent-sum concentration work is now
+  tracked in `docs/Milestone-ScalarConcentration.md`; remaining blockers here
+  are the reverse/source MGF and local-MGF/source links.
 
 ## Next Deep Route
 
-Recommended next deep proof goal: reverse MGF bridge design,
-`Tail/Orlicz/Moment -> CenteredSubGaussianMGF`.
+The real-exponent `SubGaussianMoment` and `SubExponentialMoment` bridges are
+resolved by Stages M-real-1 and M-real-2. The next major branch should be chosen
+separately from this subGaussian spine closeout.

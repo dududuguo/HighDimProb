@@ -2,12 +2,13 @@
 
 Current version target: v0.1-alpha
 
-Current stage: Stage H7
+Current stage: Stage SC-final-update
 
-Current task: non-centered Wikipedia-form Hoeffding corollary for bounded variables
+Current task: scalar concentration closeout refresh after full real/`ENNReal`
+moment bridges
 
 Milestone status:
-- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, independent finite subGaussian sum MGF, finite Hoeffding theorem for bounded centered variables, sharp finite Hoeffding theorem for bounded centered variables, and non-centered Wikipedia-form finite Hoeffding are complete.
+- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` bridges, full finite-`ENNReal` `SubExponentialMoment` bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, independent finite subGaussian sum MGF, finite Hoeffding theorem for bounded centered variables, sharp finite Hoeffding theorem for bounded centered variables, non-centered Wikipedia-form finite Hoeffding, the Hoeffding branch milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum concentration scaffold, Stage B1-fix subExponential MGF domain/max-scale infrastructure, Stage B2 full scalar Bernstein min-form tail bound, Stage SC-closeout scalar concentration theorem-family closeout, Stage B3 deterministic weighted scalar Bernstein theorem, Stage SC-final scalar concentration branch closure, Stage M-real-1 real-exponent `SubGaussianMoment` bridge, Stage M-real-2 subExponential real-moment bridge, and Stage SC-final-update scalar closeout refresh are complete.
 
 Workflow file:
 - docs/Workflow.md
@@ -91,6 +92,17 @@ Last known test status:
 - Stage H6 finite Hoeffding theorem for bounded centered variables
 - Stage H6-sharp sharp finite Hoeffding theorem for bounded centered variables
 - Stage H7 non-centered Wikipedia-form Hoeffding corollary
+- Stage H7-closeout Hoeffding branch milestone cleanup
+- Stage H8 weighted bounded Hoeffding theorem
+- Stage B1 subExponential finite-sum concentration scaffold
+- Stage B1-fix subExponential MGF domain/max-scale infrastructure
+- Stage B2 full scalar Bernstein min-form tail bound
+- Stage SC-closeout scalar concentration theorem-family closeout
+- Stage B3 deterministic weighted scalar Bernstein theorem
+- Stage SC-final scalar concentration branch closure
+- Stage M-real-1 real-exponent `SubGaussianMoment` bridge
+- Stage M-real-2 subExponential real-moment bridge
+- Stage SC-final-update scalar concentration closeout refresh after moment bridges
 
 Stage 1A implemented:
 - probability-space convention
@@ -444,7 +456,7 @@ Stage M3 implemented:
 - converted `docs/ScalarImplicationGraph.md` to a table-driven audit of proved and blocked scalar implication arrows.
 - updated `HighDimProb.Concentration.Implications` to re-export tail/Orlicz, natural-moment, and MGF implication leaves.
 - strengthened aggregate implication API tests so public theorem names are discoverable through the implication import.
-- recorded reverse MGF, full real-exponent `SubGaussianMoment`, subExponential MGF, Hoeffding, and Bernstein as future work.
+- recorded reverse MGF, real-exponent `SubGaussianMoment`, subExponential MGF, Hoeffding, and Bernstein as future work at M3 time; the real-exponent `SubGaussianMoment` bridge is now resolved by Stage M-real-1.
 
 Stage H1 implemented:
 - added experimental `HighDimProb.Distributions` and `HighDimProb.Distributions.Rademacher`.
@@ -530,6 +542,78 @@ Stage H7 implemented:
 - proved `hoeffding_sum_bounded` with the exact non-centered classical/Wikipedia exponent `-(2*t^2 / sum_i (b_i-a_i)^2)` under explicit integrability and the visible denominator assumption `0 < sum_i (b_i-a_i)^2`.
 - kept `hoeffding_sum_bounded_centered`, `hoeffding_sum_bounded_centered_sharp`, `CenteredSubGaussianMGF`, `SubGaussianTail`, `Psi2Bound`, and the existing scalar implication meanings unchanged.
 - updated focused Hoeffding tests, aggregate import checks, and documentation.
+
+Stage H7-closeout implemented:
+- added `docs/HoeffdingMilestone.md` to close the finite Hoeffding theorem family as a coherent milestone.
+- audited `HighDimProb.Concentration`, `HighDimProb.Concentration.Implications`, and branch import tests for Hoeffding theorem exposure.
+- strengthened aggregate API checks for the sharp one-sided Hoeffding helpers and centering helper lemmas.
+- documented the constants table: conservative centered `2*exp(-t^2/V)`, sharp centered `2*exp(-2*t^2/V)`, and non-centered classical/Wikipedia `2*exp(-2*t^2/V)`.
+- kept the conservative centered theorem intentionally, because it tests the generic subGaussian implication pipeline.
+- recorded Stage H8 weighted bounded Hoeffding as the next safe theorem task.
+
+Stage H8 implemented:
+- proved `sum_weighted_centered_eq_weighted_sum_sub_expect_weighted_sum`, the weighted finite-sum centering identity under explicit integrability.
+- proved `hoeffding_weighted_sum_bounded_centered_sharp` with denominator `sum_i c_i^2 * (b_i-a_i)^2`.
+- proved `hoeffding_weighted_sum_bounded` around `expect P (fun omega => sum_i c_i * X_i omega)` with the same denominator.
+- handled arbitrary real deterministic weights, including negative and zero weights, through the existing weighted finite-sum MGF theorem and the visible positive total denominator assumption.
+- used the weighted MGF route because direct reduction to the unweighted theorem would require every transformed interval to have positive width and would fail for zero weights.
+- updated focused, aggregate, experimental import tests, theorem atlas, scalar implication graph, milestone docs, and planning docs.
+- recorded Stage H9 Hoeffding branch final closeout as the next safe task.
+
+Stage B1 implemented:
+- added `HighDimProb.Concentration.SubExponentialSums` with `CenteredSubExponentialMGFLIntegral`.
+- proved `centeredSubExponentialMGF_finset_sum_mgf_bound_of_iIndepFun` and `centeredSubExponentialMGF_sum_mgf_bound_of_iIndepFun`, raw finite-sum MGF bounds with variance proxy `sum_i K_i^2` and explicit `Kmax` domain.
+- proved `centeredSubExponentialMGF_finset_sum_of_iIndepFun_of_pos` and `centeredSubExponentialMGF_sum_of_iIndepFun_of_pos`, conservative packaged finite-sum closure at scale `sqrt (sum_i K_i^2)`.
+- added `centeredSubExponentialMGFLIntegral_sum_of_iIndepFun_statement` as the typed target for future lintegral finite-sum products.
+- added `HighDimProb.Concentration.Bernstein` with `subExponentialBernsteinRate`, `bernstein_subExponential_sum_statement`, and `bernstein_subExponential_weighted_sum_statement`.
+- proved local small-deviation Chernoff tails `upperTailProb_le_exp_neg_sq_of_centeredSubExponentialMGFLIntegral_of_le`, `lowerTailProb_le_exp_neg_sq_of_centeredSubExponentialMGFLIntegral_of_le`, and `absTailProb_le_two_mul_exp_neg_sq_of_centeredSubExponentialMGFLIntegral_of_le`.
+- updated focused API tests, concentration aggregate imports, branch/experimental import checks, theorem atlas, scalar implication graph, progress docs, term map, abstraction log, TODO, test plan, status, and README.
+- recorded Stage B1-fix subExponential MGF domain/max-scale infrastructure as the next safe task.
+
+Stage B1-fix implemented:
+- added `HighDimProb.Concentration.MaxScale` with `maxScale` and `varianceProxy`.
+- proved max-scale lemmas `le_maxScale`, `maxScale_nonneg`, `maxScale_pos_of_exists_pos`, and `abs_le_inv_of_le_inv_maxScale`.
+- proved variance-proxy lemmas `varianceProxy_nonneg`, `varianceProxy_pos_of_exists_pos`, and `sq_le_varianceProxy`.
+- proved `centeredSubExponentialMGF_of_centeredSubExponentialMGFLIntegral`, bridging the stronger proof-facing predicate back to the raw predicate.
+- proved `centeredSubExponentialMGF_sum_mgf_bound_of_iIndepFun_maxScale`, the normalized raw finite-sum MGF theorem with domain `|lambda| <= 1 / maxScale K` and exponent `varianceProxy K * lambda^2`.
+- proved `centeredSubExponentialMGFLIntegral_sum_mgf_bound_of_iIndepFun_maxScale`, the lintegral finite-sum MGF bridge from independent proof-facing subExponential MGF assumptions.
+- proved local quadratic Bernstein small-deviation theorems `upperTailProb_le_exp_neg_sq_div_varianceProxy_of_mgf_bound_of_le`, `lowerTailProb_le_exp_neg_sq_div_varianceProxy_of_mgf_bound_of_le`, `absTailProb_le_two_mul_exp_neg_sq_div_varianceProxy_of_mgf_bound_of_le`, and `absTailProb_le_two_mul_exp_neg_sq_div_varianceProxy_of_centeredSubExponentialMGFLIntegral_sum`.
+- updated focused API tests, concentration aggregate imports, branch/experimental import checks, theorem atlas, scalar implication graph, progress docs, term map, abstraction log, TODO, test plan, status, and `docs/BernsteinPlan.md`.
+- recorded Stage B2 full scalar Bernstein min-form tail bound as the next safe task.
+
+Stage B2 implemented:
+- proved large-regime Bernstein one-sided and two-sided theorems `upperTailProb_le_exp_neg_linear_div_maxScale_of_mgf_bound_of_ge`, `lowerTailProb_le_exp_neg_linear_div_maxScale_of_mgf_bound_of_ge`, and `absTailProb_le_two_mul_exp_neg_linear_div_maxScale_of_mgf_bound_of_ge`.
+- proved generic min-form Chernoff theorems `upperTailProb_le_exp_neg_quarter_bernsteinRate_of_mgf_bound`, `lowerTailProb_le_exp_neg_quarter_bernsteinRate_of_mgf_bound`, and `absTailProb_le_two_mul_exp_neg_quarter_bernsteinRate_of_mgf_bound` with constant `1/4`.
+- proved finite-sum one-sided min-form wrappers `upperTailProb_le_exp_neg_quarter_bernsteinRate_of_centeredSubExponentialMGFLIntegral_sum` and `lowerTailProb_le_exp_neg_quarter_bernsteinRate_of_centeredSubExponentialMGFLIntegral_sum`.
+- proved the full scalar finite-sum Bernstein min-form theorem `bernstein_sum_subExponential` under independent `CenteredSubExponentialMGFLIntegral` assumptions, with `V = varianceProxy K`, `B = maxScale K`, and rate `subExponentialBernsteinRate`.
+- updated Bernstein API tests, branch/experimental import checks, theorem atlas, scalar implication graph, progress docs, term map, abstraction log, TODO, test plan, status, branch registry, leaf plan, and `docs/BernsteinPlan.md`.
+- recorded Stage B3 weighted Bernstein theorem as the next safe task.
+
+Stage SC-closeout implemented:
+- added `docs/ScalarConcentrationMilestone.md` with the scalar concentration summary, theorem-family table, constants table, import paths, stable/experimental status, conservative/sharp naming notes, and remaining TODOs.
+- audited `HighDimProb.Concentration`, `HighDimProb.Concentration.Implications`, and branch-style API coverage for the completed Markov/Chebyshev, Orlicz/tail, moment, MGF, Rademacher, Hoeffding, subGaussian-sum, subExponential-sum, and Bernstein families.
+- updated `HighDimProb.Concentration.Implications` so the aggregate implication import also reaches `Concentration.SubExponentialSums` and `Concentration.Bernstein`.
+- added `HighDimProbTest.ScalarConcentrationMilestoneAPI`, which imports only `HighDimProb.Concentration` and checks representative public theorem-family names from the milestone table.
+- clarified that `hoeffding_sum_bounded_centered` is the conservative generic subGaussian-pipeline theorem, `hoeffding_sum_bounded_centered_sharp` and its non-centered/weighted variants are sharp Hoeffding-specific APIs, `absTailProb_le_two_mul_exp_neg_sq_div_varianceProxy_of_centeredSubExponentialMGFLIntegral_sum` is local quadratic Bernstein, and `bernstein_sum_subExponential` is the full scalar Bernstein min-form theorem.
+- kept theorem meanings unchanged and did not start weighted Bernstein, matrix Bernstein, Hanson-Wright, or any new major theorem family.
+- recorded Stage B3 weighted Bernstein theorem as the next safe task.
+
+Stage B3 implemented:
+- added weighted Bernstein proxies `weightedVarianceProxy` and `weightedMaxScale`, plus nonnegativity/domain helper lemmas.
+- proved scalar-multiple raw and lintegral subExponential MGF bounds without requiring positive transformed scales for zero weights.
+- proved `centeredSubExponentialMGFLIntegral_weighted_sum_mgf_bound_of_iIndepFun_maxScale` with `V_c = weightedVarianceProxy c K` and `B_c = weightedMaxScale c K`.
+- proved `bernstein_weighted_sum_subExponential`, the deterministic weighted scalar Bernstein min-form theorem with constant `1/4` under explicit `0 < V_c`, `0 < B_c`, and `0 <= t`.
+- updated focused API tests, branch/experimental import checks, implication aggregate checks, scalar milestone checks, theorem atlas, implication graph, progress docs, term map, abstraction log, TODO, test plan, status, branch registry, leaf plan, README, and `docs/BernsteinPlan.md`.
+- recorded Stage SC-final scalar concentration branch final closeout as the next safe task.
+
+Stage SC-final implemented:
+- added `docs/ConcentrationLeafAudit.md` with every concentration leaf, aggregate import status, public declarations, theorem families, imports, tests, and experimental/stable status.
+- added `docs/ScalarConcentrationTheoremIndex.md` with the scalar theorem-family index, including conservative, sharp, classical, weighted, statement-only, and proven statuses.
+- added `docs/ConcentrationTestCoverage.md` mapping indexed public theorem names to focused and aggregate `#check` tests.
+- added `docs/Milestone-ScalarConcentration.md` as the final scalar concentration milestone document with completed theorem families, constants, import/test status, blockers, stable/experimental decision, and next recommended branch.
+- updated theorem atlas, implication graph, roadmap, module tree, branch registry, leaf plan, Bernstein plan, README, and progress/status docs to reflect the closed scalar concentration branch.
+- kept `HighDimProb.Concentration` experimental; no stable-root promotion was made.
+- recorded Option C real-exponent moment branch for the full `SubGaussianMoment` bridge as the next safe task; Stage M-real-1 now resolves it.
 
 Milestone Sprint S2 implemented:
 - completed fixed-scale scalar Orlicz/tail implication graph in both directions for ψ�?and ψ�?predicates
@@ -781,14 +865,64 @@ Important existing declarations:
 - `ae_mem_Icc_centered_of_ae_mem_Icc`
 - `sum_centered_eq_sum_sub_expect_sum`
 - `hoeffding_sum_bounded`
+- `sum_weighted_centered_eq_weighted_sum_sub_expect_weighted_sum`
+- `hoeffding_weighted_sum_bounded_centered_sharp`
+- `hoeffding_weighted_sum_bounded`
+- `maxScale`
+- `le_maxScale`
+- `maxScale_nonneg`
+- `maxScale_pos_of_exists_pos`
+- `abs_le_inv_of_le_inv_maxScale`
+- `varianceProxy`
+- `varianceProxy_nonneg`
+- `varianceProxy_pos_of_exists_pos`
+- `sq_le_varianceProxy`
+- `weightedVarianceProxy`
+- `weightedVarianceProxy_nonneg`
+- `weightedMaxScale`
+- `weightedMaxScale_nonneg`
+- `le_weightedMaxScale`
+- `abs_mul_le_inv_of_le_weightedMaxScale`
+- `CenteredSubExponentialMGFLIntegral`
+- `centeredSubExponentialMGF_of_centeredSubExponentialMGFLIntegral`
+- `centeredSubExponentialMGF_finset_sum_mgf_bound_of_iIndepFun`
+- `centeredSubExponentialMGF_sum_mgf_bound_of_iIndepFun`
+- `centeredSubExponentialMGF_sum_mgf_bound_of_iIndepFun_maxScale`
+- `centeredSubExponentialMGFLIntegral_sum_mgf_bound_of_iIndepFun_maxScale`
+- `centeredSubExponentialMGF_const_mul_mgf_bound`
+- `centeredSubExponentialMGFLIntegral_const_mul_mgf_bound`
+- `centeredSubExponentialMGFLIntegral_weighted_sum_mgf_bound_of_iIndepFun_maxScale`
+- `centeredSubExponentialMGF_finset_sum_of_iIndepFun_of_pos`
+- `centeredSubExponentialMGF_sum_of_iIndepFun_of_pos`
+- `centeredSubExponentialMGFLIntegral_sum_of_iIndepFun_statement`
+- `subExponentialBernsteinRate`
+- `bernstein_subExponential_sum_statement`
+- `bernstein_subExponential_weighted_sum_statement`
+- `upperTailProb_le_exp_neg_sq_div_varianceProxy_of_mgf_bound_of_le`
+- `lowerTailProb_le_exp_neg_sq_div_varianceProxy_of_mgf_bound_of_le`
+- `absTailProb_le_two_mul_exp_neg_sq_div_varianceProxy_of_mgf_bound_of_le`
+- `absTailProb_le_two_mul_exp_neg_sq_div_varianceProxy_of_centeredSubExponentialMGFLIntegral_sum`
+- `upperTailProb_le_exp_neg_linear_div_maxScale_of_mgf_bound_of_ge`
+- `lowerTailProb_le_exp_neg_linear_div_maxScale_of_mgf_bound_of_ge`
+- `absTailProb_le_two_mul_exp_neg_linear_div_maxScale_of_mgf_bound_of_ge`
+- `upperTailProb_le_exp_neg_quarter_bernsteinRate_of_mgf_bound`
+- `lowerTailProb_le_exp_neg_quarter_bernsteinRate_of_mgf_bound`
+- `absTailProb_le_two_mul_exp_neg_quarter_bernsteinRate_of_mgf_bound`
+- `upperTailProb_le_exp_neg_quarter_bernsteinRate_of_centeredSubExponentialMGFLIntegral_sum`
+- `lowerTailProb_le_exp_neg_quarter_bernsteinRate_of_centeredSubExponentialMGFLIntegral_sum`
+- `bernstein_sum_subExponential`
+- `bernstein_weighted_sum_subExponential`
+- `upperTailProb_le_exp_neg_sq_of_centeredSubExponentialMGFLIntegral_of_le`
+- `lowerTailProb_le_exp_neg_sq_of_centeredSubExponentialMGFLIntegral_of_le`
+- `absTailProb_le_two_mul_exp_neg_sq_of_centeredSubExponentialMGFLIntegral_of_le`
 
 ## Active
 
-Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage M3, Stage H1, Stage H0, Stage H2A, Stage H2B, Stage H3, Stage H4, Stage H2-cleanup, Stage H5, Stage H6, Stage H6-sharp, and Stage H7 are complete.
+Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage M3, Stage H1, Stage H0, Stage H2A, Stage H2B, Stage H3, Stage H4, Stage H2-cleanup, Stage H5, Stage H6, Stage H6-sharp, Stage H7, Stage H7-closeout, Stage H8, Stage B1, Stage B1-fix, Stage B2, Stage SC-closeout, Stage B3, and Stage SC-final are complete.
 
 The scalar subGaussian forward spine is closed for this milestone:
 `CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`.
-The full real-exponent `SubGaussianMoment` connector and reverse/source MGF links remain deferred.
+Stage M-real-1 later resolves the full real-exponent `SubGaussianMoment` connector; reverse/source MGF links remain deferred.
 
 Target files:
 - HighDimProb/Concentration.lean
@@ -796,7 +930,10 @@ Target files:
 - HighDimProb/Concentration/Implications.lean
 - HighDimProb/Concentration/MomentImplications.lean
 - HighDimProb/Concentration/MGF.lean
+- HighDimProb/Concentration/MaxScale.lean
 - HighDimProb/Concentration/SubGaussianSums.lean
+- HighDimProb/Concentration/SubExponentialSums.lean
+- HighDimProb/Concentration/Bernstein.lean
 - HighDimProb/Concentration/Hoeffding.lean
 - HighDimProb/Concentration/RademacherSums.lean
 - HighDimProb/Distributions.lean
@@ -817,6 +954,9 @@ Target files:
 - HighDimProbTest/ConcentrationImplicationsAPI.lean
 - HighDimProbTest/MGFImplicationsAPI.lean
 - HighDimProbTest/SubGaussianSumsAPI.lean
+- HighDimProbTest/SubExponentialSumsAPI.lean
+- HighDimProbTest/BernsteinAPI.lean
+- HighDimProbTest/ScalarConcentrationMilestoneAPI.lean
 - HighDimProbTest/HoeffdingAPI.lean
 - HighDimProbTest/RademacherAPI.lean
 - HighDimProbTest/RademacherFamilyAPI.lean
@@ -831,6 +971,13 @@ Target files:
 - docs/AssumptionVocabulary.md
 - docs/RademacherPlan.md
 - docs/RademacherMilestone.md
+- docs/HoeffdingMilestone.md
+- docs/BernsteinPlan.md
+- docs/ScalarConcentrationMilestone.md
+- docs/ConcentrationLeafAudit.md
+- docs/ScalarConcentrationTheoremIndex.md
+- docs/ConcentrationTestCoverage.md
+- docs/Milestone-ScalarConcentration.md
 - docs/ScalarImplicationGraph.md
 - docs/Milestone3.md
 - docs/ModuleTree.md
@@ -864,6 +1011,9 @@ Expected test modules:
 - `HighDimProbTest.ConcentrationImplicationsAPI`
 - `HighDimProbTest.MGFImplicationsAPI`
 - `HighDimProbTest.SubGaussianSumsAPI`
+- `HighDimProbTest.SubExponentialSumsAPI`
+- `HighDimProbTest.BernsteinAPI`
+- `HighDimProbTest.ScalarConcentrationMilestoneAPI`
 - `HighDimProbTest.HoeffdingAPI`
 - `HighDimProbTest.RademacherAPI`
 - `HighDimProbTest.RademacherFamilyAPI`
@@ -902,7 +1052,7 @@ Hard rules:
 - Do not prove Johnson-Lindenstrauss.
 - Do not prove covariance estimation.
 - Do not promote random matrix modules to stable root import.
-- Do not prove Bernstein yet.
+- Do not change weighted Bernstein theorem meanings or constants without an explicit follow-up task.
 - Do not prove subGaussian/subExponential equivalences.
 - Do not prove covariance PSD/symmetry.
 - Do not implement mathematical content outside the S3 small proof battery scope.
@@ -1015,9 +1165,19 @@ Processed:
 - finite Hoeffding theorem for bounded centered variables
 - sharp Wikipedia-form finite Hoeffding bound
 - non-centered Wikipedia-form finite Hoeffding bound
+- weighted bounded-variable Hoeffding inequality
+- subExponential proof-friendly lintegral MGF predicate
+- subExponential finite-sum MGF scaffold
+- finite max-scale and variance-proxy vocabulary
+- subExponential lintegral finite-sum MGF bridge
+- local quadratic Bernstein small-deviation corollary
+- scalar Bernstein min-form tail bound
+- weighted scalar Bernstein min-form tail bound
+- Bernstein scalar typed statement scaffold
+- scalar concentration theorem-family closeout
 
 Currently processing:
-- none; Stage H7 is complete
+- none; Stage SC-final-update is complete
 
 Not yet processed:
 - LLN variance-of-sample-mean proof bridge
@@ -1025,12 +1185,13 @@ Not yet processed:
 - convergence-in-probability HighDimProb alias/wrapper
 - sample covariance PSD / symmetry statement layer
 - full subGaussian/subExponential equivalence theorems
-- real-exponent `SubGaussianMoment` / `SubExponentialMoment` formulation links
 - reverse/source MGF formulation implication links
 - finite-gauge Orlicz variants
-- independent-sum Chernoff inequality variants
-- weighted bounded-variable Hoeffding inequality
-- Bernstein inequality
+- raw-predicate Bernstein bridge
+- full independent-sum Chernoff inequality variants
+- matrix Bernstein
+- Hanson-Wright
+- random matrix concentration
 - random process
 - Gaussian width
 - empirical process
@@ -1038,18 +1199,46 @@ Not yet processed:
 
 ## Blocked
 
-Stage H7 has no build blocker. Independent finite bounded sums now have
+Stage SC-final-update has no build blocker. The scalar concentration branch now has
+leaf-module audit documentation, a theorem-family index, a test-coverage map,
+the milestone document `docs/Milestone-ScalarConcentration.md`, an import-surface
+audit through `HighDimProb.Concentration`, focused aggregate checks through
+`HighDimProbTest.ScalarConcentrationMilestoneAPI`, and documentation separating
+conservative Hoeffding, sharp Hoeffding, local Bernstein, full min-form
+Bernstein, deterministic weighted Bernstein APIs, and full finite-`ENNReal`
+moment bridges for subGaussian and subExponential fixed-scale formulations. The
+subExponential/Bernstein branch now has
+the proof-friendly `CenteredSubExponentialMGFLIntegral` predicate, proved raw
+finite-sum MGF product bounds, reusable `maxScale` and `varianceProxy`
+vocabulary, normalized raw finite-sum MGF with domain
+`|lambda| <= 1 / maxScale K`, a proved lintegral finite-sum MGF bridge from the
+stronger lintegral predicate, local one-variable lintegral Chernoff tails for
+`t <= K`, a local quadratic finite-sum Bernstein corollary under
+`t <= 2 * varianceProxy K / maxScale K`, large-regime linear tails under
+`2 * varianceProxy K / maxScale K <= t`, generic min-form Chernoff helpers,
+and the full scalar finite-sum Bernstein theorem `bernstein_sum_subExponential`
+with constant `1/4` under the lintegral predicate. Stage B3 adds weighted
+proxies `weightedVarianceProxy` and `weightedMaxScale`, a weighted finite-sum
+lintegral MGF bridge, and `bernstein_weighted_sum_subExponential` with the same
+`1/4` min-form constant. Raw-predicate Bernstein variants remain future theorem
+work.
+
+Independent finite bounded sums now have
 one-variable bounded centered MGF wrappers, finite-sum MGF and tail closure, the
 existing conservative explicit centered Hoeffding bound, the sharp
 classical/Wikipedia centered bound, and the exact non-centered Wikipedia-form
 bound around `E[sum_i X_i]` under explicit integrability and the visible
-positive denominator assumption. Exact scale-0 `SubGaussianTail` and
-`CenteredSubGaussianMGF` wrappers remain unavailable because those predicates
-require strictly positive scales.
+positive denominator assumption. Stage H8 adds centered and non-centered
+weighted bounded Hoeffding with denominator `sum_i c_i^2 * (b_i-a_i)^2` and
+arbitrary real deterministic weights under the visible positive total
+denominator assumption. `docs/HoeffdingMilestone.md` records the constants and
+import/test audit for this completed milestone. Exact scale-0
+`SubGaussianTail` and `CenteredSubGaussianMGF` wrappers remain unavailable
+because those predicates require strictly positive scales.
 
-No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage H0, Stage H2A, Stage H2B, Stage H2-cleanup, Stage H3, Stage H4, Stage H5, Stage H6, Stage H6-sharp, or Stage H7 build blocker. The finite union bound is proved, the sample-covariance quadratic-form bridge/nonnegativity theorems are proved, the weak-law scaffold now includes sample-mean vocabulary, scalar assumption wrappers, and honest typed statements, and the scalar moment/MGF branch proves fixed-exponent absolute-moment bridges, all-natural absolute moments with factorial constants, natural moment-to-Lp bridges, crude linear real-Lp growth, natural-exponent sharp `sqrt(q)` real-Lp growth, sharp natural-exponent predicate bridges, forward MGF-to-tail/psi2/moment composition, the weighted finite Rademacher Hoeffding specialization, independent finite subGaussian sum MGF/tail closure, finite bounded centered Hoeffding, sharp finite bounded centered Hoeffding, and non-centered finite bounded Hoeffding.
+No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage H0, Stage H2A, Stage H2B, Stage H2-cleanup, Stage H3, Stage H4, Stage H5, Stage H6, Stage H6-sharp, Stage H7, Stage H7-closeout, Stage H8, Stage B1, Stage B1-fix, Stage B2, Stage SC-closeout, Stage B3, Stage SC-final, Stage M-real-1, Stage M-real-2, or Stage SC-final-update build blocker. The finite union bound is proved, the sample-covariance quadratic-form bridge/nonnegativity theorems are proved, the weak-law scaffold now includes sample-mean vocabulary, scalar assumption wrappers, and honest typed statements, and the scalar moment/MGF branch proves fixed-exponent absolute-moment bridges, all-natural absolute moments with factorial constants, natural moment-to-Lp bridges, crude linear real-Lp growth, natural-exponent sharp `sqrt(q)` real-Lp growth, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` and `SubExponentialMoment` bridges, forward MGF-to-tail/psi2/moment composition, the weighted finite Rademacher Hoeffding specialization, independent finite subGaussian sum MGF/tail closure, finite bounded centered Hoeffding, sharp finite bounded centered Hoeffding, non-centered finite bounded Hoeffding, the Hoeffding milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum scaffold, the Stage B1-fix max-scale/lintegral finite-sum Bernstein infrastructure, the Stage B2 scalar Bernstein min-form theorem, the Stage SC-closeout scalar theorem-family audit, the Stage B3 weighted scalar Bernstein theorem, the Stage SC-final scalar concentration branch closure, the Stage M-real-1 real-exponent `SubGaussianMoment` bridge, the Stage M-real-2 subExponential real-moment bridge, and the Stage SC-final-update scalar closeout refresh.
 
-Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Stage G2A proves Psi2Bound -> absMomentNat q=2, SubGaussianTail -> absMomentNat q=2, and the analogous first-moment psi1/subExponential pilot. Stage G2B proves Psi2Bound/SubGaussianTail -> absMomentNat q for all natural q with a crude factorial constant. Stage G2C proves `finiteAbsMomentNat -> MemLp`, quantitative `absMomentNat -> realLpNorm`, and the factorial-growth `SubGaussianMomentNat` wrappers. Stage G2D proves the linear `realLpNorm <= C*K*q` consequence. Stage G2E records the sharp route as typed targets, Stage G2E-fix proves the deterministic envelope plus natural-exponent sqrt-growth moment bounds, Stage G2F packages those bounds as `SubGaussianMomentNatSqrt`, and Sprint S4 proves `CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`. The full `SubGaussianMoment` connector is still blocked by the gap from natural exponents to arbitrary finite `ENNReal` exponents; Mathlib has `eLpNorm_le_eLpNorm_of_exponent_le`, but HighDimProb still needs a ceiling/`ENNReal.toReal`/sqrt comparison bridge before this should be promoted. Finite-gauge variants, reverse/source MGF connectors, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
+Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Stage G2A proves Psi2Bound -> absMomentNat q=2, SubGaussianTail -> absMomentNat q=2, and the analogous first-moment psi1/subExponential pilot. Stage G2B proves Psi2Bound/SubGaussianTail -> absMomentNat q for all natural q with a crude factorial constant. Stage G2C proves `finiteAbsMomentNat -> MemLp`, quantitative `absMomentNat -> realLpNorm`, and the factorial-growth `SubGaussianMomentNat` wrappers. Stage G2D proves the linear `realLpNorm <= C*K*q` consequence. Stage G2E records the sharp route as typed targets, Stage G2E-fix proves the deterministic envelope plus natural-exponent sqrt-growth moment bounds, Stage G2F packages those bounds as `SubGaussianMomentNatSqrt`, Sprint S4 proves `CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`, Stage M-real-1 proves `Psi2Bound -> SubGaussianMoment (8*K)` plus `SubGaussianTail -> SubGaussianMoment (16*K)` over arbitrary finite `p : ENNReal`, and Stage M-real-2 proves `Psi1Bound -> SubExponentialMoment (16*K)` plus `SubExponentialTail -> SubExponentialMoment (48*K)`. Finite-gauge variants, reverse/source MGF connectors, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
 
 Random matrix theorem statements are blocked except `epsilonNetOperatorNormStatement` because independent entries, iid rows, symmetric random matrices, PSD/order vocabulary, and high-probability theorem syntax are not yet implemented.
 
@@ -1057,4 +1246,5 @@ Theorem statements blocked by missing infrastructure are tracked in docs/Theorem
 
 ## Next safe task
 
-Stage H8 - weighted bounded Hoeffding theorem.
+Stage Branch-choice - choose exactly one next major branch: matrix Bernstein,
+Hanson-Wright, or WLLN/SLLN.

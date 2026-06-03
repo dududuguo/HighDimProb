@@ -2,6 +2,7 @@ import HighDimProb.Concentration.OrliczToTail
 import HighDimProb.Concentration.TailToOrlicz
 import HighDimProb.Analysis.RealInequalities
 import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
 
 /-!
 # Scalar moment implications
@@ -13,10 +14,10 @@ addition to fixed low moments, the file contains a crude all-natural-exponent
 factorial bound under a probability-measure assumption.
 
 The factorial bound yields a reusable linear-in-`q` real-Lp growth theorem.
-The sharp natural-exponent `sqrt(q)` real-Lp growth theorem is now proved and
-packaged through `SubGaussianMomentNatSqrt`.  The full real-exponent
-`SubGaussianMoment` connector remains deferred because that predicate quantifies
-over all finite `ENNReal` exponents.
+The sharp natural-exponent `sqrt(q)` real-Lp growth theorem is proved and
+packaged through `SubGaussianMomentNatSqrt`.  This file also contains the
+ceiling/exponent-monotonicity bridge from those natural-exponent theorems to
+the full finite-`ENNReal` `SubGaussianMoment` predicate.
 -/
 
 namespace HighDimProb
@@ -275,6 +276,59 @@ private lemma factorial_moment_root_le_linear {K : ℝ} (hK : 0 < K)
             exact mul_le_mul hleft hfac hfac_root_nonneg h8K_nonneg
           simpa [mul_assoc] using hprod
 
+private lemma two_rpow_inv_natCast_le_eight
+    (q : ℕ) (hq : 1 ≤ q) :
+    (2 : ℝ) ^ (1 / (q : ℝ)) ≤ 8 := by
+  have hbase_nonneg : 0 ≤ (2 : ℝ) := by norm_num
+  have hbase_le_pow : (2 : ℝ) ≤ (8 : ℝ) ^ q := by
+    exact (by norm_num : (2 : ℝ) ≤ 8).trans (eight_le_eight_pow q hq)
+  have hroot_le :
+      (2 : ℝ) ^ (1 / (q : ℝ)) ≤
+        ((8 : ℝ) ^ q) ^ (1 / (q : ℝ)) := by
+    exact Real.rpow_le_rpow hbase_nonneg hbase_le_pow (by positivity)
+  have hqpos : 0 < (q : ℝ) := by
+    have hqNat : 0 < q := hq
+    exact_mod_cast hqNat
+  have hroot_pow : ((8 : ℝ) ^ q) ^ (1 / (q : ℝ)) = 8 := by
+    rw [← Real.rpow_natCast (8 : ℝ) q]
+    rw [← Real.rpow_mul (by norm_num : 0 ≤ (8 : ℝ))]
+    have hcancel : (q : ℝ) * (1 / (q : ℝ)) = 1 := by
+      field_simp [hqpos.ne']
+    rw [hcancel, Real.rpow_one]
+  rw [hroot_pow] at hroot_le
+  exact hroot_le
+
+private lemma psi1_factorial_moment_root_le_linear {K : ℝ} (hK : 0 < K)
+    {q : ℕ} (hq : 1 ≤ q) :
+    (2 * K ^ q * (Nat.factorial q : ℝ)) ^
+        (1 / (q : ℝ)) ≤ 8 * K * (q : ℝ) := by
+  have hconst_nonneg : 0 ≤ (2 : ℝ) := by norm_num
+  have hKpow_nonneg : 0 ≤ K ^ q := by positivity
+  have hfac_nonneg : 0 ≤ (Nat.factorial q : ℝ) := by positivity
+  calc
+    (2 * K ^ q * (Nat.factorial q : ℝ)) ^ (1 / (q : ℝ))
+        = (2 : ℝ) ^ (1 / (q : ℝ)) *
+          (K ^ q) ^ (1 / (q : ℝ)) *
+          ((Nat.factorial q : ℝ) ^ (1 / (q : ℝ))) := by
+          rw [Real.mul_rpow (mul_nonneg hconst_nonneg hKpow_nonneg) hfac_nonneg]
+          rw [Real.mul_rpow hconst_nonneg hKpow_nonneg]
+    _ ≤ 8 * K * (q : ℝ) := by
+          rw [pow_rpow_inv_natCast_of_pos hK hq]
+          have hconst := two_rpow_inv_natCast_le_eight q hq
+          have hfac := factorial_rpow_inv_natCast_le q hq
+          have hfac_root_nonneg :
+              0 ≤ ((Nat.factorial q : ℝ) ^ (1 / (q : ℝ))) := by positivity
+          have h8K_nonneg : 0 ≤ (8 : ℝ) * K := by positivity
+          have hleft :
+              (2 : ℝ) ^ (1 / (q : ℝ)) * K ≤ 8 * K := by
+            exact mul_le_mul_of_nonneg_right hconst hK.le
+          have hprod :
+              ((2 : ℝ) ^ (1 / (q : ℝ)) * K) *
+                  ((Nat.factorial q : ℝ) ^ (1 / (q : ℝ))) ≤
+                (8 * K) * (q : ℝ) := by
+            exact mul_le_mul hleft hfac hfac_root_nonneg h8K_nonneg
+          simpa [mul_assoc] using hprod
+
 private lemma pow_le_factorial_mul_exp_quarter_mul_exp_sq
     {a : ℝ} (ha : 0 ≤ a) (q : ℕ) :
     a ^ q ≤ (Nat.factorial q : ℝ) * Real.exp (1 / 4) * Real.exp (a ^ 2) := by
@@ -324,6 +378,39 @@ theorem abs_pow_le_exp_sq_factorial
     _ =
         Real.exp (1 / 4) * K ^ q * (Nat.factorial q : ℝ) *
           Real.exp ((|x| / K) ^ 2) := by
+      simp only [a]
+      ring
+
+/--
+Pointwise all-natural-exponent domination by the exponential-linear integrand.
+
+This is the subExponential analogue of `abs_pow_le_exp_sq_factorial`, using
+`x^q / q! <= exp x` after scaling by `K`.
+-/
+theorem abs_pow_le_exp_linear_factorial
+    {x K : ℝ} (hK : 0 < K) (q : ℕ) :
+    |x| ^ q ≤ K ^ q * (Nat.factorial q : ℝ) * Real.exp (|x| / K) := by
+  let a : ℝ := |x| / K
+  have ha : 0 ≤ a := div_nonneg (abs_nonneg _) hK.le
+  have hfac_pos : 0 < (Nat.factorial q : ℝ) := by
+    exact_mod_cast Nat.factorial_pos q
+  have hpow_div : a ^ q / (Nat.factorial q : ℝ) ≤ Real.exp a :=
+    Real.pow_div_factorial_le_exp a ha q
+  have hpow_le : a ^ q ≤ (Nat.factorial q : ℝ) * Real.exp a := by
+    calc
+      a ^ q = (Nat.factorial q : ℝ) * (a ^ q / (Nat.factorial q : ℝ)) := by
+        field_simp [hfac_pos.ne']
+      _ ≤ (Nat.factorial q : ℝ) * Real.exp a := by
+        exact mul_le_mul_of_nonneg_left hpow_div hfac_pos.le
+  have hscale : |x| ^ q = K ^ q * a ^ q := by
+    simp only [a]
+    rw [div_pow]
+    field_simp [pow_ne_zero q hK.ne']
+  calc
+    |x| ^ q = K ^ q * a ^ q := hscale
+    _ ≤ K ^ q * ((Nat.factorial q : ℝ) * Real.exp a) := by
+      exact mul_le_mul_of_nonneg_left hpow_le (pow_nonneg hK.le q)
+    _ = K ^ q * (Nat.factorial q : ℝ) * Real.exp (|x| / K) := by
       simp only [a]
       ring
 
@@ -710,6 +797,161 @@ theorem subGaussianMomentNatSqrt_of_subGaussianTail
         8 * K * Real.sqrt (q : ℝ) := by ring
   exact h.trans_eq (by rw [hscale])
 
+/--
+Lp monotonicity promotes a finite `ENNReal` exponent to the natural ceiling of
+its real value.
+-/
+theorem realLpNorm_le_natCeil_of_realExponent
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {X : RealRandomVariable Omega} {p : ENNReal}
+    (hX : IsRealRandomVariable P X)
+    (hp_ne_top : Not (p = (Top.top : ENNReal))) :
+    realLpNorm P X p <=
+      realLpNorm P X (Nat.ceil (ENNReal.toReal p) : ENNReal) := by
+  have hp_toReal_le :
+      p <= (Nat.ceil (ENNReal.toReal p) : ENNReal) := by
+    calc
+      p = ENNReal.ofReal (ENNReal.toReal p) := (ENNReal.ofReal_toReal hp_ne_top).symm
+      _ <= ENNReal.ofReal (Nat.ceil (ENNReal.toReal p) : Real) :=
+        ENNReal.ofReal_le_ofReal (Nat.le_ceil _)
+      _ = (Nat.ceil (ENNReal.toReal p) : ENNReal) :=
+        ENNReal.ofReal_natCast _
+  exact
+    MeasureTheory.eLpNorm_le_eLpNorm_of_exponent_le
+      hp_toReal_le hX.aestronglyMeasurable
+
+/-- For finite `p >= 1`, the natural ceiling only loses a factor `2` under sqrt. -/
+theorem sqrt_natCeil_toReal_le_two_sqrt
+    {p : ENNReal} (hp : 1 <= p) (hp_ne_top : Not (p = (Top.top : ENNReal))) :
+    Real.sqrt (Nat.ceil (ENNReal.toReal p) : Real) <=
+      2 * Real.sqrt (ENNReal.toReal p) := by
+  have hp_toReal_one : (1 : Real) <= ENNReal.toReal p := by
+    simpa [ENNReal.toReal_one] using ENNReal.toReal_mono hp_ne_top hp
+  have hp_toReal_nonneg : 0 <= ENNReal.toReal p := by
+    linarith
+  have hceil_le_four :
+      (Nat.ceil (ENNReal.toReal p) : Real) <= 4 * ENNReal.toReal p := by
+    have hceil_lt :
+        (Nat.ceil (ENNReal.toReal p) : Real) < ENNReal.toReal p + 1 :=
+      Nat.ceil_lt_add_one hp_toReal_nonneg
+    nlinarith
+  calc
+    Real.sqrt (Nat.ceil (ENNReal.toReal p) : Real)
+        <= Real.sqrt (4 * ENNReal.toReal p) := Real.sqrt_le_sqrt hceil_le_four
+    _ = Real.sqrt 4 * Real.sqrt (ENNReal.toReal p) := by
+      rw [Real.sqrt_mul (by norm_num : 0 <= (4 : Real))]
+    _ = 2 * Real.sqrt (ENNReal.toReal p) := by norm_num
+
+/-- For finite `p >= 1`, the natural ceiling only loses a factor `2` linearly. -/
+theorem natCeil_toReal_le_two_mul_toReal
+    {p : ENNReal} (hp : 1 <= p) (hp_ne_top : Not (p = (Top.top : ENNReal))) :
+    (Nat.ceil (ENNReal.toReal p) : Real) <= 2 * ENNReal.toReal p := by
+  have hp_toReal_one : (1 : Real) <= ENNReal.toReal p := by
+    simpa [ENNReal.toReal_one] using ENNReal.toReal_mono hp_ne_top hp
+  have hp_toReal_nonneg : 0 <= ENNReal.toReal p := by
+    linarith
+  have hceil_lt :
+      (Nat.ceil (ENNReal.toReal p) : Real) < ENNReal.toReal p + 1 :=
+    Nat.ceil_lt_add_one hp_toReal_nonneg
+  linarith
+
+/--
+A probability-measure `psi_2` bound gives real-`Lp` sqrt growth at every finite
+`ENNReal` exponent `p >= 1`.
+-/
+theorem realLpNorm_le_sqrt_of_psi2Bound
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {X : RealRandomVariable Omega} {K : Real}
+    (hX : IsRealRandomVariable P X) (hpsi : Psi2Bound P X K)
+    {p : ENNReal} (hp : 1 <= p) (hp_ne_top : Not (p = (Top.top : ENNReal))) :
+    realLpNorm P X p <= ENNReal.ofReal (8 * K * Real.sqrt (ENNReal.toReal p)) := by
+  let q : Nat := Nat.ceil (ENNReal.toReal p)
+  have hp_toReal_one : (1 : Real) <= ENNReal.toReal p := by
+    simpa [ENNReal.toReal_one] using ENNReal.toReal_mono hp_ne_top hp
+  have hq : 1 <= q := by
+    have hq_real : (1 : Real) <= (q : Real) := hp_toReal_one.trans (Nat.le_ceil _)
+    exact_mod_cast hq_real
+  have hmono :=
+    realLpNorm_le_natCeil_of_realExponent
+      (P := P) (X := X) (p := p) hX hp_ne_top
+  have hnat :=
+    realLpNorm_nat_le_sqrt_of_psi2Bound
+      (P := P) (X := X) (K := K) (q := q) hpsi hq
+  have hsqrtq :
+      Real.sqrt (q : Real) <= 2 * Real.sqrt (ENNReal.toReal p) := by
+    change Real.sqrt (Nat.ceil (ENNReal.toReal p) : Real) <=
+      2 * Real.sqrt (ENNReal.toReal p)
+    exact sqrt_natCeil_toReal_le_two_sqrt (p := p) hp hp_ne_top
+  have hscale :
+      4 * K * Real.sqrt (q : Real) <= 8 * K * Real.sqrt (ENNReal.toReal p) := by
+    have hK_nonneg : 0 <= 4 * K := mul_nonneg (by norm_num) hpsi.1.le
+    calc
+      4 * K * Real.sqrt (q : Real)
+          <= 4 * K * (2 * Real.sqrt (ENNReal.toReal p)) := by
+            exact mul_le_mul_of_nonneg_left hsqrtq hK_nonneg
+      _ = 8 * K * Real.sqrt (ENNReal.toReal p) := by ring
+  exact hmono.trans (hnat.trans (ENNReal.ofReal_le_ofReal hscale))
+
+/--
+A `psi_2` bound gives the full finite-`ENNReal` subGaussian moment interface
+with scale `8 * K`.
+-/
+theorem subGaussianMoment_of_psi2Bound
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {X : RealRandomVariable Omega} {K : Real}
+    (hX : IsRealRandomVariable P X) (hpsi : Psi2Bound P X K) :
+    SubGaussianMoment P X (8 * K) := by
+  refine And.intro (mul_pos (by norm_num) hpsi.1) ?_
+  intro p hp hp_ne_top
+  have h :=
+    realLpNorm_le_sqrt_of_psi2Bound
+      (P := P) (X := X) (K := K) hX hpsi hp hp_ne_top
+  have hscale :
+      (8 * K) * Real.sqrt (ENNReal.toReal p) =
+        8 * K * Real.sqrt (ENNReal.toReal p) := by ring
+  rw [hscale]
+  exact h
+
+/--
+SubGaussian tail control gives real-`Lp` sqrt growth at every finite `ENNReal`
+exponent `p >= 1`, after the existing `K -> 2 * K` tail-to-Orlicz scale loss.
+-/
+theorem realLpNorm_le_sqrt_of_subGaussianTail
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {X : RealRandomVariable Omega} {K : Real}
+    (hX : IsRealRandomVariable P X) (hTail : SubGaussianTail P X K)
+    {p : ENNReal} (hp : 1 <= p) (hp_ne_top : Not (p = (Top.top : ENNReal))) :
+    realLpNorm P X p <= ENNReal.ofReal (16 * K * Real.sqrt (ENNReal.toReal p)) := by
+  have h :=
+    realLpNorm_le_sqrt_of_psi2Bound
+      (P := P) (X := X) (K := 2 * K)
+      hX (psi2Bound_of_subGaussianTail (P := P) (X := X) (K := K) hX hTail)
+      hp hp_ne_top
+  have hscale :
+      8 * (2 * K) * Real.sqrt (ENNReal.toReal p) =
+        16 * K * Real.sqrt (ENNReal.toReal p) := by ring
+  exact h.trans_eq (by rw [hscale])
+
+/--
+SubGaussian tail control gives the full finite-`ENNReal` subGaussian moment
+interface with scale `16 * K`.
+-/
+theorem subGaussianMoment_of_subGaussianTail
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {X : RealRandomVariable Omega} {K : Real}
+    (hX : IsRealRandomVariable P X) (hTail : SubGaussianTail P X K) :
+    SubGaussianMoment P X (16 * K) := by
+  refine And.intro (mul_pos (by norm_num) hTail.1) ?_
+  intro p hp hp_ne_top
+  have h :=
+    realLpNorm_le_sqrt_of_subGaussianTail
+      (P := P) (X := X) (K := K) hX hTail hp hp_ne_top
+  have hscale :
+      (16 * K) * Real.sqrt (ENNReal.toReal p) =
+        16 * K * Real.sqrt (ENNReal.toReal p) := by ring
+  rw [hscale]
+  exact h
+
 /-- A `psi_2` bound gives the natural factorial-growth subGaussian moment form. -/
 theorem subGaussianMomentNat_of_psi2Bound
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
@@ -775,6 +1017,211 @@ theorem absMomentNat_one_le_of_subExponentialTail
   exact absMomentNat_one_le_of_psi1Bound
     (P := P) (X := X) (K := 3 * K)
     (psi1Bound_of_subExponentialTail (P := P) (X := X) (K := K) hX hTail)
+
+/--
+A probability-measure `psi_1` bound controls every natural absolute moment.
+
+The bound is the standard factorial-growth estimate
+`E |X|^q <= 2 * K^q * q!`, obtained from `x^q / q! <= exp x`.
+-/
+theorem absMomentNat_le_of_psi1Bound
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RealRandomVariable Ω} {K : ℝ} (hψ : Psi1Bound P X K) (q : ℕ) :
+    absMomentNat P X q ≤
+      ENNReal.ofReal (2 * K ^ q * (Nat.factorial q : ℝ)) := by
+  have h_exp :
+      (∫⁻ ω, ENNReal.ofReal (Real.exp (|X ω| / K)) ∂P) ≤
+        (2 : ENNReal) := by
+    exact lintegral_exp_abs_div_le_two_of_psi1Bound
+      (P := P) (X := X) (K := K) hψ
+  rcases hψ with ⟨hK, _⟩
+  let C : ℝ := K ^ q * (Nat.factorial q : ℝ)
+  have hC_nonneg : 0 ≤ C := by
+    simp only [C]
+    positivity
+  unfold absMomentNat
+  calc
+    (∫⁻ ω, ENNReal.ofReal (|X ω| ^ q) ∂P)
+        ≤ ∫⁻ ω, ENNReal.ofReal (C * Real.exp (|X ω| / K)) ∂P := by
+          refine lintegral_mono ?_
+          intro ω
+          exact ENNReal.ofReal_le_ofReal
+            (by
+              simpa [C, mul_assoc] using
+                abs_pow_le_exp_linear_factorial (x := X ω) (K := K) hK q)
+    _ = ∫⁻ ω,
+          ENNReal.ofReal C *
+            ENNReal.ofReal (Real.exp (|X ω| / K)) ∂P := by
+          apply lintegral_congr_ae
+          exact ae_of_all P fun ω => by
+            change ENNReal.ofReal (C * Real.exp (|X ω| / K)) =
+              ENNReal.ofReal C *
+                ENNReal.ofReal (Real.exp (|X ω| / K))
+            rw [ENNReal.ofReal_mul hC_nonneg]
+    _ = ENNReal.ofReal C *
+          ∫⁻ ω, ENNReal.ofReal (Real.exp (|X ω| / K)) ∂P := by
+          rw [lintegral_const_mul']
+          exact ENNReal.ofReal_ne_top
+    _ ≤ ENNReal.ofReal C * 2 := by
+          gcongr
+    _ = ENNReal.ofReal (2 * K ^ q * (Nat.factorial q : ℝ)) := by
+          rw [show (2 : ENNReal) = ENNReal.ofReal (2 : ℝ) by norm_num]
+          rw [← ENNReal.ofReal_mul hC_nonneg]
+          congr 1
+          simp [C]
+          ring
+
+/--
+SubExponential tail control gives every natural absolute moment after the
+existing `K -> 3 * K` tail-to-Orlicz scale loss.
+-/
+theorem absMomentNat_le_of_subExponentialTail
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RealRandomVariable Ω} {K : ℝ}
+    (hX : IsRealRandomVariable P X) (hTail : SubExponentialTail P X K) (q : ℕ) :
+    absMomentNat P X q ≤
+      ENNReal.ofReal (2 * (3 * K) ^ q * (Nat.factorial q : ℝ)) := by
+  exact absMomentNat_le_of_psi1Bound
+    (P := P) (X := X) (K := 3 * K)
+    (psi1Bound_of_subExponentialTail (P := P) (X := X) (K := K) hX hTail) q
+
+/--
+A probability-measure `psi_1` bound gives natural real-Lp growth
+`||X||_q <= 8 * K * q`.
+-/
+theorem realLpNorm_nat_le_linear_of_psi1Bound
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RealRandomVariable Ω} {K : ℝ} {q : ℕ}
+    (hψ : Psi1Bound P X K) (hq : 1 ≤ q) :
+    realLpNorm P X (q : ENNReal) ≤ ENNReal.ofReal (8 * K * (q : ℝ)) := by
+  have hq_ne : q ≠ 0 := by
+    have hqpos : 0 < q := hq
+    exact Nat.ne_of_gt hqpos
+  let B : ℝ := 2 * K ^ q * (Nat.factorial q : ℝ)
+  have hB_nonneg : 0 ≤ B := by
+    simp only [B]
+    exact mul_nonneg (mul_nonneg (by norm_num) (pow_nonneg hψ.1.le q)) (by positivity)
+  have hbound : absMomentNat P X q ≤ ENNReal.ofReal B := by
+    simpa [B] using absMomentNat_le_of_psi1Bound (P := P) (X := X) (K := K) hψ q
+  have hnorm :=
+    realLpNorm_nat_le_of_absMomentNat_le
+      (P := P) (X := X) (q := q) (B := B) hq_ne hB_nonneg hbound
+  exact hnorm.trans
+    (ENNReal.ofReal_le_ofReal
+      (by simpa [B] using psi1_factorial_moment_root_le_linear (K := K) hψ.1 hq))
+
+/--
+SubExponential tail control gives natural real-Lp growth after the
+`K -> 3 * K` tail-to-Orlicz scale loss: `||X||_q <= 24 * K * q`.
+-/
+theorem realLpNorm_nat_le_linear_of_subExponentialTail
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RealRandomVariable Ω} {K : ℝ} {q : ℕ}
+    (hX : IsRealRandomVariable P X) (hTail : SubExponentialTail P X K)
+    (hq : 1 ≤ q) :
+    realLpNorm P X (q : ENNReal) ≤ ENNReal.ofReal (24 * K * (q : ℝ)) := by
+  have h :=
+    realLpNorm_nat_le_linear_of_psi1Bound
+      (P := P) (X := X) (K := 3 * K) (q := q)
+      (psi1Bound_of_subExponentialTail (P := P) (X := X) (K := K) hX hTail) hq
+  have hscale : 8 * (3 * K) * (q : ℝ) = 24 * K * (q : ℝ) := by ring
+  exact h.trans_eq (by rw [hscale])
+
+/--
+A probability-measure `psi_1` bound gives linear real-`Lp` growth at every
+finite `ENNReal` exponent `p >= 1`.
+-/
+theorem realLpNorm_le_linear_of_psi1Bound
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {X : RealRandomVariable Omega} {K : Real}
+    (hX : IsRealRandomVariable P X) (hψ : Psi1Bound P X K)
+    {p : ENNReal} (hp : 1 <= p) (hp_ne_top : Not (p = (Top.top : ENNReal))) :
+    realLpNorm P X p <= ENNReal.ofReal (16 * K * ENNReal.toReal p) := by
+  let q : Nat := Nat.ceil (ENNReal.toReal p)
+  have hp_toReal_one : (1 : Real) <= ENNReal.toReal p := by
+    simpa [ENNReal.toReal_one] using ENNReal.toReal_mono hp_ne_top hp
+  have hq : 1 <= q := by
+    have hq_real : (1 : Real) <= (q : Real) := hp_toReal_one.trans (Nat.le_ceil _)
+    exact_mod_cast hq_real
+  have hmono :=
+    realLpNorm_le_natCeil_of_realExponent
+      (P := P) (X := X) (p := p) hX hp_ne_top
+  have hnat :=
+    realLpNorm_nat_le_linear_of_psi1Bound
+      (P := P) (X := X) (K := K) (q := q) hψ hq
+  have hceil :
+      (q : Real) <= 2 * ENNReal.toReal p := by
+    change (Nat.ceil (ENNReal.toReal p) : Real) <= 2 * ENNReal.toReal p
+    exact natCeil_toReal_le_two_mul_toReal (p := p) hp hp_ne_top
+  have hscale :
+      8 * K * (q : Real) <= 16 * K * ENNReal.toReal p := by
+    have hcoef_nonneg : 0 <= 8 * K := mul_nonneg (by norm_num) hψ.1.le
+    calc
+      8 * K * (q : Real)
+          <= 8 * K * (2 * ENNReal.toReal p) := by
+            exact mul_le_mul_of_nonneg_left hceil hcoef_nonneg
+      _ = 16 * K * ENNReal.toReal p := by ring
+  exact hmono.trans (hnat.trans (ENNReal.ofReal_le_ofReal hscale))
+
+/--
+A `psi_1` bound gives the full finite-`ENNReal` subExponential moment
+interface with scale `16 * K`.
+-/
+theorem subExponentialMoment_of_psi1Bound
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {X : RealRandomVariable Omega} {K : Real}
+    (hX : IsRealRandomVariable P X) (hψ : Psi1Bound P X K) :
+    SubExponentialMoment P X (16 * K) := by
+  refine And.intro (mul_pos (by norm_num) hψ.1) ?_
+  intro p hp hp_ne_top
+  have h :=
+    realLpNorm_le_linear_of_psi1Bound
+      (P := P) (X := X) (K := K) hX hψ hp hp_ne_top
+  have hscale :
+      (16 * K) * ENNReal.toReal p =
+        16 * K * ENNReal.toReal p := by ring
+  rw [hscale]
+  exact h
+
+/--
+SubExponential tail control gives linear real-`Lp` growth at every finite
+`ENNReal` exponent `p >= 1`, after the `K -> 3 * K` tail-to-Orlicz scale loss.
+-/
+theorem realLpNorm_le_linear_of_subExponentialTail
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {X : RealRandomVariable Omega} {K : Real}
+    (hX : IsRealRandomVariable P X) (hTail : SubExponentialTail P X K)
+    {p : ENNReal} (hp : 1 <= p) (hp_ne_top : Not (p = (Top.top : ENNReal))) :
+    realLpNorm P X p <= ENNReal.ofReal (48 * K * ENNReal.toReal p) := by
+  have h :=
+    realLpNorm_le_linear_of_psi1Bound
+      (P := P) (X := X) (K := 3 * K)
+      hX (psi1Bound_of_subExponentialTail (P := P) (X := X) (K := K) hX hTail)
+      hp hp_ne_top
+  have hscale :
+      16 * (3 * K) * ENNReal.toReal p =
+        48 * K * ENNReal.toReal p := by ring
+  exact h.trans_eq (by rw [hscale])
+
+/--
+SubExponential tail control gives the full finite-`ENNReal` subExponential
+moment interface with scale `48 * K`.
+-/
+theorem subExponentialMoment_of_subExponentialTail
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {X : RealRandomVariable Omega} {K : Real}
+    (hX : IsRealRandomVariable P X) (hTail : SubExponentialTail P X K) :
+    SubExponentialMoment P X (48 * K) := by
+  refine And.intro (mul_pos (by norm_num) hTail.1) ?_
+  intro p hp hp_ne_top
+  have h :=
+    realLpNorm_le_linear_of_subExponentialTail
+      (P := P) (X := X) (K := K) hX hTail hp hp_ne_top
+  have hscale :
+      (48 * K) * ENNReal.toReal p =
+        48 * K * ENNReal.toReal p := by ring
+  rw [hscale]
+  exact h
 
 /--
 Typed target for the future all-natural-exponent subGaussian moment theorem.

@@ -7,7 +7,10 @@ import HighDimProb.Concentration.TailToOrlicz
 import HighDimProb.Concentration.Implications
 import HighDimProb.Concentration.MomentImplications
 import HighDimProb.Concentration.MGF
+import HighDimProb.Concentration.MaxScale
 import HighDimProb.Concentration.SubGaussianSums
+import HighDimProb.Concentration.SubExponentialSums
+import HighDimProb.Concentration.Bernstein
 import HighDimProb.Concentration.RademacherSums
 import HighDimProb.Concentration.Hoeffding
 

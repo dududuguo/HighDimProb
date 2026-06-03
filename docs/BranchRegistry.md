@@ -27,7 +27,9 @@ It is a planning document, not a request to physically move existing files.
 - Dependencies: Mathlib real logarithm, exponential, square-root, and tactic APIs.
 - Forbidden scope: probability assumptions, concentration theorem statements, and optional analytic dependencies.
 - Promotion criteria: focused helper tests, downstream proof reuse, docs, status update, and root import audit.
-- Next safe tasks: real-exponent bridge lemmas only when `SubGaussianMoment` needs them.
+- Next safe tasks: targeted deterministic helper lemmas only when a proof stage
+  needs them; the current subGaussian and subExponential moment bridges are
+  complete.
 
 ## Concentration
 
@@ -35,12 +37,19 @@ It is a planning document, not a request to physically move existing files.
 - Import path: `HighDimProb.Concentration`
 - Status: experimental
 - Purpose: scalar concentration theorem proof spine.
-- Current modules: `Concentration.Basic`, `Concentration.Markov`, `Concentration.Chebyshev`, `Concentration.LayerCake`, `Concentration.OrliczToTail`, `Concentration.TailToOrlicz`, `Concentration.MomentImplications`, `Concentration.MGF`, `Concentration.SubGaussianSums`, `Concentration.RademacherSums`, `Concentration.Hoeffding`, `Concentration.Implications`.
-- Planned leaf modules: centered/specialized `Chebyshev` extensions, reverse MGF formulation links, subExponential MGF links, weighted bounded-variable `Hoeffding`, `Bernstein`, finite-gauge implication links.
+- Current modules: `Concentration.Basic`, `Concentration.Markov`, `Concentration.Chebyshev`, `Concentration.LayerCake`, `Concentration.OrliczToTail`, `Concentration.TailToOrlicz`, `Concentration.MomentImplications`, `Concentration.MGF`, `Concentration.MaxScale`, `Concentration.SubGaussianSums`, `Concentration.SubExponentialSums`, `Concentration.Bernstein`, `Concentration.RademacherSums`, `Concentration.Hoeffding`, `Concentration.Implications`.
+- Planned leaf modules: centered/specialized `Chebyshev` extensions, reverse MGF formulation links, finite-gauge implication links, raw-predicate Bernstein variants, and future concentration families after their prerequisites are ready.
 - Dependencies: `Scalar`, `Tail`, `Expectation`, `Lp`, `Orlicz`, `SubGaussian`, `SubExponential`.
 - Forbidden scope: random matrix concentration, Hanson-Wright, and covariance estimation.
 - Promotion criteria: focused theorem statements/proofs, proof-pilot tests, docs, status update, and stable-root import audit.
-- Next safe tasks: Stage H8 weighted bounded Hoeffding theorem; reverse MGF and subExponential MGF remain later scalar routes.
+- Next safe tasks: reverse/source MGF links, finite-gauge implication links, and
+  raw-predicate Bernstein variants are the remaining scalar-only cleanup items.
+  The bounded Hoeffding family, including weighted centered and non-centered
+  forms, is recorded in `docs/HoeffdingMilestone.md`; Stage B1/B1-fix/B2/B3
+  records the Bernstein scaffold, max-scale infrastructure, scalar min-form
+  theorem, and deterministic weighted theorem in `docs/BernsteinPlan.md`; Stage
+  SC-final-update records the audited scalar theorem-family surface after the
+  full subGaussian and subExponential moment bridges.
 
 ## Distributions
 
@@ -53,7 +62,10 @@ It is a planning document, not a request to physically move existing files.
 - Dependencies: `Scalar`, `Concentration.MGF`, Mathlib PMF and distribution APIs.
 - Forbidden scope: a broad probability distribution hierarchy, independent-sum concentration theorems, and canonical subGaussian predicates.
 - Promotion criteria: focused API tests, theorem atlas entries, status updates, and stable-root import audit.
-- Next safe tasks: Stage H8 weighted bounded Hoeffding should consume the concentration leaf rather than extending distribution atoms.
+- Next safe tasks: distribution work should remain separate from scalar
+  concentration theorem-family scaffolds; after Stage SC-final-update, larger
+  theorem work should be chosen deliberately rather than routed through the
+  distribution branch.
 
 ## Vector
 

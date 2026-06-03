@@ -15,9 +15,12 @@ import HighDimProbTest.LayerCakeAPI
 import HighDimProbTest.OrliczToTailAPI
 import HighDimProbTest.TailToOrliczAPI
 import HighDimProbTest.ConcentrationImplicationsAPI
+import HighDimProbTest.ScalarConcentrationMilestoneAPI
 import HighDimProbTest.MomentImplicationsAPI
 import HighDimProbTest.MGFImplicationsAPI
 import HighDimProbTest.SubGaussianSumsAPI
+import HighDimProbTest.SubExponentialSumsAPI
+import HighDimProbTest.BernsteinAPI
 import HighDimProbTest.HoeffdingAPI
 import HighDimProbTest.RademacherAPI
 import HighDimProbTest.RademacherFamilyAPI
