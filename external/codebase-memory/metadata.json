@@ -1,0 +1,58 @@
+{
+  "project": "HighDimProb",
+  "generated_at": "2026-06-03",
+  "tool": "codebase-memory-mcp",
+  "graph_stats": {
+    "total_nodes": 1209,
+    "total_edges": 2721,
+    "node_labels": {
+      "Section": 490,
+      "Function": 376,
+      "File": 160,
+      "Module": 160,
+      "Variable": 17,
+      "Folder": 5,
+      "Project": 1
+    },
+    "edge_types": {
+      "DEFINES": 1043,
+      "CALLS": 809,
+      "USAGE": 568,
+      "CONTAINS_FILE": 160,
+      "IMPORTS": 125,
+      "CONTAINS_FOLDER": 12,
+      "SEMANTICALLY_RELATED": 4
+    },
+    "packages": [
+      "Concentration",
+      "RandomMatrix",
+      "LimitTheorems",
+      "Distributions",
+      "RandomVector",
+      "Scalar",
+      "Orlicz",
+      "Covariance",
+      "SubGaussianVector",
+      "Lp",
+      "Isotropic",
+      "Nets",
+      "MetricEntropy",
+      "Analysis",
+      "Tail"
+    ],
+    "top_hotspots": [
+      "IsRealRandomVariable (fan_in: 43)",
+      "RealRandomVariable (fan_in: 37)",
+      "absTailProb (fan_in: 19)",
+      "SubGaussianTail (fan_in: 17)",
+      "expect (fan_in: 17)"
+    ],
+    "architecture_layers": {
+      "entry": ["Concentration", "Isotropic", "MetricEntropy", "RandomMatrix"],
+      "core": ["Distributions", "Expectation", "Nets", "RandomVariable", "RandomVector", "Scalar", "SubGaussian", "Tail"],
+      "internal": ["Covariance"]
+    }
+  },
+  "database_file": "HighDimProb.db",
+  "database_size_bytes": 4063232
+}
