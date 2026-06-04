@@ -512,6 +512,94 @@
 - Lean/mathlib obstruction: the norm declaration is available, but future proofs still need bridge lemmas to `Matrix.mulVec`, unit-sphere suprema, and measurability of `operatorNorm A`.
 - Future upgrade path: a focused bridge stage should prove or wrap the needed L2 operator norm lemmas before epsilon-net or random-matrix norm theorem statements are proved.
 
+## Stage MC1 matrix concentration vocabulary
+
+- Concrete version chosen: Stage MC1 adds separate leaves for symmetry/self-adjointness, explicit PSD/order, entrywise matrix expectation, and matrix concentration statement targets.
+- Possible general version: rely directly on Mathlib Hermitian/positive-semidefinite/order structures and a Bochner-style matrix expectation from the beginning.
+- Reason for not generalizing yet: the existing random-matrix layer is entrywise and finite-dimensional; explicit predicates keep theorem statements honest without silently installing a global matrix order convention.
+- Lean/mathlib reuse: `Matrix.IsSymm`, `Matrix.IsHermitian`, product measurable spaces for matrix-valued `iIndepFun`, `Matrix.scalar`, and the existing scoped L2 operator norm all work for the statement layer.
+- Lean/mathlib obstruction: future proofs still need variance-proxy PSD algebra, matrix Laplace-transform infrastructure, and theorem-specific sampling/unit-sphere reductions.
+- Future upgrade path: Stage MC2-fix proves the exact operator-norm comparison and measurability bridges; Stage MC3 can now focus on variance proxies and independent self-adjoint matrix sums without starting matrix concentration.
+
+## Stage MC2 operator-norm and unit-sphere bridges
+
+- Concrete version chosen: add explicit finite-sum unit-vector vocabulary
+  (`vectorSqNorm`, `IsUnitVector`, `unitSphere`), explicit matrix-vector squared
+  norm vocabulary (`matVecSqNorm`), and squared unit-vector bound predicates
+  (`OperatorNormBoundSq`, `RandomOperatorNormBoundSq`).
+- Possible general version: use Mathlib's sphere, `Matrix.mulVec`, Euclidean
+  linear maps, and the scoped L2 matrix operator norm for all statements from
+  the beginning.
+- Reason for not generalizing yet: future theorem statements need stable,
+  inspectable finite-sum normal forms now, while richer sphere/net APIs should
+  wait until a proof stage actually needs them.
+- Lean/mathlib reuse: the existing `Matrix.Norms.L2Operator` wrapper is kept,
+  product measurable spaces are centralized in `RandomMatrix.Basic`, and
+  finite sums over `Fin` provide the deterministic squared-norm normal form.
+- Lean/mathlib obstruction: MC2 deliberately left exact Mathlib L2
+  operator-norm comparison and operator-norm measurability to a focused
+  bridge cleanup.
+- Future upgrade path: Stage MC2-fix resolves those comparison and
+  measurability bridges. The remaining sample-covariance unit-sphere reduction
+  needs a separate supremum/net or spectral-form argument.
+
+## Stage MC2-fix operator norm Mathlib bridge cleanup
+
+- Concrete version chosen: prove finite-sum norm identities
+  `vectorSqNorm_eq_norm_sq_toLp` and
+  `matVecSqNorm_eq_norm_sq_toLp_mulVec`, then use them to prove both
+  `operatorNorm_le_of_operatorNormBoundSq` and
+  `operatorNormBoundSq_of_operatorNorm_le`.
+- Possible general version: replace the explicit `IsUnitVector` and
+  `OperatorNormBoundSq` predicates entirely with Mathlib sphere and
+  continuous-linear-map statements.
+- Reason for not generalizing yet: existing matrix concentration statements
+  are written in explicit finite-sum form, and retaining those predicates keeps
+  downstream theorem assumptions readable while allowing exact Mathlib
+  comparison when needed.
+- Lean/mathlib reuse: `EuclideanSpace.real_norm_sq_eq`, `Matrix.l2_opNorm_def`,
+  `Matrix.l2_opNorm_mulVec`, `ContinuousLinearMap.opNorm_le_of_unit_norm`,
+  `Matrix.toLpLin_apply`, and `measurable_norm`.
+- Lean/mathlib obstruction: no blocker remains for the two deterministic
+  operator-norm bridge directions or `operatorNorm` measurability. The
+  sample-covariance unit-sphere reduction remains statement-only because it is
+  a theorem-level supremum/net or spectral reduction, not just a norm API
+  bridge.
+- Future upgrade path: Stage MC3 should build variance-proxy and independent
+  self-adjoint matrix-sum infrastructure without proving matrix Bernstein.
+
+## Stage MC3 matrix variance proxy and self-adjoint sums
+
+- Concrete version chosen: move finite random-matrix sums into
+  `HighDimProb.RandomMatrix.Sums`, move matrix square/second-moment/variance
+  proxy vocabulary into `HighDimProb.RandomMatrix.VarianceProxy`, and keep
+  assumption vocabulary in `HighDimProb.RandomMatrix.Assumptions`.
+- Possible general version: define the variance proxy through a Bochner
+  expectation or a global Mathlib Loewner-order structure.
+- Reason for not generalizing yet: the random-matrix branch already uses
+  entrywise matrix measurability, entrywise `matrixExpect`, and explicit
+  quadratic-form PSD/order predicates. Keeping MC3 in that style avoids a large
+  semantic change before matrix Bernstein proof work needs it.
+- Independence decision: `IndependentRandomMatrices` is an abbrev for Mathlib
+  `ProbabilityTheory.iIndepFun`; `IndependentSelfAdjointRandomMatrices` adds
+  the self-adjoint family wrapper without inventing a new independence theory.
+- Centering decision: `CenteredSelfAdjointRandomMatrixFamily` uses the matrix
+  zero-mean condition `matrixExpect P (A i) = 0`; the older
+  `CenteredRandomSelfAdjointMatrices` entrywise-centered vocabulary is retained
+  for compatibility.
+- Variance decision: `matrixVarianceProxy P A` is
+  `sum_i, matrixSecondMoment P (A i)`, where `matrixSecondMoment P A` is the
+  entrywise expectation of `A omega * A omega`.
+- Boundedness decision: expose `PointwiseOperatorNormBound` and
+  `AeOperatorNormBound` separately. The typed matrix Bernstein statement uses
+  the pointwise predicate for now, so no a.e. assumption is hidden.
+- Lean/mathlib reuse: `Matrix.sum_apply`, `Matrix.mul_apply`,
+  `Finset.measurable_sum`, `Measurable.mul`, `Matrix.IsHermitian.ext`,
+  `Matrix.IsHermitian.apply`, and `ProbabilityTheory.iIndepFun`.
+- Future upgrade path: Stage MC4 should refine the matrix Bernstein statement
+  and proof plan around matrix Laplace transforms, trace exponential
+  inequalities, and PSD facts for `E[A_i^2]` / `matrixVarianceProxy`.
+
 ## Root-to-branch module abstraction
 
 - Concrete version chosen: Stage I3 adds logical aggregate modules `Scalar`, `Vector`, `Geometry`, `Process`, and `Statements`.

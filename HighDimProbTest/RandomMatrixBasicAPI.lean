@@ -15,7 +15,10 @@ variable (hA : IsRandomMatrix P A)
 #check IsRandomMatrix
 #check matrixEntry_apply
 #check isRealRandomVariable_matrixEntry
+#check instMeasurableSpaceMatrix
+#check measurable_randomMatrix_of_isRandomMatrix
 
 #check (matrixEntry A i j : RealRandomVariable Omega)
 #check (isRealRandomVariable_matrixEntry hA i j :
   IsRealRandomVariable P (matrixEntry A i j))
+#check (measurable_randomMatrix_of_isRandomMatrix hA : Measurable A)

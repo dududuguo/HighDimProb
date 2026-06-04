@@ -6,7 +6,13 @@ lakefile.olean
 *.c
 *.o
 *.so
+__pycache__/
 .DS_Store
 compress-project.ps1
 dist/
 scripts/
+!.github/scripts/
+!.github/scripts/**
+.codebase-memory/cache/
+.codebase-memory/*.bak
+.codex-manual-cache/

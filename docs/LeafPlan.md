@@ -72,17 +72,27 @@
 
 ## RandomMatrix
 
-- Independence
+- SelfAdjoint
+- MatrixOrder
+- Expectation
+- Sums
+- VarianceProxy
+- ConcentrationStatements
+- IndependentRows
+- IidRows
 - Algebra
 - Statements
 - SampleCovarianceAlgebra
 - SampleCovarianceTheorems
+- UnitSphere
+- OperatorNormMeasurability
 - OperatorNormNetBridge
 - MatrixDeviationStatements
 - MatrixBernsteinStatements
 - HansonWrightStatements
 - JLStatements
 - CovarianceEstimationStatements
+- Next: Stage MC4 matrix Bernstein theorem statement refinement and proof plan; do not prove matrix Bernstein yet.
 
 ## Process
 
@@ -108,6 +118,7 @@
 
 - ConcentrationStatements
 - RandomMatrixStatements
+- RandomMatrixConcentrationStatements
 - ProcessStatements
 - RecoveryStatements
 

@@ -39,15 +39,16 @@ declarations and which are still missing. It is a planning document only.
 | iid rows | none | `IIDRows` | independence + row laws | future `HighDimProb.RandomMatrix.Independence` | high | Needs row-vector distribution vocabulary. |
 | isotropic rows | `IsotropicRowsSecondMoment`, `IsotropicRowsCovariance` | none | row-vector isotropic predicates | `HighDimProb.RandomMatrix.Assumptions` | done | Existing row predicates are sufficient for statement prerequisites. |
 | subGaussian rows | `SubGaussianRowsOrlicz` | tail/moment row variants optional | scalar/vector subGaussian predicates | `HighDimProb.RandomMatrix.Assumptions` | done/medium | Orlicz row form exists; other formulations can be added after vector implication lifting. |
-| bounded operator norm | `operatorNorm A` as random variable | predicate `BoundedOperatorNorm` | Mathlib matrix norm | `HighDimProb.RandomMatrix.OperatorNorm` | medium | Need measurability bridge and threshold convention. |
-| symmetric random matrix | none | `SymmetricRandomMatrix` | matrix transpose / symmetric predicate | future `HighDimProb.RandomMatrix.Symmetric` | high | Needed for matrix Bernstein and PSD/order statements. |
-| PSD random matrix | none | `PSDRandomMatrix` | Mathlib PSD matrix APIs | future `HighDimProb.RandomMatrix.Order` | high | Need matrix order convention and positivity API choice. |
+| bounded operator norm | `BoundedOperatorNorm` | operator-norm measurability theorem | Mathlib matrix norm | `HighDimProb.RandomMatrix.ConcentrationStatements` | done/medium | Predicate exists; future proofs need measurability and unit-sphere/action bridges. |
+| symmetric/self-adjoint random matrix | `RandomSymmetricMatrix`, `RandomSelfAdjointMatrix` | none | `Matrix.IsSymm`, `Matrix.IsHermitian` | `HighDimProb.RandomMatrix.SelfAdjoint` | done | Stage MC1 implements pointwise matrix predicates and random-matrix wrappers. |
+| PSD random matrix | `RandomPSDMatrix`, `IsPSDMatrix`, `MatrixLE` | Gram/row-Gram PSD wrappers optional | explicit quadratic forms | `HighDimProb.RandomMatrix.MatrixOrder` | done/medium | Stage MC1 chooses explicit PSD/order vocabulary and proves sample covariance PSD. |
+| matrix-valued independence | `IndependentRandomMatrices` | independent entries/rows remain separate | `ProbabilityTheory.iIndepFun` | `HighDimProb.RandomMatrix.ConcentrationStatements` | done/medium | Stage MC1 adds a product measurable-space instance for matrices; row/entry sampling assumptions remain future work. |
 
 ## Immediate Consequences
 
-- Random matrix theorem statements depending on independence should remain
-  blocked in `docs/TheoremAtlas.md`.
-- The next implementation branch should add random-matrix independence
-  vocabulary before matrix concentration statements are promoted to Lean.
+- Matrix concentration theorem statements now typecheck as `Prop`s in
+  `HighDimProb.RandomMatrix.ConcentrationStatements`, but proofs remain blocked.
+- The next implementation branch should add operator-norm measurability and
+  matrix-vector/unit-sphere bridges before matrix Bernstein is attempted.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.

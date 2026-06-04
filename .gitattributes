@@ -8,3 +8,5 @@
 *.jpeg binary
 *.gif binary
 *.pdf binary
+*.db binary
+.codebase-memory/graph.db.zst merge=ours binary

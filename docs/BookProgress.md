@@ -65,6 +65,9 @@ Infrastructure:
 - Stage M-real-1 real-exponent `SubGaussianMoment` bridge
 - Stage M-real-2 subExponential real-moment bridge
 - Stage SC-final-update scalar concentration milestone refresh after moment bridges
+- Stage MC1 matrix concentration assumption vocabulary and theorem statement layer
+- Stage MC2 operator-norm and unit-sphere bridge infrastructure
+- Stage MC2-fix operator norm Mathlib bridge cleanup
 - Milestone Sprint S2 scalar concentration proof spine + random matrix statement layer
 - Milestone Sprint S3 small branch proof battery
 
@@ -180,6 +183,9 @@ Processed as experimental object layer:
 - Frobenius norm vocabulary
 - entrywise max absolute value vocabulary
 - L2 operator norm vocabulary
+- explicit finite-sum vector/operator-norm bridge vocabulary
+- deterministic operator-norm comparison bridge
+- operator-norm measurability theorem
 - Gram and row Gram matrix vocabulary
 - sample covariance vocabulary
 - quadratic and bilinear form vocabulary
@@ -485,3 +491,57 @@ Resolved in Stage SC-final-update:
 - Remaining scalar blockers are limited to reverse/source MGF links,
   finite-gauge variants, raw-predicate Bernstein, and full equivalence packages;
   matrix Bernstein, Hanson-Wright, and WLLN/SLLN remain separate future branches.
+
+Resolved in Stage MC1:
+- Added explicit matrix symmetry/self-adjoint vocabulary, explicit PSD/order
+  vocabulary, entrywise matrix expectation/centering, and matrix concentration
+  assumption vocabulary.
+- Proved the structural bridge that uncentered `sampleCovariance` is symmetric
+  and PSD in the explicit HighDimProb quadratic-form sense.
+- Added typed `Prop` targets for matrix Bernstein, matrix Hoeffding, matrix
+  Chernoff, covariance estimation, and sample-covariance operator-norm tails.
+- Did not prove matrix Bernstein, matrix Hoeffding, matrix Chernoff,
+  Hanson-Wright, or covariance estimation.
+
+Resolved in Stage MC2:
+- Added explicit unit-vector, matrix-vector squared-norm, and squared
+  operator-norm bound vocabulary for future matrix norm proofs.
+- Proved the explicit Loewner-order quadratic-form monotonicity bridge.
+- Added typed exact operator-norm comparison/measurability targets and a typed
+  sample-covariance unit-sphere operator-norm reduction target.
+- Did not prove the exact Mathlib operator-norm bridge, operator-norm
+  measurability, matrix Bernstein, Hanson-Wright, covariance estimation, or
+  sample-covariance operator-norm bounds.
+
+Resolved in Stage MC2-fix:
+- Proved `vectorSqNorm_eq_norm_sq_toLp` and related unit-vector L2 norm
+  bridges.
+- Proved `matVecSqNorm_eq_norm_sq_toLp_mulVec` and the reverse matrix-vector
+  squared-norm rewrite.
+- Proved both directions between `OperatorNormBoundSq` and
+  `deterministicOperatorNorm`: `operatorNorm_le_of_operatorNormBoundSq` and
+  `operatorNormBoundSq_of_operatorNorm_le`.
+- Proved `isRealRandomVariable_operatorNorm` from entrywise random-matrix
+  measurability.
+- Kept `sampleCovarianceOperatorNormViaUnitSphereStatement` as a typed target
+  only; no matrix concentration theorem or sample-covariance operator-norm tail
+  was proved.
+
+Resolved in Stage MC3:
+- Added `HighDimProb.RandomMatrix.Sums` with `randomMatrixSum`, entry/apply
+  lemmas, random-matrix measurability for finite sums, and self-adjoint finite
+  sum structural lemmas.
+- Added matrix-valued independence and family vocabulary in
+  `HighDimProb.RandomMatrix.Assumptions`: `IndependentRandomMatrices`,
+  `SelfAdjointRandomMatrixFamily`, `IndependentSelfAdjointRandomMatrices`,
+  `CenteredSelfAdjointRandomMatrixFamily`, pointwise operator-norm bounds, and
+  a separate a.e. operator-norm-bound predicate.
+- Added `HighDimProb.RandomMatrix.VarianceProxy` with matrix square,
+  random-matrix square, second moment, variance proxy matrix, scalar
+  variance-proxy norm, compatibility aliases, square measurability, and the
+  self-adjoint square structural theorem.
+- Updated `matrixBernsteinStatement` to depend on the MC3 vocabulary while
+  keeping it as a typed `Prop` statement only.
+- Did not prove matrix Bernstein, matrix Hoeffding, matrix Chernoff,
+  Hanson-Wright, covariance estimation, or a sample-covariance operator-norm
+  theorem.

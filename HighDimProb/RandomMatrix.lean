@@ -6,8 +6,15 @@ import HighDimProb.RandomMatrix.Assumptions
 import HighDimProb.RandomMatrix.SampleCovariance
 import HighDimProb.RandomMatrix.QuadraticForm
 import HighDimProb.RandomMatrix.Algebra
+import HighDimProb.RandomMatrix.UnitSphere
 import HighDimProb.RandomMatrix.OperatorNorm
+import HighDimProb.RandomMatrix.SelfAdjoint
+import HighDimProb.RandomMatrix.MatrixOrder
+import HighDimProb.RandomMatrix.Expectation
+import HighDimProb.RandomMatrix.Sums
+import HighDimProb.RandomMatrix.VarianceProxy
 import HighDimProb.RandomMatrix.Statements
+import HighDimProb.RandomMatrix.ConcentrationStatements
 
 /-!
 # Random matrices

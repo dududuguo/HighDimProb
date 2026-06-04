@@ -99,12 +99,12 @@ It is a planning document, not a request to physically move existing files.
 - Import path: `HighDimProb.RandomMatrix`
 - Status: experimental physical branch
 - Purpose: random matrix object layer and theorem prerequisites.
-- Current modules: `RandomMatrix.Basic`, `RandomMatrix.RowsCols`, `RandomMatrix.Action`, `RandomMatrix.Norms`, `RandomMatrix.Assumptions`, `RandomMatrix.SampleCovariance`, `RandomMatrix.QuadraticForm`, `RandomMatrix.Algebra`, `RandomMatrix.OperatorNorm`, `RandomMatrix.Statements`.
-- Planned leaf modules: `Independence`, `SampleCovarianceTheorems`, `MatrixDeviationStatements`, `MatrixBernsteinStatements`, `HansonWrightStatements`, `JLStatements`, `CovarianceEstimationStatements`, `OperatorNormNetBridge`.
+- Current modules: `RandomMatrix.Basic`, `RandomMatrix.RowsCols`, `RandomMatrix.Action`, `RandomMatrix.Norms`, `RandomMatrix.Assumptions`, `RandomMatrix.SampleCovariance`, `RandomMatrix.QuadraticForm`, `RandomMatrix.Algebra`, `RandomMatrix.UnitSphere`, `RandomMatrix.OperatorNorm`, `RandomMatrix.SelfAdjoint`, `RandomMatrix.MatrixOrder`, `RandomMatrix.Expectation`, `RandomMatrix.Sums`, `RandomMatrix.VarianceProxy`, `RandomMatrix.Statements`, `RandomMatrix.ConcentrationStatements`.
+- Planned leaf modules: `IndependentRows`, `IidRows`, `SampleCovarianceTheorems`, `MatrixDeviationProofs`, `MatrixBernsteinProofs`, `HansonWrightStatements`, `JLStatements`, `CovarianceEstimationProofs`, `OperatorNormNetBridge`, `MatrixLaplace`.
 - Dependencies: `Scalar`, `Vector`, `Geometry`, Mathlib matrices, finite sums, and scoped L2 operator norm APIs.
-- Forbidden scope: proving matrix concentration before scalar concentration and geometry prerequisites are ready.
+- Forbidden scope: proving matrix concentration before matrix Laplace-transform, variance-proxy, and covariance-estimation prerequisites are ready.
 - Promotion criteria: submodule API tests, theorem atlas dependencies, docs, status update, and stable-root import audit.
-- Next safe tasks: Stage RM3 sample covariance PSD / symmetry statement layer; Stage RM1 random matrix assumption vocabulary implementation; operator norm bridge design.
+- Next safe tasks: Stage MC4 matrix Bernstein theorem statement refinement and proof plan; independent-row/iid-row vocabulary remains separate until covariance-estimation proof work starts.
 
 ## Process
 
@@ -138,7 +138,7 @@ It is a planning document, not a request to physically move existing files.
 - Import path: `HighDimProb.Statements`
 - Status: stable for typed specs, not theorem proofs
 - Purpose: typed `Prop` statement layer and theorem atlas bridge.
-- Current modules: `BookStatements`, `MetricEntropyStatements`, and branch-owned typed statement modules such as `RandomMatrix.Statements`.
+- Current modules: `BookStatements`, `MetricEntropyStatements`, and branch-owned typed statement modules such as `RandomMatrix.Statements` and `RandomMatrix.ConcentrationStatements`.
 - Planned leaf modules: `ConcentrationStatements`, `RandomMatrixStatements`, `GaussianWidthStatements`, `ProcessStatements`, `RecoveryStatements`.
 - Dependencies: current object-layer branches needed to type each specification.
 - Forbidden scope: unproved theorem/lemma declarations and axioms.

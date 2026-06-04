@@ -1,58 +1,97 @@
 {
   "project": "HighDimProb",
-  "generated_at": "2026-06-03",
+  "generated_at": "2026-06-04",
+  "indexed_at": "2026-06-04T18:00:49Z",
   "tool": "codebase-memory-mcp",
   "graph_stats": {
-    "total_nodes": 1209,
-    "total_edges": 2721,
+    "total_nodes": 1329,
+    "total_edges": 2961,
     "node_labels": {
-      "Section": 490,
-      "Function": 376,
-      "File": 160,
-      "Module": 160,
-      "Variable": 17,
-      "Folder": 5,
+      "Section": 568,
+      "Function": 382,
+      "Module": 181,
+      "File": 181,
+      "Variable": 14,
+      "Folder": 2,
       "Project": 1
     },
     "edge_types": {
-      "DEFINES": 1043,
-      "CALLS": 809,
-      "USAGE": 568,
-      "CONTAINS_FILE": 160,
-      "IMPORTS": 125,
-      "CONTAINS_FOLDER": 12,
-      "SEMANTICALLY_RELATED": 4
+      "DEFINES": 1145,
+      "CALLS": 796,
+      "USAGE": 678,
+      "CONTAINS_FILE": 181,
+      "IMPORTS": 145,
+      "CONTAINS_FOLDER": 10,
+      "SEMANTICALLY_RELATED": 6
     },
     "packages": [
+      "Analysis",
+      "Basic",
+      "BookStatements",
       "Concentration",
-      "RandomMatrix",
-      "LimitTheorems",
+      "Covariance",
+      "Distribution",
       "Distributions",
+      "EmpiricalProcess",
+      "Examples",
+      "Expectation",
+      "Experimental",
+      "GaussianWidth",
+      "Geometry",
+      "Init",
+      "Isotropic",
+      "LimitTheorems",
+      "Lp",
+      "MetricEntropy",
+      "MetricEntropyStatements",
+      "Moment",
+      "Nets",
+      "Orlicz",
+      "ProbabilitySpace",
+      "Process",
+      "RandomMatrix",
+      "RandomProcess",
+      "RandomVariable",
       "RandomVector",
       "Scalar",
-      "Orlicz",
-      "Covariance",
+      "SignalRecovery",
+      "Statements",
+      "SubExponential",
+      "SubGaussian",
       "SubGaussianVector",
-      "Lp",
-      "Isotropic",
-      "Nets",
-      "MetricEntropy",
-      "Analysis",
-      "Tail"
+      "Tactic",
+      "Tail",
+      "Vector"
     ],
     "top_hotspots": [
-      "IsRealRandomVariable (fan_in: 43)",
-      "RealRandomVariable (fan_in: 37)",
-      "absTailProb (fan_in: 19)",
-      "SubGaussianTail (fan_in: 17)",
-      "expect (fan_in: 17)"
+      "IsRealRandomVariable (fan_in: 42)",
+      "RealRandomVariable (fan_in: 40)",
+      "expect (fan_in: 23)",
+      "matrixEntry (fan_in: 13)",
+      "centered (fan_in: 12)"
     ],
     "architecture_layers": {
-      "entry": ["Concentration", "Isotropic", "MetricEntropy", "RandomMatrix"],
-      "core": ["Distributions", "Expectation", "Nets", "RandomVariable", "RandomVector", "Scalar", "SubGaussian", "Tail"],
-      "internal": ["Covariance"]
+      "entry": [
+        "Concentration",
+        "Isotropic",
+        "MetricEntropy",
+        "RandomMatrix"
+      ],
+      "core": [
+        "Distributions",
+        "Expectation",
+        "Nets",
+        "RandomVariable",
+        "RandomVector",
+        "Scalar",
+        "SubGaussian",
+        "Tail"
+      ],
+      "internal": [
+        "Covariance"
+      ]
     }
   },
   "database_file": "HighDimProb.db",
-  "database_size_bytes": 4063232
+  "database_size_bytes": 4456448
 }

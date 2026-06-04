@@ -2,13 +2,12 @@
 
 Current version target: v0.1-alpha
 
-Current stage: Stage SC-final-update
+Current stage: Stage MC3
 
-Current task: scalar concentration closeout refresh after full real/`ENNReal`
-moment bridges
+Current task: matrix variance proxy and independent self-adjoint matrix sums
 
 Milestone status:
-- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` bridges, full finite-`ENNReal` `SubExponentialMoment` bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, independent finite subGaussian sum MGF, finite Hoeffding theorem for bounded centered variables, sharp finite Hoeffding theorem for bounded centered variables, non-centered Wikipedia-form finite Hoeffding, the Hoeffding branch milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum concentration scaffold, Stage B1-fix subExponential MGF domain/max-scale infrastructure, Stage B2 full scalar Bernstein min-form tail bound, Stage SC-closeout scalar concentration theorem-family closeout, Stage B3 deterministic weighted scalar Bernstein theorem, Stage SC-final scalar concentration branch closure, Stage M-real-1 real-exponent `SubGaussianMoment` bridge, Stage M-real-2 subExponential real-moment bridge, and Stage SC-final-update scalar closeout refresh are complete.
+- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` bridges, full finite-`ENNReal` `SubExponentialMoment` bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, independent finite subGaussian sum MGF, finite Hoeffding theorem for bounded centered variables, sharp finite Hoeffding theorem for bounded centered variables, non-centered Wikipedia-form finite Hoeffding, the Hoeffding branch milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum concentration scaffold, Stage B1-fix subExponential MGF domain/max-scale infrastructure, Stage B2 full scalar Bernstein min-form tail bound, Stage SC-closeout scalar concentration theorem-family closeout, Stage B3 deterministic weighted scalar Bernstein theorem, Stage SC-final scalar concentration branch closure, Stage M-real-1 real-exponent `SubGaussianMoment` bridge, Stage M-real-2 subExponential real-moment bridge, Stage SC-final-update scalar closeout refresh, Stage MC1 matrix concentration vocabulary/statement layer, Stage MC2 operator-norm/unit-sphere bridge infrastructure, Stage MC2-fix operator norm Mathlib bridge cleanup, and Stage MC3 matrix variance proxy / independent self-adjoint matrix sums are complete.
 
 Workflow file:
 - docs/Workflow.md
@@ -103,6 +102,10 @@ Last known test status:
 - Stage M-real-1 real-exponent `SubGaussianMoment` bridge
 - Stage M-real-2 subExponential real-moment bridge
 - Stage SC-final-update scalar concentration closeout refresh after moment bridges
+- Stage MC1 matrix concentration assumption vocabulary and theorem statement layer
+- Stage MC2 operator-norm and unit-sphere bridge infrastructure
+- Stage MC2-fix operator norm Mathlib bridge cleanup
+- Stage MC3 matrix variance proxy and independent self-adjoint matrix sums
 
 Stage 1A implemented:
 - probability-space convention
@@ -615,6 +618,94 @@ Stage SC-final implemented:
 - kept `HighDimProb.Concentration` experimental; no stable-root promotion was made.
 - recorded Option C real-exponent moment branch for the full `SubGaussianMoment` bridge as the next safe task; Stage M-real-1 now resolves it.
 
+Stage MC1 implemented:
+- added `HighDimProb.RandomMatrix.SelfAdjoint` for symmetric/self-adjoint matrix and random-matrix vocabulary.
+- added `HighDimProb.RandomMatrix.MatrixOrder` for explicit PSD/order vocabulary and proved `isSymmetricMatrix_sampleCovariance`, `isPSD_sampleCovariance`, and `randomPSDMatrix_sampleCovariance`.
+- added `HighDimProb.RandomMatrix.Expectation` for entrywise matrix expectation and centered random matrices.
+- added `HighDimProb.RandomMatrix.ConcentrationStatements` for matrix-valued independence, centered self-adjoint finite families, operator-norm bounds, matrix variance proxies, and typed statement targets for matrix Bernstein, matrix Hoeffding, matrix Chernoff, covariance estimation, and sample-covariance operator-norm tails.
+- updated `HighDimProb.RandomMatrix`, branch import tests, experimental import tests, focused random-matrix concentration API tests, theorem atlas, term map, abstraction log, TODO, test plan, branch registry, leaf plan, book progress, README, and `docs/MatrixConcentrationPlan.md`.
+- did not prove matrix Bernstein, matrix Hoeffding, matrix Chernoff, Hanson-Wright, covariance estimation, or random matrix norm bounds.
+
+Stage MC2 implemented:
+- added `HighDimProb.RandomMatrix.UnitSphere` with explicit finite-sum
+  `vectorSqNorm`, `IsUnitVector`, and `unitSphere` vocabulary.
+- centralized the finite matrix measurable-space instance in
+  `HighDimProb.RandomMatrix.Basic` and proved
+  `measurable_randomMatrix_of_isRandomMatrix`.
+- extended `HighDimProb.RandomMatrix.OperatorNorm` with
+  `deterministicOperatorNorm`, `matVecSqNorm`, `randomMatVecSqNorm`,
+  `sqNorm_matVec_eq_matVecSqNorm`, `OperatorNormBoundSq`,
+  `RandomOperatorNormBoundSq`, and typed exact bridge targets
+  `operatorNorm_le_of_operatorNormBoundSqStatement`,
+  `operatorNormBoundSq_of_operatorNorm_leStatement`, and
+  `operatorNormMeasurabilityStatement`.
+- proved `matrixQuadraticForm_sub`, `quadraticForm_le_of_matrixLE`, and
+  `quadraticForm_apply_le_of_matrixLE` for the explicit Loewner-style order.
+- added `sampleCovarianceQuadraticFormDeviation` and
+  `sampleCovarianceOperatorNormViaUnitSphereStatement` as typed statement
+  dependencies for future sample-covariance operator-norm work.
+- updated random-matrix aggregate imports, focused random-matrix API tests,
+  branch/experimental import checks, theorem atlas, term map, abstraction log,
+  TODO, test plan, status, branch registry, leaf plan, book progress, and
+  `docs/MatrixConcentrationPlan.md`.
+- did not prove the exact Mathlib L2 operator-norm bridge, operator-norm
+  measurability, matrix Bernstein, Hanson-Wright, covariance estimation, or
+  sample covariance operator-norm bounds.
+
+Stage MC2-fix implemented:
+- proved `vectorSqNorm_eq_norm_sq_toLp`,
+  `norm_sq_toLp_eq_vectorSqNorm`, `norm_toLp_eq_one_of_isUnitVector`, and
+  `isUnitVector_of_norm_toLp_eq_one` for the explicit unit-vector vocabulary.
+- proved `matVecSqNorm_eq_norm_sq_toLp_mulVec` and
+  `norm_sq_toLp_mulVec_eq_matVecSqNorm` for explicit matrix-vector squared
+  norms.
+- proved both deterministic bridge directions:
+  `operatorNorm_le_of_operatorNormBoundSq` and
+  `operatorNormBoundSq_of_operatorNorm_le`.
+- added `instOpensMeasurableSpaceMatrixL2Operator` and proved
+  `isRealRandomVariable_operatorNorm` from entrywise random-matrix
+  measurability.
+- strengthened `HighDimProbTest.RandomMatrixOperatorNormAPI` and
+  `HighDimProbTest.RandomMatrixConcentrationAPI` with `#check` coverage for
+  the new theorem names.
+- updated matrix concentration planning docs, theorem atlas, term map,
+  abstraction log, TODO, test plan, status, branch registry, leaf plan, and
+  book progress.
+- did not prove matrix Bernstein, matrix Hoeffding, Hanson-Wright, covariance
+  estimation, random matrix concentration, or a sample-covariance
+  operator-norm theorem.
+
+Stage MC3 implemented:
+- added `HighDimProb.RandomMatrix.Sums` with `randomMatrixSum`,
+  `randomMatrixSum_apply`, `randomMatrixSum_entry`, `isRandomMatrix_sum`,
+  `isSelfAdjointMatrix_sum`, and `randomSelfAdjointMatrix_sum`.
+- added matrix-valued independence and family vocabulary in
+  `HighDimProb.RandomMatrix.Assumptions`, including
+  `IndependentRandomMatrices`, `SelfAdjointRandomMatrixFamily`,
+  `IndependentSelfAdjointRandomMatrices`,
+  `CenteredSelfAdjointRandomMatrixFamily`, `PointwiseOperatorNormBound`,
+  `UniformOperatorNormBound`, and `AeOperatorNormBound`.
+- added `HighDimProb.RandomMatrix.VarianceProxy` with `matrixSquare`,
+  `randomMatrixSquare`, `matrixSecondMoment`, `matrixVarianceProxy`,
+  `MatrixVarianceProxy`, `matrixVarianceProxyBound`,
+  `MatrixVarianceProxyBound`, `deterministicMatrixVarianceProxyNorm`, and
+  `matrixVarianceProxyNorm`.
+- proved small infrastructure lemmas for finite-sum measurability,
+  self-adjoint finite sums, square measurability, and self-adjoint matrix
+  squares.
+- updated `matrixBernsteinStatement` to use independent centered self-adjoint
+  matrix families, pointwise operator-norm bounds, an explicit PSD variance
+  proxy assumption, `matrixVarianceProxyNorm`, and `operatorNorm` of
+  `randomMatrixSum A`.
+- added `HighDimProbTest.RandomMatrixVarianceProxyAPI` and strengthened
+  random-matrix concentration, branch, and experimental import checks.
+- updated matrix concentration planning docs, theorem atlas, term map,
+  abstraction log, TODO, test plan, status, branch registry, leaf plan, and
+  book progress.
+- did not prove matrix Bernstein, matrix Hoeffding, matrix Chernoff,
+  Hanson-Wright, covariance estimation, random matrix concentration, or a
+  sample-covariance operator-norm theorem.
+
 Milestone Sprint S2 implemented:
 - completed fixed-scale scalar Orlicz/tail implication graph in both directions for ψ�?and ψ�?predicates
 - added `HighDimProb.Concentration.Implications`
@@ -769,6 +860,55 @@ Important existing declarations:
 - `isRealRandomVariable_quadraticForm`
 - `isRealRandomVariable_bilinearForm`
 - `operatorNorm`
+- `vectorSqNorm`
+- `IsUnitVector`
+- `unitSphere`
+- `vectorSqNorm_eq_norm_sq_toLp`
+- `norm_sq_toLp_eq_vectorSqNorm`
+- `norm_toLp_eq_one_of_isUnitVector`
+- `isUnitVector_of_norm_toLp_eq_one`
+- `deterministicOperatorNorm`
+- `matVecSqNorm`
+- `randomMatVecSqNorm`
+- `matVecSqNorm_eq_norm_sq_toLp_mulVec`
+- `norm_sq_toLp_mulVec_eq_matVecSqNorm`
+- `OperatorNormBoundSq`
+- `RandomOperatorNormBoundSq`
+- `operatorNorm_le_of_operatorNormBoundSqStatement`
+- `operatorNormBoundSq_of_operatorNorm_leStatement`
+- `operatorNormMeasurabilityStatement`
+- `operatorNorm_le_of_operatorNormBoundSq`
+- `operatorNormBoundSq_of_operatorNorm_le`
+- `instOpensMeasurableSpaceMatrixL2Operator`
+- `isRealRandomVariable_operatorNorm`
+- `IsSymmetricMatrix`
+- `IsSelfAdjointMatrix`
+- `RandomSymmetricMatrix`
+- `RandomSelfAdjointMatrix`
+- `matrixQuadraticForm`
+- `IsPSDMatrix`
+- `RandomPSDMatrix`
+- `MatrixLE`
+- `quadraticForm_le_of_matrixLE`
+- `isSymmetricMatrix_sampleCovariance`
+- `isPSD_sampleCovariance`
+- `randomPSDMatrix_sampleCovariance`
+- `matrixExpect`
+- `centeredRandomMatrix`
+- `CenteredRandomSelfAdjointMatrices`
+- `IndependentRandomMatrices`
+- `BoundedOperatorNorm`
+- `randomMatrixSum`
+- `MatrixVarianceProxy`
+- `MatrixVarianceProxyBound`
+- `sampleCovarianceMinusIdentity`
+- `matrixBernsteinStatement`
+- `matrixHoeffdingStatement`
+- `matrixChernoffStatement`
+- `covarianceEstimationStatement`
+- `sampleCovarianceOperatorNormStatement`
+- `sampleCovarianceQuadraticFormDeviation`
+- `sampleCovarianceOperatorNormViaUnitSphereStatement`
 - `isRealRandomVariable_centered`
 - `isRandomVector_centeredVector`
 - `lowerTailEvent`
@@ -918,13 +1058,18 @@ Important existing declarations:
 
 ## Active
 
-Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage M3, Stage H1, Stage H0, Stage H2A, Stage H2B, Stage H3, Stage H4, Stage H2-cleanup, Stage H5, Stage H6, Stage H6-sharp, Stage H7, Stage H7-closeout, Stage H8, Stage B1, Stage B1-fix, Stage B2, Stage SC-closeout, Stage B3, and Stage SC-final are complete.
+Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage M3, Stage H1, Stage H0, Stage H2A, Stage H2B, Stage H3, Stage H4, Stage H2-cleanup, Stage H5, Stage H6, Stage H6-sharp, Stage H7, Stage H7-closeout, Stage H8, Stage B1, Stage B1-fix, Stage B2, Stage SC-closeout, Stage B3, Stage SC-final, Stage M-real-1, Stage M-real-2, Stage SC-final-update, Stage MC1, Stage MC2, and Stage MC2-fix are complete.
 
 The scalar subGaussian forward spine is closed for this milestone:
 `CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`.
 Stage M-real-1 later resolves the full real-exponent `SubGaussianMoment` connector; reverse/source MGF links remain deferred.
 
 Target files:
+- HighDimProb/RandomMatrix/UnitSphere.lean
+- HighDimProb/RandomMatrix/OperatorNorm.lean
+- HighDimProbTest/RandomMatrixOperatorNormAPI.lean
+- HighDimProbTest/RandomMatrixConcentrationAPI.lean
+- docs/MatrixConcentrationPlan.md
 - HighDimProb/Concentration.lean
 - HighDimProb/Concentration/LayerCake.lean
 - HighDimProb/Concentration/Implications.lean
@@ -1033,6 +1178,7 @@ Expected test modules:
 - `HighDimProbTest.RandomMatrixQuadraticFormAPI`
 - `HighDimProbTest.RandomMatrixOperatorNormAPI`
 - `HighDimProbTest.RandomMatrixStatementsAPI`
+- `HighDimProbTest.RandomMatrixConcentrationAPI`
 - `HighDimProbTest.RandomMatrixProofsAPI`
 - `HighDimProbTest.NetsMetricEntropyAPI`
 - `HighDimProbTest.NetsProofsAPI`
@@ -1054,7 +1200,8 @@ Hard rules:
 - Do not promote random matrix modules to stable root import.
 - Do not change weighted Bernstein theorem meanings or constants without an explicit follow-up task.
 - Do not prove subGaussian/subExponential equivalences.
-- Do not prove covariance PSD/symmetry.
+- Do not prove covariance-matrix PSD/symmetry beyond the explicit uncentered
+  sample-covariance structural bridge already recorded in Stage MC1.
 - Do not implement mathematical content outside the S3 small proof battery scope.
 - Do not prove theorem families beyond small reusable branch lemmas in this round.
 - Do not move vector or random-matrix files physically in this round.
@@ -1120,6 +1267,20 @@ Processed:
 - random matrix action vocabulary
 - random matrix Frobenius and entrywise norm vocabulary
 - random matrix L2 operator norm vocabulary
+- random matrix unit-vector vocabulary
+- explicit matrix-vector squared-norm vocabulary
+- squared operator-norm bound predicate vocabulary
+- typed exact operator-norm bridge and measurability statement targets
+- explicit finite-sum vector and matrix-vector L2 norm bridges
+- exact deterministic operator-norm comparison bridges
+- operator-norm measurability theorem from entrywise random-matrix measurability
+- finite random-matrix sums
+- random-matrix sum measurability and self-adjoint finite-sum structure
+- independent self-adjoint random matrix family vocabulary
+- pointwise and a.e. matrix operator-norm-bound vocabulary
+- matrix square and random-matrix square vocabulary
+- matrix second moment and variance-proxy matrix vocabulary
+- deterministic scalar variance-proxy operator norm
 - Gram and row Gram matrix vocabulary
 - sample covariance vocabulary
 - quadratic and bilinear form vocabulary
@@ -1175,20 +1336,30 @@ Processed:
 - weighted scalar Bernstein min-form tail bound
 - Bernstein scalar typed statement scaffold
 - scalar concentration theorem-family closeout
+- matrix symmetry and self-adjoint vocabulary
+- explicit matrix PSD and Loewner-style order vocabulary
+- sample covariance symmetry and PSD structural bridge
+- entrywise matrix expectation and centered random matrices
+- matrix-valued independence and matrix concentration assumption vocabulary
+- typed matrix Bernstein, matrix Hoeffding, matrix Chernoff, covariance estimation, and sample-covariance operator-norm statement layer
+- explicit Loewner-order quadratic-form monotonicity bridge
+- sample-covariance unit-sphere operator-norm typed statement target
 
 Currently processing:
-- none; Stage SC-final-update is complete
+- none; Stage MC3 is complete
 
 Not yet processed:
 - LLN variance-of-sample-mean proof bridge
 - variance-of-finite-sample-sum bridge
 - convergence-in-probability HighDimProb alias/wrapper
-- sample covariance PSD / symmetry statement layer
+- Gram/row-Gram PSD wrappers and covariance-matrix PSD/symmetry theorem layer
 - full subGaussian/subExponential equivalence theorems
 - reverse/source MGF formulation implication links
 - finite-gauge Orlicz variants
 - raw-predicate Bernstein bridge
 - full independent-sum Chernoff inequality variants
+- matrix variance-proxy PSD theorem
+- matrix Laplace-transform and trace exponential infrastructure
 - matrix Bernstein
 - Hanson-Wright
 - random matrix concentration
@@ -1198,6 +1369,41 @@ Not yet processed:
 - signal recovery
 
 ## Blocked
+
+Stage MC1 has no build blocker. The random-matrix branch now has explicit
+symmetry/self-adjoint vocabulary, explicit PSD/order vocabulary, entrywise
+matrix expectation and centering, matrix-valued `iIndepFun` support, centered
+self-adjoint family assumptions, bounded operator-norm assumptions, matrix
+variance proxies, typed targets for matrix Bernstein/Hoeffding/Chernoff and
+covariance-estimation statements, and the structural bridge
+`isPSD_sampleCovariance` for uncentered sample covariance. No matrix
+concentration theorem has been proved.
+
+Stage MC2 has no build blocker. The random-matrix branch now has explicit
+unit-vector vocabulary, explicit matrix-vector squared-norm vocabulary, squared
+operator-norm bound predicates, typed exact operator-norm comparison targets,
+entrywise-to-matrix measurability, a typed operator-norm measurability target,
+Loewner-order quadratic-form monotonicity, and a typed sample-covariance
+unit-sphere operator-norm reduction target. Stage MC2-fix resolves the exact
+Mathlib L2 operator-norm comparison and operator-norm measurability proof
+obligations.
+
+Stage MC2-fix has no build blocker. The random-matrix branch now has explicit
+finite-sum vector and matrix-vector norm identities against Mathlib's L2
+Euclidean norm, both deterministic comparison directions between
+`OperatorNormBoundSq` and `deterministicOperatorNorm`, and
+`isRealRandomVariable_operatorNorm` from entrywise matrix measurability. The
+sample-covariance unit-sphere operator-norm reduction remains a typed statement
+only; it needs a separate supremum/net or spectral reduction argument.
+
+Stage MC3 has no build blocker. The random-matrix branch now has finite
+random-matrix sums, independent self-adjoint family vocabulary, matrix square
+and second-moment vocabulary, the standard `sum_i E[A_i^2]` variance-proxy
+matrix, a deterministic scalar variance-proxy norm, separate pointwise and
+a.e. operator-norm-bound predicates, and an updated typed
+`matrixBernsteinStatement`. PSD of `E[A_i^2]` / `matrixVarianceProxy`, matrix
+Laplace-transform infrastructure, and trace exponential estimates remain
+future theorem prerequisites.
 
 Stage SC-final-update has no build blocker. The scalar concentration branch now has
 leaf-module audit documentation, a theorem-family index, a test-coverage map,
@@ -1236,15 +1442,19 @@ import/test audit for this completed milestone. Exact scale-0
 `SubGaussianTail` and `CenteredSubGaussianMGF` wrappers remain unavailable
 because those predicates require strictly positive scales.
 
-No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage H0, Stage H2A, Stage H2B, Stage H2-cleanup, Stage H3, Stage H4, Stage H5, Stage H6, Stage H6-sharp, Stage H7, Stage H7-closeout, Stage H8, Stage B1, Stage B1-fix, Stage B2, Stage SC-closeout, Stage B3, Stage SC-final, Stage M-real-1, Stage M-real-2, or Stage SC-final-update build blocker. The finite union bound is proved, the sample-covariance quadratic-form bridge/nonnegativity theorems are proved, the weak-law scaffold now includes sample-mean vocabulary, scalar assumption wrappers, and honest typed statements, and the scalar moment/MGF branch proves fixed-exponent absolute-moment bridges, all-natural absolute moments with factorial constants, natural moment-to-Lp bridges, crude linear real-Lp growth, natural-exponent sharp `sqrt(q)` real-Lp growth, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` and `SubExponentialMoment` bridges, forward MGF-to-tail/psi2/moment composition, the weighted finite Rademacher Hoeffding specialization, independent finite subGaussian sum MGF/tail closure, finite bounded centered Hoeffding, sharp finite bounded centered Hoeffding, non-centered finite bounded Hoeffding, the Hoeffding milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum scaffold, the Stage B1-fix max-scale/lintegral finite-sum Bernstein infrastructure, the Stage B2 scalar Bernstein min-form theorem, the Stage SC-closeout scalar theorem-family audit, the Stage B3 weighted scalar Bernstein theorem, the Stage SC-final scalar concentration branch closure, the Stage M-real-1 real-exponent `SubGaussianMoment` bridge, the Stage M-real-2 subExponential real-moment bridge, and the Stage SC-final-update scalar closeout refresh.
+No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage H0, Stage H2A, Stage H2B, Stage H2-cleanup, Stage H3, Stage H4, Stage H5, Stage H6, Stage H6-sharp, Stage H7, Stage H7-closeout, Stage H8, Stage B1, Stage B1-fix, Stage B2, Stage SC-closeout, Stage B3, Stage SC-final, Stage M-real-1, Stage M-real-2, Stage SC-final-update, Stage MC1, Stage MC2, Stage MC2-fix, or Stage MC3 build blocker. The finite union bound is proved, the sample-covariance quadratic-form bridge/nonnegativity and explicit PSD bridge are proved, the weak-law scaffold now includes sample-mean vocabulary, scalar assumption wrappers, and honest typed statements, and the scalar moment/MGF branch proves fixed-exponent absolute-moment bridges, all-natural absolute moments with factorial constants, natural moment-to-Lp bridges, crude linear real-Lp growth, natural-exponent sharp `sqrt(q)` real-Lp growth, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` and `SubExponentialMoment` bridges, forward MGF-to-tail/psi2/moment composition, the weighted finite Rademacher Hoeffding specialization, independent finite subGaussian sum MGF/tail closure, finite bounded centered Hoeffding, sharp finite bounded centered Hoeffding, non-centered finite bounded Hoeffding, the Hoeffding milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum scaffold, the Stage B1-fix max-scale/lintegral finite-sum Bernstein infrastructure, the Stage B2 scalar Bernstein min-form theorem, the Stage SC-closeout scalar theorem-family audit, the Stage B3 weighted scalar Bernstein theorem, the Stage SC-final scalar concentration branch closure, the Stage M-real-1 real-exponent `SubGaussianMoment` bridge, the Stage M-real-2 subExponential real-moment bridge, the Stage SC-final-update scalar closeout refresh, the Stage MC1 matrix concentration vocabulary/statement layer, the Stage MC2 operator-norm/unit-sphere bridge layer, the Stage MC2-fix operator norm Mathlib bridge cleanup, and the Stage MC3 matrix variance proxy / independent self-adjoint matrix sum infrastructure.
 
 Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Stage G2A proves Psi2Bound -> absMomentNat q=2, SubGaussianTail -> absMomentNat q=2, and the analogous first-moment psi1/subExponential pilot. Stage G2B proves Psi2Bound/SubGaussianTail -> absMomentNat q for all natural q with a crude factorial constant. Stage G2C proves `finiteAbsMomentNat -> MemLp`, quantitative `absMomentNat -> realLpNorm`, and the factorial-growth `SubGaussianMomentNat` wrappers. Stage G2D proves the linear `realLpNorm <= C*K*q` consequence. Stage G2E records the sharp route as typed targets, Stage G2E-fix proves the deterministic envelope plus natural-exponent sqrt-growth moment bounds, Stage G2F packages those bounds as `SubGaussianMomentNatSqrt`, Sprint S4 proves `CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`, Stage M-real-1 proves `Psi2Bound -> SubGaussianMoment (8*K)` plus `SubGaussianTail -> SubGaussianMoment (16*K)` over arbitrary finite `p : ENNReal`, and Stage M-real-2 proves `Psi1Bound -> SubExponentialMoment (16*K)` plus `SubExponentialTail -> SubExponentialMoment (48*K)`. Finite-gauge variants, reverse/source MGF connectors, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
 
-Random matrix theorem statements are blocked except `epsilonNetOperatorNormStatement` because independent entries, iid rows, symmetric random matrices, PSD/order vocabulary, and high-probability theorem syntax are not yet implemented.
+Random matrix theorem proofs remain blocked by matrix Laplace-transform
+infrastructure, variance-proxy PSD algebra, row/iid-row sampling assumptions
+for covariance estimation, centered empirical covariance conventions, and the
+sample-covariance unit-sphere reduction theorem. The major matrix
+concentration statement targets now typecheck as `Prop`s, but they are not
+theorems.
 
 Theorem statements blocked by missing infrastructure are tracked in docs/TheoremAtlas.md.
 
 ## Next safe task
 
-Stage Branch-choice - choose exactly one next major branch: matrix Bernstein,
-Hanson-Wright, or WLLN/SLLN.
+Stage MC4 - matrix Bernstein theorem statement refinement and proof plan.

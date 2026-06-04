@@ -735,12 +735,36 @@ future directions.
 - Informal statement: operator norm over a sphere can be controlled using an epsilon-net.
 - Target Lean statement: `epsilonNetOperatorNormStatement`.
 - Required objects: epsilon nets, matrices, operator norm, unit sphere.
-- Required definitions: Stage 5A Mathlib-backed net predicate `IsEpsilonNet` exists; Stage 6A random matrix entries and actions exist; Stage 6B adds `operatorNorm`.
-- Required bridge lemmas: finite net approximation, unit-sphere cover bridge, Matrix-to-linear-map/L2 operator-norm bridge, and `operatorNorm` comparison lemmas.
+- Required definitions: Stage 5A Mathlib-backed net predicate `IsEpsilonNet` exists; Stage 6A random matrix entries and actions exist; Stage 6B adds `operatorNorm`; Stage MC2 adds explicit `IsUnitVector`, `matVecSqNorm`, and `OperatorNormBoundSq` vocabulary; Stage MC2-fix proves the finite-sum L2 norm bridges and both `OperatorNormBoundSq` / `deterministicOperatorNorm` comparison directions.
+- Required bridge lemmas: finite net approximation, unit-sphere cover bridge, and a theorem-level net-to-operator-norm reduction using the proved MC2-fix operator-norm bridges.
 - Status: typed-prop
-- Blocker: proof bridge lemmas are not active yet; the typed statement uses the existing function-space unit sphere and Mathlib L2 matrix norm convention.
+- Blocker: finite net approximation and unit-sphere cover arguments remain future work; the exact Mathlib L2 operator-norm comparison and measurability bridges are no longer blockers.
 - Target module: `HighDimProb/RandomMatrix/Statements.lean`
 - Priority: v0.3
+
+## operator-norm and unit-sphere bridge layer
+- Book heading: operator-norm prerequisites for random matrix concentration
+- Informal statement: before proving matrix norm concentration, expose unit vectors, explicit matrix-vector squared norms, squared operator-norm bound predicates, typed targets for the exact Mathlib L2 operator-norm bridge, and proved comparison/measurability bridges.
+- Target Lean declarations: `vectorSqNorm`, `IsUnitVector`, `unitSphere`, `vectorSqNorm_eq_norm_sq_toLp`, `norm_sq_toLp_eq_vectorSqNorm`, `norm_toLp_eq_one_of_isUnitVector`, `isUnitVector_of_norm_toLp_eq_one`, `matVecSqNorm`, `randomMatVecSqNorm`, `matVecSqNorm_eq_norm_sq_toLp_mulVec`, `norm_sq_toLp_mulVec_eq_matVecSqNorm`, `OperatorNormBoundSq`, `RandomOperatorNormBoundSq`, `operatorNorm_le_of_operatorNormBoundSqStatement`, `operatorNormBoundSq_of_operatorNorm_leStatement`, `operatorNormMeasurabilityStatement`, `operatorNorm_le_of_operatorNormBoundSq`, `operatorNormBoundSq_of_operatorNorm_le`, `instOpensMeasurableSpaceMatrixL2Operator`, `isRealRandomVariable_operatorNorm`.
+- Required objects: `RandomMatrix`, `matVec`, Mathlib scoped L2 matrix norm, finite sums over `Fin`.
+- Required definitions: Stage MC2 adds `HighDimProb.RandomMatrix.UnitSphere` and extends `HighDimProb.RandomMatrix.OperatorNorm`; Stage MC2-fix adds the Mathlib L2 bridges.
+- Required bridge lemmas: MC2-fix reuses finite-dimensional Euclidean norm-square identities, `Matrix.l2_opNorm_mulVec`, `ContinuousLinearMap.opNorm_le_of_unit_norm`, and `measurable_norm`.
+- Status: proven bridge plus retained typed `Prop` statement targets
+- Blocker: no blocker for the two explicit operator-norm comparison directions or operator-norm measurability. Sample-covariance/unit-sphere concentration reductions remain separate future theorem work.
+- Target module: `HighDimProb/RandomMatrix/OperatorNorm.lean`
+- Priority: Stage MC2
+
+## matrix concentration assumption vocabulary
+- Book heading: matrix Bernstein, matrix Hoeffding, matrix Chernoff, covariance estimation prerequisites
+- Informal statement: future matrix concentration theorem statements require explicit symmetry/self-adjointness, PSD/order, matrix expectation, matrix-valued independence, operator-norm bound, and variance-proxy assumptions.
+- Target Lean declarations: `IsSymmetricMatrix`, `IsSelfAdjointMatrix`, `RandomSelfAdjointMatrix`, `IsPSDMatrix`, `RandomPSDMatrix`, `MatrixLE`, `matrixExpect`, `centeredRandomMatrix`, `CenteredRandomSelfAdjointMatrices`, `IndependentRandomMatrices`, `BoundedOperatorNorm`, `MatrixVarianceProxy`, `MatrixVarianceProxyBound`.
+- Required objects: `RandomMatrix`, `operatorNorm`, `sampleCovariance`, finite matrix sums, Mathlib matrix predicates and independence.
+- Required definitions: Stage MC1 adds the vocabulary in `SelfAdjoint`, `MatrixOrder`, `Expectation`, and `ConcentrationStatements`.
+- Required bridge lemmas: future proof stages still need matrix Laplace transform infrastructure, variance-proxy PSD facts, and theorem-specific self-adjoint sum algebra; the exact operator-norm comparison and measurability bridges are now proved in Stage MC2-fix.
+- Status: implemented vocabulary
+- Blocker: no matrix concentration theorem is attempted or proved in MC1.
+- Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
+- Priority: Stage MC1
 
 ## metric entropy as log covering number
 - Book heading: `度量熵`
@@ -781,25 +805,25 @@ future directions.
 ## subGaussian random matrix norm bound
 - Book heading: `带有次高斯元素矩阵的范数`, `次高斯矩阵的双侧界`
 - Informal statement: random matrices with independent subGaussian entries or rows have high-probability operator norm/singular value bounds.
-- Target Lean statement: blocked until random matrix independence and high-probability assumption vocabulary exist.
+- Target Lean statement: blocked until independent-entry/independent-row vocabulary and operator-norm theorem bridges exist.
 - Required objects: `RandomMatrix`, `matrixEntry`, `rowVector`, `matVec`, `operatorNorm`, independence, subGaussian predicates.
 - Required definitions: Stage 6A matrix-valued random-variable predicates, row/column views, action vocabulary, and entry/row subGaussian predicates exist; Stage 6B adds `operatorNorm`.
-- Required bridge lemmas: operator norm bridge lemmas, independent entries or rows, entry/row measurability, and net-to-operator-norm bounds.
+- Required bridge lemmas: independent entries or rows, entry/row measurability, net-to-operator-norm bounds, and probabilistic concentration inputs; MC2-fix supplies the basic operator-norm comparison bridge.
 - Status: blocked
-- Blocker: independence predicates and operator-norm proof bridges are deferred; theorem is beyond object layer.
+- Blocker: Stage MC1 adds matrix-valued independence, but independent-entry/independent-row sampling assumptions, net arguments, and concentration inputs are still deferred; theorem is beyond object layer.
 - Target module: future `HighDimProb/RandomMatrix/Statements.lean`
 - Priority: v0.3
 
 ## sample covariance concentration
 - Book heading: `协方差估计`, `一般协方差估计`
 - Informal statement: the empirical or sample covariance matrix of independent subGaussian samples concentrates around the population covariance.
-- Target Lean statement: blocked until independence, centered/empirical covariance conventions, and operator-norm theorem bridges exist.
+- Target Lean statements: `covarianceEstimationStatement`, `sampleCovarianceOperatorNormStatement`.
 - Required objects: `RandomMatrix`, row samples, `sampleCovariance`, covariance matrix, `operatorNorm`, row subGaussian/isotropic assumptions.
-- Required definitions: Stage 6A row and assumption predicates exist; Stage 6B adds `sampleCovariance`, `gramMatrix`, and `operatorNorm`.
-- Required bridge lemmas: matrix multiplication/scaling convention, row independence, expectation/covariance bridge, and operator-norm bridge lemmas.
-- Status: blocked
-- Blocker: row independence, centered/empirical covariance conventions, and operator-norm proof bridges are deferred.
-- Target module: future `HighDimProb/RandomMatrix/Statements.lean`
+- Required definitions: Stage 6A row and assumption predicates exist; Stage 6B adds `sampleCovariance`, `gramMatrix`, and `operatorNorm`; Stage MC1 adds matrix expectation/order vocabulary and typed covariance-estimation statement targets; Stage MC2 adds `sampleCovarianceQuadraticFormDeviation` and the unit-sphere reduction statement target.
+- Required bridge lemmas: matrix multiplication/scaling convention, row independence, expectation/covariance bridge, sample-covariance/unit-sphere reduction, and matrix concentration.
+- Status: typed-prop
+- Blocker: row independence, centered/empirical covariance conventions, the sample-covariance unit-sphere reduction theorem, and matrix concentration proofs are deferred.
+- Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - Priority: v0.3
 
 ## Hanson-Wright inequality
@@ -829,37 +853,37 @@ future directions.
 ## covariance estimation
 - Book heading: `协方差估计`, `一般协方差估计`, `低维分布的协方差估计`
 - Informal statement: empirical covariance of subGaussian samples approximates the population covariance with high probability.
-- Target Lean statement: blocked until empirical covariance conventions, independence, and concentration APIs exist.
+- Target Lean statement: `covarianceEstimationStatement`.
 - Required objects: `RandomVector`, `RandomMatrix`, samples, covariance matrices, `sampleCovariance`, matrix norms.
-- Required definitions: Stage 6A random matrix rows exist; Stage 6B adds uncentered `sampleCovariance` and `operatorNorm`.
+- Required definitions: Stage 6A random matrix rows exist; Stage 6B adds uncentered `sampleCovariance` and `operatorNorm`; Stage MC1 adds matrix order/expectation vocabulary and a typed covariance-estimation target.
 - Required bridge lemmas: sample independence, sample covariance algebra, centered/empirical covariance convention, and matrix concentration.
-- Status: blocked
-- Blocker: independence, centered/empirical covariance, and concentration infrastructure are not ready.
-- Target module: future `HighDimProb/RandomMatrix/Statements.lean`
+- Status: typed-prop
+- Blocker: independence, centered/empirical covariance, sample-covariance/unit-sphere reduction, and matrix concentration proofs are not ready.
+- Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - Priority: v0.3
 
 ## matrix Bernstein inequality
 - Book heading: `矩阵伯恩斯坦不等式`, `矩阵不等式`
 - Informal statement: sums of independent centered random matrices with bounded operator norm satisfy Bernstein-type spectral tail bounds.
-- Target Lean statement: blocked until symmetric/random matrix sums, operator norm, variance proxy, and matrix independence APIs exist.
-- Required objects: random matrices, symmetric matrix predicate, centered matrix variables, `operatorNorm`, variance proxy, independence.
-- Required definitions: Stage 6A random matrix object layer exists; Stage 6B adds `operatorNorm`; no symmetric random matrix or matrix-sum assumption layer exists yet.
-- Required bridge lemmas: matrix-valued measurability, operator-norm bridge lemmas, independence of matrix-valued variables, and self-adjoint dilation if rectangular variants are used.
-- Status: blocked
-- Blocker: theorem is beyond the object layer and requires symmetric/random-matrix-sum, operator-norm bridge, and independence infrastructure.
-- Target module: future `HighDimProb/RandomMatrix/Statements.lean`
+- Target Lean statement: `matrixBernsteinStatement`.
+- Required objects: random matrices, self-adjoint matrix predicates, centered matrix variables, `operatorNorm`, finite random-matrix sums, matrix square/second moments, variance proxy, independence.
+- Required definitions: Stage 6A random matrix object layer exists; Stage 6B adds `operatorNorm`; Stage MC1 adds self-adjoint, matrix order, matrix expectation, and typed statement vocabulary; Stage MC2/MC2-fix adds explicit unit-vector/operator-norm bridges and operator-norm measurability; Stage MC3 adds `randomMatrixSum`, `IndependentSelfAdjointRandomMatrices`, `CenteredSelfAdjointRandomMatrixFamily`, `PointwiseOperatorNormBound`, `matrixSecondMoment`, `matrixVarianceProxy`, and `matrixVarianceProxyNorm`.
+- Required bridge lemmas: matrix-valued measurability, independence of matrix-valued variables, self-adjoint finite-sum algebra, matrix square measurability, matrix Laplace-transform infrastructure, variance-proxy PSD facts, and self-adjoint dilation if rectangular variants are used. MC2-fix supplies the basic operator-norm comparison and measurability bridges; MC3 supplies random-matrix sum and variance-proxy infrastructure but not the PSD proof for the proxy.
+- Status: typed-prop
+- Blocker: theorem proof is beyond MC3 and still requires matrix Laplace-transform infrastructure, trace/exponential-moment machinery, PSD facts for `E[A_i^2]` and `matrixVarianceProxy`, and a final decision between pointwise and a.e. norm-bounded assumptions.
+- Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - Priority: v0.4
 
 ## matrix deviation inequality
 - Book heading: `一般协方差估计`, random matrix deviation estimates
 - Informal statement: empirical matrix deviations such as `sampleCovariance A - Sigma` are controlled in operator norm under sampling and moment assumptions.
-- Target Lean statement: blocked until centered empirical covariance, matrix subtraction/norm events, independence, and concentration APIs exist.
+- Target Lean statement: `sampleCovarianceOperatorNormStatement` is available as a generic typed target; `sampleCovarianceOperatorNormViaUnitSphereStatement` records the unit-vector reduction route as a typed target; sharper deviation statements remain future work.
 - Required objects: `sampleCovariance`, `operatorNorm`, covariance matrices, random matrix rows, row assumptions.
-- Required definitions: Stage 6B adds uncentered sample covariance and operator-norm vocabulary.
-- Required bridge lemmas: sample covariance algebra, centered/empirical covariance convention, operator-norm measurability, row independence, and matrix concentration.
-- Status: blocked
-- Blocker: object vocabulary exists only at the uncentered level; theorem dependencies remain future work.
-- Target module: future `HighDimProb/RandomMatrix/Statements.lean`
+- Required definitions: Stage 6B adds uncentered sample covariance and operator-norm vocabulary; Stage MC1 adds `sampleCovarianceMinusIdentity` and generic sample-covariance operator-norm tail syntax; Stage MC2 adds quadratic-form deviation vocabulary for unit vectors.
+- Required bridge lemmas: sample covariance algebra, centered/empirical covariance convention, sample-covariance/unit-sphere reduction, row independence, and matrix concentration.
+- Status: partial typed-prop
+- Blocker: centered empirical covariance conventions, row independence, sample-covariance/unit-sphere reduction, and matrix concentration proofs remain future work.
+- Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - Priority: v0.4
 
 ## generic chaining / Dudley inequality
@@ -993,3 +1017,15 @@ future directions.
 - Blocker: none. Stage RM2 proves the row-dot-square normal form `(1 / (m : Real)) * sum k, (sum i, A omega k i * x i)^2` and derives nonnegativity without assuming `0 < m`.
 - Target module: `HighDimProb/RandomMatrix/Algebra.lean`
 - Priority: Stage RM2
+
+## sample covariance PSD bridge
+- Book heading: sample covariance and PSD prerequisites
+- Informal statement: the uncentered sample covariance matrix is symmetric and positive semidefinite in the explicit HighDimProb quadratic-form sense.
+- Target Lean statements: `isSymmetricMatrix_sampleCovariance`, `isPSD_sampleCovariance`, `randomPSDMatrix_sampleCovariance`
+- Required objects: `sampleCovariance`, `matrixQuadraticForm`, `IsPSDMatrix`, finite sums.
+- Required definitions: Stage MC1 adds explicit symmetry/PSD vocabulary and reuses the Stage RM2 quadratic-form nonnegativity bridge.
+- Required bridge lemmas: `quadraticForm_sampleCovariance_nonneg` and finite-sum commutativity for symmetry.
+- Status: proven structural bridge
+- Blocker: none for uncentered sample covariance. Gram/row-Gram PSD wrappers and covariance-matrix PSD remain future work.
+- Target module: `HighDimProb/RandomMatrix/MatrixOrder.lean`
+- Priority: Stage MC1
