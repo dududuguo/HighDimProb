@@ -92,7 +92,7 @@
 - HansonWrightStatements
 - JLStatements
 - CovarianceEstimationStatements
-- Next: Stage MC4 matrix Bernstein theorem statement refinement and proof plan; do not prove matrix Bernstein yet.
+- Next: Stage MC4-psd PSD square and variance-proxy algebra cleanup; do not prove matrix Bernstein yet.
 
 ## Process
 

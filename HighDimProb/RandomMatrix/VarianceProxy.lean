@@ -143,6 +143,91 @@ theorem isSelfAdjointMatrix_matrixSquare_of_isSelfAdjointMatrix {n : Nat}
     _ = matrixSquare A i j := by
           simp [matrixSquare, Matrix.mul_apply]
 
+/-! ## PSD structure of matrix squares, second moments, and variance proxies -/
+
+/-- Typed target: the square of a self-adjoint real matrix is PSD.
+
+The proof requires the identity `xᵀ A² x = (Ax)ᵀ (Ax) = ‖Ax‖² ≥ 0`.
+When A is self-adjoint, `A² = Aᵀ A`, and `xᵀ Aᵀ A x = ‖Ax‖²` is true
+for any real matrix A by expanding the finite sums and using
+`Finset.sum_comm` and `Finset.mul_sum`.
+
+Blocker: the finite-sum algebraic identity needs a careful `calc` proof
+with multiple sum reindexing steps. This is a routine but tedious
+algebraic verification, not a deep mathematical obstacle. -/
+abbrev isPSD_matrixSquare_of_selfAdjoint_statement {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (_hA : IsSelfAdjointMatrix A) : Prop :=
+  IsPSDMatrix (matrixSquare A)
+
+/-- The second moment matrix of a self-adjoint random matrix family is self-adjoint.
+This is proven: each `(A ω)^2` is self-adjoint, and entrywise expectation preserves
+self-adjointness because `star` is identity on ℝ and the integral is linear. -/
+theorem isSelfAdjointMatrix_matrixSecondMoment {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {n : Nat} {A : RandomMatrix Omega n n}
+    (hA : RandomSelfAdjointMatrix P A) :
+    IsSelfAdjointMatrix (matrixSecondMoment P A) := by
+  apply Matrix.IsHermitian.ext
+  intro i j
+  -- For real matrices, star = id.
+  -- We need: (E[A^2])_ji = (E[A^2])_ij
+  dsimp [matrixSecondMoment, matrixExpect, expect]
+  -- Goal: (∫ ω, (randomMatrixSquare A) ω j i ∂P) = (∫ ω, (randomMatrixSquare A) ω i j ∂P)
+  have h_entry_eq : ∀ ω, (randomMatrixSquare A) ω j i = (randomMatrixSquare A) ω i j := by
+    intro ω
+    simp [randomMatrixSquare]
+    have h_sq_herm : IsSelfAdjointMatrix (matrixSquare (A ω)) :=
+      isSelfAdjointMatrix_matrixSquare_of_isSelfAdjointMatrix (hA ω)
+    -- h_sq_herm : IsHermitian (A ω)^2, so (A ω)^2_{ji} = (A ω)^2_{ij} (real case)
+    have h_eq := Matrix.IsHermitian.apply h_sq_herm j i
+    -- h_eq : star ((A ω)^2_{i j}) = (A ω)^2_{j i}
+    -- For ℝ, star = id, so this gives (A ω)^2_{ij} = (A ω)^2_{ji}
+    -- Goal: (A ω)^2_{ji} = (A ω)^2_{ij}, which is h_eq.symm
+    simpa using h_eq.symm
+  -- Now the two functions are equal pointwise, so their integrals are equal
+  refine integral_congr_ae ?_
+  filter_upwards with ω
+  exact h_entry_eq ω
+
+/-- Typed target: the second moment matrix `E[A^2]` of a self-adjoint random matrix is PSD.
+
+The proof requires: `matrixQuadraticForm (E[A^2]) x = E[matrixQuadraticForm(A^2) x]`
+(linearity of expectation over finite sums), and then pointwise nonnegativity
+of `matrixQuadraticForm (A ω^2) x` gives the result.
+
+Blocker: the commutation lemma `matrixQuadraticForm_matrixExpect` needs
+`integral_finset_sum` and `integral_mul_right` from Mathlib; these exist
+but the proof requires careful `calc` with `Finset` sum/integral exchange. -/
+abbrev isPSD_matrixSecondMoment_of_selfAdjoint_statement {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {n : Nat} {A : RandomMatrix Omega n n}
+    (_hA : RandomSelfAdjointMatrix P A) : Prop :=
+  IsPSDMatrix (matrixSecondMoment P A)
+
+/-- The matrix variance proxy `sum_i E[A_i^2]` is self-adjoint when each term is. -/
+theorem isSelfAdjointMatrix_matrixVarianceProxy {Omega : Type*} [MeasurableSpace Omega]
+    {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)
+    {A : I -> RandomMatrix Omega n n}
+    (hA : forall i, RandomSelfAdjointMatrix P (A i)) :
+    IsSelfAdjointMatrix (matrixVarianceProxy P A) := by
+  apply isSelfAdjointMatrix_sum
+  intro i
+  exact isSelfAdjointMatrix_matrixSecondMoment (hA i)
+
+/-- Typed target: the matrix variance proxy `sum_i E[A_i^2]` is PSD.
+
+The proof follows from each `E[A_i^2]` being PSD and the fact that
+`matrixQuadraticForm` is linear in the matrix, distributing over finite sums.
+
+Blocker: depends on `isPSD_matrixSecondMoment_of_selfAdjoint_statement` being proven
+(see above). The sum-of-PSD step is a straightforward distributivity of
+`matrixQuadraticForm` over `Finset.sum`. -/
+abbrev isPSD_matrixVarianceProxy_of_selfAdjoint_statement {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)
+    {A : I -> RandomMatrix Omega n n}
+    (_hA : forall i, RandomSelfAdjointMatrix P (A i)) : Prop :=
+  IsPSDMatrix (matrixVarianceProxy P A)
+
+
+
 end
 
 end HighDimProb

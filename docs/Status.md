@@ -2,12 +2,12 @@
 
 Current version target: v0.1-alpha
 
-Current stage: Stage MC3
+Current stage: Stage MC4-cleanup
 
-Current task: matrix variance proxy and independent self-adjoint matrix sums
+Current task: matrix concentration statement honesty cleanup
 
 Milestone status:
-- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` bridges, full finite-`ENNReal` `SubExponentialMoment` bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, independent finite subGaussian sum MGF, finite Hoeffding theorem for bounded centered variables, sharp finite Hoeffding theorem for bounded centered variables, non-centered Wikipedia-form finite Hoeffding, the Hoeffding branch milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum concentration scaffold, Stage B1-fix subExponential MGF domain/max-scale infrastructure, Stage B2 full scalar Bernstein min-form tail bound, Stage SC-closeout scalar concentration theorem-family closeout, Stage B3 deterministic weighted scalar Bernstein theorem, Stage SC-final scalar concentration branch closure, Stage M-real-1 real-exponent `SubGaussianMoment` bridge, Stage M-real-2 subExponential real-moment bridge, Stage SC-final-update scalar closeout refresh, Stage MC1 matrix concentration vocabulary/statement layer, Stage MC2 operator-norm/unit-sphere bridge infrastructure, Stage MC2-fix operator norm Mathlib bridge cleanup, and Stage MC3 matrix variance proxy / independent self-adjoint matrix sums are complete.
+- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` bridges, full finite-`ENNReal` `SubExponentialMoment` bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, independent finite subGaussian sum MGF, finite Hoeffding theorem for bounded centered variables, sharp finite Hoeffding theorem for bounded centered variables, non-centered Wikipedia-form finite Hoeffding, the Hoeffding branch milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum concentration scaffold, Stage B1-fix subExponential MGF domain/max-scale infrastructure, Stage B2 full scalar Bernstein min-form tail bound, Stage SC-closeout scalar concentration theorem-family closeout, Stage B3 deterministic weighted scalar Bernstein theorem, Stage SC-final scalar concentration branch closure, Stage M-real-1 real-exponent `SubGaussianMoment` bridge, Stage M-real-2 subExponential real-moment bridge, Stage SC-final-update scalar closeout refresh, Stage MC1 matrix concentration vocabulary/statement layer, Stage MC2 operator-norm/unit-sphere bridge infrastructure, Stage MC2-fix operator norm Mathlib bridge cleanup, Stage MC3 matrix variance proxy / independent self-adjoint matrix sums, and Stage MC4-cleanup matrix concentration statement honesty cleanup are complete.
 
 Workflow file:
 - docs/Workflow.md
@@ -106,6 +106,7 @@ Last known test status:
 - Stage MC2 operator-norm and unit-sphere bridge infrastructure
 - Stage MC2-fix operator norm Mathlib bridge cleanup
 - Stage MC3 matrix variance proxy and independent self-adjoint matrix sums
+- Stage MC4-cleanup matrix concentration statement honesty cleanup
 
 Stage 1A implemented:
 - probability-space convention
@@ -706,6 +707,27 @@ Stage MC3 implemented:
   Hanson-Wright, covariance estimation, random matrix concentration, or a
   sample-covariance operator-norm theorem.
 
+Stage MC4-cleanup implemented:
+- added `IntegrableRandomMatrix` as a lightweight entrywise integrability
+  predicate for random matrices.
+- removed the misleading theorem-like Lean declarations
+  `matrixLaplaceTransformStatement` and `traceExpMomentBoundStatement`, both of
+  which had body `True`.
+- refined `matrixBernsteinSelfAdjointStatement` to expose the probability
+  measure assumption, integrability, centered self-adjointness, independence,
+  pointwise operator-norm boundedness, PSD variance proxy, variance proxy norm
+  bound, positivity/nonnegativity, and denominator positivity assumptions.
+- corrected matrix Bernstein comments and documentation so PSD of
+  `matrixVarianceProxy` is recorded as a typed target only, not a proven
+  theorem.
+- updated `docs/MatrixBernsteinProofPlan.md` to separate proven
+  infrastructure, typed statements, and documentation-only matrix Laplace /
+  trace exponential TODOs.
+- updated random-matrix concentration and variance-proxy API tests and removed
+  checks for the deleted placeholder declarations.
+- did not prove matrix Bernstein, matrix Laplace, trace exponential bounds,
+  Hanson-Wright, covariance estimation, or any matrix concentration theorem.
+
 Milestone Sprint S2 implemented:
 - completed fixed-scale scalar Orlicz/tail implication graph in both directions for ψ�?and ψ�?predicates
 - added `HighDimProb.Concentration.Implications`
@@ -1058,7 +1080,7 @@ Important existing declarations:
 
 ## Active
 
-Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage M3, Stage H1, Stage H0, Stage H2A, Stage H2B, Stage H3, Stage H4, Stage H2-cleanup, Stage H5, Stage H6, Stage H6-sharp, Stage H7, Stage H7-closeout, Stage H8, Stage B1, Stage B1-fix, Stage B2, Stage SC-closeout, Stage B3, Stage SC-final, Stage M-real-1, Stage M-real-2, Stage SC-final-update, Stage MC1, Stage MC2, and Stage MC2-fix are complete.
+Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage M3, Stage H1, Stage H0, Stage H2A, Stage H2B, Stage H3, Stage H4, Stage H2-cleanup, Stage H5, Stage H6, Stage H6-sharp, Stage H7, Stage H7-closeout, Stage H8, Stage B1, Stage B1-fix, Stage B2, Stage SC-closeout, Stage B3, Stage SC-final, Stage M-real-1, Stage M-real-2, Stage SC-final-update, Stage MC1, Stage MC2, Stage MC2-fix, Stage MC3, and Stage MC4-cleanup are complete.
 
 The scalar subGaussian forward spine is closed for this milestone:
 `CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`.
@@ -1346,7 +1368,7 @@ Processed:
 - sample-covariance unit-sphere operator-norm typed statement target
 
 Currently processing:
-- none; Stage MC3 is complete
+- none; Stage MC4-cleanup is complete
 
 Not yet processed:
 - LLN variance-of-sample-mean proof bridge
@@ -1405,6 +1427,14 @@ a.e. operator-norm-bound predicates, and an updated typed
 Laplace-transform infrastructure, and trace exponential estimates remain
 future theorem prerequisites.
 
+Stage MC4-cleanup has no build blocker. The matrix concentration statement
+layer no longer contains theorem-like Laplace or trace declarations whose body
+is just `True`. The additive matrix Bernstein typed statement now has explicit
+probability-measure, integrability, positivity, PSD variance proxy, and
+denominator assumptions. Matrix Laplace and trace exponential work is
+documentation-only until the required objects and analytic theorems are
+available.
+
 Stage SC-final-update has no build blocker. The scalar concentration branch now has
 leaf-module audit documentation, a theorem-family index, a test-coverage map,
 the milestone document `docs/Milestone-ScalarConcentration.md`, an import-surface
@@ -1442,7 +1472,7 @@ import/test audit for this completed milestone. Exact scale-0
 `SubGaussianTail` and `CenteredSubGaussianMGF` wrappers remain unavailable
 because those predicates require strictly positive scales.
 
-No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage H0, Stage H2A, Stage H2B, Stage H2-cleanup, Stage H3, Stage H4, Stage H5, Stage H6, Stage H6-sharp, Stage H7, Stage H7-closeout, Stage H8, Stage B1, Stage B1-fix, Stage B2, Stage SC-closeout, Stage B3, Stage SC-final, Stage M-real-1, Stage M-real-2, Stage SC-final-update, Stage MC1, Stage MC2, Stage MC2-fix, or Stage MC3 build blocker. The finite union bound is proved, the sample-covariance quadratic-form bridge/nonnegativity and explicit PSD bridge are proved, the weak-law scaffold now includes sample-mean vocabulary, scalar assumption wrappers, and honest typed statements, and the scalar moment/MGF branch proves fixed-exponent absolute-moment bridges, all-natural absolute moments with factorial constants, natural moment-to-Lp bridges, crude linear real-Lp growth, natural-exponent sharp `sqrt(q)` real-Lp growth, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` and `SubExponentialMoment` bridges, forward MGF-to-tail/psi2/moment composition, the weighted finite Rademacher Hoeffding specialization, independent finite subGaussian sum MGF/tail closure, finite bounded centered Hoeffding, sharp finite bounded centered Hoeffding, non-centered finite bounded Hoeffding, the Hoeffding milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum scaffold, the Stage B1-fix max-scale/lintegral finite-sum Bernstein infrastructure, the Stage B2 scalar Bernstein min-form theorem, the Stage SC-closeout scalar theorem-family audit, the Stage B3 weighted scalar Bernstein theorem, the Stage SC-final scalar concentration branch closure, the Stage M-real-1 real-exponent `SubGaussianMoment` bridge, the Stage M-real-2 subExponential real-moment bridge, the Stage SC-final-update scalar closeout refresh, the Stage MC1 matrix concentration vocabulary/statement layer, the Stage MC2 operator-norm/unit-sphere bridge layer, the Stage MC2-fix operator norm Mathlib bridge cleanup, and the Stage MC3 matrix variance proxy / independent self-adjoint matrix sum infrastructure.
+No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage H0, Stage H2A, Stage H2B, Stage H2-cleanup, Stage H3, Stage H4, Stage H5, Stage H6, Stage H6-sharp, Stage H7, Stage H7-closeout, Stage H8, Stage B1, Stage B1-fix, Stage B2, Stage SC-closeout, Stage B3, Stage SC-final, Stage M-real-1, Stage M-real-2, Stage SC-final-update, Stage MC1, Stage MC2, Stage MC2-fix, Stage MC3, or Stage MC4-cleanup build blocker. The finite union bound is proved, the sample-covariance quadratic-form bridge/nonnegativity and explicit PSD bridge are proved, the weak-law scaffold now includes sample-mean vocabulary, scalar assumption wrappers, and honest typed statements, and the scalar moment/MGF branch proves fixed-exponent absolute-moment bridges, all-natural absolute moments with factorial constants, natural moment-to-Lp bridges, crude linear real-Lp growth, natural-exponent sharp `sqrt(q)` real-Lp growth, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` and `SubExponentialMoment` bridges, forward MGF-to-tail/psi2/moment composition, the weighted finite Rademacher Hoeffding specialization, independent finite subGaussian sum MGF/tail closure, finite bounded centered Hoeffding, sharp finite bounded centered Hoeffding, non-centered finite bounded Hoeffding, the Hoeffding milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum scaffold, the Stage B1-fix max-scale/lintegral finite-sum Bernstein infrastructure, the Stage B2 scalar Bernstein min-form theorem, the Stage SC-closeout scalar theorem-family audit, the Stage B3 weighted scalar Bernstein theorem, the Stage SC-final scalar concentration branch closure, the Stage M-real-1 real-exponent `SubGaussianMoment` bridge, the Stage M-real-2 subExponential real-moment bridge, the Stage SC-final-update scalar closeout refresh, the Stage MC1 matrix concentration vocabulary/statement layer, the Stage MC2 operator-norm/unit-sphere bridge layer, the Stage MC2-fix operator norm Mathlib bridge cleanup, the Stage MC3 matrix variance proxy / independent self-adjoint matrix sum infrastructure, and the Stage MC4-cleanup matrix concentration statement honesty cleanup.
 
 Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Stage G2A proves Psi2Bound -> absMomentNat q=2, SubGaussianTail -> absMomentNat q=2, and the analogous first-moment psi1/subExponential pilot. Stage G2B proves Psi2Bound/SubGaussianTail -> absMomentNat q for all natural q with a crude factorial constant. Stage G2C proves `finiteAbsMomentNat -> MemLp`, quantitative `absMomentNat -> realLpNorm`, and the factorial-growth `SubGaussianMomentNat` wrappers. Stage G2D proves the linear `realLpNorm <= C*K*q` consequence. Stage G2E records the sharp route as typed targets, Stage G2E-fix proves the deterministic envelope plus natural-exponent sqrt-growth moment bounds, Stage G2F packages those bounds as `SubGaussianMomentNatSqrt`, Sprint S4 proves `CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`, Stage M-real-1 proves `Psi2Bound -> SubGaussianMoment (8*K)` plus `SubGaussianTail -> SubGaussianMoment (16*K)` over arbitrary finite `p : ENNReal`, and Stage M-real-2 proves `Psi1Bound -> SubExponentialMoment (16*K)` plus `SubExponentialTail -> SubExponentialMoment (48*K)`. Finite-gauge variants, reverse/source MGF connectors, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
 
@@ -1457,4 +1487,4 @@ Theorem statements blocked by missing infrastructure are tracked in docs/Theorem
 
 ## Next safe task
 
-Stage MC4 - matrix Bernstein theorem statement refinement and proof plan.
+Stage MC4-psd - PSD square and variance-proxy algebra cleanup.

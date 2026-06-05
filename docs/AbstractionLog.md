@@ -1030,3 +1030,30 @@
 - Constant decision: one-sided Chernoff tails use denominator `4*K^2`, the two-sided tail scale is `2*K`, the induced ψ₂ scale is `4*K`, and the induced natural sqrt-moment scale is `16*K`.
 - Lean/mathlib reuse: the proofs use Mathlib `HasSubgaussianMGF` for exponential integrability, `MeasureTheory.ofReal_integral_eq_lintegral_ofReal`, `MeasureTheory.meas_ge_le_lintegral_div`, `measure_union_le`, and existing HighDimProb tail-to-Orlicz and moment bridges.
 - Future upgrade path: prove reverse MGF links or source the MGF predicate from ψ₂/tail hypotheses in a separate stage; do not collapse predicate forms until those directions are available.
+
+## Stage MC4-cleanup matrix concentration statement honesty
+
+- Concrete version chosen: remove the theorem-like Lean placeholders
+  `matrixLaplaceTransformStatement` and `traceExpMomentBoundStatement` because
+  they had body `True`, and keep matrix Laplace / trace exponential work as
+  documentation-only TODOs in `docs/MatrixBernsteinProofPlan.md`.
+- Statement decision: keep
+  `operatorNorm_eq_spectralRadius_of_selfAdjointStatement` as a typed `Prop`
+  because it mentions existing objects, but do not add typed Laplace or
+  trace-exponential statements until the needed objects and assumptions can be
+  stated honestly.
+- Bernstein decision: refine `matrixBernsteinSelfAdjointStatement` to expose
+  the probability-measure assumption, entrywise integrability, centered
+  self-adjointness, independence, pointwise operator-norm boundedness, PSD
+  variance proxy, variance proxy norm bound, nonnegative scales, positive
+  constants, nonnegative threshold, and positive denominator.
+- Integrability decision: add `IntegrableRandomMatrix` as a lightweight
+  entrywise predicate in `HighDimProb.RandomMatrix.Expectation`; do not build a
+  Bochner matrix-expectation layer.
+- PSD decision: documentation now says
+  `isPSD_matrixVarianceProxy_of_selfAdjoint_statement` is only a typed target.
+  PSD remains blocked by PSD of self-adjoint squares, expectation preserving
+  PSD, and finite sums preserving PSD.
+- Future upgrade path: Stage MC4-psd should resolve the PSD square and
+  variance-proxy algebra before returning to matrix Laplace or trace
+  exponential vocabulary.

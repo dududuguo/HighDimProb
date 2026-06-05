@@ -31,6 +31,7 @@ variable (hM : IsSelfAdjointMatrix M)
 #check IndependentSelfAdjointRandomMatrices
 #check CenteredSelfAdjointRandomMatrixFamily
 #check CenteredRandomSelfAdjointMatrices
+#check IntegrableRandomMatrix
 #check BoundedOperatorNorm
 #check PointwiseOperatorNormBound
 #check UniformOperatorNormBound
@@ -52,6 +53,11 @@ variable (hM : IsSelfAdjointMatrix M)
 #check matrixVarianceProxyNorm
 #check matrixVarianceProxyNorm_apply
 #check isSelfAdjointMatrix_matrixSquare_of_isSelfAdjointMatrix
+#check isPSD_matrixSquare_of_selfAdjoint_statement
+#check isSelfAdjointMatrix_matrixSecondMoment
+#check isPSD_matrixSecondMoment_of_selfAdjoint_statement
+#check isSelfAdjointMatrix_matrixVarianceProxy
+#check isPSD_matrixVarianceProxy_of_selfAdjoint_statement
 #check matrixBernsteinStatement
 
 #check (randomMatrixSum A : RandomMatrix Omega n n)
@@ -67,6 +73,7 @@ variable (hM : IsSelfAdjointMatrix M)
 #check (IndependentSelfAdjointRandomMatrices P A : Prop)
 #check (CenteredSelfAdjointRandomMatrixFamily P A : Prop)
 #check (CenteredRandomSelfAdjointMatrices P A : Prop)
+#check (IntegrableRandomMatrix P X : Prop)
 #check (BoundedOperatorNorm X R : Prop)
 #check (PointwiseOperatorNormBound A R : Prop)
 #check (UniformOperatorNormBound A R : Prop)
@@ -84,4 +91,5 @@ variable (hM : IsSelfAdjointMatrix M)
 #check (matrixVarianceProxyNorm P A : Real)
 #check (isSelfAdjointMatrix_matrixSquare_of_isSelfAdjointMatrix hM :
   IsSelfAdjointMatrix (matrixSquare M))
+#check (isPSD_matrixSquare_of_selfAdjoint_statement hM : Prop)
 #check (matrixBernsteinStatement P A sigma2 R c t : Prop)

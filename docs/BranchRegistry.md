@@ -104,7 +104,7 @@ It is a planning document, not a request to physically move existing files.
 - Dependencies: `Scalar`, `Vector`, `Geometry`, Mathlib matrices, finite sums, and scoped L2 operator norm APIs.
 - Forbidden scope: proving matrix concentration before matrix Laplace-transform, variance-proxy, and covariance-estimation prerequisites are ready.
 - Promotion criteria: submodule API tests, theorem atlas dependencies, docs, status update, and stable-root import audit.
-- Next safe tasks: Stage MC4 matrix Bernstein theorem statement refinement and proof plan; independent-row/iid-row vocabulary remains separate until covariance-estimation proof work starts.
+- Next safe tasks: Stage MC4-psd PSD square and variance-proxy algebra cleanup; independent-row/iid-row vocabulary remains separate until covariance-estimation proof work starts.
 
 ## Process
 
@@ -170,3 +170,28 @@ It is a planning document, not a request to physically move existing files.
 - Forbidden scope: stable API promotion by accident and new declarations inside the aggregate.
 - Promotion criteria: not promoted as a whole; branches are promoted individually.
 - Next safe tasks: keep aggregate synchronized with reserved and experimental branches.
+
+## MC4-cleanup — Matrix Concentration Statement Honesty
+
+- Stage: MC4-cleanup
+- Date: 2026-02-03 (approximate)
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/VarianceProxy.lean`,
+  `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
+- Test modules: `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
+  `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`
+- Docs: `docs/MatrixBernsteinProofPlan.md`, `docs/MatrixConcentrationPlan.md`,
+  `docs/TheoremAtlas.md`, `docs/Status.md`, `docs/AbstractionLog.md`
+- New declarations: `IntegrableRandomMatrix`, `matrixBernsteinSelfAdjointStatement`,
+  `operatorNorm_eq_spectralRadius_of_selfAdjointStatement`,
+  `HighProbabilityBound`, `highProbabilityBound`,
+  `isSelfAdjointMatrix_matrixSecondMoment`,
+  `isSelfAdjointMatrix_matrixVarianceProxy`,
+  `isPSD_matrixSquare_of_selfAdjoint_statement`,
+  `isPSD_matrixSecondMoment_of_selfAdjoint_statement`,
+  `isPSD_matrixVarianceProxy_of_selfAdjoint_statement`
+- Removed placeholders: `matrixLaplaceTransformStatement` and
+  `traceExpMomentBoundStatement`; matrix Laplace and trace exponential work is
+  documentation-only until honest typed objects exist.
+- Proven: self-adjointness of `matrixSecondMoment` and `matrixVarianceProxy`
+- Blocked: PSD lemmas (typed targets), λmax bridge, Golden-Thompson

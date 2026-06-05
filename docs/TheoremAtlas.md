@@ -867,10 +867,10 @@ future directions.
 - Informal statement: sums of independent centered random matrices with bounded operator norm satisfy Bernstein-type spectral tail bounds.
 - Target Lean statement: `matrixBernsteinStatement`.
 - Required objects: random matrices, self-adjoint matrix predicates, centered matrix variables, `operatorNorm`, finite random-matrix sums, matrix square/second moments, variance proxy, independence.
-- Required definitions: Stage 6A random matrix object layer exists; Stage 6B adds `operatorNorm`; Stage MC1 adds self-adjoint, matrix order, matrix expectation, and typed statement vocabulary; Stage MC2/MC2-fix adds explicit unit-vector/operator-norm bridges and operator-norm measurability; Stage MC3 adds `randomMatrixSum`, `IndependentSelfAdjointRandomMatrices`, `CenteredSelfAdjointRandomMatrixFamily`, `PointwiseOperatorNormBound`, `matrixSecondMoment`, `matrixVarianceProxy`, and `matrixVarianceProxyNorm`.
-- Required bridge lemmas: matrix-valued measurability, independence of matrix-valued variables, self-adjoint finite-sum algebra, matrix square measurability, matrix Laplace-transform infrastructure, variance-proxy PSD facts, and self-adjoint dilation if rectangular variants are used. MC2-fix supplies the basic operator-norm comparison and measurability bridges; MC3 supplies random-matrix sum and variance-proxy infrastructure but not the PSD proof for the proxy.
+- Required definitions: Stage 6A random matrix object layer exists; Stage 6B adds `operatorNorm`; Stage MC1 adds self-adjoint, matrix order, matrix expectation, and typed statement vocabulary; Stage MC2/MC2-fix adds explicit unit-vector/operator-norm bridges and operator-norm measurability; Stage MC3 adds `randomMatrixSum`, `IndependentSelfAdjointRandomMatrices`, `CenteredSelfAdjointRandomMatrixFamily`, `PointwiseOperatorNormBound`, `matrixSecondMoment`, `matrixVarianceProxy`, and `matrixVarianceProxyNorm`; Stage MC4-cleanup adds `IntegrableRandomMatrix` and refines the additive-form `matrixBernsteinSelfAdjointStatement`.
+- Required bridge lemmas: matrix-valued measurability, independence of matrix-valued variables, self-adjoint finite-sum algebra, matrix square measurability, matrix Laplace-transform infrastructure, variance-proxy PSD facts, and self-adjoint dilation if rectangular variants are used. MC2-fix supplies the basic operator-norm comparison and measurability bridges; MC3 supplies random-matrix sum and variance-proxy infrastructure; MC4-cleanup removes meaningless Laplace/trace `True` placeholders and keeps those as documentation-only TODOs.
 - Status: typed-prop
-- Blocker: theorem proof is beyond MC3 and still requires matrix Laplace-transform infrastructure, trace/exponential-moment machinery, PSD facts for `E[A_i^2]` and `matrixVarianceProxy`, and a final decision between pointwise and a.e. norm-bounded assumptions.
+- Blocker: theorem proof is beyond MC4-cleanup and still requires PSD facts for `A_i^2`, `E[A_i^2]`, and `matrixVarianceProxy`, matrix Laplace-transform infrastructure, trace/exponential-moment machinery, and likely a final decision between pointwise and a.e. norm-bounded assumptions.
 - Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - Priority: v0.4
 
@@ -1029,3 +1029,54 @@ future directions.
 - Blocker: none for uncentered sample covariance. Gram/row-Gram PSD wrappers and covariance-matrix PSD remain future work.
 - Target module: `HighDimProb/RandomMatrix/MatrixOrder.lean`
 - Priority: Stage MC1
+
+## Matrix Bernstein Theorem (MC4-cleanup)
+
+- Book heading: Matrix Bernstein inequality (Tropp 5.4)
+- Informal statement: for independent centered self-adjoint random matrices with
+  uniform norm bound `R` and variance proxy `σ²`, the operator norm of the sum
+  satisfies a subGaussian+subExponential tail bound with dimension factor `2n`.
+- Target Lean statement: `matrixBernsteinStatement` (min-form) and
+  `matrixBernsteinSelfAdjointStatement` (additive-form)
+- Required objects: `CenteredSelfAdjointRandomMatrixFamily`,
+  `IndependentSelfAdjointRandomMatrices`, `PointwiseOperatorNormBound`,
+  `matrixVarianceProxyNorm`, `operatorNorm`, `randomMatrixSum`
+- Required bridge lemmas: PSD of `A_i^2`, PSD of `E[A_i^2]`,
+  PSD of `matrixVarianceProxy`, lambda-max/operator-norm bridge,
+  matrix Laplace transform, Golden-Thompson inequality
+- Status: typed-prop (statement refined in MC4-cleanup)
+- Blocker: PSD lemmas are typed targets only, Golden-Thompson and Lieb-style
+  trace inequalities are not available here, and matrix Laplace / trace
+  exponential statements are documentation-only TODOs until they can mention
+  honest Lean objects.
+- Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
+- Proof plan: `docs/MatrixBernsteinProofPlan.md`
+- Priority: Stage MC5+
+
+## Matrix lambda-max / Operator-norm Bridge (MC4-cleanup)
+
+- Book heading: spectral radius equals operator norm for self-adjoint matrices
+- Informal statement: for a self-adjoint real matrix, `‖A‖ = max |λ_i(A)|`
+- Target Lean statement: `operatorNorm_eq_spectralRadius_of_selfAdjointStatement`
+- Required objects: `deterministicOperatorNorm`, `spectralRadius`,
+  `Matrix.IsHermitian.eigenvalues`
+- Status: typed-prop (MC4-cleanup), unproved
+- Blocker: `spectralRadius` returns `ℝ≥0∞`, not `ℝ`; needs coercion and norm equality proof
+- Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
+- Priority: Stage MC5
+
+## PSD of Matrix Square / Second Moment / Variance Proxy (MC4-cleanup)
+
+- Book heading: structural PSD facts for matrix Bernstein
+- Informal statement: if A is self-adjoint then A² is PSD; if A is self-adjoint
+  random then E[A²] is PSD; the variance proxy Σᵢ E[A_i²] is PSD
+- Target Lean statements: `isPSD_matrixSquare_of_selfAdjoint_statement`,
+  `isPSD_matrixSecondMoment_of_selfAdjoint_statement`,
+  `isPSD_matrixVarianceProxy_of_selfAdjoint_statement`
+- Required objects: `matrixSquare`, `matrixSecondMoment`, `matrixVarianceProxy`,
+  `IsPSDMatrix`
+- Status: typed-prop targets (MC4-cleanup), unproved
+- Blocker: PSD of the self-adjoint square, expectation preserving PSD, and
+  finite sums preserving PSD in the explicit quadratic-form order.
+- Target module: `HighDimProb/RandomMatrix/VarianceProxy.lean`
+- Priority: Stage MC4-psd

@@ -1,4 +1,5 @@
 import HighDimProb.Expectation
+import HighDimProb.Lp
 import HighDimProb.RandomMatrix.Basic
 
 /-!
@@ -20,6 +21,12 @@ def matrixExpect {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
     (P : Measure Omega) (A : RandomMatrix Omega m n) :
     Matrix (Fin m) (Fin n) Real :=
   fun i j => expect P (matrixEntry A i j)
+
+/-- Entrywise integrability predicate for random matrices. -/
+def IntegrableRandomMatrix {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (P : Measure Omega) (A : RandomMatrix Omega m n) : Prop :=
+  forall i : Fin m, forall j : Fin n,
+    IntegrableRealRandomVariable P (matrixEntry A i j)
 
 @[simp]
 theorem matrixExpect_apply {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}

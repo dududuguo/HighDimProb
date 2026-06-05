@@ -121,6 +121,44 @@ MC3.
 - Add centered empirical covariance conventions beyond the current uncentered
   `sampleCovariance`.
 
+## Stage MC4-cleanup — Matrix Concentration Statement Honesty
+
+Stage MC4-cleanup removes misleading statement targets whose bodies were just
+`True`, and keeps matrix Laplace / trace exponential work as documentation-only
+TODOs until the required objects and analytic theorems are available.
+
+### MC4-cleanup Additions
+
+| Area | Declarations | Status |
+|---|---|---|
+| Matrix integrability | `IntegrableRandomMatrix` | implemented entrywise predicate |
+| Refined Bernstein statement | `matrixBernsteinSelfAdjointStatement` | typed `Prop` with explicit probability-measure, integrability, positivity, PSD variance proxy, and denominator assumptions |
+| Spectral-radius bridge | `operatorNorm_eq_spectralRadius_of_selfAdjointStatement` | typed `Prop`, unproved |
+| High-probability syntax | `HighProbabilityBound`, `highProbabilityBound` | implemented thin wrapper |
+| Self-adjoint second moment | `isSelfAdjointMatrix_matrixSecondMoment` | proven |
+| Self-adjoint variance proxy | `isSelfAdjointMatrix_matrixVarianceProxy` | proven |
+| PSD square (blocked) | `isPSD_matrixSquare_of_selfAdjoint_statement` | typed `Prop`, unproved |
+| PSD second moment (blocked) | `isPSD_matrixSecondMoment_of_selfAdjoint_statement` | typed `Prop`, unproved |
+| PSD variance proxy (blocked) | `isPSD_matrixVarianceProxy_of_selfAdjoint_statement` | typed `Prop`, unproved |
+| Matrix Laplace transform | no Lean declaration | documentation-only TODO |
+| Trace exponential moment | no Lean declaration | documentation-only TODO |
+| Proof plan document | `docs/MatrixBernsteinProofPlan.md` | updated |
+
+### PSD Blockers
+
+The PSD variance proxy theorem is not proved. The code only has typed targets
+for PSD square, PSD second moment, and PSD variance proxy. These remain blocked
+by the explicit PSD-square finite-sum identity, expectation preserving PSD, and
+finite sums preserving PSD in the explicit quadratic-form order.
+
+### Matrix Laplace / Trace Exponential Blockers
+
+No Lean declaration named `matrixLaplaceTransformStatement` or
+`traceExpMomentBoundStatement` remains. Golden-Thompson inequality and Lieb
+concavity are not in the current project, and matrix Laplace / trace
+exponential work stays in `docs/MatrixBernsteinProofPlan.md` until an honest
+typed statement can mention real objects.
+
 ## Next Safe Task
 
-Stage MC4 - matrix Bernstein theorem statement refinement and proof plan.
+Stage MC4-psd - PSD square and variance-proxy algebra cleanup.

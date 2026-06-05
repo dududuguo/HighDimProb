@@ -5,6 +5,7 @@ open HighDimProb
 
 variable {Omega : Type*} [MeasurableSpace Omega]
 variable {P : Measure Omega}
+variable [IsProbabilityMeasure P]
 variable {I : Type*} [Fintype I]
 variable {m n : Nat}
 variable (A : RandomMatrix Omega n n)
@@ -12,7 +13,7 @@ variable (B : I -> RandomMatrix Omega n n)
 variable (X : RandomMatrix Omega m n)
 variable (M N : Matrix (Fin n) (Fin n) Real)
 variable (x : Fin n -> Real)
-variable (R sigma2 c t bound K : Real)
+variable (R sigma2 c c1 c2 t bound K : Real)
 
 #check instMeasurableSpaceMatrix
 #check IsSymmetricMatrix
@@ -33,6 +34,7 @@ variable (R sigma2 c t bound K : Real)
 #check isPSD_sampleCovariance
 #check randomPSDMatrix_sampleCovariance
 #check matrixExpect
+#check IntegrableRandomMatrix
 #check centeredRandomMatrix
 #check matrixExpect_apply
 #check centeredRandomMatrix_apply
@@ -70,6 +72,10 @@ variable (R sigma2 c t bound K : Real)
 #check sampleCovarianceQuadraticFormDeviation
 #check sampleCovarianceOperatorNormViaUnitSphereStatement
 #check matrixBernsteinStatement
+#check matrixBernsteinSelfAdjointStatement
+#check operatorNorm_eq_spectralRadius_of_selfAdjointStatement
+#check HighProbabilityBound
+#check highProbabilityBound
 #check matrixHoeffdingStatement
 #check matrixChernoffStatement
 #check covarianceEstimationStatement
@@ -84,6 +90,7 @@ variable (R sigma2 c t bound K : Real)
 #check (RandomPSDMatrix P A : Prop)
 #check (MatrixLE M N : Prop)
 #check (matrixExpect P X : Matrix (Fin m) (Fin n) Real)
+#check (IntegrableRandomMatrix P X : Prop)
 #check (centeredRandomMatrix P X : RandomMatrix Omega m n)
 #check (CenteredRandomSelfAdjointMatrices P B : Prop)
 #check (IndependentRandomMatrices P B : Prop)
@@ -115,6 +122,10 @@ variable (R sigma2 c t bound K : Real)
 #check (sampleCovarianceQuadraticFormDeviation X x : RealRandomVariable Omega)
 #check (sampleCovarianceOperatorNormViaUnitSphereStatement P X t bound : Prop)
 #check (matrixBernsteinStatement P B sigma2 R c t : Prop)
+#check (matrixBernsteinSelfAdjointStatement P B sigma2 R c1 c2 t : Prop)
+#check (operatorNorm_eq_spectralRadius_of_selfAdjointStatement M : Prop)
+#check (HighProbabilityBound P (Set.univ : Set Omega) 1 : Prop)
+#check (highProbabilityBound P (Set.univ : Set Omega) 1 : Prop)
 #check (matrixHoeffdingStatement P B R c t : Prop)
 #check (matrixChernoffStatement P B R c t : Prop)
 #check (covarianceEstimationStatement P X K c t : Prop)

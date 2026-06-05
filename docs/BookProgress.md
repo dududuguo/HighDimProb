@@ -545,3 +545,16 @@ Resolved in Stage MC3:
 - Did not prove matrix Bernstein, matrix Hoeffding, matrix Chernoff,
   Hanson-Wright, covariance estimation, or a sample-covariance operator-norm
   theorem.
+
+Resolved in Stage MC4-cleanup:
+- Added `IntegrableRandomMatrix` as a lightweight entrywise integrability
+  predicate for random matrices.
+- Removed the misleading `matrixLaplaceTransformStatement` and
+  `traceExpMomentBoundStatement` Lean declarations because they were
+  theorem-like names with body `True`.
+- Refined `matrixBernsteinSelfAdjointStatement` so integrability, positivity,
+  PSD variance proxy, and denominator assumptions are explicit.
+- Updated `docs/MatrixBernsteinProofPlan.md` to record matrix Laplace and trace
+  exponential work as documentation-only TODOs.
+- Kept PSD of `matrixVarianceProxy` as a typed target only; no PSD variance
+  proxy theorem or matrix Bernstein theorem was proved.
