@@ -11,20 +11,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - ".github/scripts/codebase_memory_update.py"
-      - ".github/scripts/codebase_memory_metadata.py"
-      - ".github/workflows/codebase-memory.yml"
-      - ".cbmignore"
-      - ".gitignore"
-      - "HighDimProb.lean"
-      - "HighDimProb/**"
-      - "HighDimProbTest.lean"
-      - "HighDimProbTest/**"
-      - "docs/**"
-      - "lake-manifest.json"
-      - "lakefile.lean"
-      - "lean-toolchain"
 
 permissions:
   contents: write
@@ -62,6 +48,17 @@ jobs:
             --cache-dir "$CBM_CACHE_DIR" \
             --mode full
 
+      - name: Install Graphviz
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+
+      - name: Render Graphviz views
+        run: |
+          set -euo pipefail
+          python .github/scripts/codebase_memory_graphviz.py --render
+
       - name: Show graph summary
         run: |
           set -euo pipefail
@@ -75,6 +72,7 @@ jobs:
             .codebase-memory/graph.db.zst
             external/codebase-memory/HighDimProb.db
             external/codebase-memory/metadata.json
+            external/codebase-memory/graphviz/
           if-no-files-found: error
 
       - name: Commit refreshed graph
