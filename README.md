@@ -11,6 +11,21 @@ lake build
 lake test
 ```
 
+## Judge Suite
+
+HighDimProb also has a lightweight compile-time judge suite for downstream API
+use cases and repository policy checks:
+
+```bash
+lake build HighDimProbJudge
+python scripts/judge_policy_check.py
+```
+
+The judge suite is separate from `HighDimProbTest`. It imports public APIs the
+way external Lean files would, checks selected theorem names, and includes small
+application examples for Hoeffding, Bernstein, subGaussian, and random-matrix
+statement surfaces. Details are in `docs/JudgeSystem.md`.
+
 ## Theory Roadmap Submodule
 
 The external theory-side knowledge graph is mounted as a Git submodule:

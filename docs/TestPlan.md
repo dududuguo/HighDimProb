@@ -84,6 +84,15 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/NetsProofsAPI.lean`: checks the first net proof-pilot declarations.
 - `HighDimProbTest/BookStatements.lean`: checks typed statement specifications.
 - `HighDimProbTest/NoDeepMathYet.lean`: policy marker for theorem-heavy tests deferred to later layers.
+- `docs/visualizations/` is documentation-only. Stage V1 verifies it by
+  running `python scripts/visualize_imports.py`, `lake build`, and `lake test`;
+  no Lean API test is added because no Lean declaration is introduced.
+- `HighDimProbJudge`: compile-time OJ-style judge library for downstream API
+  use cases. It is built separately with `lake build HighDimProbJudge`.
+- Stage J2 expands `HighDimProbJudge` with downstream-style judge files for
+  basic concentration, Orlicz/tail bridges, moment bridges, Rademacher,
+  subGaussian/subExponential sums, random-matrix PSD/order, sample covariance,
+  and variance-proxy APIs.
 
 ## Stable vs Experimental Policy
 
@@ -128,11 +137,16 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - Tests should catch broken names, broken imports, wrong abstraction choices, and unusable APIs.
 - Keep tests separate from main package code.
 - `lake build` and `lake test` are mandatory for every round.
+- Judge cases should import public modules the way external users would and use
+  `#check`, explicit type assertions, or direct theorem application examples.
+- `scripts/judge_policy_check.py` enforces forbidden-token, `:= True`, stable
+  root import, judge experimental-import boundary, and judge-root
+  import-completeness checks.
 - Future lint and import minimization are planned, but must not replace build and test checks.
 
 ## Current Limits
 
-No theorem-heavy tests before the object layer stabilizes. The weighted Rademacher Hoeffding specialization, finite bounded-variable Hoeffding theorem, subExponential finite-sum MGF scaffold, max-scale/variance-proxy infrastructure, Bernstein typed statements, local quadratic Bernstein corollary, scalar Bernstein min-form theorem, deterministic weighted scalar Bernstein theorem, scalar concentration closeout import surface, MC1 matrix concentration vocabulary/statement layer, MC2 operator-norm/unit-sphere bridge vocabulary, MC2-fix operator-norm bridge/measurability theorems, MC3 finite random-matrix sum / variance-proxy infrastructure, and MC4-cleanup statement honesty surface are now tested; do not test full subGaussian/subExponential equivalences, random matrix bounds, matrix Bernstein proofs, Johnson-Lindenstrauss, Hanson-Wright, generic chaining, empirical process bounds, or signal recovery guarantees yet.
+No theorem-heavy tests before the object layer stabilizes. The weighted Rademacher Hoeffding specialization, finite bounded-variable Hoeffding theorem, subExponential finite-sum MGF scaffold, max-scale/variance-proxy infrastructure, Bernstein typed statements, local quadratic Bernstein corollary, scalar Bernstein min-form theorem, deterministic weighted scalar Bernstein theorem, scalar concentration closeout import surface, MC1 matrix concentration vocabulary/statement layer, MC2 operator-norm/unit-sphere bridge vocabulary, MC2-fix operator-norm bridge/measurability theorems, MC3 finite random-matrix sum / variance-proxy infrastructure, MC4-cleanup statement honesty surface, V1 visualization script/docs layer, J1 compile-time judge suite, and J2 expanded judge coverage are now checked; do not test full subGaussian/subExponential equivalences, random matrix bounds, matrix Bernstein proofs, Johnson-Lindenstrauss, Hanson-Wright, generic chaining, empirical process bounds, or signal recovery guarantees yet.
 
 ## Future Lint
 

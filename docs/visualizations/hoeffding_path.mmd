@@ -1,0 +1,32 @@
+flowchart TD
+  RAtom["Rademacher atom<br/>MGF/tail proven"]
+  RFamily["finite Rademacher family<br/>independence proven"]
+  RWeightedMGF["weighted Rademacher sum MGF<br/>proven"]
+  RWeightedTail["weighted Rademacher tail<br/>proven"]
+  RHoeffding["Rademacher Hoeffding bound<br/>proven conservative"]
+
+  Bounded["bounded centered variable"]
+  OneMGF["one-variable bounded centered MGF<br/>proven"]
+  SumMGF["finite independent sum MGF<br/>proven"]
+  Conservative["hoeffding_sum_bounded_centered<br/>conservative theorem"]
+  SharpCentered["hoeffding_sum_bounded_centered_sharp<br/>sharp theorem"]
+  NonCentered["hoeffding_sum_bounded<br/>Wikipedia/classical form"]
+  Weighted["hoeffding_weighted_sum_bounded<br/>weighted theorem"]
+
+  RAtom --> RFamily --> RWeightedMGF --> RWeightedTail --> RHoeffding
+
+  Bounded --> OneMGF --> SumMGF
+  SumMGF --> Conservative
+  SumMGF --> SharpCentered
+  SharpCentered --> NonCentered
+  NonCentered --> Weighted
+
+  classDef proven fill:#e7f5e9,stroke:#2e7d32,color:#123;
+  classDef conservative fill:#fff8e1,stroke:#f9a825,color:#332;
+  classDef sharp fill:#e3f2fd,stroke:#1565c0,color:#123;
+  classDef weighted fill:#f3e5f5,stroke:#6a1b9a,color:#213;
+
+  class RAtom,RFamily,RWeightedMGF,RWeightedTail,RHoeffding,Bounded,OneMGF,SumMGF proven;
+  class Conservative conservative;
+  class SharpCentered,NonCentered sharp;
+  class Weighted weighted;

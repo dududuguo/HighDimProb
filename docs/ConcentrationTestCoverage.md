@@ -5,6 +5,19 @@ Stage SC-final-update verifies that every theorem listed in
 aggregate import coverage. Focused `#check` coverage is enough for this
 documentation consolidation stage.
 
+Stage J2 adds compile-time judge coverage through `HighDimProbJudge`. The judge
+suite is separate from `HighDimProbTest`: it imports public modules as a
+downstream user would and checks that theorem names and representative
+applications still elaborate.
+
+J2 concentration judge files:
+- `HighDimProbJudge/Concentration/BasicUse.lean`
+- `HighDimProbJudge/Concentration/OrliczTailUse.lean`
+- `HighDimProbJudge/Concentration/MomentUse.lean`
+- `HighDimProbJudge/Concentration/RademacherUse.lean`
+- `HighDimProbJudge/Concentration/SumsUse.lean`
+- Existing `HoeffdingUse`, `BernsteinUse`, and `SubGaussianUse`
+
 | Theorem or public declaration | Primary `#check` coverage | Aggregate coverage | Result |
 |---|---|---|---|
 | `measure_biUnion_le` | `HighDimProbTest/UnionBoundAPI.lean` | `HighDimProbTest/BranchImports.lean` | covered |
@@ -82,4 +95,5 @@ No new complex examples were added in Stage SC-final-update. Existing focused
 `#check` tests already cover the theorem index, and aggregate import tests
 verify that representative theorem families are reachable through
 `HighDimProb.Concentration`, `HighDimProb.Concentration.Implications`, and
-`HighDimProb.Experimental`.
+`HighDimProb.Experimental`. Stage J2 adds downstream judge examples for the
+major scalar concentration families without changing theorem meanings.

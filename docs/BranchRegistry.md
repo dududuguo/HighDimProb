@@ -171,6 +171,29 @@ It is a planning document, not a request to physically move existing files.
 - Promotion criteria: not promoted as a whole; branches are promoted individually.
 - Next safe tasks: keep aggregate synchronized with reserved and experimental branches.
 
+## Judge
+
+- Branch name: Judge
+- Import path: `HighDimProbJudge`
+- Status: external-facing compile-time judge library
+- Purpose: lightweight OJ-style API and policy checks for downstream users.
+- Current modules: `Smoke`, `StableImports`, `Concentration.BasicUse`,
+  `Concentration.OrliczTailUse`, `Concentration.MomentUse`,
+  `Concentration.RademacherUse`, `Concentration.SumsUse`,
+  `Concentration.HoeffdingUse`, `Concentration.BernsteinUse`,
+  `Concentration.SubGaussianUse`, `RandomMatrix.OperatorNormUse`,
+  `RandomMatrix.StatementUse`, `RandomMatrix.PSDUse`,
+  `RandomMatrix.SampleCovarianceUse`, and `RandomMatrix.VarianceProxyUse`.
+- Dependencies: public `HighDimProb`, `HighDimProb.Concentration`, and
+  `HighDimProb.RandomMatrix` imports.
+- Forbidden scope: new theorem proving, theorem meaning changes, and hidden
+  promotion of experimental modules into the stable root.
+- Promotion criteria: not a stable API branch; it is built with
+  `lake build HighDimProbJudge` and guarded by
+  `scripts/judge_policy_check.py`.
+- Next safe tasks: add judge coverage for geometry, vector, and
+  limit-theorem APIs.
+
 ## MC4-cleanup — Matrix Concentration Statement Honesty
 
 - Stage: MC4-cleanup

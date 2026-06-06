@@ -1,0 +1,32 @@
+flowchart TD
+  KG["theory_kg node"]
+  Reuse["REUSE_SOURCE_VALIDATING<br/>workflow gate"]
+  Mathlib["Mathlib reuse report"]
+  Source["source validation"]
+  Mapping["Lean declaration mapping"]
+  Action["test/doc action"]
+  CBM["codebase-memory update"]
+  FSM["FSM/workflow update"]
+
+  KG --> Reuse --> Mathlib --> Source --> Mapping --> Action --> CBM --> FSM
+
+  Cheb["example: Chebyshev mapping<br/>existing proven theorem"]
+  Union["example: UnionBound test action<br/>focused API test"]
+  Hoeffding["example: Hoeffding source validation<br/>validated before theorem work"]
+
+  Mapping --> Cheb
+  Action --> Union
+  Source --> Hoeffding
+
+  Artifact0["external/validation/mvp-kg-to-lean"]
+  Artifact1["external/validation/mvp-kg-to-lean-v1"]
+  Artifact0 --> KG
+  Artifact1 --> Reuse
+
+  classDef done fill:#e7f5e9,stroke:#2e7d32,color:#123;
+  classDef artifact fill:#f5f5f5,stroke:#616161,color:#111;
+  classDef example fill:#e3f2fd,stroke:#1565c0,color:#123;
+
+  class KG,Reuse,Mathlib,Source,Mapping,Action,CBM,FSM done;
+  class Artifact0,Artifact1 artifact;
+  class Cheb,Union,Hoeffding example;

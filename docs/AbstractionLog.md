@@ -1057,3 +1057,41 @@
 - Future upgrade path: Stage MC4-psd should resolve the PSD square and
   variance-proxy algebra before returning to matrix Laplace or trace
   exponential vocabulary.
+
+## Stage V1 Lean path visualization infrastructure
+
+- Concrete version chosen: add a documentation-only visualization layer under
+  `docs/visualizations/` plus a small import-graph generator in
+  `scripts/visualize_imports.py`.
+- Diagram decision: keep semantic theorem/proof-spine diagrams curated from the
+  milestone and branch docs, because theorem status needs human wording such as
+  `proven`, `typed Prop`, `conservative`, `sharp`, and `TODO`.
+- Import decision: generate `docs/visualizations/import_graph.dot` from actual
+  Lean import lines so the import graph can be refreshed without a full Lean
+  parser.
+- Dependency decision: the script uses only the Python standard library and no
+  optional rendering dependency is added. Graphviz and Mermaid renderers remain
+  optional viewer tools.
+- Scope decision: no Lean declarations, theorem statements, theorem meanings,
+  or proof statuses are changed in this stage.
+- Future upgrade path: regenerate `import_graph.dot` after import changes and
+  keep curated diagrams aligned with milestone closeouts.
+
+## Stage J1 HighDimProb compile-time judge suite
+
+- Concrete version chosen: add a separate `HighDimProbJudge` Lean library
+  rather than mixing OJ-style checks into `HighDimProbTest`.
+- Judge style decision: use a mix of name checks, selected exact type checks,
+  and downstream-style theorem application examples. Large concentration
+  theorems are checked by application examples instead of brittle full type
+  assertions.
+- Policy decision: add `scripts/judge_policy_check.py` using only the Python
+  standard library. It checks forbidden Lean tokens, theorem-like `:= True`
+  declarations, stable-root import boundaries, and complete imports from
+  `HighDimProbJudge.lean`.
+- Import decision: the judge imports public surfaces directly:
+  `HighDimProb`, `HighDimProb.Concentration`, and `HighDimProb.RandomMatrix`.
+- Scope decision: no Lean source theorem declarations, theorem meanings, or
+  optional dependencies are changed.
+- Future upgrade path: Stage J2 can add more judge cases for scalar implication
+  graph names, branch import boundaries, and random-matrix typed statements.

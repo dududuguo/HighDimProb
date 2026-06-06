@@ -62,6 +62,10 @@ HighDimProb
 
 Planned leaves for these branches are tracked in `docs/LeafPlan.md`. Ownership, dependency, and promotion rules are tracked in `docs/BranchRegistry.md`.
 
+Stage V1 adds human/agent-facing diagrams for this tree in
+`docs/visualizations/module_tree.mmd`, and the generated Lean import graph in
+`docs/visualizations/import_graph.dot`.
+
 ## Stage SC-final Import Decision
 
 `HighDimProb.Concentration` remains experimental after scalar concentration

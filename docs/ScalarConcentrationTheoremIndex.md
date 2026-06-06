@@ -2,7 +2,10 @@
 
 Stage SC-final-update indexes the public scalar concentration theorem families. The
 status column distinguishes proved theorem APIs from statement-only `Prop`
-scaffolds and known conservative variants.
+scaffolds and known conservative variants. Stage J2 adds downstream-style
+`HighDimProbJudge` coverage for the major rows in this index through
+`BasicUse`, `OrliczTailUse`, `MomentUse`, `RademacherUse`, `SumsUse`,
+`HoeffdingUse`, `BernsteinUse`, and `SubGaussianUse`.
 
 | Theorem name | File | Statement summary | Constants | Assumptions | Status | Test file | Source/theory family |
 |---|---|---|---|---|---|---|---|

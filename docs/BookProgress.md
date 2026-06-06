@@ -558,3 +558,25 @@ Resolved in Stage MC4-cleanup:
   exponential work as documentation-only TODOs.
 - Kept PSD of `matrixVarianceProxy` as a typed target only; no PSD variance
   proxy theorem or matrix Bernstein theorem was proved.
+
+Resolved in Stage V1:
+- Added `docs/visualizations/index.md` as the entry point for human/agent
+  diagrams.
+- Added curated Mermaid diagrams for the module tree, scalar concentration
+  proof spine, Hoeffding path, Bernstein path, random matrix branch, and
+  KG-to-Lean validation path.
+- Added generated `docs/visualizations/import_graph.dot` and the standard
+  library script `scripts/visualize_imports.py` that regenerates it from Lean
+  import lines.
+- Did not prove new theorems, change theorem meanings, or add optional
+  dependencies.
+
+Resolved in Stage J1:
+- Added `HighDimProbJudge` as a separate compile-time judge library.
+- Added downstream-style judge files for stable imports, Hoeffding,
+  Bernstein, subGaussian implications, operator-norm measurability, and matrix
+  Bernstein statement use.
+- Added the standard-library policy script `scripts/judge_policy_check.py`.
+- Documented the judge system in `docs/JudgeSystem.md`.
+- Did not prove new theorems, change theorem meanings, or add optional
+  dependencies.

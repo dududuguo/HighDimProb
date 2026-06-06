@@ -12,3 +12,6 @@ lean_lib «HighDimProb» where
 
 lean_lib «HighDimProbTest» where
   globs := #[`HighDimProbTest.*]
+
+lean_lib «HighDimProbJudge» where
+  globs := #[`HighDimProbJudge.*]

@@ -1,0 +1,44 @@
+flowchart TD
+  Basic["RandomMatrix.Basic<br/>object + entry measurability"]
+  RowsCols["RowsCols<br/>row/column views"]
+  Action["Action<br/>matrix-vector actions"]
+  Norms["Norms<br/>Frobenius and entrywise norms"]
+  Assumptions["Assumptions<br/>independence/self-adjoint/bounds"]
+  SampleCov["SampleCovariance<br/>Gram and sample covariance"]
+  Quadratic["QuadraticForm<br/>quadratic and bilinear forms"]
+  Algebra["Algebra<br/>finite-sum algebra helpers"]
+  UnitSphere["UnitSphere<br/>unit-vector bridge"]
+  OperatorNorm["OperatorNorm<br/>Mathlib L2 operator norm bridge"]
+  MatrixOrder["MatrixOrder<br/>PSD/order vocabulary"]
+  SelfAdjoint["SelfAdjoint<br/>symmetry/self-adjoint vocabulary"]
+  Expectation["Expectation<br/>entrywise expectation + integrability"]
+  Sums["Sums<br/>random matrix finite sums"]
+  VarianceProxy["VarianceProxy<br/>matrix square + second moment"]
+  Statements["ConcentrationStatements<br/>typed statement layer"]
+
+  Basic --> RowsCols --> Action --> Norms --> Assumptions --> SampleCov --> Quadratic --> Algebra --> UnitSphere --> OperatorNorm --> MatrixOrder --> SelfAdjoint --> Expectation --> Sums --> VarianceProxy --> Statements
+
+  SCPSD["sample covariance PSD<br/>proven"]
+  NormBridge["operator norm bridge<br/>proven"]
+  NormMeas["operator norm measurability<br/>proven"]
+  MBStmt["matrix Bernstein statement<br/>typed Prop"]
+  MBProof["matrix Bernstein proof<br/>TODO"]
+  HW["Hanson-Wright<br/>TODO"]
+  PSDProxy["variance proxy PSD<br/>typed Prop only"]
+
+  SampleCov --> SCPSD
+  OperatorNorm --> NormBridge
+  OperatorNorm --> NormMeas
+  VarianceProxy --> PSDProxy
+  Statements --> MBStmt --> MBProof
+  Statements --> HW
+
+  classDef proven fill:#e7f5e9,stroke:#2e7d32,color:#123;
+  classDef typed fill:#e3f2fd,stroke:#1565c0,color:#123;
+  classDef todo fill:#ffebee,stroke:#c62828,color:#311;
+  classDef helper fill:#f5f5f5,stroke:#616161,color:#111;
+
+  class Basic,RowsCols,Action,Norms,Assumptions,SampleCov,Quadratic,Algebra,UnitSphere,OperatorNorm,MatrixOrder,SelfAdjoint,Expectation,Sums,VarianceProxy,Statements helper;
+  class SCPSD,NormBridge,NormMeas proven;
+  class MBStmt,PSDProxy typed;
+  class MBProof,HW todo;

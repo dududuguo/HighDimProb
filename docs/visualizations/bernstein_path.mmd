@@ -1,0 +1,40 @@
+flowchart TD
+  Psi1["Psi1Bound<br/>proven predicate"]
+  Tail["SubExponentialTail<br/>proven implication"]
+  Moment["SubExponentialMoment<br/>proven finite exponent bridge"]
+
+  RawMGF["CenteredSubExponentialMGF<br/>raw local MGF"]
+  LintMGF["CenteredSubExponentialMGFLIntegral<br/>proof-facing local MGF"]
+  SumMGF["finite-sum MGF<br/>proven"]
+  MaxScale["maxScale<br/>proven"]
+  VarianceProxy["varianceProxy<br/>proven"]
+  Local["local Bernstein<br/>proven"]
+  Full["full scalar Bernstein min-form<br/>proven"]
+  Weighted["weighted Bernstein<br/>proven"]
+  MatrixTODO["matrix Bernstein<br/>TODO"]
+
+  Psi1 -- "matching scale" --> Tail
+  Tail -- "scale loss 3*K" --> Psi1
+  Psi1 --> Moment
+  Tail --> Moment
+
+  RawMGF -- "raw finite-sum infrastructure" --> SumMGF
+  LintMGF -- "tail-proof source" --> SumMGF
+  SumMGF --> MaxScale
+  SumMGF --> VarianceProxy
+  MaxScale --> Local
+  VarianceProxy --> Local
+  Local --> Full --> Weighted
+  Weighted -. "separate branch prerequisite" .-> MatrixTODO
+
+  classDef proven fill:#e7f5e9,stroke:#2e7d32,color:#123;
+  classDef local fill:#fff8e1,stroke:#f9a825,color:#332;
+  classDef weighted fill:#f3e5f5,stroke:#6a1b9a,color:#213;
+  classDef todo fill:#ffebee,stroke:#c62828,color:#311;
+  classDef partial fill:#f5f5f5,stroke:#616161,color:#111;
+
+  class Psi1,Tail,Moment,LintMGF,SumMGF,MaxScale,VarianceProxy,Full proven;
+  class RawMGF partial;
+  class Local local;
+  class Weighted weighted;
+  class MatrixTODO todo;

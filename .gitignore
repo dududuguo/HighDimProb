@@ -10,7 +10,9 @@ __pycache__/
 .DS_Store
 compress-project.ps1
 dist/
-scripts/
+scripts/*
+!scripts/visualize_imports.py
+!scripts/judge_policy_check.py
 !.github/scripts/
 !.github/scripts/**
 .codebase-memory/cache/
