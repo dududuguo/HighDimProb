@@ -20,7 +20,7 @@ Rayleigh quotient bridge. We therefore expose two honest layers:
 namespace HighDimProb
 
 open MeasureTheory
-open scoped Matrix.Norms.L2Operator MatrixOrder
+open scoped Matrix.Norms.L2Operator MatrixOrder Pointwise
 
 noncomputable section
 
@@ -172,6 +172,92 @@ theorem lambdaMaxOrdered_is_greatest_eigenvalue {n : Nat}
   simpa [lambdaMaxOrdered,
     lambdaMaxOrdered_is_greatest_eigenvalue_statement] using
     hA.eigenvalues₀_antitone (Fin.zero_le i)
+
+/-- The ordered lambda-max endpoint is a real spectral value. -/
+private theorem lambdaMaxOrdered_mem_spectrum_real {n : Nat}
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : IsSelfAdjointMatrix A) :
+    lambdaMaxOrdered A hA ∈ spectrum Real A := by
+  classical
+  let e : Fin (Fintype.card (Fin (n + 1))) ≃ Fin (n + 1) :=
+    Fintype.equivOfCardEq (by simp)
+  have hmem := hA.eigenvalues_mem_spectrum_real (e 0)
+  simpa [lambdaMaxOrdered, Matrix.IsHermitian.eigenvalues, e] using hmem
+
+/-- Every real spectral value of a self-adjoint matrix is bounded by the
+ordered endpoint. -/
+private theorem spectrum_real_le_lambdaMaxOrdered {n : Nat}
+    {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hA : IsSelfAdjointMatrix A) {x : Real}
+    (hx : x ∈ spectrum Real A) :
+    x <= lambdaMaxOrdered A hA := by
+  classical
+  rw [hA.spectrum_real_eq_range_eigenvalues] at hx
+  rcases hx with ⟨i, rfl⟩
+  dsimp [lambdaMaxOrdered, Matrix.IsHermitian.eigenvalues]
+  exact hA.eigenvalues₀_antitone (Fin.zero_le _)
+
+/-- The ordered lambda-max endpoint commutes with nonnegative scalar
+multiplication. -/
+theorem lambdaMaxOrdered_smul_of_nonneg
+    {n : Nat} {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (theta : Real) (hTheta : 0 <= theta)
+    (hA : IsSelfAdjointMatrix A) :
+    lambdaMaxOrdered (theta • A) (isSelfAdjointMatrix_smul theta hA)
+      = theta * lambdaMaxOrdered A hA := by
+  classical
+  let hThetaA : IsSelfAdjointMatrix (theta • A) :=
+    isSelfAdjointMatrix_smul theta hA
+  apply le_antisymm
+  · have hmemTheta :
+        lambdaMaxOrdered (theta • A) hThetaA ∈ spectrum Real (theta • A) :=
+      lambdaMaxOrdered_mem_spectrum_real (theta • A) hThetaA
+    have hspectrum :
+        spectrum Real (theta • A) = theta • spectrum Real A :=
+      spectrum.smul_eq_smul theta A
+        (Set.nonempty_of_mem (lambdaMaxOrdered_mem_spectrum_real A hA))
+    rw [hspectrum] at hmemTheta
+    rcases hmemTheta with ⟨mu, hmu, hmul⟩
+    rw [← hmul]
+    exact mul_le_mul_of_nonneg_left
+      (spectrum_real_le_lambdaMaxOrdered hA hmu) hTheta
+  · have hmem :
+        theta * lambdaMaxOrdered A hA ∈ spectrum Real (theta • A) := by
+      have hspectrum :
+          spectrum Real (theta • A) = theta • spectrum Real A :=
+        spectrum.smul_eq_smul theta A
+          (Set.nonempty_of_mem (lambdaMaxOrdered_mem_spectrum_real A hA))
+      rw [hspectrum]
+      simpa [smul_eq_mul] using
+        (Set.smul_mem_smul_set
+          (a := theta)
+          (lambdaMaxOrdered_mem_spectrum_real A hA))
+    exact spectrum_real_le_lambdaMaxOrdered hThetaA hmem
+
+/-- For a positive semidefinite self-adjoint matrix, the ordered largest
+eigenvalue is bounded by the matrix trace.
+
+This is stated with `Matrix.trace` so it can live in `Spectral.lean` without
+importing the downstream `matrixTrace` wrapper from `TraceExp.lean`. -/
+theorem lambdaMaxOrdered_le_trace_of_posSemidef
+    {n : Nat} {B : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hB : IsSelfAdjointMatrix B)
+    (hPSD : Matrix.PosSemidef B) :
+    lambdaMaxOrdered B hB <= Matrix.trace B := by
+  classical
+  let e : Fin (Fintype.card (Fin (n + 1))) ≃ Fin (n + 1) :=
+    Fintype.equivOfCardEq (by simp)
+  have htrace : Matrix.trace B = ∑ i, (hB.eigenvalues i : Real) :=
+    hB.trace_eq_sum_eigenvalues
+  have hnonneg : ∀ i : Fin (n + 1), 0 <= hB.eigenvalues i := by
+    intro i
+    exact hPSD.eigenvalues_nonneg i
+  have hterm :
+      hB.eigenvalues (e 0) <= ∑ i, hB.eigenvalues i := by
+    exact Finset.single_le_sum (by
+      intro j _hj
+      exact hnonneg j) (Finset.mem_univ (e 0))
+  simpa [lambdaMaxOrdered, Matrix.IsHermitian.eigenvalues, e, htrace] using hterm
 
 /-- Typed target recording that the `lambdaMin` wrapper is the least
 Hermitian eigenvalue. -/

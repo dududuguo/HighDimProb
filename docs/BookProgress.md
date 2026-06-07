@@ -732,3 +732,39 @@ Resolved in Stage MB-S7A-provider:
   `lambdaMax_eq_lambdaMaxOrdered_statement` compatibility target.
 - Did not prove trace-exp spectral dominance, full matrix Laplace, trace-mgf,
   Golden-Thompson, Lieb, or matrix Bernstein.
+
+Resolved in Stage MB-S7B-semantic:
+- Added `TraceExpDominatesUpperBound` as the semantic deterministic trace-exp
+  dominance predicate for an arbitrary upper-bound scalar.
+- Proved the generic bridge from `matrixUpperBoundTailEvent` to
+  `traceExpThresholdEvent` under explicit `0 <= theta` and pointwise
+  trace-exp dominance.
+- Proved Rayleigh and spectral semantic wrappers into
+  `TraceExpDominatesQuadraticFormUpperTail`.
+- Did not prove the `lambdaMaxOrdered` trace-exp provider theorem, spectral
+  mapping, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or matrix
+  Bernstein.
+
+Resolved in Stage MB-S7B-scalar-endpoint:
+- Proved `lambdaMaxOrdered_smul_of_nonneg`, the nonnegative
+  scalar-multiplication theorem for the ordered endpoint.
+- This closes only the scalar endpoint split in the trace-exp provider route.
+- Did not prove the `lambdaMaxOrdered` trace-exp provider theorem, exponential
+  spectral mapping, trace endpoint dominance, full matrix Laplace, trace-mgf,
+  Golden-Thompson, Lieb, or matrix Bernstein.
+
+Resolved in Stage MB-S7B-exp-spectral-mapping:
+- Proved `lambdaMaxOrdered_matrixExp`, the ordered endpoint spectral-mapping
+  theorem for `matrixExp`.
+- This closes only the exponential spectral-mapping split in the trace-exp
+  provider route.
+- Did not prove the `lambdaMaxOrdered` trace-exp provider theorem,
+  trace endpoint dominance, full matrix Laplace, trace-mgf, Golden-Thompson,
+  Lieb, or matrix Bernstein.
+
+Resolved in Stage MB-S7B-trace-dominates-endpoint:
+- Proved `lambdaMaxOrdered_le_trace_of_posSemidef`, the ordered endpoint trace
+  domination theorem for positive semidefinite self-adjoint matrices.
+- This closes only the trace endpoint split in the trace-exp provider route.
+- Did not prove the `lambdaMaxOrdered` trace-exp provider theorem, full matrix
+  Laplace, trace-mgf, Golden-Thompson, Lieb, or matrix Bernstein.

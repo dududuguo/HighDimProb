@@ -15,6 +15,7 @@ variable (Z : Omega -> Real)
 variable {d : Nat}
 variable (H : Matrix (Fin (d + 1)) (Fin (d + 1)) Real)
 variable (hH : IsSelfAdjointMatrix H)
+variable (hHPSD : Matrix.PosSemidef H)
 variable (B : RandomMatrix Omega (d + 1) (d + 1))
 variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 
@@ -43,6 +44,8 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check lambdaMaxOrdered_spectralUpperBound
 #check lambdaMaxOrderedPSDUpperBound
 #check lambdaMaxOrdered_rayleighUpperBound
+#check lambdaMaxOrdered_smul_of_nonneg
+#check lambdaMaxOrdered_le_trace_of_posSemidef
 #check spectralUpperBound_of_lambdaMaxPSDUpperBound
 #check spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound
 #check matrixQuadraticForm_nonneg_of_posSemidef
@@ -147,6 +150,15 @@ example :
 example :
     matrixQuadraticForm_le_lambdaMaxOrdered_statement H hH := by
   exact lambdaMaxOrdered_rayleighUpperBound hH
+
+example (theta : Real) (hTheta : 0 <= theta) :
+    lambdaMaxOrdered (theta • H) (isSelfAdjointMatrix_smul theta hH) =
+      theta * lambdaMaxOrdered H hH := by
+  exact lambdaMaxOrdered_smul_of_nonneg theta hTheta hH
+
+example :
+    lambdaMaxOrdered H hH <= Matrix.trace H := by
+  exact lambdaMaxOrdered_le_trace_of_posSemidef hH hHPSD
 
 example (hPSD : M.PosSemidef) :
     0 <= matrixQuadraticForm M x := by

@@ -59,11 +59,12 @@ targets only.
 | Second moment self-adjointness | `isSelfAdjointMatrix_matrixSecondMoment` |
 | Variance proxy self-adjointness | `isSelfAdjointMatrix_matrixVarianceProxy` |
 | Variance proxy PSD | `isPSD_matrixVarianceProxy_of_selfAdjoint` |
-| Spectral vocabulary | `lambdaMax`, `lambdaMaxOrdered`, `lambdaMaxOrdered_eq_eigenvalues₀_zero`, `lambdaMin`, `SpectralUpperBound`, `RayleighUpperBound`, `QuadraticFormUpperBound`, `QuadraticFormLowerBound`, `quadraticFormUpperTailEvent`, `quadraticFormLowerTailEvent`, `twoSidedQuadraticFormTailEvent`, `LambdaMaxPSDUpperBound`, `LambdaMaxOrderedPSDUpperBound`, `matrixQuadraticForm_nonneg_of_posSemidef`, `matrixQuadraticForm_smul_one_of_isUnitVector`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound`, `rayleighUpperBound_of_spectralUpperBound`, `lambdaMaxOrdered_is_greatest_eigenvalue`, `lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrdered_rayleighUpperBound`, `matrixQuadraticForm_le_lambdaMaxOrdered_of_lambdaMaxOrderedPSDUpperBound` |
+| Spectral vocabulary | `lambdaMax`, `lambdaMaxOrdered`, `lambdaMaxOrdered_eq_eigenvalues₀_zero`, `lambdaMin`, `SpectralUpperBound`, `RayleighUpperBound`, `QuadraticFormUpperBound`, `QuadraticFormLowerBound`, `quadraticFormUpperTailEvent`, `quadraticFormLowerTailEvent`, `twoSidedQuadraticFormTailEvent`, `LambdaMaxPSDUpperBound`, `LambdaMaxOrderedPSDUpperBound`, `matrixQuadraticForm_nonneg_of_posSemidef`, `matrixQuadraticForm_smul_one_of_isUnitVector`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound`, `rayleighUpperBound_of_spectralUpperBound`, `lambdaMaxOrdered_is_greatest_eigenvalue`, `lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrdered_rayleighUpperBound`, `lambdaMaxOrdered_smul_of_nonneg`, `lambdaMaxOrdered_le_trace_of_posSemidef`, `matrixQuadraticForm_le_lambdaMaxOrdered_of_lambdaMaxOrderedPSDUpperBound` |
 | Quadratic-form event inclusions | `quadraticFormUpperTailEvent_subset_twoSidedQuadraticFormTailEvent`, `quadraticFormLowerTailEvent_subset_twoSidedQuadraticFormTailEvent` |
 | Matrix exponential and trace | `matrixExp`, `matrixTrace`, `traceMatrixExp`, `traceExpIntegrand`, `traceExpMoment`, `traceExpMomentLIntegral`, `matrixExp_posSemidef_of_selfAdjoint`, `traceMatrixExp_nonneg_of_selfAdjoint`, `traceExpIntegrand_nonneg_of_randomSelfAdjoint`, `traceExpMoment_nonneg_of_randomSelfAdjoint`, `matrixTrace_nonneg_of_posSemidef`, `traceMatrixExp_nonneg_of_matrixExp_posSemidef`, `traceExpMoment_nonneg_of_nonneg`, `traceExpMomentLIntegral_nonneg`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment` |
 | Conditional trace-exp Markov/Laplace bridge | `traceExpThresholdEvent`, `matrixLaplaceRHSLIntegralDiv`, `matrixLaplaceRHSLIntegralDiv_eq_matrixLaplaceRHSLIntegral`, `traceExpThresholdEvent_lintegral_bound`, `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`, `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset` |
 | Conditional trace-exp dominance/Laplace bridge | `TraceExpDominatesQuadraticFormUpperTail`, `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_traceExpDominates`, `matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail` |
+| Semantic trace-exp dominance bridge | `TraceExpDominatesUpperBound`, `matrixUpperBoundTailEvent_subset_traceExpThresholdEvent_of_traceExpDominatesUpperBound`, `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_rayleighUpperBound_of_traceExpDominatesUpperBound`, `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_spectralUpperBound_of_traceExpDominatesUpperBound`, `traceExpDominatesQuadraticFormUpperTail_of_rayleighUpperBound_of_traceExpDominatesUpperBound`, `traceExpDominatesQuadraticFormUpperTail_of_spectralUpperBound_of_traceExpDominatesUpperBound` |
 
 ## Typed Statements Only
 
@@ -80,7 +81,7 @@ targets only.
 | PSD matrix square compatibility target | `isPSD_matrixSquare_of_selfAdjoint_statement` | typed `Prop`; theorem proved |
 | PSD second moment compatibility target | `isPSD_matrixSecondMoment_of_selfAdjoint_statement` | typed `Prop`; theorem proved with square integrability |
 | PSD variance proxy compatibility target | `isPSD_matrixVarianceProxy_of_selfAdjoint_statement` | typed `Prop`; theorem proved with per-summand square integrability |
-| Lambda-max/Rayleigh bridge | `lambdaMax_le_iff_quadraticForm_le_statement`, `matrixQuadraticForm_le_lambdaMax_statement`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, `lambdaMax_eq_lambdaMaxOrdered_statement`, `matrixQuadraticForm_le_lambdaMaxOrdered_statement`, `lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrdered_rayleighUpperBound` | legacy direct theorem typed/unproved; ordered endpoint wrapper added; semantic provider and ordered Rayleigh wrappers proved for the `lambdaMaxOrdered` route |
+| Lambda-max/Rayleigh bridge | `lambdaMax_le_iff_quadraticForm_le_statement`, `matrixQuadraticForm_le_lambdaMax_statement`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, `lambdaMax_eq_lambdaMaxOrdered_statement`, `matrixQuadraticForm_le_lambdaMaxOrdered_statement`, `lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrdered_rayleighUpperBound`, `lambdaMaxOrdered_smul_of_nonneg`, `lambdaMaxOrdered_le_trace_of_posSemidef` | legacy direct theorem typed/unproved; ordered endpoint wrapper added; semantic provider, ordered Rayleigh wrappers, nonnegative scalar-multiplication endpoint theorem, and trace endpoint theorem proved for the `lambdaMaxOrdered` route |
 | Self-adjoint norm/eigenvalue endpoint bridge | `operatorNorm_eq_max_abs_lambda_statement` | typed `Prop`, unproved |
 | Lambda-max endpoint ordering bridge | `lambdaMax_is_greatest_eigenvalue_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue` | legacy statement typed/unproved; ordered endpoint theorem proved for `eigenvalues₀` |
 | Lambda-min endpoint ordering bridge | `lambdaMin_is_least_eigenvalue_statement` | typed `Prop`, unproved |
@@ -95,7 +96,7 @@ targets only.
 | Matrix Laplace upper-tail reduction, lintegral form | `matrixLaplaceTransformLIntegralStatement` | typed `Prop`, unproved |
 | Conditional trace-exp threshold Markov bound | `traceExpThresholdEvent_lintegral_bound` | proven under explicit a.e. measurability |
 | Conditional quadratic-form Laplace bridge | `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`, `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset` | proven only under explicit subset hypothesis `quadraticFormUpperTailEvent Y t ⊆ traceExpThresholdEvent Y theta t` |
-| Trace-exp dominance target | `traceExpDominatesQuadraticFormUpperTailStatement` | typed `Prop`, unproved direct spectral/Rayleigh bridge |
+| Trace-exp dominance target | `traceExpDominatesQuadraticFormUpperTailStatement` | typed `Prop`, unproved direct provider bridge; MB-S7B-semantic proves generic bridges from explicit `TraceExpDominatesUpperBound` assumptions |
 | Conditional dominance-named Laplace bridge | `matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail` | proven only under explicit `TraceExpDominatesQuadraticFormUpperTail Y theta t` |
 | Chernoff step from trace-exp bound | `matrixChernoffFromTraceExpStatement` | typed `Prop`, unproved |
 | Chernoff step from trace-exp bound, lintegral form | `matrixChernoffFromTraceExpLIntegralStatement` | typed `Prop`, unproved |
@@ -222,6 +223,74 @@ The direct proof of `TraceExpDominatesQuadraticFormUpperTail Y theta t`
 remains open. The full matrix Laplace theorem, trace-mgf inequalities,
 Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
 
+## MB-S7B Semantic Trace-Exp Dominance Status
+
+MB-S7B-semantic adds the deterministic semantic predicate:
+
+```lean
+TraceExpDominatesUpperBound
+```
+
+and proves generic event bridges:
+
+```lean
+matrixUpperBoundTailEvent_subset_traceExpThresholdEvent_of_traceExpDominatesUpperBound
+quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_rayleighUpperBound_of_traceExpDominatesUpperBound
+quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_spectralUpperBound_of_traceExpDominatesUpperBound
+traceExpDominatesQuadraticFormUpperTail_of_rayleighUpperBound_of_traceExpDominatesUpperBound
+traceExpDominatesQuadraticFormUpperTail_of_spectralUpperBound_of_traceExpDominatesUpperBound
+```
+
+This stage proves only semantic consequences from explicit pointwise
+`TraceExpDominatesUpperBound` assumptions. It does not prove the
+`lambdaMaxOrdered` trace-exp provider theorem, spectral mapping, full matrix
+Laplace, trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein.
+
+## MB-S7B Scalar Endpoint Status
+
+MB-S7B-scalar-endpoint proves:
+
+```lean
+lambdaMaxOrdered_smul_of_nonneg
+```
+
+This shows that `lambdaMaxOrdered (theta • A)` agrees with
+`theta * lambdaMaxOrdered A hA` for `0 <= theta` using the ordered endpoint and
+real spectrum APIs. It resolves the scalar-multiplication split in the
+trace-exp provider plan only. It does not prove the `lambdaMaxOrdered`
+trace-exp provider theorem, exponential spectral mapping, trace endpoint
+dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or Matrix
+Bernstein.
+
+## MB-S7B Exponential Spectral Mapping Status
+
+MB-S7B-exp-spectral-mapping proves:
+
+```lean
+lambdaMaxOrdered_matrixExp
+```
+
+This shows that the ordered largest endpoint of `matrixExp A` is
+`Real.exp (lambdaMaxOrdered A hA)` for self-adjoint real matrices. It resolves
+only the exponential spectral-mapping split in the future `lambdaMaxOrdered`
+trace-exp provider route. It does not prove the `lambdaMaxOrdered` trace-exp
+provider theorem, trace-dominates-endpoint theorem, full matrix Laplace,
+trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein.
+
+## MB-S7B Trace Endpoint Status
+
+MB-S7B-trace-dominates-endpoint proves:
+
+```lean
+lambdaMaxOrdered_le_trace_of_posSemidef
+```
+
+This shows that a positive semidefinite self-adjoint matrix has ordered
+largest endpoint bounded by `Matrix.trace`. It resolves the trace endpoint
+split in the future `lambdaMaxOrdered` trace-exp provider route. It does not
+prove the `lambdaMaxOrdered` trace-exp provider theorem, full matrix Laplace,
+trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein.
+
 ## PSD Variance Proxy Status
 
 The PSD variance proxy theorem is proved:
@@ -249,9 +318,10 @@ explicit `IsPSDMatrix` predicate.
    future proof work.
 2. Prove or import trace-exponential moment inequalities over the new
    `traceExpMoment` vocabulary.
-3. Prove the direct `TraceExpDominatesQuadraticFormUpperTail Y theta t`
-   bridge from Rayleigh/min-max, lambda-max, and trace-exponential spectral
-   facts under explicit hypotheses.
+3. Prove that the chosen provider, expected first as
+   `lambdaMaxOrdered`, supplies `TraceExpDominatesUpperBound`; the
+   nonnegative scalar-multiplication endpoint helper, exponential
+   spectral-mapping helper, and trace endpoint helper are proved.
 4. Prove the typed matrix Laplace transform method, which still likely
    requires Golden-Thompson and Lieb-style trace inequalities for the trace-mgf
    step.
@@ -260,9 +330,11 @@ explicit `IsPSDMatrix` predicate.
 
 ## Next Safe Task
 
-Stage MB-S7B - trace-exp spectral dominance source/API contract. Do not prove
-trace-exp spectral dominance, trace-mgf, Golden-Thompson, Lieb, full matrix
-Laplace, or Matrix Bernstein in the contract stage.
+Stage MB-S7B-provider-close: assemble the `lambdaMaxOrdered`
+`TraceExpDominatesUpperBound` provider theorem from the scalar endpoint,
+matrix-exponential spectral mapping, and trace endpoint helpers, or block
+cleanly. Do not prove trace-mgf, Golden-Thompson, Lieb, full matrix Laplace, or
+Matrix Bernstein in that stage.
 
 ## MB-S7A Spectral Bridge Typed Split
 
@@ -416,4 +488,7 @@ the legacy `lambdaMax` API unchanged. It does not prove legacy/ordered lambda
 compatibility, trace-exp spectral dominance, full matrix Laplace, trace-mgf,
 Golden-Thompson, Lieb, or Matrix Bernstein.
 
-Next safe task: MB-S7B trace-exp spectral dominance source/API contract.
+Next safe task: MB-S7B-provider-close: assemble the `lambdaMaxOrdered`
+`TraceExpDominatesUpperBound` provider theorem from the scalar endpoint,
+matrix-exponential spectral mapping, and trace endpoint helpers, or block
+cleanly.

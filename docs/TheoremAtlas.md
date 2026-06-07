@@ -1136,6 +1136,12 @@ future directions.
   self-adjoint operator norm by applying the route to `Y` and `-Y`.
 - Target Lean declarations: `matrixLaplaceRHS`,
   `matrixLaplaceRHSLIntegral`, `traceExpThresholdEvent`,
+  `TraceExpDominatesUpperBound`,
+  `matrixUpperBoundTailEvent_subset_traceExpThresholdEvent_of_traceExpDominatesUpperBound`,
+  `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_rayleighUpperBound_of_traceExpDominatesUpperBound`,
+  `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_spectralUpperBound_of_traceExpDominatesUpperBound`,
+  `traceExpDominatesQuadraticFormUpperTail_of_rayleighUpperBound_of_traceExpDominatesUpperBound`,
+  `traceExpDominatesQuadraticFormUpperTail_of_spectralUpperBound_of_traceExpDominatesUpperBound`,
   `matrixLaplaceRHSLIntegralDiv`,
   `traceExpThresholdEvent_lintegral_bound`,
   `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`,
@@ -1152,12 +1158,16 @@ future directions.
 - Status: conditional bridge plus typed-prop targets. MB-S5 proves the
   trace-exponential threshold Markov bound and conditional quadratic-form
   Laplace bridge under an explicit subset hypothesis; MB-S6 names that
-  dominance hypothesis and proves conditional wrappers from it. No full matrix
-  Laplace theorem is proved.
-- Blocker: future proof work must prove
-  `TraceExpDominatesQuadraticFormUpperTail Y theta t`, the self-adjoint
-  operator-norm/lambda-max route, and the trace-mgf inequality for independent
-  matrix sums.
+  dominance hypothesis and proves conditional wrappers from it.
+  MB-S7B-semantic adds the semantic deterministic
+  `TraceExpDominatesUpperBound` predicate and proves generic event bridges from
+  explicit Rayleigh/spectral and trace-exp dominance assumptions. No
+  `lambdaMaxOrdered` trace-exp provider theorem or full matrix Laplace theorem
+  is proved.
+- Blocker: future proof work must prove that a concrete provider such as
+  `lambdaMaxOrdered` supplies `TraceExpDominatesUpperBound`, then still prove
+  the self-adjoint operator-norm/lambda-max route and the trace-mgf inequality
+  for independent matrix sums.
 - Target module: `HighDimProb/RandomMatrix/Laplace.lean`
 - Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
 - Priority: Stage MC5
@@ -1211,8 +1221,8 @@ future directions.
   `HighDimProbTest/RandomMatrixTraceExpAPI.lean`,
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
-- Priority: Stage MB-S2 through MB-S7A-provider complete; next task is
-  MB-S7B trace-exp spectral dominance source/API contract.
+- Priority: Stage MB-S2 through MB-S7B-trace-dominates-endpoint complete; next
+  task is MB-S7B-provider-close.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1289,14 +1299,103 @@ future directions.
   `matrixLaplaceRHSLIntegral`, and `RandomSelfAdjointMatrix`.
 - Status: conditional bridge proved under explicit
   `TraceExpDominatesQuadraticFormUpperTail Y theta t`.
-- Blocker: direct proof of `TraceExpDominatesQuadraticFormUpperTail Y theta t`
-  remains open. Full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and
-  matrix Bernstein remain unproved.
+- Blocker: MB-S7B-semantic later proves generic semantic bridges from explicit
+  `TraceExpDominatesUpperBound` assumptions, MB-S7B-scalar-endpoint proves
+  nonnegative scalar multiplication for the ordered endpoint, and
+  MB-S7B-exp-spectral-mapping proves `lambdaMaxOrdered_matrixExp`, and
+  MB-S7B-trace-dominates-endpoint proves
+  `lambdaMaxOrdered_le_trace_of_posSemidef`. The `lambdaMaxOrdered`
+  trace-exp provider theorem remains open. Full matrix Laplace,
+  trace-mgf, Golden-Thompson, Lieb, and matrix Bernstein remain unproved.
 - Target module: `HighDimProb/RandomMatrix/Laplace.lean`
 - Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
 - Priority: Stage MB-S6 is complete, but direct dominance should wait until
   the ordered endpoint PSD/Rayleigh bridge is proved.
+
+## Semantic Trace-Exp Dominance Bridge (MB-S7B-semantic)
+
+- Book heading: matrix Laplace transform method for matrix Bernstein.
+- Informal statement: if a scalar process `L` bounds the quadratic-form upper
+  tail semantically and the deterministic trace exponential dominates
+  `exp(theta * L)`, then the quadratic-form tail is contained in the
+  trace-exponential threshold event.
+- Target Lean declarations: `TraceExpDominatesUpperBound`,
+  `matrixUpperBoundTailEvent_subset_traceExpThresholdEvent_of_traceExpDominatesUpperBound`,
+  `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_rayleighUpperBound_of_traceExpDominatesUpperBound`,
+  `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_spectralUpperBound_of_traceExpDominatesUpperBound`,
+  `traceExpDominatesQuadraticFormUpperTail_of_rayleighUpperBound_of_traceExpDominatesUpperBound`,
+  and
+  `traceExpDominatesQuadraticFormUpperTail_of_spectralUpperBound_of_traceExpDominatesUpperBound`.
+- Required objects: `matrixUpperBoundTailEvent`, `RayleighUpperBound`,
+  `SpectralUpperBound`, `traceExpThresholdEvent`, `traceExpIntegrand`,
+  `traceMatrixExp`, and `ENNReal.ofReal`.
+- Status: proved generic semantic bridges under explicit `0 <= theta` and
+  pointwise `TraceExpDominatesUpperBound` hypotheses.
+- Blocker: the `lambdaMaxOrdered` trace-exp provider theorem remains unproved;
+  its scalar endpoint, matrix-exponential spectral mapping, and trace endpoint
+  helper splits are now proved. Full matrix Laplace, trace-mgf,
+  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/Laplace.lean`
+- Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
+- Priority: next safe task is MB-S7B-provider-close.
+
+## Ordered Endpoint Scalar Multiplication (MB-S7B-scalar-endpoint)
+
+- Book heading: matrix Laplace transform method for matrix Bernstein.
+- Informal statement: for `0 <= theta`, the canonical ordered endpoint of
+  `theta • A` is `theta * lambdaMaxOrdered A hA`.
+- Target Lean declarations: `lambdaMaxOrdered_smul_of_nonneg`.
+- Required objects: `lambdaMaxOrdered`, `isSelfAdjointMatrix_smul`, Mathlib
+  real spectrum scaling, Hermitian real spectrum membership, and ordered
+  eigenvalue antitonicity.
+- Status: proved.
+- Blocker: none for scalar multiplication. The `lambdaMaxOrdered` trace-exp
+  provider theorem, exponential spectral mapping, trace-dominates-endpoint
+  theorem, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and Matrix
+  Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- Priority: completed; MB-S7B-exp-spectral-mapping is now also complete.
+
+## Ordered Endpoint Matrix Exponential (MB-S7B-exp-spectral-mapping)
+
+- Book heading: matrix Laplace transform method for matrix Bernstein.
+- Informal statement: for self-adjoint real matrices, the ordered largest
+  endpoint of `matrixExp A` is `Real.exp (lambdaMaxOrdered A hA)`.
+- Target Lean declaration: `lambdaMaxOrdered_matrixExp`.
+- Required objects: `lambdaMaxOrdered`, `matrixExp`,
+  `isSelfAdjointMatrix_matrixExp`, CFC spectral mapping, and Hermitian real
+  spectrum endpoint APIs.
+- Status: proved.
+- Blocker: none for exponential spectral mapping. At this stage the
+  `lambdaMaxOrdered` trace-exp provider theorem and trace endpoint theorem were
+  still future splits; MB-S7B-trace-dominates-endpoint now proves the trace
+  endpoint split. Full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and
+  Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- Priority: completed; MB-S7B-trace-dominates-endpoint is now also complete.
+
+## Ordered Endpoint Trace Domination (MB-S7B-trace-dominates-endpoint)
+
+- Book heading: matrix Laplace transform method for matrix Bernstein.
+- Informal statement: for a positive semidefinite self-adjoint real matrix, the
+  ordered largest endpoint is bounded by the matrix trace.
+- Target Lean declaration: `lambdaMaxOrdered_le_trace_of_posSemidef`.
+- Required objects: `lambdaMaxOrdered`, `Matrix.trace`, Hermitian trace as sum
+  of eigenvalues, PSD eigenvalue nonnegativity, and finite nonnegative sums.
+- Status: proved.
+- Blocker: none for trace endpoint domination. The `lambdaMaxOrdered`
+  trace-exp provider theorem, full matrix Laplace, trace-mgf,
+  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- Priority: next safe task is MB-S7B-provider-close.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -1342,8 +1441,8 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
-- Priority: completed through MB-S7A-provider; next safe task is MB-S7B
-  trace-exp spectral dominance source/API contract.
+- Priority: completed through MB-S7B-trace-dominates-endpoint; next safe task
+  is MB-S7B-provider-close.
 
 ## Matrix Bernstein Rayleigh Conversion Helper Bridge (MB-S7A-fix)
 
@@ -1374,8 +1473,8 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
-- Priority: completed through MB-S7A-provider; next safe task is MB-S7B
-  trace-exp spectral dominance source/API contract.
+- Priority: completed through MB-S7B-trace-dominates-endpoint; next safe task
+  is MB-S7B-provider-close.
 
 ## Matrix Bernstein Ordered Endpoint Wrapper (MB-S7A-index)
 
@@ -1405,8 +1504,8 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
-- Priority: completed through MB-S7A-provider; next safe task is MB-S7B
-  trace-exp spectral dominance source/API contract.
+- Priority: completed through MB-S7B-trace-dominates-endpoint; next safe task
+  is MB-S7B-provider-close.
 
 ## Matrix Bernstein Semantic Spectral API (MB-S7A-abstract)
 
@@ -1452,5 +1551,5 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
-- Priority: next safe task is MB-S7B trace-exp spectral dominance source/API
-  contract.
+- Priority: MB-S7B-trace-dominates-endpoint is complete; next safe task is
+  MB-S7B-provider-close.

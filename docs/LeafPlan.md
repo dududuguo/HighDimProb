@@ -95,9 +95,11 @@
 - HansonWrightStatements
 - JLStatements
 - CovarianceEstimationStatements
-- Next: Stage MB-S7B trace-exp spectral dominance source/API contract. Do not
-  prove trace-exp spectral dominance, trace-mgf, Golden-Thompson, Lieb, full
-  matrix Laplace, or Matrix Bernstein in the contract stage.
+- Next: Stage MB-S7B-provider-close. Assemble the `lambdaMaxOrdered`
+  `TraceExpDominatesUpperBound` provider theorem from the scalar endpoint,
+  matrix-exponential spectral mapping, and trace endpoint helpers, or block
+  cleanly. Do not prove trace-mgf, Golden-Thompson, Lieb, full matrix Laplace,
+  or Matrix Bernstein in that stage.
 
 ## Process
 

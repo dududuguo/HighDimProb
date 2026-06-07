@@ -104,10 +104,12 @@ It is a planning document, not a request to physically move existing files.
 - Dependencies: `Scalar`, `Vector`, `Geometry`, Mathlib matrices, finite sums, and scoped L2 operator norm APIs.
 - Forbidden scope: proving matrix concentration before matrix Laplace-transform, variance-proxy, and covariance-estimation prerequisites are ready.
 - Promotion criteria: submodule API tests, theorem atlas dependencies, docs, status update, and stable-root import audit.
-- Next safe tasks: Stage MB-S7B trace-exp spectral dominance source/API
-  contract. Full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, trace-exp
-  spectral dominance, and Matrix Bernstein remain forbidden until their missing
-  bridges are proved.
+- Next safe tasks: Stage MB-S7B-provider-close: assemble the
+  `lambdaMaxOrdered` `TraceExpDominatesUpperBound` provider theorem from the
+  scalar endpoint, matrix-exponential spectral mapping, and trace endpoint
+  helpers, or block cleanly. Full matrix Laplace, trace-mgf, Golden-Thompson,
+  Lieb, and Matrix Bernstein remain forbidden until their missing bridges are
+  proved.
   Independent-row/iid-row vocabulary remains separate until
   covariance-estimation proof work starts.
 
@@ -397,3 +399,66 @@ It is a planning document, not a request to physically move existing files.
   compatibility target.
 - Blocked: trace-exp spectral dominance, full matrix Laplace, trace-mgf,
   Golden-Thompson, Lieb, and matrix Bernstein remain unproved.
+
+## MB-S7B-semantic Trace-Exp Semantic Dominance Bridge
+
+- Stage: MB-S7B-semantic
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/Laplace.lean`
+- Test modules: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
+- New declarations: `TraceExpDominatesUpperBound`,
+  `matrixUpperBoundTailEvent_subset_traceExpThresholdEvent_of_traceExpDominatesUpperBound`,
+  `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_rayleighUpperBound_of_traceExpDominatesUpperBound`,
+  `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_spectralUpperBound_of_traceExpDominatesUpperBound`,
+  `traceExpDominatesQuadraticFormUpperTail_of_rayleighUpperBound_of_traceExpDominatesUpperBound`,
+  and
+  `traceExpDominatesQuadraticFormUpperTail_of_spectralUpperBound_of_traceExpDominatesUpperBound`.
+- Proven: generic event bridges from explicit semantic upper-bound and
+  trace-exp dominance assumptions to the existing MB-S6 dominance predicate.
+- Blocked: `lambdaMaxOrdered` trace-exp provider theorem, spectral mapping,
+  full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and matrix Bernstein
+  remain unproved.
+
+## MB-S7B-scalar-endpoint Ordered Endpoint Scalar Multiplication
+
+- Stage: MB-S7B-scalar-endpoint
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test modules: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- New declarations: `lambdaMaxOrdered_smul_of_nonneg`.
+- Proven: nonnegative scalar multiplication for the canonical ordered endpoint.
+- Did not prove: `lambdaMaxOrdered` trace-exp provider theorem, exponential
+  spectral mapping, trace endpoint theorem, full matrix Laplace, trace-mgf,
+  Golden-Thompson, Lieb, or matrix Bernstein.
+
+## MB-S7B-exp-spectral-mapping Ordered Endpoint Matrix Exponential
+
+- Stage: MB-S7B-exp-spectral-mapping
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test modules: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- New declarations: `lambdaMaxOrdered_matrixExp`.
+- Proven: ordered endpoint spectral mapping for `matrixExp`.
+- Did not prove: `lambdaMaxOrdered` trace-exp provider theorem, trace endpoint
+  theorem, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or matrix
+  Bernstein.
+
+## MB-S7B-trace-dominates-endpoint Ordered Endpoint Trace Domination
+
+- Stage: MB-S7B-trace-dominates-endpoint
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test modules: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- New declarations: `lambdaMaxOrdered_le_trace_of_posSemidef`.
+- Proven: ordered endpoint trace domination for positive semidefinite
+  self-adjoint matrices.
+- Blocked: `lambdaMaxOrdered` trace-exp provider theorem, full matrix Laplace,
+  trace-mgf, Golden-Thompson, Lieb, and matrix Bernstein remain unproved.

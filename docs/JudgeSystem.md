@@ -62,7 +62,8 @@ theorems or typed statements without relying on local test internals.
 - `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`: matrix Laplace RHS and
   lintegral RHS vocabulary, trace-exp threshold events, MB-S5 conditional
   Markov/Laplace bridge APIs, MB-S6 explicit-dominance conditional wrappers,
-  and typed Laplace/Chernoff/operator-norm Laplace statement APIs.
+  MB-S7B-semantic trace-exp upper-bound dominance/event bridges, and typed
+  Laplace/Chernoff/operator-norm Laplace statement APIs.
 - `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`: proof-ready matrix
   Bernstein statement surface, `matrixBernsteinLaplacePrerequisitesStatement`,
   and its main structural/analytic dependencies.
@@ -144,6 +145,33 @@ MB-S7A-provider adds ordered endpoint provider judge cases for
 `lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, and
 `lambdaMaxOrdered_rayleighUpperBound`. The judge still does not claim trace-exp
 spectral dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or
+Matrix Bernstein.
+
+MB-S7B-scalar-endpoint adds Spectral judge cases for
+`lambdaMaxOrdered_smul_of_nonneg` with explicit `0 <= theta` and
+self-adjointness hypotheses. The judge still does not claim the
+`lambdaMaxOrdered` trace-exp provider theorem, exponential spectral mapping,
+trace endpoint dominance, full matrix Laplace, trace-mgf, Golden-Thompson,
+Lieb, or Matrix Bernstein.
+
+MB-S7B-exp-spectral-mapping adds TraceExp judge cases for
+`lambdaMaxOrdered_matrixExp` with explicit self-adjointness hypotheses. The
+judge still does not claim the `lambdaMaxOrdered` trace-exp provider theorem,
+trace endpoint dominance, full matrix Laplace, trace-mgf, Golden-Thompson,
+Lieb, or Matrix Bernstein.
+
+MB-S7B-trace-dominates-endpoint adds Spectral judge cases for
+`lambdaMaxOrdered_le_trace_of_posSemidef` with explicit self-adjointness and
+positive-semidefiniteness hypotheses. The judge still does not claim the
+`lambdaMaxOrdered` trace-exp provider theorem, full matrix Laplace, trace-mgf,
+Golden-Thompson, Lieb, or Matrix Bernstein.
+
+MB-S7B-semantic adds Laplace judge cases for `TraceExpDominatesUpperBound`, the
+upper-bound-tail to trace-exp threshold bridge, and the Rayleigh/spectral
+semantic wrappers into `TraceExpDominatesQuadraticFormUpperTail`. The examples
+keep `0 <= theta` and pointwise trace-exp dominance assumptions explicit. The
+judge still does not claim the `lambdaMaxOrdered` trace-exp provider theorem,
+spectral mapping, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or
 Matrix Bernstein.
 
 For a full stage verification run:

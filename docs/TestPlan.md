@@ -83,6 +83,11 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
   `TraceExpDominatesQuadraticFormUpperTail`,
   `traceExpDominatesQuadraticFormUpperTailStatement`, and the conditional
   `_of_traceExpDominatesQuadraticFormUpperTail` Laplace wrappers.
+- Stage MB-S7B-semantic extends `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
+  and `HighDimProbJudge/RandomMatrix/LaplaceUse.lean` for
+  `TraceExpDominatesUpperBound`, the upper-bound-to-trace-exp threshold bridge,
+  and the Rayleigh/spectral semantic wrappers into
+  `TraceExpDominatesQuadraticFormUpperTail`.
 - `HighDimProbTest/MomentImplicationsAPI.lean`: checks natural absolute-moment vocabulary, fixed-exponent and all-natural-exponent moment implication theorems, finiteness corollaries, natural moment-to-`MemLp`/`realLpNorm` bridges, crude linear and sharp sqrt real-Lp growth theorems, finite-`ENNReal` exponent monotonicity bridges, `SubGaussianMomentNat`, `SubGaussianMomentNatSqrt`, full `SubGaussianMoment` and `SubExponentialMoment` bridges, sharp natural-exponent predicate bridges, and the sharp typed statement wrappers.
 - `HighDimProbTest/MGFImplicationsAPI.lean`: checks the proof-friendly MGF lintegral predicate, the Mathlib-backed MGF bridge, one-sided Chernoff bounds, two-sided tail from MGF, and composed MGF-to-ψ₂/natural-moment corollaries.
 - `HighDimProbTest/SubGaussianSumsAPI.lean`: checks independent finite subGaussian sum measurability helpers, Mathlib MGF proxy wrappers, unweighted and weighted centered-MGF theorems, and their tail corollaries.
@@ -110,7 +115,7 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/RandomMatrixOperatorNormAPI.lean`: checks the experimental L2 operator-norm wrapper, MC2 unit-vector vocabulary, explicit matrix-vector squared norm bridge, squared operator-norm bound predicates, retained exact bridge typed statements, proved MC2-fix bridge theorems, and the proved operator-norm measurability theorem.
 - `HighDimProbTest/RandomMatrixSpectralAPI.lean`: checks MC5.1/MB-S2 spectral wrappers, MB-S7A-index ordered endpoint wrappers, MB-S7A-abstract semantic spectral upper-bound abstractions, quadratic-form bound predicates, monotonicity lemmas, two-sided tail event vocabulary, subset lemmas, and typed spectral bridge targets.
 - `HighDimProbTest/RandomMatrixTraceExpAPI.lean`: checks MC5.2/MB-S2 matrix exponential, trace, trace-exponential moment, lintegral trace-exp moment, self-adjointness preservation, and typed trace-exponential bound targets.
-- `HighDimProbTest/RandomMatrixLaplaceAPI.lean`: checks MC5.3/MB-S2 matrix Laplace RHS vocabulary, lintegral RHS vocabulary, MB-S5 trace-exp threshold/conditional Markov-Laplace bridge declarations, MB-S6 explicit dominance and conditional dominance-wrapper declarations, and typed Laplace/Chernoff/operator-norm statement targets.
+- `HighDimProbTest/RandomMatrixLaplaceAPI.lean`: checks MC5.3/MB-S2 matrix Laplace RHS vocabulary, lintegral RHS vocabulary, MB-S5 trace-exp threshold/conditional Markov-Laplace bridge declarations, MB-S6 explicit dominance and conditional dominance-wrapper declarations, MB-S7B-semantic trace-exp upper-bound dominance/event bridges, and typed Laplace/Chernoff/operator-norm statement targets.
 - `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`: checks Stage MC3 finite random-matrix sums, matrix-valued independence/self-adjoint family assumptions, entrywise matrix integrability, pointwise/a.e. operator-norm-bound predicates, matrix square/second-moment/variance-proxy declarations, scalar variance-proxy norm, compatibility aliases, MB-S1 PSD square/second-moment/variance-proxy theorems, and the updated matrix Bernstein typed statement.
 - `HighDimProbTest/RandomMatrixStatementsAPI.lean`: checks random-matrix theorem statement declarations that are currently honest to type.
 - `HighDimProbTest/RandomMatrixConcentrationAPI.lean`: checks Stage MC1 matrix symmetry/self-adjoint, PSD/order, matrix expectation/integrability, concentration-assumption vocabulary, sample-covariance PSD bridge, MC2 quadratic-form monotonicity and unit-sphere operator-norm typed target, MC2-fix operator-norm bridge theorem names, MC3 finite-sum/variance-proxy vocabulary, MC4-cleanup statement honesty names, and typed matrix concentration statement targets.
@@ -274,3 +279,54 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
 - Coverage proves only the ordered endpoint provider/Rayleigh route. It does
   not claim trace-exp spectral dominance, full matrix Laplace, trace-mgf,
   Golden-Thompson, Lieb, or Matrix Bernstein.
+
+## MB-S7B-scalar-endpoint Ordered Endpoint Coverage
+
+- `HighDimProbTest/RandomMatrixSpectralAPI.lean` and
+  `HighDimProbJudge/RandomMatrix/SpectralUse.lean` both check
+  `lambdaMaxOrdered_smul_of_nonneg`.
+- The examples pass explicit `hTheta : 0 <= theta` and
+  `hA : IsSelfAdjointMatrix A` hypotheses.
+- Coverage proves only nonnegative scalar multiplication for the ordered
+  endpoint. It does not claim the `lambdaMaxOrdered` trace-exp provider
+  theorem, exponential spectral mapping, trace endpoint dominance, full matrix
+  Laplace, trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein.
+
+## MB-S7B-exp-spectral-mapping TraceExp Coverage
+
+- `HighDimProbTest/RandomMatrixTraceExpAPI.lean` and
+  `HighDimProbJudge/RandomMatrix/TraceExpUse.lean` both check
+  `lambdaMaxOrdered_matrixExp`.
+- The examples pass an explicit `hA : IsSelfAdjointMatrix A` hypothesis.
+- Coverage proves only ordered endpoint spectral mapping for `matrixExp`. It
+  does not claim the `lambdaMaxOrdered` trace-exp provider theorem,
+  trace endpoint dominance, full matrix Laplace, trace-mgf, Golden-Thompson,
+  Lieb, or Matrix Bernstein.
+
+## MB-S7B-trace-dominates-endpoint Spectral Coverage
+
+- `HighDimProbTest/RandomMatrixSpectralAPI.lean` and
+  `HighDimProbJudge/RandomMatrix/SpectralUse.lean` both check
+  `lambdaMaxOrdered_le_trace_of_posSemidef`.
+- The examples pass explicit `hA : IsSelfAdjointMatrix A` and
+  `hPSD : Matrix.PosSemidef A` hypotheses.
+- Coverage proves only ordered endpoint trace domination. It does not claim the
+  `lambdaMaxOrdered` trace-exp provider theorem, full matrix Laplace,
+  trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein.
+
+## MB-S7B-semantic Trace-Exp Dominance Coverage
+
+- `HighDimProbTest/RandomMatrixLaplaceAPI.lean` and
+  `HighDimProbJudge/RandomMatrix/LaplaceUse.lean` both check:
+  `TraceExpDominatesUpperBound`,
+  `matrixUpperBoundTailEvent_subset_traceExpThresholdEvent_of_traceExpDominatesUpperBound`,
+  `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_rayleighUpperBound_of_traceExpDominatesUpperBound`,
+  `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_spectralUpperBound_of_traceExpDominatesUpperBound`,
+  `traceExpDominatesQuadraticFormUpperTail_of_rayleighUpperBound_of_traceExpDominatesUpperBound`,
+  and
+  `traceExpDominatesQuadraticFormUpperTail_of_spectralUpperBound_of_traceExpDominatesUpperBound`.
+- The examples pass `hTheta`, Rayleigh/spectral upper-bound assumptions, and
+  pointwise `TraceExpDominatesUpperBound` assumptions explicitly.
+- Coverage proves only semantic event bridges. It does not claim the
+  `lambdaMaxOrdered` trace-exp provider theorem, spectral mapping, full matrix
+  Laplace, trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein.

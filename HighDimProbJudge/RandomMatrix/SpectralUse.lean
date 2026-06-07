@@ -25,6 +25,8 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.lambdaMaxOrdered_spectralUpperBound
 #check HighDimProb.lambdaMaxOrderedPSDUpperBound
 #check HighDimProb.lambdaMaxOrdered_rayleighUpperBound
+#check HighDimProb.lambdaMaxOrdered_smul_of_nonneg
+#check HighDimProb.lambdaMaxOrdered_le_trace_of_posSemidef
 #check HighDimProb.spectralUpperBound_of_lambdaMaxPSDUpperBound
 #check HighDimProb.spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound
 #check HighDimProb.matrixQuadraticForm_nonneg_of_posSemidef
@@ -193,6 +195,22 @@ example {n : Nat}
     (hA : HighDimProb.IsSelfAdjointMatrix A) :
     HighDimProb.matrixQuadraticForm_le_lambdaMaxOrdered_statement A hA := by
   exact HighDimProb.lambdaMaxOrdered_rayleighUpperBound hA
+
+example {n : Nat}
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : HighDimProb.IsSelfAdjointMatrix A)
+    (theta : Real) (hTheta : 0 <= theta) :
+    HighDimProb.lambdaMaxOrdered (theta • A)
+        (HighDimProb.isSelfAdjointMatrix_smul theta hA) =
+      theta * HighDimProb.lambdaMaxOrdered A hA := by
+  exact HighDimProb.lambdaMaxOrdered_smul_of_nonneg theta hTheta hA
+
+example {n : Nat}
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : HighDimProb.IsSelfAdjointMatrix A)
+    (hPSD : Matrix.PosSemidef A) :
+    HighDimProb.lambdaMaxOrdered A hA <= Matrix.trace A := by
+  exact HighDimProb.lambdaMaxOrdered_le_trace_of_posSemidef hA hPSD
 
 example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (A : HighDimProb.RandomMatrix Omega n n) (Z : Omega -> Real) (t : Real)

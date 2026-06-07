@@ -2,94 +2,182 @@
 // Direction: importer -> imported module.
 digraph HighDimProbImports {
   rankdir=LR;
-  graph [fontname="Arial", fontsize=10];
-  node [shape=box, style="rounded", fontname="Arial", fontsize=10];
-  edge [fontname="Arial", fontsize=9];
+  label="HighDimProb Lean import graph";
+  labelloc=t;
+  graph [fontname="Arial", fontsize=11, compound=true];
+  node [shape=box, fontname="Arial", fontsize=10];
+  edge [fontname="Arial", fontsize=9, color="#666666", arrowsize=0.7];
 
-  "HighDimProb";
-  "HighDimProb.Analysis";
-  "HighDimProb.Analysis.RealInequalities";
-  "HighDimProb.Basic";
-  "HighDimProb.BookStatements";
-  "HighDimProb.Concentration";
-  "HighDimProb.Concentration.Basic";
-  "HighDimProb.Concentration.Bernstein";
-  "HighDimProb.Concentration.Chebyshev";
-  "HighDimProb.Concentration.Hoeffding";
-  "HighDimProb.Concentration.Implications";
-  "HighDimProb.Concentration.LayerCake";
-  "HighDimProb.Concentration.MGF";
-  "HighDimProb.Concentration.Markov";
-  "HighDimProb.Concentration.MaxScale";
-  "HighDimProb.Concentration.MomentImplications";
-  "HighDimProb.Concentration.OrliczToTail";
-  "HighDimProb.Concentration.RademacherSums";
-  "HighDimProb.Concentration.SubExponentialSums";
-  "HighDimProb.Concentration.SubGaussianSums";
-  "HighDimProb.Concentration.TailToOrlicz";
-  "HighDimProb.Covariance";
-  "HighDimProb.Distribution";
-  "HighDimProb.Distributions";
-  "HighDimProb.Distributions.Rademacher";
-  "HighDimProb.Distributions.RademacherFamily";
-  "HighDimProb.EmpiricalProcess";
-  "HighDimProb.Examples.BasicUsage";
-  "HighDimProb.Examples.NetsUsage";
-  "HighDimProb.Examples.OrliczUsage";
-  "HighDimProb.Examples.RandomMatrixUsage";
-  "HighDimProb.Examples.RandomVariableUsage";
-  "HighDimProb.Examples.RandomVectorUsage";
-  "HighDimProb.Examples.TailUsage";
-  "HighDimProb.Expectation";
-  "HighDimProb.Experimental";
-  "HighDimProb.GaussianWidth";
-  "HighDimProb.Geometry";
-  "HighDimProb.Init";
-  "HighDimProb.Isotropic";
-  "HighDimProb.LimitTheorems";
-  "HighDimProb.LimitTheorems.Assumptions";
-  "HighDimProb.LimitTheorems.Basic";
-  "HighDimProb.LimitTheorems.WeakLaw";
-  "HighDimProb.Lp";
-  "HighDimProb.MetricEntropy";
-  "HighDimProb.MetricEntropyStatements";
-  "HighDimProb.Moment";
-  "HighDimProb.Nets";
-  "HighDimProb.Orlicz";
-  "HighDimProb.ProbabilitySpace";
-  "HighDimProb.Process";
-  "HighDimProb.RandomMatrix";
-  "HighDimProb.RandomMatrix.Action";
-  "HighDimProb.RandomMatrix.Algebra";
-  "HighDimProb.RandomMatrix.Assumptions";
-  "HighDimProb.RandomMatrix.Basic";
-  "HighDimProb.RandomMatrix.ConcentrationStatements";
-  "HighDimProb.RandomMatrix.Expectation";
-  "HighDimProb.RandomMatrix.MatrixOrder";
-  "HighDimProb.RandomMatrix.Norms";
-  "HighDimProb.RandomMatrix.OperatorNorm";
-  "HighDimProb.RandomMatrix.QuadraticForm";
-  "HighDimProb.RandomMatrix.RowsCols";
-  "HighDimProb.RandomMatrix.SampleCovariance";
-  "HighDimProb.RandomMatrix.SelfAdjoint";
-  "HighDimProb.RandomMatrix.Statements";
-  "HighDimProb.RandomMatrix.Sums";
-  "HighDimProb.RandomMatrix.UnitSphere";
-  "HighDimProb.RandomMatrix.VarianceProxy";
-  "HighDimProb.RandomProcess";
-  "HighDimProb.RandomVariable";
-  "HighDimProb.RandomVector";
-  "HighDimProb.Scalar";
-  "HighDimProb.Scalar.Centering";
-  "HighDimProb.Scalar.Variance";
-  "HighDimProb.SignalRecovery";
-  "HighDimProb.Statements";
-  "HighDimProb.SubExponential";
-  "HighDimProb.SubGaussian";
-  "HighDimProb.SubGaussianVector";
-  "HighDimProb.Tactic";
-  "HighDimProb.Tail";
-  "HighDimProb.Vector";
+  subgraph cluster_api {
+    label="API";
+    color="#444444";
+    penwidth=1.5;
+    "HighDimProb" [label="HighDimProb", color="#444444", fontcolor="#222222", style="rounded,dashed,filled", fillcolor="#f8f8f8"];
+    "HighDimProb.Experimental" [label="Experimental", color="#444444", fontcolor="#222222", style="rounded,dashed,filled", fillcolor="#f8f8f8"];
+  }
+
+  subgraph cluster_analysis {
+    label="Analysis";
+    color="#bab0ab";
+    penwidth=1.5;
+    "HighDimProb.Analysis" [label="Analysis", color="#bab0ab", fontcolor="#222222", style="rounded,dashed,filled", fillcolor="#f8f8f8"];
+    "HighDimProb.Analysis.RealInequalities" [label="Analysis.RealInequalities", color="#bab0ab", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+  }
+
+  subgraph cluster_concentration {
+    label="Concentration";
+    color="#f28e2b";
+    penwidth=1.5;
+    "HighDimProb.Concentration" [label="Concentration", color="#f28e2b", fontcolor="#222222", style="rounded,dashed,filled", fillcolor="#f8f8f8"];
+    "HighDimProb.Concentration.Basic" [label="Concentration.Basic", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.Bernstein" [label="Concentration.Bernstein", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.Chebyshev" [label="Concentration.Chebyshev", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.Hoeffding" [label="Concentration.Hoeffding", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.Implications" [label="Concentration.Implications", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.LayerCake" [label="Concentration.LayerCake", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.MGF" [label="Concentration.MGF", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.Markov" [label="Concentration.Markov", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.MaxScale" [label="Concentration.MaxScale", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.MomentImplications" [label="Concentration.MomentImplications", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.OrliczToTail" [label="Concentration.OrliczToTail", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.RademacherSums" [label="Concentration.RademacherSums", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.SubExponentialSums" [label="Concentration.SubExponentialSums", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.SubGaussianSums" [label="Concentration.SubGaussianSums", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Concentration.TailToOrlicz" [label="Concentration.TailToOrlicz", color="#f28e2b", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+  }
+
+  subgraph cluster_core {
+    label="Core";
+    color="#6f6f6f";
+    penwidth=1.5;
+    "HighDimProb.Init" [label="Init", color="#6f6f6f", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+  }
+
+  subgraph cluster_distributions {
+    label="Distributions";
+    color="#b07aa1";
+    penwidth=1.5;
+    "HighDimProb.Distributions" [label="Distributions", color="#b07aa1", fontcolor="#222222", style="rounded,dashed,filled", fillcolor="#f8f8f8"];
+    "HighDimProb.Distributions.Rademacher" [label="Distributions.Rademacher", color="#b07aa1", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Distributions.RademacherFamily" [label="Distributions.RademacherFamily", color="#b07aa1", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+  }
+
+  subgraph cluster_examples {
+    label="Examples";
+    color="#af7aa1";
+    penwidth=1.5;
+    "HighDimProb.Examples.BasicUsage" [label="Examples.BasicUsage", color="#af7aa1", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Examples.NetsUsage" [label="Examples.NetsUsage", color="#af7aa1", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Examples.OrliczUsage" [label="Examples.OrliczUsage", color="#af7aa1", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Examples.RandomMatrixUsage" [label="Examples.RandomMatrixUsage", color="#af7aa1", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Examples.RandomVariableUsage" [label="Examples.RandomVariableUsage", color="#af7aa1", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Examples.RandomVectorUsage" [label="Examples.RandomVectorUsage", color="#af7aa1", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Examples.TailUsage" [label="Examples.TailUsage", color="#af7aa1", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+  }
+
+  subgraph cluster_infrastructure {
+    label="Infrastructure";
+    color="#79706e";
+    penwidth=1.5;
+    "HighDimProb.Tactic" [label="Tactic", color="#79706e", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+  }
+
+  subgraph cluster_limittheorems {
+    label="LimitTheorems";
+    color="#9c755f";
+    penwidth=1.5;
+    "HighDimProb.LimitTheorems" [label="LimitTheorems", color="#9c755f", fontcolor="#222222", style="rounded,dashed,filled", fillcolor="#f8f8f8"];
+    "HighDimProb.LimitTheorems.Assumptions" [label="LimitTheorems.Assumptions", color="#9c755f", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.LimitTheorems.Basic" [label="LimitTheorems.Basic", color="#9c755f", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.LimitTheorems.WeakLaw" [label="LimitTheorems.WeakLaw", color="#9c755f", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+  }
+
+  subgraph cluster_probability {
+    label="Probability";
+    color="#4e79a7";
+    penwidth=1.5;
+    "HighDimProb.Basic" [label="Basic", color="#4e79a7", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Distribution" [label="Distribution", color="#4e79a7", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Expectation" [label="Expectation", color="#4e79a7", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.ProbabilitySpace" [label="ProbabilitySpace", color="#4e79a7", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomVariable" [label="RandomVariable", color="#4e79a7", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Tail" [label="Tail", color="#4e79a7", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+  }
+
+  subgraph cluster_process {
+    label="Process";
+    color="#edc948";
+    penwidth=1.5;
+    "HighDimProb.EmpiricalProcess" [label="EmpiricalProcess", color="#edc948", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Process" [label="Process", color="#edc948", fontcolor="#222222", style="rounded,dashed,filled", fillcolor="#f8f8f8"];
+    "HighDimProb.RandomProcess" [label="RandomProcess", color="#edc948", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+  }
+
+  subgraph cluster_randommatrix {
+    label="RandomMatrix";
+    color="#e15759";
+    penwidth=1.5;
+    "HighDimProb.RandomMatrix" [label="RandomMatrix", color="#e15759", fontcolor="#222222", style="rounded,dashed,filled", fillcolor="#f8f8f8"];
+    "HighDimProb.RandomMatrix.Action" [label="RandomMatrix.Action", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.Algebra" [label="RandomMatrix.Algebra", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.Assumptions" [label="RandomMatrix.Assumptions", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.Basic" [label="RandomMatrix.Basic", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.ConcentrationStatements" [label="RandomMatrix.ConcentrationStatements", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.Expectation" [label="RandomMatrix.Expectation", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.Laplace" [label="RandomMatrix.Laplace", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.MatrixOrder" [label="RandomMatrix.MatrixOrder", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.Norms" [label="RandomMatrix.Norms", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.OperatorNorm" [label="RandomMatrix.OperatorNorm", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.QuadraticForm" [label="RandomMatrix.QuadraticForm", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.RowsCols" [label="RandomMatrix.RowsCols", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.SampleCovariance" [label="RandomMatrix.SampleCovariance", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.SelfAdjoint" [label="RandomMatrix.SelfAdjoint", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.Spectral" [label="RandomMatrix.Spectral", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.Statements" [label="RandomMatrix.Statements", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.Sums" [label="RandomMatrix.Sums", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.TraceExp" [label="RandomMatrix.TraceExp", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.UnitSphere" [label="RandomMatrix.UnitSphere", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomMatrix.VarianceProxy" [label="RandomMatrix.VarianceProxy", color="#e15759", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+  }
+
+  subgraph cluster_scalar {
+    label="Scalar";
+    color="#59a14f";
+    penwidth=1.5;
+    "HighDimProb.Covariance" [label="Covariance", color="#59a14f", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Lp" [label="Lp", color="#59a14f", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Moment" [label="Moment", color="#59a14f", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Orlicz" [label="Orlicz", color="#59a14f", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Scalar" [label="Scalar", color="#59a14f", fontcolor="#222222", style="rounded,dashed,filled", fillcolor="#f8f8f8"];
+    "HighDimProb.Scalar.Centering" [label="Scalar.Centering", color="#59a14f", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Scalar.Variance" [label="Scalar.Variance", color="#59a14f", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.SubExponential" [label="SubExponential", color="#59a14f", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.SubGaussian" [label="SubGaussian", color="#59a14f", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+  }
+
+  subgraph cluster_statements {
+    label="Statements";
+    color="#8cd17d";
+    penwidth=1.5;
+    "HighDimProb.BookStatements" [label="BookStatements", color="#8cd17d", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Statements" [label="Statements", color="#8cd17d", fontcolor="#222222", style="rounded,dashed,filled", fillcolor="#f8f8f8"];
+  }
+
+  subgraph cluster_vector {
+    label="Vector";
+    color="#76b7b2";
+    penwidth=1.5;
+    "HighDimProb.GaussianWidth" [label="GaussianWidth", color="#76b7b2", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Geometry" [label="Geometry", color="#76b7b2", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Isotropic" [label="Isotropic", color="#76b7b2", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.MetricEntropy" [label="MetricEntropy", color="#76b7b2", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.MetricEntropyStatements" [label="MetricEntropyStatements", color="#76b7b2", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Nets" [label="Nets", color="#76b7b2", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.RandomVector" [label="RandomVector", color="#76b7b2", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.SignalRecovery" [label="SignalRecovery", color="#76b7b2", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.SubGaussianVector" [label="SubGaussianVector", color="#76b7b2", fontcolor="#222222", style="rounded,filled", fillcolor="#ffffff"];
+    "HighDimProb.Vector" [label="Vector", color="#76b7b2", fontcolor="#222222", style="rounded,dashed,filled", fillcolor="#f8f8f8"];
+  }
 
   "HighDimProb" -> "HighDimProb.Init";
   "HighDimProb" -> "HighDimProb.Scalar";
@@ -197,6 +285,7 @@ digraph HighDimProbImports {
   "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.Basic";
   "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.ConcentrationStatements";
   "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.Expectation";
+  "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.Laplace";
   "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.MatrixOrder";
   "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.Norms";
   "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.OperatorNorm";
@@ -204,8 +293,10 @@ digraph HighDimProbImports {
   "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.RowsCols";
   "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.SampleCovariance";
   "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.SelfAdjoint";
+  "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.Spectral";
   "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.Statements";
   "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.Sums";
+  "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.TraceExp";
   "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.UnitSphere";
   "HighDimProb.RandomMatrix" -> "HighDimProb.RandomMatrix.VarianceProxy";
   "HighDimProb.RandomMatrix.Action" -> "HighDimProb.RandomMatrix.RowsCols";
@@ -219,6 +310,7 @@ digraph HighDimProbImports {
   "HighDimProb.RandomMatrix.Assumptions" -> "HighDimProb.SubGaussianVector";
   "HighDimProb.RandomMatrix.Basic" -> "HighDimProb.RandomVector";
   "HighDimProb.RandomMatrix.ConcentrationStatements" -> "HighDimProb.RandomMatrix.Assumptions";
+  "HighDimProb.RandomMatrix.ConcentrationStatements" -> "HighDimProb.RandomMatrix.Laplace";
   "HighDimProb.RandomMatrix.ConcentrationStatements" -> "HighDimProb.RandomMatrix.MatrixOrder";
   "HighDimProb.RandomMatrix.ConcentrationStatements" -> "HighDimProb.RandomMatrix.OperatorNorm";
   "HighDimProb.RandomMatrix.ConcentrationStatements" -> "HighDimProb.RandomMatrix.Sums";
@@ -227,6 +319,7 @@ digraph HighDimProbImports {
   "HighDimProb.RandomMatrix.Expectation" -> "HighDimProb.Expectation";
   "HighDimProb.RandomMatrix.Expectation" -> "HighDimProb.Lp";
   "HighDimProb.RandomMatrix.Expectation" -> "HighDimProb.RandomMatrix.Basic";
+  "HighDimProb.RandomMatrix.Laplace" -> "HighDimProb.RandomMatrix.TraceExp";
   "HighDimProb.RandomMatrix.MatrixOrder" -> "HighDimProb.RandomMatrix.Algebra";
   "HighDimProb.RandomMatrix.MatrixOrder" -> "HighDimProb.RandomMatrix.SelfAdjoint";
   "HighDimProb.RandomMatrix.Norms" -> "HighDimProb.RandomMatrix.Basic";
@@ -236,12 +329,16 @@ digraph HighDimProbImports {
   "HighDimProb.RandomMatrix.RowsCols" -> "HighDimProb.RandomMatrix.Basic";
   "HighDimProb.RandomMatrix.SampleCovariance" -> "HighDimProb.RandomMatrix.Basic";
   "HighDimProb.RandomMatrix.SelfAdjoint" -> "HighDimProb.RandomMatrix.Basic";
+  "HighDimProb.RandomMatrix.Spectral" -> "HighDimProb.RandomMatrix.MatrixOrder";
+  "HighDimProb.RandomMatrix.Spectral" -> "HighDimProb.RandomMatrix.OperatorNorm";
   "HighDimProb.RandomMatrix.Statements" -> "HighDimProb.Nets";
   "HighDimProb.RandomMatrix.Statements" -> "HighDimProb.RandomMatrix.Assumptions";
   "HighDimProb.RandomMatrix.Statements" -> "HighDimProb.RandomMatrix.OperatorNorm";
   "HighDimProb.RandomMatrix.Statements" -> "HighDimProb.RandomMatrix.QuadraticForm";
   "HighDimProb.RandomMatrix.Statements" -> "HighDimProb.RandomMatrix.SampleCovariance";
   "HighDimProb.RandomMatrix.Sums" -> "HighDimProb.RandomMatrix.SelfAdjoint";
+  "HighDimProb.RandomMatrix.TraceExp" -> "HighDimProb.RandomMatrix.Spectral";
+  "HighDimProb.RandomMatrix.TraceExp" -> "HighDimProb.RandomMatrix.VarianceProxy";
   "HighDimProb.RandomMatrix.UnitSphere" -> "HighDimProb.RandomMatrix.Basic";
   "HighDimProb.RandomMatrix.VarianceProxy" -> "HighDimProb.RandomMatrix.Expectation";
   "HighDimProb.RandomMatrix.VarianceProxy" -> "HighDimProb.RandomMatrix.MatrixOrder";
