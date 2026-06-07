@@ -15,7 +15,7 @@ theorems or typed statements without relying on local test internals.
   and matrix concentration statements.
 - Repository policy through `scripts/judge_policy_check.py`:
   no forbidden Lean tokens in source/tests/judge files, no theorem-like
-  `:= True` declarations including multi-line declarations, no accidental
+  True-bodied declarations including multi-line declarations, no accidental
   stable-root import of `HighDimProb.Experimental`, no non-experimental judge
   imports of `HighDimProb.Experimental`, and complete judge-root imports.
 
@@ -50,6 +50,22 @@ theorems or typed statements without relying on local test internals.
 - `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`: matrix square, second
   moment, variance proxy, variance-proxy norm, self-adjointness lemmas, PSD
   typed targets, and matrix Bernstein statement surface.
+- `HighDimProbJudge/RandomMatrix/SpectralUse.lean`: lambda-max wrappers,
+  ordered endpoint wrappers, quadratic-form bound predicates, monotonicity
+  lemmas, two-sided tail events, and spectral tail event APIs.
+- `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`: matrix exponential, trace,
+  trace-exponential integrand/moment, lintegral trace-exponential moment,
+  trace-exp nonnegativity bridges under explicit hypotheses, self-adjoint
+  matrix-exponential PSD and trace nonnegativity bridges, random
+  self-adjoint trace-exp moment nonnegativity, real/lintegral bridge theorem,
+  and remaining typed statement APIs.
+- `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`: matrix Laplace RHS and
+  lintegral RHS vocabulary, trace-exp threshold events, MB-S5 conditional
+  Markov/Laplace bridge APIs, MB-S6 explicit-dominance conditional wrappers,
+  and typed Laplace/Chernoff/operator-norm Laplace statement APIs.
+- `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`: proof-ready matrix
+  Bernstein statement surface, `matrixBernsteinLaplacePrerequisitesStatement`,
+  and its main structural/analytic dependencies.
 
 ## How It Differs From Normal Tests
 
@@ -86,6 +102,47 @@ lake build HighDimProbJudge
 lake test
 python scripts/judge_policy_check.py
 ```
+
+## MB-S7A Spectral Judge Coverage
+
+`HighDimProbJudge/RandomMatrix/SpectralUse.lean` checks the MB-S7A spectral
+bridge split:
+
+- `matrixQuadraticForm_le_lambdaMax_statement` as a typed `Prop`;
+- `lambdaMaxUpperTailEvent`;
+- the conditional quadratic-form-to-lambda-max bound and event subset helpers;
+- zero-dimensional unit-sphere and upper-tail emptiness lemmas.
+
+The judge does not claim the direct Rayleigh theorem, trace-exp spectral
+dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or Matrix
+Bernstein.
+
+## MB-S7A-fix Rayleigh Helper Judge Coverage
+
+`HighDimProbJudge/RandomMatrix/SpectralUse.lean` also checks the MB-S7A-fix
+helper bridge:
+
+- `LambdaMaxPSDUpperBound`;
+- `matrixQuadraticForm_nonneg_of_posSemidef`;
+- `matrixQuadraticForm_smul_one_of_isUnitVector`;
+- `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`.
+- `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound`.
+
+The examples keep the endpoint PSD premise explicit. The judge still treats
+`matrixQuadraticForm_le_lambdaMax_statement` as a typed statement, not a
+proved direct Rayleigh theorem.
+
+MB-S7A-order adds no new public declarations and therefore no new judge cases.
+MB-S7A-index adds ordered endpoint judge cases for `lambdaMaxOrdered`,
+`lambdaMaxOrdered_is_greatest_eigenvalue`, `LambdaMaxOrderedPSDUpperBound`, the
+ordered PSD-premise-to-Rayleigh helper, and the ordered upper-tail event route.
+MB-S7A-abstract adds semantic spectral judge cases for `SpectralUpperBound`,
+`RayleighUpperBound`, `scalarUpperTailEvent`, `matrixUpperBoundTailEvent`,
+`rayleighUpperBound_of_spectralUpperBound`, the generic quadratic-form
+upper-tail subset bridges, and the lambda provider compatibility wrappers.
+The judge still does not claim the unconditional endpoint PSD theorem, direct
+Rayleigh theorem, trace-exp spectral dominance, full matrix Laplace, trace-mgf,
+Golden-Thompson, Lieb, or Matrix Bernstein.
 
 For a full stage verification run:
 

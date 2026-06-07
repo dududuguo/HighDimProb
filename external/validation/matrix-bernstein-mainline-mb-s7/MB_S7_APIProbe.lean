@@ -1,0 +1,50 @@
+import HighDimProb.RandomMatrix.Laplace
+import HighDimProb.RandomMatrix.Spectral
+import HighDimProb.RandomMatrix.TraceExp
+import Mathlib.Analysis.InnerProductSpace.Rayleigh
+import Mathlib.Analysis.Matrix.PosDef
+import Mathlib.Analysis.Matrix.Spectrum
+
+open HighDimProb
+open MeasureTheory
+open scoped MatrixOrder Matrix.Norms.Operator Matrix.Norms.L2Operator
+
+#check TraceExpDominatesQuadraticFormUpperTail
+#check traceExpDominatesQuadraticFormUpperTailStatement
+#check quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_traceExpDominates
+#check matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail
+#check matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail
+#check traceExpThresholdEvent
+#check traceExpIntegrand
+#check matrixLaplaceRHSLIntegral
+#check matrixLaplaceRHSLIntegralDiv
+
+#check quadraticFormUpperTailEvent
+#check matrixQuadraticForm
+#check IsUnitVector
+#check lambdaMax
+#check lambdaMin
+#check LambdaMaxBound
+#check lambdaMax_is_greatest_eigenvalue_statement
+#check lambdaMax_le_iff_quadraticForm_le_statement
+#check operatorNorm_eq_max_abs_lambda_statement
+
+#check matrixExp_posSemidef_of_selfAdjoint
+#check traceMatrixExp_nonneg_of_selfAdjoint
+#check traceExpIntegrand_nonneg_of_randomSelfAdjoint
+#check traceExpMoment_nonneg_of_randomSelfAdjoint
+
+#check IsSelfAdjointMatrix
+#check RandomSelfAdjointMatrix
+#check isSelfAdjointMatrix_smul
+#check randomSelfAdjointMatrix_smul
+
+#check ContinuousLinearMap.rayleighQuotient
+#check ContinuousLinearMap.iSup_rayleigh_eq_iSup_rayleigh_sphere
+#check ContinuousLinearMap.norm_eq_iSup_rayleighQuotient
+#check Matrix.IsHermitian.trace_eq_sum_eigenvalues
+#check Matrix.IsHermitian.posSemidef_iff_eigenvalues_nonneg
+#check Matrix.PosSemidef.eigenvalues_nonneg
+#check Matrix.PosSemidef.trace_nonneg
+#check Matrix.nonneg_iff_posSemidef
+#check IsSelfAdjoint.exp_nonneg

@@ -518,7 +518,10 @@
 - Possible general version: rely directly on Mathlib Hermitian/positive-semidefinite/order structures and a Bochner-style matrix expectation from the beginning.
 - Reason for not generalizing yet: the existing random-matrix layer is entrywise and finite-dimensional; explicit predicates keep theorem statements honest without silently installing a global matrix order convention.
 - Lean/mathlib reuse: `Matrix.IsSymm`, `Matrix.IsHermitian`, product measurable spaces for matrix-valued `iIndepFun`, `Matrix.scalar`, and the existing scoped L2 operator norm all work for the statement layer.
-- Lean/mathlib obstruction: future proofs still need variance-proxy PSD algebra, matrix Laplace-transform infrastructure, and theorem-specific sampling/unit-sphere reductions.
+- Lean/mathlib obstruction: future proofs still need matrix Laplace-transform
+  infrastructure, spectral/operator-norm tail reductions, and theorem-specific
+  sampling/unit-sphere reductions. MB-S1 later resolves the variance-proxy PSD
+  algebra.
 - Future upgrade path: Stage MC2-fix proves the exact operator-norm comparison and measurability bridges; Stage MC3 can now focus on variance proxies and independent self-adjoint matrix sums without starting matrix concentration.
 
 ## Stage MC2 operator-norm and unit-sphere bridges
@@ -1050,13 +1053,91 @@
 - Integrability decision: add `IntegrableRandomMatrix` as a lightweight
   entrywise predicate in `HighDimProb.RandomMatrix.Expectation`; do not build a
   Bochner matrix-expectation layer.
-- PSD decision: documentation now says
-  `isPSD_matrixVarianceProxy_of_selfAdjoint_statement` is only a typed target.
-  PSD remains blocked by PSD of self-adjoint squares, expectation preserving
-  PSD, and finite sums preserving PSD.
-- Future upgrade path: Stage MC4-psd should resolve the PSD square and
-  variance-proxy algebra before returning to matrix Laplace or trace
-  exponential vocabulary.
+- PSD decision: documentation at MC4-cleanup kept
+  `isPSD_matrixVarianceProxy_of_selfAdjoint_statement` as a typed target only.
+  MB-S1 later proves PSD of self-adjoint squares, expectation-preserved PSD,
+  and finite-sum PSD closure.
+- Future upgrade path: MB-S1 resolves the PSD square and variance-proxy
+  algebra; the next mainline matrix stage should return to spectral,
+  matrix Laplace, and trace exponential vocabulary.
+
+## Stage MB-S1 matrix PSD variance-proxy algebra
+
+- Concrete version chosen: prove the PSD variance-proxy chain in the existing
+  explicit quadratic-form order instead of switching to a spectral or Loewner
+  order instance.
+- Proof-pattern decision: normalize quadratic forms by expanding finite sums.
+  The key bridge is
+  `matrixQuadraticForm_matrixSquare_eq_matVecSqNorm_of_selfAdjoint`, which
+  rewrites `x^T A^2 x` to the squared Euclidean norm of `A x`.
+- Expectation decision: keep `matrixExpect` entrywise. The bridge
+  `matrixQuadraticForm_matrixExpect` requires `IntegrableRandomMatrix` and
+  commutes finite sums through the scalar integral.
+- Variance-proxy decision: prove finite PSD closure as `isPSDMatrix_sum`, then
+  combine second-moment PSD termwise in
+  `isPSD_matrixVarianceProxy_of_selfAdjoint`.
+- Statement decision: refine `matrixBernsteinSelfAdjointStatement` so PSD of
+  the variance proxy is not a separate assumption; it is derived from centered
+  self-adjointness plus per-summand square integrability.
+- Future upgrade path: the next matrix Bernstein stage should focus on the
+  self-adjoint operator-norm/eigenvalue tail reduction and the matrix
+  Laplace/trace-exponential layer.
+
+## Stage MB-S2 matrix spectral/Laplace bridge
+
+- Concrete version chosen: strengthen the existing `Spectral`, `TraceExp`, and
+  `Laplace` leaves with proof-ready typed targets and small event/vocabulary
+  lemmas, rather than attempting matrix Bernstein before the analytic
+  prerequisites exist.
+- Spectral decision: keep `lambdaMax` / `lambdaMin` as narrow Mathlib
+  Hermitian eigenvalue wrappers, but route theorem statements through explicit
+  quadratic-form tail events until the Rayleigh/operator-norm bridge is
+  proved.
+- Event decision: add `twoSidedQuadraticFormTailEvent` and prove the easy
+  one-sided subset lemmas. The hard
+  `selfAdjointOperatorNormTailViaQuadraticFormStatement` remains a typed
+  target.
+- Trace-exp decision: add `traceExpMomentLIntegral` so future Laplace proofs
+  can use ENNReal Markov-style bounds without pretending the
+  real-expectation/lintegral bridge is already proved.
+- Laplace decision: add lintegral variants of the matrix Laplace and Chernoff
+  statement targets, plus `matrixBernsteinLaplacePrerequisitesStatement` as an
+  honest dependency bundle for the future matrix Bernstein proof.
+- Lean/mathlib reuse: `Matrix.IsHermitian.eigenvalues` and Mathlib comments /
+  lemmas around decreasing Hermitian eigenvalue order, `Matrix.trace`,
+  `NormedSpace.exp`, `Matrix.IsHermitian.exp`, `ENNReal.ofReal`, and
+  measure-valued tail events.
+- Lean/mathlib obstruction: the exact endpoint/Rayleigh bridge from Mathlib's
+  Hermitian spectral API to HighDimProb's explicit unit-vector quadratic form,
+  trace-exp nonnegativity, the real expectation / lintegral bridge, trace-mgf
+  inequalities, and matrix Laplace remain unproved.
+- Future upgrade path: prove one small bridge next, starting with
+  `traceMatrixExp_nonneg_of_selfAdjoint_statement` or an equivalent
+  trace-exponential positivity theorem.
+
+## Stage MC5 spectral, trace-exponential, and Laplace vocabulary
+
+- Concrete version chosen: split the analytic matrix Bernstein layer into
+  `Spectral`, `TraceExp`, and `Laplace` leaves. `Spectral` exposes narrow
+  Hermitian eigenvalue wrappers and quadratic-form event predicates.
+  `TraceExp` wraps Mathlib matrix exponential and trace objects. `Laplace`
+  records typed reduction targets over the existing quadratic-form tail and
+  trace-exponential vocabulary.
+- Possible general version: switch all matrix concentration statements to a
+  full Mathlib spectral theorem / Loewner order / trace-mgf framework in one
+  step.
+- Reason for not generalizing yet: the project already has explicit
+  quadratic-form PSD/order infrastructure, and matrix Bernstein still lacks
+  proved Rayleigh, trace-mgf, and Laplace reductions. The wrappers let future
+  theorem statements mention real objects without claiming those reductions.
+- Lean/mathlib reuse: `Matrix.IsHermitian.eigenvalues`,
+  `NormedSpace.exp`, `Matrix.IsHermitian.exp`, and `Matrix.trace`.
+- Lean/mathlib obstruction: no Golden-Thompson, Lieb, or ready-made matrix
+  trace-mgf theorem was found by name; those remain theorem-layer blockers.
+  The Rayleigh/operator-norm bridge is also still a typed target.
+- Future upgrade path: after MC5.3, refine the Bernstein proof plan around the
+  typed Laplace target, then later proof stages can target the missing
+  analytic inequalities.
 
 ## Stage V1 Lean path visualization infrastructure
 
@@ -1086,7 +1167,7 @@
   theorems are checked by application examples instead of brittle full type
   assertions.
 - Policy decision: add `scripts/judge_policy_check.py` using only the Python
-  standard library. It checks forbidden Lean tokens, theorem-like `:= True`
+  standard library. It checks forbidden Lean tokens, theorem-like True-bodied
   declarations, stable-root import boundaries, and complete imports from
   `HighDimProbJudge.lean`.
 - Import decision: the judge imports public surfaces directly:
@@ -1095,3 +1176,26 @@
   optional dependencies are changed.
 - Future upgrade path: Stage J2 can add more judge cases for scalar implication
   graph names, branch import boundaries, and random-matrix typed statements.
+
+## Stage MB-S3 trace-exponential positivity bridge
+
+- Concrete version chosen: factor the trace-exp scalar random variable as
+  `traceExpIntegrand`, so `traceExpMoment` and `traceExpMomentLIntegral` share
+  one definitional integrand.
+- Proven bridge: Mathlib `Matrix.PosSemidef.trace_nonneg` gives
+  `matrixTrace_nonneg_of_posSemidef`, and therefore
+  `traceMatrixExp_nonneg_of_matrixExp_posSemidef` whenever `matrixExp A` has a
+  Mathlib PSD certificate.
+- Proven measure bridge: pointwise nonnegativity gives
+  `traceExpMoment_nonneg_of_nonneg`; `traceExpMomentLIntegral_nonneg` is
+  immediate in `ENNReal`; and `ofReal_integral_eq_lintegral_ofReal` gives
+  `traceExpMomentLIntegral_eq_ofReal_traceExpMoment` under explicit
+  integrability plus pointwise nonnegativity.
+- Resolved in MB-S4: `matrixExp_posSemidef_of_selfAdjoint` opens Mathlib's
+  scoped matrix Loewner order and matrix operator-norm scope, applies
+  `IsSelfAdjoint.exp_nonneg` to `hA.isSelfAdjoint`, and converts
+  `0 <= matrixExp A` to `Matrix.PosSemidef (matrixExp A)` with
+  `Matrix.nonneg_iff_posSemidef`.
+- Remaining upgrade path: prove matrix Laplace / trace-mgf inequalities and
+  spectral/operator-norm tail reductions using this trace-exp positivity
+  bridge as infrastructure.

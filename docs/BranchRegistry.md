@@ -99,12 +99,17 @@ It is a planning document, not a request to physically move existing files.
 - Import path: `HighDimProb.RandomMatrix`
 - Status: experimental physical branch
 - Purpose: random matrix object layer and theorem prerequisites.
-- Current modules: `RandomMatrix.Basic`, `RandomMatrix.RowsCols`, `RandomMatrix.Action`, `RandomMatrix.Norms`, `RandomMatrix.Assumptions`, `RandomMatrix.SampleCovariance`, `RandomMatrix.QuadraticForm`, `RandomMatrix.Algebra`, `RandomMatrix.UnitSphere`, `RandomMatrix.OperatorNorm`, `RandomMatrix.SelfAdjoint`, `RandomMatrix.MatrixOrder`, `RandomMatrix.Expectation`, `RandomMatrix.Sums`, `RandomMatrix.VarianceProxy`, `RandomMatrix.Statements`, `RandomMatrix.ConcentrationStatements`.
-- Planned leaf modules: `IndependentRows`, `IidRows`, `SampleCovarianceTheorems`, `MatrixDeviationProofs`, `MatrixBernsteinProofs`, `HansonWrightStatements`, `JLStatements`, `CovarianceEstimationProofs`, `OperatorNormNetBridge`, `MatrixLaplace`.
+- Current modules: `RandomMatrix.Basic`, `RandomMatrix.RowsCols`, `RandomMatrix.Action`, `RandomMatrix.Norms`, `RandomMatrix.Assumptions`, `RandomMatrix.SampleCovariance`, `RandomMatrix.QuadraticForm`, `RandomMatrix.Algebra`, `RandomMatrix.UnitSphere`, `RandomMatrix.OperatorNorm`, `RandomMatrix.SelfAdjoint`, `RandomMatrix.MatrixOrder`, `RandomMatrix.Expectation`, `RandomMatrix.Sums`, `RandomMatrix.VarianceProxy`, `RandomMatrix.Spectral`, `RandomMatrix.TraceExp`, `RandomMatrix.Laplace`, `RandomMatrix.Statements`, `RandomMatrix.ConcentrationStatements`.
+- Planned leaf modules: `IndependentRows`, `IidRows`, `SampleCovarianceTheorems`, `MatrixDeviationProofs`, `MatrixBernsteinProofs`, `HansonWrightStatements`, `JLStatements`, `CovarianceEstimationProofs`, `OperatorNormNetBridge`.
 - Dependencies: `Scalar`, `Vector`, `Geometry`, Mathlib matrices, finite sums, and scoped L2 operator norm APIs.
 - Forbidden scope: proving matrix concentration before matrix Laplace-transform, variance-proxy, and covariance-estimation prerequisites are ready.
 - Promotion criteria: submodule API tests, theorem atlas dependencies, docs, status update, and stable-root import audit.
-- Next safe tasks: Stage MC4-psd PSD square and variance-proxy algebra cleanup; independent-row/iid-row vocabulary remains separate until covariance-estimation proof work starts.
+- Next safe tasks: Stage MB-S7A-provider, prove that `lambdaMaxOrdered`
+  provides `SpectralUpperBound`, or block cleanly. Full matrix Laplace,
+  trace-mgf, Golden-Thompson, Lieb, trace-exp spectral dominance, and Matrix
+  Bernstein remain forbidden until their missing bridges are proved.
+  Independent-row/iid-row vocabulary remains separate until
+  covariance-estimation proof work starts.
 
 ## Process
 
@@ -183,7 +188,9 @@ It is a planning document, not a request to physically move existing files.
   `Concentration.HoeffdingUse`, `Concentration.BernsteinUse`,
   `Concentration.SubGaussianUse`, `RandomMatrix.OperatorNormUse`,
   `RandomMatrix.StatementUse`, `RandomMatrix.PSDUse`,
-  `RandomMatrix.SampleCovarianceUse`, and `RandomMatrix.VarianceProxyUse`.
+  `RandomMatrix.SampleCovarianceUse`, `RandomMatrix.VarianceProxyUse`,
+  `RandomMatrix.SpectralUse`, `RandomMatrix.TraceExpUse`,
+  `RandomMatrix.LaplaceUse`, and `RandomMatrix.MatrixBernsteinUse`.
 - Dependencies: public `HighDimProb`, `HighDimProb.Concentration`, and
   `HighDimProb.RandomMatrix` imports.
 - Forbidden scope: new theorem proving, theorem meaning changes, and hidden
@@ -192,7 +199,8 @@ It is a planning document, not a request to physically move existing files.
   `lake build HighDimProbJudge` and guarded by
   `scripts/judge_policy_check.py`.
 - Next safe tasks: add judge coverage for geometry, vector, and
-  limit-theorem APIs.
+  limit-theorem APIs after the current matrix Bernstein bridge surface remains
+  green.
 
 ## MC4-cleanup — Matrix Concentration Statement Honesty
 
@@ -217,4 +225,155 @@ It is a planning document, not a request to physically move existing files.
   `traceExpMomentBoundStatement`; matrix Laplace and trace exponential work is
   documentation-only until honest typed objects exist.
 - Proven: self-adjointness of `matrixSecondMoment` and `matrixVarianceProxy`
-- Blocked: PSD lemmas (typed targets), λmax bridge, Golden-Thompson
+
+## MB-S1 Matrix Bernstein Mainline PSD Algebra
+
+- Stage: MB-S1
+- Date: 2026-06-06
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/MatrixOrder.lean`,
+  `HighDimProb/RandomMatrix/VarianceProxy.lean`,
+  `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
+- Test modules: `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
+  `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`,
+  `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`
+- New declarations: `matrixQuadraticForm_sum`, `isPSDMatrix_sum`,
+  `matrixQuadraticForm_matrixSquare_eq_matVecSqNorm_of_selfAdjoint`,
+  `isPSD_matrixSquare_of_selfAdjoint`, `matrixQuadraticForm_matrixExpect`,
+  `isPSD_matrixSecondMoment_of_selfAdjoint`,
+  `isPSD_matrixVarianceProxy_of_selfAdjoint`
+- Proven: PSD square, PSD second moment under square integrability, and PSD
+  matrix variance proxy under per-summand square integrability.
+- Blocked: lambda-max/spectral tail bridge, matrix Laplace transform, trace
+  exponential machinery, and Golden-Thompson/Lieb-style prerequisites.
+
+## MB-S7A Spectral Bridge Typed Split
+
+- Stage: MB-S7A
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test modules: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- New declarations: `matrixQuadraticForm_le_lambdaMax_statement`,
+  `quadraticFormUpperBound_of_lambdaMax_le_of_matrixQuadraticForm_le_lambdaMax`,
+  `lambdaMaxUpperTailEvent`,
+  `quadraticFormUpperTailEvent_subset_lambdaMaxUpperTailEvent_of_matrixQuadraticForm_le_lambdaMax`,
+  `not_isUnitVector_fin_zero`, `unitSphere_empty_of_zero_dim`, and
+  `quadraticFormUpperTailEvent_empty_of_zero_dim`.
+- Proven: conditional quadratic-form/lambda-max bound and event helpers under
+  the explicit Rayleigh bridge hypothesis; zero-dimensional unit-sphere and
+  upper-tail events are empty.
+- Typed only: direct Rayleigh bridge from explicit `matrixQuadraticForm` /
+  `IsUnitVector` to `lambdaMax`.
+- Blocked: direct Rayleigh proof, trace-exp spectral dominance, full matrix
+  Laplace, trace-mgf, Golden-Thompson, Lieb, and matrix Bernstein.
+
+## MB-S7A-fix Rayleigh Conversion Helper Bridge
+
+- Stage: MB-S7A-fix
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test modules: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- New declarations: `matrixQuadraticForm_nonneg_of_posSemidef`,
+  `matrixQuadraticForm_smul_one_of_isUnitVector`, and
+  `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`.
+- Proven: Mathlib PSD implies nonnegativity of the explicit HighDimProb
+  quadratic form; scalar identity matrices evaluate to the scalar on explicit
+  unit vectors; the Rayleigh typed statement follows from the explicit PSD
+  premise `((lambdaMax A hA) • 1 - A).PosSemidef`.
+- Typed only: direct Rayleigh bridge from explicit `matrixQuadraticForm` /
+  `IsUnitVector` to `lambdaMax`.
+- Blocked: endpoint-order/PSD bridge for `lambdaMax`, trace-exp spectral
+  dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and matrix
+  Bernstein.
+
+## MB-S7A-clean Spectral Bridge API Consolidation
+
+- Stage: MB-S7A-clean
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test modules: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- New declarations: `LambdaMaxPSDUpperBound` and
+  `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound`.
+- Proven: only a wrapper over the existing endpoint-PSD helper; no endpoint
+  spectral theorem was proved.
+- Compatibility: all MB-S7A and MB-S7A-fix names are preserved.
+- Blocked: prove `LambdaMaxPSDUpperBound A hA` from endpoint ordering,
+  trace-exp spectral dominance, full matrix Laplace, trace-mgf,
+  Golden-Thompson, Lieb, and matrix Bernstein.
+
+## MB-S7A-order Endpoint Ordering Probe
+
+- Stage: MB-S7A-order
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: none
+- Test modules touched: none
+- Judge modules touched: none
+- New declarations: none
+- Result: blocked cleanly. Mathlib provides ordered endpoint control through
+  `Matrix.IsHermitian.eigenvalues₀_antitone`, but current `lambdaMax` is based
+  on the reindexed `Matrix.IsHermitian.eigenvalues`.
+- Blocked: prove an index-normalization/compatibility bridge from current
+  `lambdaMax` to the ordered `eigenvalues₀ 0` endpoint. Trace-exp spectral
+  dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and matrix
+  Bernstein remain unproved.
+
+## MB-S7A-index Ordered Endpoint Wrapper
+
+- Stage: MB-S7A-index
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test modules: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- New declarations: `lambdaMaxOrdered`,
+  `lambdaMaxOrdered_eq_eigenvalues₀_zero`,
+  `lambdaMax_eq_lambdaMaxOrdered_statement`,
+  `lambdaMaxOrdered_is_greatest_eigenvalue_statement`,
+  `lambdaMaxOrdered_is_greatest_eigenvalue`,
+  `LambdaMaxOrderedPSDUpperBound`,
+  `matrixQuadraticForm_le_lambdaMaxOrdered_statement`,
+  `matrixQuadraticForm_le_lambdaMaxOrdered_of_lambdaMaxOrderedPSDUpperBound`,
+  `lambdaMaxOrderedUpperTailEvent`, and
+  `quadraticFormUpperTailEvent_subset_lambdaMaxOrderedUpperTailEvent_of_matrixQuadraticForm_le_lambdaMaxOrdered`.
+- Proven: ordered endpoint is definitionally `eigenvalues₀ 0`, ordered endpoint
+  greatest theorem, and conditional ordered PSD-premise-to-Rayleigh/event
+  helpers.
+- Compatibility: existing public `lambdaMax` is preserved unchanged; the
+  legacy-to-ordered bridge remains typed as
+  `lambdaMax_eq_lambdaMaxOrdered_statement`.
+- Blocked: prove `LambdaMaxOrderedPSDUpperBound A hA` or an equivalent ordered
+  Rayleigh bridge. Trace-exp spectral dominance, full matrix Laplace,
+  trace-mgf, Golden-Thompson, Lieb, and matrix Bernstein remain unproved.
+
+## MB-S7A-abstract Semantic Spectral API
+
+- Stage: MB-S7A-abstract
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test modules: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- New declarations: `SpectralUpperBound`, `RayleighUpperBound`,
+  `scalarUpperTailEvent`, `matrixUpperBoundTailEvent`,
+  `rayleighUpperBound_of_spectralUpperBound`,
+  `quadraticFormUpperTailEvent_subset_scalarUpperTailEvent_of_rayleighUpperBound`,
+  `quadraticFormUpperTailEvent_subset_matrixUpperBoundTailEvent_of_rayleighUpperBound`,
+  `quadraticFormUpperTailEvent_subset_matrixUpperBoundTailEvent_of_spectralUpperBound`,
+  `spectralUpperBound_of_lambdaMaxPSDUpperBound`,
+  `spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound`,
+  `lambdaMaxUpperTailEvent_eq_matrixUpperBoundTailEvent`, and
+  `lambdaMaxOrderedUpperTailEvent_eq_matrixUpperBoundTailEvent`.
+- Proven: semantic PSD-to-Rayleigh bridge and generic event subset bridges from
+  explicit semantic assumptions.
+- Compatibility: existing public `lambdaMax` and `lambdaMaxOrdered` APIs are
+  preserved as concrete provider routes.
+- Blocked: prove that `lambdaMaxOrdered` provides `SpectralUpperBound`, or
+  block cleanly. Trace-exp spectral dominance, full matrix Laplace, trace-mgf,
+  Golden-Thompson, Lieb, and matrix Bernstein remain unproved.

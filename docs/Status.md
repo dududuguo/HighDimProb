@@ -2,12 +2,12 @@
 
 Current version target: v0.1-alpha
 
-Current stage: Stage J2
+Current stage: Stage MB-S7A-abstract
 
-Current task: expand HighDimProb Judge coverage
+Current task: Semantic spectral abstraction layer added; ordered provider PSD/Rayleigh bridge remains next
 
 Milestone status:
-- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` bridges, full finite-`ENNReal` `SubExponentialMoment` bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, independent finite subGaussian sum MGF, finite Hoeffding theorem for bounded centered variables, sharp finite Hoeffding theorem for bounded centered variables, non-centered Wikipedia-form finite Hoeffding, the Hoeffding branch milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum concentration scaffold, Stage B1-fix subExponential MGF domain/max-scale infrastructure, Stage B2 full scalar Bernstein min-form tail bound, Stage SC-closeout scalar concentration theorem-family closeout, Stage B3 deterministic weighted scalar Bernstein theorem, Stage SC-final scalar concentration branch closure, Stage M-real-1 real-exponent `SubGaussianMoment` bridge, Stage M-real-2 subExponential real-moment bridge, Stage SC-final-update scalar closeout refresh, Stage MC1 matrix concentration vocabulary/statement layer, Stage MC2 operator-norm/unit-sphere bridge infrastructure, Stage MC2-fix operator norm Mathlib bridge cleanup, Stage MC3 matrix variance proxy / independent self-adjoint matrix sums, Stage MC4-cleanup matrix concentration statement honesty cleanup, Stage V1 Lean path visualization infrastructure, Stage J1 HighDimProb compile-time judge suite, and Stage J2 expanded HighDimProb judge coverage are complete.
+- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` bridges, full finite-`ENNReal` `SubExponentialMoment` bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, independent finite subGaussian sum MGF, finite Hoeffding theorem for bounded centered variables, sharp finite Hoeffding theorem for bounded centered variables, non-centered Wikipedia-form finite Hoeffding, the Hoeffding branch milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum concentration scaffold, Stage B1-fix subExponential MGF domain/max-scale infrastructure, Stage B2 full scalar Bernstein min-form tail bound, Stage SC-closeout scalar concentration theorem-family closeout, Stage B3 deterministic weighted scalar Bernstein theorem, Stage SC-final scalar concentration branch closure, Stage M-real-1 real-exponent `SubGaussianMoment` bridge, Stage M-real-2 subExponential real-moment bridge, Stage SC-final-update scalar closeout refresh, Stage MC1 matrix concentration vocabulary/statement layer, Stage MC2 operator-norm/unit-sphere bridge infrastructure, Stage MC2-fix operator norm Mathlib bridge cleanup, Stage MC3 matrix variance proxy / independent self-adjoint matrix sums, Stage MC4-cleanup matrix concentration statement honesty cleanup, Stage V1 Lean path visualization infrastructure, Stage J1 HighDimProb compile-time judge suite, Stage J2 expanded HighDimProb judge coverage, Stage MB-S1 matrix PSD variance-proxy algebra, Stage MC5.1 spectral vocabulary, Stage MC5.2 trace-exponential vocabulary, Stage MC5.3 matrix Laplace statement vocabulary, Stage MC5.4 matrix Bernstein proof-plan refinement, Stage MC5.5 matrix spectral/trace/Laplace judge coverage, Stage MC5.6 memory/workflow closeout, Stage MB-S2 spectral/Rayleigh/trace-exponential/Laplace bridge closeout, Stage MB-S3 trace-exponential positivity bridge under explicit hypotheses, Stage MB-S4 matrix exponential PSD bridge, Stage MB-S5 conditional trace-exponential Markov/Laplace bridge, Stage MB-S6 source-first conditional trace-exponential dominance bridge, Stage MB-S7A spectral bridge typed split, Stage MB-S7A-fix spectral Rayleigh conversion helper bridge, Stage MB-S7A-clean spectral bridge API consolidation, Stage MB-S7A-order endpoint ordering probe, Stage MB-S7A-index ordered endpoint wrapper, and Stage MB-S7A-abstract semantic spectral abstraction are complete.
 
 Workflow file:
 - docs/Workflow.md
@@ -718,16 +718,35 @@ Stage MC4-cleanup implemented:
   which had body `True`.
 - refined `matrixBernsteinSelfAdjointStatement` to expose the probability
   measure assumption, integrability, centered self-adjointness, independence,
-  pointwise operator-norm boundedness, PSD variance proxy, variance proxy norm
-  bound, positivity/nonnegativity, and denominator positivity assumptions.
-- corrected matrix Bernstein comments and documentation so PSD of
-  `matrixVarianceProxy` is recorded as a typed target only, not a proven
-  theorem.
+  pointwise operator-norm boundedness, variance proxy norm bound,
+  positivity/nonnegativity, and denominator positivity assumptions.
+- corrected matrix Bernstein comments and documentation so matrix Laplace and
+  trace-exponential placeholders are documentation-only until honest Lean
+  objects exist; MB-S1 later proves the PSD variance-proxy algebra.
 - updated `docs/MatrixBernsteinProofPlan.md` to separate proven
   infrastructure, typed statements, and documentation-only matrix Laplace /
   trace exponential TODOs.
 - updated random-matrix concentration and variance-proxy API tests and removed
   checks for the deleted placeholder declarations.
+- did not prove matrix Bernstein, matrix Laplace, trace exponential bounds,
+  Hanson-Wright, covariance estimation, or any matrix concentration theorem.
+
+Stage MB-S1 implemented:
+- proved `matrixQuadraticForm_matrixSquare_eq_matVecSqNorm_of_selfAdjoint`
+  and `isPSD_matrixSquare_of_selfAdjoint`.
+- proved `matrixQuadraticForm_matrixExpect` for entrywise integrable random
+  matrices.
+- proved `matrixQuadraticForm_sum` and `isPSDMatrix_sum` for the explicit
+  quadratic-form PSD predicate.
+- proved `isPSD_matrixSecondMoment_of_selfAdjoint` under
+  `IntegrableRandomMatrix P (randomMatrixSquare A)`.
+- proved `isPSD_matrixVarianceProxy_of_selfAdjoint` under per-summand
+  square-integrability.
+- refined `matrixBernsteinSelfAdjointStatement` so the proof-ready statement
+  assumes square integrability of every summand square and no longer asks for a
+  separate PSD variance-proxy hypothesis.
+- updated random-matrix API tests and judge examples for the new PSD bridge
+  theorems.
 - did not prove matrix Bernstein, matrix Laplace, trace exponential bounds,
   Hanson-Wright, covariance estimation, or any matrix concentration theorem.
 
@@ -743,8 +762,8 @@ Stage V1 implemented:
   graph.
 - no Lean source files, theorem meanings, or optional dependencies were
   changed.
-- recorded Stage MC4-psd PSD square and variance-proxy algebra cleanup as the
-  next safe task.
+- recorded the random-matrix branch as the next theorem mainline after the
+  visualization layer.
 
 Stage J1 implemented:
 - added `HighDimProbJudge` as a separate compile-time OJ-style judge library.
@@ -753,7 +772,8 @@ Stage J1 implemented:
   measurability, and matrix Bernstein typed statement use.
 - added `lean_lib HighDimProbJudge` to `lakefile.lean`.
 - added `scripts/judge_policy_check.py` to enforce forbidden-token,
-  `:= True`, stable-root import, and judge-root import-completeness checks.
+  True-bodied declaration, stable-root import, and judge-root
+  import-completeness checks.
 - added `docs/JudgeSystem.md` and updated README/test/status/branch docs.
 - no Lean source theorem meanings, mathematical theorem proofs, or optional
   dependencies were changed.
@@ -765,7 +785,7 @@ Stage J2 implemented:
 - added random-matrix judge files for PSD/order, sample covariance, and
   variance-proxy APIs.
 - updated `HighDimProbJudge.lean` so the judge root imports every judge file.
-- strengthened `scripts/judge_policy_check.py` with multi-line `:= True`
+- strengthened `scripts/judge_policy_check.py` with multi-line True-bodied
   declaration scanning and a judge `HighDimProb.Experimental` import boundary.
 - updated judge/test/status/branch and scalar concentration coverage docs.
 - no Lean source theorem meanings, mathematical theorem proofs, or optional
@@ -1425,7 +1445,6 @@ Not yet processed:
 - finite-gauge Orlicz variants
 - raw-predicate Bernstein bridge
 - full independent-sum Chernoff inequality variants
-- matrix variance-proxy PSD theorem
 - matrix Laplace-transform and trace exponential infrastructure
 - matrix Bernstein
 - Hanson-Wright
@@ -1468,17 +1487,131 @@ random-matrix sums, independent self-adjoint family vocabulary, matrix square
 and second-moment vocabulary, the standard `sum_i E[A_i^2]` variance-proxy
 matrix, a deterministic scalar variance-proxy norm, separate pointwise and
 a.e. operator-norm-bound predicates, and an updated typed
-`matrixBernsteinStatement`. PSD of `E[A_i^2]` / `matrixVarianceProxy`, matrix
-Laplace-transform infrastructure, and trace exponential estimates remain
-future theorem prerequisites.
+`matrixBernsteinStatement`. MB-S1 later resolves PSD of `E[A_i^2]` /
+`matrixVarianceProxy`; matrix Laplace-transform infrastructure and trace
+exponential estimates remain future theorem prerequisites.
 
 Stage MC4-cleanup has no build blocker. The matrix concentration statement
 layer no longer contains theorem-like Laplace or trace declarations whose body
 is just `True`. The additive matrix Bernstein typed statement now has explicit
-probability-measure, integrability, positivity, PSD variance proxy, and
-denominator assumptions. Matrix Laplace and trace exponential work is
+probability-measure, summand integrability, square integrability, positivity,
+variance-proxy norm, and denominator assumptions. Matrix Laplace and trace
+exponential work is
 documentation-only until the required objects and analytic theorems are
 available.
+
+Stage MB-S1 has no build blocker. The random-matrix branch now proves PSD of
+the self-adjoint square, PSD of the entrywise second moment under square
+integrability, finite-sum closure of the explicit PSD predicate, and PSD of the
+matrix Bernstein variance proxy under self-adjointness plus per-summand square
+integrability. Matrix Laplace and trace exponential work remains future
+theorem infrastructure.
+
+Stage MC5.1 has no build blocker. The random-matrix branch now has
+`HighDimProb.RandomMatrix.Spectral`, with narrow Mathlib Hermitian eigenvalue
+wrappers `lambdaMax` and `lambdaMin` for nonempty finite dimensions, explicit
+unit-sphere quadratic-form bound predicates, quadratic-form tail event
+vocabulary, and typed targets for the future Rayleigh and self-adjoint
+operator-norm/eigenvalue endpoint bridges. No lambda-max theorem, matrix
+Laplace theorem, trace exponential theorem, or matrix Bernstein theorem is
+proved.
+
+Stage MC5.2 has no build blocker. The random-matrix branch now has
+`HighDimProb.RandomMatrix.TraceExp`, wrapping Mathlib `NormedSpace.exp` on
+matrices, `Matrix.trace`, trace of matrix exponential, trace-exponential
+moments, and typed trace-exponential bound targets. Mathlib
+`Matrix.IsHermitian.exp` proves that matrix exponentials preserve
+self-adjointness. No trace-mgf inequality, Golden-Thompson theorem, Lieb
+theorem, matrix Laplace theorem, or matrix Bernstein theorem is proved.
+
+Stage MC5.3 has no build blocker. The random-matrix branch now has
+`HighDimProb.RandomMatrix.Laplace`, with `matrixLaplaceRHS` and meaningful
+typed targets `matrixLaplaceTransformStatement`,
+`matrixChernoffFromTraceExpStatement`, and
+`selfAdjointOperatorNormLaplaceStatement`. The Laplace target uses
+`quadraticFormUpperTailEvent` while the lambda-max/Rayleigh bridge remains
+unproved. No matrix Laplace theorem, trace-mgf theorem,
+operator-norm/lambda-max reduction theorem, or matrix Bernstein theorem is
+proved.
+
+Stage MC5.4 has no build blocker. The additive
+`matrixBernsteinSelfAdjointStatement` remains an operator-norm tail statement;
+it is not rewritten to `lambdaMax` before the Rayleigh and self-adjoint
+operator-norm endpoint bridges are proved. The proof plan now explicitly
+routes future theorem work through the MC5 spectral, trace-exponential, and
+Laplace typed targets.
+
+Stage MC5.5 has no build blocker. The judge suite now has downstream-style
+RandomMatrix examples for the MC5 spectral, trace-exponential, Laplace, and
+matrix Bernstein statement APIs. These judge files verify import reachability
+and user-facing API shape only; they do not prove matrix Laplace, trace-mgf
+inequalities, or matrix Bernstein.
+
+Stage MB-S3 has no build blocker. The trace-exponential layer now factors the
+scalar integrand as `traceExpIntegrand`, proves
+`matrixTrace_nonneg_of_posSemidef`, proves
+`traceMatrixExp_nonneg_of_matrixExp_posSemidef`, proves real
+trace-exponential moment nonnegativity under pointwise nonnegativity, proves
+unconditional ENNReal lintegral nonnegativity, and proves
+`traceExpMomentLIntegral_eq_ofReal_traceExpMoment` under explicit
+integrability plus pointwise nonnegativity.
+
+Stage MB-S4 has no build blocker. The matrix trace-exponential layer now proves
+`matrixExp_posSemidef_of_selfAdjoint` using Mathlib's scoped matrix Loewner
+order, `IsSelfAdjoint.exp_nonneg`, and `Matrix.nonneg_iff_posSemidef`. It also
+proves `traceMatrixExp_nonneg_of_selfAdjoint`,
+`traceExpIntegrand_nonneg_of_randomSelfAdjoint`, and
+`traceExpMoment_nonneg_of_randomSelfAdjoint`. Matrix Laplace, trace-mgf
+inequalities, Golden-Thompson, Lieb, and matrix Bernstein remain unproved.
+
+Stage MB-S5 has no build blocker. The matrix Laplace layer now defines
+`traceExpThresholdEvent` and `matrixLaplaceRHSLIntegralDiv`, proves
+`matrixLaplaceRHSLIntegralDiv_eq_matrixLaplaceRHSLIntegral`, proves
+`traceExpThresholdEvent_lintegral_bound` from Mathlib's lintegral Markov
+inequality, and proves the conditional bridges
+`matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset` and
+`matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset`. These theorems
+require the explicit hypothesis
+`quadraticFormUpperTailEvent Y t ⊆ traceExpThresholdEvent Y theta t`. The full
+`matrixLaplaceTransformStatement`, trace-mgf inequalities, Golden-Thompson,
+Lieb, and matrix Bernstein remain unproved.
+
+Stage MB-S6 has no build blocker. The matrix Laplace layer now exposes the
+source-backed but still unproved spectral dominance step as
+`TraceExpDominatesQuadraticFormUpperTail`, records the future typed target
+`traceExpDominatesQuadraticFormUpperTailStatement`, proves
+`quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_traceExpDominates`,
+and proves the conditional wrappers
+`matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`
+and
+`matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`.
+These theorems do not prove the direct spectral/Rayleigh event-subset bridge;
+they only route the explicit dominance hypothesis through the MB-S5 Laplace
+bridge. The full `matrixLaplaceTransformStatement`, trace-mgf inequalities,
+Golden-Thompson, Lieb, and matrix Bernstein remain unproved.
+
+Stage MB-S7A-index has no build blocker. The spectral layer now preserves the
+legacy `lambdaMax` wrapper while adding the canonical ordered endpoint wrapper
+`lambdaMaxOrdered`, defined directly as `hA.eigenvalues₀ 0`. It proves
+`lambdaMaxOrdered_is_greatest_eigenvalue` from
+`Matrix.IsHermitian.eigenvalues₀_antitone`, records the legacy compatibility
+target as `lambdaMax_eq_lambdaMaxOrdered_statement`, and adds
+`LambdaMaxOrderedPSDUpperBound` plus conditional ordered PSD-to-Rayleigh and
+ordered upper-tail event helpers. The old `lambdaMax` API remains unchanged.
+The unconditional endpoint PSD theorem, direct Rayleigh theorem, trace-exp
+spectral dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and
+Matrix Bernstein remain unproved.
+
+Stage MB-S7A-abstract has no build blocker. This stage paused proof progress
+and raised the spectral bridge API to semantic predicates:
+`SpectralUpperBound`, `RayleighUpperBound`, `scalarUpperTailEvent`, and
+`matrixUpperBoundTailEvent`. Downstream bridges should depend on
+`SpectralUpperBound` / `RayleighUpperBound`, not directly on the concrete
+implementation details of `lambdaMax` or `lambdaMaxOrdered`. Concrete wrappers
+such as `lambdaMaxOrdered` are now provider routes for semantic bounds; the hard
+provider theorem `LambdaMaxOrderedPSDUpperBound A hA` remains unproved. Trace-exp
+spectral dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and
+Matrix Bernstein remain unproved.
 
 Stage V1 has no build blocker. The visualization layer is documentation/script
 infrastructure only: curated Mermaid diagrams live under
@@ -1489,7 +1622,7 @@ No Lean theorem, statement, or module import meaning changed.
 Stage J1 has no build blocker. The judge suite is a separate compile-time
 library, `HighDimProbJudge`, and does not replace `HighDimProbTest`. The policy
 script checks Lean source/tests/judge files for forbidden tokens and
-theorem-like `:= True` declarations, verifies that `HighDimProb.lean` does not
+theorem-like True-bodied declarations, verifies that `HighDimProb.lean` does not
 import `HighDimProb.Experimental`, and verifies that `HighDimProbJudge.lean`
 imports every judge file.
 
@@ -1499,7 +1632,7 @@ Bernstein, and subGaussian checks, including Markov, Chebyshev, Boole,
 Orlicz/tail bridges, real-exponent moment bridges, Rademacher, and
 subGaussian/subExponential sum APIs. It also covers random-matrix PSD/order,
 sample covariance, and variance-proxy APIs. The policy script now detects
-multi-line theorem-like `:= True` declarations and blocks ordinary judge files
+multi-line theorem-like True-bodied declarations and blocks ordinary judge files
 from importing `HighDimProb.Experimental`.
 
 Stage SC-final-update has no build blocker. The scalar concentration branch now has
@@ -1539,14 +1672,17 @@ import/test audit for this completed milestone. Exact scale-0
 `SubGaussianTail` and `CenteredSubGaussianMGF` wrappers remain unavailable
 because those predicates require strictly positive scales.
 
-No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage H0, Stage H2A, Stage H2B, Stage H2-cleanup, Stage H3, Stage H4, Stage H5, Stage H6, Stage H6-sharp, Stage H7, Stage H7-closeout, Stage H8, Stage B1, Stage B1-fix, Stage B2, Stage SC-closeout, Stage B3, Stage SC-final, Stage M-real-1, Stage M-real-2, Stage SC-final-update, Stage MC1, Stage MC2, Stage MC2-fix, Stage MC3, Stage MC4-cleanup, Stage V1, Stage J1, or Stage J2 build blocker. The finite union bound is proved, the sample-covariance quadratic-form bridge/nonnegativity and explicit PSD bridge are proved, the weak-law scaffold now includes sample-mean vocabulary, scalar assumption wrappers, and honest typed statements, and the scalar moment/MGF branch proves fixed-exponent absolute-moment bridges, all-natural absolute moments with factorial constants, natural moment-to-Lp bridges, crude linear real-Lp growth, natural-exponent sharp `sqrt(q)` real-Lp growth, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` and `SubExponentialMoment` bridges, forward MGF-to-tail/psi2/moment composition, the weighted finite Rademacher Hoeffding specialization, independent finite subGaussian sum MGF/tail closure, finite bounded centered Hoeffding, sharp finite bounded centered Hoeffding, non-centered finite bounded Hoeffding, the Hoeffding milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum scaffold, the Stage B1-fix max-scale/lintegral finite-sum Bernstein infrastructure, the Stage B2 scalar Bernstein min-form theorem, the Stage SC-closeout scalar theorem-family audit, the Stage B3 weighted scalar Bernstein theorem, the Stage SC-final scalar concentration branch closure, the Stage M-real-1 real-exponent `SubGaussianMoment` bridge, the Stage M-real-2 subExponential real-moment bridge, the Stage SC-final-update scalar closeout refresh, the Stage MC1 matrix concentration vocabulary/statement layer, the Stage MC2 operator-norm/unit-sphere bridge layer, the Stage MC2-fix operator norm Mathlib bridge cleanup, the Stage MC3 matrix variance proxy / independent self-adjoint matrix sum infrastructure, the Stage MC4-cleanup matrix concentration statement honesty cleanup, the Stage V1 Lean path visualization infrastructure, the Stage J1 HighDimProb compile-time judge suite, and the Stage J2 expanded judge coverage.
+No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B, Stage G2C, Stage G2D, Stage G2E, Stage G2E-fix, Stage G2F, Stage G2F-cleanup, Sprint S4, Stage H0, Stage H2A, Stage H2B, Stage H2-cleanup, Stage H3, Stage H4, Stage H5, Stage H6, Stage H6-sharp, Stage H7, Stage H7-closeout, Stage H8, Stage B1, Stage B1-fix, Stage B2, Stage SC-closeout, Stage B3, Stage SC-final, Stage M-real-1, Stage M-real-2, Stage SC-final-update, Stage MC1, Stage MC2, Stage MC2-fix, Stage MC3, Stage MC4-cleanup, Stage MB-S1, Stage MC5.1, Stage MC5.2, Stage MC5.3, Stage MC5.4, Stage MC5.5, Stage MC5.6, Stage MB-S3, Stage MB-S4, Stage MB-S5, Stage MB-S6, Stage V1, Stage J1, or Stage J2 build blocker. The finite union bound is proved, the sample-covariance quadratic-form bridge/nonnegativity and explicit PSD bridge are proved, the weak-law scaffold now includes sample-mean vocabulary, scalar assumption wrappers, and honest typed statements, and the scalar moment/MGF branch proves fixed-exponent absolute-moment bridges, all-natural absolute moments with factorial constants, natural moment-to-Lp bridges, crude linear real-Lp growth, natural-exponent sharp `sqrt(q)` real-Lp growth, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` and `SubExponentialMoment` bridges, forward MGF-to-tail/psi2/moment composition, the weighted finite Rademacher Hoeffding specialization, independent finite subGaussian sum MGF/tail closure, finite bounded centered Hoeffding, sharp finite bounded centered Hoeffding, non-centered finite bounded Hoeffding, the Hoeffding milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum scaffold, the Stage B1-fix max-scale/lintegral finite-sum Bernstein infrastructure, the Stage B2 scalar Bernstein min-form theorem, the Stage SC-closeout scalar theorem-family audit, the Stage B3 weighted scalar Bernstein theorem, the Stage SC-final scalar concentration branch closure, the Stage M-real-1 real-exponent `SubGaussianMoment` bridge, the Stage M-real-2 subExponential real-moment bridge, the Stage SC-final-update scalar closeout refresh, the Stage MC1 matrix concentration vocabulary/statement layer, the Stage MC2 operator-norm/unit-sphere bridge layer, the Stage MC2-fix operator norm Mathlib bridge cleanup, the Stage MC3 matrix variance proxy / independent self-adjoint matrix sum infrastructure, the Stage MC4-cleanup matrix concentration statement honesty cleanup, the Stage MB-S1 matrix PSD variance-proxy algebra, the Stage MC5 spectral/trace/Laplace vocabulary and judge coverage, the Stage MB-S3 trace-exponential bridge layer, the Stage MB-S4 matrix exponential PSD bridge, the Stage MB-S5 conditional trace-exponential Markov/Laplace bridge, the Stage MB-S6 source-first conditional dominance bridge, the Stage V1 Lean path visualization infrastructure, the Stage J1 HighDimProb compile-time judge suite, and the Stage J2 expanded judge coverage.
 
 Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Stage G2A proves Psi2Bound -> absMomentNat q=2, SubGaussianTail -> absMomentNat q=2, and the analogous first-moment psi1/subExponential pilot. Stage G2B proves Psi2Bound/SubGaussianTail -> absMomentNat q for all natural q with a crude factorial constant. Stage G2C proves `finiteAbsMomentNat -> MemLp`, quantitative `absMomentNat -> realLpNorm`, and the factorial-growth `SubGaussianMomentNat` wrappers. Stage G2D proves the linear `realLpNorm <= C*K*q` consequence. Stage G2E records the sharp route as typed targets, Stage G2E-fix proves the deterministic envelope plus natural-exponent sqrt-growth moment bounds, Stage G2F packages those bounds as `SubGaussianMomentNatSqrt`, Sprint S4 proves `CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`, Stage M-real-1 proves `Psi2Bound -> SubGaussianMoment (8*K)` plus `SubGaussianTail -> SubGaussianMoment (16*K)` over arbitrary finite `p : ENNReal`, and Stage M-real-2 proves `Psi1Bound -> SubExponentialMoment (16*K)` plus `SubExponentialTail -> SubExponentialMoment (48*K)`. Finite-gauge variants, reverse/source MGF connectors, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
 
-Random matrix theorem proofs remain blocked by matrix Laplace-transform
-infrastructure, variance-proxy PSD algebra, row/iid-row sampling assumptions
-for covariance estimation, centered empirical covariance conventions, and the
-sample-covariance unit-sphere reduction theorem. The major matrix
+Random matrix theorem proofs remain blocked by the missing direct proof of
+`TraceExpDominatesQuadraticFormUpperTail Y theta t`, the full matrix
+Laplace-transform proof, trace-exponential inequalities,
+spectral/operator-norm tail reductions,
+row/iid-row sampling assumptions for covariance estimation,
+centered empirical covariance conventions, and the sample-covariance
+unit-sphere reduction theorem. The major matrix
 concentration statement targets now typecheck as `Prop`s, but they are not
 theorems.
 
@@ -1554,4 +1690,5 @@ Theorem statements blocked by missing infrastructure are tracked in docs/Theorem
 
 ## Next safe task
 
-Stage J3 - add judge coverage for geometry, vector, and limit-theorem APIs.
+Stage MB-S7A-provider - prove that `lambdaMaxOrdered` provides
+`SpectralUpperBound`, or block cleanly.

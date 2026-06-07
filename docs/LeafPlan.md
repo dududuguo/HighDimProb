@@ -78,6 +78,9 @@
 - Sums
 - VarianceProxy
 - ConcentrationStatements
+- Spectral
+- TraceExp
+- Laplace
 - IndependentRows
 - IidRows
 - Algebra
@@ -92,7 +95,10 @@
 - HansonWrightStatements
 - JLStatements
 - CovarianceEstimationStatements
-- Next: Stage MC4-psd PSD square and variance-proxy algebra cleanup; do not prove matrix Bernstein yet.
+- Next: Stage MB-S7A-provider, prove that `lambdaMaxOrdered` provides
+  `SpectralUpperBound`, or block cleanly. Do not prove trace-exp spectral
+  dominance, trace-mgf, Golden-Thompson, Lieb, full matrix Laplace, or Matrix
+  Bernstein yet.
 
 ## Process
 

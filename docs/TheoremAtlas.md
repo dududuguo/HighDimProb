@@ -760,7 +760,7 @@ future directions.
 - Target Lean declarations: `IsSymmetricMatrix`, `IsSelfAdjointMatrix`, `RandomSelfAdjointMatrix`, `IsPSDMatrix`, `RandomPSDMatrix`, `MatrixLE`, `matrixExpect`, `centeredRandomMatrix`, `CenteredRandomSelfAdjointMatrices`, `IndependentRandomMatrices`, `BoundedOperatorNorm`, `MatrixVarianceProxy`, `MatrixVarianceProxyBound`.
 - Required objects: `RandomMatrix`, `operatorNorm`, `sampleCovariance`, finite matrix sums, Mathlib matrix predicates and independence.
 - Required definitions: Stage MC1 adds the vocabulary in `SelfAdjoint`, `MatrixOrder`, `Expectation`, and `ConcentrationStatements`.
-- Required bridge lemmas: future proof stages still need matrix Laplace transform infrastructure, variance-proxy PSD facts, and theorem-specific self-adjoint sum algebra; the exact operator-norm comparison and measurability bridges are now proved in Stage MC2-fix.
+- Required bridge lemmas: future proof stages still need matrix Laplace transform infrastructure and theorem-specific spectral/eigenvalue reductions; the exact operator-norm comparison and measurability bridges are proved in Stage MC2-fix, and the PSD variance-proxy algebra is proved in MB-S1.
 - Status: implemented vocabulary
 - Blocker: no matrix concentration theorem is attempted or proved in MC1.
 - Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
@@ -867,10 +867,10 @@ future directions.
 - Informal statement: sums of independent centered random matrices with bounded operator norm satisfy Bernstein-type spectral tail bounds.
 - Target Lean statement: `matrixBernsteinStatement`.
 - Required objects: random matrices, self-adjoint matrix predicates, centered matrix variables, `operatorNorm`, finite random-matrix sums, matrix square/second moments, variance proxy, independence.
-- Required definitions: Stage 6A random matrix object layer exists; Stage 6B adds `operatorNorm`; Stage MC1 adds self-adjoint, matrix order, matrix expectation, and typed statement vocabulary; Stage MC2/MC2-fix adds explicit unit-vector/operator-norm bridges and operator-norm measurability; Stage MC3 adds `randomMatrixSum`, `IndependentSelfAdjointRandomMatrices`, `CenteredSelfAdjointRandomMatrixFamily`, `PointwiseOperatorNormBound`, `matrixSecondMoment`, `matrixVarianceProxy`, and `matrixVarianceProxyNorm`; Stage MC4-cleanup adds `IntegrableRandomMatrix` and refines the additive-form `matrixBernsteinSelfAdjointStatement`.
-- Required bridge lemmas: matrix-valued measurability, independence of matrix-valued variables, self-adjoint finite-sum algebra, matrix square measurability, matrix Laplace-transform infrastructure, variance-proxy PSD facts, and self-adjoint dilation if rectangular variants are used. MC2-fix supplies the basic operator-norm comparison and measurability bridges; MC3 supplies random-matrix sum and variance-proxy infrastructure; MC4-cleanup removes meaningless Laplace/trace `True` placeholders and keeps those as documentation-only TODOs.
+- Required definitions: Stage 6A random matrix object layer exists; Stage 6B adds `operatorNorm`; Stage MC1 adds self-adjoint, matrix order, matrix expectation, and typed statement vocabulary; Stage MC2/MC2-fix adds explicit unit-vector/operator-norm bridges and operator-norm measurability; Stage MC3 adds `randomMatrixSum`, `IndependentSelfAdjointRandomMatrices`, `CenteredSelfAdjointRandomMatrixFamily`, `PointwiseOperatorNormBound`, `matrixSecondMoment`, `matrixVarianceProxy`, and `matrixVarianceProxyNorm`; Stage MC4-cleanup adds `IntegrableRandomMatrix`; MB-S1 adds the PSD square/second-moment/variance-proxy proof layer and refines the additive-form `matrixBernsteinSelfAdjointStatement`.
+- Required bridge lemmas: matrix-valued measurability, independence of matrix-valued variables, self-adjoint finite-sum algebra, matrix square measurability, matrix Laplace-transform infrastructure, spectral/operator-norm tail reductions, and self-adjoint dilation if rectangular variants are used. MC2-fix supplies the basic operator-norm comparison and measurability bridges; MC3 supplies random-matrix sum and variance-proxy infrastructure; MC4-cleanup removes meaningless Laplace/trace `True` placeholders and keeps those as documentation-only TODOs; MB-S1 supplies PSD variance-proxy algebra.
 - Status: typed-prop
-- Blocker: theorem proof is beyond MC4-cleanup and still requires PSD facts for `A_i^2`, `E[A_i^2]`, and `matrixVarianceProxy`, matrix Laplace-transform infrastructure, trace/exponential-moment machinery, and likely a final decision between pointwise and a.e. norm-bounded assumptions.
+- Blocker: theorem proof is beyond MB-S1 and MC5.4. The additive statement remains an operator-norm tail target and still requires spectral/operator-norm tail reductions, a proof of the typed matrix Laplace-transform target, trace/exponential-moment inequalities, and likely a final decision between pointwise and a.e. norm-bounded assumptions. PSD variance-proxy algebra is no longer a blocker.
 - Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - Priority: v0.4
 
@@ -1041,14 +1041,18 @@ future directions.
 - Required objects: `CenteredSelfAdjointRandomMatrixFamily`,
   `IndependentSelfAdjointRandomMatrices`, `PointwiseOperatorNormBound`,
   `matrixVarianceProxyNorm`, `operatorNorm`, `randomMatrixSum`
-- Required bridge lemmas: PSD of `A_i^2`, PSD of `E[A_i^2]`,
-  PSD of `matrixVarianceProxy`, lambda-max/operator-norm bridge,
-  matrix Laplace transform, Golden-Thompson inequality
-- Status: typed-prop (statement refined in MC4-cleanup)
-- Blocker: PSD lemmas are typed targets only, Golden-Thompson and Lieb-style
-  trace inequalities are not available here, and matrix Laplace / trace
-  exponential statements are documentation-only TODOs until they can mention
-  honest Lean objects.
+- Required bridge lemmas: lambda-max/operator-norm bridge, matrix Laplace
+  transform, Golden-Thompson inequality, and trace-exponential machinery.
+  PSD of `A_i^2`, `E[A_i^2]`, and `matrixVarianceProxy` is proved in MB-S1.
+  MB-S2 adds two-sided quadratic-form event vocabulary, lintegral trace-exp
+  and Laplace typed targets, and a bundled analytic prerequisite statement.
+- Status: typed-prop (statement refined in MB-S1)
+- Blocker: Golden-Thompson and Lieb-style trace inequalities are not
+  available here. MC5.2/MC5.3 and MB-S2 provide honest trace-exponential,
+  lintegral, and matrix Laplace typed targets, but no trace-mgf, matrix
+  Laplace, or matrix Bernstein theorem is proved. The statement remains in
+  operator-norm form rather than switching to lambda-max before the
+  Rayleigh/operator-norm bridges are proved.
 - Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - Proof plan: `docs/MatrixBernsteinProofPlan.md`
 - Priority: Stage MC5+
@@ -1065,18 +1069,371 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - Priority: Stage MC5
 
-## PSD of Matrix Square / Second Moment / Variance Proxy (MC4-cleanup)
+## Matrix Spectral Vocabulary (MC5.1)
+
+- Book heading: largest eigenvalue and Rayleigh quotient prerequisites for
+  matrix Bernstein.
+- Informal statement: expose a small largest/smallest eigenvalue vocabulary for
+  nonempty finite self-adjoint real matrices, plus proof-friendly
+  quadratic-form tail predicates that can stand in for lambda-max events until
+  the Rayleigh quotient theorem is proved.
+- Target Lean declarations: `lambdaMax`, `lambdaMaxOrdered`, `lambdaMin`,
+  `QuadraticFormUpperBound`, `QuadraticFormLowerBound`, `LambdaMaxBound`,
+  `LambdaMaxPSDUpperBound`, `LambdaMaxOrderedPSDUpperBound`,
+  `quadraticFormUpperTailEvent`, `quadraticFormLowerTailEvent`,
+  `SelfAdjointOperatorNormTailEvent`,
+  `lambdaMax_le_iff_quadraticForm_le_statement`,
+  `lambdaMax_eq_lambdaMaxOrdered_statement`,
+  `lambdaMaxOrdered_is_greatest_eigenvalue`,
+  `operatorNorm_eq_max_abs_lambda_statement`.
+- Required objects: `IsSelfAdjointMatrix`, `Matrix.IsHermitian.eigenvalues`,
+  `Matrix.IsHermitian.eigenvalues₀`, `IsUnitVector`, `matrixQuadraticForm`,
+  `operatorNorm`.
+- Status: implemented vocabulary and typed targets; MB-S7A-index adds
+  `lambdaMaxOrdered` as the canonical ordered `eigenvalues₀ 0` endpoint and
+  proves the ordered endpoint greatest theorem. No unconditional
+  lambda-max/Rayleigh quotient theorem is proved.
+- Blocker: future proof work must prove the ordered endpoint PSD/Rayleigh
+  bridge, connect Mathlib Hermitian/Rayleigh APIs to the explicit HighDimProb
+  quadratic-form/unit-sphere predicate, then connect self-adjoint
+  operator-norm tails to lambda-max tails for `A` and `-A`.
+- Target module: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Priority: Stage MC5
+
+## Matrix Trace-Exponential Vocabulary (MC5.2)
+
+- Book heading: matrix Laplace transform prerequisites.
+- Informal statement: expose matrix exponential, trace, trace of matrix
+  exponential, and trace-exponential moment vocabulary for future matrix
+  Laplace and trace-mgf arguments.
+- Target Lean declarations: `matrixExp`, `matrixTrace`, `traceMatrixExp`,
+  `isSelfAdjointMatrix_matrixExp`, `traceExpIntegrand`, `traceExpMoment`,
+  `traceExpMomentLIntegral`, `matrixTrace_nonneg_of_posSemidef`,
+  `traceMatrixExp_nonneg_of_matrixExp_posSemidef`,
+  `traceExpMoment_nonneg_of_nonneg`,
+  `traceExpMomentLIntegral_nonneg`,
+  `traceExpMomentLIntegral_eq_ofReal_traceExpMoment`,
+  `traceExpMomentBoundStatement`, `traceExpVarianceProxyBoundStatement`.
+- Required objects: `NormedSpace.exp` on matrices, `Matrix.trace`,
+  `RandomMatrix`, `RandomSelfAdjointMatrix`, `IsPSDMatrix`.
+- Status: implemented vocabulary; MB-S3 proves the downstream nonnegativity and
+  real-expectation/lintegral bridges under explicit hypotheses, and MB-S4
+  proves PSD of `matrixExp A` for self-adjoint real matrices. No
+  Golden-Thompson, Lieb, trace-mgf, full matrix Laplace, or matrix Bernstein
+  theorem is proved.
+- Blocker: future proof work must add trace-exponential moment inequalities
+  and the full matrix Laplace transform reduction over the existing vocabulary.
+- Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Priority: Stage MC5
+
+## Matrix Laplace Statement Vocabulary (MC5.3)
+
+- Book heading: matrix Laplace transform method for matrix Bernstein.
+- Informal statement: trace-exponential moment bounds should imply upper-tail
+  bounds for the largest self-adjoint direction, and eventually for the
+  self-adjoint operator norm by applying the route to `Y` and `-Y`.
+- Target Lean declarations: `matrixLaplaceRHS`,
+  `matrixLaplaceRHSLIntegral`, `traceExpThresholdEvent`,
+  `matrixLaplaceRHSLIntegralDiv`,
+  `traceExpThresholdEvent_lintegral_bound`,
+  `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`,
+  `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset`,
+  `TraceExpDominatesQuadraticFormUpperTail`,
+  `traceExpDominatesQuadraticFormUpperTailStatement`,
+  `matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`,
+  `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`,
+  `matrixLaplaceTransformStatement`, `matrixChernoffFromTraceExpStatement`,
+  `selfAdjointOperatorNormLaplaceStatement`.
+- Required objects: `quadraticFormUpperTailEvent`,
+  `SelfAdjointOperatorNormTailEvent`, `traceExpMoment`,
+  `RandomSelfAdjointMatrix`, and `ENNReal.ofReal`.
+- Status: conditional bridge plus typed-prop targets. MB-S5 proves the
+  trace-exponential threshold Markov bound and conditional quadratic-form
+  Laplace bridge under an explicit subset hypothesis; MB-S6 names that
+  dominance hypothesis and proves conditional wrappers from it. No full matrix
+  Laplace theorem is proved.
+- Blocker: future proof work must prove
+  `TraceExpDominatesQuadraticFormUpperTail Y theta t`, the self-adjoint
+  operator-norm/lambda-max route, and the trace-mgf inequality for independent
+  matrix sums.
+- Target module: `HighDimProb/RandomMatrix/Laplace.lean`
+- Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
+- Priority: Stage MC5
+
+## Matrix Bernstein Spectral / Laplace Bridge (MB-S2)
+
+- Book heading: matrix Bernstein analytic prerequisites.
+- Informal statement: strengthen the statement layer between PSD variance
+  proxy algebra and the future matrix Laplace proof by exposing monotone
+  quadratic-form bounds, two-sided quadratic-form tail events, lintegral
+  trace-exponential moments, lintegral matrix Laplace targets, and a bundled
+  matrix Bernstein prerequisite statement.
+- Target Lean declarations: `quadraticFormUpperBound_mono`,
+  `quadraticFormLowerBound_mono`, `twoSidedQuadraticFormTailEvent`,
+  `quadraticFormUpperTailEvent_subset_twoSidedQuadraticFormTailEvent`,
+  `quadraticFormLowerTailEvent_subset_twoSidedQuadraticFormTailEvent`,
+  `lambdaMax_is_greatest_eigenvalue_statement`,
+  `lambdaMin_is_least_eigenvalue_statement`,
+  `selfAdjointOperatorNormTailViaQuadraticFormStatement`,
+  `traceExpMomentLIntegral`,
+  `traceMatrixExp_nonneg_of_selfAdjoint_statement`,
+  `traceExpMoment_nonneg_statement`,
+  `traceExpMomentLIntegral_eq_ofReal_statement`,
+  `matrixLaplaceRHSLIntegral`,
+  `matrixLaplaceTransformLIntegralStatement`,
+  `matrixChernoffFromTraceExpLIntegralStatement`,
+  `selfAdjointOperatorNormLaplaceRHSLIntegral`,
+  `selfAdjointOperatorNormLaplaceLIntegralStatement`, and
+  `matrixBernsteinLaplacePrerequisitesStatement`.
+- Required objects: `IsUnitVector`, `matrixQuadraticForm`,
+  `quadraticFormUpperTailEvent`, `quadraticFormLowerTailEvent`,
+  `traceExpMoment`, `traceExpMomentLIntegral`, and
+  `selfAdjointOperatorNormTailEvent`.
+- Status: partial bridge. The monotonicity and one-sided-to-two-sided event
+  inclusion lemmas are proved. MB-S3 proves the trace-exp moment nonnegativity
+  and lintegral bridge under explicit assumptions. MB-S4 proves self-adjoint
+  trace-exp positivity, MB-S5 proves the conditional trace-exp threshold
+  Markov/Laplace bridge, and MB-S6 names the missing dominance hypothesis with
+  conditional Laplace wrappers. The Rayleigh/operator-norm, direct dominance
+  proof, full matrix Laplace, trace-mgf, and matrix Bernstein results remain
+  unproved.
+- Blocker: exact bridge from Mathlib Hermitian eigenvalue/Rayleigh APIs to the
+  explicit HighDimProb unit-vector quadratic form, the pointwise
+  `quadraticFormUpperTailEvent` to `traceExpThresholdEvent` subset, and
+  trace-mgf inequalities.
+- Target modules: `HighDimProb/RandomMatrix/Spectral.lean`,
+  `HighDimProb/RandomMatrix/TraceExp.lean`,
+  `HighDimProb/RandomMatrix/Laplace.lean`, and
+  `HighDimProb/RandomMatrix/ConcentrationStatements.lean`.
+- Test modules: `HighDimProbTest/RandomMatrixSpectralAPI.lean`,
+  `HighDimProbTest/RandomMatrixTraceExpAPI.lean`,
+  `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
+  `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
+- Priority: Stage MB-S2 through MB-S7A-abstract complete; next proof task is
+  MB-S7A-provider, prove that `lambdaMaxOrdered` provides
+  `SpectralUpperBound`, or block cleanly before attempting trace-exp dominance.
+
+## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
+
+- Book heading: matrix Laplace transform prerequisites.
+- Informal statement: trace-exponential moments can be safely routed through
+  nonnegative integrals once trace-exp nonnegativity is supplied explicitly.
+- Target Lean declarations: `matrixTrace_nonneg_of_posSemidef`,
+  `traceMatrixExp_nonneg_of_matrixExp_posSemidef`,
+  `matrixExp_posSemidef_of_selfAdjoint_statement`,
+  `matrixExp_posSemidef_of_selfAdjoint`, `traceExpIntegrand`,
+  `traceMatrixExp_nonneg_of_selfAdjoint`,
+  `traceExpMoment_nonneg_of_nonneg`,
+  `traceExpIntegrand_nonneg_of_randomSelfAdjoint`,
+  `traceExpMoment_nonneg_of_randomSelfAdjoint`,
+  `traceExpMomentLIntegral_nonneg`,
+  `traceExpMomentLIntegral_eq_ofReal_traceExpMoment`.
+- Required objects: Mathlib `Matrix.PosSemidef.trace_nonneg`, HighDimProb
+  `traceMatrixExp`, `traceExpMoment`, `traceExpMomentLIntegral`, and scalar
+  integrability via `IntegrableRealRandomVariable`.
+- Status: proven bridge for trace-exp nonnegativity. MB-S4 proves
+  `matrixExp_posSemidef_of_selfAdjoint` from Mathlib's scoped matrix Loewner
+  order and CFC theorem `IsSelfAdjoint.exp_nonneg`, then derives deterministic
+  trace nonnegativity and random self-adjoint trace-exp moment nonnegativity.
+- Blocker: none for the matrix-exponential PSD bridge. Matrix Laplace,
+  trace-mgf inequalities, Golden-Thompson/Lieb inputs, and spectral/operator
+  norm tail reductions remain future work.
+- Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Priority: Stage MB-S4 complete; MB-S5 has completed the conditional
+  Markov/Laplace bridge over the existing trace-exp vocabulary.
+
+## Conditional Matrix Laplace Bridge (MB-S5)
+
+- Book heading: matrix Laplace transform method for matrix Bernstein.
+- Informal statement: once the quadratic-form upper-tail event is known to be
+  contained in the trace-exponential threshold event, Mathlib's lintegral
+  Markov inequality bounds the quadratic-form tail by the lintegral Laplace
+  RHS.
+- Target Lean declarations: `traceExpThresholdEvent`,
+  `matrixLaplaceRHSLIntegralDiv`,
+  `matrixLaplaceRHSLIntegralDiv_eq_matrixLaplaceRHSLIntegral`,
+  `traceExpThresholdEvent_lintegral_bound`,
+  `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`, and
+  `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset`.
+- Required objects: Mathlib `MeasureTheory.meas_ge_le_lintegral_div`,
+  `traceExpIntegrand`, `traceExpMomentLIntegral`,
+  `matrixLaplaceRHSLIntegral`, and `quadraticFormUpperTailEvent`.
+- Status: proven conditional bridge.
+- Blocker: the subset
+  `quadraticFormUpperTailEvent Y t ⊆ traceExpThresholdEvent Y theta t` is not
+  proved. Full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and matrix
+  Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/Laplace.lean`
+- Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
+- Priority: Stage MB-S5 complete; MB-S6 records the missing dominance step as
+  an explicit hypothesis and proves conditional wrappers.
+
+## Source-First Conditional Trace-Exp Dominance Bridge (MB-S6)
+
+- Book heading: matrix Laplace transform method for matrix Bernstein.
+- Informal statement: the book route reduces largest-eigenvalue tails through a
+  trace-exponential threshold, but the current HighDimProb
+  `quadraticFormUpperTailEvent` API still needs a Rayleigh/min-max spectral
+  bridge. MB-S6 exposes that step as an explicit predicate and proves only
+  conditional consequences.
+- Target Lean declarations: `TraceExpDominatesQuadraticFormUpperTail`,
+  `traceExpDominatesQuadraticFormUpperTailStatement`,
+  `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_traceExpDominates`,
+  `matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`,
+  and `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`.
+- Required objects: `quadraticFormUpperTailEvent`,
+  `traceExpThresholdEvent`, `matrixLaplaceRHSLIntegralDiv`,
+  `matrixLaplaceRHSLIntegral`, and `RandomSelfAdjointMatrix`.
+- Status: conditional bridge proved under explicit
+  `TraceExpDominatesQuadraticFormUpperTail Y theta t`.
+- Blocker: direct proof of `TraceExpDominatesQuadraticFormUpperTail Y theta t`
+  remains open. Full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and
+  matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/Laplace.lean`
+- Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
+- Priority: Stage MB-S6 is complete, but direct dominance should wait until
+  the ordered endpoint PSD/Rayleigh bridge is proved.
+
+## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
 - Book heading: structural PSD facts for matrix Bernstein
 - Informal statement: if A is self-adjoint then A² is PSD; if A is self-adjoint
   random then E[A²] is PSD; the variance proxy Σᵢ E[A_i²] is PSD
-- Target Lean statements: `isPSD_matrixSquare_of_selfAdjoint_statement`,
-  `isPSD_matrixSecondMoment_of_selfAdjoint_statement`,
-  `isPSD_matrixVarianceProxy_of_selfAdjoint_statement`
+- Target Lean statements: `isPSD_matrixSquare_of_selfAdjoint`,
+  `isPSD_matrixSecondMoment_of_selfAdjoint`,
+  `isPSD_matrixVarianceProxy_of_selfAdjoint`
 - Required objects: `matrixSquare`, `matrixSecondMoment`, `matrixVarianceProxy`,
   `IsPSDMatrix`
-- Status: typed-prop targets (MC4-cleanup), unproved
-- Blocker: PSD of the self-adjoint square, expectation preserving PSD, and
-  finite sums preserving PSD in the explicit quadratic-form order.
+- Status: proven structural bridge. The second-moment and variance-proxy
+  theorems require explicit entrywise integrability of the squared random
+  matrix terms.
+- Blocker: none for this structural PSD layer.
 - Target module: `HighDimProb/RandomMatrix/VarianceProxy.lean`
-- Priority: Stage MC4-psd
+- Priority: completed in MB-S1
+
+## Matrix Bernstein Spectral Bridge Typed Split (MB-S7A)
+
+- Book heading: matrix Laplace transform prerequisites / Rayleigh reduction.
+- Informal statement: before proving trace-exp dominance, HighDimProb needs a
+  bridge from explicit unit-vector quadratic forms to the nonempty-dimension
+  `lambdaMax` wrapper.
+- Target Lean declarations:
+  `matrixQuadraticForm_le_lambdaMax_statement`,
+  `quadraticFormUpperBound_of_lambdaMax_le_of_matrixQuadraticForm_le_lambdaMax`,
+  `lambdaMaxUpperTailEvent`,
+  `quadraticFormUpperTailEvent_subset_lambdaMaxUpperTailEvent_of_matrixQuadraticForm_le_lambdaMax`,
+  `not_isUnitVector_fin_zero`, `unitSphere_empty_of_zero_dim`, and
+  `quadraticFormUpperTailEvent_empty_of_zero_dim`.
+- Required objects: `matrixQuadraticForm`, `IsUnitVector`,
+  `quadraticFormUpperTailEvent`, `lambdaMax`, and `IsSelfAdjointMatrix`.
+- Status: typed split plus conditional helpers proved. The direct
+  `matrixQuadraticForm_le_lambdaMax_statement` theorem is not proved.
+- Dimension route: lambda wrappers stay on `Fin (n + 1)`; zero-dimensional
+  unit-sphere and upper-tail events are proved empty.
+- Blocker: direct Mathlib/HighDimProb Rayleigh bridge from explicit finite-sum
+  quadratic forms to Hermitian eigenvalue endpoints. MB-S7A-index adds an
+  ordered endpoint wrapper for the next PSD/Rayleigh proof, but trace-exp
+  spectral dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb,
+  and Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- Priority: next safe task is MB-S7A-provider, prove that `lambdaMaxOrdered`
+  provides `SpectralUpperBound`, or block cleanly.
+
+## Matrix Bernstein Rayleigh Conversion Helper Bridge (MB-S7A-fix)
+
+- Book heading: matrix Laplace transform prerequisites / Rayleigh reduction.
+- Informal statement: a Loewner-style endpoint bound
+  `((lambdaMax A hA) • 1 - A).PosSemidef` is enough to prove the explicit
+  HighDimProb unit-vector Rayleigh statement.
+- Target Lean declarations: `LambdaMaxPSDUpperBound`,
+  `matrixQuadraticForm_nonneg_of_posSemidef`,
+  `matrixQuadraticForm_smul_one_of_isUnitVector`,
+  `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, and
+  `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound`.
+- Required objects: Mathlib `Matrix.PosSemidef`, HighDimProb
+  `matrixQuadraticForm`, `matrixQuadraticForm_sub`, `IsUnitVector`,
+  `lambdaMax`, and `matrixQuadraticForm_le_lambdaMax_statement`.
+- Status: helper bridge proved and consolidated, API-tested, and judge-tested.
+  The direct theorem behind `matrixQuadraticForm_le_lambdaMax_statement`
+  remains unproved.
+- Dimension route: unchanged `Fin (n + 1)` lambda route; no coercion between
+  `Fin n` and `Fin (n + 1)` was introduced.
+- Blocker: MB-S7A-order found that Mathlib's ordered endpoint theorem applies
+  to `Matrix.IsHermitian.eigenvalues₀`, while current `lambdaMax` uses the
+  reindexed `Matrix.IsHermitian.eigenvalues`. MB-S7A-index preserves current
+  `lambdaMax` and introduces `lambdaMaxOrdered`; the remaining endpoint task is
+  the ordered PSD/Rayleigh theorem. Trace-exp spectral dominance, full matrix
+  Laplace, trace-mgf, Golden-Thompson, Lieb, and Matrix Bernstein remain
+  unproved.
+- Target module: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- Priority: next safe task is MB-S7A-provider, prove that `lambdaMaxOrdered`
+  provides `SpectralUpperBound`, or block cleanly.
+
+## Matrix Bernstein Ordered Endpoint Wrapper (MB-S7A-index)
+
+- Book heading: matrix Laplace transform prerequisites / Rayleigh reduction.
+- Informal statement: preserve the legacy `lambdaMax` wrapper while exposing a
+  canonical ordered largest-eigenvalue endpoint based directly on
+  `Matrix.IsHermitian.eigenvalues₀ 0`.
+- Target Lean declarations: `lambdaMaxOrdered`,
+  `lambdaMaxOrdered_eq_eigenvalues₀_zero`,
+  `lambdaMax_eq_lambdaMaxOrdered_statement`,
+  `lambdaMaxOrdered_is_greatest_eigenvalue_statement`,
+  `lambdaMaxOrdered_is_greatest_eigenvalue`,
+  `LambdaMaxOrderedPSDUpperBound`,
+  `matrixQuadraticForm_le_lambdaMaxOrdered_statement`,
+  `matrixQuadraticForm_le_lambdaMaxOrdered_of_lambdaMaxOrderedPSDUpperBound`,
+  `lambdaMaxOrderedUpperTailEvent`, and
+  `quadraticFormUpperTailEvent_subset_lambdaMaxOrderedUpperTailEvent_of_matrixQuadraticForm_le_lambdaMaxOrdered`.
+- Required objects: Mathlib `Matrix.IsHermitian.eigenvalues₀_antitone`,
+  HighDimProb `matrixQuadraticForm`, `IsUnitVector`, and existing PSD
+  conversion helpers.
+- Status: ordered endpoint wrapper and ordered greatest theorem proved;
+  conditional ordered PSD-premise-to-Rayleigh and event helpers proved.
+- Blocker: unconditional `LambdaMaxOrderedPSDUpperBound A hA` or equivalent
+  ordered Rayleigh theorem remains unproved. Trace-exp spectral dominance, full
+  matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and Matrix Bernstein remain
+  unproved.
+- Target module: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- Priority: next safe task is MB-S7A-provider, prove that `lambdaMaxOrdered`
+  provides `SpectralUpperBound`, or block cleanly.
+
+## Matrix Bernstein Semantic Spectral API (MB-S7A-abstract)
+
+- Book heading: matrix Laplace transform prerequisites / Rayleigh reduction.
+- Informal statement: downstream spectral reductions should depend on semantic
+  upper-bound predicates rather than concrete eigenvalue wrapper internals.
+- Target Lean declarations: `SpectralUpperBound`, `RayleighUpperBound`,
+  `scalarUpperTailEvent`, `matrixUpperBoundTailEvent`,
+  `rayleighUpperBound_of_spectralUpperBound`,
+  `quadraticFormUpperTailEvent_subset_scalarUpperTailEvent_of_rayleighUpperBound`,
+  `quadraticFormUpperTailEvent_subset_matrixUpperBoundTailEvent_of_rayleighUpperBound`,
+  `quadraticFormUpperTailEvent_subset_matrixUpperBoundTailEvent_of_spectralUpperBound`,
+  `spectralUpperBound_of_lambdaMaxPSDUpperBound`,
+  `spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound`,
+  `lambdaMaxUpperTailEvent_eq_matrixUpperBoundTailEvent`, and
+  `lambdaMaxOrderedUpperTailEvent_eq_matrixUpperBoundTailEvent`.
+- Required objects: existing Mathlib `Matrix.PosSemidef` API and HighDimProb
+  `matrixQuadraticForm` / `IsUnitVector` helper lemmas.
+- Status: semantic abstraction layer implemented, API-tested, and
+  judge-tested. No hard provider theorem was proved.
+- Blocker: prove that `lambdaMaxOrdered A hA` provides
+  `SpectralUpperBound A (lambdaMaxOrdered A hA)`, equivalently the existing
+  `LambdaMaxOrderedPSDUpperBound A hA`, or block cleanly. Trace-exp spectral
+  dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and Matrix
+  Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- Priority: MB-S7A-provider.

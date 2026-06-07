@@ -68,6 +68,10 @@ Infrastructure:
 - Stage MC1 matrix concentration assumption vocabulary and theorem statement layer
 - Stage MC2 operator-norm and unit-sphere bridge infrastructure
 - Stage MC2-fix operator norm Mathlib bridge cleanup
+- Stage MB-S2 spectral/Rayleigh/trace-exponential/Laplace bridge closeout
+- Stage MB-S3 trace-exponential positivity bridge under explicit hypotheses
+- Stage MB-S4 matrix exponential PSD bridge
+- Stage MB-S5 conditional trace-exponential Markov/Laplace bridge
 - Milestone Sprint S2 scalar concentration proof spine + random matrix statement layer
 - Milestone Sprint S3 small branch proof battery
 
@@ -553,11 +557,74 @@ Resolved in Stage MC4-cleanup:
   `traceExpMomentBoundStatement` Lean declarations because they were
   theorem-like names with body `True`.
 - Refined `matrixBernsteinSelfAdjointStatement` so integrability, positivity,
-  PSD variance proxy, and denominator assumptions are explicit.
+  variance-proxy norm, and denominator assumptions are explicit.
 - Updated `docs/MatrixBernsteinProofPlan.md` to record matrix Laplace and trace
   exponential work as documentation-only TODOs.
-- Kept PSD of `matrixVarianceProxy` as a typed target only; no PSD variance
-  proxy theorem or matrix Bernstein theorem was proved.
+- Kept matrix Laplace and trace exponential work documentation-only; no matrix
+  Bernstein theorem was proved.
+
+Resolved in Stage MB-S1:
+- Proved `isPSD_matrixSquare_of_selfAdjoint`.
+- Proved `matrixQuadraticForm_matrixExpect`, showing entrywise matrix
+  expectation commutes with the explicit quadratic form under entrywise
+  integrability.
+- Proved `isPSD_matrixSecondMoment_of_selfAdjoint` under
+  `IntegrableRandomMatrix P (randomMatrixSquare A)`.
+- Proved `matrixQuadraticForm_sum`, `isPSDMatrix_sum`, and
+  `isPSD_matrixVarianceProxy_of_selfAdjoint` under per-summand
+  square-integrability.
+- Refined `matrixBernsteinSelfAdjointStatement` so PSD of the variance proxy is
+  derived from the new theorem chain instead of being a separate hypothesis.
+- Did not prove matrix Bernstein, matrix Laplace, or trace exponential bounds.
+
+Resolved in Stage MB-S2:
+- Proved monotonicity helpers for `QuadraticFormUpperBound` and
+  `QuadraticFormLowerBound`.
+- Added `twoSidedQuadraticFormTailEvent` and proved the upper/lower one-sided
+  event subset lemmas into it.
+- Added typed lambda endpoint and self-adjoint operator-norm-to-quadratic-form
+  bridge targets without using them as proved theorems.
+- Added `traceExpMomentLIntegral` and typed targets for trace-exp
+  nonnegativity and the real-expectation/lintegral bridge.
+- Added lintegral matrix Laplace / Chernoff / self-adjoint operator-norm
+  Laplace typed targets.
+- Added `matrixBernsteinLaplacePrerequisitesStatement` as the dependency
+  bundle for the future matrix Bernstein proof path.
+- Did not prove Rayleigh, trace-mgf, matrix Laplace, or matrix Bernstein.
+
+Resolved in Stage MB-S4:
+- Proved `matrixExp_posSemidef_of_selfAdjoint` using Mathlib's scoped matrix
+  Loewner order and CFC theorem `IsSelfAdjoint.exp_nonneg`.
+- Derived `traceMatrixExp_nonneg_of_selfAdjoint`,
+  `traceExpIntegrand_nonneg_of_randomSelfAdjoint`, and
+  `traceExpMoment_nonneg_of_randomSelfAdjoint`.
+- Added self-adjoint scalar multiplication/negation bridge lemmas for
+  deterministic and random matrices.
+
+Resolved in Stage MB-S5:
+- Added `traceExpThresholdEvent` and `matrixLaplaceRHSLIntegralDiv`.
+- Proved `matrixLaplaceRHSLIntegralDiv_eq_matrixLaplaceRHSLIntegral`.
+- Proved `traceExpThresholdEvent_lintegral_bound` using Mathlib's lintegral
+  Markov inequality.
+- Proved the conditional bridges
+  `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset` and
+  `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset`.
+- Did not prove the missing event-subset bridge, trace-mgf, full matrix
+  Laplace, Golden-Thompson, Lieb, or matrix Bernstein.
+
+Resolved in Stage MB-S6:
+- Surveyed external source material for the missing event-subset bridge.
+- Added `TraceExpDominatesQuadraticFormUpperTail` as the explicit dominance
+  hypothesis and `traceExpDominatesQuadraticFormUpperTailStatement` as a typed
+  target, not a theorem.
+- Proved
+  `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_traceExpDominates`.
+- Proved the conditional wrappers
+  `matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`
+  and
+  `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`.
+- Did not prove the direct dominance bridge, trace-mgf, full matrix Laplace,
+  Golden-Thompson, Lieb, or matrix Bernstein.
 
 Resolved in Stage V1:
 - Added `docs/visualizations/index.md` as the entry point for human/agent
@@ -580,3 +647,77 @@ Resolved in Stage J1:
 - Documented the judge system in `docs/JudgeSystem.md`.
 - Did not prove new theorems, change theorem meanings, or add optional
   dependencies.
+
+Resolved in Stage MB-S7A:
+- Added `matrixQuadraticForm_le_lambdaMax_statement` as a typed split target
+  for the explicit unit-vector Rayleigh bridge to `lambdaMax`.
+- Proved conditional consequences
+  `quadraticFormUpperBound_of_lambdaMax_le_of_matrixQuadraticForm_le_lambdaMax`
+  and
+  `quadraticFormUpperTailEvent_subset_lambdaMaxUpperTailEvent_of_matrixQuadraticForm_le_lambdaMax`.
+- Added `lambdaMaxUpperTailEvent` and zero-dimensional cleanup lemmas
+  `not_isUnitVector_fin_zero`, `unitSphere_empty_of_zero_dim`, and
+  `quadraticFormUpperTailEvent_empty_of_zero_dim`.
+- Did not prove the direct Rayleigh theorem, trace-exp spectral dominance,
+  full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or matrix Bernstein.
+
+Resolved in Stage MB-S7A-fix:
+- Proved `matrixQuadraticForm_nonneg_of_posSemidef`, converting Mathlib
+  `Matrix.PosSemidef` to nonnegativity of HighDimProb's explicit quadratic
+  form.
+- Proved `matrixQuadraticForm_smul_one_of_isUnitVector` for scalar identity
+  matrices on explicit HighDimProb unit vectors.
+- Proved `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, a
+  conditional Rayleigh conversion from the explicit PSD premise
+  `((lambdaMax A hA) • 1 - A).PosSemidef`.
+- Did not prove the endpoint/order theorem producing that PSD premise, the
+  direct Rayleigh theorem, trace-exp spectral dominance, full matrix Laplace,
+  trace-mgf, Golden-Thompson, Lieb, or matrix Bernstein.
+
+Resolved in Stage MB-S7A-clean:
+- Added `LambdaMaxPSDUpperBound` as the named endpoint PSD premise for the
+  Rayleigh conversion route.
+- Added `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound` as a thin
+  compatibility wrapper over the MB-S7A-fix helper.
+- Reorganized the spectral bridge comments and grouped API/judge coverage.
+- Did not prove `LambdaMaxPSDUpperBound`, the direct Rayleigh theorem,
+  trace-exp spectral dominance, full matrix Laplace, trace-mgf,
+  Golden-Thompson, Lieb, or matrix Bernstein.
+
+Stage MB-S7A-order:
+- No theorem status was upgraded and no Lean source declaration was added.
+- Mathlib's ordered endpoint control is available for
+  `Matrix.IsHermitian.eigenvalues₀`, but current HighDimProb `lambdaMax` uses
+  the reindexed `Matrix.IsHermitian.eigenvalues`.
+- MB-S7A-index resolves this by adding a separate ordered wrapper instead of
+  changing the legacy `lambdaMax` meaning.
+
+Resolved in Stage MB-S7A-index:
+- Preserved the existing public `lambdaMax` API and added the separate ordered
+  endpoint wrapper `lambdaMaxOrdered`, defined directly as `hA.eigenvalues₀ 0`.
+- Proved `lambdaMaxOrdered_eq_eigenvalues₀_zero` and
+  `lambdaMaxOrdered_is_greatest_eigenvalue`.
+- Added the honest legacy compatibility target
+  `lambdaMax_eq_lambdaMaxOrdered_statement`.
+- Added `LambdaMaxOrderedPSDUpperBound`,
+  `matrixQuadraticForm_le_lambdaMaxOrdered_statement`,
+  `matrixQuadraticForm_le_lambdaMaxOrdered_of_lambdaMaxOrderedPSDUpperBound`,
+  `lambdaMaxOrderedUpperTailEvent`, and the ordered conditional upper-tail
+  subset helper.
+- Did not prove the unconditional ordered endpoint PSD theorem, direct
+  Rayleigh theorem, trace-exp spectral dominance, full matrix Laplace,
+  trace-mgf, Golden-Thompson, Lieb, or matrix Bernstein.
+
+Resolved in Stage MB-S7A-abstract:
+- Paused proof progress and introduced semantic spectral abstractions:
+  `SpectralUpperBound`, `RayleighUpperBound`, `scalarUpperTailEvent`, and
+  `matrixUpperBoundTailEvent`.
+- Proved the direct semantic bridge
+  `rayleighUpperBound_of_spectralUpperBound` using existing PSD/quadratic-form
+  helper lemmas.
+- Proved generic quadratic-form upper-tail subset lemmas from pointwise
+  `RayleighUpperBound` or `SpectralUpperBound` assumptions.
+- Preserved concrete `lambdaMax` and `lambdaMaxOrdered` APIs as provider and
+  compatibility routes into the semantic layer.
+- Did not prove `LambdaMaxOrderedPSDUpperBound`, trace-exp spectral dominance,
+  full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or matrix Bernstein.
