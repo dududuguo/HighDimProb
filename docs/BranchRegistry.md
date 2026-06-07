@@ -104,12 +104,10 @@ It is a planning document, not a request to physically move existing files.
 - Dependencies: `Scalar`, `Vector`, `Geometry`, Mathlib matrices, finite sums, and scoped L2 operator norm APIs.
 - Forbidden scope: proving matrix concentration before matrix Laplace-transform, variance-proxy, and covariance-estimation prerequisites are ready.
 - Promotion criteria: submodule API tests, theorem atlas dependencies, docs, status update, and stable-root import audit.
-- Next safe tasks: Stage MB-S7B-provider-close: assemble the
-  `lambdaMaxOrdered` `TraceExpDominatesUpperBound` provider theorem from the
-  scalar endpoint, matrix-exponential spectral mapping, and trace endpoint
-  helpers, or block cleanly. Full matrix Laplace, trace-mgf, Golden-Thompson,
-  Lieb, and Matrix Bernstein remain forbidden until their missing bridges are
-  proved.
+- Next safe tasks: Stage MB-S9-trace-mgf-provider-contract: audit the
+  source/API route for proving `matrixBernsteinTraceMGF_statement`, or block
+  cleanly on missing Golden-Thompson/Lieb/matrix-mgf prerequisites. Matrix
+  Bernstein remains forbidden until its missing bridges are proved.
   Independent-row/iid-row vocabulary remains separate until
   covariance-estimation proof work starts.
 
@@ -462,3 +460,74 @@ It is a planning document, not a request to physically move existing files.
   self-adjoint matrices.
 - Blocked: `lambdaMaxOrdered` trace-exp provider theorem, full matrix Laplace,
   trace-mgf, Golden-Thompson, Lieb, and matrix Bernstein remain unproved.
+
+## MB-S7B-provider-close Ordered Endpoint Trace-Exp Provider
+
+- Stage: MB-S7B-provider-close
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/Laplace.lean`
+- Test modules: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
+- New declarations: `lambdaMaxOrdered_traceExpDominatesUpperBound`.
+- Proven: deterministic trace-exp dominance provider for `lambdaMaxOrdered`
+  under explicit `0 <= theta`.
+- Blocked: full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and matrix
+  Bernstein remain unproved.
+
+## MB-S7C-assemble-dominance Concrete Dominance Assembly
+
+- Stage: MB-S7C-assemble-dominance
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/Laplace.lean`
+- Test modules: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
+- New declarations:
+  `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`.
+- Proven: concrete `TraceExpDominatesQuadraticFormUpperTail` assembly for
+  random self-adjoint matrices under explicit `0 <= theta`.
+- Blocked: full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and matrix
+  Bernstein remain unproved.
+
+## MB-S8-laplace-assembly Concrete LIntegral Laplace Assembly
+
+- Stage: MB-S8-laplace-assembly
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/Laplace.lean`
+- Test modules: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
+- New declarations:
+  `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint`,
+  `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`.
+- Proven: concrete division-RHS and product-RHS lintegral Laplace wrappers for
+  random self-adjoint matrices under explicit trace-exp integrand a.e.
+  measurability and `0 <= theta`.
+- Blocked: real RHS bridge, trace-mgf, Golden-Thompson, Lieb, and matrix
+  Bernstein remain unproved.
+
+## MB-S9-foundation Trace-MGF / Variance-Proxy Foundation
+
+- Stage: MB-S9-foundation
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/TraceExp.lean`,
+  `HighDimProb/RandomMatrix/VarianceProxy.lean`,
+  `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
+- Test modules: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`,
+  `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`,
+  `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
+  `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`,
+  `HighDimProbJudge/RandomMatrix/StatementUse.lean`
+- New declarations: `TraceMGFBound`, `TraceMGFBoundLIntegral`,
+  `TraceMGFVarianceProxyBound`, `TraceMGFVarianceProxyBoundLIntegral`,
+  `MatrixVarianceProxyUpperBound`, `MatrixVarianceProxyNormBound`,
+  `traceMGFBound_statement`, `traceMGFBoundLIntegral_statement`,
+  `traceMGFVarianceProxyBound_statement`, and
+  `matrixBernsteinTraceMGF_statement`.
+- Proven: semantic definitions and typed targets only; no hard analytic
+  theorem.
+- Blocked: Golden-Thompson, Lieb, the full trace-mgf master theorem, the real
+  RHS bridge, and matrix Bernstein remain unproved.

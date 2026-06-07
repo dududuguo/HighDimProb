@@ -1,0 +1,55 @@
+import HighDimProb.RandomMatrix.TraceExp
+import HighDimProb.RandomMatrix.Laplace
+import HighDimProb.RandomMatrix.VarianceProxy
+import HighDimProb.RandomMatrix.ConcentrationStatements
+
+open MeasureTheory
+
+namespace HighDimProb
+
+#check traceExpIntegrand
+#check traceExpMoment
+#check traceExpMomentLIntegral
+#check traceExpMomentLIntegral_eq_ofReal_traceExpMoment
+#check traceExpMoment_nonneg_of_randomSelfAdjoint
+#check traceMatrixExp
+#check matrixExp
+#check matrixTrace
+#check TraceMGFBound
+#check TraceMGFBoundLIntegral
+#check TraceMGFVarianceProxyBound
+#check TraceMGFVarianceProxyBoundLIntegral
+
+#check TraceExpDominatesUpperBound
+#check TraceExpDominatesQuadraticFormUpperTail
+#check traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint
+#check matrixLaplaceRHS
+#check matrixLaplaceRHSLIntegral
+#check matrixLaplaceRHSLIntegralDiv
+#check matrixLaplaceTransformLIntegral_of_randomSelfAdjoint
+#check matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint
+
+#check matrixSquare
+#check randomMatrixSquare
+#check matrixSecondMoment
+#check matrixVarianceProxy
+#check MatrixVarianceProxy
+#check matrixVarianceProxyBound
+#check MatrixVarianceProxyBound
+#check MatrixVarianceProxyUpperBound
+#check deterministicMatrixVarianceProxyNorm
+#check matrixVarianceProxyNorm
+#check MatrixVarianceProxyNormBound
+#check isPSD_matrixVarianceProxy_of_selfAdjoint
+
+#check traceExpMomentBoundStatement
+#check traceExpVarianceProxyBoundStatement
+#check traceMGFBound_statement
+#check traceMGFBoundLIntegral_statement
+#check traceMGFVarianceProxyBound_statement
+#check matrixBernsteinTraceMGF_statement
+#check matrixBernsteinStatement
+#check matrixBernsteinSelfAdjointStatement
+#check matrixBernsteinLaplacePrerequisitesStatement
+
+end HighDimProb

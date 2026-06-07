@@ -107,6 +107,36 @@ only the trace endpoint split behind the trace-exp provider route. The
 `lambdaMaxOrdered` trace-exp provider theorem, trace-mgf inequalities, full
 matrix Laplace, and matrix Bernstein remain unproved.
 
+Stage MB-S7B-provider-close proves
+`lambdaMaxOrdered_traceExpDominatesUpperBound`, assembling the scalar endpoint,
+matrix-exponential spectral mapping, and trace endpoint helper into the
+deterministic `TraceExpDominatesUpperBound` provider for `lambdaMaxOrdered`.
+It does not prove trace-mgf inequalities, full matrix Laplace,
+Golden-Thompson, Lieb, or matrix Bernstein.
+
+Stage MB-S7C-assemble-dominance proves
+`traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`, assembling the
+`lambdaMaxOrdered` Rayleigh and trace-exp providers into the concrete
+`TraceExpDominatesQuadraticFormUpperTail` dominance wrapper for random
+self-adjoint matrices. It does not prove trace-mgf inequalities, full matrix
+Laplace, Golden-Thompson, Lieb, or matrix Bernstein.
+
+Stage MB-S8-laplace-assembly proves
+`matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint` and
+`matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`, assembling concrete
+random self-adjoint dominance with the existing conditional Laplace wrappers.
+The theorems keep the trace-exp integrand a.e. measurability hypothesis
+explicit. They do not prove the real RHS bridge, trace-mgf inequalities,
+Golden-Thompson, Lieb, or matrix Bernstein.
+
+Stage MB-S9-foundation adds semantic trace-mgf and variance-proxy foundation
+vocabulary: `TraceMGFBound`, `TraceMGFBoundLIntegral`,
+`TraceMGFVarianceProxyBound`, `TraceMGFVarianceProxyBoundLIntegral`,
+`MatrixVarianceProxyUpperBound`, `MatrixVarianceProxyNormBound`, and typed
+trace-mgf provider targets including `matrixBernsteinTraceMGF_statement`. It
+does not prove Golden-Thompson, Lieb, the full trace-mgf master theorem, the
+real RHS bridge, or matrix Bernstein.
+
 ## Implemented Vocabulary
 
 | Area | Declarations | Status | Source |
@@ -121,11 +151,11 @@ matrix Laplace, and matrix Bernstein remain unproved.
 | Exact operator norm bridges and measurability | `operatorNorm_le_of_operatorNormBoundSqStatement`, `operatorNormBoundSq_of_operatorNorm_leStatement`, `operatorNormMeasurabilityStatement`, `operatorNorm_le_of_operatorNormBoundSq`, `operatorNormBoundSq_of_operatorNorm_le`, `instOpensMeasurableSpaceMatrixL2Operator`, `isRealRandomVariable_operatorNorm` | typed `Prop` targets retained; bridge directions and measurability theorem proved | `HighDimProb/RandomMatrix/OperatorNorm.lean` |
 | Finite random-matrix sums | `randomMatrixSum`, `randomMatrixSum_apply`, `randomMatrixSum_entry`, `isRandomMatrix_sum`, `isSelfAdjointMatrix_sum`, `randomSelfAdjointMatrix_sum` | implemented with measurability and self-adjoint sum lemmas | `HighDimProb/RandomMatrix/Sums.lean` |
 | Matrix assumptions | `IndependentRandomMatrices`, `SelfAdjointRandomMatrixFamily`, `IndependentSelfAdjointRandomMatrices`, `CenteredSelfAdjointRandomMatrixFamily`, `CenteredRandomSelfAdjointMatrices`, `BoundedOperatorNorm`, `PointwiseOperatorNormBound`, `UniformOperatorNormBound`, `AeOperatorNormBound` | implemented; pointwise and a.e. norm bounds are named separately | `HighDimProb/RandomMatrix/Assumptions.lean` |
-| Matrix square and variance proxy | `matrixSquare`, `randomMatrixSquare`, `matrixSecondMoment`, `matrixVarianceProxy`, `MatrixVarianceProxy`, `matrixVarianceProxyBound`, `MatrixVarianceProxyBound`, `deterministicMatrixVarianceProxyNorm`, `matrixVarianceProxyNorm` | implemented; square measurability, PSD square, PSD second moment, and PSD variance proxy proved with explicit square-integrability assumptions | `HighDimProb/RandomMatrix/VarianceProxy.lean` |
+| Matrix square and variance proxy | `matrixSquare`, `randomMatrixSquare`, `matrixSecondMoment`, `matrixVarianceProxy`, `MatrixVarianceProxy`, `matrixVarianceProxyBound`, `MatrixVarianceProxyBound`, `MatrixVarianceProxyUpperBound`, `deterministicMatrixVarianceProxyNorm`, `matrixVarianceProxyNorm`, `MatrixVarianceProxyNormBound` | implemented; square measurability, PSD square, PSD second moment, and PSD variance proxy proved with explicit square-integrability assumptions; MB-S9 adds semantic upper-bound and scalar-norm-bound predicates | `HighDimProb/RandomMatrix/VarianceProxy.lean` |
 | Spectral and quadratic-form tails | `lambdaMax`, `lambdaMaxOrdered`, `lambdaMaxOrdered_eq_eigenvalues₀_zero`, `lambdaMin`, `QuadraticFormUpperBound`, `QuadraticFormLowerBound`, `quadraticFormUpperBound_mono`, `quadraticFormLowerBound_mono`, `LambdaMaxBound`, `LambdaMaxPSDUpperBound`, `LambdaMaxOrderedPSDUpperBound`, `quadraticFormUpperTailEvent`, `quadraticFormLowerTailEvent`, `twoSidedQuadraticFormTailEvent`, `SelfAdjointOperatorNormTailEvent`, `selfAdjointOperatorNormTailViaQuadraticFormStatement`, `lambdaMax_le_iff_quadraticForm_le_statement`, `lambdaMax_eq_lambdaMaxOrdered_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue`, `lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrdered_rayleighUpperBound`, `lambdaMaxOrdered_smul_of_nonneg`, `lambdaMaxOrdered_le_trace_of_posSemidef`, `matrixQuadraticForm_le_lambdaMaxOrdered_statement`, `operatorNorm_eq_max_abs_lambda_statement`, `matrixQuadraticForm_nonneg_of_posSemidef`, `matrixQuadraticForm_smul_one_of_isUnitVector`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound`, `matrixQuadraticForm_le_lambdaMaxOrdered_of_lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrderedUpperTailEvent`, `quadraticFormUpperTailEvent_subset_lambdaMaxOrderedUpperTailEvent_of_matrixQuadraticForm_le_lambdaMaxOrdered` | implemented vocabulary; legacy eigenvalue wrappers are preserved, `lambdaMaxOrdered` uses Mathlib's ordered `eigenvalues₀ 0` endpoint directly, ordered endpoint greatest theorem, semantic provider/Rayleigh wrappers, nonnegative scalar endpoint theorem, and trace endpoint theorem are proved; legacy direct Rayleigh/operator-norm bridges remain unproved | `HighDimProb/RandomMatrix/Spectral.lean` |
-| Trace exponential vocabulary | `matrixExp`, `matrixTrace`, `traceMatrixExp`, `isSelfAdjointMatrix_matrixExp`, `matrixExp_posSemidef_of_selfAdjoint`, `matrixTrace_nonneg_of_posSemidef`, `traceMatrixExp_nonneg_of_matrixExp_posSemidef`, `traceMatrixExp_nonneg_of_selfAdjoint`, `matrixExp_posSemidef_of_selfAdjoint_statement`, `traceExpIntegrand`, `traceExpMoment`, `traceExpMomentLIntegral`, `traceExpMoment_nonneg_of_nonneg`, `traceExpIntegrand_nonneg_of_randomSelfAdjoint`, `traceExpMoment_nonneg_of_randomSelfAdjoint`, `traceExpMomentLIntegral_nonneg`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment`, `traceMatrixExp_nonneg_of_selfAdjoint_statement`, `traceExpMoment_nonneg_statement`, `traceExpMomentLIntegral_eq_ofReal_statement`, `traceExpMomentBoundStatement`, `traceExpVarianceProxyBoundStatement` | implemented vocabulary; deterministic self-adjoint matrix exponential PSD, trace-exp nonnegativity, random self-adjoint trace-exp moment nonnegativity, and expectation/lintegral bridges are proved under explicit hypotheses; trace-mgf inequalities remain unproved | `HighDimProb/RandomMatrix/TraceExp.lean` |
-| Matrix Laplace vocabulary | `matrixLaplaceRHS`, `matrixLaplaceRHSLIntegral`, `traceExpThresholdEvent`, `TraceExpDominatesUpperBound`, `matrixUpperBoundTailEvent_subset_traceExpThresholdEvent_of_traceExpDominatesUpperBound`, `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_rayleighUpperBound_of_traceExpDominatesUpperBound`, `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_spectralUpperBound_of_traceExpDominatesUpperBound`, `traceExpDominatesQuadraticFormUpperTail_of_rayleighUpperBound_of_traceExpDominatesUpperBound`, `traceExpDominatesQuadraticFormUpperTail_of_spectralUpperBound_of_traceExpDominatesUpperBound`, `matrixLaplaceRHSLIntegralDiv`, `matrixLaplaceRHSLIntegralDiv_eq_matrixLaplaceRHSLIntegral`, `traceExpThresholdEvent_lintegral_bound`, `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`, `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset`, `TraceExpDominatesQuadraticFormUpperTail`, `traceExpDominatesQuadraticFormUpperTailStatement`, `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_traceExpDominates`, `matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformStatement`, `matrixLaplaceTransformLIntegralStatement`, `matrixChernoffFromTraceExpStatement`, `matrixChernoffFromTraceExpLIntegralStatement`, `selfAdjointOperatorNormLaplaceStatement`, `selfAdjointOperatorNormLaplaceLIntegralStatement` | conditional lintegral Markov/Laplace, dominance-wrapper bridges, and semantic trace-exp upper-bound event bridges are proved under explicit hypotheses; the `lambdaMaxOrdered` trace-exp provider theorem and full matrix Laplace remain unproved | `HighDimProb/RandomMatrix/Laplace.lean` |
-| Matrix Bernstein analytic prerequisite bundle | `matrixBernsteinLaplacePrerequisitesStatement` | typed target bundling the operator-norm/quadratic-form event bridge and lintegral Laplace routes; no matrix Bernstein theorem proved | `HighDimProb/RandomMatrix/ConcentrationStatements.lean` |
+| Trace exponential vocabulary | `matrixExp`, `matrixTrace`, `traceMatrixExp`, `isSelfAdjointMatrix_matrixExp`, `matrixExp_posSemidef_of_selfAdjoint`, `matrixTrace_nonneg_of_posSemidef`, `traceMatrixExp_nonneg_of_matrixExp_posSemidef`, `traceMatrixExp_nonneg_of_selfAdjoint`, `matrixExp_posSemidef_of_selfAdjoint_statement`, `traceExpIntegrand`, `traceExpMoment`, `traceExpMomentLIntegral`, `TraceMGFBound`, `TraceMGFBoundLIntegral`, `TraceMGFVarianceProxyBound`, `TraceMGFVarianceProxyBoundLIntegral`, `traceExpMoment_nonneg_of_nonneg`, `traceExpIntegrand_nonneg_of_randomSelfAdjoint`, `traceExpMoment_nonneg_of_randomSelfAdjoint`, `traceExpMomentLIntegral_nonneg`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment`, `traceMatrixExp_nonneg_of_selfAdjoint_statement`, `traceExpMoment_nonneg_statement`, `traceExpMomentLIntegral_eq_ofReal_statement`, `traceExpMomentBoundStatement`, `traceExpVarianceProxyBoundStatement`, `traceMGFBound_statement`, `traceMGFBoundLIntegral_statement`, `traceMGFVarianceProxyBound_statement` | implemented vocabulary; deterministic self-adjoint matrix exponential PSD, trace-exp nonnegativity, random self-adjoint trace-exp moment nonnegativity, and expectation/lintegral bridges are proved under explicit hypotheses; MB-S9 adds semantic trace-mgf predicates and typed provider targets, while trace-mgf inequalities remain unproved | `HighDimProb/RandomMatrix/TraceExp.lean` |
+| Matrix Laplace vocabulary | `matrixLaplaceRHS`, `matrixLaplaceRHSLIntegral`, `traceExpThresholdEvent`, `TraceExpDominatesUpperBound`, `lambdaMaxOrdered_traceExpDominatesUpperBound`, `matrixUpperBoundTailEvent_subset_traceExpThresholdEvent_of_traceExpDominatesUpperBound`, `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_rayleighUpperBound_of_traceExpDominatesUpperBound`, `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_spectralUpperBound_of_traceExpDominatesUpperBound`, `traceExpDominatesQuadraticFormUpperTail_of_rayleighUpperBound_of_traceExpDominatesUpperBound`, `traceExpDominatesQuadraticFormUpperTail_of_spectralUpperBound_of_traceExpDominatesUpperBound`, `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`, `matrixLaplaceRHSLIntegralDiv`, `matrixLaplaceRHSLIntegralDiv_eq_matrixLaplaceRHSLIntegral`, `traceExpThresholdEvent_lintegral_bound`, `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`, `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset`, `TraceExpDominatesQuadraticFormUpperTail`, `traceExpDominatesQuadraticFormUpperTailStatement`, `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_traceExpDominates`, `matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint`, `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`, `matrixLaplaceTransformStatement`, `matrixLaplaceTransformLIntegralStatement`, `matrixChernoffFromTraceExpStatement`, `matrixChernoffFromTraceExpLIntegralStatement`, `selfAdjointOperatorNormLaplaceStatement`, `selfAdjointOperatorNormLaplaceLIntegralStatement` | conditional lintegral Markov/Laplace, dominance-wrapper bridges, semantic trace-exp upper-bound event bridges, the `lambdaMaxOrdered` trace-exp provider theorem, concrete random self-adjoint dominance assembly, and concrete random self-adjoint lintegral Laplace wrappers are proved under explicit hypotheses; real RHS bridge remains unproved | `HighDimProb/RandomMatrix/Laplace.lean` |
+| Matrix Bernstein analytic prerequisite bundle | `matrixBernsteinLaplacePrerequisitesStatement`, `matrixBernsteinTraceMGF_statement` | typed targets bundling the operator-norm/quadratic-form event bridge, lintegral Laplace routes, and semantic trace-mgf target; no matrix Bernstein theorem proved | `HighDimProb/RandomMatrix/ConcentrationStatements.lean` |
 | Helper random matrices | `sampleCovarianceMinusIdentity` | implemented | `HighDimProb/RandomMatrix/ConcentrationStatements.lean` |
 
 ## Typed Statement Layer
@@ -424,9 +454,12 @@ later proves generic semantic bridges from explicit
 `TraceExpDominatesUpperBound` assumptions, and MB-S7B-scalar-endpoint proves
 the nonnegative ordered endpoint scalar-multiplication helper.
 MB-S7B-exp-spectral-mapping proves `lambdaMaxOrdered_matrixExp`. The `lambdaMaxOrdered`
-trace-exp provider theorem, full matrix
-Laplace theorem, trace-mgf
-inequalities, Golden-Thompson, Lieb, and matrix Bernstein remain unproved.
+trace-exp provider theorem is now proved by MB-S7B-provider-close as
+`lambdaMaxOrdered_traceExpDominatesUpperBound`. MB-S7C proves the concrete
+random-matrix dominance assembly as
+`traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`. The full
+matrix Laplace theorem, trace-mgf inequalities, Golden-Thompson, Lieb, and
+matrix Bernstein remain unproved.
 
 ## Stage MC5.4 - Bernstein Proof-Plan Refinement
 
@@ -446,10 +479,9 @@ The proof plan now lists the route:
 
 ## Next Safe Task
 
-Stage MB-S7B-provider-close: assemble the `lambdaMaxOrdered`
-`TraceExpDominatesUpperBound` provider theorem from the scalar endpoint,
-matrix-exponential spectral mapping, and trace endpoint helpers, or block
-cleanly.
+Stage MB-S9-trace-mgf-provider-contract: audit the source/API route for
+proving `matrixBernsteinTraceMGF_statement`, or block cleanly on missing
+Golden-Thompson/Lieb/matrix-mgf prerequisites.
 
 ## Stage MB-S7A - Spectral Bridge Typed Split
 
@@ -605,4 +637,33 @@ the ordered largest endpoint trace bound for positive semidefinite
 self-adjoint matrices. This closes the trace endpoint split for the future
 trace-exp provider route. It does not prove the `lambdaMaxOrdered` trace-exp
 provider theorem, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb,
+Hanson-Wright, or matrix Bernstein.
+
+## Stage MB-S7B-provider-close - Ordered Endpoint Trace-Exp Provider
+
+MB-S7B-provider-close proves `lambdaMaxOrdered_traceExpDominatesUpperBound`,
+the deterministic trace-exp dominance provider for the canonical ordered
+endpoint. This closes the provider split by composing
+`lambdaMaxOrdered_smul_of_nonneg`, `lambdaMaxOrdered_matrixExp`, and
+`lambdaMaxOrdered_le_trace_of_posSemidef`. It does not prove full matrix
+Laplace, trace-mgf, Golden-Thompson, Lieb, Hanson-Wright, or matrix Bernstein.
+
+## Stage MB-S7C-assemble-dominance - Concrete Dominance Assembly
+
+MB-S7C-assemble-dominance proves
+`traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`, assembling the
+`lambdaMaxOrdered` Rayleigh provider, the `lambdaMaxOrdered`
+`TraceExpDominatesUpperBound` provider, and the generic semantic bridge into
+the concrete `TraceExpDominatesQuadraticFormUpperTail` wrapper for random
+self-adjoint matrices. It does not prove full matrix Laplace, trace-mgf,
+Golden-Thompson, Lieb, Hanson-Wright, or matrix Bernstein.
+
+## Stage MB-S8-laplace-assembly - Concrete LIntegral Laplace Assembly
+
+MB-S8-laplace-assembly proves
+`matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint` and
+`matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`, the division-RHS and
+product-RHS lintegral Laplace wrappers for random self-adjoint matrices under
+explicit trace-exp integrand a.e. measurability and `0 <= theta`. This stage
+does not prove the real RHS bridge, trace-mgf, Golden-Thompson, Lieb,
 Hanson-Wright, or matrix Bernstein.

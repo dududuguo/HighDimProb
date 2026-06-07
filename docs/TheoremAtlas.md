@@ -1150,6 +1150,8 @@ future directions.
   `traceExpDominatesQuadraticFormUpperTailStatement`,
   `matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`,
   `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`,
+  `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint`,
+  `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`,
   `matrixLaplaceTransformStatement`, `matrixChernoffFromTraceExpStatement`,
   `selfAdjointOperatorNormLaplaceStatement`.
 - Required objects: `quadraticFormUpperTailEvent`,
@@ -1161,13 +1163,16 @@ future directions.
   dominance hypothesis and proves conditional wrappers from it.
   MB-S7B-semantic adds the semantic deterministic
   `TraceExpDominatesUpperBound` predicate and proves generic event bridges from
-  explicit Rayleigh/spectral and trace-exp dominance assumptions. No
-  `lambdaMaxOrdered` trace-exp provider theorem or full matrix Laplace theorem
-  is proved.
-- Blocker: future proof work must prove that a concrete provider such as
-  `lambdaMaxOrdered` supplies `TraceExpDominatesUpperBound`, then still prove
-  the self-adjoint operator-norm/lambda-max route and the trace-mgf inequality
-  for independent matrix sums.
+  explicit Rayleigh/spectral and trace-exp dominance assumptions.
+  MB-S7B-provider-close proves that `lambdaMaxOrdered` supplies
+  `TraceExpDominatesUpperBound`. MB-S7C proves the concrete random
+  self-adjoint `TraceExpDominatesQuadraticFormUpperTail` assembly. MB-S8
+  proves concrete random self-adjoint lintegral Laplace wrappers; no real RHS
+  bridge or trace-mgf theorem is proved.
+- Blocker: future proof work must bridge the lintegral RHS to the real
+  trace-exp moment/RHS vocabulary, then still prove the self-adjoint
+  operator-norm/lambda-max route and the trace-mgf inequality for independent
+  matrix sums.
 - Target module: `HighDimProb/RandomMatrix/Laplace.lean`
 - Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
 - Priority: Stage MC5
@@ -1206,13 +1211,12 @@ future directions.
   and lintegral bridge under explicit assumptions. MB-S4 proves self-adjoint
   trace-exp positivity, MB-S5 proves the conditional trace-exp threshold
   Markov/Laplace bridge, and MB-S6 names the missing dominance hypothesis with
-  conditional Laplace wrappers. The Rayleigh/operator-norm, direct dominance
-  proof, full matrix Laplace, trace-mgf, and matrix Bernstein results remain
-  unproved.
-- Blocker: exact bridge from Mathlib Hermitian eigenvalue/Rayleigh APIs to the
-  explicit HighDimProb unit-vector quadratic form, the pointwise
-  `quadraticFormUpperTailEvent` to `traceExpThresholdEvent` subset, and
-  trace-mgf inequalities.
+  conditional Laplace wrappers. MB-S7C proves concrete random self-adjoint
+  dominance, and MB-S8 proves concrete lintegral Laplace wrappers. The
+  Rayleigh/operator-norm, real RHS bridge, trace-mgf, and matrix Bernstein
+  results remain unproved.
+- Blocker: the self-adjoint operator-norm/lambda-max route, real RHS bridge,
+  and trace-mgf inequalities.
 - Target modules: `HighDimProb/RandomMatrix/Spectral.lean`,
   `HighDimProb/RandomMatrix/TraceExp.lean`,
   `HighDimProb/RandomMatrix/Laplace.lean`, and
@@ -1221,8 +1225,8 @@ future directions.
   `HighDimProbTest/RandomMatrixTraceExpAPI.lean`,
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
-- Priority: Stage MB-S2 through MB-S7B-trace-dominates-endpoint complete; next
-  task is MB-S7B-provider-close.
+- Priority: Stage MB-S2 through MB-S9-foundation complete; next task is
+  MB-S9-trace-mgf-provider-contract.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1304,9 +1308,11 @@ future directions.
   nonnegative scalar multiplication for the ordered endpoint, and
   MB-S7B-exp-spectral-mapping proves `lambdaMaxOrdered_matrixExp`, and
   MB-S7B-trace-dominates-endpoint proves
-  `lambdaMaxOrdered_le_trace_of_posSemidef`. The `lambdaMaxOrdered`
-  trace-exp provider theorem remains open. Full matrix Laplace,
-  trace-mgf, Golden-Thompson, Lieb, and matrix Bernstein remain unproved.
+  `lambdaMaxOrdered_le_trace_of_posSemidef`, MB-S7B-provider-close proves
+  `lambdaMaxOrdered_traceExpDominatesUpperBound`, and MB-S7C proves
+  `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`. Full matrix
+  Laplace, trace-mgf, Golden-Thompson, Lieb, and matrix Bernstein remain
+  unproved.
 - Target module: `HighDimProb/RandomMatrix/Laplace.lean`
 - Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
@@ -1332,14 +1338,15 @@ future directions.
   `traceMatrixExp`, and `ENNReal.ofReal`.
 - Status: proved generic semantic bridges under explicit `0 <= theta` and
   pointwise `TraceExpDominatesUpperBound` hypotheses.
-- Blocker: the `lambdaMaxOrdered` trace-exp provider theorem remains unproved;
-  its scalar endpoint, matrix-exponential spectral mapping, and trace endpoint
-  helper splits are now proved. Full matrix Laplace, trace-mgf,
-  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+- Blocker: MB-S7B-provider-close proves the `lambdaMaxOrdered` trace-exp
+  provider theorem, and MB-S7C proves the concrete random self-adjoint
+  dominance assembly. Full matrix Laplace, trace-mgf, Golden-Thompson, Lieb,
+  and Matrix Bernstein remain unproved.
 - Target module: `HighDimProb/RandomMatrix/Laplace.lean`
 - Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
-- Priority: next safe task is MB-S7B-provider-close.
+- Priority: MB-S7C-assemble-dominance is complete; next safe task is
+  MB-S8-laplace-assembly.
 
 ## Ordered Endpoint Scalar Multiplication (MB-S7B-scalar-endpoint)
 
@@ -1390,12 +1397,109 @@ future directions.
   of eigenvalues, PSD eigenvalue nonnegativity, and finite nonnegative sums.
 - Status: proved.
 - Blocker: none for trace endpoint domination. The `lambdaMaxOrdered`
-  trace-exp provider theorem, full matrix Laplace, trace-mgf,
-  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+  trace-exp provider theorem is now proved by MB-S7B-provider-close. Full
+  matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and Matrix Bernstein
+  remain unproved.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
-- Priority: next safe task is MB-S7B-provider-close.
+- Priority: completed; MB-S7B-provider-close is now also complete.
+
+## Ordered Endpoint Trace-Exp Provider (MB-S7B-provider-close)
+
+- Book heading: matrix Laplace transform method for matrix Bernstein.
+- Informal statement: for `0 <= theta`, the trace exponential of `theta • A`
+  dominates `exp (theta * lambdaMaxOrdered A hA)`.
+- Target Lean declaration: `lambdaMaxOrdered_traceExpDominatesUpperBound`.
+- Required objects: `TraceExpDominatesUpperBound`, `lambdaMaxOrdered`,
+  `lambdaMaxOrdered_smul_of_nonneg`, `lambdaMaxOrdered_matrixExp`,
+  `lambdaMaxOrdered_le_trace_of_posSemidef`,
+  `matrixExp_posSemidef_of_selfAdjoint`, and `traceMatrixExp`.
+- Status: proved.
+- Blocker: none for the deterministic provider. MB-S7C proves the concrete
+  random self-adjoint dominance assembly. Full matrix Laplace, trace-mgf,
+  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/Laplace.lean`
+- Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
+- Priority: MB-S7C-assemble-dominance is complete; next safe task is
+  MB-S8-laplace-assembly.
+
+## Concrete Trace-Exp Dominance Assembly (MB-S7C)
+
+- Book heading: matrix Laplace transform method for matrix Bernstein.
+- Informal statement: random self-adjointness and `0 <= theta` are enough to
+  supply the concrete `TraceExpDominatesQuadraticFormUpperTail` dominance
+  wrapper by using the `lambdaMaxOrdered` Rayleigh and trace-exp providers.
+- Target Lean declaration:
+  `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`.
+- Required objects: `RandomSelfAdjointMatrix`,
+  `lambdaMaxOrdered_rayleighUpperBound`,
+  `lambdaMaxOrdered_traceExpDominatesUpperBound`, and
+  `traceExpDominatesQuadraticFormUpperTail_of_rayleighUpperBound_of_traceExpDominatesUpperBound`.
+- Status: proved.
+- Blocker: none for concrete dominance assembly. Full matrix Laplace,
+  trace-mgf, Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/Laplace.lean`
+- Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
+- Priority: MB-S9-foundation is complete; next safe task is
+  MB-S9-trace-mgf-provider-contract.
+
+## Concrete LIntegral Matrix Laplace Assembly (MB-S8)
+
+- Book heading: matrix Laplace transform method for matrix Bernstein.
+- Informal statement: random self-adjointness, explicit trace-exp integrand
+  a.e. measurability, and `0 <= theta` imply the lintegral matrix Laplace
+  upper-tail bound over the quadratic-form upper-tail event.
+- Target Lean declarations:
+  `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint`,
+  `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`.
+- Required objects: `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`,
+  `matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`,
+  `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`,
+  `traceExpIntegrand`, and `AEMeasurable`.
+- Status: proved for both division-RHS and product-RHS lintegral forms.
+- Blocker: real RHS / real expectation bridge, trace-mgf, Golden-Thompson,
+  Lieb, and Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/Laplace.lean`
+- Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
+- Priority: MB-S9-foundation is complete; next safe task is
+  MB-S9-trace-mgf-provider-contract.
+
+## Trace-MGF / Variance-Proxy Foundation (MB-S9)
+
+- Book heading: matrix Laplace transform and trace-mgf method for matrix
+  Bernstein.
+- Informal statement: before proving the matrix trace-mgf comparison, expose
+  semantic predicates for real/lintegral trace-mgf bounds and variance-proxy
+  trace-mgf targets.
+- Target Lean declarations: `TraceMGFBound`, `TraceMGFBoundLIntegral`,
+  `TraceMGFVarianceProxyBound`, `TraceMGFVarianceProxyBoundLIntegral`,
+  `MatrixVarianceProxyUpperBound`, `MatrixVarianceProxyNormBound`,
+  `traceMGFBound_statement`, `traceMGFBoundLIntegral_statement`,
+  `traceMGFVarianceProxyBound_statement`, and
+  `matrixBernsteinTraceMGF_statement`.
+- Required objects: `traceExpMoment`, `traceExpMomentLIntegral`,
+  `traceMatrixExp`, `matrixVarianceProxy`, `matrixVarianceProxyNorm`, and
+  `randomMatrixSum`.
+- Status: semantic API and typed statement layer implemented. No
+  Golden-Thompson, Lieb, full trace-mgf master theorem, real RHS bridge, or
+  Matrix Bernstein theorem is proved.
+- Blocker: the future provider theorem for `matrixBernsteinTraceMGF_statement`
+  needs a source/API contract for noncommutative trace-mgf machinery, likely
+  including Golden-Thompson/Lieb or an equivalent Mathlib route.
+- Target modules: `HighDimProb/RandomMatrix/TraceExp.lean`,
+  `HighDimProb/RandomMatrix/VarianceProxy.lean`, and
+  `HighDimProb/RandomMatrix/ConcentrationStatements.lean`.
+- Test modules: `HighDimProbTest/RandomMatrixTraceExpAPI.lean` and
+  `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`.
+- Judge modules: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`,
+  `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
+  `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
+  `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
+- Priority: next safe task is MB-S9-trace-mgf-provider-contract.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -1441,8 +1545,8 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
-- Priority: completed through MB-S7B-trace-dominates-endpoint; next safe task
-  is MB-S7B-provider-close.
+- Priority: completed through MB-S9-foundation; next safe task is
+  MB-S9-trace-mgf-provider-contract.
 
 ## Matrix Bernstein Rayleigh Conversion Helper Bridge (MB-S7A-fix)
 
@@ -1473,8 +1577,8 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
-- Priority: completed through MB-S7B-trace-dominates-endpoint; next safe task
-  is MB-S7B-provider-close.
+- Priority: completed through MB-S9-foundation; next safe task is
+  MB-S9-trace-mgf-provider-contract.
 
 ## Matrix Bernstein Ordered Endpoint Wrapper (MB-S7A-index)
 
@@ -1504,8 +1608,8 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
-- Priority: completed through MB-S7B-trace-dominates-endpoint; next safe task
-  is MB-S7B-provider-close.
+- Priority: completed through MB-S9-foundation; next safe task is
+  MB-S9-trace-mgf-provider-contract.
 
 ## Matrix Bernstein Semantic Spectral API (MB-S7A-abstract)
 
@@ -1551,5 +1655,5 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
-- Priority: MB-S7B-trace-dominates-endpoint is complete; next safe task is
-  MB-S7B-provider-close.
+- Priority: MB-S9-foundation is complete; next safe task is
+  MB-S9-trace-mgf-provider-contract.

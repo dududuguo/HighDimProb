@@ -72,6 +72,7 @@ Infrastructure:
 - Stage MB-S3 trace-exponential positivity bridge under explicit hypotheses
 - Stage MB-S4 matrix exponential PSD bridge
 - Stage MB-S5 conditional trace-exponential Markov/Laplace bridge
+- Stage MB-S9 semantic trace-mgf and variance-proxy foundation
 - Milestone Sprint S2 scalar concentration proof spine + random matrix statement layer
 - Milestone Sprint S3 small branch proof battery
 
@@ -768,3 +769,44 @@ Resolved in Stage MB-S7B-trace-dominates-endpoint:
 - This closes only the trace endpoint split in the trace-exp provider route.
 - Did not prove the `lambdaMaxOrdered` trace-exp provider theorem, full matrix
   Laplace, trace-mgf, Golden-Thompson, Lieb, or matrix Bernstein.
+
+Resolved in Stage MB-S7B-provider-close:
+- Proved `lambdaMaxOrdered_traceExpDominatesUpperBound`, the deterministic
+  trace-exp dominance provider for the canonical ordered endpoint under
+  explicit `0 <= theta`.
+- This closes the `lambdaMaxOrdered` provider split by composing scalar
+  endpoint scaling, matrix-exponential spectral mapping, and trace endpoint
+  domination.
+- Did not prove full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or
+  matrix Bernstein.
+
+Resolved in Stage MB-S7C-assemble-dominance:
+- Proved `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`, the
+  concrete `TraceExpDominatesQuadraticFormUpperTail` assembly for random
+  self-adjoint matrices under explicit `0 <= theta`.
+- This assembles the `lambdaMaxOrdered` Rayleigh provider, the
+  `lambdaMaxOrdered` trace-exp provider, and the generic semantic bridge.
+- Did not prove full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or
+  matrix Bernstein.
+
+Resolved in Stage MB-S8-laplace-assembly:
+- Proved `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint` and
+  `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`, the concrete
+  division-RHS and product-RHS lintegral Laplace wrappers for random
+  self-adjoint matrices.
+- These theorems keep trace-exp integrand a.e. measurability, random
+  self-adjointness, and `0 <= theta` as explicit hypotheses.
+- Did not prove the real RHS bridge, trace-mgf, Golden-Thompson, Lieb, or
+  matrix Bernstein.
+
+Resolved in Stage MB-S9-foundation:
+- Added semantic trace-mgf predicates `TraceMGFBound`,
+  `TraceMGFBoundLIntegral`, `TraceMGFVarianceProxyBound`, and
+  `TraceMGFVarianceProxyBoundLIntegral`.
+- Added semantic variance-proxy predicates `MatrixVarianceProxyUpperBound`
+  and `MatrixVarianceProxyNormBound`.
+- Added typed trace-mgf targets `traceMGFBound_statement`,
+  `traceMGFBoundLIntegral_statement`, `traceMGFVarianceProxyBound_statement`,
+  and `matrixBernsteinTraceMGF_statement`.
+- Did not prove Golden-Thompson, Lieb, the full trace-mgf master theorem, the
+  real RHS bridge, or matrix Bernstein.

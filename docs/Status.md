@@ -2,15 +2,18 @@
 
 Current version target: v0.1-alpha
 
-Current stage: Stage MB-S7B-provider-close
+Current stage: Stage MB-S9-foundation
 
-Current task: Trace endpoint dominance for `lambdaMaxOrdered` is proved against `Matrix.trace`; MB-S7B-provider-close remains next
+Current task: semantic trace-mgf and variance-proxy foundation API is in place; next is a source/API contract for the trace-mgf provider route
 
 Milestone status:
-- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` bridges, full finite-`ENNReal` `SubExponentialMoment` bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, independent finite subGaussian sum MGF, finite Hoeffding theorem for bounded centered variables, sharp finite Hoeffding theorem for bounded centered variables, non-centered Wikipedia-form finite Hoeffding, the Hoeffding branch milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum concentration scaffold, Stage B1-fix subExponential MGF domain/max-scale infrastructure, Stage B2 full scalar Bernstein min-form tail bound, Stage SC-closeout scalar concentration theorem-family closeout, Stage B3 deterministic weighted scalar Bernstein theorem, Stage SC-final scalar concentration branch closure, Stage M-real-1 real-exponent `SubGaussianMoment` bridge, Stage M-real-2 subExponential real-moment bridge, Stage SC-final-update scalar closeout refresh, Stage MC1 matrix concentration vocabulary/statement layer, Stage MC2 operator-norm/unit-sphere bridge infrastructure, Stage MC2-fix operator norm Mathlib bridge cleanup, Stage MC3 matrix variance proxy / independent self-adjoint matrix sums, Stage MC4-cleanup matrix concentration statement honesty cleanup, Stage V1 Lean path visualization infrastructure, Stage J1 HighDimProb compile-time judge suite, Stage J2 expanded HighDimProb judge coverage, Stage MB-S1 matrix PSD variance-proxy algebra, Stage MC5.1 spectral vocabulary, Stage MC5.2 trace-exponential vocabulary, Stage MC5.3 matrix Laplace statement vocabulary, Stage MC5.4 matrix Bernstein proof-plan refinement, Stage MC5.5 matrix spectral/trace/Laplace judge coverage, Stage MC5.6 memory/workflow closeout, Stage MB-S2 spectral/Rayleigh/trace-exponential/Laplace bridge closeout, Stage MB-S3 trace-exponential positivity bridge under explicit hypotheses, Stage MB-S4 matrix exponential PSD bridge, Stage MB-S5 conditional trace-exponential Markov/Laplace bridge, Stage MB-S6 source-first conditional trace-exponential dominance bridge, Stage MB-S7A spectral bridge typed split, Stage MB-S7A-fix spectral Rayleigh conversion helper bridge, Stage MB-S7A-clean spectral bridge API consolidation, Stage MB-S7A-order endpoint ordering probe, Stage MB-S7A-index ordered endpoint wrapper, Stage MB-S7A-abstract semantic spectral abstraction, Stage MB-S7A-provider ordered endpoint semantic provider bridge, Stage MB-S7B-semantic trace-exp semantic dominance bridge, Stage MB-S7B-scalar-endpoint nonnegative ordered endpoint scalar-multiplication, Stage MB-S7B-exp-spectral-mapping ordered endpoint matrix-exponential spectral mapping, and Stage MB-S7B-trace-dominates-endpoint ordered endpoint trace domination are complete.
+- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` bridges, full finite-`ENNReal` `SubExponentialMoment` bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, independent finite subGaussian sum MGF, finite Hoeffding theorem for bounded centered variables, sharp finite Hoeffding theorem for bounded centered variables, non-centered Wikipedia-form finite Hoeffding, the Hoeffding branch milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum concentration scaffold, Stage B1-fix subExponential MGF domain/max-scale infrastructure, Stage B2 full scalar Bernstein min-form tail bound, Stage SC-closeout scalar concentration theorem-family closeout, Stage B3 deterministic weighted scalar Bernstein theorem, Stage SC-final scalar concentration branch closure, Stage M-real-1 real-exponent `SubGaussianMoment` bridge, Stage M-real-2 subExponential real-moment bridge, Stage SC-final-update scalar closeout refresh, Stage MC1 matrix concentration vocabulary/statement layer, Stage MC2 operator-norm/unit-sphere bridge infrastructure, Stage MC2-fix operator norm Mathlib bridge cleanup, Stage MC3 matrix variance proxy / independent self-adjoint matrix sums, Stage MC4-cleanup matrix concentration statement honesty cleanup, Stage V1 Lean path visualization infrastructure, Stage J1 HighDimProb compile-time judge suite, Stage J2 expanded HighDimProb judge coverage, Stage MB-S1 matrix PSD variance-proxy algebra, Stage MC5.1 spectral vocabulary, Stage MC5.2 trace-exponential vocabulary, Stage MC5.3 matrix Laplace statement vocabulary, Stage MC5.4 matrix Bernstein proof-plan refinement, Stage MC5.5 matrix spectral/trace/Laplace judge coverage, Stage MC5.6 memory/workflow closeout, Stage MB-S2 spectral/Rayleigh/trace-exponential/Laplace bridge closeout, Stage MB-S3 trace-exponential positivity bridge under explicit hypotheses, Stage MB-S4 matrix exponential PSD bridge, Stage MB-S5 conditional trace-exponential Markov/Laplace bridge, Stage MB-S6 source-first conditional trace-exponential dominance bridge, Stage MB-S7A spectral bridge typed split, Stage MB-S7A-fix spectral Rayleigh conversion helper bridge, Stage MB-S7A-clean spectral bridge API consolidation, Stage MB-S7A-order endpoint ordering probe, Stage MB-S7A-index ordered endpoint wrapper, Stage MB-S7A-abstract semantic spectral abstraction, Stage MB-S7A-provider ordered endpoint semantic provider bridge, Stage MB-S7B-semantic trace-exp semantic dominance bridge, Stage MB-S7B-scalar-endpoint nonnegative ordered endpoint scalar-multiplication, Stage MB-S7B-exp-spectral-mapping ordered endpoint matrix-exponential spectral mapping, Stage MB-S7B-trace-dominates-endpoint ordered endpoint trace domination, Stage MB-S7B-provider-close ordered endpoint trace-exp provider, Stage MB-S7C-assemble-dominance concrete random-matrix trace-exp dominance assembly, Stage MB-S8-laplace-assembly concrete lintegral matrix Laplace assembly, and Stage MB-S9-foundation semantic trace-mgf / variance-proxy API foundation are complete.
 
 Workflow file:
 - docs/Workflow.md
+
+RandomMatrix Matrix Bernstein API index:
+- docs/RandomMatrixAPI.md
 
 Project path:
 - C:\Users\User\research\HighDimProb
@@ -1653,6 +1656,29 @@ future `lambdaMaxOrdered` trace-exp provider route. It does not prove the
 `lambdaMaxOrdered` trace-exp provider theorem, full matrix Laplace, trace-mgf,
 Golden-Thompson, Lieb, or Matrix Bernstein.
 
+Stage MB-S7B-provider-close has no build blocker. The Laplace layer now proves
+`lambdaMaxOrdered_traceExpDominatesUpperBound`, assembling the nonnegative
+scalar endpoint, matrix-exponential spectral mapping, and trace endpoint
+helpers into the deterministic `TraceExpDominatesUpperBound` provider for
+`lambdaMaxOrdered`. It does not prove full matrix Laplace, trace-mgf,
+Golden-Thompson, Lieb, or Matrix Bernstein.
+
+Stage MB-S7C-assemble-dominance has no build blocker. The Laplace layer now
+proves `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`, which
+assembles `lambdaMaxOrdered_rayleighUpperBound`,
+`lambdaMaxOrdered_traceExpDominatesUpperBound`, and the generic semantic bridge
+into `TraceExpDominatesQuadraticFormUpperTail` for random self-adjoint
+matrices. It does not prove full matrix Laplace, trace-mgf,
+Golden-Thompson, Lieb, or Matrix Bernstein.
+
+Stage MB-S8-laplace-assembly has no build blocker. The Laplace layer now
+proves `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint` and
+`matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`, assembling the concrete
+dominance theorem with the existing conditional Laplace wrappers under explicit
+trace-exp integrand a.e. measurability, random self-adjointness, and
+`0 <= theta`. The real RHS / real expectation bridge remains separate, and
+trace-mgf, Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+
 Stage V1 has no build blocker. The visualization layer is documentation/script
 infrastructure only: curated Mermaid diagrams live under
 `docs/visualizations/`, and `scripts/visualize_imports.py` regenerates the DOT
@@ -1716,10 +1742,8 @@ No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B
 
 Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Stage G2A proves Psi2Bound -> absMomentNat q=2, SubGaussianTail -> absMomentNat q=2, and the analogous first-moment psi1/subExponential pilot. Stage G2B proves Psi2Bound/SubGaussianTail -> absMomentNat q for all natural q with a crude factorial constant. Stage G2C proves `finiteAbsMomentNat -> MemLp`, quantitative `absMomentNat -> realLpNorm`, and the factorial-growth `SubGaussianMomentNat` wrappers. Stage G2D proves the linear `realLpNorm <= C*K*q` consequence. Stage G2E records the sharp route as typed targets, Stage G2E-fix proves the deterministic envelope plus natural-exponent sqrt-growth moment bounds, Stage G2F packages those bounds as `SubGaussianMomentNatSqrt`, Sprint S4 proves `CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`, Stage M-real-1 proves `Psi2Bound -> SubGaussianMoment (8*K)` plus `SubGaussianTail -> SubGaussianMoment (16*K)` over arbitrary finite `p : ENNReal`, and Stage M-real-2 proves `Psi1Bound -> SubExponentialMoment (16*K)` plus `SubExponentialTail -> SubExponentialMoment (48*K)`. Finite-gauge variants, reverse/source MGF connectors, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
 
-Random matrix theorem proofs remain blocked by the missing
-`lambdaMaxOrdered` provider theorem for `TraceExpDominatesUpperBound`, the
-full matrix
-Laplace-transform proof, trace-exponential inequalities,
+Random matrix theorem proofs remain blocked by the real RHS matrix Laplace
+bridge, trace-exponential inequalities,
 spectral/operator-norm tail reductions,
 row/iid-row sampling assumptions for covariance estimation,
 centered empirical covariance conventions, and the sample-covariance
@@ -1731,7 +1755,6 @@ Theorem statements blocked by missing infrastructure are tracked in docs/Theorem
 
 ## Next safe task
 
-Stage MB-S7B-provider-close - assemble the `lambdaMaxOrdered`
-`TraceExpDominatesUpperBound` provider theorem from the scalar endpoint,
-matrix-exponential spectral mapping, and trace endpoint helpers, or block
-cleanly.
+Stage MB-S9-trace-mgf-provider-contract - audit the source/API route for
+proving `matrixBernsteinTraceMGF_statement`, or block cleanly on missing
+Golden-Thompson/Lieb/matrix-mgf prerequisites.

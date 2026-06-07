@@ -95,6 +95,14 @@ abbrev MatrixVarianceProxyBound {n : Nat} (V : Matrix (Fin n) (Fin n) Real)
     (sigma2 : Real) : Prop :=
   matrixVarianceProxyBound V sigma2
 
+/-- Semantic assertion that the variance proxy of a random matrix family is
+bounded above by a deterministic matrix. -/
+def MatrixVarianceProxyUpperBound {Omega : Type*} [MeasurableSpace Omega]
+    {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)
+    (A : I -> RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real) :
+    Prop :=
+  MatrixLE (matrixVarianceProxy P A) V
+
 /-- Deterministic operator norm of a matrix variance proxy. -/
 def deterministicMatrixVarianceProxyNorm {n : Nat}
     (V : Matrix (Fin n) (Fin n) Real) : Real :=
@@ -119,6 +127,14 @@ theorem matrixVarianceProxyNorm_apply {Omega : Type*} [MeasurableSpace Omega]
     matrixVarianceProxyNorm P A =
       deterministicOperatorNorm (matrixVarianceProxy P A) :=
   rfl
+
+/-- Semantic scalar-norm bound for the variance proxy of a random matrix
+family. This packages the scalar parameter used in Matrix Bernstein statements
+without changing the underlying `matrixVarianceProxyNorm` definition. -/
+def MatrixVarianceProxyNormBound {Omega : Type*} [MeasurableSpace Omega]
+    {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)
+    (A : I -> RandomMatrix Omega n n) (sigma2 : Real) : Prop :=
+  matrixVarianceProxyNorm P A <= sigma2
 
 /-- The square of a self-adjoint real matrix is self-adjoint. -/
 theorem isSelfAdjointMatrix_matrixSquare_of_isSelfAdjointMatrix {n : Nat}
@@ -145,6 +161,135 @@ theorem isSelfAdjointMatrix_matrixSquare_of_isSelfAdjointMatrix {n : Nat}
 
 /-! ## PSD structure of matrix squares, second moments, and variance proxies -/
 
+/-- Quadratic form of the square of a self-adjoint real matrix is the squared
+Euclidean norm of the matrix-vector product. -/
+theorem matrixQuadraticForm_matrixSquare_eq_matVecSqNorm_of_selfAdjoint {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (hA : IsSelfAdjointMatrix A)
+    (x : Fin n -> Real) :
+    matrixQuadraticForm (matrixSquare A) x = matVecSqNorm A x := by
+  have hsymm : forall i j : Fin n, A i j = A j i := by
+    intro i j
+    have h := Matrix.IsHermitian.apply hA i j
+    simpa using h.symm
+  have hsq : forall u : Fin n -> Real,
+      (Finset.univ.sum fun i : Fin n =>
+        Finset.univ.sum fun j : Fin n => u i * u j) =
+        (Finset.univ.sum fun i : Fin n => u i) ^ 2 := by
+    intro u
+    rw [pow_two, Finset.sum_mul]
+    apply Finset.sum_congr rfl
+    intro i _
+    rw [Finset.mul_sum]
+  calc
+    matrixQuadraticForm (matrixSquare A) x
+        = Finset.univ.sum fun i : Fin n =>
+            Finset.univ.sum fun j : Fin n =>
+              (x i * Finset.univ.sum (fun k : Fin n => A i k * A k j)) * x j := by
+          simp [matrixQuadraticForm, matrixSquare, Matrix.mul_apply]
+    _ = Finset.univ.sum fun i : Fin n =>
+          Finset.univ.sum fun j : Fin n =>
+            Finset.univ.sum fun k : Fin n => (A k i * x i) * (A k j * x j) := by
+          apply Finset.sum_congr rfl
+          intro i _
+          apply Finset.sum_congr rfl
+          intro j _
+          rw [Finset.mul_sum, Finset.sum_mul]
+          apply Finset.sum_congr rfl
+          intro k _
+          rw [hsymm i k]
+          ring
+    _ = Finset.univ.sum fun k : Fin n =>
+          Finset.univ.sum fun i : Fin n =>
+            Finset.univ.sum fun j : Fin n => (A k i * x i) * (A k j * x j) := by
+          calc
+            (Finset.univ.sum fun i : Fin n =>
+              Finset.univ.sum fun j : Fin n =>
+                Finset.univ.sum fun k : Fin n => (A k i * x i) * (A k j * x j))
+                = Finset.univ.sum fun i : Fin n =>
+                    Finset.univ.sum fun k : Fin n =>
+                      Finset.univ.sum fun j : Fin n => (A k i * x i) * (A k j * x j) := by
+                  apply Finset.sum_congr rfl
+                  intro i _
+                  rw [Finset.sum_comm]
+            _ = Finset.univ.sum fun k : Fin n =>
+                  Finset.univ.sum fun i : Fin n =>
+                    Finset.univ.sum fun j : Fin n => (A k i * x i) * (A k j * x j) := by
+                  rw [Finset.sum_comm]
+    _ = Finset.univ.sum fun k : Fin n =>
+          (Finset.univ.sum fun i : Fin n => A k i * x i) ^ 2 := by
+          apply Finset.sum_congr rfl
+          intro k _
+          exact hsq (fun i : Fin n => A k i * x i)
+    _ = matVecSqNorm A x := by
+          simp [matVecSqNorm, vectorSqNorm]
+
+/-- The square of a self-adjoint real matrix is PSD in the explicit
+HighDimProb quadratic-form order. -/
+theorem isPSD_matrixSquare_of_selfAdjoint {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (hA : IsSelfAdjointMatrix A) :
+    IsPSDMatrix (matrixSquare A) := by
+  refine ⟨?_, ?_⟩
+  · have hsqAdj : IsSelfAdjointMatrix (matrixSquare A) :=
+      isSelfAdjointMatrix_matrixSquare_of_isSelfAdjointMatrix hA
+    apply Matrix.IsSymm.ext
+    intro i j
+    have h := Matrix.IsHermitian.apply hsqAdj i j
+    simpa using h
+  · intro x
+    rw [matrixQuadraticForm_matrixSquare_eq_matVecSqNorm_of_selfAdjoint hA]
+    exact matVecSqNorm_nonneg A x
+
+/-- Entrywise matrix expectation commutes with the explicit quadratic form,
+under entrywise integrability. -/
+theorem matrixQuadraticForm_matrixExpect {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {n : Nat} {A : RandomMatrix Omega n n}
+    (hA : IntegrableRandomMatrix P A) (x : Fin n -> Real) :
+    matrixQuadraticForm (matrixExpect P A) x =
+      expect P (fun omega => matrixQuadraticForm (A omega) x) := by
+  calc
+    matrixQuadraticForm (matrixExpect P A) x
+        = Finset.univ.sum fun i : Fin n =>
+            Finset.univ.sum fun j : Fin n =>
+              x i * (∫ omega, A omega i j ∂P) * x j := by
+          simp [matrixQuadraticForm, matrixExpect, expect, matrixEntry]
+    _ = Finset.univ.sum fun i : Fin n =>
+          Finset.univ.sum fun j : Fin n =>
+            ∫ omega, x i * A omega i j * x j ∂P := by
+          apply Finset.sum_congr rfl
+          intro i _
+          apply Finset.sum_congr rfl
+          intro j _
+          calc
+            x i * (∫ omega, A omega i j ∂P) * x j
+                = (∫ omega, x i * A omega i j ∂P) * x j := by
+                  rw [MeasureTheory.integral_const_mul]
+            _ = ∫ omega, (x i * A omega i j) * x j ∂P := by
+                  rw [MeasureTheory.integral_mul_const]
+            _ = ∫ omega, x i * A omega i j * x j ∂P := by
+                  rfl
+    _ = ∫ omega, Finset.univ.sum fun i : Fin n =>
+          Finset.univ.sum fun j : Fin n => x i * A omega i j * x j ∂P := by
+          have houter :
+              (∫ omega, Finset.univ.sum fun i : Fin n =>
+                Finset.univ.sum fun j : Fin n => x i * A omega i j * x j ∂P) =
+                Finset.univ.sum fun i : Fin n =>
+                  ∫ omega, Finset.univ.sum fun j : Fin n => x i * A omega i j * x j ∂P :=
+            MeasureTheory.integral_finset_sum Finset.univ fun i _ =>
+              integrable_finset_sum Finset.univ fun j _ =>
+                ((hA i j).const_mul (x i)).mul_const (x j)
+          rw [houter]
+          apply Finset.sum_congr rfl
+          intro i _
+          have hinner :
+              (∫ omega, Finset.univ.sum fun j : Fin n => x i * A omega i j * x j ∂P) =
+                Finset.univ.sum fun j : Fin n =>
+                  ∫ omega, x i * A omega i j * x j ∂P :=
+            MeasureTheory.integral_finset_sum Finset.univ fun j _ =>
+              ((hA i j).const_mul (x i)).mul_const (x j)
+          rw [hinner]
+    _ = expect P (fun omega => matrixQuadraticForm (A omega) x) := by
+          simp [expect, matrixQuadraticForm]
+
 /-- Typed target: the square of a self-adjoint real matrix is PSD.
 
 The proof requires the identity `xᵀ A² x = (Ax)ᵀ (Ax) = ‖Ax‖² ≥ 0`.
@@ -152,9 +297,7 @@ When A is self-adjoint, `A² = Aᵀ A`, and `xᵀ Aᵀ A x = ‖Ax‖²` is true
 for any real matrix A by expanding the finite sums and using
 `Finset.sum_comm` and `Finset.mul_sum`.
 
-Blocker: the finite-sum algebraic identity needs a careful `calc` proof
-with multiple sum reindexing steps. This is a routine but tedious
-algebraic verification, not a deep mathematical obstacle. -/
+The corresponding theorem `isPSD_matrixSquare_of_selfAdjoint` is now proved. -/
 abbrev isPSD_matrixSquare_of_selfAdjoint_statement {n : Nat}
     {A : Matrix (Fin n) (Fin n) Real} (_hA : IsSelfAdjointMatrix A) : Prop :=
   IsPSDMatrix (matrixSquare A)
@@ -188,15 +331,37 @@ theorem isSelfAdjointMatrix_matrixSecondMoment {Omega : Type*} [MeasurableSpace 
   filter_upwards with ω
   exact h_entry_eq ω
 
+/-- The second moment matrix `E[A^2]` of a self-adjoint random matrix is PSD,
+provided the squared random matrix is entrywise integrable. -/
+theorem isPSD_matrixSecondMoment_of_selfAdjoint {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {n : Nat} {A : RandomMatrix Omega n n}
+    (hA : RandomSelfAdjointMatrix P A)
+    (hInt : IntegrableRandomMatrix P (randomMatrixSquare A)) :
+    IsPSDMatrix (matrixSecondMoment P A) := by
+  refine ⟨?_, ?_⟩
+  · have hAdj : IsSelfAdjointMatrix (matrixSecondMoment P A) :=
+      isSelfAdjointMatrix_matrixSecondMoment hA
+    apply Matrix.IsSymm.ext
+    intro i j
+    have h := Matrix.IsHermitian.apply hAdj i j
+    simpa using h
+  · intro x
+    change 0 <= matrixQuadraticForm (matrixExpect P (randomMatrixSquare A)) x
+    rw [matrixQuadraticForm_matrixExpect hInt]
+    change 0 <= ∫ omega, matrixQuadraticForm (randomMatrixSquare A omega) x ∂P
+    exact MeasureTheory.integral_nonneg fun omega => by
+      simpa [randomMatrixSquare] using
+        (isPSD_matrixSquare_of_selfAdjoint (hA omega)).2 x
+
 /-- Typed target: the second moment matrix `E[A^2]` of a self-adjoint random matrix is PSD.
 
 The proof requires: `matrixQuadraticForm (E[A^2]) x = E[matrixQuadraticForm(A^2) x]`
 (linearity of expectation over finite sums), and then pointwise nonnegativity
 of `matrixQuadraticForm (A ω^2) x` gives the result.
 
-Blocker: the commutation lemma `matrixQuadraticForm_matrixExpect` needs
-`integral_finset_sum` and `integral_mul_right` from Mathlib; these exist
-but the proof requires careful `calc` with `Finset` sum/integral exchange. -/
+The corresponding theorem `isPSD_matrixSecondMoment_of_selfAdjoint` is now
+proved with the explicit additional assumption
+`IntegrableRandomMatrix P (randomMatrixSquare A)`. -/
 abbrev isPSD_matrixSecondMoment_of_selfAdjoint_statement {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {n : Nat} {A : RandomMatrix Omega n n}
     (_hA : RandomSelfAdjointMatrix P A) : Prop :=
@@ -212,14 +377,26 @@ theorem isSelfAdjointMatrix_matrixVarianceProxy {Omega : Type*} [MeasurableSpace
   intro i
   exact isSelfAdjointMatrix_matrixSecondMoment (hA i)
 
+/-- The matrix variance proxy `sum_i E[A_i^2]` is PSD when every summand is
+self-adjoint and every squared summand is entrywise integrable. -/
+theorem isPSD_matrixVarianceProxy_of_selfAdjoint {Omega : Type*} [MeasurableSpace Omega]
+    {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)
+    {A : I -> RandomMatrix Omega n n}
+    (hA : forall i, RandomSelfAdjointMatrix P (A i))
+    (hInt : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i))) :
+    IsPSDMatrix (matrixVarianceProxy P A) := by
+  dsimp [matrixVarianceProxy]
+  apply isPSDMatrix_sum
+  intro i
+  exact isPSD_matrixSecondMoment_of_selfAdjoint (hA i) (hInt i)
+
 /-- Typed target: the matrix variance proxy `sum_i E[A_i^2]` is PSD.
 
 The proof follows from each `E[A_i^2]` being PSD and the fact that
 `matrixQuadraticForm` is linear in the matrix, distributing over finite sums.
 
-Blocker: depends on `isPSD_matrixSecondMoment_of_selfAdjoint_statement` being proven
-(see above). The sum-of-PSD step is a straightforward distributivity of
-`matrixQuadraticForm` over `Finset.sum`. -/
+The corresponding theorem `isPSD_matrixVarianceProxy_of_selfAdjoint` is now
+proved with explicit per-summand square-integrability assumptions. -/
 abbrev isPSD_matrixVarianceProxy_of_selfAdjoint_statement {Omega : Type*}
     [MeasurableSpace Omega] {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)
     {A : I -> RandomMatrix Omega n n}

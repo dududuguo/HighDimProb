@@ -3,6 +3,7 @@ import HighDimProb.RandomMatrix.MatrixOrder
 import HighDimProb.RandomMatrix.OperatorNorm
 import HighDimProb.RandomMatrix.Sums
 import HighDimProb.RandomMatrix.VarianceProxy
+import HighDimProb.RandomMatrix.Laplace
 import HighDimProb.Tail
 import Mathlib.Analysis.Normed.Algebra.Spectrum
 
@@ -30,9 +31,10 @@ def sampleCovarianceMinusIdentity {Omega : Type*} [MeasurableSpace Omega]
 /-- Typed target for a future finite-dimensional matrix Bernstein theorem.
 
 This is the original MC1/MC3 min-form statement. The PSD hypothesis on the
-variance proxy is an explicit assumption; the corresponding derivation from
-self-adjoint summands remains a typed target in `VarianceProxy.lean`, not a
-proved theorem. -/
+variance proxy remains explicit for compatibility with the earlier public API.
+For the proof-oriented self-adjoint statement below, PSD is instead supplied by
+`isPSD_matrixVarianceProxy_of_selfAdjoint` from centered self-adjoint summands
+and per-summand square integrability. -/
 abbrev matrixBernsteinStatement {Omega : Type*} [MeasurableSpace Omega]
     {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)
     (A : I -> RandomMatrix Omega n n) (sigma2 R c t : Real) : Prop :=
@@ -49,24 +51,31 @@ abbrev matrixBernsteinStatement {Omega : Type*} [MeasurableSpace Omega]
 /-- Refined matrix Bernstein statement with additive denominator form.
 
 This is still a typed `Prop` target, not a theorem. It is proof-oriented:
-entrywise integrability, centered self-adjointness, matrix-valued
-independence, a pointwise operator-norm bound, an explicit PSD variance proxy,
-nonnegative scale parameters, positive denominator constants, and denominator
-positivity are all visible assumptions.
+entrywise integrability of each summand, entrywise integrability of each
+matrix square, centered self-adjointness, matrix-valued independence, a
+pointwise operator-norm bound, nonnegative scale parameters, positive
+denominator constants, and denominator positivity are all visible assumptions.
+The PSD variance-proxy condition is no longer a separate hypothesis here:
+it follows from `isPSD_matrixVarianceProxy_of_selfAdjoint`.
 
 The intended shape is
 `P(||sum_i A_i|| >= t) <= 2 n exp ( -t^2 / (c1*sigma2 + c2*R*t) )`.
-Constants are conservative proof targets, not sharp constants. -/
+Constants are conservative proof targets, not sharp constants.
+
+MC5 keeps this as an operator-norm tail statement. The future analytic route
+should pass through the typed spectral, trace-exponential, and Laplace targets
+in `Spectral`, `TraceExp`, and `Laplace`; the lambda-max/Rayleigh and
+self-adjoint operator-norm endpoint bridges remain unproved. -/
 abbrev matrixBernsteinSelfAdjointStatement {Omega : Type*} [MeasurableSpace Omega]
     {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)
     [IsProbabilityMeasure P]
     (A : I -> RandomMatrix Omega n n) (sigma2 R c1 c2 t : Real) : Prop :=
   0 < n ->
     (forall i, IntegrableRandomMatrix P (A i)) ->
-      CenteredSelfAdjointRandomMatrixFamily P A ->
-        IndependentSelfAdjointRandomMatrices P A ->
-          PointwiseOperatorNormBound A R ->
-            IsPSDMatrix (matrixVarianceProxy P A) ->
+      (forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i))) ->
+        CenteredSelfAdjointRandomMatrixFamily P A ->
+          IndependentSelfAdjointRandomMatrices P A ->
+            PointwiseOperatorNormBound A R ->
               matrixVarianceProxyNorm P A <= sigma2 ->
                 0 <= sigma2 ->
                   0 <= R ->
@@ -78,6 +87,33 @@ abbrev matrixBernsteinSelfAdjointStatement {Omega : Type*} [MeasurableSpace Omeg
                               ENNReal.ofReal
                                 (2 * (n : Real) *
                                   Real.exp (-(t ^ 2 / (c1 * sigma2 + c2 * R * t))))
+
+/-- Typed dependency bundle for the future matrix Bernstein Laplace route.
+
+This is not a theorem and does not assert matrix Bernstein. It records the
+three bridge targets that remain between the current proof-ready Bernstein
+statement and a trace-mgf argument: the self-adjoint operator-norm tail
+reduction, the upper quadratic-form matrix Laplace step, and the two-sided
+operator-norm Laplace step. -/
+abbrev matrixBernsteinLaplacePrerequisitesStatement {Omega : Type*}
+    [MeasurableSpace Omega] {n : Nat} (P : Measure Omega)
+    (Y : RandomMatrix Omega n n) (theta t : Real) : Prop :=
+  selfAdjointOperatorNormTailViaQuadraticFormStatement Y t ∧
+    matrixLaplaceTransformLIntegralStatement P Y theta t ∧
+      selfAdjointOperatorNormLaplaceLIntegralStatement P Y theta t
+
+/-- Typed target for the future Matrix Bernstein trace-mgf provider.
+
+This statement isolates the hard matrix-mgf comparison for the random sum from
+the final Bernstein tail theorem. Proving it is expected to require
+Golden-Thompson/Lieb or equivalent noncommutative trace-mgf machinery, plus the
+matrix-valued independence and variance-proxy provider steps. -/
+abbrev matrixBernsteinTraceMGF_statement {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} [Fintype I] {n : Nat}
+    (P : Measure Omega) (A : I -> RandomMatrix Omega n n)
+    (theta : Real) : Prop :=
+  TraceMGFVarianceProxyBound P (randomMatrixSum A) (matrixVarianceProxy P A)
+    theta
 
 /-- Typed target for the spectral-radius reduction for self-adjoint matrices.
 

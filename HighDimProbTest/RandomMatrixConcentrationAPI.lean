@@ -1,4 +1,5 @@
 import HighDimProb.RandomMatrix.ConcentrationStatements
+import HighDimProb.RandomMatrix.Laplace
 
 open MeasureTheory
 open HighDimProb
@@ -24,7 +25,9 @@ variable (R sigma2 c c1 c2 t bound K : Real)
 #check randomSymmetricMatrix_apply
 #check randomSelfAdjointMatrix_apply
 #check matrixQuadraticForm
+#check matrixQuadraticForm_sum
 #check IsPSDMatrix
+#check isPSDMatrix_sum
 #check RandomPSDMatrix
 #check MatrixLE
 #check matrixQuadraticForm_apply
@@ -60,6 +63,11 @@ variable (R sigma2 c c1 c2 t bound K : Real)
 #check matrixVarianceProxyBound
 #check deterministicMatrixVarianceProxyNorm
 #check isSelfAdjointMatrix_matrixSquare_of_isSelfAdjointMatrix
+#check matrixQuadraticForm_matrixSquare_eq_matVecSqNorm_of_selfAdjoint
+#check isPSD_matrixSquare_of_selfAdjoint
+#check matrixQuadraticForm_matrixExpect
+#check isPSD_matrixSecondMoment_of_selfAdjoint
+#check isPSD_matrixVarianceProxy_of_selfAdjoint
 #check sampleCovarianceMinusIdentity
 #check IsUnitVector
 #check unitSphere
@@ -71,8 +79,17 @@ variable (R sigma2 c c1 c2 t bound K : Real)
 #check quadraticForm_le_of_matrixLE
 #check sampleCovarianceQuadraticFormDeviation
 #check sampleCovarianceOperatorNormViaUnitSphereStatement
+#check twoSidedQuadraticFormTailEvent
+#check selfAdjointOperatorNormTailViaQuadraticFormStatement
+#check matrixLaplaceTransformStatement
+#check matrixLaplaceTransformLIntegralStatement
+#check matrixChernoffFromTraceExpStatement
+#check matrixChernoffFromTraceExpLIntegralStatement
+#check selfAdjointOperatorNormLaplaceStatement
+#check selfAdjointOperatorNormLaplaceLIntegralStatement
 #check matrixBernsteinStatement
 #check matrixBernsteinSelfAdjointStatement
+#check matrixBernsteinLaplacePrerequisitesStatement
 #check operatorNorm_eq_spectralRadius_of_selfAdjointStatement
 #check HighProbabilityBound
 #check highProbabilityBound
@@ -107,6 +124,24 @@ variable (R sigma2 c c1 c2 t bound K : Real)
 #check (matrixVarianceProxyNorm P B : Real)
 #check (MatrixVarianceProxyBound (MatrixVarianceProxy P B) sigma2 : Prop)
 #check (matrixSquare M : Matrix (Fin n) (Fin n) Real)
+#check (matrixQuadraticForm_matrixSquare_eq_matVecSqNorm_of_selfAdjoint :
+  IsSelfAdjointMatrix M ->
+    forall x : Fin n -> Real, matrixQuadraticForm (matrixSquare M) x = matVecSqNorm M x)
+#check (isPSD_matrixSquare_of_selfAdjoint :
+  IsSelfAdjointMatrix M -> IsPSDMatrix (matrixSquare M))
+#check (matrixQuadraticForm_matrixExpect :
+  IntegrableRandomMatrix P A ->
+    forall x : Fin n -> Real,
+      matrixQuadraticForm (matrixExpect P A) x =
+        expect P (fun omega => matrixQuadraticForm (A omega) x))
+#check (isPSD_matrixSecondMoment_of_selfAdjoint :
+  RandomSelfAdjointMatrix P A ->
+    IntegrableRandomMatrix P (randomMatrixSquare A) ->
+      IsPSDMatrix (matrixSecondMoment P A))
+#check (isPSD_matrixVarianceProxy_of_selfAdjoint P :
+  (forall i, RandomSelfAdjointMatrix P (B i)) ->
+    (forall i, IntegrableRandomMatrix P (randomMatrixSquare (B i))) ->
+      IsPSDMatrix (matrixVarianceProxy P B))
 #check (randomMatrixSquare A : RandomMatrix Omega n n)
 #check (matrixSecondMoment P A : Matrix (Fin n) (Fin n) Real)
 #check (deterministicMatrixVarianceProxyNorm M : Real)
@@ -121,8 +156,18 @@ variable (R sigma2 c c1 c2 t bound K : Real)
 #check (operatorNormMeasurabilityStatement P X : Prop)
 #check (sampleCovarianceQuadraticFormDeviation X x : RealRandomVariable Omega)
 #check (sampleCovarianceOperatorNormViaUnitSphereStatement P X t bound : Prop)
+#check (twoSidedQuadraticFormTailEvent A t : Set Omega)
+#check (selfAdjointOperatorNormTailViaQuadraticFormStatement A t : Prop)
+#check (matrixLaplaceTransformStatement P A c t : Prop)
+#check (matrixLaplaceTransformLIntegralStatement P A c t : Prop)
+#check (matrixChernoffFromTraceExpStatement P A c t bound : Prop)
+#check (matrixChernoffFromTraceExpLIntegralStatement P A c t
+  (ENNReal.ofReal bound) : Prop)
+#check (selfAdjointOperatorNormLaplaceStatement P A c t : Prop)
+#check (selfAdjointOperatorNormLaplaceLIntegralStatement P A c t : Prop)
 #check (matrixBernsteinStatement P B sigma2 R c t : Prop)
 #check (matrixBernsteinSelfAdjointStatement P B sigma2 R c1 c2 t : Prop)
+#check (matrixBernsteinLaplacePrerequisitesStatement P A c t : Prop)
 #check (operatorNorm_eq_spectralRadius_of_selfAdjointStatement M : Prop)
 #check (HighProbabilityBound P (Set.univ : Set Omega) 1 : Prop)
 #check (highProbabilityBound P (Set.univ : Set Omega) 1 : Prop)

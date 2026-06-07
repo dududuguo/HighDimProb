@@ -95,11 +95,10 @@
 - HansonWrightStatements
 - JLStatements
 - CovarianceEstimationStatements
-- Next: Stage MB-S7B-provider-close. Assemble the `lambdaMaxOrdered`
-  `TraceExpDominatesUpperBound` provider theorem from the scalar endpoint,
-  matrix-exponential spectral mapping, and trace endpoint helpers, or block
-  cleanly. Do not prove trace-mgf, Golden-Thompson, Lieb, full matrix Laplace,
-  or Matrix Bernstein in that stage.
+- Next: Stage MB-S9-trace-mgf-provider-contract. Audit the source/API route
+  for proving `matrixBernsteinTraceMGF_statement`, or block cleanly on missing
+  Golden-Thompson/Lieb/matrix-mgf prerequisites. Do not prove Golden-Thompson,
+  Lieb, the full trace-mgf master theorem, or Matrix Bernstein in that stage.
 
 ## Process
 

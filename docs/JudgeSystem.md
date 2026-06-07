@@ -48,17 +48,18 @@ theorems or typed statements without relying on local test internals.
 - `HighDimProbJudge/RandomMatrix/SampleCovarianceUse.lean`: sample covariance
   PSD and quadratic-form nonnegativity APIs.
 - `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`: matrix square, second
-  moment, variance proxy, variance-proxy norm, self-adjointness lemmas, PSD
-  typed targets, and matrix Bernstein statement surface.
+  moment, variance proxy, semantic variance-proxy bounds,
+  variance-proxy norm, self-adjointness lemmas, PSD typed targets, and matrix
+  Bernstein statement surface.
 - `HighDimProbJudge/RandomMatrix/SpectralUse.lean`: lambda-max wrappers,
   ordered endpoint wrappers, quadratic-form bound predicates, monotonicity
   lemmas, two-sided tail events, and spectral tail event APIs.
 - `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`: matrix exponential, trace,
   trace-exponential integrand/moment, lintegral trace-exponential moment,
-  trace-exp nonnegativity bridges under explicit hypotheses, self-adjoint
-  matrix-exponential PSD and trace nonnegativity bridges, random
-  self-adjoint trace-exp moment nonnegativity, real/lintegral bridge theorem,
-  and remaining typed statement APIs.
+  semantic trace-mgf predicates, trace-exp nonnegativity bridges under
+  explicit hypotheses, self-adjoint matrix-exponential PSD and trace
+  nonnegativity bridges, random self-adjoint trace-exp moment nonnegativity,
+  real/lintegral bridge theorem, and remaining typed statement APIs.
 - `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`: matrix Laplace RHS and
   lintegral RHS vocabulary, trace-exp threshold events, MB-S5 conditional
   Markov/Laplace bridge APIs, MB-S6 explicit-dominance conditional wrappers,
@@ -66,7 +67,8 @@ theorems or typed statements without relying on local test internals.
   Laplace/Chernoff/operator-norm Laplace statement APIs.
 - `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`: proof-ready matrix
   Bernstein statement surface, `matrixBernsteinLaplacePrerequisitesStatement`,
-  and its main structural/analytic dependencies.
+  `matrixBernsteinTraceMGF_statement`, and its main structural/analytic
+  dependencies.
 
 ## How It Differs From Normal Tests
 
@@ -173,6 +175,33 @@ keep `0 <= theta` and pointwise trace-exp dominance assumptions explicit. The
 judge still does not claim the `lambdaMaxOrdered` trace-exp provider theorem,
 spectral mapping, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or
 Matrix Bernstein.
+
+MB-S7B-provider-close adds a Laplace judge case for
+`lambdaMaxOrdered_traceExpDominatesUpperBound` with explicit self-adjointness
+and `0 <= theta` hypotheses. The judge still does not claim the concrete
+random-matrix dominance assembly, full matrix Laplace, trace-mgf,
+Golden-Thompson, Lieb, or Matrix Bernstein.
+
+MB-S7C-assemble-dominance adds a Laplace judge case for
+`traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint` with explicit
+random self-adjointness and `0 <= theta` hypotheses. The judge still does not
+claim full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or Matrix
+Bernstein.
+
+MB-S8-laplace-assembly adds Laplace judge cases for
+`matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint` and
+`matrixLaplaceTransformLIntegral_of_randomSelfAdjoint` with explicit
+trace-exp integrand a.e. measurability, random self-adjointness, and
+`0 <= theta` hypotheses. The judge still does not claim the real RHS bridge,
+trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein.
+
+MB-S9-foundation adds TraceExp, VarianceProxy, MatrixBernstein, and Statement
+judge cases for `TraceMGFBound`, `TraceMGFBoundLIntegral`,
+`TraceMGFVarianceProxyBound`, `TraceMGFVarianceProxyBoundLIntegral`,
+`MatrixVarianceProxyUpperBound`, `MatrixVarianceProxyNormBound`, and
+`matrixBernsteinTraceMGF_statement`. The judge still does not claim
+Golden-Thompson, Lieb, the full trace-mgf master theorem, the real RHS bridge,
+or Matrix Bernstein.
 
 For a full stage verification run:
 
