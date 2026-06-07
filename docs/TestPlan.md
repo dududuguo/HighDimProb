@@ -258,6 +258,19 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   the generic quadratic-form upper-tail subset lemmas, the lambda provider
   projections to `SpectralUpperBound`, and the lambda event compatibility
   wrappers.
-- Coverage proves only semantic consequences from explicit assumptions. It
-  does not claim `LambdaMaxOrderedPSDUpperBound`, trace-exp spectral dominance,
-  full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein.
+- Coverage proves only semantic consequences from explicit assumptions. The
+  ordered provider theorem is covered in MB-S7A-provider below; trace-exp
+  spectral dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb,
+  and Matrix Bernstein remain unproved.
+
+## MB-S7A-provider Ordered Endpoint Provider Coverage
+
+- `HighDimProbTest/RandomMatrixSpectralAPI.lean` and
+  `HighDimProbJudge/RandomMatrix/SpectralUse.lean` both check:
+  `lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, and
+  `lambdaMaxOrdered_rayleighUpperBound`.
+- The examples apply each provider theorem with an explicit
+  `hA : IsSelfAdjointMatrix A` hypothesis.
+- Coverage proves only the ordered endpoint provider/Rayleigh route. It does
+  not claim trace-exp spectral dominance, full matrix Laplace, trace-mgf,
+  Golden-Thompson, Lieb, or Matrix Bernstein.

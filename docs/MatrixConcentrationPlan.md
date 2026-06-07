@@ -71,6 +71,13 @@ Laplace wrappers from the named hypothesis. It does not prove the direct
 dominance bridge, trace-mgf inequalities, full matrix Laplace, or matrix
 Bernstein.
 
+Stage MB-S7A-provider proves the semantic ordered endpoint provider theorem
+`lambdaMaxOrdered_spectralUpperBound`, the named provider wrapper
+`lambdaMaxOrderedPSDUpperBound`, and the direct ordered Rayleigh wrapper
+`lambdaMaxOrdered_rayleighUpperBound`. It preserves the legacy `lambdaMax` API
+and does not prove trace-exp dominance, trace-mgf inequalities, full matrix
+Laplace, or matrix Bernstein.
+
 ## Implemented Vocabulary
 
 | Area | Declarations | Status | Source |
@@ -86,7 +93,7 @@ Bernstein.
 | Finite random-matrix sums | `randomMatrixSum`, `randomMatrixSum_apply`, `randomMatrixSum_entry`, `isRandomMatrix_sum`, `isSelfAdjointMatrix_sum`, `randomSelfAdjointMatrix_sum` | implemented with measurability and self-adjoint sum lemmas | `HighDimProb/RandomMatrix/Sums.lean` |
 | Matrix assumptions | `IndependentRandomMatrices`, `SelfAdjointRandomMatrixFamily`, `IndependentSelfAdjointRandomMatrices`, `CenteredSelfAdjointRandomMatrixFamily`, `CenteredRandomSelfAdjointMatrices`, `BoundedOperatorNorm`, `PointwiseOperatorNormBound`, `UniformOperatorNormBound`, `AeOperatorNormBound` | implemented; pointwise and a.e. norm bounds are named separately | `HighDimProb/RandomMatrix/Assumptions.lean` |
 | Matrix square and variance proxy | `matrixSquare`, `randomMatrixSquare`, `matrixSecondMoment`, `matrixVarianceProxy`, `MatrixVarianceProxy`, `matrixVarianceProxyBound`, `MatrixVarianceProxyBound`, `deterministicMatrixVarianceProxyNorm`, `matrixVarianceProxyNorm` | implemented; square measurability, PSD square, PSD second moment, and PSD variance proxy proved with explicit square-integrability assumptions | `HighDimProb/RandomMatrix/VarianceProxy.lean` |
-| Spectral and quadratic-form tails | `lambdaMax`, `lambdaMaxOrdered`, `lambdaMaxOrdered_eq_eigenvalues₀_zero`, `lambdaMin`, `QuadraticFormUpperBound`, `QuadraticFormLowerBound`, `quadraticFormUpperBound_mono`, `quadraticFormLowerBound_mono`, `LambdaMaxBound`, `LambdaMaxPSDUpperBound`, `LambdaMaxOrderedPSDUpperBound`, `quadraticFormUpperTailEvent`, `quadraticFormLowerTailEvent`, `twoSidedQuadraticFormTailEvent`, `SelfAdjointOperatorNormTailEvent`, `selfAdjointOperatorNormTailViaQuadraticFormStatement`, `lambdaMax_le_iff_quadraticForm_le_statement`, `lambdaMax_eq_lambdaMaxOrdered_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue`, `matrixQuadraticForm_le_lambdaMaxOrdered_statement`, `operatorNorm_eq_max_abs_lambda_statement`, `matrixQuadraticForm_nonneg_of_posSemidef`, `matrixQuadraticForm_smul_one_of_isUnitVector`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound`, `matrixQuadraticForm_le_lambdaMaxOrdered_of_lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrderedUpperTailEvent`, `quadraticFormUpperTailEvent_subset_lambdaMaxOrderedUpperTailEvent_of_matrixQuadraticForm_le_lambdaMaxOrdered` | implemented vocabulary; legacy eigenvalue wrappers are preserved, `lambdaMaxOrdered` uses Mathlib's ordered `eigenvalues₀ 0` endpoint directly, ordered endpoint greatest theorem is proved, and conditional endpoint-PSD-to-Rayleigh helpers are proved; direct Rayleigh/operator-norm bridges and unconditional endpoint PSD remain unproved | `HighDimProb/RandomMatrix/Spectral.lean` |
+| Spectral and quadratic-form tails | `lambdaMax`, `lambdaMaxOrdered`, `lambdaMaxOrdered_eq_eigenvalues₀_zero`, `lambdaMin`, `QuadraticFormUpperBound`, `QuadraticFormLowerBound`, `quadraticFormUpperBound_mono`, `quadraticFormLowerBound_mono`, `LambdaMaxBound`, `LambdaMaxPSDUpperBound`, `LambdaMaxOrderedPSDUpperBound`, `quadraticFormUpperTailEvent`, `quadraticFormLowerTailEvent`, `twoSidedQuadraticFormTailEvent`, `SelfAdjointOperatorNormTailEvent`, `selfAdjointOperatorNormTailViaQuadraticFormStatement`, `lambdaMax_le_iff_quadraticForm_le_statement`, `lambdaMax_eq_lambdaMaxOrdered_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue`, `lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrdered_rayleighUpperBound`, `matrixQuadraticForm_le_lambdaMaxOrdered_statement`, `operatorNorm_eq_max_abs_lambda_statement`, `matrixQuadraticForm_nonneg_of_posSemidef`, `matrixQuadraticForm_smul_one_of_isUnitVector`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound`, `matrixQuadraticForm_le_lambdaMaxOrdered_of_lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrderedUpperTailEvent`, `quadraticFormUpperTailEvent_subset_lambdaMaxOrderedUpperTailEvent_of_matrixQuadraticForm_le_lambdaMaxOrdered` | implemented vocabulary; legacy eigenvalue wrappers are preserved, `lambdaMaxOrdered` uses Mathlib's ordered `eigenvalues₀ 0` endpoint directly, ordered endpoint greatest theorem and semantic provider/Rayleigh wrappers are proved; legacy direct Rayleigh/operator-norm bridges remain unproved | `HighDimProb/RandomMatrix/Spectral.lean` |
 | Trace exponential vocabulary | `matrixExp`, `matrixTrace`, `traceMatrixExp`, `isSelfAdjointMatrix_matrixExp`, `matrixExp_posSemidef_of_selfAdjoint`, `matrixTrace_nonneg_of_posSemidef`, `traceMatrixExp_nonneg_of_matrixExp_posSemidef`, `traceMatrixExp_nonneg_of_selfAdjoint`, `matrixExp_posSemidef_of_selfAdjoint_statement`, `traceExpIntegrand`, `traceExpMoment`, `traceExpMomentLIntegral`, `traceExpMoment_nonneg_of_nonneg`, `traceExpIntegrand_nonneg_of_randomSelfAdjoint`, `traceExpMoment_nonneg_of_randomSelfAdjoint`, `traceExpMomentLIntegral_nonneg`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment`, `traceMatrixExp_nonneg_of_selfAdjoint_statement`, `traceExpMoment_nonneg_statement`, `traceExpMomentLIntegral_eq_ofReal_statement`, `traceExpMomentBoundStatement`, `traceExpVarianceProxyBoundStatement` | implemented vocabulary; deterministic self-adjoint matrix exponential PSD, trace-exp nonnegativity, random self-adjoint trace-exp moment nonnegativity, and expectation/lintegral bridges are proved under explicit hypotheses; trace-mgf inequalities remain unproved | `HighDimProb/RandomMatrix/TraceExp.lean` |
 | Matrix Laplace vocabulary | `matrixLaplaceRHS`, `matrixLaplaceRHSLIntegral`, `traceExpThresholdEvent`, `matrixLaplaceRHSLIntegralDiv`, `matrixLaplaceRHSLIntegralDiv_eq_matrixLaplaceRHSLIntegral`, `traceExpThresholdEvent_lintegral_bound`, `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`, `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset`, `TraceExpDominatesQuadraticFormUpperTail`, `traceExpDominatesQuadraticFormUpperTailStatement`, `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_traceExpDominates`, `matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformStatement`, `matrixLaplaceTransformLIntegralStatement`, `matrixChernoffFromTraceExpStatement`, `matrixChernoffFromTraceExpLIntegralStatement`, `selfAdjointOperatorNormLaplaceStatement`, `selfAdjointOperatorNormLaplaceLIntegralStatement` | conditional lintegral Markov/Laplace and dominance-wrapper bridges proved under explicit hypotheses; direct dominance proof and full matrix Laplace remain unproved | `HighDimProb/RandomMatrix/Laplace.lean` |
 | Matrix Bernstein analytic prerequisite bundle | `matrixBernsteinLaplacePrerequisitesStatement` | typed target bundling the operator-norm/quadratic-form event bridge and lintegral Laplace routes; no matrix Bernstein theorem proved | `HighDimProb/RandomMatrix/ConcentrationStatements.lean` |
@@ -406,8 +413,7 @@ The proof plan now lists the route:
 
 ## Next Safe Task
 
-Stage MB-S7A-provider - prove that `lambdaMaxOrdered` provides
-`SpectralUpperBound`, or block cleanly.
+Stage MB-S7B - trace-exp spectral dominance source/API contract.
 
 ## Stage MB-S7A - Spectral Bridge Typed Split
 
@@ -520,3 +526,20 @@ Concrete wrappers such as `lambdaMaxOrdered` are provider routes into the
 semantic layer, not the core downstream abstraction. This stage does not prove
 `LambdaMaxOrderedPSDUpperBound`, trace-exp spectral dominance, full matrix
 Laplace, trace-mgf, Golden-Thompson, Lieb, Hanson-Wright, or matrix Bernstein.
+
+## Stage MB-S7A-provider - Ordered Endpoint Semantic Provider
+
+MB-S7A-provider proves the ordered endpoint provider route:
+
+- `lambdaMaxOrdered_spectralUpperBound` proves
+  `SpectralUpperBound A (lambdaMaxOrdered A hA)` for self-adjoint nonempty
+  matrices.
+- `lambdaMaxOrderedPSDUpperBound` provides the named ordered endpoint PSD
+  wrapper.
+- `lambdaMaxOrdered_rayleighUpperBound` derives the direct ordered Rayleigh
+  bound through `rayleighUpperBound_of_spectralUpperBound`.
+
+The legacy `lambdaMax` API and the typed
+`lambdaMax_eq_lambdaMaxOrdered_statement` compatibility target are unchanged.
+Trace-exp spectral dominance, full matrix Laplace, trace-mgf, Golden-Thompson,
+Lieb, Hanson-Wright, and matrix Bernstein remain unproved.

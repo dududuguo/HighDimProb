@@ -1091,12 +1091,12 @@ future directions.
   `operatorNorm`.
 - Status: implemented vocabulary and typed targets; MB-S7A-index adds
   `lambdaMaxOrdered` as the canonical ordered `eigenvalues₀ 0` endpoint and
-  proves the ordered endpoint greatest theorem. No unconditional
-  lambda-max/Rayleigh quotient theorem is proved.
-- Blocker: future proof work must prove the ordered endpoint PSD/Rayleigh
-  bridge, connect Mathlib Hermitian/Rayleigh APIs to the explicit HighDimProb
-  quadratic-form/unit-sphere predicate, then connect self-adjoint
-  operator-norm tails to lambda-max tails for `A` and `-A`.
+  proves the ordered endpoint greatest theorem. MB-S7A-provider proves that
+  `lambdaMaxOrdered` supplies `SpectralUpperBound` and the direct ordered
+  Rayleigh wrapper.
+- Blocker: future proof work must connect the ordered Rayleigh route to the
+  trace-exp dominance target and still connect self-adjoint operator-norm tails
+  to lambda-max tails for `A` and `-A`.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Priority: Stage MC5
@@ -1211,9 +1211,8 @@ future directions.
   `HighDimProbTest/RandomMatrixTraceExpAPI.lean`,
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
-- Priority: Stage MB-S2 through MB-S7A-abstract complete; next proof task is
-  MB-S7A-provider, prove that `lambdaMaxOrdered` provides
-  `SpectralUpperBound`, or block cleanly before attempting trace-exp dominance.
+- Priority: Stage MB-S2 through MB-S7A-provider complete; next task is
+  MB-S7B trace-exp spectral dominance source/API contract.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1343,8 +1342,8 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
-- Priority: next safe task is MB-S7A-provider, prove that `lambdaMaxOrdered`
-  provides `SpectralUpperBound`, or block cleanly.
+- Priority: completed through MB-S7A-provider; next safe task is MB-S7B
+  trace-exp spectral dominance source/API contract.
 
 ## Matrix Bernstein Rayleigh Conversion Helper Bridge (MB-S7A-fix)
 
@@ -1375,8 +1374,8 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
-- Priority: next safe task is MB-S7A-provider, prove that `lambdaMaxOrdered`
-  provides `SpectralUpperBound`, or block cleanly.
+- Priority: completed through MB-S7A-provider; next safe task is MB-S7B
+  trace-exp spectral dominance source/API contract.
 
 ## Matrix Bernstein Ordered Endpoint Wrapper (MB-S7A-index)
 
@@ -1399,15 +1398,15 @@ future directions.
   conversion helpers.
 - Status: ordered endpoint wrapper and ordered greatest theorem proved;
   conditional ordered PSD-premise-to-Rayleigh and event helpers proved.
-- Blocker: unconditional `LambdaMaxOrderedPSDUpperBound A hA` or equivalent
-  ordered Rayleigh theorem remains unproved. Trace-exp spectral dominance, full
-  matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and Matrix Bernstein remain
-  unproved.
+  MB-S7A-provider later proves `lambdaMaxOrdered_spectralUpperBound`,
+  `lambdaMaxOrderedPSDUpperBound`, and `lambdaMaxOrdered_rayleighUpperBound`.
+- Blocker: trace-exp spectral dominance, full matrix Laplace, trace-mgf,
+  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
-- Priority: next safe task is MB-S7A-provider, prove that `lambdaMaxOrdered`
-  provides `SpectralUpperBound`, or block cleanly.
+- Priority: completed through MB-S7A-provider; next safe task is MB-S7B
+  trace-exp spectral dominance source/API contract.
 
 ## Matrix Bernstein Semantic Spectral API (MB-S7A-abstract)
 
@@ -1427,13 +1426,31 @@ future directions.
 - Required objects: existing Mathlib `Matrix.PosSemidef` API and HighDimProb
   `matrixQuadraticForm` / `IsUnitVector` helper lemmas.
 - Status: semantic abstraction layer implemented, API-tested, and
-  judge-tested. No hard provider theorem was proved.
-- Blocker: prove that `lambdaMaxOrdered A hA` provides
-  `SpectralUpperBound A (lambdaMaxOrdered A hA)`, equivalently the existing
-  `LambdaMaxOrderedPSDUpperBound A hA`, or block cleanly. Trace-exp spectral
-  dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and Matrix
-  Bernstein remain unproved.
+  judge-tested. MB-S7A-provider later proves the ordered provider theorem.
+- Blocker: trace-exp spectral dominance, full matrix Laplace, trace-mgf,
+  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
 - Target module: `HighDimProb/RandomMatrix/Spectral.lean`
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
-- Priority: MB-S7A-provider.
+- Priority: completed through MB-S7A-provider.
+
+## Matrix Bernstein Ordered Endpoint Provider (MB-S7A-provider)
+
+- Book heading: matrix Laplace transform prerequisites / Rayleigh reduction.
+- Informal statement: the canonical ordered endpoint wrapper
+  `lambdaMaxOrdered A hA` provides the semantic upper spectral bound needed by
+  downstream Rayleigh/event bridges.
+- Target Lean declarations: `lambdaMaxOrdered_spectralUpperBound`,
+  `lambdaMaxOrderedPSDUpperBound`, and `lambdaMaxOrdered_rayleighUpperBound`.
+- Required objects: `SpectralUpperBound`, `RayleighUpperBound`,
+  `lambdaMaxOrdered`, Mathlib Hermitian spectrum/order APIs, and existing
+  HighDimProb PSD-to-quadratic-form helpers.
+- Status: provider theorem, named provider wrapper, and direct ordered
+  Rayleigh wrapper are proved, API-tested, and judge-tested.
+- Blocker: trace-exp spectral dominance, full matrix Laplace, trace-mgf,
+  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- Priority: next safe task is MB-S7B trace-exp spectral dominance source/API
+  contract.

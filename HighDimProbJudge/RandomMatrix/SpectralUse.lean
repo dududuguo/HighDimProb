@@ -22,6 +22,9 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.matrixQuadraticForm_le_lambdaMaxOrdered_statement
 #check HighDimProb.LambdaMaxPSDUpperBound
 #check HighDimProb.LambdaMaxOrderedPSDUpperBound
+#check HighDimProb.lambdaMaxOrdered_spectralUpperBound
+#check HighDimProb.lambdaMaxOrderedPSDUpperBound
+#check HighDimProb.lambdaMaxOrdered_rayleighUpperBound
 #check HighDimProb.spectralUpperBound_of_lambdaMaxPSDUpperBound
 #check HighDimProb.spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound
 #check HighDimProb.matrixQuadraticForm_nonneg_of_posSemidef
@@ -172,6 +175,24 @@ example {n : Nat}
     (hPSD : HighDimProb.LambdaMaxOrderedPSDUpperBound A hA) :
     HighDimProb.SpectralUpperBound A (HighDimProb.lambdaMaxOrdered A hA) := by
   exact HighDimProb.spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound hPSD
+
+example {n : Nat}
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : HighDimProb.IsSelfAdjointMatrix A) :
+    HighDimProb.SpectralUpperBound A (HighDimProb.lambdaMaxOrdered A hA) := by
+  exact HighDimProb.lambdaMaxOrdered_spectralUpperBound hA
+
+example {n : Nat}
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : HighDimProb.IsSelfAdjointMatrix A) :
+    HighDimProb.LambdaMaxOrderedPSDUpperBound A hA := by
+  exact HighDimProb.lambdaMaxOrderedPSDUpperBound hA
+
+example {n : Nat}
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : HighDimProb.IsSelfAdjointMatrix A) :
+    HighDimProb.matrixQuadraticForm_le_lambdaMaxOrdered_statement A hA := by
+  exact HighDimProb.lambdaMaxOrdered_rayleighUpperBound hA
 
 example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (A : HighDimProb.RandomMatrix Omega n n) (Z : Omega -> Real) (t : Real)

@@ -95,10 +95,9 @@
 - HansonWrightStatements
 - JLStatements
 - CovarianceEstimationStatements
-- Next: Stage MB-S7A-provider, prove that `lambdaMaxOrdered` provides
-  `SpectralUpperBound`, or block cleanly. Do not prove trace-exp spectral
-  dominance, trace-mgf, Golden-Thompson, Lieb, full matrix Laplace, or Matrix
-  Bernstein yet.
+- Next: Stage MB-S7B trace-exp spectral dominance source/API contract. Do not
+  prove trace-exp spectral dominance, trace-mgf, Golden-Thompson, Lieb, full
+  matrix Laplace, or Matrix Bernstein in the contract stage.
 
 ## Process
 

@@ -104,10 +104,10 @@ It is a planning document, not a request to physically move existing files.
 - Dependencies: `Scalar`, `Vector`, `Geometry`, Mathlib matrices, finite sums, and scoped L2 operator norm APIs.
 - Forbidden scope: proving matrix concentration before matrix Laplace-transform, variance-proxy, and covariance-estimation prerequisites are ready.
 - Promotion criteria: submodule API tests, theorem atlas dependencies, docs, status update, and stable-root import audit.
-- Next safe tasks: Stage MB-S7A-provider, prove that `lambdaMaxOrdered`
-  provides `SpectralUpperBound`, or block cleanly. Full matrix Laplace,
-  trace-mgf, Golden-Thompson, Lieb, trace-exp spectral dominance, and Matrix
-  Bernstein remain forbidden until their missing bridges are proved.
+- Next safe tasks: Stage MB-S7B trace-exp spectral dominance source/API
+  contract. Full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, trace-exp
+  spectral dominance, and Matrix Bernstein remain forbidden until their missing
+  bridges are proved.
   Independent-row/iid-row vocabulary remains separate until
   covariance-estimation proof work starts.
 
@@ -374,6 +374,26 @@ It is a planning document, not a request to physically move existing files.
   explicit semantic assumptions.
 - Compatibility: existing public `lambdaMax` and `lambdaMaxOrdered` APIs are
   preserved as concrete provider routes.
-- Blocked: prove that `lambdaMaxOrdered` provides `SpectralUpperBound`, or
-  block cleanly. Trace-exp spectral dominance, full matrix Laplace, trace-mgf,
+- Follow-up: proving that `lambdaMaxOrdered` provides `SpectralUpperBound` was
+  resolved later in MB-S7A-provider. Trace-exp spectral dominance, full matrix
+  Laplace, trace-mgf, Golden-Thompson, Lieb, and matrix Bernstein remain
+  unproved.
+
+## MB-S7A-provider Ordered Endpoint Semantic Provider
+
+- Stage: MB-S7A-provider
+- Date: 2026-06-07
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/Spectral.lean`
+- Test modules: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
+- New declarations: `lambdaMaxOrdered_spectralUpperBound`,
+  `lambdaMaxOrderedPSDUpperBound`, and `lambdaMaxOrdered_rayleighUpperBound`.
+- Proven: the canonical ordered endpoint wrapper provides
+  `SpectralUpperBound`; the named ordered PSD provider wrapper and direct
+  ordered Rayleigh wrapper follow by the semantic route.
+- Compatibility: existing public `lambdaMax` and `lambdaMaxOrdered` APIs are
+  preserved; `lambdaMax_eq_lambdaMaxOrdered_statement` remains a typed
+  compatibility target.
+- Blocked: trace-exp spectral dominance, full matrix Laplace, trace-mgf,
   Golden-Thompson, Lieb, and matrix Bernstein remain unproved.

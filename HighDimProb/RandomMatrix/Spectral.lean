@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.Analysis.Matrix.Order
 import HighDimProb.RandomMatrix.MatrixOrder
 import HighDimProb.RandomMatrix.OperatorNorm
 
@@ -19,7 +20,7 @@ Rayleigh quotient bridge. We therefore expose two honest layers:
 namespace HighDimProb
 
 open MeasureTheory
-open scoped Matrix.Norms.L2Operator
+open scoped Matrix.Norms.L2Operator MatrixOrder
 
 noncomputable section
 
@@ -216,6 +217,33 @@ abbrev LambdaMaxOrderedPSDUpperBound {n : Nat}
     (hA : IsSelfAdjointMatrix A) : Prop :=
   SpectralUpperBound A (lambdaMaxOrdered A hA)
 
+/-- The canonical ordered lambda-max endpoint provides the semantic spectral
+upper-bound predicate. -/
+theorem lambdaMaxOrdered_spectralUpperBound
+    {n : Nat} {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hA : IsSelfAdjointMatrix A) :
+    SpectralUpperBound A (lambdaMaxOrdered A hA) := by
+  classical
+  have hle :
+      A ≤ algebraMap Real (Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+        (lambdaMaxOrdered A hA) := by
+    apply le_algebraMap_of_spectrum_le
+    · intro x hx
+      rw [hA.spectrum_real_eq_range_eigenvalues] at hx
+      rcases hx with ⟨i, rfl⟩
+      dsimp [lambdaMaxOrdered, Matrix.IsHermitian.eigenvalues]
+      exact hA.eigenvalues₀_antitone (Fin.zero_le _)
+    · exact hA.isSelfAdjoint
+  simpa [SpectralUpperBound, Algebra.algebraMap_eq_smul_one] using
+    (Matrix.le_iff.mp hle)
+
+/-- The ordered lambda-max endpoint satisfies the named provider predicate. -/
+theorem lambdaMaxOrderedPSDUpperBound
+    {n : Nat} {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hA : IsSelfAdjointMatrix A) :
+    LambdaMaxOrderedPSDUpperBound A hA :=
+  lambdaMaxOrdered_spectralUpperBound hA
+
 /-- Compatibility projection from the legacy lambda-max PSD premise to the
 semantic spectral upper-bound predicate. -/
 theorem spectralUpperBound_of_lambdaMaxPSDUpperBound
@@ -287,6 +315,14 @@ theorem rayleighUpperBound_of_spectralUpperBound
   rw [matrixQuadraticForm_sub] at hnonneg
   rw [matrixQuadraticForm_smul_one_of_isUnitVector L hx] at hnonneg
   exact sub_nonneg.mp hnonneg
+
+/-- Direct Rayleigh bridge supplied by the ordered lambda-max provider theorem. -/
+theorem lambdaMaxOrdered_rayleighUpperBound
+    {n : Nat} {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hA : IsSelfAdjointMatrix A) :
+    matrixQuadraticForm_le_lambdaMaxOrdered_statement A hA :=
+  rayleighUpperBound_of_spectralUpperBound
+    (lambdaMaxOrdered_spectralUpperBound hA)
 
 /-- Conditional Rayleigh conversion from a Mathlib Loewner-style premise.
 

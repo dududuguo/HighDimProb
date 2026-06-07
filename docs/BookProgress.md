@@ -721,3 +721,14 @@ Resolved in Stage MB-S7A-abstract:
   compatibility routes into the semantic layer.
 - Did not prove `LambdaMaxOrderedPSDUpperBound`, trace-exp spectral dominance,
   full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or matrix Bernstein.
+
+Resolved in Stage MB-S7A-provider:
+- Proved `lambdaMaxOrdered_spectralUpperBound`, showing that the canonical
+  ordered endpoint wrapper provides `SpectralUpperBound`.
+- Proved the named provider wrapper `lambdaMaxOrderedPSDUpperBound`.
+- Proved the direct ordered Rayleigh wrapper
+  `lambdaMaxOrdered_rayleighUpperBound` through the semantic bridge.
+- Preserved the legacy `lambdaMax` API and the typed
+  `lambdaMax_eq_lambdaMaxOrdered_statement` compatibility target.
+- Did not prove trace-exp spectral dominance, full matrix Laplace, trace-mgf,
+  Golden-Thompson, Lieb, or matrix Bernstein.

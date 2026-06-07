@@ -140,9 +140,11 @@ MB-S7A-abstract adds semantic spectral judge cases for `SpectralUpperBound`,
 `RayleighUpperBound`, `scalarUpperTailEvent`, `matrixUpperBoundTailEvent`,
 `rayleighUpperBound_of_spectralUpperBound`, the generic quadratic-form
 upper-tail subset bridges, and the lambda provider compatibility wrappers.
-The judge still does not claim the unconditional endpoint PSD theorem, direct
-Rayleigh theorem, trace-exp spectral dominance, full matrix Laplace, trace-mgf,
-Golden-Thompson, Lieb, or Matrix Bernstein.
+MB-S7A-provider adds ordered endpoint provider judge cases for
+`lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, and
+`lambdaMaxOrdered_rayleighUpperBound`. The judge still does not claim trace-exp
+spectral dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or
+Matrix Bernstein.
 
 For a full stage verification run:
 

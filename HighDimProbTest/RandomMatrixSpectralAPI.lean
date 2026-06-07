@@ -40,6 +40,9 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check matrixQuadraticForm_le_lambdaMaxOrdered_statement
 #check LambdaMaxPSDUpperBound
 #check LambdaMaxOrderedPSDUpperBound
+#check lambdaMaxOrdered_spectralUpperBound
+#check lambdaMaxOrderedPSDUpperBound
+#check lambdaMaxOrdered_rayleighUpperBound
 #check spectralUpperBound_of_lambdaMaxPSDUpperBound
 #check spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound
 #check matrixQuadraticForm_nonneg_of_posSemidef
@@ -132,6 +135,18 @@ example (hPSD : LambdaMaxPSDUpperBound H hH) :
 example (hPSD : LambdaMaxOrderedPSDUpperBound H hH) :
     SpectralUpperBound H (lambdaMaxOrdered H hH) := by
   exact spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound hPSD
+
+example :
+    SpectralUpperBound H (lambdaMaxOrdered H hH) := by
+  exact lambdaMaxOrdered_spectralUpperBound hH
+
+example :
+    LambdaMaxOrderedPSDUpperBound H hH := by
+  exact lambdaMaxOrderedPSDUpperBound hH
+
+example :
+    matrixQuadraticForm_le_lambdaMaxOrdered_statement H hH := by
+  exact lambdaMaxOrdered_rayleighUpperBound hH
 
 example (hPSD : M.PosSemidef) :
     0 <= matrixQuadraticForm M x := by
