@@ -2,8 +2,29 @@ name: CI
 
 on:
   push:
+    paths-ignore:
+      - "**/*.md"
+      - ".codebase-memory/**"
+      - "docbuild/**"
+      - "docs/**"
+      - "external/**"
+      - "tools/**"
   pull_request:
+    paths-ignore:
+      - "**/*.md"
+      - ".codebase-memory/**"
+      - "docbuild/**"
+      - "docs/**"
+      - "external/**"
+      - "tools/**"
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:

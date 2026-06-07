@@ -7,14 +7,7 @@ on:
         description: Commit rendered Graphviz artifacts back to the current branch
         required: false
         type: boolean
-        default: true
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/scripts/codebase_memory_graphviz.py"
-      - ".github/workflows/codebase-memory-graphviz.yml"
-      - "external/codebase-memory/HighDimProb.db"
+        default: false
 
 permissions:
   contents: write
@@ -53,9 +46,7 @@ jobs:
           if-no-files-found: error
 
       - name: Commit rendered views
-        if: >-
-          github.event_name == 'push' ||
-          (github.event_name == 'workflow_dispatch' && inputs.commit_changes)
+        if: inputs.commit_changes
         run: |
           set -euo pipefail
           if git diff --quiet -- external/codebase-memory/graphviz; then

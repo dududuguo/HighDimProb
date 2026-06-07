@@ -7,10 +7,7 @@ on:
         description: Commit refreshed graph artifacts back to the current branch
         required: false
         type: boolean
-        default: true
-  push:
-    branches:
-      - main
+        default: false
 
 permissions:
   contents: write
@@ -76,9 +73,7 @@ jobs:
           if-no-files-found: error
 
       - name: Commit refreshed graph
-        if: >-
-          github.event_name == 'push' ||
-          (github.event_name == 'workflow_dispatch' && inputs.commit_changes)
+        if: inputs.commit_changes
         run: |
           set -euo pipefail
           if git diff --quiet -- .codebase-memory external/codebase-memory; then
