@@ -11,6 +11,34 @@ lake build
 lake test
 ```
 
+## Documentation
+
+Build the doc-gen4 documentation from the repository root with:
+
+```bash
+./tools/build_docgen4.sh
+```
+
+The script defaults to GitHub source links, rewrites the generated index to open
+the `HighDimProb` API page first, and moves `HighDimProb` to the top of the
+doc-gen4 library navigation. For a faster local rebuild that skips equation
+rendering, use:
+
+```bash
+./tools/build_docgen4.sh --disable-equations
+```
+
+The generated site is written to `docbuild/.lake/build/doc`. Preview it locally
+with:
+
+```bash
+cd docbuild/.lake/build/doc
+python3 -m http.server 8000
+```
+
+Then open <http://localhost:8000/>. Keep the `.lake/build` caches in place for
+incremental rebuilds; deleting them forces a slow full doc rebuild.
+
 ## Judge Suite
 
 HighDimProb also has a lightweight compile-time judge suite for downstream API
