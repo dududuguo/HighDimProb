@@ -1,28 +1,29 @@
 {
   "project": "HighDimProb",
-  "generated_at": "2026-06-05",
-  "indexed_at": "2026-06-05T03:42:15Z",
+  "generated_at": "2026-06-08",
+  "indexed_at": "2026-06-08T18:13:42Z",
   "tool": "codebase-memory-mcp",
   "graph_stats": {
-    "total_nodes": 1358,
-    "total_edges": 3031,
+    "total_nodes": 1751,
+    "total_edges": 3969,
     "node_labels": {
-      "Section": 585,
-      "Function": 392,
-      "Module": 182,
-      "File": 182,
-      "Variable": 14,
-      "Folder": 2,
-      "Project": 1
+      "Section": 779,
+      "Function": 459,
+      "Module": 225,
+      "File": 225,
+      "Variable": 53,
+      "Folder": 8,
+      "Project": 1,
+      "Class": 1
     },
     "edge_types": {
-      "DEFINES": 1173,
-      "CALLS": 823,
-      "USAGE": 692,
-      "CONTAINS_FILE": 182,
-      "IMPORTS": 145,
-      "CONTAINS_FOLDER": 10,
-      "SEMANTICALLY_RELATED": 6
+      "DEFINES": 1517,
+      "CALLS": 1109,
+      "USAGE": 904,
+      "CONTAINS_FILE": 225,
+      "IMPORTS": 173,
+      "SEMANTICALLY_RELATED": 24,
+      "CONTAINS_FOLDER": 17
     },
     "packages": [
       "Analysis",
@@ -64,11 +65,11 @@
       "Vector"
     ],
     "top_hotspots": [
-      "IsRealRandomVariable (fan_in: 42)",
-      "RealRandomVariable (fan_in: 40)",
-      "expect (fan_in: 23)",
-      "matrixEntry (fan_in: 14)",
-      "centered (fan_in: 12)"
+      "IsRealRandomVariable (fan_in: 43)",
+      "RealRandomVariable (fan_in: 43)",
+      "expect (fan_in: 30)",
+      "IsSelfAdjointMatrix (fan_in: 18)",
+      "matrixQuadraticForm (fan_in: 18)"
     ],
     "architecture_layers": {
       "entry": [
@@ -93,5 +94,5 @@
     }
   },
   "database_file": "HighDimProb.db",
-  "database_size_bytes": 4521984
+  "database_size_bytes": 5570560
 }
