@@ -3,6 +3,17 @@
 This index records the public RandomMatrix API used by the Matrix Bernstein
 mainline. It is documentation only; theorem status is not upgraded here.
 
+## Current Public Status
+
+- Proved MB-S9 theorem:
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
+- This theorem is conditional on explicit typed primitives:
+  `troppMasterTraceMGFFiniteFamily_statement` and
+  `bernsteinMatrixExp_le_quadratic_statement`.
+- The finite-family Tropp/Lieb primitive, Bernstein CFC primitive,
+  Golden-Thompson, and the full Matrix Bernstein tail theorem remain unproved.
+- Next safe task: `MB-S9-trace-mgf-to-laplace-tail-contract`.
+
 ## `HighDimProb/RandomMatrix/SelfAdjoint.lean`
 
 - `IsSymmetricMatrix`: abbrev.
@@ -236,14 +247,16 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Current Blockers
 
+- Trace-MGF to Laplace/tail connection for the bounded MB-S9 result.
+- Unconditional trace-MGF provider theorem without explicit finite-family
+  Tropp assumptions. The bounded theorem under primitives is proved for
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`; the finite-family
+  Tropp primitive itself remains typed only.
+- The older `matrixBernsteinTraceMGF_statement` is retained for the
+  `theta ^ 2 / 2` compatibility target and is not the bounded Matrix
+  Bernstein RHS.
 - Real RHS / real expectation bridge for the concrete lintegral Laplace
   wrappers.
-- Full trace-mgf provider theorem without explicit finite-family Tropp
-  assumptions. The bounded thin wrapper is proved for
-  `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`; the finite-family
-  Tropp primitive itself remains typed only. The older
-  `matrixBernsteinTraceMGF_statement` is retained for the `theta ^ 2 / 2`
-  compatibility target and is not the bounded Matrix Bernstein RHS.
 - Full CFC-free single-summand MGF provider; the current provider theorem
   assumes the pointwise Bernstein CFC primitive explicitly.
 - Functional-calculus proof for
@@ -269,10 +282,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
 ## Next Safe Task
 
 MB-S9-trace-mgf-to-laplace-tail-contract: audit the next
-Matrix Bernstein trace-MGF route now that the thin wrappers from
-`troppMasterTraceMGFFiniteFamily_statement` to the bounded semantic and
-high-level trace-MGF targets are proved. Do not prove the Bernstein CFC
-primitive, Golden-Thompson, Lieb, or Matrix Bernstein in that contract stage.
+Matrix Bernstein route now that
+`matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives` is proved. The
+contract should connect the bounded trace-MGF-under-primitives result to the
+Laplace/tail layer without proving the Bernstein CFC primitive,
+Golden-Thompson, Lieb, or the full Matrix Bernstein tail theorem.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 

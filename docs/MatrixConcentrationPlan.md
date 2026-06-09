@@ -2,6 +2,14 @@
 
 ## Summary
 
+Current public RandomMatrix status: MB-S9 has proved
+`matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`, the bounded
+Matrix Bernstein trace-MGF statement under explicit finite-family
+Tropp/Lieb and pointwise Bernstein CFC primitive assumptions. The typed
+primitives themselves remain unproved, and the full Matrix Bernstein tail
+theorem remains unproved.
+
+Next safe task: `MB-S9-trace-mgf-to-laplace-tail-contract`.
 Stage MC1 starts the matrix concentration branch after the scalar concentration
 closeout. It adds the assumption vocabulary, explicit matrix order vocabulary,
 matrix expectation wrappers, and typed theorem-statement layer needed before
@@ -494,11 +502,10 @@ The proof plan now lists the route:
 
 ## Next Safe Task
 
-Stage MB-S9-trace-mgf-to-laplace-tail-contract: audit how the typed
-Tropp/Lieb primitive, the provider-under-CFC theorem, and the remaining
-explicit primitive assumptions connect to the semantic trace-mgf provider
-route, without proving Lieb, Golden-Thompson, the Bernstein CFC primitive, or
-Matrix Bernstein.
+Stage MB-S9-trace-mgf-to-laplace-tail-contract: audit how the proved bounded
+trace-MGF theorem under explicit primitives connects to the existing
+Laplace/tail layer, without proving Lieb, Golden-Thompson, the Bernstein CFC
+primitive, or the full Matrix Bernstein tail theorem.
 
 ## Stage MB-S7A - Spectral Bridge Typed Split
 

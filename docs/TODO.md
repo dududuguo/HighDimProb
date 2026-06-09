@@ -2,40 +2,33 @@
 
 ## Current RandomMatrix Next Task
 
+- Done: MB-S9 bounded Matrix Bernstein trace-MGF under explicit primitives
+  proved `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
+- The theorem keeps the analytic primitives explicit:
+  `troppMasterTraceMGFFiniteFamily_statement` and pointwise
+  `bernsteinMatrixExp_le_quadratic_statement`.
 - Done: MB-S9-bernstein-cfc-typed-primitive added
   `bernsteinMatrixExp_le_quadratic_statement` as a typed-only
-  Bernstein-specific scalar-to-matrix functional-calculus primitive with
-  explicit self-adjointness, deterministic operator-norm bound, nonnegative
-  radius, theta range, Bernstein quadratic coefficient, and `MatrixLE`
-  conclusion.
-- Done: MB-S9-PSD-expectation-proof proved
-  `isPSDMatrix_matrixExpect_of_pointwise_isPSD` and
-  `matrixExpect_matrixLE_of_pointwise_matrixLE`, with helper theorems
-  `integrableRandomMatrix_sub` and `matrixExpect_sub`.
-- Done: MB-S9-expectation-linearity-proof proved
-  `integrableRandomMatrix_add`, `integrableRandomMatrix_smul`,
-  `integrableRandomMatrix_zero`, `integrableRandomMatrix_const`,
-  `matrixExpect_add`, `matrixExpect_smul`, `matrixExpect_zero`,
-  `matrixExpect_const`, `matrixExpect_const_of_isProbabilityMeasure`, and
-  `matrixExpect_one_of_isProbabilityMeasure`.
-- Done: MB-S9-exp-lower-bound-proof proved
-  `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint` and
-  `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`.
+  Bernstein-specific scalar-to-matrix functional-calculus primitive.
+- Done: MB-S9 expectation, MatrixLE algebra, Bernstein coefficient, and
+  matrix exponential lower-bound infrastructure was proved for the bounded
+  trace-MGF route.
 - Done: MB-S9-single-summand-provider-under-cfc proved
   `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`,
   the single-summand MGF variance-proxy provider under an explicit pointwise
   Bernstein CFC primitive assumption.
+- Done: MB-S9 trace-MGF wrappers under primitives proved
+  `traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily`,
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily`,
+  and `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
 - Not proved: functional-calculus proof / Bernstein CFC primitive, full
-  CFC-free single-summand MGF theorem,
-  operator-norm-to-spectral-interval bridge, Lieb concavity, Golden-Thompson,
-  trace-mgf provider, full matrix Laplace real RHS bridge, and Matrix
-  Bernstein.
-- Next: MB-S9-trace-mgf-to-laplace-tail-contract, a source/API
-  contract for assembling the trace-mgf provider route from the explicit
-  Tropp/Lieb typed primitive, the single-summand provider-under-CFC theorem,
-  and remaining primitive assumptions without proving Lieb, Golden-Thompson,
-  the Bernstein CFC primitive, or Matrix Bernstein.
-
+  CFC-free single-summand MGF theorem, operator-norm-to-spectral-interval
+  bridge, Lieb concavity, Golden-Thompson, full matrix Laplace real RHS
+  bridge, and the full Matrix Bernstein tail theorem.
+- Next: MB-S9-trace-mgf-to-laplace-tail-contract, a source/API contract for
+  connecting the proved bounded trace-MGF theorem under explicit primitives
+  to the existing Laplace / tail layer without proving Lieb,
+  Golden-Thompson, the Bernstein CFC primitive, or Matrix Bernstein.
 ## Stage M3 Scalar Closeout TODO Audit
 
 The forward scalar subGaussian proof spine is closed as an experimental

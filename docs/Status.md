@@ -2,35 +2,48 @@
 
 Current version target: v0.1-alpha
 
-Current stage: Stage MB-S9-single-summand-provider-under-cfc
+## Current Stage
 
-Current task: thin bounded trace-MGF wrappers from the finite-family Tropp typed primitive are proved under explicit finite-family primitive assumptions.
+RandomMatrix / Matrix Bernstein mainline: MB-S9 trace-MGF under explicit
+primitives is complete.
 
-Milestone status:
-- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` bridges, full finite-`ENNReal` `SubExponentialMoment` bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, independent finite subGaussian sum MGF, finite Hoeffding theorem for bounded centered variables, sharp finite Hoeffding theorem for bounded centered variables, non-centered Wikipedia-form finite Hoeffding, the Hoeffding branch milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum concentration scaffold, Stage B1-fix subExponential MGF domain/max-scale infrastructure, Stage B2 full scalar Bernstein min-form tail bound, Stage SC-closeout scalar concentration theorem-family closeout, Stage B3 deterministic weighted scalar Bernstein theorem, Stage SC-final scalar concentration branch closure, Stage M-real-1 real-exponent `SubGaussianMoment` bridge, Stage M-real-2 subExponential real-moment bridge, Stage SC-final-update scalar closeout refresh, Stage MC1 matrix concentration vocabulary/statement layer, Stage MC2 operator-norm/unit-sphere bridge infrastructure, Stage MC2-fix operator norm Mathlib bridge cleanup, Stage MC3 matrix variance proxy / independent self-adjoint matrix sums, Stage MC4-cleanup matrix concentration statement honesty cleanup, Stage V1 Lean path visualization infrastructure, Stage J1 HighDimProb compile-time judge suite, Stage J2 expanded HighDimProb judge coverage, Stage MB-S1 matrix PSD variance-proxy algebra, Stage MC5.1 spectral vocabulary, Stage MC5.2 trace-exponential vocabulary, Stage MC5.3 matrix Laplace statement vocabulary, Stage MC5.4 matrix Bernstein proof-plan refinement, Stage MC5.5 matrix spectral/trace/Laplace judge coverage, Stage MC5.6 memory/workflow closeout, Stage MB-S2 spectral/Rayleigh/trace-exponential/Laplace bridge closeout, Stage MB-S3 trace-exponential positivity bridge under explicit hypotheses, Stage MB-S4 matrix exponential PSD bridge, Stage MB-S5 conditional trace-exponential Markov/Laplace bridge, Stage MB-S6 source-first conditional trace-exponential dominance bridge, Stage MB-S7A spectral bridge typed split, Stage MB-S7A-fix spectral Rayleigh conversion helper bridge, Stage MB-S7A-clean spectral bridge API consolidation, Stage MB-S7A-order endpoint ordering probe, Stage MB-S7A-index ordered endpoint wrapper, Stage MB-S7A-abstract semantic spectral abstraction, Stage MB-S7A-provider ordered endpoint semantic provider bridge, Stage MB-S7B-semantic trace-exp semantic dominance bridge, Stage MB-S7B-scalar-endpoint nonnegative ordered endpoint scalar-multiplication, Stage MB-S7B-exp-spectral-mapping ordered endpoint matrix-exponential spectral mapping, Stage MB-S7B-trace-dominates-endpoint ordered endpoint trace domination, Stage MB-S7B-provider-close ordered endpoint trace-exp provider, Stage MB-S7C-assemble-dominance concrete random-matrix trace-exp dominance assembly, Stage MB-S8-laplace-assembly concrete lintegral matrix Laplace assembly, Stage MB-S9-foundation semantic trace-mgf / variance-proxy API foundation, Stage MB-S9-PSD-expectation-proof matrix expectation PSD/order bridge, and Stage MB-S9-expectation-linearity-proof matrix expectation linearity/normalization bridge are complete.
+The latest proved public theorem is:
 
-- Stage MB-S9-matrixle-algebra-proof MatrixLE/PSD algebra bridge is complete.
-- Stage MB-S9-exp-lower-bound-proof MatrixLE matrix-exponential lower-bound bridge is complete.
-- Stage MB-S9-single-summand-provider-under-cfc is complete.
+- `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
+
+This theorem packages bounded Matrix Bernstein trace-MGF assumptions under
+explicit primitive assumptions. It does not prove the finite-family
+Tropp/Lieb primitive, the Bernstein CFC primitive, Golden-Thompson, or the
+final Matrix Bernstein tail theorem.
+
+## Next Safe Task
+
+- `MB-S9-trace-mgf-to-laplace-tail-contract`
+
+## Public Milestone Summary
+
+- Scalar concentration branch: stable for the current milestone and not the
+  active development branch.
+- RandomMatrix / Matrix Bernstein branch: active mainline.
+- MB-S9 milestone summary:
+  `external/validation/matrix-bernstein-mainline-mb-s9/MILESTONE_SUMMARY.md`
+- RandomMatrix Matrix Bernstein API index: `docs/RandomMatrixAPI.md`
 
 Workflow file:
 - docs/Workflow.md
-
-RandomMatrix Matrix Bernstein API index:
-- docs/RandomMatrixAPI.md
 
 Project path:
 - C:\Users\User\research\HighDimProb
 
 Reference notes:
-- Not present in the current checkout; expected path was `C:\Users\User\research\HighDimProb\高维概率及其在数据科学中的应�?md`.
+- Not present in the current checkout; expected path was previously recorded
+  in older local status notes.
 
 Last known build status:
 - `lake build` passes
 
 Last known test status:
 - `lake test` passes
-
 ## Completed
 
 - Initial Lean4 package skeleton
@@ -1759,11 +1772,10 @@ Theorem statements blocked by missing infrastructure are tracked in docs/Theorem
 
 ## Next safe task
 
-Stage MB-S9-trace-mgf-to-laplace-tail-contract - audit how the
-under-CFC single-summand provider, typed Bernstein CFC primitive, and typed
-Tropp/Lieb master primitive connect to the semantic trace-mgf provider target.
-Do not prove Golden-Thompson, Lieb, the full trace-mgf provider, or Matrix
-Bernstein in that contract stage.
+Stage MB-S9-trace-mgf-to-laplace-tail-contract - audit how the proved bounded
+trace-MGF theorem under explicit primitives connects to the existing
+Laplace/tail layer. Do not prove Golden-Thompson, Lieb, the Bernstein CFC
+primitive, or the full Matrix Bernstein tail theorem in that contract stage.
 
 Stage MB-S9-Tropp-master-typed-primitive has no build blocker. The trace-exp
 layer now exposes `troppMasterTraceMGFStep_statement`, a typed-only

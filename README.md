@@ -2,7 +2,8 @@
 
 HighDimProb is a Lean 4 package for high-dimensional probability foundations. It is a Mathlib-compatible ergonomic layer: reuse Mathlib first, then add small wrappers, aliases, predicates, examples, and theorem-statement specifications where they help downstream formalization.
 
-Current status: scalar concentration branch closure on top of v0.1-alpha. The stable API is the scalar probability object layer. The high-dimensional and concentration proof layers remain experimental.
+For current development status and roadmap notes, see `docs/Status.md`. For
+the RandomMatrix / Matrix Bernstein API surface, see `docs/RandomMatrixAPI.md`.
 
 ## Build and Test
 
@@ -90,7 +91,11 @@ Experimental v0.2+ modules are imported through:
 import HighDimProb.Experimental
 ```
 
-This currently includes high-dimensional vocabulary such as random vectors, covariance, isotropicity, subGaussian vector predicates, nets, metric entropy, random matrices, matrix concentration statement prerequisites, and experimental scalar concentration wrappers. The concentration branch includes Markov/Chebyshev, fixed-scale Orlicz-to-tail implications, fixed-scale tail-to-Orlicz reverse implications, sharp natural-exponent subGaussian moment growth, forward MGF-to-tail/Orlicz/moment links, finite Rademacher product/sum concentration, finite bounded-variable Hoeffding with documented conservative, sharp, and weighted constants, subExponential finite-sum MGF infrastructure, local quadratic Bernstein, scalar Bernstein min-form tails including deterministic weighted sums, and a final milestone/leaf/test audit. Do not promote an experimental module to the stable root import without tests, docs, a status update, and a root import audit.
+This includes high-dimensional and experimental theorem-development modules:
+random vectors, covariance and isotropicity vocabulary, subGaussian vector
+predicates, nets and metric entropy, random matrices, and matrix concentration
+statement surfaces. Scalar concentration theorem families are available
+through `HighDimProb.Concentration` and summarized below.
 
 ## Scalar Concentration Milestone
 

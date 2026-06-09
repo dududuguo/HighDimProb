@@ -10,6 +10,22 @@ Unproved book results are documentation entries or typed `Prop` specifications. 
 - `blocked`
 - `proven`
 
+## Current RandomMatrix Status
+
+MB-S9 has proved the bounded Matrix Bernstein trace-MGF theorem under explicit
+primitive assumptions:
+
+```lean
+matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
+```
+
+This is a proved theorem, not a proof of the underlying typed primitives. The
+finite-family Tropp/Lieb primitive `troppMasterTraceMGFFiniteFamily_statement`
+and the Bernstein CFC primitive `bernsteinMatrixExp_le_quadratic_statement`
+remain typed-only. Golden-Thompson and the full Matrix Bernstein tail theorem
+also remain unproved.
+
+Next safe task: `MB-S9-trace-mgf-to-laplace-tail-contract`.
 ## Milestone 3 scalar implication closeout
 
 This audit separates proved theorem families from typed statements and blocked
@@ -1226,7 +1242,7 @@ future directions.
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Priority: Stage MB-S2 through MB-S9-foundation complete; next task is
-  MB-S9-single-summand-provider-proof-contract.
+  MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1444,7 +1460,7 @@ future directions.
 - Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
 - Priority: MB-S9-foundation is complete; next safe task is
-  MB-S9-single-summand-provider-proof-contract.
+  MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## Matrix Bernstein Tropp Master Trace-MGF Primitive (MB-S9-Tropp)
 
@@ -1591,7 +1607,7 @@ future directions.
 - Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
 - Priority: MB-S9-foundation is complete; next safe task is
-  MB-S9-single-summand-provider-proof-contract.
+  MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## Trace-MGF / Variance-Proxy Foundation (MB-S9)
 
@@ -1671,7 +1687,7 @@ future directions.
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
 - Priority: completed through MB-S9-foundation; next safe task is
-  MB-S9-single-summand-provider-proof-contract.
+  MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## Matrix Bernstein Rayleigh Conversion Helper Bridge (MB-S7A-fix)
 
@@ -1703,7 +1719,7 @@ future directions.
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
 - Priority: completed through MB-S9-foundation; next safe task is
-  MB-S9-single-summand-provider-proof-contract.
+  MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## Matrix Bernstein Ordered Endpoint Wrapper (MB-S7A-index)
 
@@ -1734,7 +1750,7 @@ future directions.
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
 - Priority: completed through MB-S9-foundation; next safe task is
-  MB-S9-single-summand-provider-proof-contract.
+  MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## Matrix Bernstein Semantic Spectral API (MB-S7A-abstract)
 
@@ -1781,7 +1797,7 @@ future directions.
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
 - Priority: MB-S9-foundation is complete; next safe task is
-  MB-S9-single-summand-provider-proof-contract.
+  MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## Bernstein Coefficient Nonnegativity (MB-S9-bernstein-coefficient-proof)
 

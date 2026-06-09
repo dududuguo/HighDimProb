@@ -1,9 +1,24 @@
 # Matrix Bernstein Proof Plan
 
-Stage MB-S2 records the current honest proof plan for matrix Bernstein.
-This document is documentation-only for the missing analytic machinery; the
-Lean file keeps only typed `Prop` statements whose objects already exist.
+This document records the current honest proof plan for Matrix Bernstein.
+It is documentation-only for missing analytic machinery; Lean files keep only
+typed `Prop` statements whose objects already exist.
 
+## Current Public Status
+
+MB-S9 has proved the bounded Matrix Bernstein trace-MGF wrapper under explicit
+primitive assumptions:
+
+```lean
+matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
+```
+
+The theorem assumes the finite-family Tropp/Lieb typed primitive and the
+pointwise Bernstein CFC typed primitive explicitly. It does not prove
+Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, or the full Matrix
+Bernstein tail theorem.
+
+Next safe task: `MB-S9-trace-mgf-to-laplace-tail-contract`.
 ## Target Theorem
 
 For a finite family of independent centered self-adjoint random matrices
@@ -500,11 +515,10 @@ Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
 
 ## Next Safe Task
 
-Stage MB-S9-trace-mgf-to-laplace-tail-contract: audit whether the
-typed Tropp/Lieb primitive, the provider-under-CFC theorem, and the remaining
-explicit primitive assumptions are enough to state a trace-mgf provider route
-without proving Lieb, Golden-Thompson, the Bernstein CFC primitive, or Matrix
-Bernstein.
+Stage MB-S9-trace-mgf-to-laplace-tail-contract: audit how the proved bounded
+trace-MGF theorem under explicit primitives connects to the existing
+Laplace/tail layer. Do not prove Lieb, Golden-Thompson, the Bernstein CFC
+primitive, or the full Matrix Bernstein tail theorem in that contract stage.
 
 ## MB-S7A Spectral Bridge Typed Split
 
