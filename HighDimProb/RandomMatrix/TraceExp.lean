@@ -10,6 +10,16 @@ import HighDimProb.RandomMatrix.VarianceProxy
 /-!
 # Matrix exponential and trace-exponential vocabulary
 
+Verified Wikipedia references:
+* Matrix exponential: https://en.wikipedia.org/wiki/Matrix_exponential
+* Trace: https://en.wikipedia.org/wiki/Trace_(linear_algebra)
+* Self-adjoint operator: https://en.wikipedia.org/wiki/Self-adjoint_operator
+* Loewner order: https://en.wikipedia.org/wiki/Loewner_order
+
+Note: Golden-Thompson-type trace-exponential inequalities are background for
+this area, but this file's current comments only cite concepts directly present
+in the definitions and theorem statements.
+
 Mathlib provides matrix exponential facts through `NormedSpace.exp` and
 `Mathlib.Analysis.Normed.Algebra.MatrixExponential`. This module wraps those
 objects with HighDimProb-facing names for future matrix Laplace and trace-mgf

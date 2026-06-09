@@ -5,6 +5,11 @@ import HighDimProb.RandomMatrix.QuadraticForm
 # Algebraic bridges for random matrices
 -/
 
+Verified Wikipedia references:
+* Dot product: https://en.wikipedia.org/wiki/Dot_product
+* Quadratic form: https://en.wikipedia.org/wiki/Quadratic_form
+* Sample mean and covariance: https://en.wikipedia.org/wiki/Sample_mean_and_covariance
+
 namespace HighDimProb
 
 open MeasureTheory

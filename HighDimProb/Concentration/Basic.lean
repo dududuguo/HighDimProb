@@ -3,6 +3,13 @@ import HighDimProb.Scalar
 /-!
 # Scalar concentration basics
 
+Verified Wikipedia references:
+* Concentration inequality: https://en.wikipedia.org/wiki/Concentration_inequality
+* Expected value: https://en.wikipedia.org/wiki/Expected_value
+
+Note: the tail-event monotonicity lemmas here are support vocabulary for
+concentration bounds, not a standalone named concentration inequality.
+
 Small reusable event and expectation bridges for scalar concentration proofs.
 -/
 

@@ -7,6 +7,12 @@ import HighDimProb.RandomMatrix.OperatorNorm
 /-!
 # Spectral and quadratic-form event vocabulary
 
+Verified Wikipedia references:
+* Eigenvalues and eigenvectors: https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors
+* Spectral theorem: https://en.wikipedia.org/wiki/Spectral_theorem
+* Operator norm: https://en.wikipedia.org/wiki/Operator_norm
+* Loewner order: https://en.wikipedia.org/wiki/Loewner_order
+
 This module starts the matrix Bernstein spectral layer. Mathlib provides
 Hermitian eigenvalues, but HighDimProb does not yet have a proved lambda-max
 Rayleigh quotient bridge. We therefore expose two honest layers:

@@ -3,6 +3,16 @@ import HighDimProb.RandomMatrix.TraceExp
 /-!
 # Matrix Laplace statement vocabulary
 
+Verified Wikipedia references:
+* Matrix exponential: https://en.wikipedia.org/wiki/Matrix_exponential
+* Trace: https://en.wikipedia.org/wiki/Trace_(linear_algebra)
+* Chernoff bound: https://en.wikipedia.org/wiki/Chernoff_bound
+* Matrix Chernoff bound: https://en.wikipedia.org/wiki/Matrix_Chernoff_bound
+
+Note: despite the file name, the comments here cite the trace-exponential
+Laplace method used in matrix concentration, not the classical integral
+Laplace transform page.
+
 This module records honest typed targets for the future matrix Laplace method.
 It does not prove a matrix Laplace theorem, matrix Chernoff theorem, trace-mgf
 bound, or matrix Bernstein theorem.

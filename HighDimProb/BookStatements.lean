@@ -5,6 +5,11 @@ import HighDimProb.Tail
 /-!
 # Book statement specifications
 
+Verified Wikipedia references:
+* Pushforward measure: https://en.wikipedia.org/wiki/Pushforward_measure
+* Expected value: https://en.wikipedia.org/wiki/Expected_value
+* Probability distribution: https://en.wikipedia.org/wiki/Probability_distribution
+
 This module contains typechecked `Prop` specifications for book-adjacent statements whose objects
 already exist in HighDimProb. These are specifications only, not proofs of book theorems.
 -/

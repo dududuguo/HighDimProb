@@ -10,6 +10,14 @@ import HighDimProb.Isotropic
 # Random matrix assumption predicates
 -/
 
+Verified Wikipedia references:
+* Random matrix: https://en.wikipedia.org/wiki/Random_matrix
+* Sub-Gaussian distribution: https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+* Isotropic position: https://en.wikipedia.org/wiki/Isotropic_position
+* Self-adjoint operator: https://en.wikipedia.org/wiki/Self-adjoint_operator
+* Operator norm: https://en.wikipedia.org/wiki/Operator_norm
+* Independence: https://en.wikipedia.org/wiki/Independence_(probability_theory)
+
 namespace HighDimProb
 
 open MeasureTheory

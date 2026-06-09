@@ -4,6 +4,11 @@ import HighDimProb.RandomMatrix.RowsCols
 # Matrix-vector actions for random matrices
 -/
 
+Verified Wikipedia references:
+* Random matrix: https://en.wikipedia.org/wiki/Random_matrix
+* Matrix multiplication: https://en.wikipedia.org/wiki/Matrix_multiplication
+* Multivariate random variable: https://en.wikipedia.org/wiki/Multivariate_random_variable
+
 namespace HighDimProb
 
 open MeasureTheory

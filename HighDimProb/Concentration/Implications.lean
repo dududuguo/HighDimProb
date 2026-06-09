@@ -11,6 +11,15 @@ import HighDimProb.Concentration.Hoeffding
 /-!
 # Scalar implication graph
 
+Verified Wikipedia references:
+* Concentration inequality: https://en.wikipedia.org/wiki/Concentration_inequality
+* Moment generating function: https://en.wikipedia.org/wiki/Moment-generating_function
+* Chernoff bound: https://en.wikipedia.org/wiki/Chernoff_bound
+* Sub-Gaussian distribution: https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+* Bernstein inequalities: https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
+* Hoeffding inequality: https://en.wikipedia.org/wiki/Hoeffding%27s_inequality
+* Rademacher distribution: https://en.wikipedia.org/wiki/Rademacher_distribution
+
 This module is the collection point for proved scalar concentration implication
 theorems. The owning leaves remain `OrliczToTail`, `TailToOrlicz`,
 `MomentImplications`, `MGF`, `SubGaussianSums`, `SubExponentialSums`,
