@@ -15,7 +15,6 @@ not promote modules, prove theorems, or change theorem meanings.
 | `hoeffding_path.mmd` | Mermaid | curated from `docs/HoeffdingMilestone.md` | Rademacher and bounded-variable Hoeffding theorem paths. |
 | `bernstein_path.mmd` | Mermaid | curated from `docs/BernsteinPlan.md` | Scalar Bernstein and weighted Bernstein proof path. |
 | `random_matrix_branch.mmd` | Mermaid | curated from `docs/MatrixConcentrationPlan.md` | Random matrix infrastructure and statement status. |
-| `kg_to_lean_mvp.mmd` | Mermaid | curated from `external/validation/mvp-kg-to-lean*/` | KG-to-Lean validation workflow path. |
 
 ## Viewing Mermaid
 

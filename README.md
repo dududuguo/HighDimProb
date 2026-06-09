@@ -1,143 +1,101 @@
 # HighDimProb
 
-HighDimProb is a Lean 4 package for high-dimensional probability foundations. It is a Mathlib-compatible ergonomic layer: reuse Mathlib first, then add small wrappers, aliases, predicates, examples, and theorem-statement specifications where they help downstream formalization.
+HighDimProb is an early Lean 4 library for high-dimensional probability.
 
-For current development status and roadmap notes, see `docs/Status.md`. For
-the RandomMatrix / Matrix Bernstein API surface, see `docs/RandomMatrixAPI.md`.
+The goal is modest: reuse Mathlib wherever possible, then add a thin layer of
+names, wrappers, examples, and theorem interfaces that make probability and
+random-matrix formalization easier to build on.
 
-## Build and Test
+The scalar concentration side is the most stable part right now. Random vectors,
+random matrices, and Matrix Bernstein material are under active development.
+
+## Quick Start
 
 ```bash
 lake build
 lake test
 ```
 
-## Documentation
+The main public import is:
 
-Build the doc-gen4 documentation from the repository root with:
-
-```bash
-./tools/build_docgen4.sh
+```lean
+import HighDimProb
 ```
 
-The script defaults to GitHub source links, rewrites the generated index to open
-the `HighDimProb` API page first, and moves `HighDimProb` to the top of the
-doc-gen4 library navigation. For a faster local rebuild that skips equation
-rendering, use:
+Scalar concentration results are available through:
 
-```bash
-./tools/build_docgen4.sh --disable-equations
+```lean
+import HighDimProb.Concentration
 ```
 
-The generated site is written to `docbuild/.lake/build/doc`. Preview it locally
-with:
+Experimental and fast-moving modules are kept under:
 
-```bash
-cd docbuild/.lake/build/doc
-python3 -m http.server 8000
+```lean
+import HighDimProb.Experimental
 ```
 
-Then open <http://localhost:8000/>. Keep the `.lake/build` caches in place for
-incremental rebuilds; deleting them forces a slow full doc rebuild.
+## What Is In The Repo
 
-## Judge Suite
+- `HighDimProb/`: the Lean library.
+- `HighDimProbTest/`: API and regression tests.
+- `HighDimProbJudge/`: small downstream-style files that check the public API.
+- `docs/`: notes, API summaries, workflow docs, and development records.
+- `external/`: optional or generated support material. It is not part of the
+  Lean API.
 
-HighDimProb also has a lightweight compile-time judge suite for downstream API
-use cases and repository policy checks:
+Good starting points:
+
+- `docs/RandomMatrixAPI.md` for the current RandomMatrix / Matrix Bernstein API.
+- `docs/JudgeSystem.md` for the judge suite.
+- `docs/Workflow.md` for the project workflow.
+- `docs/Status.md` for the current development state.
+- `docs/References.md` for the external references behind the MVP areas.
+
+## Judge Checks
+
+The judge suite imports the library the way an outside user would. It is useful
+when changing public theorem names or module boundaries.
 
 ```bash
 lake build HighDimProbJudge
 python scripts/judge_policy_check.py
 ```
 
-The judge suite is separate from `HighDimProbTest`. It imports public APIs the
-way external Lean files would, checks selected theorem names, and includes small
-application examples for Hoeffding, Bernstein, subGaussian, and random-matrix
-statement surfaces. Details are in `docs/JudgeSystem.md`.
+## Documentation Site
 
-## Theory Roadmap Submodule
+The doc-gen4 setup lives in `docbuild/`. Build it from the repository root:
 
-The external theory-side knowledge graph is mounted as a Git submodule:
+```bash
+./tools/build_docgen4.sh
+```
+
+For a faster local rebuild:
+
+```bash
+./tools/build_docgen4.sh --disable-equations
+```
+
+The generated site is written to `docbuild/.lake/build/doc`.
+
+## External Material
+
+The theory roadmap is an optional Git submodule:
 
 ```bash
 git submodule update --init --recursive
 ```
 
-It lives at `external/theory-roadmap/` and tracks the separate
-`dududuguo/highdimprob-theory-roadmap` repository. This submodule contains the
-source-reference roadmap for future formalization. The main repository's
-`knowledge_graph/` namespace, if added later, is reserved for the Lean code
-graph: modules, declarations, imports, tests, and API exposure.
+It lives at `external/theory-roadmap/`. Other folders under `external/` contain
+generated knowledge-graph artifacts, validation logs, and planning notes. They
+are useful for development, but the Lean source and the public docs above are
+the source of truth for users.
 
-## Stable API
+## Contributing
 
-Stable v0.1 modules are imported through:
+Small PRs are easiest to review. Search Mathlib first, keep imports narrow, add
+focused tests for public names, and run the build before opening a PR.
 
-```lean
-import HighDimProb
-```
+Please do not add `sorry`, `admit`, axioms, fake theorem bodies, or custom
+probability infrastructure when existing Mathlib objects can do the job.
 
-This covers the reviewed scalar object layer: probability-space conventions,
-real-valued random variables, laws, expectation, scalar centering and variance
-wrappers, tail events and probabilities, Lp and moment vocabulary, Orlicz
-bounds, scalar subGaussian and subExponential predicate forms, and typed
-statement specifications supported by current objects.
-
-## Experimental API
-
-Experimental v0.2+ modules are imported through:
-
-```lean
-import HighDimProb.Experimental
-```
-
-This includes high-dimensional and experimental theorem-development modules:
-random vectors, covariance and isotropicity vocabulary, subGaussian vector
-predicates, nets and metric entropy, random matrices, and matrix concentration
-statement surfaces. Scalar concentration theorem families are available
-through `HighDimProb.Concentration` and summarized below.
-
-## Scalar Concentration Milestone
-
-The scalar concentration branch is closed for the current milestone and remains
-available as:
-
-```lean
-import HighDimProb.Concentration
-```
-
-It proves Markov/Chebyshev/Boole, scalar Orlicz/tail/moment/MGF implication
-arrows, full finite-`ENNReal` moment bridges for fixed-scale subGaussian and
-subExponential formulations, Rademacher and Hoeffding theorem families,
-subExponential finite-sum MGF infrastructure, local Bernstein, scalar Bernstein
-min-form, and weighted scalar Bernstein. Future work includes reverse/source
-MGF links, finite-gauge variants, raw-predicate Bernstein, operator-norm
-bridges, matrix Bernstein proofs, Hanson-Wright, and WLLN/SLLN proof branches.
-
-## How to Contribute
-
-Start with:
-
-- `docs/ContributorRoadmap.md`
-- `docs/Workflow.md`
-- `docs/StageChecklist.md`
-- `docs/TheoremAtlas.md`
-- `ORGANISATION.md`
-- `NOTATION.md`
-- `docs/Automation.md`
-- `docs/Roadmap.md`
-- `docs/ScalarImplicationGraph.md`
-- `docs/AssumptionVocabulary.md`
-- `CONTRIBUTING.md`
-
-Pick exactly one small task. Search Mathlib first. Implement object-level vocabulary only unless the task explicitly asks for a theorem proof. Add tests, update docs, then run `lake build` and `lake test`.
-
-## Good First Tasks
-
-- Add examples for existing declarations.
-- Add or improve API regression tests.
-- Clean up `docs/TermMap.md`.
-- Add typed statement specifications when dependencies already exist.
-- Improve documentation consistency.
-
-Do not add `sorry`, `admit`, axioms, optional dependencies, custom probability universes, custom random-variable structures, or unproved book results as Lean `theorem` or `lemma` declarations.
+See `CONTRIBUTING.md` for the fuller checklist.

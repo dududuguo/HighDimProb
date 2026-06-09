@@ -10,6 +10,9 @@ __pycache__/
 .DS_Store
 compress-project.ps1
 dist/
+node_modules/
+wiki.md
+Random_Matrices.md
 scripts/*
 !scripts/judge_policy_check.py
 !.github/scripts/
@@ -18,3 +21,12 @@ scripts/*
 .codebase-memory/*.bak
 .codex-manual-cache/
 tools/cc.exe
+tools/node_modules/
+tools/package.json
+tools/package-lock.json
+
+# Generated doc site cache. The docbuild Lake config files are tracked.
+docbuild/.lake/
+
+# Validation scratch runs are local by default. Existing tracked reports remain tracked.
+external/validation/*/
