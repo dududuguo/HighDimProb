@@ -11,6 +11,10 @@ import Mathlib.Tactic
 This file contains the first implication proofs from the Orlicz layer to the
 tail layer. The proofs use Mathlib's `lintegral` Markov inequality directly:
 the Orlicz predicates are already stated as nonnegative `lintegral` bounds.
+
+Verified Wikipedia references:
+* Orlicz space: https://en.wikipedia.org/wiki/Orlicz_space
+* Markov's inequality: https://en.wikipedia.org/wiki/Markov%27s_inequality
 -/
 
 namespace HighDimProb
@@ -21,18 +25,25 @@ open scoped ENNReal
 
 noncomputable section
 
+-- Formula reference: Orlicz `psi_2` tails use the nonnegative integrand
+-- `exp ((|x| / K)^2) - 1`; see https://en.wikipedia.org/wiki/Orlicz_space
 private lemma exp_sq_div_sub_one_nonneg {K x : ℝ} :
     0 ≤ Real.exp ((|x| / K) ^ 2) - 1 := by
   have hsq : 0 ≤ (|x| / K) ^ 2 := sq_nonneg _
   have hexp : (1 : ℝ) ≤ Real.exp ((|x| / K) ^ 2) := Real.one_le_exp hsq
   linarith
 
+-- Formula reference: Orlicz `psi_1` tails use the nonnegative integrand
+-- `exp (|x| / K) - 1`; see https://en.wikipedia.org/wiki/Orlicz_space
 private lemma exp_abs_div_sub_one_nonneg {K x : ℝ} (hK : 0 < K) :
     0 ≤ Real.exp (|x| / K) - 1 := by
   have hdiv : 0 ≤ |x| / K := div_nonneg (abs_nonneg _) hK.le
   have hexp : (1 : ℝ) ≤ Real.exp (|x| / K) := Real.one_le_exp hdiv
   linarith
 
+-- Formula reference: this rewrites `exp ((|x| / K)^2)` as
+-- `(exp ((|x| / K)^2) - 1) + 1`, the Orlicz integrand plus mass term;
+-- see https://en.wikipedia.org/wiki/Orlicz_space
 private lemma ofReal_exp_sq_div_eq_add {K x : ℝ} :
     ENNReal.ofReal (Real.exp ((|x| / K) ^ 2)) =
       ENNReal.ofReal (Real.exp ((|x| / K) ^ 2) - 1) + 1 := by
@@ -45,6 +56,9 @@ private lemma ofReal_exp_sq_div_eq_add {K x : ℝ} :
         ENNReal.ofReal_add h_nonneg zero_le_one
     _ = ENNReal.ofReal (Real.exp ((|x| / K) ^ 2) - 1) + 1 := by simp
 
+-- Formula reference: this rewrites `exp (|x| / K)` as
+-- `(exp (|x| / K) - 1) + 1`, the `psi_1` Orlicz integrand plus mass term;
+-- see https://en.wikipedia.org/wiki/Orlicz_space
 private lemma ofReal_exp_abs_div_eq_add {K x : ℝ} (hK : 0 < K) :
     ENNReal.ofReal (Real.exp (|x| / K)) =
       ENNReal.ofReal (Real.exp (|x| / K) - 1) + 1 := by
@@ -62,6 +76,11 @@ A `Psi2Bound` gives the exponential-square moment bound with constant `2`.
 
 The probability assumption is necessary: `Psi2Bound` alone does not control the
 mass of the underlying measure when the Orlicz integrand vanishes.
+
+Formula reference: the `psi_2` Orlicz integrand is
+`exp ((|X| / K)^2) - 1`; adding the probability mass gives the bound for
+`exp ((|X| / K)^2)`.  See
+https://en.wikipedia.org/wiki/Orlicz_space
 -/
 theorem lintegral_exp_sq_div_le_two_of_psi2Bound {Ω : Type*} [MeasurableSpace Ω]
     {P : Measure Ω} [IsProbabilityMeasure P] {X : RealRandomVariable Ω} {K : ℝ}
@@ -83,6 +102,10 @@ A `Psi1Bound` gives the exponential-linear moment bound with constant `2`.
 
 The probability assumption is necessary for the same reason as in the `psi_2`
 case: the Orlicz bound controls only the shifted exponential integrand.
+
+Formula reference: the `psi_1` Orlicz integrand is
+`exp (|X| / K) - 1`; adding the probability mass gives the bound for
+`exp (|X| / K)`.  See https://en.wikipedia.org/wiki/Orlicz_space
 -/
 theorem lintegral_exp_abs_div_le_two_of_psi1Bound {Ω : Type*} [MeasurableSpace Ω]
     {P : Measure Ω} [IsProbabilityMeasure P] {X : RealRandomVariable Ω} {K : ℝ}
@@ -99,6 +122,10 @@ theorem lintegral_exp_abs_div_le_two_of_psi1Bound {Ω : Type*} [MeasurableSpace 
     _ ≤ (1 : ENNReal) + 1 := add_le_add hψ_int le_rfl
     _ = 2 := by norm_num
 
+-- Formula reference: this is the exponential Markov conversion from a
+-- `psi_2` moment bound to `2 * exp (-(t^2 / K^2))`; see Markov's inequality
+-- at https://en.wikipedia.org/wiki/Markov%27s_inequality and Orlicz space at
+-- https://en.wikipedia.org/wiki/Orlicz_space
 private lemma two_div_exp_sq_eq_ofReal (t K : ℝ) :
     (2 : ENNReal) / ENNReal.ofReal (Real.exp ((t / K) ^ 2)) =
       ENNReal.ofReal (2 * Real.exp (-(t ^ 2 / K ^ 2))) := by
@@ -110,6 +137,10 @@ private lemma two_div_exp_sq_eq_ofReal (t K : ℝ) :
   rw [hratio, Real.exp_neg]
   field_simp [Real.exp_ne_zero]
 
+-- Formula reference: this is the exponential Markov conversion from a
+-- `psi_1` moment bound to `2 * exp (-(t / K))`; see Markov's inequality
+-- at https://en.wikipedia.org/wiki/Markov%27s_inequality and Orlicz space at
+-- https://en.wikipedia.org/wiki/Orlicz_space
 private lemma two_div_exp_abs_eq_ofReal (t K : ℝ) :
     (2 : ENNReal) / ENNReal.ofReal (Real.exp (t / K)) =
       ENNReal.ofReal (2 * Real.exp (-(t / K))) := by
@@ -126,6 +157,12 @@ bound with the same scale.
 
 Measurability is kept separate because `Psi2Bound` is an integral bound
 predicate, not a random-variable predicate.
+
+Formula reference: applying Markov's inequality to
+`exp ((|X| / K)^2)` yields a two-sided `psi_2` tail
+`2 * exp (-(t^2 / K^2))`; see
+https://en.wikipedia.org/wiki/Markov%27s_inequality and
+https://en.wikipedia.org/wiki/Orlicz_space
 -/
 theorem subGaussianTail_of_psi2Bound {Ω : Type*} [MeasurableSpace Ω]
     {P : Measure Ω} [IsProbabilityMeasure P] {X : RealRandomVariable Ω} {K : ℝ}
@@ -177,6 +214,11 @@ bound with the same scale.
 
 Measurability is kept separate for the same reason as in
 `subGaussianTail_of_psi2Bound`.
+
+Formula reference: applying Markov's inequality to `exp (|X| / K)` yields the
+two-sided `psi_1` tail `2 * exp (-(t / K))`; see
+https://en.wikipedia.org/wiki/Markov%27s_inequality and
+https://en.wikipedia.org/wiki/Orlicz_space
 -/
 theorem subExponentialTail_of_psi1Bound {Ω : Type*} [MeasurableSpace Ω]
     {P : Measure Ω} [IsProbabilityMeasure P] {X : RealRandomVariable Ω} {K : ℝ}

@@ -5,6 +5,9 @@ import HighDimProb.RandomVariable
 
 This file exposes Mathlib `MemLp`, `eLpNorm`, and `Integrable` under
 HighDimProb-oriented names.
+
+Verified Wikipedia reference:
+https://en.wikipedia.org/wiki/Lp_space
 -/
 
 namespace HighDimProb
@@ -13,7 +16,12 @@ open MeasureTheory
 
 noncomputable section
 
-/-- A random variable belongs to `L^p(P)`. -/
+/--
+A random variable belongs to `L^p(P)`.
+
+Formula reference: `L^p` spaces collect functions with finite p-th power
+integral; see https://en.wikipedia.org/wiki/Lp_space
+-/
 abbrev MemLpRandomVariable {Ω E : Type*} [MeasurableSpace Ω] [NormedAddCommGroup E]
     (P : Measure Ω) (X : RandomVariable Ω E) (p : ENNReal) : Prop :=
   MemLp X p P
@@ -23,7 +31,12 @@ abbrev MemLpRealRandomVariable {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (X : RealRandomVariable Ω) (p : ENNReal) : Prop :=
   MemLpRandomVariable P X p
 
-/-- The Mathlib extended `L^p` seminorm of a random variable. -/
+/--
+The Mathlib extended `L^p` seminorm of a random variable.
+
+Formula reference: the `L^p` norm is based on integrating `|f|^p`; see
+https://en.wikipedia.org/wiki/Lp_space
+-/
 abbrev lpNormRandomVariable {Ω E : Type*} [MeasurableSpace Ω] [NormedAddCommGroup E]
     (P : Measure Ω) (X : RandomVariable Ω E) (p : ENNReal) : ENNReal :=
   eLpNorm X p P

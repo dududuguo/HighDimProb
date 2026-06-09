@@ -2,12 +2,16 @@
 
 Current version target: v0.1-alpha
 
-Current stage: Stage MB-S9-foundation
+Current stage: Stage MB-S9-single-summand-provider-under-cfc
 
-Current task: semantic trace-mgf and variance-proxy foundation API is in place; next is a source/API contract for the trace-mgf provider route
+Current task: thin bounded trace-MGF wrappers from the finite-family Tropp typed primitive are proved under explicit finite-family primitive assumptions.
 
 Milestone status:
-- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` bridges, full finite-`ENNReal` `SubExponentialMoment` bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, independent finite subGaussian sum MGF, finite Hoeffding theorem for bounded centered variables, sharp finite Hoeffding theorem for bounded centered variables, non-centered Wikipedia-form finite Hoeffding, the Hoeffding branch milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum concentration scaffold, Stage B1-fix subExponential MGF domain/max-scale infrastructure, Stage B2 full scalar Bernstein min-form tail bound, Stage SC-closeout scalar concentration theorem-family closeout, Stage B3 deterministic weighted scalar Bernstein theorem, Stage SC-final scalar concentration branch closure, Stage M-real-1 real-exponent `SubGaussianMoment` bridge, Stage M-real-2 subExponential real-moment bridge, Stage SC-final-update scalar closeout refresh, Stage MC1 matrix concentration vocabulary/statement layer, Stage MC2 operator-norm/unit-sphere bridge infrastructure, Stage MC2-fix operator norm Mathlib bridge cleanup, Stage MC3 matrix variance proxy / independent self-adjoint matrix sums, Stage MC4-cleanup matrix concentration statement honesty cleanup, Stage V1 Lean path visualization infrastructure, Stage J1 HighDimProb compile-time judge suite, Stage J2 expanded HighDimProb judge coverage, Stage MB-S1 matrix PSD variance-proxy algebra, Stage MC5.1 spectral vocabulary, Stage MC5.2 trace-exponential vocabulary, Stage MC5.3 matrix Laplace statement vocabulary, Stage MC5.4 matrix Bernstein proof-plan refinement, Stage MC5.5 matrix spectral/trace/Laplace judge coverage, Stage MC5.6 memory/workflow closeout, Stage MB-S2 spectral/Rayleigh/trace-exponential/Laplace bridge closeout, Stage MB-S3 trace-exponential positivity bridge under explicit hypotheses, Stage MB-S4 matrix exponential PSD bridge, Stage MB-S5 conditional trace-exponential Markov/Laplace bridge, Stage MB-S6 source-first conditional trace-exponential dominance bridge, Stage MB-S7A spectral bridge typed split, Stage MB-S7A-fix spectral Rayleigh conversion helper bridge, Stage MB-S7A-clean spectral bridge API consolidation, Stage MB-S7A-order endpoint ordering probe, Stage MB-S7A-index ordered endpoint wrapper, Stage MB-S7A-abstract semantic spectral abstraction, Stage MB-S7A-provider ordered endpoint semantic provider bridge, Stage MB-S7B-semantic trace-exp semantic dominance bridge, Stage MB-S7B-scalar-endpoint nonnegative ordered endpoint scalar-multiplication, Stage MB-S7B-exp-spectral-mapping ordered endpoint matrix-exponential spectral mapping, Stage MB-S7B-trace-dominates-endpoint ordered endpoint trace domination, Stage MB-S7B-provider-close ordered endpoint trace-exp provider, Stage MB-S7C-assemble-dominance concrete random-matrix trace-exp dominance assembly, Stage MB-S8-laplace-assembly concrete lintegral matrix Laplace assembly, and Stage MB-S9-foundation semantic trace-mgf / variance-proxy API foundation are complete.
+- Boole inequality, sample-covariance algebra, weak-law scaffold, Stage C1 cleanup, fixed low moment implications, all-natural absolute-moment factorial bound, natural moment-to-Lp bridge, crude linear subGaussian real-Lp growth, sharp natural-exponent typed compatibility statements, natural-exponent sqrt-growth real-Lp bounds, sharp natural-exponent predicate bridges, full finite-`ENNReal` `SubGaussianMoment` bridges, full finite-`ENNReal` `SubExponentialMoment` bridges, forward centered-MGF-to-tail/psi2/moment links, the Milestone 3 scalar closeout audit, the canonical Rademacher MGF atom, the Rademacher/Hoeffding branch readiness cleanup, finite product Rademacher family infrastructure, weighted finite Rademacher sum MGF, finite Rademacher Hoeffding tail bound, Rademacher/Hoeffding branch closeout, weighted Rademacher zero-weight cleanup, independent finite subGaussian sum MGF, finite Hoeffding theorem for bounded centered variables, sharp finite Hoeffding theorem for bounded centered variables, non-centered Wikipedia-form finite Hoeffding, the Hoeffding branch milestone closeout, weighted bounded Hoeffding, the Stage B1 subExponential finite-sum concentration scaffold, Stage B1-fix subExponential MGF domain/max-scale infrastructure, Stage B2 full scalar Bernstein min-form tail bound, Stage SC-closeout scalar concentration theorem-family closeout, Stage B3 deterministic weighted scalar Bernstein theorem, Stage SC-final scalar concentration branch closure, Stage M-real-1 real-exponent `SubGaussianMoment` bridge, Stage M-real-2 subExponential real-moment bridge, Stage SC-final-update scalar closeout refresh, Stage MC1 matrix concentration vocabulary/statement layer, Stage MC2 operator-norm/unit-sphere bridge infrastructure, Stage MC2-fix operator norm Mathlib bridge cleanup, Stage MC3 matrix variance proxy / independent self-adjoint matrix sums, Stage MC4-cleanup matrix concentration statement honesty cleanup, Stage V1 Lean path visualization infrastructure, Stage J1 HighDimProb compile-time judge suite, Stage J2 expanded HighDimProb judge coverage, Stage MB-S1 matrix PSD variance-proxy algebra, Stage MC5.1 spectral vocabulary, Stage MC5.2 trace-exponential vocabulary, Stage MC5.3 matrix Laplace statement vocabulary, Stage MC5.4 matrix Bernstein proof-plan refinement, Stage MC5.5 matrix spectral/trace/Laplace judge coverage, Stage MC5.6 memory/workflow closeout, Stage MB-S2 spectral/Rayleigh/trace-exponential/Laplace bridge closeout, Stage MB-S3 trace-exponential positivity bridge under explicit hypotheses, Stage MB-S4 matrix exponential PSD bridge, Stage MB-S5 conditional trace-exponential Markov/Laplace bridge, Stage MB-S6 source-first conditional trace-exponential dominance bridge, Stage MB-S7A spectral bridge typed split, Stage MB-S7A-fix spectral Rayleigh conversion helper bridge, Stage MB-S7A-clean spectral bridge API consolidation, Stage MB-S7A-order endpoint ordering probe, Stage MB-S7A-index ordered endpoint wrapper, Stage MB-S7A-abstract semantic spectral abstraction, Stage MB-S7A-provider ordered endpoint semantic provider bridge, Stage MB-S7B-semantic trace-exp semantic dominance bridge, Stage MB-S7B-scalar-endpoint nonnegative ordered endpoint scalar-multiplication, Stage MB-S7B-exp-spectral-mapping ordered endpoint matrix-exponential spectral mapping, Stage MB-S7B-trace-dominates-endpoint ordered endpoint trace domination, Stage MB-S7B-provider-close ordered endpoint trace-exp provider, Stage MB-S7C-assemble-dominance concrete random-matrix trace-exp dominance assembly, Stage MB-S8-laplace-assembly concrete lintegral matrix Laplace assembly, Stage MB-S9-foundation semantic trace-mgf / variance-proxy API foundation, Stage MB-S9-PSD-expectation-proof matrix expectation PSD/order bridge, and Stage MB-S9-expectation-linearity-proof matrix expectation linearity/normalization bridge are complete.
+
+- Stage MB-S9-matrixle-algebra-proof MatrixLE/PSD algebra bridge is complete.
+- Stage MB-S9-exp-lower-bound-proof MatrixLE matrix-exponential lower-bound bridge is complete.
+- Stage MB-S9-single-summand-provider-under-cfc is complete.
 
 Workflow file:
 - docs/Workflow.md
@@ -19,7 +23,7 @@ Project path:
 - C:\Users\User\research\HighDimProb
 
 Reference notes:
-- Not present in the current checkout; expected path was `C:\Users\User\research\HighDimProb\高维概率及其在数据科学中的应用.md`.
+- Not present in the current checkout; expected path was `C:\Users\User\research\HighDimProb\高维概率及其在数据科学中的应�?md`.
 
 Last known build status:
 - `lake build` passes
@@ -41,7 +45,7 @@ Last known test status:
 - Stage 1C public API boundary and scaffold cleanup
 - Stage 1R README workflow and future-work documentation
 - Stage 2A Lp and moment vocabulary
-- Stage 2B Orlicz / ψ�?/ ψ�?definition layer
+- Stage 2B Orlicz / ψ�?/ ψ�?definition layer
 - Stage 3A subGaussian predicate layer
 - Stage 3B subExponential predicate layer
 - Stage 4A random vector object layer
@@ -180,7 +184,7 @@ Stage 3B implemented:
 - API regression tests for subExponential declarations
 
 Stage 4A implemented:
-- finite-dimensional random-vector alias using `Ω �?Fin n �?ℝ`
+- finite-dimensional random-vector alias using `Ω �?Fin n �?ℝ`
 - coordinatewise random-vector measurability predicate
 - coordinate random-variable wrapper and bridge lemmas
 - finite linear marginal wrapper and measurability bridge
@@ -422,7 +426,7 @@ Stage G2C implemented:
 
 Stage G2D implemented:
 - proved `realLpNorm_nat_le_linear_of_psi2Bound` with constant `8` for natural `q >= 1`.
-- proved `realLpNorm_nat_le_linear_of_subGaussianTail` with constant `16`, using the existing `K -> 2*K` tail-to-ψ₂ scale loss.
+- proved `realLpNorm_nat_le_linear_of_subGaussianTail` with constant `16`, using the existing `K -> 2*K` tail-to-ψ�?scale loss.
 - reused `Nat.factorial_le_pow`, `Real.rpow_le_rpow`, `Real.mul_rpow`, `Real.rpow_mul`, `Real.exp_one_lt_three`, and the existing `absMomentNat -> realLpNorm` bridge.
 - documented that the factorial-root route only yields linear `q`; sharp `sqrt(q)` growth remains blocked by missing direct tail-integral/Gamma moment estimates.
 
@@ -797,7 +801,7 @@ Stage J2 implemented:
   safe task.
 
 Milestone Sprint S2 implemented:
-- completed fixed-scale scalar Orlicz/tail implication graph in both directions for ψ�?and ψ�?predicates
+- completed fixed-scale scalar Orlicz/tail implication graph in both directions for ψ�?and ψ�?predicates
 - added `HighDimProb.Concentration.Implications`
 - added `docs/ScalarImplicationGraph.md`
 - hardened concentration aggregate tests
@@ -1321,8 +1325,8 @@ Processed:
 - Lp norm
 - moments
 - Orlicz norm vocabulary
-- ψ�?norm vocabulary
-- ψ�?norm vocabulary
+- ψ�?norm vocabulary
+- ψ�?norm vocabulary
 - subGaussian random variable definitions
 - subExponential random variable definitions
 - random vector object layer
@@ -1382,12 +1386,12 @@ Processed:
 - scalar concentration API cleanup
 - Markov inequality
 - Chebyshev inequality
-- ψ�?Orlicz bound implies subGaussian tail
-- ψ�?Orlicz bound implies subExponential tail
+- ψ�?Orlicz bound implies subGaussian tail
+- ψ�?Orlicz bound implies subExponential tail
 - tail-to-Orlicz reverse implication typed targets
 - layer-cake tail integral bridge
-- ψ�?tail-to-Orlicz reverse implication
-- ψ�?tail-to-Orlicz reverse implication
+- ψ�?tail-to-Orlicz reverse implication
+- ψ�?tail-to-Orlicz reverse implication
 - scalar Orlicz/tail implication graph
 - concentration layer-cake import boundary
 - random matrix theorem statement layer
@@ -1400,7 +1404,7 @@ Processed:
 - all-natural absolute-moment factorial bound
 - natural absolute-moment to `MemLp` / `realLpNorm` bridge
 - factorial-growth natural subGaussian moment predicate
-- crude linear `realLpNorm` growth from ψ₂ and subGaussian-tail control
+- crude linear `realLpNorm` growth from ψ�?and subGaussian-tail control
 - sharp natural-exponent `realLpNorm <= C*K*sqrt(q)` growth
 - sharp natural-exponent subGaussian moment predicate bridge
 - forward centered-MGF-to-tail/psi2/natural-moment implication spine
@@ -1575,7 +1579,7 @@ inequality, and proves the conditional bridges
 `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset` and
 `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset`. These theorems
 require the explicit hypothesis
-`quadraticFormUpperTailEvent Y t ⊆ traceExpThresholdEvent Y theta t`. The full
+`quadraticFormUpperTailEvent Y t �?traceExpThresholdEvent Y theta t`. The full
 `matrixLaplaceTransformStatement`, trace-mgf inequalities, Golden-Thompson,
 Lieb, and matrix Bernstein remain unproved.
 
@@ -1755,6 +1759,131 @@ Theorem statements blocked by missing infrastructure are tracked in docs/Theorem
 
 ## Next safe task
 
-Stage MB-S9-trace-mgf-provider-contract - audit the source/API route for
-proving `matrixBernsteinTraceMGF_statement`, or block cleanly on missing
-Golden-Thompson/Lieb/matrix-mgf prerequisites.
+Stage MB-S9-trace-mgf-to-laplace-tail-contract - audit how the
+under-CFC single-summand provider, typed Bernstein CFC primitive, and typed
+Tropp/Lieb master primitive connect to the semantic trace-mgf provider target.
+Do not prove Golden-Thompson, Lieb, the full trace-mgf provider, or Matrix
+Bernstein in that contract stage.
+
+Stage MB-S9-Tropp-master-typed-primitive has no build blocker. The trace-exp
+layer now exposes `troppMasterTraceMGFStep_statement`, a typed-only
+Tropp/Lieb master trace-mgf primitive with explicit self-adjointness,
+integrability, matrix-exponential expectation, and strict-positivity
+assumptions. Lieb concavity, Golden-Thompson, the trace-mgf provider, the real
+RHS bridge, and Matrix Bernstein remain unproved.
+
+Stage MB-S9-single-summand-mgf-typed-primitive has no build blocker. The
+trace-exp layer now exposes `singleSummandMatrixMGFVarianceProxy_statement`,
+a typed-only single-summand matrix MGF variance-proxy primitive with explicit
+self-adjointness, centeredness, pointwise boundedness, integrability, theta
+range, square/variance-proxy comparison, and `MatrixLE` conclusion. The
+scalar-to-matrix functional-calculus bridge,
+operator-norm-to-spectral-interval bridge, trace-mgf provider, and Matrix
+Bernstein remain unproved.
+
+Stage MB-S9-bernstein-cfc-typed-primitive has no build blocker. The trace-exp
+layer now exposes `bernsteinMatrixExp_le_quadratic_statement`, a typed-only
+Bernstein-specific scalar-to-matrix functional-calculus primitive with explicit
+self-adjointness, deterministic operator-norm bound, nonnegative radius, theta
+range, Bernstein quadratic coefficient, and `MatrixLE` conclusion. The
+functional-calculus proof, full CFC-free single-summand MGF theorem,
+operator-norm-to-spectral-interval bridge, trace-mgf provider, and Matrix
+Bernstein remain unproved.
+
+Stage MB-S9-PSD-expectation-proof has no build blocker. The variance-proxy
+layer now exposes `isPSDMatrix_matrixExpect_of_pointwise_isPSD` and
+`matrixExpect_matrixLE_of_pointwise_matrixLE`, plus the direct helper theorems
+`integrableRandomMatrix_sub` and `matrixExpect_sub`. Single-summand MGF,
+functional calculus, trace-mgf provider, and Matrix Bernstein remain
+unproved.
+
+Stage MB-S9-expectation-linearity-proof has no build blocker. The
+variance-proxy layer now exposes `integrableRandomMatrix_add`,
+`integrableRandomMatrix_smul`, `integrableRandomMatrix_zero`,
+`integrableRandomMatrix_const`, `matrixExpect_add`, `matrixExpect_smul`,
+`matrixExpect_zero`, `matrixExpect_const`,
+`matrixExpect_const_of_isProbabilityMeasure`, and
+`matrixExpect_one_of_isProbabilityMeasure`. Single-summand MGF, functional
+calculus, trace-mgf provider, Golden-Thompson, Lieb, and Matrix Bernstein
+remain unproved.
+
+Stage MB-S9-matrixle-algebra-proof has no build blocker. The matrix-order
+layer now exposes `matrixQuadraticForm_add`, `matrixQuadraticForm_smul`,
+`isPSDMatrix_zero`, `isPSDMatrix_add`, `isPSDMatrix_smul_of_nonneg`,
+`matrixLE_refl`, `matrixLE_of_eq`, `matrixLE_trans`, `matrixLE_add`,
+`matrixLE_add_left`, `matrixLE_add_right`, and `matrixLE_smul_of_nonneg`.
+Single-summand MGF, the Bernstein CFC proof, trace-mgf provider,
+Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+
+Stage MB-S9-bernstein-coefficient-proof has no build blocker. The TraceExp
+layer now exposes `bernsteinCoefficient_nonneg`, proving nonnegativity of the
+Bernstein quadratic coefficient
+`(theta ^ 2 / 2) / (1 - abs theta * R / 3)` from `abs theta * R < 3`.
+The single-summand provider remains unproved. The downstream matrix
+exponential lower bound is now resolved by MB-S9-exp-lower-bound-proof. The
+Bernstein CFC primitive remains typed only, and the trace-mgf provider,
+Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+
+Stage MB-S9-exp-lower-bound-proof has no build blocker. The TraceExp layer now
+exposes `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint`, proving the
+deterministic lower bound `1 + A <= matrixExp A` in `MatrixLE` for
+self-adjoint real matrices, and
+`matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`, the scalar-multiple
+wrapper needed downstream. This stage is followed by the provider under
+explicit CFC assumptions. The Bernstein CFC primitive remains typed only, and
+the trace-mgf provider, Golden-Thompson, Lieb, and Matrix Bernstein remain
+unproved.
+
+Stage MB-S9-single-summand-provider-under-cfc has no build blocker. The
+TraceExp layer now exposes
+`singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`,
+proving `singleSummandMatrixMGFVarianceProxy_statement` under an explicit
+pointwise `bernsteinMatrixExp_le_quadratic_statement` assumption and
+`[IsProbabilityMeasure P]`. The Bernstein CFC primitive itself remains typed
+only; trace-mgf provider, Golden-Thompson, Lieb, full CFC-free
+single-summand provider, and Matrix Bernstein remain unproved.
+
+Stage MB-S9-rhs-normalization-proof has no build blocker. The TraceExp layer
+now exposes the canonical bounded-Bernstein coefficient `bernsteinMGFCoeff`,
+the wrapper `bernsteinMGFCoeff_nonneg`, and bounded-denominator semantic
+targets `TraceMGFBernsteinVarianceProxyBound`,
+`TraceMGFBernsteinVarianceProxyBoundLIntegral`, and
+`traceMGFBernsteinVarianceProxyBound_statement`. The high-level concentration
+statement layer now exposes
+`matrixBernsteinTraceMGFWithBernsteinCoeff_statement`. The retained
+`TraceMGFVarianceProxyBound` and `matrixBernsteinTraceMGF_statement` use the
+old `theta ^ 2 / 2` coefficient and are not the bounded Matrix Bernstein
+denominator target. The trace-mgf provider, Tropp/Lieb primitive proof,
+Bernstein CFC primitive proof, and Matrix Bernstein remain unproved. Next safe
+task: MB-S9-trace-mgf-to-laplace-tail-contract.
+
+Stage MB-S9-tropp-shape-refactor has no build blocker. The TraceExp layer now
+exposes `troppMasterTraceMGFFiniteFamily_statement`, a typed-only
+finite-family Tropp/Lieb iteration primitive for the bounded Matrix Bernstein
+trace-mgf route. The one-step `troppMasterTraceMGFStep_statement` remains
+available. No Lieb theorem, Golden-Thompson theorem, trace-mgf provider
+theorem, or Matrix Bernstein theorem was proved. Next safe task:
+MB-S9-trace-mgf-to-laplace-tail-contract.
+
+Stage MB-S9-trace-mgf-provider-thin-wrapper-proof has no build blocker. The
+TraceExp layer now exposes
+`traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily`, a
+thin wrapper from the finite-family Tropp typed primitive to the bounded
+Bernstein semantic trace-MGF target. The concentration statement layer now
+exposes
+`matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily`,
+the corresponding high-level bounded Matrix Bernstein trace-MGF wrapper. The
+finite-family Tropp primitive itself remains typed only. The Bernstein CFC
+primitive remains typed only. No Lieb theorem, Golden-Thompson theorem, or
+Matrix Bernstein tail theorem was proved. Next safe task:
+MB-S9-trace-mgf-to-laplace-tail-contract.
+
+Stage MB-S9-matrix-bernstein-trace-mgf-under-primitives-proof has no build
+blocker. The concentration statement layer now exposes
+`matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`, proving the
+bounded Matrix Bernstein trace-MGF statement under explicit finite-family
+Tropp and pointwise Bernstein CFC primitive assumptions. The finite-family
+Tropp primitive itself remains typed only. The Bernstein CFC primitive remains
+typed only. No Lieb theorem, Golden-Thompson theorem, or Matrix Bernstein tail
+theorem was proved. Next safe task:
+MB-S9-trace-mgf-to-laplace-tail-contract.

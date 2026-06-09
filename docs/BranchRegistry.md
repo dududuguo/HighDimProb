@@ -104,10 +104,11 @@ It is a planning document, not a request to physically move existing files.
 - Dependencies: `Scalar`, `Vector`, `Geometry`, Mathlib matrices, finite sums, and scoped L2 operator norm APIs.
 - Forbidden scope: proving matrix concentration before matrix Laplace-transform, variance-proxy, and covariance-estimation prerequisites are ready.
 - Promotion criteria: submodule API tests, theorem atlas dependencies, docs, status update, and stable-root import audit.
-- Next safe tasks: Stage MB-S9-trace-mgf-provider-contract: audit the
-  source/API route for proving `matrixBernsteinTraceMGF_statement`, or block
-  cleanly on missing Golden-Thompson/Lieb/matrix-mgf prerequisites. Matrix
-  Bernstein remains forbidden until its missing bridges are proved.
+- Next safe tasks: Stage MB-S9-trace-mgf-to-laplace-tail-contract:
+  audit the trace-mgf provider route now that the single-summand provider
+  under explicit pointwise Bernstein CFC assumptions is proved, while the
+  Bernstein CFC primitive itself remains typed only.
+  Matrix Bernstein remains forbidden until its missing bridges are proved.
   Independent-row/iid-row vocabulary remains separate until
   covariance-estimation proof work starts.
 
@@ -202,7 +203,7 @@ It is a planning document, not a request to physically move existing files.
   limit-theorem APIs after the current matrix Bernstein bridge surface remains
   green.
 
-## MC4-cleanup â€” Matrix Concentration Statement Honesty
+## MC4-cleanup â€?Matrix Concentration Statement Honesty
 
 - Stage: MC4-cleanup
 - Date: 2026-02-03 (approximate)
@@ -283,7 +284,7 @@ It is a planning document, not a request to physically move existing files.
 - Proven: Mathlib PSD implies nonnegativity of the explicit HighDimProb
   quadratic form; scalar identity matrices evaluate to the scalar on explicit
   unit vectors; the Rayleigh typed statement follows from the explicit PSD
-  premise `((lambdaMax A hA) â€¢ 1 - A).PosSemidef`.
+  premise `((lambdaMax A hA) â€?1 - A).PosSemidef`.
 - Typed only: direct Rayleigh bridge from explicit `matrixQuadraticForm` /
   `IsUnitVector` to `lambdaMax`.
 - Blocked: endpoint-order/PSD bridge for `lambdaMax`, trace-exp spectral
@@ -531,3 +532,215 @@ It is a planning document, not a request to physically move existing files.
   theorem.
 - Blocked: Golden-Thompson, Lieb, the full trace-mgf master theorem, the real
   RHS bridge, and matrix Bernstein remain unproved.
+
+## MB-S9-Tropp-master-typed-primitive Tropp Master Typed Primitive
+
+- Stage: MB-S9-Tropp-master-typed-primitive
+- Date: 2026-06-08
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test modules: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- New declarations: `troppMasterTraceMGFStep_statement`.
+- Proven: no new theorem; typed Tropp/Lieb primitive only.
+- Blocked: Lieb concavity, Golden-Thompson, trace-mgf provider, full
+  trace-mgf master theorem, real RHS bridge, and matrix Bernstein remain
+  unproved.
+
+## MB-S9-single-summand-mgf-typed-primitive Single-Summand MGF Typed Primitive
+
+- Stage: MB-S9-single-summand-mgf-typed-primitive
+- Date: 2026-06-08
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test modules: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- New declarations: `singleSummandMatrixMGFVarianceProxy_statement`.
+- Proven: no new theorem; typed single-summand matrix MGF primitive only.
+- Blocked: scalar-to-matrix functional calculus bridge, matrix-valued
+  expectation monotonicity, operator-norm-to-spectral-interval bridge,
+  trace-mgf provider, Golden-Thompson, Lieb, real RHS bridge, and matrix
+  Bernstein remain unproved.
+
+## MB-S9-bernstein-cfc-typed-primitive Bernstein CFC Typed Primitive
+
+- Stage: MB-S9-bernstein-cfc-typed-primitive
+- Date: 2026-06-08
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test modules: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- New declarations: `bernsteinMatrixExp_le_quadratic_statement`.
+- Proven: no new theorem; typed Bernstein-specific scalar-to-matrix CFC
+  primitive only.
+- Blocked: functional-calculus proof, single-summand MGF theorem,
+  operator-norm-to-spectral-interval bridge, trace-mgf provider,
+  Golden-Thompson, Lieb, real RHS bridge, and matrix Bernstein remain
+  unproved.
+
+## MB-S9-tropp-shape-refactor Tropp Interface Shape
+
+- Stage: MB-S9-tropp-shape-refactor
+- Date: 2026-06-09
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test modules: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- New declarations: `troppMasterTraceMGFFiniteFamily_statement`.
+- Proven: none; the declaration is a typed `Prop` interface only.
+- Blocked: Lieb/Tropp finite-family proof, Bernstein CFC proof, trace-mgf
+  provider, Golden-Thompson, Lieb, and matrix Bernstein remain unproved.
+
+## MB-S9-rhs-normalization-proof Bounded Trace-MGF RHS
+
+- Stage: MB-S9-rhs-normalization-proof
+- Date: 2026-06-09
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/TraceExp.lean`,
+  `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
+- Test modules: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`,
+  `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`,
+  `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`,
+  `HighDimProbJudge/RandomMatrix/StatementUse.lean`,
+  `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`
+- New declarations: `bernsteinMGFCoeff`, `bernsteinMGFCoeff_nonneg`,
+  `TraceMGFBernsteinVarianceProxyBound`,
+  `TraceMGFBernsteinVarianceProxyBoundLIntegral`,
+  `traceMGFBernsteinVarianceProxyBound_statement`, and
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`.
+- Proven: scalar wrapper nonnegativity for the named coefficient.
+- Typed only: bounded trace-mgf semantic targets and high-level bounded
+  Matrix Bernstein trace-mgf target.
+- Compatibility: `matrixBernsteinTraceMGF_statement` remains the old
+  `theta ^ 2 / 2` target and is not the bounded Bernstein denominator target.
+- Blocked: trace-mgf provider, Bernstein CFC proof, Tropp/Lieb primitive,
+  Golden-Thompson, Lieb, and matrix Bernstein remain unproved.
+
+## MB-S9-exp-lower-bound-proof Matrix Exponential Lower Bound
+
+- Stage: MB-S9-exp-lower-bound-proof
+- Date: 2026-06-08
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test modules: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- New declarations: `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint` and
+  `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`.
+- Proven: deterministic MatrixLE lower bound `1 + A <= matrixExp A` for
+  self-adjoint real matrices and the scalar-multiple wrapper.
+- Blocked: single-summand provider, Bernstein CFC proof, trace-mgf provider,
+  Golden-Thompson, Lieb, real RHS bridge, and matrix Bernstein remain
+  unproved.
+- Next safe task was MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## MB-S9-single-summand-provider-under-cfc Single-Summand Provider Under CFC
+
+- Stage: MB-S9-single-summand-provider-under-cfc
+- Date: 2026-06-09
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test modules: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- New declarations:
+  `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`.
+- Proven: single-summand matrix MGF variance-proxy typed target under an
+  explicit pointwise `bernsteinMatrixExp_le_quadratic_statement` assumption.
+- Blocked: Bernstein CFC proof, Tropp/Lieb proof, trace-mgf provider, full
+  CFC-free single-summand provider, Golden-Thompson, Lieb, real RHS bridge,
+  and matrix Bernstein remain unproved.
+- Next safe task was MB-S9-trace-mgf-to-laplace-tail-contract.
+
+- Stage: MB-S9-bernstein-coefficient-proof
+- Date: 2026-06-08
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test modules: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- New declarations: `bernsteinCoefficient_nonneg`.
+- Proven: nonnegativity of the Bernstein quadratic coefficient under
+  `abs theta * R < 3`.
+- Blocked: single-summand MGF provider, Bernstein CFC proof, downstream
+  matrix exponential lower bound, trace-mgf provider, Golden-Thompson, Lieb,
+  real RHS bridge, and matrix Bernstein remain unproved.
+
+## MB-S9-matrixle-algebra-proof MatrixLE / PSD Algebra
+
+- Stage: MB-S9-matrixle-algebra-proof
+- Date: 2026-06-08
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/MatrixOrder.lean`
+- Test modules: `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`
+- New declarations: `matrixQuadraticForm_add`, `matrixQuadraticForm_smul`,
+  `isPSDMatrix_zero`, `isPSDMatrix_add`,
+  `isPSDMatrix_smul_of_nonneg`, `matrixLE_refl`, `matrixLE_of_eq`,
+  `matrixLE_trans`, `matrixLE_add`, `matrixLE_add_left`,
+  `matrixLE_add_right`, and `matrixLE_smul_of_nonneg`.
+- Proven: small PSD and MatrixLE algebra helpers needed for future
+  single-summand MGF RHS normalization.
+- Blocked: Bernstein CFC proof, single-summand MGF provider,
+  operator-norm-to-spectral-interval bridge, trace-mgf provider,
+  Golden-Thompson, Lieb, real RHS bridge, and matrix Bernstein remain
+  unproved.
+
+## MB-S9-PSD-expectation-proof PSD Expectation Bridge
+
+- Stage: MB-S9-PSD-expectation-proof
+- Date: 2026-06-08
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/VarianceProxy.lean`
+- Test modules: `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`
+- New declarations: `integrableRandomMatrix_sub`, `matrixExpect_sub`,
+  `isPSDMatrix_matrixExpect_of_pointwise_isPSD`,
+  `matrixExpect_matrixLE_of_pointwise_matrixLE`.
+- Proven: entrywise matrix expectation preserves pointwise PSD matrices and is
+  monotone for `MatrixLE` under explicit entrywise integrability assumptions.
+- Blocked: functional-calculus proof, single-summand MGF theorem,
+  operator-norm-to-spectral-interval bridge, trace-mgf provider,
+  Golden-Thompson, Lieb, real RHS bridge, and matrix Bernstein remain
+  unproved.
+
+## MB-S9-expectation-linearity-proof Expectation Linearity Bridge
+
+- Stage: MB-S9-expectation-linearity-proof
+- Date: 2026-06-08
+- Branch: RandomMatrix (experimental)
+- Leaf modules touched: `HighDimProb/RandomMatrix/VarianceProxy.lean`
+- Test modules: `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`
+- New declarations: `integrableRandomMatrix_add`,
+  `integrableRandomMatrix_smul`, `integrableRandomMatrix_zero`,
+  `integrableRandomMatrix_const`, `matrixExpect_add`, `matrixExpect_smul`,
+  `matrixExpect_zero`, `matrixExpect_const`,
+  `matrixExpect_const_of_isProbabilityMeasure`, and
+  `matrixExpect_one_of_isProbabilityMeasure`.
+- Proven: entrywise integrability closure and matrix expectation
+  add/smul/zero/constant normalization, with finite-measure and
+  probability-measure assumptions kept explicit where needed.
+- Blocked: functional-calculus proof, single-summand MGF theorem,
+  operator-norm-to-spectral-interval bridge, trace-mgf provider,
+  Golden-Thompson, Lieb, real RHS bridge, and matrix Bernstein remain
+  unproved.
+## MB-S9 Trace-MGF Thin Wrapper Branch
+
+- Stage: MB-S9-trace-mgf-provider-thin-wrapper-proof.
+- Status: complete.
+- Added proved wrappers:
+  `traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily`
+  and
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily`.
+- Remaining unproved: finite-family Tropp/Lieb primitive, Bernstein CFC
+  primitive, Lieb, Golden-Thompson, Matrix Bernstein tail theorem.
+- Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## MB-S9 Matrix Bernstein Trace-MGF Under Primitives Branch
+
+- Stage: MB-S9-matrix-bernstein-trace-mgf-under-primitives-proof.
+- Status: complete.
+- Added proved theorem:
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
+- Remaining unproved: finite-family Tropp/Lieb primitive, Bernstein CFC
+  primitive, Lieb, Golden-Thompson, Matrix Bernstein tail theorem.
+- Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.

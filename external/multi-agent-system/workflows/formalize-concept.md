@@ -146,6 +146,47 @@ Orchestrator selects a concept from the topological queue.
 └──────────────────────────────────────────────────────────────┘
 ```
 
+## Learned Domain Patterns
+
+### Matrix finite-sum PSD algebra
+
+For HighDimProb random-matrix concentration prerequisites, structural PSD
+facts should be proved before matrix Laplace or trace-exponential translation.
+The successful MB-S1 pattern is:
+
+1. expand the explicit `matrixQuadraticForm`;
+2. normalize matrix multiplication with `Matrix.mul_apply`;
+3. commute finite sums with `Finset.sum_comm`;
+4. prove nonnegativity through squared matrix-vector norms;
+5. commute entrywise `matrixExpect` through finite sums only under explicit
+   `IntegrableRandomMatrix` assumptions;
+6. close variance-proxy PSD by finite-sum closure of `IsPSDMatrix`.
+
+Do not replace this with spectral-theorem reasoning unless the target stage is
+explicitly about eigenvalue or spectral-radius bridges.
+
+### Matrix spectral and trace-exp bridge staging
+
+For matrix Bernstein mainline work after PSD variance-proxy algebra, do not
+jump directly to the final concentration theorem. The successful MB-S2 pattern
+is:
+
+1. audit Mathlib spectral ordering, Rayleigh quotient, trace, and matrix
+   exponential APIs first;
+2. keep true eigenvalue wrappers separate from proof-friendly quadratic-form
+   event predicates;
+3. prove small monotonicity and event-inclusion lemmas when they are purely
+   definitional;
+4. downgrade Rayleigh/operator-norm, trace-exp positivity, lintegral bridge,
+   and Laplace reductions to meaningful typed `Prop` statements until their
+   proofs are available;
+5. add judge/API checks for every public bridge declaration before the next
+   proof sprint.
+
+This pattern is a strict statement-honesty guard: no theorem-like `Prop :=
+True`, and no matrix Bernstein theorem claim before the analytic bridge
+theorems compile.
+
 ## Agent Interaction Sequence
 
 ```

@@ -6,6 +6,12 @@ import HighDimProb.Concentration.MGF
 This file packages Mathlib's finite independent-sum theorem for
 `ProbabilityTheory.HasSubgaussianMGF` into the HighDimProb scalar MGF and tail
 interfaces.
+
+Verified Wikipedia references:
+* Sub-Gaussian distribution:
+  https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+* Moment-generating function:
+  https://en.wikipedia.org/wiki/Moment-generating_function
 -/
 
 namespace HighDimProb
@@ -16,7 +22,13 @@ noncomputable section
 
 open scoped BigOperators NNReal
 
-/-- A finite sum of measurable real random variables is measurable. -/
+/--
+A finite sum of measurable real random variables is measurable.
+
+Formula reference: finite sums of random variables are the objects whose
+subGaussian tail behavior is controlled in the sub-Gaussian framework; see
+https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+-/
 theorem isRealRandomVariable_finset_sum {Omega ι : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {s : Finset ι}
     {X : ι -> RealRandomVariable Omega}
@@ -25,7 +37,13 @@ theorem isRealRandomVariable_finset_sum {Omega ι : Type*}
   dsimp [IsRealRandomVariable, IsRandomVariable]
   exact Finset.measurable_sum s hX
 
-/-- A finite weighted sum of measurable real random variables is measurable. -/
+/--
+A finite weighted sum of measurable real random variables is measurable.
+
+Formula reference: weighted sums are the standard finite-sum form behind
+subGaussian concentration; see
+https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+-/
 theorem isRealRandomVariable_finset_weighted_sum {Omega ι : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {s : Finset ι}
     (a : ι -> ℝ) {X : ι -> RealRandomVariable Omega}
@@ -39,6 +57,11 @@ Mathlib MGF proxy for a finite independent sum.
 
 The proxy adds as `sum_i K_i^2`, matching the scale
 `sqrt (sum_i K_i^2)` in the HighDimProb wrapper below.
+
+Formula reference: sub-Gaussian random variables are characterized through
+exponential/MGF control, and independent sums add variance proxies; see
+https://en.wikipedia.org/wiki/Sub-Gaussian_distribution and
+https://en.wikipedia.org/wiki/Moment-generating_function
 -/
 theorem hasSubgaussianMGF_finset_sum_of_iIndepFun {Omega ι : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
@@ -61,6 +84,10 @@ subGaussian with scale `sqrt (sum_i K_i^2)`.
 
 The positivity assumption is only needed because `CenteredSubGaussianMGF`
 requires a strictly positive scale.
+
+Formula reference: the finite-sum subGaussian scale is the square root of the
+sum of squared individual scales; see
+https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
 -/
 theorem centeredSubGaussianMGF_finset_sum_of_iIndepFun_of_pos
     {Omega ι : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -94,6 +121,10 @@ theorem centeredSubGaussianMGF_finset_sum_of_iIndepFun_of_pos
 Fintype-facing wrapper for independent finite sums.
 
 This is the main user-facing version when the index type itself is finite.
+
+Formula reference: this Fintype wrapper states the same scale explicitly as
+`K_sum = sqrt (sum_i K_i^2)` for the sum `omega |-> sum_i X_i(omega)`; see
+https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
 -/
 theorem centeredSubGaussianMGF_sum_of_iIndepFun_of_pos
     {Omega ι : Type*} [MeasurableSpace Omega] [Fintype ι]
@@ -110,7 +141,13 @@ theorem centeredSubGaussianMGF_sum_of_iIndepFun_of_pos
       (P := P) (s := Finset.univ) (X := X) (K := K)
       hpos hIndep (fun i _hi => hMGF i)
 
-/-- Tail corollary for independent finite sums, in Finset form. -/
+/--
+Tail corollary for independent finite sums, in Finset form.
+
+Formula reference: converting the MGF proxy to a two-sided tail yields the
+subGaussian exponential tail at scale `sqrt (sum_i K_i^2)`; see
+https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+-/
 theorem subGaussianTail_finset_sum_of_iIndepFun_of_pos
     {Omega ι : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {s : Finset ι}
@@ -131,7 +168,14 @@ theorem subGaussianTail_finset_sum_of_iIndepFun_of_pos
       (centeredSubGaussianMGF_finset_sum_of_iIndepFun_of_pos
         (P := P) (s := s) (X := X) (K := K) hpos hIndep hMGF)
 
-/-- Tail corollary for independent finite sums over a finite index type. -/
+/--
+Tail corollary for independent finite sums over a finite index type.
+
+Formula reference: finite-index version of the tail bound for
+`S = sum_i X_i`, with scale `2 * sqrt (sum_i K_i^2)` in the HighDimProb
+tail predicate; see
+https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+-/
 theorem subGaussianTail_sum_of_iIndepFun_of_pos
     {Omega ι : Type*} [MeasurableSpace Omega] [Fintype ι]
     {P : Measure Omega} [IsProbabilityMeasure P]
@@ -148,7 +192,13 @@ theorem subGaussianTail_sum_of_iIndepFun_of_pos
       (P := P) (s := Finset.univ) (X := X) (K := K)
       (fun i _hi => hX i) hpos hIndep (fun i _hi => hMGF i)
 
-/-- Deterministic scalar multiples preserve independence of an indexed family. -/
+/--
+Deterministic scalar multiples preserve independence of an indexed family.
+
+Formula reference: weighted subGaussian sums multiply each individual scale by
+the deterministic coefficient; see
+https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+-/
 theorem iIndepFun_weighted_of_iIndepFun {Omega ι : Type*}
     [MeasurableSpace Omega] {P : Measure Omega}
     {X : ι -> RealRandomVariable Omega} (a : ι -> ℝ)
@@ -163,7 +213,13 @@ theorem iIndepFun_weighted_of_iIndepFun {Omega ι : Type*}
         fun_prop)
   simpa [Function.comp_def] using h
 
-/-- A weighted centered subGaussian variable has Mathlib proxy `(a_i*K_i)^2`. -/
+/--
+A weighted centered subGaussian variable has Mathlib proxy `(a_i*K_i)^2`.
+
+Formula reference: scaling a subGaussian variable scales its MGF proxy
+quadratically, giving `(a_i * K_i)^2`; see
+https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+-/
 theorem hasSubgaussianMGF_weighted_of_centeredSubGaussianMGF
     {Omega ι : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     {X : ι -> RealRandomVariable Omega} {K : ι -> ℝ}
@@ -178,7 +234,13 @@ theorem hasSubgaussianMGF_weighted_of_centeredSubGaussianMGF
   simp
   ring
 
-/-- Mathlib MGF proxy for a finite independent weighted sum. -/
+/--
+Mathlib MGF proxy for a finite independent weighted sum.
+
+Formula reference: independent weighted subGaussian proxies add as
+`sum_i (a_i * K_i)^2`; see
+https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+-/
 theorem hasSubgaussianMGF_finset_weighted_sum_of_iIndepFun
     {Omega ι : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {s : Finset ι}
@@ -199,6 +261,11 @@ theorem hasSubgaussianMGF_finset_weighted_sum_of_iIndepFun
 /--
 A finite independent weighted sum of centered subGaussian variables is centered
 subGaussian with scale `sqrt (sum_i (a_i*K_i)^2)`.
+
+Formula reference: for `S = sum_i a_i * X_i`, the summed MGF proxy is
+`sum_i (a_i * K_i)^2`, so the HighDimProb scale is
+`sqrt (sum_i (a_i * K_i)^2)`; see
+https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
 -/
 theorem centeredSubGaussianMGF_finset_weighted_sum_of_iIndepFun_of_pos
     {Omega ι : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -233,7 +300,14 @@ theorem centeredSubGaussianMGF_finset_weighted_sum_of_iIndepFun_of_pos
     hasSubgaussianMGF_finset_weighted_sum_of_iIndepFun
       (P := P) (s := s) (X := X) (K := K) a hIndep hMGF
 
-/-- Fintype-facing wrapper for independent finite weighted sums. -/
+/--
+Fintype-facing wrapper for independent finite weighted sums.
+
+Formula reference: this Fintype wrapper states the weighted scale
+`K_weighted = sqrt (sum_i (a_i * K_i)^2)` for
+`omega |-> sum_i a_i * X_i(omega)`; see
+https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+-/
 theorem centeredSubGaussianMGF_weighted_sum_of_iIndepFun_of_pos
     {Omega ι : Type*} [MeasurableSpace Omega] [Fintype ι]
     {P : Measure Omega} [IsProbabilityMeasure P]
@@ -249,7 +323,13 @@ theorem centeredSubGaussianMGF_weighted_sum_of_iIndepFun_of_pos
       (P := P) (s := Finset.univ) (X := X) (K := K) a
       hpos hIndep (fun i _hi => hMGF i)
 
-/-- Tail corollary for independent finite weighted sums, in Finset form. -/
+/--
+Tail corollary for independent finite weighted sums, in Finset form.
+
+Formula reference: the weighted finite-sum subGaussian tail uses scale
+`sqrt (sum_i (a_i * K_i)^2)`; see
+https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+-/
 theorem subGaussianTail_finset_weighted_sum_of_iIndepFun_of_pos
     {Omega ι : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {s : Finset ι}
@@ -270,7 +350,14 @@ theorem subGaussianTail_finset_weighted_sum_of_iIndepFun_of_pos
       (centeredSubGaussianMGF_finset_weighted_sum_of_iIndepFun_of_pos
         (P := P) (s := s) (X := X) (K := K) a hpos hIndep hMGF)
 
-/-- Tail corollary for independent finite weighted sums over a finite index type. -/
+/--
+Tail corollary for independent finite weighted sums over a finite index type.
+
+Formula reference: finite-index weighted tail statement for
+`S = sum_i a_i * X_i`, using scale
+`2 * sqrt (sum_i (a_i * K_i)^2)` in the HighDimProb two-sided tail predicate;
+see https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+-/
 theorem subGaussianTail_weighted_sum_of_iIndepFun_of_pos
     {Omega ι : Type*} [MeasurableSpace Omega] [Fintype ι]
     {P : Measure Omega} [IsProbabilityMeasure P]

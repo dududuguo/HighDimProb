@@ -16,6 +16,35 @@ still updated, and `lake build` plus `lake test` remain mandatory.
 
 ## Growth Triggers
 
+### 0. Domain Prerequisite Pattern
+
+When a theorem family repeatedly requires structural algebra before analytic
+translation, record the prerequisite stage explicitly.
+
+```
+TRIGGER: matrix concentration theorem work requires PSD/order facts
+ACTION:  Insert or prioritize a structural PSD prerequisite stage before
+         matrix Laplace, trace exponential, or final concentration translation.
+EXAMPLE: MB-S1 proves PSD of `A^2`, `E[A^2]`, and `sum_i E[A_i^2]`
+         before any matrix Bernstein theorem proof.
+```
+
+### 0a. Spectral / Trace-Exp API Audit Pattern
+
+When a theorem family depends on spectral or trace-exponential APIs whose
+Mathlib bridge status is uncertain, insert an audit-and-statement bridge stage
+before proof translation.
+
+```
+TRIGGER: matrix Bernstein theorem work requires lambda-max, Rayleigh,
+         trace-exp, or matrix Laplace infrastructure
+ACTION:  Survey Mathlib APIs, add only honest wrappers or meaningful typed
+         statement targets, and record blockers before proof translation.
+EXAMPLE: MB-S2 adds two-sided quadratic-form tail events, lintegral trace-exp
+         and Laplace targets, and a Bernstein prerequisite bundle while
+         leaving Rayleigh, trace-mgf, and matrix Laplace proofs unproved.
+```
+
 ### 1. Repeated State Pairs
 
 When the same `(from_state, error_type, to_state)` tuple is observed ≥ N times:

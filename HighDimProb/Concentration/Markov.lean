@@ -5,6 +5,9 @@ import Mathlib.MeasureTheory.Integral.Lebesgue.Markov
 # Markov inequality
 
 HighDimProb-facing wrapper around Mathlib's lintegral Markov inequality.
+
+Verified Wikipedia reference:
+https://en.wikipedia.org/wiki/Markov%27s_inequality
 -/
 
 namespace HighDimProb
@@ -15,6 +18,10 @@ noncomputable section
 
 /--
 Markov's inequality for a pointwise nonnegative integrable real random variable.
+
+Formula reference: for nonnegative `X` and `a > 0`,
+`P(X >= a) <= E[X] / a`; see
+https://en.wikipedia.org/wiki/Markov%27s_inequality
 
 The proof uses Mathlib's `MeasureTheory.meas_ge_le_lintegral_div`, then converts the
 nonnegative `lintegral` back to the HighDimProb expectation wrapper.
@@ -56,6 +63,10 @@ theorem markov_inequality {Omega : Type*} [MeasurableSpace Omega]
 
 /--
 Markov's inequality for an a.e.-nonnegative integrable real random variable.
+
+Formula reference: this keeps the same Markov bound
+`P(X >= a) <= E[X] / a`; see
+https://en.wikipedia.org/wiki/Markov%27s_inequality
 
 The tail event is pointwise, but the proof only needs a.e. nonnegativity for
 the `lintegral`/expectation bridge.

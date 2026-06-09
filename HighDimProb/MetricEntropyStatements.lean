@@ -5,6 +5,9 @@ import HighDimProb.MetricEntropy
 
 This module records typechecked `Prop` targets for covering, packing, and
 epsilon-net results. These are specifications only, not proved theorems.
+
+Verified Wikipedia reference:
+https://en.wikipedia.org/wiki/Covering_number
 -/
 
 namespace HighDimProb
@@ -21,6 +24,9 @@ abbrev maximalSeparatedNetStatement {alpha : Type*} [PseudoMetricSpace alpha]
 /--
 Statement target: an internal epsilon-net gives an upper bound for the
 covering number by its cardinality.
+
+Formula reference: an explicit epsilon-net bounds the covering number by the
+number of centers; see https://en.wikipedia.org/wiki/Covering_number
 -/
 abbrev epsilonNetCoveringNumberStatement {alpha : Type*} [PseudoMetricSpace alpha]
     (K N : Set alpha) (eps : Real) : Prop :=
@@ -32,6 +38,10 @@ abbrev epsilonNetCoveringNumberStatement {alpha : Type*} [PseudoMetricSpace alph
 /--
 Statement target: packing and covering numbers bound each other at related
 radii.
+
+Formula reference: packing-covering comparisons are standard metric entropy
+estimates based on epsilon-separated sets and epsilon-covers; see
+https://en.wikipedia.org/wiki/Covering_number
 -/
 abbrev packingCoveringInequalityStatement {alpha : Type*} [PseudoMetricSpace alpha]
     (K : Set alpha) (eps : Real) : Prop :=

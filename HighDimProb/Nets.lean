@@ -6,13 +6,21 @@ import HighDimProb.Basic
 
 Wrappers in this file reuse Mathlib's metric covering and separated-set APIs.
 Real radii are converted to nonnegative radii by `Real.toNNReal`.
+
+Verified Wikipedia reference:
+https://en.wikipedia.org/wiki/Covering_number
 -/
 
 namespace HighDimProb
 
 open scoped NNReal ENNReal
 
-/-- Nonnegative Mathlib radius associated to a real radius. -/
+/--
+Nonnegative Mathlib radius associated to a real radius.
+
+Formula reference: covering numbers are parameterized by a radius/scale
+epsilon; see https://en.wikipedia.org/wiki/Covering_number
+-/
 abbrev epsilonRadius (eps : Real) : NNReal :=
   Real.toNNReal eps
 
@@ -23,18 +31,31 @@ abbrev epsilonERadius (eps : Real) : ENNReal :=
 /--
 `N` is an `eps`-net/cover for `K`, using Mathlib's `Metric.IsCover`.
 
+Formula reference: an epsilon-net covers a set by balls of radius epsilon; see
+https://en.wikipedia.org/wiki/Covering_number
+
 Mathlib's cover predicate allows centers in `N` to lie outside `K`.
 -/
 abbrev IsEpsilonNet {alpha : Type*} [PseudoMetricSpace alpha]
     (K N : Set alpha) (eps : Real) : Prop :=
   Metric.IsCover (epsilonRadius eps) K N
 
-/-- Internal `eps`-net: a Mathlib cover whose centers lie in `K`. -/
+/--
+Internal `eps`-net: a Mathlib cover whose centers lie in `K`.
+
+Formula reference: this is the internal-center version of an epsilon cover; see
+https://en.wikipedia.org/wiki/Covering_number
+-/
 abbrev IsInternalEpsilonNet {alpha : Type*} [PseudoMetricSpace alpha]
     (K N : Set alpha) (eps : Real) : Prop :=
   Set.Subset N K ∧ IsEpsilonNet K N eps
 
-/-- A set is `eps`-separated, using Mathlib's `Metric.IsSeparated`. -/
+/--
+A set is `eps`-separated, using Mathlib's `Metric.IsSeparated`.
+
+Formula reference: packing/separated sets are dual to covering-number bounds;
+see https://en.wikipedia.org/wiki/Covering_number
+-/
 abbrev IsEpsilonSeparated {alpha : Type*} [PseudoMetricSpace alpha]
     (N : Set alpha) (eps : Real) : Prop :=
   Metric.IsSeparated (epsilonERadius eps) N

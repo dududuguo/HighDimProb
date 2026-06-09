@@ -5,6 +5,9 @@ import HighDimProb.RandomVariable
 
 The concrete model is `Ω → Fin n → ℝ`. Coordinates, finite linear
 marginals, and norm random variables are exposed as unbundled functions.
+
+Verified Wikipedia reference:
+https://en.wikipedia.org/wiki/Multivariate_random_variable
 -/
 
 namespace HighDimProb
@@ -14,7 +17,12 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- An `n`-dimensional real random vector. -/
+/--
+An `n`-dimensional real random vector.
+
+Formula reference: a random vector is a vector-valued random variable; see
+https://en.wikipedia.org/wiki/Multivariate_random_variable
+-/
 abbrev RandomVector (Ω : Type*) [MeasurableSpace Ω] (n : ℕ) :=
   RandomVariable Ω (Fin n → ℝ)
 
@@ -23,7 +31,12 @@ abbrev IsRandomVector {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
     (P : Measure Ω) (X : RandomVector Ω n) : Prop :=
   ∀ i : Fin n, IsRealRandomVariable P (fun ω => X ω i)
 
-/-- Coordinate random variable of a finite-dimensional random vector. -/
+/--
+Coordinate random variable of a finite-dimensional random vector.
+
+Formula reference: coordinates of a random vector are scalar random variables;
+see https://en.wikipedia.org/wiki/Multivariate_random_variable
+-/
 def coord {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
     (X : RandomVector Ω n) (i : Fin n) : RealRandomVariable Ω :=
   fun ω => X ω i
@@ -57,7 +70,13 @@ theorem isRealRandomVariable_coordinate {Ω : Type*} [MeasurableSpace Ω] {P : M
     IsRealRandomVariable P (coordinate X i) :=
   hX i
 
-/-- Finite linear marginal `ω ↦ ∑ i, a i * X ω i`. -/
+/--
+Finite linear marginal `omega -> sum_i a_i * X_i(omega)`.
+
+Formula reference: linear projections/marginals of random vectors are scalar
+random variables; see
+https://en.wikipedia.org/wiki/Multivariate_random_variable
+-/
 def linearForm {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
     (X : RandomVector Ω n) (a : Fin n → ℝ) : RealRandomVariable Ω :=
   fun ω => ∑ i, a i * X ω i
@@ -92,7 +111,12 @@ theorem isRealRandomVariable_marginal {Ω : Type*} [MeasurableSpace Ω] {P : Mea
     IsRealRandomVariable P (marginal X a) :=
   isRealRandomVariable_linearForm hX a
 
-/-- Squared Euclidean norm random variable, represented by the coordinate sum. -/
+/--
+Squared Euclidean norm random variable, represented by the coordinate sum.
+
+Formula reference: Euclidean squared norm is `sum_i x_i^2`; see
+https://en.wikipedia.org/wiki/Euclidean_distance
+-/
 def sqNorm {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
     (X : RandomVector Ω n) : RealRandomVariable Ω :=
   fun ω => ∑ i, (X ω i) ^ 2
@@ -103,7 +127,12 @@ theorem sqNorm_apply {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
     sqNorm X ω = ∑ i, (X ω i) ^ 2 :=
   rfl
 
-/-- Euclidean norm random variable `ω ↦ sqrt (sqNorm X ω)`. -/
+/--
+Euclidean norm random variable `omega -> sqrt (sqNorm X omega)`.
+
+Formula reference: Euclidean norm is the square root of the squared coordinate
+sum; see https://en.wikipedia.org/wiki/Euclidean_distance
+-/
 def euclideanNorm {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
     (X : RandomVector Ω n) : RealRandomVariable Ω :=
   fun ω => Real.sqrt (sqNorm X ω)

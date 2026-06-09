@@ -6,6 +6,9 @@ import Mathlib.Probability.Moments.Variance
 # Chebyshev inequality
 
 HighDimProb-facing wrapper around Mathlib's variance-form Chebyshev inequality.
+
+Verified Wikipedia reference:
+https://en.wikipedia.org/wiki/Chebyshev%27s_inequality
 -/
 
 namespace HighDimProb
@@ -17,6 +20,10 @@ noncomputable section
 
 /--
 Chebyshev's inequality in HighDimProb notation.
+
+Formula reference: for `t > 0`,
+`P(|X - E[X]| >= t) <= Var(X) / t^2`; see
+https://en.wikipedia.org/wiki/Chebyshev%27s_inequality
 
 This is a wrapper around `ProbabilityTheory.meas_ge_le_variance_div_sq`.
 -/

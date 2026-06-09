@@ -60,7 +60,7 @@ prove matrix Laplace, trace-mgf inequalities, or matrix Bernstein.
 Stage MB-S5 proves the generic lintegral Markov/Laplace step for the
 trace-exponential threshold event and the conditional quadratic-form bridge
 under the explicit subset hypothesis
-`quadraticFormUpperTailEvent Y t ‚äÜ traceExpThresholdEvent Y theta t`. It does
+`quadraticFormUpperTailEvent Y t ‚ä?traceExpThresholdEvent Y theta t`. It does
 not prove that subset, trace-mgf inequalities, full matrix Laplace, or matrix
 Bernstein.
 
@@ -137,6 +137,21 @@ trace-mgf provider targets including `matrixBernsteinTraceMGF_statement`. It
 does not prove Golden-Thompson, Lieb, the full trace-mgf master theorem, the
 real RHS bridge, or matrix Bernstein.
 
+Stage MB-S9-exp-lower-bound-proof proves
+`matrixLE_one_add_self_le_matrixExp_of_selfAdjoint` and
+`matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`, giving the
+deterministic `1 + A <= matrixExp A` MatrixLE lower bound for self-adjoint
+real matrices and the downstream scalar-multiple wrapper. It does not prove
+the single-summand provider, Bernstein CFC primitive, trace-mgf provider,
+Golden-Thompson, Lieb, or matrix Bernstein.
+
+Stage MB-S9-single-summand-provider-under-cfc proves
+`singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`,
+the single-summand matrix MGF variance-proxy provider under an explicit
+pointwise Bernstein CFC primitive assumption. The Bernstein CFC primitive
+itself, trace-mgf provider, Golden-Thompson, Lieb, and matrix Bernstein remain
+unproved.
+
 ## Implemented Vocabulary
 
 | Area | Declarations | Status | Source |
@@ -151,9 +166,9 @@ real RHS bridge, or matrix Bernstein.
 | Exact operator norm bridges and measurability | `operatorNorm_le_of_operatorNormBoundSqStatement`, `operatorNormBoundSq_of_operatorNorm_leStatement`, `operatorNormMeasurabilityStatement`, `operatorNorm_le_of_operatorNormBoundSq`, `operatorNormBoundSq_of_operatorNorm_le`, `instOpensMeasurableSpaceMatrixL2Operator`, `isRealRandomVariable_operatorNorm` | typed `Prop` targets retained; bridge directions and measurability theorem proved | `HighDimProb/RandomMatrix/OperatorNorm.lean` |
 | Finite random-matrix sums | `randomMatrixSum`, `randomMatrixSum_apply`, `randomMatrixSum_entry`, `isRandomMatrix_sum`, `isSelfAdjointMatrix_sum`, `randomSelfAdjointMatrix_sum` | implemented with measurability and self-adjoint sum lemmas | `HighDimProb/RandomMatrix/Sums.lean` |
 | Matrix assumptions | `IndependentRandomMatrices`, `SelfAdjointRandomMatrixFamily`, `IndependentSelfAdjointRandomMatrices`, `CenteredSelfAdjointRandomMatrixFamily`, `CenteredRandomSelfAdjointMatrices`, `BoundedOperatorNorm`, `PointwiseOperatorNormBound`, `UniformOperatorNormBound`, `AeOperatorNormBound` | implemented; pointwise and a.e. norm bounds are named separately | `HighDimProb/RandomMatrix/Assumptions.lean` |
-| Matrix square and variance proxy | `matrixSquare`, `randomMatrixSquare`, `matrixSecondMoment`, `matrixVarianceProxy`, `MatrixVarianceProxy`, `matrixVarianceProxyBound`, `MatrixVarianceProxyBound`, `MatrixVarianceProxyUpperBound`, `deterministicMatrixVarianceProxyNorm`, `matrixVarianceProxyNorm`, `MatrixVarianceProxyNormBound` | implemented; square measurability, PSD square, PSD second moment, and PSD variance proxy proved with explicit square-integrability assumptions; MB-S9 adds semantic upper-bound and scalar-norm-bound predicates | `HighDimProb/RandomMatrix/VarianceProxy.lean` |
+| Matrix square, expectation, and variance proxy | `matrixSquare`, `randomMatrixSquare`, `matrixSecondMoment`, `matrixVarianceProxy`, `MatrixVarianceProxy`, `matrixVarianceProxyBound`, `MatrixVarianceProxyBound`, `MatrixVarianceProxyUpperBound`, `deterministicMatrixVarianceProxyNorm`, `matrixVarianceProxyNorm`, `MatrixVarianceProxyNormBound`, `integrableRandomMatrix_sub`, `integrableRandomMatrix_add`, `integrableRandomMatrix_smul`, `integrableRandomMatrix_zero`, `integrableRandomMatrix_const`, `matrixExpect_sub`, `matrixExpect_add`, `matrixExpect_smul`, `matrixExpect_zero`, `matrixExpect_const`, `matrixExpect_const_of_isProbabilityMeasure`, `matrixExpect_one_of_isProbabilityMeasure`, `isPSDMatrix_matrixExpect_of_pointwise_isPSD`, `matrixExpect_matrixLE_of_pointwise_matrixLE` | implemented; square measurability, PSD square, PSD second moment, PSD variance proxy, PSD preservation under entrywise matrix expectation, MatrixLE expectation monotonicity, and matrix expectation add/smul/zero/constant normalization are proved with explicit integrability or probability-measure assumptions where needed; MB-S9 adds semantic upper-bound and scalar-norm-bound predicates | `HighDimProb/RandomMatrix/VarianceProxy.lean` |
 | Spectral and quadratic-form tails | `lambdaMax`, `lambdaMaxOrdered`, `lambdaMaxOrdered_eq_eigenvalues‚ÇÄ_zero`, `lambdaMin`, `QuadraticFormUpperBound`, `QuadraticFormLowerBound`, `quadraticFormUpperBound_mono`, `quadraticFormLowerBound_mono`, `LambdaMaxBound`, `LambdaMaxPSDUpperBound`, `LambdaMaxOrderedPSDUpperBound`, `quadraticFormUpperTailEvent`, `quadraticFormLowerTailEvent`, `twoSidedQuadraticFormTailEvent`, `SelfAdjointOperatorNormTailEvent`, `selfAdjointOperatorNormTailViaQuadraticFormStatement`, `lambdaMax_le_iff_quadraticForm_le_statement`, `lambdaMax_eq_lambdaMaxOrdered_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue`, `lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrdered_rayleighUpperBound`, `lambdaMaxOrdered_smul_of_nonneg`, `lambdaMaxOrdered_le_trace_of_posSemidef`, `matrixQuadraticForm_le_lambdaMaxOrdered_statement`, `operatorNorm_eq_max_abs_lambda_statement`, `matrixQuadraticForm_nonneg_of_posSemidef`, `matrixQuadraticForm_smul_one_of_isUnitVector`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound`, `matrixQuadraticForm_le_lambdaMaxOrdered_of_lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrderedUpperTailEvent`, `quadraticFormUpperTailEvent_subset_lambdaMaxOrderedUpperTailEvent_of_matrixQuadraticForm_le_lambdaMaxOrdered` | implemented vocabulary; legacy eigenvalue wrappers are preserved, `lambdaMaxOrdered` uses Mathlib's ordered `eigenvalues‚ÇÄ 0` endpoint directly, ordered endpoint greatest theorem, semantic provider/Rayleigh wrappers, nonnegative scalar endpoint theorem, and trace endpoint theorem are proved; legacy direct Rayleigh/operator-norm bridges remain unproved | `HighDimProb/RandomMatrix/Spectral.lean` |
-| Trace exponential vocabulary | `matrixExp`, `matrixTrace`, `traceMatrixExp`, `isSelfAdjointMatrix_matrixExp`, `matrixExp_posSemidef_of_selfAdjoint`, `matrixTrace_nonneg_of_posSemidef`, `traceMatrixExp_nonneg_of_matrixExp_posSemidef`, `traceMatrixExp_nonneg_of_selfAdjoint`, `matrixExp_posSemidef_of_selfAdjoint_statement`, `traceExpIntegrand`, `traceExpMoment`, `traceExpMomentLIntegral`, `TraceMGFBound`, `TraceMGFBoundLIntegral`, `TraceMGFVarianceProxyBound`, `TraceMGFVarianceProxyBoundLIntegral`, `traceExpMoment_nonneg_of_nonneg`, `traceExpIntegrand_nonneg_of_randomSelfAdjoint`, `traceExpMoment_nonneg_of_randomSelfAdjoint`, `traceExpMomentLIntegral_nonneg`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment`, `traceMatrixExp_nonneg_of_selfAdjoint_statement`, `traceExpMoment_nonneg_statement`, `traceExpMomentLIntegral_eq_ofReal_statement`, `traceExpMomentBoundStatement`, `traceExpVarianceProxyBoundStatement`, `traceMGFBound_statement`, `traceMGFBoundLIntegral_statement`, `traceMGFVarianceProxyBound_statement` | implemented vocabulary; deterministic self-adjoint matrix exponential PSD, trace-exp nonnegativity, random self-adjoint trace-exp moment nonnegativity, and expectation/lintegral bridges are proved under explicit hypotheses; MB-S9 adds semantic trace-mgf predicates and typed provider targets, while trace-mgf inequalities remain unproved | `HighDimProb/RandomMatrix/TraceExp.lean` |
+| Trace exponential vocabulary | `matrixExp`, `matrixTrace`, `traceMatrixExp`, `isSelfAdjointMatrix_matrixExp`, `matrixExp_posSemidef_of_selfAdjoint`, `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint`, `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`, `matrixTrace_nonneg_of_posSemidef`, `traceMatrixExp_nonneg_of_matrixExp_posSemidef`, `traceMatrixExp_nonneg_of_selfAdjoint`, `matrixExp_posSemidef_of_selfAdjoint_statement`, `traceExpIntegrand`, `traceExpMoment`, `traceExpMomentLIntegral`, `TraceMGFBound`, `TraceMGFBoundLIntegral`, `TraceMGFVarianceProxyBound`, `TraceMGFVarianceProxyBoundLIntegral`, `troppMasterTraceMGFStep_statement`, `bernsteinMatrixExp_le_quadratic_statement`, `singleSummandMatrixMGFVarianceProxy_statement`, `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`, `traceExpMoment_nonneg_of_nonneg`, `traceExpIntegrand_nonneg_of_randomSelfAdjoint`, `traceExpMoment_nonneg_of_randomSelfAdjoint`, `traceExpMomentLIntegral_nonneg`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment`, `traceMatrixExp_nonneg_of_selfAdjoint_statement`, `traceExpMoment_nonneg_statement`, `traceExpMomentLIntegral_eq_ofReal_statement`, `traceExpMomentBoundStatement`, `traceExpVarianceProxyBoundStatement`, `traceMGFBound_statement`, `traceMGFBoundLIntegral_statement`, `traceMGFVarianceProxyBound_statement` | implemented vocabulary; deterministic self-adjoint matrix exponential PSD, MatrixLE affine lower bound for matrix exponential, trace-exp nonnegativity, random self-adjoint trace-exp moment nonnegativity, expectation/lintegral bridges, and the single-summand provider under explicit CFC primitive are proved under explicit hypotheses; MB-S9 adds semantic trace-mgf predicates plus typed Tropp, Bernstein CFC, and single-summand MGF primitives, while CFC proof and trace-mgf inequalities remain unproved | `HighDimProb/RandomMatrix/TraceExp.lean` |
 | Matrix Laplace vocabulary | `matrixLaplaceRHS`, `matrixLaplaceRHSLIntegral`, `traceExpThresholdEvent`, `TraceExpDominatesUpperBound`, `lambdaMaxOrdered_traceExpDominatesUpperBound`, `matrixUpperBoundTailEvent_subset_traceExpThresholdEvent_of_traceExpDominatesUpperBound`, `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_rayleighUpperBound_of_traceExpDominatesUpperBound`, `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_spectralUpperBound_of_traceExpDominatesUpperBound`, `traceExpDominatesQuadraticFormUpperTail_of_rayleighUpperBound_of_traceExpDominatesUpperBound`, `traceExpDominatesQuadraticFormUpperTail_of_spectralUpperBound_of_traceExpDominatesUpperBound`, `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`, `matrixLaplaceRHSLIntegralDiv`, `matrixLaplaceRHSLIntegralDiv_eq_matrixLaplaceRHSLIntegral`, `traceExpThresholdEvent_lintegral_bound`, `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`, `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset`, `TraceExpDominatesQuadraticFormUpperTail`, `traceExpDominatesQuadraticFormUpperTailStatement`, `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_traceExpDominates`, `matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint`, `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`, `matrixLaplaceTransformStatement`, `matrixLaplaceTransformLIntegralStatement`, `matrixChernoffFromTraceExpStatement`, `matrixChernoffFromTraceExpLIntegralStatement`, `selfAdjointOperatorNormLaplaceStatement`, `selfAdjointOperatorNormLaplaceLIntegralStatement` | conditional lintegral Markov/Laplace, dominance-wrapper bridges, semantic trace-exp upper-bound event bridges, the `lambdaMaxOrdered` trace-exp provider theorem, concrete random self-adjoint dominance assembly, and concrete random self-adjoint lintegral Laplace wrappers are proved under explicit hypotheses; real RHS bridge remains unproved | `HighDimProb/RandomMatrix/Laplace.lean` |
 | Matrix Bernstein analytic prerequisite bundle | `matrixBernsteinLaplacePrerequisitesStatement`, `matrixBernsteinTraceMGF_statement` | typed targets bundling the operator-norm/quadratic-form event bridge, lintegral Laplace routes, and semantic trace-mgf target; no matrix Bernstein theorem proved | `HighDimProb/RandomMatrix/ConcentrationStatements.lean` |
 | Helper random matrices | `sampleCovarianceMinusIdentity` | implemented | `HighDimProb/RandomMatrix/ConcentrationStatements.lean` |
@@ -279,7 +294,7 @@ MB-S2 strengthens the statement layer without changing theorem meanings:
 No matrix Laplace theorem, trace-mgf theorem, Rayleigh theorem, or matrix
 Bernstein theorem is proved in MB-S2.
 
-## Stage MC4-cleanup ‚Äî Matrix Concentration Statement Honesty
+## Stage MC4-cleanup ‚Ä?Matrix Concentration Statement Honesty
 
 Stage MC4-cleanup removes misleading statement targets whose bodies were just
 `True`, and keeps matrix Laplace / trace exponential work as documentation-only
@@ -429,7 +444,7 @@ HighDimProb `traceExpIntegrand`, `traceExpMomentLIntegral`,
 `matrixLaplaceRHSLIntegral`, and `quadraticFormUpperTailEvent` vocabulary.
 
 Status: conditional bridge proved and API-tested. The missing pointwise subset
-`quadraticFormUpperTailEvent Y t ‚äÜ traceExpThresholdEvent Y theta t` is not
+`quadraticFormUpperTailEvent Y t ‚ä?traceExpThresholdEvent Y theta t` is not
 proved, so the full matrix Laplace theorem, trace-mgf inequalities,
 Golden-Thompson, Lieb, and matrix Bernstein remain unproved.
 
@@ -479,9 +494,11 @@ The proof plan now lists the route:
 
 ## Next Safe Task
 
-Stage MB-S9-trace-mgf-provider-contract: audit the source/API route for
-proving `matrixBernsteinTraceMGF_statement`, or block cleanly on missing
-Golden-Thompson/Lieb/matrix-mgf prerequisites.
+Stage MB-S9-trace-mgf-to-laplace-tail-contract: audit how the typed
+Tropp/Lieb primitive, the provider-under-CFC theorem, and the remaining
+explicit primitive assumptions connect to the semantic trace-mgf provider
+route, without proving Lieb, Golden-Thompson, the Bernstein CFC primitive, or
+Matrix Bernstein.
 
 ## Stage MB-S7A - Spectral Bridge Typed Split
 
@@ -517,11 +534,11 @@ were source/API-backed:
   quadratic form on an explicit HighDimProb unit vector.
 - `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef` proves
   `matrixQuadraticForm_le_lambdaMax_statement A hA` from the explicit PSD
-  premise `((lambdaMax A hA) ‚Ä¢ 1 - A).PosSemidef`.
+  premise `((lambdaMax A hA) ‚Ä?1 - A).PosSemidef`.
 
 Status: helper lemmas proved and API/judge-tested. The direct Rayleigh theorem
 remains unproved because the endpoint/order theorem producing
-`((lambdaMax A hA) ‚Ä¢ 1 - A).PosSemidef` is still missing. Trace-exp spectral
+`((lambdaMax A hA) ‚Ä?1 - A).PosSemidef` is still missing. Trace-exp spectral
 dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, Hanson-Wright,
 and matrix Bernstein remain unproved.
 
@@ -531,7 +548,7 @@ MB-S7A-clean does not prove new spectral mathematics. It consolidates the
 spectral bridge surface by naming the repeated endpoint PSD premise:
 
 - `LambdaMaxPSDUpperBound A hA` abbreviates
-  `((lambdaMax A hA) ‚Ä¢ 1 - A).PosSemidef`.
+  `((lambdaMax A hA) ‚Ä?1 - A).PosSemidef`.
 - `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound` reuses the
   MB-S7A-fix helper to derive `matrixQuadraticForm_le_lambdaMax_statement A hA`
   from that named premise.
@@ -581,7 +598,7 @@ Hanson-Wright, and matrix Bernstein remain unproved.
 Stage MB-S7A-abstract pauses proof progress and introduces semantic spectral
 abstractions:
 
-- `SpectralUpperBound A L` names the PSD/Loewner statement that `L ‚Ä¢ 1 - A` is
+- `SpectralUpperBound A L` names the PSD/Loewner statement that `L ‚Ä?1 - A` is
   positive semidefinite.
 - `RayleighUpperBound A L` names the explicit HighDimProb unit-vector quadratic
   form bound by `L`.
@@ -667,3 +684,233 @@ product-RHS lintegral Laplace wrappers for random self-adjoint matrices under
 explicit trace-exp integrand a.e. measurability and `0 <= theta`. This stage
 does not prove the real RHS bridge, trace-mgf, Golden-Thompson, Lieb,
 Hanson-Wright, or matrix Bernstein.
+
+## Stage MB-S9-Tropp-master-typed-primitive - Typed Tropp/Lieb Primitive
+
+MB-S9-Tropp-master-typed-primitive adds
+`troppMasterTraceMGFStep_statement`, a typed-only Tropp master trace-mgf
+primitive in `HighDimProb/RandomMatrix/TraceExp.lean`. The statement exposes
+self-adjointness, trace-exp integrability, matrix-exponential entrywise
+integrability, self-adjointness of `E exp Z`, and strict positivity of
+`E exp Z`.
+
+This stage does not prove Lieb concavity, Golden-Thompson, the trace-mgf
+provider, the full trace-mgf master theorem, the real RHS bridge, Hanson-Wright,
+or matrix Bernstein. This stage was followed by
+MB-S9-single-summand-mgf-contract.
+
+## Stage MB-S9-single-summand-mgf-typed-primitive - Typed Single-Summand MGF Primitive
+
+MB-S9-single-summand-mgf-typed-primitive adds
+`singleSummandMatrixMGFVarianceProxy_statement`, a typed-only source-backed
+single-summand matrix MGF variance-proxy primitive in
+`HighDimProb/RandomMatrix/TraceExp.lean`.
+
+The statement exposes self-adjointness, entrywise measurability,
+integrability of `X`, `X^2`, and `exp(theta X)`, entrywise zero mean,
+pointwise operator-norm boundedness, theta range, self-adjoint/PSD structure
+of the deterministic comparison matrix, square/variance-proxy comparison,
+and the `MatrixLE` conclusion.
+
+This stage does not prove the scalar-to-matrix functional-calculus bridge,
+operator-norm-to-spectral-interval bridge, the trace-mgf provider,
+Golden-Thompson, Lieb, Hanson-Wright, or matrix Bernstein. This stage was followed by
+MB-S9-bernstein-cfc-typed-primitive.
+
+## Stage MB-S9-bernstein-cfc-typed-primitive - Typed Bernstein CFC Primitive
+
+MB-S9-bernstein-cfc-typed-primitive adds
+`bernsteinMatrixExp_le_quadratic_statement`, a typed-only Bernstein-specific
+scalar-to-matrix functional-calculus primitive in
+`HighDimProb/RandomMatrix/TraceExp.lean`.
+
+The statement exposes self-adjointness, deterministic operator-norm
+boundedness, nonnegative radius, theta range, the explicit Bernstein
+quadratic coefficient, and the `MatrixLE` conclusion.
+
+This stage does not prove the functional-calculus bridge, single-summand MGF
+theorem, operator-norm-to-spectral-interval bridge, the trace-mgf provider,
+Golden-Thompson, Lieb, Hanson-Wright, or matrix Bernstein. It was followed by
+MB-S9-PSD-expectation-proof.
+
+## Stage MB-S9-PSD-expectation-proof - PSD Expectation Bridge
+
+MB-S9-PSD-expectation-proof proves:
+
+```lean
+isPSDMatrix_matrixExpect_of_pointwise_isPSD
+matrixExpect_matrixLE_of_pointwise_matrixLE
+```
+
+It also adds the direct helper theorems `integrableRandomMatrix_sub` and
+`matrixExpect_sub`. This closes the matrix-valued expectation monotonicity
+blocker for `MatrixLE` under explicit entrywise integrability assumptions.
+It does not prove the functional-calculus bridge, the single-summand MGF
+theorem, the trace-mgf provider, Golden-Thompson, Lieb, Hanson-Wright, or
+matrix Bernstein. This stage was followed by
+MB-S9-expectation-linearity-proof.
+
+## Stage MB-S9-expectation-linearity-proof - Matrix Expectation Linearity
+
+MB-S9-expectation-linearity-proof proves:
+
+```lean
+integrableRandomMatrix_add
+integrableRandomMatrix_smul
+integrableRandomMatrix_zero
+integrableRandomMatrix_const
+matrixExpect_add
+matrixExpect_smul
+matrixExpect_zero
+matrixExpect_const
+matrixExpect_const_of_isProbabilityMeasure
+matrixExpect_one_of_isProbabilityMeasure
+```
+
+This closes the small add/smul/zero/constant normalization blocker for the
+future single-summand provider. Constant integrability remains explicit through
+`[IsFiniteMeasure P]`, and constant expectation normalization over probability
+measures uses `[IsProbabilityMeasure P]`. This stage does not prove the
+functional-calculus bridge, the single-summand MGF theorem, the trace-mgf
+provider, Golden-Thompson, Lieb, Hanson-Wright, or matrix Bernstein. This stage
+was followed by MB-S9-matrixle-algebra-proof.
+
+## Stage MB-S9-matrixle-algebra-proof - MatrixLE / PSD Algebra
+
+MB-S9-matrixle-algebra-proof proves:
+
+```lean
+matrixQuadraticForm_add
+matrixQuadraticForm_smul
+isPSDMatrix_zero
+isPSDMatrix_add
+isPSDMatrix_smul_of_nonneg
+matrixLE_refl
+matrixLE_of_eq
+matrixLE_trans
+matrixLE_add
+matrixLE_add_left
+matrixLE_add_right
+matrixLE_smul_of_nonneg
+```
+
+This closes the MatrixLE algebra and RHS-normalization blocker identified by
+the single-summand provider proof contract. The stage does not prove the
+functional-calculus bridge, the single-summand MGF provider, the trace-mgf
+provider, Golden-Thompson, Lieb, Hanson-Wright, or matrix Bernstein. The next
+safe task was MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## MB-S9 Bernstein Coefficient Helper
+
+Stage MB-S9-bernstein-coefficient-proof proves `bernsteinCoefficient_nonneg`
+for the coefficient `(theta ^ 2 / 2) / (1 - abs theta * R / 3)` under
+`abs theta * R < 3`. This closes only the scalar coefficient nonnegativity
+blocker for the future single-summand provider. The provider itself remains
+unproved. The downstream matrix exponential lower bound was later resolved by
+MB-S9-exp-lower-bound-proof. The Bernstein CFC proof, trace-mgf provider,
+Golden-Thompson, Lieb, Hanson-Wright, and matrix Bernstein remain unproved.
+
+## MB-S9 Exp Lower Bound
+
+Stage MB-S9-exp-lower-bound-proof proves:
+
+```lean
+matrixLE_one_add_self_le_matrixExp_of_selfAdjoint
+matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint
+```
+
+The first theorem proves `MatrixLE (1 + A) (matrixExp A)` for self-adjoint real
+matrices. The second is the scalar-multiple wrapper used by the provider under
+explicit CFC assumptions. The stage itself does not prove the single-summand
+provider, the Bernstein CFC primitive, trace-mgf provider, Golden-Thompson,
+Lieb, Hanson-Wright, or matrix Bernstein.
+
+## MB-S9 Single-Summand Provider Under CFC
+
+Stage MB-S9-single-summand-provider-under-cfc proves:
+
+```lean
+singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic
+```
+
+The theorem proves the single-summand matrix MGF variance-proxy provider under
+an explicit pointwise `bernsteinMatrixExp_le_quadratic_statement` assumption.
+It does not prove the Bernstein CFC primitive itself, trace-mgf provider,
+Golden-Thompson, Lieb, Hanson-Wright, or matrix Bernstein. The next safe task
+was MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## MB-S9 RHS Normalization
+
+Stage MB-S9-rhs-normalization-proof normalizes the bounded Matrix Bernstein
+trace-mgf RHS coefficient to:
+
+```lean
+bernsteinMGFCoeff theta R =
+  (theta ^ 2 / 2) / (1 - abs theta * R / 3)
+```
+
+It adds `bernsteinMGFCoeff_nonneg` as a wrapper around the existing scalar
+nonnegativity proof, updates the bounded single-summand/CFC typed targets to
+use the named coefficient, and exposes the bounded-denominator trace-mgf
+targets:
+
+```lean
+TraceMGFBernsteinVarianceProxyBound
+TraceMGFBernsteinVarianceProxyBoundLIntegral
+traceMGFBernsteinVarianceProxyBound_statement
+matrixBernsteinTraceMGFWithBernsteinCoeff_statement
+```
+
+The old `theta ^ 2 / 2` coefficient target is retained for compatibility but
+is not the bounded Bernstein denominator target. This stage does not prove the
+trace-mgf provider, Tropp/Lieb primitive, Bernstein CFC primitive,
+Golden-Thompson, Lieb, Hanson-Wright, or matrix Bernstein. The next safe task
+is MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## MB-S9-tropp-shape-refactor
+
+The trace-exp layer now exposes `troppMasterTraceMGFFiniteFamily_statement`,
+a typed-only finite-family Tropp/Lieb iteration primitive for the bounded
+Matrix Bernstein trace-mgf route. It links per-summand matrix-MGF `MatrixLE`
+comparisons, `iIndepFun` independence, trace-exp integrability, and
+`sum_i K_i = bernsteinMGFCoeff theta R ‚Ä?V` normalization to
+`TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum X) V theta R`.
+
+The one-step `troppMasterTraceMGFStep_statement` remains available. No Lieb,
+Golden-Thompson, trace-mgf provider, or Matrix Bernstein theorem was proved.
+The next safe task is
+MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## MB-S9 Trace-MGF Thin Wrapper
+
+The bounded trace-MGF provider now has proved thin wrappers from the
+finite-family Tropp typed primitive:
+
+```lean
+traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
+matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily
+```
+
+These wrappers only apply explicit finite-family primitive assumptions. The
+finite-family Tropp primitive remains typed only, the Bernstein CFC primitive
+remains typed only, and no Lieb, Golden-Thompson, or Matrix Bernstein tail
+theorem was proved.
+
+Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## MB-S9 Matrix Bernstein Trace-MGF Under Primitives
+
+The bounded Matrix Bernstein trace-MGF statement is now proved under explicit
+primitive assumptions:
+
+```lean
+matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
+```
+
+The theorem keeps both analytic primitives explicit:
+`troppMasterTraceMGFFiniteFamily_statement` and pointwise
+`bernsteinMatrixExp_le_quadratic_statement`. It does not prove Tropp/Lieb,
+the Bernstein CFC primitive, Golden-Thompson, or the Matrix Bernstein tail
+theorem.
+
+Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.

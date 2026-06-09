@@ -8,6 +8,10 @@ import Mathlib.Probability.ProbabilityMassFunction.Integrals
 This file provides the minimal distribution-level atom needed before finite
 Rademacher-sum and Hoeffding-style stages: the symmetric Rademacher variable on
 `Bool`, with the uniform Bernoulli measure.
+
+Verified Wikipedia reference:
+* Rademacher distribution:
+  https://en.wikipedia.org/wiki/Rademacher_distribution
 -/
 
 namespace HighDimProb
@@ -16,29 +20,61 @@ open MeasureTheory ProbabilityTheory
 
 noncomputable section
 
-/-- The symmetric Bernoulli PMF on `Bool`. -/
+/--
+The symmetric Bernoulli PMF on `Bool`.
+
+Formula reference: the Rademacher distribution assigns probability `1 / 2`
+to each of `-1` and `+1`; see
+https://en.wikipedia.org/wiki/Rademacher_distribution
+-/
 def rademacherPMF : PMF Bool :=
   PMF.bernoulli (1 / 2 : NNReal) (by norm_num)
 
-/-- The canonical probability measure for a symmetric Rademacher variable. -/
+/--
+The canonical probability measure for a symmetric Rademacher variable.
+
+Formula reference: this is the measure-level version of the symmetric
+two-point mass function on `{ -1, +1 }`; see
+https://en.wikipedia.org/wiki/Rademacher_distribution
+-/
 def rademacherMeasure : Measure Bool :=
   rademacherPMF.toMeasure
 
+/--
+Formula reference: the Rademacher PMF has total mass `1`, giving a probability
+measure; see https://en.wikipedia.org/wiki/Rademacher_distribution
+-/
 instance instIsProbabilityMeasure_rademacherMeasure :
     IsProbabilityMeasure rademacherMeasure :=
   PMF.toMeasure.isProbabilityMeasure _
 
-/-- The canonical Rademacher random variable on `Bool`: `true -> 1`, `false -> -1`. -/
+/--
+The canonical Rademacher random variable on `Bool`: `true -> 1`, `false -> -1`.
+
+Formula reference: a Rademacher variate takes values `+1` and `-1` with equal
+probability; see https://en.wikipedia.org/wiki/Rademacher_distribution
+-/
 def rademacher : RealRandomVariable Bool :=
   fun b => if b then (1 : Real) else -1
 
-/-- The canonical Rademacher variable is measurable. -/
+/--
+The canonical Rademacher variable is measurable.
+
+Formula reference: measurability is the Lean-side random-variable condition
+for the two-point Rademacher variate described at
+https://en.wikipedia.org/wiki/Rademacher_distribution
+-/
 theorem isRealRandomVariable_rademacher :
     IsRealRandomVariable rademacherMeasure rademacher := by
   unfold IsRealRandomVariable IsRandomVariable rademacher
   fun_prop
 
-/-- The canonical Rademacher variable is pointwise contained in `[-1, 1]`. -/
+/--
+The canonical Rademacher variable is pointwise contained in `[-1, 1]`.
+
+Formula reference: the support is exactly `{ -1, +1 }`, hence lies in
+`[-1, 1]`; see https://en.wikipedia.org/wiki/Rademacher_distribution
+-/
 theorem rademacher_mem_Icc (b : Bool) :
     Set.Icc (-1 : Real) 1 (rademacher b) := by
   have hval : Or (rademacher b = 1) (rademacher b = -1) := by
@@ -49,7 +85,12 @@ theorem rademacher_mem_Icc (b : Bool) :
   rw [hval]
   constructor <;> norm_num
 
-/-- The canonical Rademacher variable has mean zero. -/
+/--
+The canonical Rademacher variable has mean zero.
+
+Formula reference: Wikipedia lists the Rademacher mean as `0`; see
+https://en.wikipedia.org/wiki/Rademacher_distribution
+-/
 theorem integral_rademacher :
     MeasureTheory.integral rademacherMeasure rademacher = 0 := by
   unfold rademacherMeasure rademacherPMF rademacher
@@ -62,6 +103,10 @@ The canonical symmetric Rademacher variable is centered subGaussian in the MGF
 sense with scale `1`.
 
 This uses Mathlib's bounded zero-mean MGF lemma with interval `[-1, 1]`.
+
+Formula reference: Wikipedia lists the Rademacher MGF as `cosh(t)` and records
+Rademacher-sum concentration inequalities; see
+https://en.wikipedia.org/wiki/Rademacher_distribution
 -/
 theorem centeredSubGaussianMGF_rademacher :
     CenteredSubGaussianMGF rademacherMeasure rademacher 1 := by
@@ -84,6 +129,10 @@ theorem centeredSubGaussianMGF_rademacher :
 The canonical Rademacher variable satisfies the existing two-sided
 subGaussian-tail predicate with scale `2`, by composition through the MGF
 bridge.
+
+Formula reference: Rademacher variables are the canonical bounded signs used
+in Rademacher-sum concentration bounds; see
+https://en.wikipedia.org/wiki/Rademacher_distribution
 -/
 theorem subGaussianTail_rademacher :
     SubGaussianTail rademacherMeasure rademacher 2 := by

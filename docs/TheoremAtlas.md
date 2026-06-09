@@ -315,7 +315,7 @@ future directions.
 - Informal statement: if the exponential-square Orlicz bound holds at scale `K`, then the absolute tail has Gaussian decay with the same scale and constant `2`.
 - Target Lean statement: `subGaussianTail_of_psi2Bound`
 - Required objects: `Psi2Bound`, `SubGaussianTail`, `absTailProb`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
-- Required definitions: ψ₂ bound via shifted exponential `lintegral`, two-sided absolute-tail predicate, positive scale.
+- Required definitions: ψ�?bound via shifted exponential `lintegral`, two-sided absolute-tail predicate, positive scale.
 - Required bridge lemmas: `lintegral_exp_sq_div_le_two_of_psi2Bound`, Mathlib `MeasureTheory.meas_ge_le_lintegral_div`, exponential monotonicity, square monotonicity, `ENNReal.ofReal` division bridge.
 - Status: proven
 - Blocker: none for the probability-measure/measurable-variable formulation. The full equivalence theorem and gauge/norm formulations remain future work.
@@ -327,7 +327,7 @@ future directions.
 - Informal statement: if the exponential-linear Orlicz bound holds at scale `K`, then the absolute tail has exponential decay with the same scale and constant `2`.
 - Target Lean statement: `subExponentialTail_of_psi1Bound`
 - Required objects: `Psi1Bound`, `SubExponentialTail`, `absTailProb`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
-- Required definitions: ψ₁ bound via shifted exponential `lintegral`, two-sided absolute-tail predicate, positive scale.
+- Required definitions: ψ�?bound via shifted exponential `lintegral`, two-sided absolute-tail predicate, positive scale.
 - Required bridge lemmas: `lintegral_exp_abs_div_le_two_of_psi1Bound`, Mathlib `MeasureTheory.meas_ge_le_lintegral_div`, exponential monotonicity, `ENNReal.ofReal` division bridge.
 - Status: proven
 - Blocker: none for the probability-measure/measurable-variable formulation. The full equivalence theorem and gauge/norm formulations remain future work.
@@ -462,7 +462,7 @@ future directions.
 - Book heading: `次高斯性质`, `次高斯随机变量`, `次高斯范数`
 - Informal statement: tail, moment, MGF, and Orlicz characterizations of subGaussian variables are equivalent up to constants.
 - Target Lean statement: blocked until a precise equivalence statement and constants are selected.
-- Required objects: real random variables, tail probabilities, moments, Mathlib MGF predicate, ψ₂ Orlicz control.
+- Required objects: real random variables, tail probabilities, moments, Mathlib MGF predicate, ψ�?Orlicz control.
 - Required definitions: `SubGaussianTail`, `SubGaussianMoment`, `CenteredSubGaussianMGF`, `SubGaussianOrlicz`, `HasSubGaussianOrlicz`; fixed-scale tail/Orlicz, natural moment, and MGF-to-tail directions now have proved bridges.
 - Required bridge lemmas: expectation of exponentials, tail/moment integration.
 - Status: blocked
@@ -474,7 +474,7 @@ future directions.
 - Book heading: `次指数性质`, `次指数随机变量`, `次指数范数`
 - Informal statement: tail, moment, MGF, and Orlicz characterizations of subExponential variables are equivalent up to constants.
 - Target Lean statement: blocked until a precise equivalence statement and constants are selected.
-- Required objects: real random variables, tail probabilities, moments, exponential moments, ψ₁ Orlicz control.
+- Required objects: real random variables, tail probabilities, moments, exponential moments, ψ�?Orlicz control.
 - Required definitions: `SubExponentialTail`, `SubExponentialMoment`, `CenteredSubExponentialMGF`, `SubExponentialOrlicz`, `HasSubExponentialOrlicz`; fixed-scale tail/Orlicz and the full finite-`ENNReal` moment bridge now have proved connectors.
 - Required bridge lemmas: expectation of exponentials, tail/moment integration.
 - Status: blocked
@@ -604,12 +604,12 @@ future directions.
 ## high-dimensional subGaussian vector characterizations
 - Book heading: `高维次高斯分布`, `次高斯范数`
 - Informal statement: a random vector is subGaussian when all one-dimensional marginals are subGaussian; the usual norm is a supremum over unit directions.
-- Target Lean statement: blocked until scalar equivalence theorems, ψ₂ gauges/norms, and unit-sphere vocabulary are available.
+- Target Lean statement: blocked until scalar equivalence theorems, ψ�?gauges/norms, and unit-sphere vocabulary are available.
 - Required objects: `RandomVector`, `marginal`, `directionNorm`, scalar subGaussian predicate forms.
 - Required definitions: Stage 4D predicate forms `SubGaussianVectorOrlicz`, `HasSubGaussianVectorOrlicz`, `SubGaussianVectorTail`, `SubGaussianVectorMoment`, and `CenteredSubGaussianVectorMGF` exist.
 - Required bridge lemmas: scalar subGaussian equivalences, scaling of marginals, all-direction/unit-sphere equivalence.
 - Status: blocked
-- Blocker: Stage 4D only provides object-level predicate forms and does not define ψ₂ vector norms or prove equivalences.
+- Blocker: Stage 4D only provides object-level predicate forms and does not define ψ�?vector norms or prove equivalences.
 - Target module: `HighDimProb/SubGaussianVector.lean`
 - Priority: v0.2
 
@@ -1060,7 +1060,7 @@ future directions.
 ## Matrix lambda-max / Operator-norm Bridge (MC4-cleanup)
 
 - Book heading: spectral radius equals operator norm for self-adjoint matrices
-- Informal statement: for a self-adjoint real matrix, `‖A‖ = max |λ_i(A)|`
+- Informal statement: for a self-adjoint real matrix, `‖A�?= max |λ_i(A)|`
 - Target Lean statement: `operatorNorm_eq_spectralRadius_of_selfAdjointStatement`
 - Required objects: `deterministicOperatorNorm`, `spectralRadius`,
   `Matrix.IsHermitian.eigenvalues`
@@ -1226,7 +1226,7 @@ future directions.
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Priority: Stage MB-S2 through MB-S9-foundation complete; next task is
-  MB-S9-trace-mgf-provider-contract.
+  MB-S9-single-summand-provider-proof-contract.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1276,7 +1276,7 @@ future directions.
   `matrixLaplaceRHSLIntegral`, and `quadraticFormUpperTailEvent`.
 - Status: proven conditional bridge.
 - Blocker: the subset
-  `quadraticFormUpperTailEvent Y t ⊆ traceExpThresholdEvent Y theta t` is not
+  `quadraticFormUpperTailEvent Y t �?traceExpThresholdEvent Y theta t` is not
   proved. Full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and matrix
   Bernstein remain unproved.
 - Target module: `HighDimProb/RandomMatrix/Laplace.lean`
@@ -1352,7 +1352,7 @@ future directions.
 
 - Book heading: matrix Laplace transform method for matrix Bernstein.
 - Informal statement: for `0 <= theta`, the canonical ordered endpoint of
-  `theta • A` is `theta * lambdaMaxOrdered A hA`.
+  `theta �?A` is `theta * lambdaMaxOrdered A hA`.
 - Target Lean declarations: `lambdaMaxOrdered_smul_of_nonneg`.
 - Required objects: `lambdaMaxOrdered`, `isSelfAdjointMatrix_smul`, Mathlib
   real spectrum scaling, Hermitian real spectrum membership, and ordered
@@ -1408,7 +1408,7 @@ future directions.
 ## Ordered Endpoint Trace-Exp Provider (MB-S7B-provider-close)
 
 - Book heading: matrix Laplace transform method for matrix Bernstein.
-- Informal statement: for `0 <= theta`, the trace exponential of `theta • A`
+- Informal statement: for `0 <= theta`, the trace exponential of `theta �?A`
   dominates `exp (theta * lambdaMaxOrdered A hA)`.
 - Target Lean declaration: `lambdaMaxOrdered_traceExpDominatesUpperBound`.
 - Required objects: `TraceExpDominatesUpperBound`, `lambdaMaxOrdered`,
@@ -1444,7 +1444,132 @@ future directions.
 - Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
 - Priority: MB-S9-foundation is complete; next safe task is
-  MB-S9-trace-mgf-provider-contract.
+  MB-S9-single-summand-provider-proof-contract.
+
+## Matrix Bernstein Tropp Master Trace-MGF Primitive (MB-S9-Tropp)
+
+- Book heading: Matrix Bernstein inequality / Lieb inequality for random
+  matrices.
+- Informal statement: the Tropp/Lieb one-step primitive bounds
+  `E tr exp(H + Z)` by `tr exp(H + log E exp Z)`.
+- Target Lean declaration: `troppMasterTraceMGFStep_statement`.
+- Required objects: `traceMatrixExp`, `matrixExp`, `matrixExpect`,
+  `IntegrableRealRandomVariable`, `IntegrableRandomMatrix`,
+  `RandomSelfAdjointMatrix`, `IsSelfAdjointMatrix`, and `IsStrictlyPositive`.
+- Status: typed statement only, API-tested, and judge-tested. Lieb concavity,
+  Golden-Thompson, the trace-mgf provider, full trace-mgf master theorem, and
+  Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- Priority: this has been followed by MB-S9-single-summand-mgf-typed-primitive.
+
+## Matrix Bernstein Single-Summand MGF Primitive (MB-S9-single)
+
+- Book heading: Matrix Bernstein inequality / single-summand moment
+  generating function.
+- Informal statement: for one centered self-adjoint random matrix, the matrix
+  exponential moment is bounded in Loewner order by the exponential of a
+  deterministic variance-proxy comparison matrix.
+- Target Lean declaration: `singleSummandMatrixMGFVarianceProxy_statement`.
+- Required objects: `matrixExp`, `matrixExpect`, `randomMatrixSquare`,
+  `matrixSecondMoment`, `operatorNorm`, `MatrixLE`, `IsRandomMatrix`,
+  `RandomSelfAdjointMatrix`, `IntegrableRandomMatrix`, `IsSelfAdjointMatrix`,
+  and `IsPSDMatrix`.
+- Status: typed statement only, API-tested, and judge-tested. The
+  scalar-to-matrix functional-calculus bridge, single-summand provider
+  assembly, operator-norm-to-spectral-interval bridge, trace-mgf provider,
+  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- Priority: this has been followed by MB-S9-bernstein-cfc-typed-primitive.
+
+## Matrix Bernstein Bernstein CFC Primitive (MB-S9-CFC)
+
+- Book heading: Matrix Bernstein inequality / scalar Bernstein functional
+  calculus.
+- Informal statement: for a deterministic self-adjoint matrix `A` with
+  bounded spectrum, the matrix exponential `exp(theta A)` is bounded in
+  Loewner order by `I + theta A + g(theta, R) A^2`.
+- Target Lean declaration: `bernsteinMatrixExp_le_quadratic_statement`.
+- Required objects: `matrixExp`, `matrixSquare`, `MatrixLE`,
+  `deterministicOperatorNorm`, `IsSelfAdjointMatrix`, theta/radius
+  inequalities, and the explicit Bernstein quadratic coefficient.
+- Status: typed statement only, API-tested, and judge-tested. The
+  functional-calculus proof, single-summand MGF theorem,
+  operator-norm-to-spectral-interval bridge, trace-mgf provider,
+  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- Priority: followed by MB-S9-PSD-expectation-proof.
+
+## Matrix Expectation PSD/Order Bridge (MB-S9)
+
+- Book heading: Matrix Bernstein inequality / expectation monotonicity.
+- Informal statement: entrywise matrix expectation preserves pointwise PSD
+  matrices, and is monotone for the explicit `MatrixLE` order under entrywise
+  integrability assumptions.
+- Target Lean declarations:
+  `isPSDMatrix_matrixExpect_of_pointwise_isPSD` and
+  `matrixExpect_matrixLE_of_pointwise_matrixLE`.
+- Required objects: `matrixExpect`, `IntegrableRandomMatrix`, `IsPSDMatrix`,
+  `MatrixLE`, and `matrixQuadraticForm_matrixExpect`.
+- Helper declarations: `integrableRandomMatrix_sub`, `matrixExpect_sub`.
+- Status: proven, API-tested, and judge-tested.
+- Target module: `HighDimProb/RandomMatrix/VarianceProxy.lean`
+- Test module: `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`
+- Priority: followed by MB-S9-expectation-linearity-proof.
+
+## Matrix Expectation Linearity / Normalization Bridge (MB-S9)
+
+- Book heading: Matrix Bernstein inequality / expectation algebra.
+- Informal statement: entrywise matrix expectation commutes with matrix
+  addition, deterministic scalar multiplication, zero, and constants; constants
+  normalize to themselves over probability measures.
+- Target Lean declarations:
+  `integrableRandomMatrix_add`, `integrableRandomMatrix_smul`,
+  `integrableRandomMatrix_zero`, `integrableRandomMatrix_const`,
+  `matrixExpect_add`, `matrixExpect_smul`, `matrixExpect_zero`,
+  `matrixExpect_const`, `matrixExpect_const_of_isProbabilityMeasure`, and
+  `matrixExpect_one_of_isProbabilityMeasure`.
+- Required objects: `matrixExpect`, `IntegrableRandomMatrix`,
+  `IsFiniteMeasure`, and `IsProbabilityMeasure`.
+- Status: proven and covered by focused API and judge checks.
+- Blocker: none for add/smul/zero/constant expectation normalization.
+  Functional calculus, the single-summand MGF theorem, trace-mgf provider,
+  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/VarianceProxy.lean`
+- Test module: `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`
+- Priority: followed by MB-S9-matrixle-algebra-proof.
+
+## MatrixLE / PSD Algebra Bridge (MB-S9)
+
+- Book heading: Matrix Bernstein inequality / Loewner-order algebra.
+- Informal statement: explicit PSD and `MatrixLE` order are closed under the
+  small algebraic operations needed for one-step matrix MGF RHS
+  normalization: addition, nonnegative scalar multiplication, reflexivity,
+  equality, transitivity, and add/smul monotonicity.
+- Target Lean declarations:
+  `matrixQuadraticForm_add`, `matrixQuadraticForm_smul`,
+  `isPSDMatrix_zero`, `isPSDMatrix_add`,
+  `isPSDMatrix_smul_of_nonneg`, `matrixLE_refl`, `matrixLE_of_eq`,
+  `matrixLE_trans`, `matrixLE_add`, `matrixLE_add_left`,
+  `matrixLE_add_right`, and `matrixLE_smul_of_nonneg`.
+- Required objects: `matrixQuadraticForm`, `IsPSDMatrix`, `MatrixLE`, matrix
+  addition/subtraction, and real scalar multiplication.
+- Status: proven and covered by focused API and judge checks.
+- Blocker: none for MatrixLE algebra. Functional calculus, the
+  single-summand MGF provider, trace-mgf provider, Golden-Thompson, Lieb, and
+  Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/MatrixOrder.lean`
+- Test module: `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`
+- Priority: next safe task is
+  MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## Concrete LIntegral Matrix Laplace Assembly (MB-S8)
 
@@ -1466,7 +1591,7 @@ future directions.
 - Test module: `HighDimProbTest/RandomMatrixLaplaceAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`
 - Priority: MB-S9-foundation is complete; next safe task is
-  MB-S9-trace-mgf-provider-contract.
+  MB-S9-single-summand-provider-proof-contract.
 
 ## Trace-MGF / Variance-Proxy Foundation (MB-S9)
 
@@ -1499,13 +1624,13 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is MB-S9-trace-mgf-provider-contract.
+- Priority: next safe task is MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
 - Book heading: structural PSD facts for matrix Bernstein
 - Informal statement: if A is self-adjoint then A² is PSD; if A is self-adjoint
-  random then E[A²] is PSD; the variance proxy Σᵢ E[A_i²] is PSD
+  random then E[A²] is PSD; the variance proxy Σ�?E[A_i²] is PSD
 - Target Lean statements: `isPSD_matrixSquare_of_selfAdjoint`,
   `isPSD_matrixSecondMoment_of_selfAdjoint`,
   `isPSD_matrixVarianceProxy_of_selfAdjoint`
@@ -1546,13 +1671,13 @@ future directions.
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
 - Priority: completed through MB-S9-foundation; next safe task is
-  MB-S9-trace-mgf-provider-contract.
+  MB-S9-single-summand-provider-proof-contract.
 
 ## Matrix Bernstein Rayleigh Conversion Helper Bridge (MB-S7A-fix)
 
 - Book heading: matrix Laplace transform prerequisites / Rayleigh reduction.
 - Informal statement: a Loewner-style endpoint bound
-  `((lambdaMax A hA) • 1 - A).PosSemidef` is enough to prove the explicit
+  `((lambdaMax A hA) �?1 - A).PosSemidef` is enough to prove the explicit
   HighDimProb unit-vector Rayleigh statement.
 - Target Lean declarations: `LambdaMaxPSDUpperBound`,
   `matrixQuadraticForm_nonneg_of_posSemidef`,
@@ -1578,7 +1703,7 @@ future directions.
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
 - Priority: completed through MB-S9-foundation; next safe task is
-  MB-S9-trace-mgf-provider-contract.
+  MB-S9-single-summand-provider-proof-contract.
 
 ## Matrix Bernstein Ordered Endpoint Wrapper (MB-S7A-index)
 
@@ -1609,7 +1734,7 @@ future directions.
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
 - Priority: completed through MB-S9-foundation; next safe task is
-  MB-S9-trace-mgf-provider-contract.
+  MB-S9-single-summand-provider-proof-contract.
 
 ## Matrix Bernstein Semantic Spectral API (MB-S7A-abstract)
 
@@ -1656,4 +1781,150 @@ future directions.
 - Test module: `HighDimProbTest/RandomMatrixSpectralAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/SpectralUse.lean`
 - Priority: MB-S9-foundation is complete; next safe task is
-  MB-S9-trace-mgf-provider-contract.
+  MB-S9-single-summand-provider-proof-contract.
+
+## Bernstein Coefficient Nonnegativity (MB-S9-bernstein-coefficient-proof)
+
+- Book heading: Matrix Bernstein single-summand MGF scalar coefficient.
+- Informal statement: the Bernstein coefficient
+  `(theta ^ 2 / 2) / (1 - abs theta * R / 3)` is nonnegative under
+  `abs theta * R < 3`.
+- Target Lean declaration: `bernsteinCoefficient_nonneg`.
+- Required objects: real square nonnegativity, positive denominator from the
+  theta-range hypothesis, and real division nonnegativity.
+- Status: proved, API-tested, and judge-tested.
+- Blocker: the single-summand provider, Bernstein CFC proof, matrix
+  exponential lower bound `MatrixLE (1 + c �?V) (matrixExp (c �?V))`,
+  trace-mgf provider, Golden-Thompson, Lieb, and Matrix Bernstein remain
+  unproved.
+- Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- Priority: next safe task is MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
+
+- Book heading: deterministic matrix exponential lower bound for the
+  single-summand MGF RHS normalization.
+- Informal statement: for self-adjoint real matrices,
+  `MatrixLE (1 + A) (matrixExp A)`.
+- Target Lean declarations:
+  `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint` and
+  `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`.
+- Required objects: `Real.add_one_le_exp`, `cfc_mono`,
+  `CFC.real_exp_eq_normedSpace_exp`, `matrixExp`, `MatrixLE`, and
+  `isSelfAdjointMatrix_smul`.
+- Status: proved, API-tested, and judge-tested.
+- Blocker: the full CFC-free single-summand provider remains unproved; the
+  Bernstein CFC primitive remains typed only; trace-mgf provider,
+  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- Priority: completed through MB-S9-exp-lower-bound-proof; the next safe
+  task was MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## Single-Summand Provider Under CFC (MB-S9-single-summand-provider-under-cfc)
+
+- Book heading: Matrix Bernstein single-summand MGF variance-proxy provider.
+- Informal statement: assuming the pointwise typed Bernstein CFC primitive
+  for every sample, the single-summand matrix MGF variance-proxy typed target
+  follows from matrix expectation monotonicity, expectation linearity,
+  MatrixLE algebra, coefficient nonnegativity, second-moment comparison, and
+  the deterministic matrix exponential lower bound.
+- Target Lean declaration:
+  `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`.
+- Required objects: `bernsteinMatrixExp_le_quadratic_statement`,
+  `singleSummandMatrixMGFVarianceProxy_statement`,
+  `matrixExpect_matrixLE_of_pointwise_matrixLE`, `matrixExpect_add`,
+  `matrixExpect_smul`, `matrixExpect_const_of_isProbabilityMeasure`,
+  `matrixLE_trans`, `matrixLE_add_left`, `matrixLE_smul_of_nonneg`,
+  `bernsteinCoefficient_nonneg`, and
+  `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`.
+- Status: proved, API-tested, and judge-tested as a provider under explicit
+  pointwise CFC assumptions.
+- Blocker: the Bernstein CFC primitive itself remains typed only; the
+  trace-mgf provider, Golden-Thompson, Lieb, full CFC-free single-summand
+  provider, and Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
+- Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
+- Priority: next safe task was
+  MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## Bounded Bernstein Trace-MGF RHS Normal Form (MB-S9-rhs-normalization-proof)
+
+- Book heading: Matrix Bernstein trace-mgf RHS normalization.
+- Informal statement: the bounded Bernstein trace-mgf coefficient is
+  `bernsteinMGFCoeff theta R =
+  (theta ^ 2 / 2) / (1 - abs theta * R / 3)`.
+- Target Lean declarations: `bernsteinMGFCoeff`,
+  `bernsteinMGFCoeff_nonneg`, `TraceMGFBernsteinVarianceProxyBound`,
+  `TraceMGFBernsteinVarianceProxyBoundLIntegral`,
+  `traceMGFBernsteinVarianceProxyBound_statement`, and
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`.
+- Status: RHS coefficient normalized, API-tested, and judge-tested.
+- Compatibility: `TraceMGFVarianceProxyBound` and
+  `matrixBernsteinTraceMGF_statement` are retained with coefficient
+  `theta ^ 2 / 2`; they are not the bounded Matrix Bernstein denominator
+  target.
+- Blocker: trace-mgf provider, Bernstein CFC proof, Tropp/Lieb primitive,
+  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+- Target modules: `HighDimProb/RandomMatrix/TraceExp.lean` and
+  `HighDimProb/RandomMatrix/ConcentrationStatements.lean`.
+- Test modules: `HighDimProbTest/RandomMatrixTraceExpAPI.lean` and
+  `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`.
+- Judge modules: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`,
+  `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`,
+  `HighDimProbJudge/RandomMatrix/StatementUse.lean`, and
+  `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`.
+- Priority: next safe task is
+  MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## Finite-Family Tropp Trace-MGF Interface (MB-S9-tropp-shape-refactor)
+
+- Informal statement: a typed finite-family Tropp/Lieb iteration primitive
+  consumes per-summand matrix-MGF comparisons, independence, trace-exp
+  integrability, and bounded-Bernstein RHS normalization, and returns
+  `TraceMGFBernsteinVarianceProxyBound` for `randomMatrixSum`.
+- Target Lean declaration: `troppMasterTraceMGFFiniteFamily_statement`.
+- Status: typed statement only, API-tested, and judge-tested.
+- Compatibility: `troppMasterTraceMGFStep_statement` remains available as the
+  one-step log-form primitive.
+- Blocker: Lieb/Tropp proof, Bernstein CFC proof, trace-mgf provider,
+  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+- Target module: `HighDimProb/RandomMatrix/TraceExp.lean`.
+- Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`.
+- Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`.
+- Priority: next safe task is
+  MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## Bounded Trace-MGF Thin Wrappers (MB-S9-trace-mgf-provider-thin-wrapper-proof)
+
+- Informal statement: the finite-family Tropp typed primitive directly yields
+  the bounded Bernstein semantic trace-MGF target, and with
+  `V = matrixVarianceProxy P A` yields the high-level bounded Matrix
+  Bernstein trace-MGF statement.
+- Target Lean declarations:
+  `traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily`
+  and
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily`.
+- Status: proved, API-tested, and judge-tested.
+- Blocker: the finite-family Tropp primitive itself remains typed only; the
+  Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and
+  Matrix Bernstein remain unproved.
+- Priority: next safe task is
+  MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## Matrix Bernstein Trace-MGF Under Primitives (MB-S9)
+
+- Informal statement: ordinary finite-family Matrix Bernstein hypotheses plus
+  explicit finite-family Tropp and pointwise Bernstein CFC primitive
+  assumptions imply the bounded Matrix Bernstein trace-MGF statement.
+- Target Lean declaration:
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
+- Status: proved, API-tested, and judge-tested.
+- Blocker: the finite-family Tropp primitive itself remains typed only; the
+  Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and the
+  Matrix Bernstein tail theorem remain unproved.
+- Priority: next safe task is MB-S9-trace-mgf-to-laplace-tail-contract.

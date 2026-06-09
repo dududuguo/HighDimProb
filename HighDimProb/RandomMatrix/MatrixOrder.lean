@@ -65,6 +65,209 @@ theorem isPSDMatrix_quadraticForm_nonneg {n : Nat}
     0 <= matrixQuadraticForm A x :=
   hA.2 x
 
+/-- Quadratic forms distribute over finite sums of deterministic matrices. -/
+theorem matrixQuadraticForm_sum {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> Matrix (Fin n) (Fin n) Real) (x : Fin n -> Real) :
+    matrixQuadraticForm (Finset.univ.sum fun i : I => A i) x =
+      Finset.univ.sum fun i : I => matrixQuadraticForm (A i) x := by
+  calc
+    matrixQuadraticForm (Finset.univ.sum fun i : I => A i) x
+        = Finset.univ.sum fun r : Fin n =>
+            Finset.univ.sum fun c : Fin n =>
+              x r * (Finset.univ.sum fun i : I => A i r c) * x c := by
+          simp [matrixQuadraticForm, Matrix.sum_apply]
+    _ = Finset.univ.sum fun r : Fin n =>
+          Finset.univ.sum fun c : Fin n =>
+            Finset.univ.sum fun i : I => x r * A i r c * x c := by
+          apply Finset.sum_congr rfl
+          intro r _
+          apply Finset.sum_congr rfl
+          intro c _
+          rw [Finset.mul_sum, Finset.sum_mul]
+    _ = Finset.univ.sum fun i : I =>
+          Finset.univ.sum fun r : Fin n =>
+            Finset.univ.sum fun c : Fin n => x r * A i r c * x c := by
+          calc
+            (Finset.univ.sum fun r : Fin n =>
+              Finset.univ.sum fun c : Fin n =>
+                Finset.univ.sum fun i : I => x r * A i r c * x c)
+                = Finset.univ.sum fun r : Fin n =>
+                    Finset.univ.sum fun i : I =>
+                      Finset.univ.sum fun c : Fin n => x r * A i r c * x c := by
+                  apply Finset.sum_congr rfl
+                  intro r _
+                  rw [Finset.sum_comm]
+            _ = Finset.univ.sum fun i : I =>
+                  Finset.univ.sum fun r : Fin n =>
+                    Finset.univ.sum fun c : Fin n => x r * A i r c * x c := by
+                  rw [Finset.sum_comm]
+    _ = Finset.univ.sum fun i : I => matrixQuadraticForm (A i) x := by
+          simp [matrixQuadraticForm]
+
+/-- Finite sums of PSD matrices are PSD in the explicit quadratic-form order. -/
+theorem isPSDMatrix_sum {I : Type*} [Fintype I] {n : Nat}
+    {A : I -> Matrix (Fin n) (Fin n) Real}
+    (hA : forall i, IsPSDMatrix (A i)) :
+    IsPSDMatrix (Finset.univ.sum fun i : I => A i) := by
+  refine ⟨?_, ?_⟩
+  · apply Matrix.IsSymm.ext
+    intro r c
+    calc
+      (Finset.univ.sum fun i : I => A i) c r
+          = Finset.univ.sum fun i : I => A i c r := by
+            rw [Matrix.sum_apply]
+      _ = Finset.univ.sum fun i : I => A i r c := by
+            apply Finset.sum_congr rfl
+            intro i _
+            exact isSymmetricMatrix_apply (hA i).1 r c
+      _ = (Finset.univ.sum fun i : I => A i) r c := by
+            rw [Matrix.sum_apply]
+  · intro x
+    rw [matrixQuadraticForm_sum]
+    exact Finset.sum_nonneg fun i _ => (hA i).2 x
+
+/-- Quadratic forms distribute over deterministic matrix addition. -/
+theorem matrixQuadraticForm_add {n : Nat}
+    (A B : Matrix (Fin n) (Fin n) Real) (x : Fin n -> Real) :
+    matrixQuadraticForm (A + B) x =
+      matrixQuadraticForm A x + matrixQuadraticForm B x := by
+  simp [matrixQuadraticForm]
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro i _
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro j _
+  ring
+
+/-- Quadratic forms commute with scalar multiplication of deterministic matrices. -/
+theorem matrixQuadraticForm_smul {n : Nat}
+    (c : Real) (A : Matrix (Fin n) (Fin n) Real) (x : Fin n -> Real) :
+    matrixQuadraticForm (c • A) x =
+      c * matrixQuadraticForm A x := by
+  simp [matrixQuadraticForm]
+  rw [Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro i _
+  rw [Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro j _
+  ring
+
+/-- The zero matrix is PSD in the explicit quadratic-form order. -/
+theorem isPSDMatrix_zero {n : Nat} :
+    IsPSDMatrix (0 : Matrix (Fin n) (Fin n) Real) := by
+  refine ⟨?_, ?_⟩
+  · apply Matrix.IsSymm.ext
+    intro r c
+    simp
+  · intro x
+    simp [matrixQuadraticForm]
+
+/-- The sum of two PSD matrices is PSD. -/
+theorem isPSDMatrix_add {n : Nat}
+    {A B : Matrix (Fin n) (Fin n) Real}
+    (hA : IsPSDMatrix A) (hB : IsPSDMatrix B) :
+    IsPSDMatrix (A + B) := by
+  refine ⟨?_, ?_⟩
+  · apply Matrix.IsSymm.ext
+    intro r c
+    simp [Matrix.add_apply, isSymmetricMatrix_apply hA.1 r c,
+      isSymmetricMatrix_apply hB.1 r c]
+  · intro x
+    rw [matrixQuadraticForm_add]
+    exact add_nonneg (hA.2 x) (hB.2 x)
+
+/-- Nonnegative scalar multiples of PSD matrices are PSD. -/
+theorem isPSDMatrix_smul_of_nonneg {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} {c : Real}
+    (hc : 0 <= c) (hA : IsPSDMatrix A) :
+    IsPSDMatrix (c • A) := by
+  refine ⟨?_, ?_⟩
+  · apply Matrix.IsSymm.ext
+    intro r c'
+    simp [Matrix.smul_apply, isSymmetricMatrix_apply hA.1 r c']
+  · intro x
+    rw [matrixQuadraticForm_smul]
+    exact mul_nonneg hc (hA.2 x)
+
+/-- Reflexivity of the explicit Loewner-style matrix comparison. -/
+theorem matrixLE_refl {n : Nat} (A : Matrix (Fin n) (Fin n) Real) :
+    MatrixLE A A := by
+  unfold MatrixLE
+  have hEq : A - A = (0 : Matrix (Fin n) (Fin n) Real) := by
+    ext r c
+    simp [Matrix.sub_apply]
+  rw [hEq]
+  exact isPSDMatrix_zero
+
+/-- Equality gives the explicit Loewner-style matrix comparison. -/
+theorem matrixLE_of_eq {n : Nat}
+    {A B : Matrix (Fin n) (Fin n) Real} (h : A = B) :
+    MatrixLE A B := by
+  subst h
+  exact matrixLE_refl A
+
+/-- Transitivity of the explicit Loewner-style matrix comparison. -/
+theorem matrixLE_trans {n : Nat}
+    {A B C : Matrix (Fin n) (Fin n) Real}
+    (hAB : MatrixLE A B) (hBC : MatrixLE B C) :
+    MatrixLE A C := by
+  unfold MatrixLE at *
+  have hsum : IsPSDMatrix ((B - A) + (C - B)) :=
+    isPSDMatrix_add hAB hBC
+  have hEq : C - A = (B - A) + (C - B) := by
+    ext r c
+    simp [Matrix.sub_apply, Matrix.add_apply]
+  rw [hEq]
+  exact hsum
+
+/-- Addition preserves the explicit Loewner-style matrix comparison. -/
+theorem matrixLE_add {n : Nat}
+    {A B C D : Matrix (Fin n) (Fin n) Real}
+    (hAB : MatrixLE A B) (hCD : MatrixLE C D) :
+    MatrixLE (A + C) (B + D) := by
+  unfold MatrixLE at *
+  have hsum : IsPSDMatrix ((B - A) + (D - C)) :=
+    isPSDMatrix_add hAB hCD
+  have hEq : (B + D) - (A + C) = (B - A) + (D - C) := by
+    ext r c
+    simp [Matrix.sub_apply, Matrix.add_apply]
+    ring
+  rw [hEq]
+  exact hsum
+
+/-- Adding the same matrix on the left preserves `MatrixLE`. -/
+theorem matrixLE_add_left {n : Nat}
+    (C : Matrix (Fin n) (Fin n) Real)
+    {A B : Matrix (Fin n) (Fin n) Real}
+    (hAB : MatrixLE A B) :
+    MatrixLE (C + A) (C + B) :=
+  matrixLE_add (matrixLE_refl C) hAB
+
+/-- Adding the same matrix on the right preserves `MatrixLE`. -/
+theorem matrixLE_add_right {n : Nat}
+    {A B : Matrix (Fin n) (Fin n) Real}
+    (C : Matrix (Fin n) (Fin n) Real)
+    (hAB : MatrixLE A B) :
+    MatrixLE (A + C) (B + C) :=
+  matrixLE_add hAB (matrixLE_refl C)
+
+/-- Nonnegative scalar multiplication preserves `MatrixLE`. -/
+theorem matrixLE_smul_of_nonneg {n : Nat}
+    {A B : Matrix (Fin n) (Fin n) Real} {c : Real}
+    (hc : 0 <= c) (hAB : MatrixLE A B) :
+    MatrixLE (c • A) (c • B) := by
+  unfold MatrixLE at *
+  have hsmul : IsPSDMatrix (c • (B - A)) :=
+    isPSDMatrix_smul_of_nonneg hc hAB
+  have hEq : c • B - c • A = c • (B - A) := by
+    ext r c'
+    simp [Matrix.sub_apply, Matrix.smul_apply]
+    ring
+  rw [hEq]
+  exact hsmul
+
 /-- Loewner-style matrix comparison implies quadratic-form comparison. -/
 theorem quadraticForm_le_of_matrixLE {n : Nat}
     {A B : Matrix (Fin n) (Fin n) Real} (hAB : MatrixLE A B)

@@ -4,6 +4,9 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.matrixBernsteinSelfAdjointStatement
 #check HighDimProb.matrixBernsteinLaplacePrerequisitesStatement
 #check HighDimProb.matrixBernsteinTraceMGF_statement
+#check HighDimProb.matrixBernsteinTraceMGFWithBernsteinCoeff_statement
+#check HighDimProb.matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily
+#check HighDimProb.matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
 #check HighDimProb.matrixVarianceProxyNorm
 #check HighDimProb.PointwiseOperatorNormBound
 #check HighDimProb.IndependentSelfAdjointRandomMatrices
@@ -31,3 +34,9 @@ example {Omega I : Type*} [MeasurableSpace Omega] [Fintype I]
     (A : I -> HighDimProb.RandomMatrix Omega n n)
     (theta : Real) : Prop :=
   HighDimProb.matrixBernsteinTraceMGF_statement P A theta
+
+example {Omega I : Type*} [MeasurableSpace Omega] [Fintype I]
+    {n : Nat} (P : MeasureTheory.Measure Omega)
+    (A : I -> HighDimProb.RandomMatrix Omega n n)
+    (theta R : Real) : Prop :=
+  HighDimProb.matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R

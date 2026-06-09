@@ -5,6 +5,9 @@ import HighDimProb.Moment
 
 This file records concrete Orlicz and psi-bound names without committing to a
 general Orlicz-space or normed-space API.
+
+Verified Wikipedia reference:
+https://en.wikipedia.org/wiki/Orlicz_space
 -/
 
 namespace HighDimProb
@@ -13,10 +16,21 @@ open MeasureTheory
 
 noncomputable section
 
-/-- A concrete Orlicz function on real scalars. Structural assumptions are separate. -/
+/--
+A concrete Orlicz function on real scalars. Structural assumptions are separate.
+
+Formula reference: Orlicz spaces are defined using a Young/Orlicz function
+`Phi`; see https://en.wikipedia.org/wiki/Orlicz_space
+-/
 abbrev OrliczFunction := ℝ → ℝ
 
-/-- The usual `exp(|x|^p) - 1` model family, with natural exponent for now. -/
+/--
+The usual `exp(|x|^p) - 1` model family, with natural exponent for now.
+
+Formula reference: exponential Orlicz functions are standard examples in
+Orlicz-space random-variable norms; see
+https://en.wikipedia.org/wiki/Orlicz_space
+-/
 def psiPower (p : ℕ) : OrliczFunction :=
   fun x => Real.exp (|x| ^ p) - 1
 
@@ -31,6 +45,10 @@ def psi2Function : OrliczFunction :=
 /--
 An Orlicz-type Luxemburg bound at scale `K`.
 
+Formula reference: Luxemburg-type bounds use
+`integral Phi(|f|/K) dmu <= 1`; see
+https://en.wikipedia.org/wiki/Orlicz_space
+
 This is a predicate-level definition using `lintegral` and `ENNReal.ofReal`.
 It is deliberately not a norm definition.
 -/
@@ -43,6 +61,9 @@ def OrliczBound {Ω : Type*} [MeasurableSpace Ω]
 The `psi_2` Orlicz bound at scale `K`, expressed by an exponential-square
 nonnegative integral bound.
 
+Formula reference: this specializes the Luxemburg bound to
+`Phi(x) = exp(x^2) - 1`; see https://en.wikipedia.org/wiki/Orlicz_space
+
 This is not named subGaussian; equivalence with tail, moment, and MGF forms is
 future theorem work.
 -/
@@ -54,6 +75,9 @@ def Psi2Bound {Ω : Type*} [MeasurableSpace Ω]
 /--
 The `psi_1` Orlicz bound at scale `K`, expressed by an exponential-linear
 nonnegative integral bound.
+
+Formula reference: this specializes the Luxemburg bound to
+`Phi(x) = exp(x) - 1`; see https://en.wikipedia.org/wiki/Orlicz_space
 
 This is not named subExponential; equivalence with tail, moment, and MGF forms is
 future theorem work.

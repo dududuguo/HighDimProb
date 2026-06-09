@@ -7,6 +7,11 @@ This file packages Mathlib's one-variable Hoeffding lemma for bounded centered
 real random variables with the existing HighDimProb finite independent-sum MGF
 and tail infrastructure, including sharp centered, non-centered, and
 deterministic weighted finite-sum forms.
+
+Verified Wikipedia references:
+* Hoeffding inequality: https://en.wikipedia.org/wiki/Hoeffding%27s_inequality
+* Chernoff bound: https://en.wikipedia.org/wiki/Chernoff_bound
+* Sub-Gaussian distribution: https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
 -/
 
 namespace HighDimProb
@@ -148,6 +153,10 @@ theorem sum_weighted_centered_eq_weighted_sum_sub_expect_weighted_sum
 /--
 Sharp one-sided Chernoff bound from an eighth-variance MGF estimate.
 
+Formula reference: Chernoff bounds apply Markov to `exp(lambda * Y)` and
+optimize the exponential moment bound; see
+https://en.wikipedia.org/wiki/Chernoff_bound
+
 The hypothesis is the Hoeffding-specific normal form
 `E exp(lambda * Y) <= exp(lambda^2 * V / 8)`. Optimizing at
 `lambda = 4*t/V` gives the classical exponent `-2*t^2/V`.
@@ -206,6 +215,10 @@ theorem upperTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth
 
 /--
 Sharp lower-tail Chernoff bound from an eighth-variance MGF estimate.
+
+Formula reference: this is the lower-tail counterpart of the same Chernoff
+optimization used for Hoeffding-type bounds; see
+https://en.wikipedia.org/wiki/Chernoff_bound
 -/
 theorem lowerTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
@@ -263,6 +276,10 @@ theorem lowerTailProb_le_exp_neg_two_mul_sq_div_of_mgf_eighth
 
 /--
 Sharp two-sided absolute-tail bound from an eighth-variance MGF estimate.
+
+Formula reference: combines one-sided Chernoff bounds into the two-sided
+Hoeffding-style form `P(|Y| >= t) <= 2 * exp(-2*t^2/V)`; see
+https://en.wikipedia.org/wiki/Hoeffding%27s_inequality
 -/
 theorem absTailProb_le_two_mul_exp_neg_two_mul_sq_div_of_mgf_eighth
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
@@ -295,6 +312,10 @@ theorem absTailProb_le_two_mul_exp_neg_two_mul_sq_div_of_mgf_eighth
 
 /--
 A bounded centered real random variable is centered subGaussian.
+
+Formula reference: bounded variables are sub-Gaussian via Hoeffding's lemma;
+see the sub-Gaussian generalization discussion at
+https://en.wikipedia.org/wiki/Hoeffding%27s_inequality
 
 This a.e.-bounded wrapper reuses Mathlib's Hoeffding lemma
 `ProbabilityTheory.hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero` with
@@ -339,6 +360,10 @@ theorem centeredSubGaussianMGF_of_forall_mem_Icc_of_centered
 Finite independent sums of bounded centered variables are centered
 subGaussian.
 
+Formula reference: the sum proxy is the square-root of the sum of squared
+half-widths, matching the MGF route behind Hoeffding bounds; see
+https://en.wikipedia.org/wiki/Hoeffding%27s_inequality
+
 The scale is `sqrt (sum_i ((b_i - a_i) / 2)^2)`, inherited directly from the
 one-variable half-width MGF scale and the existing independent finite-sum MGF
 closure theorem.
@@ -369,6 +394,10 @@ theorem centeredSubGaussianMGF_sum_of_iIndepFun_bounded_centered
 Two-sided subGaussian tail corollary for finite independent sums of bounded
 centered variables.
 
+Formula reference: this is the sub-Gaussian tail form
+`P(|sum_i X_i| >= t) <= 2 * exp(-c*t^2 / sum_i ||X_i||_psi2^2)`; see
+https://en.wikipedia.org/wiki/Hoeffding%27s_inequality
+
 The tail scale doubles the MGF scale through
 `subGaussianTail_of_centeredSubGaussianMGF`.
 -/
@@ -397,6 +426,11 @@ theorem subGaussianTail_sum_of_iIndepFun_bounded_centered
 /--
 Conservative, non-sharp HighDimProb-facing Hoeffding bound for finite
 independent sums of bounded centered variables.
+
+Formula reference: compare the classical two-sided Hoeffding formula
+`P(|sum_i X_i - E[sum_i X_i]| >= t) <=
+2 * exp(-2*t^2 / sum_i (b_i-a_i)^2)` at
+https://en.wikipedia.org/wiki/Hoeffding%27s_inequality
 
 The denominator is `sum_i (b_i - a_i)^2`. This follows from the half-width MGF
 scale and the existing MGF-to-tail bridge, so it is a conservative two-sided
@@ -436,6 +470,10 @@ theorem hoeffding_sum_bounded_centered
 /--
 Sharp centered Hoeffding bound for finite independent sums of bounded centered
 variables.
+
+Formula reference: this proves the classical two-sided exponent
+`-2*t^2 / sum_i (b_i-a_i)^2`; see
+https://en.wikipedia.org/wiki/Hoeffding%27s_inequality
 
 This theorem keeps the existing conservative `SubGaussianTail` API unchanged.
 It uses the sharper Hoeffding-specific MGF constant, optimizing
@@ -517,6 +555,11 @@ theorem hoeffding_sum_bounded_centered_sharp
 /--
 Sharp centered weighted Hoeffding bound for finite independent sums of bounded
 centered variables with deterministic real weights.
+
+Formula reference: this is the weighted analogue of the two-sided Hoeffding
+bound, replacing `sum_i (b_i-a_i)^2` by
+`sum_i c_i^2 * (b_i-a_i)^2`; see
+https://en.wikipedia.org/wiki/Hoeffding%27s_inequality
 
 The denominator is `sum_i c_i^2 * (b_i-a_i)^2`. Negative and zero weights are
 handled through the existing weighted finite-sum MGF theorem, whose proxy uses
@@ -607,6 +650,11 @@ theorem hoeffding_weighted_sum_bounded_centered_sharp
 Non-centered classical/Wikipedia-style finite Hoeffding inequality for finite
 independent bounded real variables.
 
+Formula reference: Wikipedia states the deviation-from-expectation form
+`P(|S_n - E[S_n]| >= t) <=
+2 * exp(-2*t^2 / sum_i (b_i-a_i)^2)`; see
+https://en.wikipedia.org/wiki/Hoeffding%27s_inequality
+
 This is the classical/Wikipedia form: the deviation is measured from
 `E[sum_i X_i]`. The proof centers each variable, applies
 `hoeffding_sum_bounded_centered_sharp`, and uses finite expectation linearity to
@@ -671,6 +719,10 @@ theorem hoeffding_sum_bounded
 /--
 Sharp non-centered weighted Hoeffding inequality for finite independent bounded
 real variables with deterministic real weights.
+
+Formula reference: this is the weighted deviation-from-expectation analogue
+of the Wikipedia two-sided Hoeffding bound; see
+https://en.wikipedia.org/wiki/Hoeffding%27s_inequality
 
 This is the weighted classical/Wikipedia form around
 `E[sum_i c_i X_i]`, with denominator `sum_i c_i^2 * (b_i-a_i)^2`.

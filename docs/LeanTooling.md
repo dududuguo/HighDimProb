@@ -18,6 +18,12 @@ Run:
 .\tools\build_docgen4.ps1
 ```
 
+Or from Bash/Git Bash:
+
+```bash
+./tools/build_docgen4.sh
+```
+
 The expected output root is:
 
 ```text
@@ -45,6 +51,12 @@ Run:
 
 ```powershell
 .\tools\build_import_graph.ps1
+```
+
+Or from Bash/Git Bash:
+
+```bash
+./tools/build_import_graph.sh
 ```
 
 This generates:

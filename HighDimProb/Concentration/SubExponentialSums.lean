@@ -8,6 +8,12 @@ This file starts the Bernstein/subExponential finite-sum branch.  The existing
 `CenteredSubExponentialMGF` predicate is an expectation-level local MGF bound;
 the `LIntegral` auxiliary below is the proof-facing form used by Chernoff
 tail arguments.
+
+Verified Wikipedia references:
+* Heavy-tailed distribution:
+  https://en.wikipedia.org/wiki/Heavy-tailed_distribution
+* Moment-generating function:
+  https://en.wikipedia.org/wiki/Moment-generating_function
 -/
 
 namespace HighDimProb
@@ -23,6 +29,12 @@ Proof-friendly centered subExponential MGF formulation using `lintegral`.
 
 The lambda domain is local: the bound is available only when
 `|lambda| <= 1 / K`.
+
+Formula reference: subExponential control is represented here through a local
+exponential-moment/MGF bound, contrasting with heavy-tailed variables whose
+moment-generating functions may fail globally; see
+https://en.wikipedia.org/wiki/Heavy-tailed_distribution and
+https://en.wikipedia.org/wiki/Moment-generating_function
 -/
 def CenteredSubExponentialMGFLIntegral {Omega : Type*} [MeasurableSpace Omega]
     (P : Measure Omega) (X : RealRandomVariable Omega) (K : Real) : Prop :=
@@ -35,6 +47,11 @@ def CenteredSubExponentialMGFLIntegral {Omega : Type*} [MeasurableSpace Omega]
 /--
 The proof-facing lintegral subExponential MGF predicate implies the raw
 expectation-level predicate.
+
+Formula reference: this converts the `lintegral` bound
+`int exp(lambda X) <= exp(K^2 lambda^2)` on `|lambda| <= 1 / K` back to the
+expectation/MGF form; see
+https://en.wikipedia.org/wiki/Moment-generating_function
 -/
 theorem centeredSubExponentialMGF_of_centeredSubExponentialMGFLIntegral
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -68,6 +85,9 @@ theorem centeredSubExponentialMGF_of_centeredSubExponentialMGFLIntegral
   exact
     (ENNReal.ofReal_le_ofReal_iff (Real.exp_pos _).le).mp h_ofReal
 
+-- Formula reference: products of exponentials convert to an exponential of a
+-- sum, matching finite independent MGF multiplication; see
+-- https://en.wikipedia.org/wiki/Moment-generating_function
 private theorem finset_prod_exp_eq_exp_sum {ι : Type*} (s : Finset ι)
     (f : ι → Real) :
     s.prod (fun i => Real.exp (f i)) = Real.exp (s.sum f) := by
@@ -84,6 +104,11 @@ Raw local MGF product bound for independent centered subExponential variables.
 The domain is expressed with an explicit `Kmax`, matching the Bernstein
 abstraction where the variance proxy is `sum_i K_i^2` and the local lambda
 domain is controlled by the largest individual scale.
+
+Formula reference: independent MGFs multiply, so local subExponential proxies
+add as `sum_i K_i^2`, while the admissible lambda range is governed by a
+largest scale `Kmax`; see
+https://en.wikipedia.org/wiki/Moment-generating_function
 -/
 theorem centeredSubExponentialMGF_finset_sum_mgf_bound_of_iIndepFun
     {Omega ι : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -126,7 +151,14 @@ theorem centeredSubExponentialMGF_finset_sum_mgf_bound_of_iIndepFun
           congr 1
           exact (Finset.sum_mul s (fun i => (K i) ^ 2) (lambda ^ 2)).symm
 
-/-- Fintype-facing raw local MGF product bound. -/
+/--
+Fintype-facing raw local MGF product bound.
+
+Formula reference: finite-index version of the product-MGF formula
+`E exp(lambda sum_i X_i) <= exp((sum_i K_i^2) * lambda^2)` under the domain
+`|lambda| <= 1 / Kmax`; see
+https://en.wikipedia.org/wiki/Moment-generating_function
+-/
 theorem centeredSubExponentialMGF_sum_mgf_bound_of_iIndepFun
     {Omega ι : Type*} [MeasurableSpace Omega] [Fintype ι]
     {P : Measure Omega} [IsProbabilityMeasure P]
@@ -149,6 +181,10 @@ theorem centeredSubExponentialMGF_sum_mgf_bound_of_iIndepFun
 /--
 Fintype-facing raw local MGF bound normalized to the deterministic
 `maxScale` and `varianceProxy` vocabulary.
+
+Formula reference: `varianceProxy` records `sum_i K_i^2`, while `maxScale`
+records the local-MGF radius via `1 / max_i K_i`; see
+https://en.wikipedia.org/wiki/Moment-generating_function
 -/
 theorem centeredSubExponentialMGF_sum_mgf_bound_of_iIndepFun_maxScale
     {Omega ι : Type*} [MeasurableSpace Omega] [Fintype ι]
@@ -178,6 +214,11 @@ normalized to `maxScale` and `varianceProxy`.
 This is the bridge needed by later Bernstein-style Chernoff arguments: the
 lambda domain is controlled by the largest individual scale, while the
 quadratic term is controlled by the sum of squared scales.
+
+Formula reference: lintegral version of
+`int exp(lambda sum_i X_i) <= exp(varianceProxy K * lambda^2)`, where
+`varianceProxy K = sum_i K_i^2` and `|lambda| <= 1 / maxScale K`; see
+https://en.wikipedia.org/wiki/Moment-generating_function
 -/
 theorem centeredSubExponentialMGFLIntegral_sum_mgf_bound_of_iIndepFun_maxScale
     {Omega ι : Type*} [MeasurableSpace Omega] [Fintype ι]
@@ -246,6 +287,10 @@ theorem centeredSubExponentialMGFLIntegral_sum_mgf_bound_of_iIndepFun_maxScale
 Local MGF bound for a deterministic scalar multiple under the raw
 subExponential MGF predicate.  The domain is stated as
 `|lambda * c| <= 1 / K` so zero scalar multiples remain explicit.
+
+Formula reference: multiplying a random variable by `c` changes the MGF input
+from `lambda` to `lambda * c` and the proxy to `c^2 * K^2`; see
+https://en.wikipedia.org/wiki/Moment-generating_function
 -/
 theorem centeredSubExponentialMGF_const_mul_mgf_bound
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -272,6 +317,10 @@ Local lintegral MGF bound for a deterministic scalar multiple under the
 proof-facing subExponential MGF predicate.  This is a bound, not a packaged
 `CenteredSubExponentialMGFLIntegral` predicate, so the zero-weight case is not
 hidden behind a strictly positive scale.
+
+Formula reference: lintegral version of the deterministic scaling formula
+with proxy `c^2 * K^2`; see
+https://en.wikipedia.org/wiki/Moment-generating_function
 -/
 theorem centeredSubExponentialMGFLIntegral_const_mul_mgf_bound
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -300,6 +349,11 @@ weighted sums, normalized to `weightedMaxScale` and `weightedVarianceProxy`.
 The domain transfer handles zero weights explicitly; only the original
 subExponential scales `K_i` are required to be positive through the input
 `CenteredSubExponentialMGFLIntegral` assumptions.
+
+Formula reference: weighted finite sums add proxies
+`sum_i c_i^2 K_i^2`, and their local domain is controlled by
+`weightedMaxScale`; see
+https://en.wikipedia.org/wiki/Moment-generating_function
 -/
 theorem centeredSubExponentialMGFLIntegral_weighted_sum_mgf_bound_of_iIndepFun_maxScale
     {Omega ι : Type*} [MeasurableSpace Omega] [Fintype ι]
@@ -409,6 +463,11 @@ Conservative packaged finite-sum closure for the existing raw predicate.
 The resulting scale is `sqrt (sum_i K_i^2)`, so the inherited lambda domain is
 `1 / sqrt (sum_i K_i^2)`.  This is stronger than the eventual Bernstein domain
 `1 / max_i K_i`, but it fits the current single-scale predicate exactly.
+
+Formula reference: this packages the local MGF proxy `sum_i K_i^2` into the
+single scale `sqrt (sum_i K_i^2)`, which forces the stricter domain
+`|lambda| <= 1 / sqrt (sum_i K_i^2)`; see
+https://en.wikipedia.org/wiki/Moment-generating_function
 -/
 theorem centeredSubExponentialMGF_finset_sum_of_iIndepFun_of_pos
     {Omega ι : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -438,7 +497,13 @@ theorem centeredSubExponentialMGF_finset_sum_of_iIndepFun_of_pos
   rw [Real.sq_sqrt hsum_nonneg]
   exact hbound
 
-/-- Fintype-facing conservative packaged finite-sum closure. -/
+/--
+Fintype-facing conservative packaged finite-sum closure.
+
+Formula reference: finite-index version of the packaged scale
+`K_sum = sqrt (sum_i K_i^2)` for `sum_i X_i`; see
+https://en.wikipedia.org/wiki/Moment-generating_function
+-/
 theorem centeredSubExponentialMGF_sum_of_iIndepFun_of_pos
     {Omega ι : Type*} [MeasurableSpace Omega] [Fintype ι]
     {P : Measure Omega} [IsProbabilityMeasure P]
@@ -461,6 +526,10 @@ Typed target for the proof-friendly lintegral finite-sum theorem.
 This records the intended future bridge: finite independent variables satisfying
 `CenteredSubExponentialMGFLIntegral` should yield the same local product bound
 under a `Kmax` domain.  It is a `Prop` specification, not a theorem.
+
+Formula reference: the specification is the local product-MGF statement with
+domain `|lambda| <= 1 / Kmax` and proxy `sum_i K_i^2`; see
+https://en.wikipedia.org/wiki/Moment-generating_function
 -/
 abbrev centeredSubExponentialMGFLIntegral_sum_of_iIndepFun_statement
     {Omega ι : Type*} [MeasurableSpace Omega] [Fintype ι]

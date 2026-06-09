@@ -10,5 +10,13 @@ For Stage C1 the existing declarations are re-exported from
 `HighDimProb.Concentration.TailToOrlicz` to keep names stable and avoid a risky
 physical move of proof-heavy analytic lemmas. Future cleanup can move the
 declaration bodies here without changing public theorem names.
--/
 
+Verified Wikipedia reference:
+* Layer cake representation:
+  https://en.wikipedia.org/wiki/Layer_cake_representation
+
+Formula reference: the re-exported lemmas formalize the layer-cake identity
+that rewrites nonnegative functions and integrals through super-level-set
+tails, as summarized at
+https://en.wikipedia.org/wiki/Layer_cake_representation
+-/

@@ -18,4 +18,8 @@ import HighDimProb.Concentration.Hoeffding
 # Concentration branch
 
 Experimental aggregate for scalar tail concentration foundations.
+
+Verified Wikipedia reference:
+* Concentration inequality:
+  https://en.wikipedia.org/wiki/Concentration_inequality
 -/

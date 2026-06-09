@@ -5,6 +5,12 @@ import HighDimProb.Concentration.SubExponentialSums
 
 This file adds the first Bernstein-branch statement layer and local Chernoff
 theorems from the proof-friendly subExponential MGF predicate.
+
+Verified Wikipedia references:
+* Bernstein inequalities: https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
+* Chernoff bound: https://en.wikipedia.org/wiki/Chernoff_bound
+* Markov inequality: https://en.wikipedia.org/wiki/Markov%27s_inequality
+* Heavy-tailed/subExponential context: https://en.wikipedia.org/wiki/Heavy-tailed_distribution
 -/
 
 namespace HighDimProb
@@ -15,13 +21,23 @@ noncomputable section
 
 open scoped BigOperators ENNReal
 
-/-- The Bernstein min-form rate `min (t^2 / varianceProxy) (t / maxScale)`. -/
+/--
+The Bernstein min-form rate `min (t^2 / varianceProxy) (t / maxScale)`.
+
+Formula reference: Bernstein inequalities interpolate a quadratic small-
+deviation regime and a linear large-deviation regime; see
+https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
+-/
 def subExponentialBernsteinRate (t varianceProxy maxScale : Real) : Real :=
   min (t ^ 2 / varianceProxy) (t / maxScale)
 
 /--
 Typed statement for the scalar Bernstein inequality for a finite sum of
 centered subExponential variables.
+
+Formula reference: this records a two-sided Bernstein-style tail bound
+`P(|sum_i X_i| >= t) <= 2 * exp(-c * min(t^2/V, t/B))`; see
+https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 
 The positive constant is explicit because this stage does not prove the full
 min-form inequality.
@@ -50,6 +66,10 @@ abbrev bernstein_subExponential_sum_statement
 
 /--
 Typed statement for a weighted finite subExponential Bernstein inequality.
+
+Formula reference: this is the weighted analogue of the Bernstein min-form
+tail bound with weighted variance and max-scale proxies; see
+https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 
 The variance proxy and max scale are stated explicitly to avoid committing to a
 future gauge or finite-maximum API in this scaffold stage.
@@ -127,6 +147,10 @@ private lemma neg_linear_half_le_neg_quarter_bernsteinRate
 /--
 Small-deviation upper-tail Chernoff bound from a local lintegral MGF bound
 with variance proxy `V` and max-scale domain `B`.
+
+Formula reference: Chernoff uses `P(X >= t) <= E[exp(lambda X)] * exp(-lambda t)`;
+the optimizer here gives `exp(-t^2/(4*V))`; see
+https://en.wikipedia.org/wiki/Chernoff_bound
 -/
 theorem upperTailProb_le_exp_neg_sq_div_varianceProxy_of_mgf_bound_of_le
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -192,6 +216,9 @@ theorem upperTailProb_le_exp_neg_sq_div_varianceProxy_of_mgf_bound_of_le
 /--
 Small-deviation lower-tail Chernoff bound from a local lintegral MGF bound
 with variance proxy `V` and max-scale domain `B`.
+
+Formula reference: lower-tail Chernoff uses the same exponential Markov method
+with negative `lambda`; see https://en.wikipedia.org/wiki/Chernoff_bound
 -/
 theorem lowerTailProb_le_exp_neg_sq_div_varianceProxy_of_mgf_bound_of_le
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -260,6 +287,10 @@ theorem lowerTailProb_le_exp_neg_sq_div_varianceProxy_of_mgf_bound_of_le
 /--
 Two-sided local Bernstein small-deviation bound from a local lintegral MGF
 bound with variance proxy `V` and max-scale domain `B`.
+
+Formula reference: combines upper and lower small-deviation Chernoff bounds into
+`P(|X| >= t) <= 2 * exp(-t^2/(4*V))`; see
+https://en.wikipedia.org/wiki/Chernoff_bound
 -/
 theorem absTailProb_le_two_mul_exp_neg_sq_div_varianceProxy_of_mgf_bound_of_le
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -297,6 +328,10 @@ theorem absTailProb_le_two_mul_exp_neg_sq_div_varianceProxy_of_mgf_bound_of_le
 /--
 Large-deviation upper-tail Chernoff bound from a local lintegral MGF bound
 with variance proxy `V` and max-scale domain `B`.
+
+Formula reference: this is the linear Bernstein regime
+`exp(-t/(2*B))`, obtained by choosing the boundary MGF parameter; see
+https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 -/
 theorem upperTailProb_le_exp_neg_linear_div_maxScale_of_mgf_bound_of_ge
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -363,6 +398,9 @@ theorem upperTailProb_le_exp_neg_linear_div_maxScale_of_mgf_bound_of_ge
 /--
 Large-deviation lower-tail Chernoff bound from a local lintegral MGF bound
 with variance proxy `V` and max-scale domain `B`.
+
+Formula reference: lower-tail version of the linear Bernstein regime; see
+https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 -/
 theorem lowerTailProb_le_exp_neg_linear_div_maxScale_of_mgf_bound_of_ge
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -433,6 +471,10 @@ theorem lowerTailProb_le_exp_neg_linear_div_maxScale_of_mgf_bound_of_ge
 /--
 Two-sided large-deviation Bernstein bound from a local lintegral MGF bound
 with variance proxy `V` and max-scale domain `B`.
+
+Formula reference: combines the upper/lower linear Bernstein regimes into
+`P(|X| >= t) <= 2 * exp(-t/(2*B))`; see
+https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 -/
 theorem absTailProb_le_two_mul_exp_neg_linear_div_maxScale_of_mgf_bound_of_ge
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -470,6 +512,10 @@ theorem absTailProb_le_two_mul_exp_neg_linear_div_maxScale_of_mgf_bound_of_ge
 /--
 One-sided upper-tail Bernstein min-form bound from a local lintegral MGF
 bound.  The universal constant is the conservative value `1/4`.
+
+Formula reference: this packages the quadratic and linear regimes as
+`exp(-c * min(t^2/V, t/B))`; see
+https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 -/
 theorem upperTailProb_le_exp_neg_quarter_bernsteinRate_of_mgf_bound
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -505,6 +551,9 @@ theorem upperTailProb_le_exp_neg_quarter_bernsteinRate_of_mgf_bound
 /--
 One-sided lower-tail Bernstein min-form bound from a local lintegral MGF
 bound.  The universal constant is the conservative value `1/4`.
+
+Formula reference: lower-tail min-form Bernstein bound; see
+https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 -/
 theorem lowerTailProb_le_exp_neg_quarter_bernsteinRate_of_mgf_bound
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -540,6 +589,10 @@ theorem lowerTailProb_le_exp_neg_quarter_bernsteinRate_of_mgf_bound
 /--
 Two-sided Bernstein min-form bound from a local lintegral MGF bound.  The
 universal constant is the conservative value `1/4`.
+
+Formula reference: two-sided min-form Bernstein bound
+`P(|X| >= t) <= 2 * exp(-c * min(t^2/V, t/B))`; see
+https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 -/
 theorem absTailProb_le_two_mul_exp_neg_quarter_bernsteinRate_of_mgf_bound
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -579,6 +632,9 @@ theorem absTailProb_le_two_mul_exp_neg_quarter_bernsteinRate_of_mgf_bound
 /--
 Local Bernstein small-deviation bound for a finite independent sum satisfying
 the proof-facing subExponential MGF assumptions.
+
+Formula reference: finite-sum version of the small-deviation Bernstein regime;
+see https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 -/
 theorem absTailProb_le_two_mul_exp_neg_sq_div_varianceProxy_of_centeredSubExponentialMGFLIntegral_sum
     {Omega ι : Type*} [MeasurableSpace Omega] [Fintype ι]
@@ -608,6 +664,9 @@ theorem absTailProb_le_two_mul_exp_neg_sq_div_varianceProxy_of_centeredSubExpone
 /--
 One-sided upper-tail scalar Bernstein min-form bound for a finite independent
 sum satisfying the proof-facing subExponential MGF assumptions.
+
+Formula reference: finite independent-sum Bernstein min-form upper tail; see
+https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 -/
 theorem upperTailProb_le_exp_neg_quarter_bernsteinRate_of_centeredSubExponentialMGFLIntegral_sum
     {Omega ι : Type*} [MeasurableSpace Omega] [Fintype ι]
@@ -638,6 +697,9 @@ theorem upperTailProb_le_exp_neg_quarter_bernsteinRate_of_centeredSubExponential
 /--
 One-sided lower-tail scalar Bernstein min-form bound for a finite independent
 sum satisfying the proof-facing subExponential MGF assumptions.
+
+Formula reference: finite independent-sum Bernstein min-form lower tail; see
+https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 -/
 theorem lowerTailProb_le_exp_neg_quarter_bernsteinRate_of_centeredSubExponentialMGFLIntegral_sum
     {Omega ι : Type*} [MeasurableSpace Omega] [Fintype ι]
@@ -668,6 +730,10 @@ theorem lowerTailProb_le_exp_neg_quarter_bernsteinRate_of_centeredSubExponential
 /--
 Full scalar Bernstein min-form tail bound for a finite independent sum
 satisfying the proof-facing centered subExponential MGF assumptions.
+
+Formula reference: two-sided finite independent-sum Bernstein min-form tail
+bound; see
+https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 
 The constant is the conservative universal value `1/4`.
 -/
@@ -701,6 +767,10 @@ theorem bernstein_sum_subExponential
 Deterministic weighted scalar Bernstein min-form tail bound for a finite
 independent sum satisfying the proof-facing centered subExponential MGF
 assumptions.
+
+Formula reference: weighted two-sided Bernstein min-form tail bound with
+variance proxy `sum_i c_i^2 * K_i^2` and max scale `max_i |c_i| * K_i`; see
+https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 
 The weighted variance proxy is `sum_i c_i^2 * K_i^2`, and the weighted max
 scale is `max_i |c_i| * K_i`.  The positive weighted denominators are explicit,
@@ -739,6 +809,10 @@ theorem bernstein_weighted_sum_subExponential
 /--
 Small-deviation upper-tail Chernoff bound from the lintegral local MGF
 predicate.
+
+Formula reference: local subExponential MGF plus Chernoff yields
+`exp(-t^2/(4*K^2))` in the small-deviation range; see
+https://en.wikipedia.org/wiki/Chernoff_bound
 
 The optimizer `lambda = t / (2*K^2)` is inside the local MGF domain under the
 visible assumption `t <= K`.
@@ -803,7 +877,13 @@ theorem upperTailProb_le_exp_neg_sq_of_centeredSubExponentialMGFLIntegral_of_le
             field_simp [hK.ne']
             ring
 
-/-- Small-deviation lower-tail Chernoff bound from the lintegral local MGF predicate. -/
+/--
+Small-deviation lower-tail Chernoff bound from the lintegral local MGF predicate.
+
+Formula reference: lower-tail local subExponential Chernoff bound with the same
+`exp(-t^2/(4*K^2))` exponent; see
+https://en.wikipedia.org/wiki/Chernoff_bound
+-/
 theorem lowerTailProb_le_exp_neg_sq_of_centeredSubExponentialMGFLIntegral_of_le
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     {X : RealRandomVariable Omega} {K t : Real}
@@ -867,7 +947,13 @@ theorem lowerTailProb_le_exp_neg_sq_of_centeredSubExponentialMGFLIntegral_of_le
             field_simp [hK.ne']
             ring
 
-/-- Two-sided local small-deviation tail bound from the lintegral local MGF predicate. -/
+/--
+Two-sided local small-deviation tail bound from the lintegral local MGF predicate.
+
+Formula reference: combines the local upper/lower Chernoff bounds into
+`P(|X| >= t) <= 2 * exp(-t^2/(4*K^2))`; see
+https://en.wikipedia.org/wiki/Chernoff_bound
+-/
 theorem absTailProb_le_two_mul_exp_neg_sq_of_centeredSubExponentialMGFLIntegral_of_le
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     {X : RealRandomVariable Omega} {K t : Real}

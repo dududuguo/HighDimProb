@@ -8,6 +8,10 @@ This file starts the MGF branch of the scalar subGaussian implication graph.
 The existing `CenteredSubGaussianMGF` predicate wraps Mathlib's real-valued
 `HasSubgaussianMGF`; the auxiliary lintegral predicate below is a
 proof-friendly ENNReal form for HighDimProb tail probabilities.
+
+Verified Wikipedia references:
+* Moment generating function: https://en.wikipedia.org/wiki/Moment-generating_function
+* Chernoff bound: https://en.wikipedia.org/wiki/Chernoff_bound
 -/
 
 namespace HighDimProb
@@ -20,6 +24,10 @@ noncomputable section
 
 /--
 Proof-friendly centered MGF formulation using `lintegral`.
+
+Formula reference: the moment-generating function has the form
+`M_X(lambda) = E[exp(lambda * X)]`; see
+https://en.wikipedia.org/wiki/Moment-generating_function
 
 The bound is intentionally stated with `exp (K^2 * lambda^2)`, matching the
 book-style convention used by the Chernoff wrapper below.  Mathlib's
@@ -73,6 +81,10 @@ private lemma ofReal_exp_div_exp_eq_ofReal_exp_sub (a b : ℝ) :
 
 /--
 One-sided upper-tail Chernoff bound from the lintegral centered MGF predicate.
+
+Formula reference: Chernoff applies Markov to `exp(lambda * X)` and optimizes
+`M_X(lambda) * exp(-lambda * t)`; see
+https://en.wikipedia.org/wiki/Chernoff_bound
 
 The denominator `4 * K^2` matches the looser book-style convention
 `E exp(lambda X) <= exp(K^2 lambda^2)`.
@@ -128,6 +140,10 @@ theorem upperTailProb_le_exp_neg_sq_of_centeredSubGaussianMGFLIntegral
 
 /--
 One-sided lower-tail Chernoff bound from the lintegral centered MGF predicate.
+
+Formula reference: this is the left-tail version of the same exponential
+moment/Chernoff argument; see
+https://en.wikipedia.org/wiki/Chernoff_bound
 -/
 theorem lowerTailProb_le_exp_neg_sq_of_centeredSubGaussianMGFLIntegral
     {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
@@ -221,6 +237,10 @@ private lemma add_two_ofReal_exp (a : ℝ) :
 
 /--
 Two-sided subGaussian tail bound from the lintegral centered MGF predicate.
+
+Formula reference: combines the upper and lower Chernoff tail bounds into
+`P(|X| >= t) <= 2 * exp(-t^2 / (2*K)^2)`; see
+https://en.wikipedia.org/wiki/Chernoff_bound
 
 The resulting `SubGaussianTail` scale is `2 * K`.
 -/

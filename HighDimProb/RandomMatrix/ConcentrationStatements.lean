@@ -115,6 +115,146 @@ abbrev matrixBernsteinTraceMGF_statement {Omega : Type*}
   TraceMGFVarianceProxyBound P (randomMatrixSum A) (matrixVarianceProxy P A)
     theta
 
+/-- Typed target for the bounded Matrix Bernstein trace-mgf provider.
+
+This is the Bernstein-denominator variant of `matrixBernsteinTraceMGF_statement`.
+It preserves the older `theta ^ 2 / 2` target for compatibility while exposing
+the coefficient produced by the bounded single-summand MGF route. -/
+abbrev matrixBernsteinTraceMGFWithBernsteinCoeff_statement {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} [Fintype I] {n : Nat}
+    (P : Measure Omega) (A : I -> RandomMatrix Omega n n)
+    (theta R : Real) : Prop :=
+  TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum A)
+    (matrixVarianceProxy P A) theta R
+
+/-- Thin high-level bounded Matrix Bernstein trace-mgf wrapper from the
+finite-family Tropp typed primitive.
+
+This theorem does not prove the finite-family Tropp/Lieb primitive. It
+specializes the semantic wrapper to the canonical variance proxy
+`matrixVarianceProxy P A`, which is definitionally the RHS used by
+`matrixBernsteinTraceMGFWithBernsteinCoeff_statement`. -/
+theorem matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n)
+    (K : I -> Matrix (Fin n) (Fin n) Real) (theta R : Real)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A K (matrixVarianceProxy P A) theta R)
+    (hRand : forall i, IsRandomMatrix P (A i))
+    (hSA : forall i, RandomSelfAdjointMatrix P (A i))
+    (hIndep : ProbabilityTheory.iIndepFun A P)
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (fun omega => matrixExp (SMul.smul theta (A i omega))))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A) theta))
+    (hKSA : forall i, IsSelfAdjointMatrix (K i))
+    (hVSA : IsSelfAdjointMatrix (matrixVarianceProxy P A))
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hMGF :
+      forall i,
+        MatrixLE
+          (matrixExpect P
+            (fun omega => matrixExp (SMul.smul theta (A i omega))))
+          (matrixExp (K i)))
+    (hNorm :
+      Finset.univ.sum (fun i : I => K i) =
+        SMul.smul (bernsteinMGFCoeff theta R) (matrixVarianceProxy P A)) :
+    matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R :=
+  traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
+    A K (matrixVarianceProxy P A) theta R hTropp hRand hSA hIndep hExpInt
+    hTraceInt hKSA hVSA hR hRange hMGF hNorm
+
+/-- Bounded Matrix Bernstein trace-mgf provider under explicit primitive
+assumptions.
+
+This theorem packages the ordinary finite-family Matrix Bernstein assumptions
+with the two still-typed analytic primitives. It does not prove the
+finite-family Tropp/Lieb primitive or the pointwise Bernstein functional
+calculus primitive. -/
+theorem matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (theta R : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (fun omega => matrixExp (SMul.smul theta (A i omega))))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A) theta))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hCFC :
+      forall i omega,
+        bernsteinMatrixExp_le_quadratic_statement (A i omega) theta R)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A
+        (fun i => SMul.smul (bernsteinMGFCoeff theta R)
+          (matrixSecondMoment P (A i)))
+        (matrixVarianceProxy P A) theta R) :
+    matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R := by
+  have hFam : SelfAdjointRandomMatrixFamily P A := hCentered.1
+  have hRand : forall i, IsRandomMatrix P (A i) := hFam.1
+  have hSA : forall i, RandomSelfAdjointMatrix P (A i) := hFam.2
+  have hMeanZero : forall i, matrixExpect P (A i) = 0 := hCentered.2
+  have hIndep : ProbabilityTheory.iIndepFun A P := hIndepSA.2
+  have hKSA :
+      forall i,
+        IsSelfAdjointMatrix
+          (SMul.smul (bernsteinMGFCoeff theta R)
+            (matrixSecondMoment P (A i))) := by
+    intro i
+    exact isSelfAdjointMatrix_smul (bernsteinMGFCoeff theta R)
+      (isSelfAdjointMatrix_matrixSecondMoment (hSA i))
+  have hVSA : IsSelfAdjointMatrix (matrixVarianceProxy P A) :=
+    isSelfAdjointMatrix_matrixVarianceProxy P hSA
+  have hMGF :
+      forall i,
+        MatrixLE
+          (matrixExpect P
+            (fun omega => matrixExp (SMul.smul theta (A i omega))))
+          (matrixExp
+            (SMul.smul (bernsteinMGFCoeff theta R)
+              (matrixSecondMoment P (A i)))) := by
+    intro i
+    exact
+      singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic
+        (A i) (matrixSecondMoment P (A i)) theta R (hCFC i)
+        (hRand i) (hSA i) (hIntX i) (hIntSq i) (hExpInt i)
+        (hMeanZero i) (hBound i) hR hRange
+        (isSelfAdjointMatrix_matrixSecondMoment (hSA i))
+        (isPSD_matrixSecondMoment_of_selfAdjoint (hSA i) (hIntSq i))
+        (matrixLE_refl (matrixSecondMoment P (A i)))
+  have hNorm :
+      Finset.univ.sum
+          (fun i : I =>
+            SMul.smul (bernsteinMGFCoeff theta R)
+              (matrixSecondMoment P (A i))) =
+        SMul.smul (bernsteinMGFCoeff theta R) (matrixVarianceProxy P A) := by
+    simpa [matrixVarianceProxy] using
+      (Finset.smul_sum (s := Finset.univ)
+        (f := fun i : I => matrixSecondMoment P (A i))
+        (r := bernsteinMGFCoeff theta R)).symm
+  exact
+    matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily
+      A
+      (fun i => SMul.smul (bernsteinMGFCoeff theta R)
+        (matrixSecondMoment P (A i)))
+      theta R hTropp hRand hSA hIndep hExpInt hTraceInt hKSA hVSA hR hRange
+      hMGF hNorm
+
 /-- Typed target for the spectral-radius reduction for self-adjoint matrices.
 
 This records a future bridge between HighDimProb's deterministic L2 operator

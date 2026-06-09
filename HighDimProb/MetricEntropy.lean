@@ -5,6 +5,13 @@ import HighDimProb.Nets
 
 This file exposes HighDimProb-facing names for Mathlib's covering and packing
 number APIs. The values are Mathlib `ℕ∞` cardinal numbers.
+
+Verified Wikipedia reference:
+https://en.wikipedia.org/wiki/Covering_number
+
+Note: wiki.md listed `https://en.wikipedia.org/wiki/Metric_entropy`, but this
+was not verified as a dedicated Wikipedia page. Covering-number vocabulary is
+therefore linked to the verified covering-number page.
 -/
 
 namespace HighDimProb
@@ -13,17 +20,35 @@ open scoped NNReal ENNReal
 
 noncomputable section
 
-/-- External covering number: centers may lie outside `K`. -/
+/--
+External covering number: centers may lie outside `K`.
+
+Formula reference: this is the external covering number `N_ext(K, epsilon)`,
+the least number of radius-`epsilon` balls whose centers may lie outside `K`
+and whose union covers `K`; see https://en.wikipedia.org/wiki/Covering_number
+-/
 abbrev externalCoveringNumber {α : Type*} [PseudoMetricSpace α]
     (K : Set α) (ε : ℝ) : ℕ∞ :=
   Metric.externalCoveringNumber (epsilonRadius ε) K
 
-/-- Internal covering number: centers are constrained to lie in `K`. -/
+/--
+Internal covering number: centers are constrained to lie in `K`.
+
+Formula reference: this is the internal covering number `N(K, epsilon)`, the
+least number of radius-`epsilon` balls with centers constrained to lie in `K`
+whose union covers `K`; see https://en.wikipedia.org/wiki/Covering_number
+-/
 abbrev coveringNumber {α : Type*} [PseudoMetricSpace α]
     (K : Set α) (ε : ℝ) : ℕ∞ :=
   Metric.coveringNumber (epsilonRadius ε) K
 
-/-- Packing number: maximal cardinality of an `ε`-separated subset of `K`. -/
+/--
+Packing number: maximal cardinality of an `epsilon`-separated subset of `K`.
+
+Formula reference: this is the packing number `M(K, epsilon)`, the maximal
+cardinality of a subset of `K` whose distinct points are pairwise separated at
+scale `epsilon`; see https://en.wikipedia.org/wiki/Covering_number
+-/
 abbrev packingNumber {α : Type*} [PseudoMetricSpace α]
     (K : Set α) (ε : ℝ) : ℕ∞ :=
   Metric.packingNumber (epsilonRadius ε) K

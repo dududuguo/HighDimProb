@@ -5,6 +5,10 @@ import Mathlib.Probability.Moments.Variance
 # Scalar variance and covariance
 
 Thin HighDimProb aliases around Mathlib scalar variance, covariance, and second moments.
+
+Verified Wikipedia references:
+* Variance: https://en.wikipedia.org/wiki/Variance
+* Covariance: https://en.wikipedia.org/wiki/Covariance
 -/
 
 namespace HighDimProb
@@ -14,17 +18,32 @@ open scoped ProbabilityTheory
 
 noncomputable section
 
-/-- Variance of a real random variable, reusing Mathlib's definition. -/
+/--
+Variance of a real random variable, reusing Mathlib's definition.
+
+Formula reference: `Var(X) = E[(X - E[X])^2]`; see
+https://en.wikipedia.org/wiki/Variance
+-/
 abbrev variance {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (X : RealRandomVariable Ω) : ℝ :=
   ProbabilityTheory.variance X P
 
-/-- Covariance of two real random variables, reusing Mathlib's definition. -/
+/--
+Covariance of two real random variables, reusing Mathlib's definition.
+
+Formula reference: `Cov(X,Y) = E[(X - E[X]) * (Y - E[Y])]`; see
+https://en.wikipedia.org/wiki/Covariance
+-/
 abbrev covariance {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (X Y : RealRandomVariable Ω) : ℝ :=
   ProbabilityTheory.covariance X Y P
 
-/-- Uncentered second moment of two real random variables. -/
+/--
+Uncentered second moment of two real random variables.
+
+Formula reference: second moments are expectations of degree-two products; see
+https://en.wikipedia.org/wiki/Moment_(mathematics)
+-/
 abbrev secondMoment {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (X Y : RealRandomVariable Ω) : ℝ :=
   expect P (fun ω => X ω * Y ω)
@@ -53,7 +72,12 @@ theorem secondMoment_def {Ω : Type*} [MeasurableSpace Ω]
     secondMoment P X Y = expect P (fun ω => X ω * Y ω) :=
   rfl
 
-/-- Scalar variance is nonnegative. -/
+/--
+Scalar variance is nonnegative.
+
+Formula reference: variance is an expected square and is therefore nonnegative;
+see https://en.wikipedia.org/wiki/Variance
+-/
 theorem variance_nonneg {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (X : RealRandomVariable Ω) :
     0 <= variance P X := by

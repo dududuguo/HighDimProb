@@ -2,17 +2,30 @@ import HighDimProb.RandomProcess
 
 /-!
 # Empirical process vocabulary
+
+Verified Wikipedia reference:
+https://en.wikipedia.org/wiki/Empirical_process
 -/
 
 namespace HighDimProb
 
 open MeasureTheory
 
-/-- A finite sample of `E`-valued random variables. -/
+/--
+A finite sample of `E`-valued random variables.
+
+Formula reference: empirical-process vocabulary is built from samples of
+random variables; see https://en.wikipedia.org/wiki/Empirical_process
+-/
 abbrev RandomSample (Ω E : Type*) [MeasurableSpace Ω] (n : ℕ) :=
   Fin n → RandomVariable Ω E
 
-/-- Evaluation of a test function over a finite random sample. -/
+/--
+Evaluation of a test function over a finite random sample.
+
+Formula reference: empirical processes evaluate classes of functions on
+sample points; see https://en.wikipedia.org/wiki/Empirical_process
+-/
 def sampleEvaluation {Ω E : Type*} [MeasurableSpace Ω] {n : ℕ}
     (X : RandomSample Ω E n) (f : E → ℝ) (ω : Ω) : Fin n → ℝ :=
   fun i => f (X i ω)

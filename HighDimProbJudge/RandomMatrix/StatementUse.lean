@@ -2,6 +2,8 @@ import HighDimProb.RandomMatrix
 
 #check HighDimProb.matrixBernsteinStatement
 #check HighDimProb.matrixBernsteinTraceMGF_statement
+#check HighDimProb.matrixBernsteinTraceMGFWithBernsteinCoeff_statement
+#check HighDimProb.matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily
 
 #check
   (HighDimProb.matrixBernsteinStatement :
@@ -22,3 +24,9 @@ example {Omega I : Type*} [MeasurableSpace Omega] [Fintype I]
     (A : I -> HighDimProb.RandomMatrix Omega n n)
     (theta : Real) : Prop :=
   HighDimProb.matrixBernsteinTraceMGF_statement P A theta
+
+example {Omega I : Type*} [MeasurableSpace Omega] [Fintype I]
+    {n : Nat} (P : MeasureTheory.Measure Omega)
+    (A : I -> HighDimProb.RandomMatrix Omega n n)
+    (theta R : Real) : Prop :=
+  HighDimProb.matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R

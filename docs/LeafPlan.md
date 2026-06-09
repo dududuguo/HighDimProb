@@ -95,10 +95,12 @@
 - HansonWrightStatements
 - JLStatements
 - CovarianceEstimationStatements
-- Next: Stage MB-S9-trace-mgf-provider-contract. Audit the source/API route
-  for proving `matrixBernsteinTraceMGF_statement`, or block cleanly on missing
-  Golden-Thompson/Lieb/matrix-mgf prerequisites. Do not prove Golden-Thompson,
-  Lieb, the full trace-mgf master theorem, or Matrix Bernstein in that stage.
+- Next: Stage MB-S9-trace-mgf-to-laplace-tail-contract. Audit
+  the trace-mgf provider route now that the single-summand MGF provider is
+  proved under explicit pointwise Bernstein CFC assumptions and the bounded
+  Bernstein RHS coefficient is normalized, while the Bernstein CFC primitive
+  itself remains typed only. Do not prove Golden-Thompson, Lieb, the full
+  trace-mgf provider, or Matrix Bernstein in that contract stage.
 
 ## Process
 
@@ -134,3 +136,85 @@
 - FinsetSimp
 - MatrixEntry
 - Tail
+
+## MB-S9 Bernstein Coefficient Leaf Update
+
+- `HighDimProb/RandomMatrix/TraceExp.lean` now contains
+  `bernsteinCoefficient_nonneg`, a proved scalar helper for the Bernstein
+  coefficient used by the typed CFC and single-summand MGF primitives.
+- The single-summand provider remains unproved. The downstream matrix
+  exponential lower bound `MatrixLE (1 + c â€?V) (matrixExp (c â€?V))`, the
+  Bernstein CFC primitive proof, trace-mgf provider, Golden-Thompson, Lieb,
+  and Matrix Bernstein remain unproved.
+- Next safe task was MB-S9-exp-lower-bound-contract.
+
+## MB-S9 Exp Lower Bound Leaf Update
+
+- `HighDimProb/RandomMatrix/TraceExp.lean` now contains
+  `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint`, proving
+  `MatrixLE (1 + A) (matrixExp A)` for self-adjoint real matrices.
+- It also contains `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`,
+  the scalar-multiple wrapper for downstream single-summand provider work.
+- The Bernstein CFC primitive remains typed only, and trace-mgf provider,
+  Golden-Thompson, Lieb, full CFC-free single-summand provider, and Matrix
+  Bernstein remain unproved.
+- Next safe task was MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## MB-S9 Single-Summand Provider Under CFC Leaf Update
+
+- `HighDimProb/RandomMatrix/TraceExp.lean` now contains
+  `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`,
+  proving the single-summand matrix MGF variance-proxy target under an
+  explicit pointwise `bernsteinMatrixExp_le_quadratic_statement` assumption.
+- The theorem preserves the typed target's explicit centeredness,
+  integrability, boundedness, theta-range, self-adjointness, and
+  second-moment comparison assumptions.
+- The Bernstein CFC primitive itself remains typed only. Tropp/Lieb,
+  trace-mgf provider, full CFC-free single-summand provider, and Matrix
+  Bernstein remain unproved.
+- Next safe task was MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## MB-S9 RHS Normalization Leaf Update
+
+- `HighDimProb/RandomMatrix/TraceExp.lean` now contains
+  `bernsteinMGFCoeff`, the canonical bounded Bernstein coefficient
+  `(theta ^ 2 / 2) / (1 - abs theta * R / 3)`.
+- It also contains `bernsteinMGFCoeff_nonneg`,
+  `TraceMGFBernsteinVarianceProxyBound`,
+  `TraceMGFBernsteinVarianceProxyBoundLIntegral`, and
+  `traceMGFBernsteinVarianceProxyBound_statement`.
+- `HighDimProb/RandomMatrix/ConcentrationStatements.lean` now contains
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`.
+- The retained `TraceMGFVarianceProxyBound` and
+  `matrixBernsteinTraceMGF_statement` use `theta ^ 2 / 2` and are not the
+  bounded Bernstein denominator target.
+- Trace-mgf provider, Tropp/Lieb, Bernstein CFC, full CFC-free
+  single-summand provider, and Matrix Bernstein remain unproved.
+- MB-S9-tropp-shape-refactor adds
+  `troppMasterTraceMGFFiniteFamily_statement`, a typed-only finite-family
+  Tropp/Lieb iteration interface consuming per-summand matrix-MGF comparisons
+  and bounded-RHS normalization. The one-step Tropp primitive remains
+  available, and no Lieb, Golden-Thompson, trace-mgf provider, or Matrix
+  Bernstein theorem was proved.
+- Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+## MB-S9 Trace-MGF Thin Wrapper Leaf
+
+- Completed leaf: prove thin wrappers from
+  `troppMasterTraceMGFFiniteFamily_statement`.
+- New API:
+  `traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily`;
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily`.
+- Scope preserved: no Tropp/Lieb proof, no Bernstein CFC proof, no Matrix
+  Bernstein tail proof.
+- Next safe leaf:
+  MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## MB-S9 Matrix Bernstein Trace-MGF Under Primitives Leaf
+
+- Completed leaf: prove high-level bounded Matrix Bernstein trace-MGF under
+  explicit finite-family Tropp and pointwise Bernstein CFC primitive
+  assumptions.
+- New API: `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
+- Scope preserved: no Tropp/Lieb proof, no Bernstein CFC proof, no Matrix
+  Bernstein tail proof.
+- Next safe leaf: MB-S9-trace-mgf-to-laplace-tail-contract.

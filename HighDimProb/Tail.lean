@@ -2,38 +2,72 @@ import HighDimProb.RandomVariable
 
 /-!
 # Tail events
+
+Verified Wikipedia references:
+* Tail probabilities / fat tails: https://en.wikipedia.org/wiki/Fat-tailed_distribution
+* Concentration inequalities: https://en.wikipedia.org/wiki/Concentration_inequality
 -/
 
 namespace HighDimProb
 
 open MeasureTheory
 
-/-- Upper-tail event `{ω | t ≤ X ω}` for a real random variable. -/
+/--
+Upper-tail event `{ω | t ≤ X ω}` for a real random variable.
+
+Formula reference: tail probabilities study events of the form `P(X >= t)`;
+see https://en.wikipedia.org/wiki/Fat-tailed_distribution
+-/
 def upperTailEvent {Ω : Type*} [MeasurableSpace Ω]
     (X : RealRandomVariable Ω) (t : ℝ) : Event Ω :=
   {ω | t ≤ X ω}
 
-/-- Lower-tail event `{ω | X ω ≤ t}` for a real random variable. -/
+/--
+Lower-tail event `{ω | X ω ≤ t}` for a real random variable.
+
+Formula reference: this is the left-tail analogue of a tail event; see
+https://en.wikipedia.org/wiki/Fat-tailed_distribution
+-/
 def lowerTailEvent {Ω : Type*} [MeasurableSpace Ω]
     (X : RealRandomVariable Ω) (t : ℝ) : Event Ω :=
   {ω | X ω ≤ t}
 
-/-- Absolute-tail event `{ω | t ≤ |X ω|}` for a real random variable. -/
+/--
+Absolute-tail event `{ω | t ≤ |X ω|}` for a real random variable.
+
+Formula reference: two-sided tails are commonly written as `P(|X| >= t)`; see
+https://en.wikipedia.org/wiki/Concentration_inequality
+-/
 def absTailEvent {Ω : Type*} [MeasurableSpace Ω]
     (X : RealRandomVariable Ω) (t : ℝ) : Event Ω :=
   {ω | t ≤ |X ω|}
 
-/-- Upper-tail probability `P {ω | t ≤ X ω}`. -/
+/--
+Upper-tail probability `P {ω | t ≤ X ω}`.
+
+Formula reference: `P(X >= t)` is the upper-tail probability notation used by
+tail bounds; see https://en.wikipedia.org/wiki/Concentration_inequality
+-/
 def upperTailProb {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (X : RealRandomVariable Ω) (t : ℝ) : ENNReal :=
   P (upperTailEvent X t)
 
-/-- Lower-tail probability `P {ω | X ω ≤ t}`. -/
+/--
+Lower-tail probability `P {ω | X ω ≤ t}`.
+
+Formula reference: lower-tail bounds control `P(X <= t)`; see
+https://en.wikipedia.org/wiki/Concentration_inequality
+-/
 def lowerTailProb {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (X : RealRandomVariable Ω) (t : ℝ) : ENNReal :=
   P (lowerTailEvent X t)
 
-/-- Absolute-tail probability `P {ω | t ≤ |X ω|}`. -/
+/--
+Absolute-tail probability `P {ω | t ≤ |X ω|}`.
+
+Formula reference: two-sided bounds control `P(|X| >= t)`; see
+https://en.wikipedia.org/wiki/Concentration_inequality
+-/
 def absTailProb {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (X : RealRandomVariable Ω) (t : ℝ) : ENNReal :=
   P (absTailEvent X t)

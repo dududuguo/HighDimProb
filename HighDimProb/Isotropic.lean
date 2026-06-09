@@ -2,6 +2,12 @@ import HighDimProb.Covariance
 
 /-!
 # Isotropic random vectors
+
+Verified Wikipedia reference:
+https://en.wikipedia.org/wiki/Isotropic_position
+
+Note: wiki.md listed `https://en.wikipedia.org/wiki/Isotropic_vector`, but the
+verified probability/random-vector page is `Isotropic_position`.
 -/
 
 namespace HighDimProb
@@ -11,24 +17,50 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- Entrywise second-moment isotropicity: `E[X_i X_j]` is the identity matrix. -/
+/--
+Entrywise second-moment isotropicity: `E[X_i X_j]` is the identity matrix.
+
+Formula reference: this is the coordinate statement
+`E[X_i X_j] = delta_ij`, equivalent to the matrix identity
+`E[X X^T] = I` for an isotropic-position distribution; see
+https://en.wikipedia.org/wiki/Isotropic_position
+-/
 def IsotropicSecondMoment {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
     (P : Measure Ω) (X : RandomVector Ω n) : Prop :=
   ∀ i j : Fin n, secondMomentMatrixEntry P X i j = if i = j then 1 else 0
 
-/-- Matrix-form second-moment isotropicity. The entrywise predicate is the primary API. -/
+/--
+Matrix-form second-moment isotropicity. The entrywise predicate is the primary API.
+
+Formula reference: this is the compact matrix form `E[X X^T] = I`, where the
+identity matrix has entries `delta_ij`; see
+https://en.wikipedia.org/wiki/Isotropic_position
+-/
 def IsotropicSecondMomentMatrix {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
     (P : Measure Ω) (X : RandomVector Ω n) : Prop :=
   secondMomentMatrix P X = 1
 
-/-- Covariance-form isotropicity: centered coordinates and identity covariance matrix. -/
+/--
+Covariance-form isotropicity: centered coordinates and identity covariance matrix.
+
+Formula reference: after adding the centeredness condition `E[X_i] = 0`, this
+uses the covariance form `Cov(X_i, X_j) = delta_ij`, i.e. covariance matrix
+`I`; see https://en.wikipedia.org/wiki/Isotropic_position
+-/
 def IsotropicCovariance {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
     (P : Measure Ω) (X : RandomVector Ω n) : Prop :=
   CenteredVector P X ∧
     ∀ i j : Fin n,
       covarianceMatrixEntry P X i j = if i = j then 1 else 0
 
-/-- Marginal-form isotropicity: every linear marginal has second moment `∑ i, a i ^ 2`. -/
+/--
+Marginal-form isotropicity: every linear marginal has second moment
+`sum_i a_i^2`.
+
+Formula reference: this is the one-dimensional marginal form
+`E[(sum_i a_i X_i)^2] = sum_i a_i^2`, equivalent to `E[X X^T] = I`; see
+https://en.wikipedia.org/wiki/Isotropic_position
+-/
 def IsotropicMarginal {Ω : Type*} [MeasurableSpace Ω] {n : ℕ}
     (P : Measure Ω) (X : RandomVector Ω n) : Prop :=
   ∀ a : Fin n → ℝ,

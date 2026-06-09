@@ -3,6 +3,7 @@ import Mathlib.Analysis.Matrix.Order
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Basic
 import Mathlib.Data.Real.StarOrdered
 import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.Probability.Independence.Basic
 import HighDimProb.RandomMatrix.Spectral
 import HighDimProb.RandomMatrix.VarianceProxy
 
@@ -95,6 +96,65 @@ theorem matrixExp_posSemidef_of_selfAdjoint {n : Nat}
     Matrix.PosSemidef (matrixExp A) := by
   exact Matrix.nonneg_iff_posSemidef.mp (by
     simpa [matrixExp] using IsSelfAdjoint.exp_nonneg hA.isSelfAdjoint)
+
+/-- Matrix exponential dominates its affine first-order lower bound in the
+explicit HighDimProb Loewner-style order.
+
+This is the CFC lift of the scalar inequality `x + 1 <= exp x`, converted from
+Mathlib's matrix order to `MatrixLE`. -/
+theorem matrixLE_one_add_self_le_matrixExp_of_selfAdjoint {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (hA : IsSelfAdjointMatrix A) :
+    MatrixLE ((1 : Matrix (Fin n) (Fin n) Real) + A) (matrixExp A) := by
+  unfold MatrixLE
+  have hle :
+      (1 : Matrix (Fin n) (Fin n) Real) + A <= matrixExp A := by
+    have hmono :
+        cfc (fun x : Real => x + 1) A <= cfc Real.exp A := by
+      exact cfc_mono (a := A)
+        (f := fun x : Real => x + 1)
+        (g := Real.exp)
+        (by
+          intro x _hx
+          exact Real.add_one_le_exp x)
+    have hlin :
+        cfc (fun x : Real => x + 1) A =
+          A + (1 : Matrix (Fin n) (Fin n) Real) := by
+      calc
+        cfc (fun x : Real => x + 1) A =
+            cfc (fun x : Real => id x + (1 : Real)) A := rfl
+        _ = cfc id A + cfc (1 : Real -> Real) A := by
+            exact cfc_add A id (1 : Real -> Real)
+        _ = A + (1 : Matrix (Fin n) (Fin n) Real) := by
+            rw [cfc_id Real A hA.isSelfAdjoint, cfc_one Real A hA.isSelfAdjoint]
+    have hexp : cfc Real.exp A = matrixExp A := by
+      simpa [matrixExp] using
+        (CFC.real_exp_eq_normedSpace_exp (a := A) hA.isSelfAdjoint)
+    calc
+      (1 : Matrix (Fin n) (Fin n) Real) + A =
+          A + (1 : Matrix (Fin n) (Fin n) Real) := by
+            rw [add_comm]
+      _ = cfc (fun x : Real => x + 1) A := hlin.symm
+      _ <= cfc Real.exp A := hmono
+      _ = matrixExp A := hexp
+  have hPSD :
+      (matrixExp A - ((1 : Matrix (Fin n) (Fin n) Real) + A)).PosSemidef :=
+    Matrix.le_iff.mp hle
+  constructor
+  · apply Matrix.IsSymm.ext
+    intro i j
+    have h := Matrix.IsHermitian.apply hPSD.isHermitian i j
+    simpa using h
+  · intro x
+    exact matrixQuadraticForm_nonneg_of_posSemidef hPSD x
+
+/-- Scalar-multiple wrapper for the matrix exponential affine lower bound. -/
+theorem matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint {n : Nat}
+    {V : Matrix (Fin n) (Fin n) Real} (c : Real)
+    (hV : IsSelfAdjointMatrix V) :
+    MatrixLE ((1 : Matrix (Fin n) (Fin n) Real) + SMul.smul c V)
+      (matrixExp (SMul.smul c V)) := by
+  exact matrixLE_one_add_self_le_matrixExp_of_selfAdjoint
+    (isSelfAdjointMatrix_smul c hV)
 
 end MatrixExpPosSemidef
 
@@ -198,6 +258,386 @@ def TraceMGFVarianceProxyBoundLIntegral {Omega : Type*} [MeasurableSpace Omega]
     (V : Matrix (Fin n) (Fin n) Real) (theta : Real) : Prop :=
   TraceMGFBoundLIntegral P Y theta
     (ENNReal.ofReal (traceMatrixExp ((theta ^ 2 / 2) • V)))
+
+/-! ## Typed Tropp/Lieb trace-mgf primitive -/
+
+section TroppMasterTraceMGFStep
+
+open scoped BigOperators MatrixOrder Matrix.Norms.Operator
+
+/-- Typed Tropp master trace-mgf step.
+
+This is the source-backed primitive
+`E tr exp(H + Z) <= tr exp(H + log E exp Z)` from the Lieb/Tropp matrix-mgf
+route. It is only a `Prop`-valued typed statement: the hard Lieb concavity and
+Jensen/conditional-expectation proof is not supplied here.
+
+All currently visible infrastructure assumptions are explicit. The matrix
+exponential moment uses HighDimProb's entrywise `matrixExpect`, and the
+self-adjointness and strict positivity needed to form the matrix logarithm are
+assumptions rather than hidden providers. -/
+abbrev troppMasterTraceMGFStep_statement {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    (H : Matrix (Fin n) (Fin n) Real)
+    (Z : RandomMatrix Omega n n) : Prop :=
+  IsSelfAdjointMatrix H ->
+    RandomSelfAdjointMatrix P Z ->
+      IntegrableRealRandomVariable P
+        (fun omega => traceMatrixExp (H + Z omega)) ->
+        IntegrableRandomMatrix P (fun omega => matrixExp (Z omega)) ->
+          IsSelfAdjointMatrix
+            (matrixExpect P (fun omega => matrixExp (Z omega))) ->
+            IsStrictlyPositive
+              (matrixExpect P (fun omega => matrixExp (Z omega))) ->
+              expect P (fun omega => traceMatrixExp (H + Z omega)) <=
+                traceMatrixExp
+                  (H + CFC.log
+                    (matrixExpect P (fun omega => matrixExp (Z omega))))
+
+end TroppMasterTraceMGFStep
+
+/-! ## Typed Bernstein functional-calculus primitive -/
+
+section BernsteinFunctionalCalculus
+
+open scoped MatrixOrder Matrix.Norms.Operator
+
+/-- Canonical bounded-Bernstein matrix-MGF coefficient. -/
+def bernsteinMGFCoeff (theta R : Real) : Real :=
+  (theta ^ 2 / 2) / (1 - abs theta * R / 3)
+
+/-- Nonnegativity of the Bernstein quadratic coefficient under the standard
+theta-range hypothesis. -/
+theorem bernsteinCoefficient_nonneg {theta R : Real}
+    (hRange : abs theta * R < 3) :
+    0 <= (theta ^ 2 / 2) / (1 - abs theta * R / 3) := by
+  have hNum : 0 <= theta ^ 2 / 2 := by
+    exact div_nonneg (sq_nonneg theta) (by norm_num : (0 : Real) <= 2)
+  have hDenPos : 0 < 1 - abs theta * R / 3 := by
+    nlinarith [hRange]
+  exact div_nonneg hNum (le_of_lt hDenPos)
+
+/-- Named-coefficient wrapper for `bernsteinCoefficient_nonneg`. -/
+theorem bernsteinMGFCoeff_nonneg {theta R : Real}
+    (hRange : abs theta * R < 3) :
+    0 <= bernsteinMGFCoeff theta R := by
+  simpa [bernsteinMGFCoeff] using bernsteinCoefficient_nonneg hRange
+
+/-- Semantic trace-mgf bound using the bounded-Bernstein coefficient.
+
+This is the RHS normal form produced by the bounded single-summand Bernstein
+MGF route. The older `TraceMGFVarianceProxyBound` remains available for the
+subGaussian-style coefficient `theta ^ 2 / 2`. -/
+def TraceMGFBernsteinVarianceProxyBound {Omega : Type*}
+    [MeasurableSpace Omega] {n : Nat} (P : Measure Omega)
+    (Y : RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real)
+    (theta R : Real) : Prop :=
+  TraceMGFBound P Y theta
+    (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V))
+
+/-- LIntegral-form trace-mgf bound using the bounded-Bernstein coefficient. -/
+def TraceMGFBernsteinVarianceProxyBoundLIntegral {Omega : Type*}
+    [MeasurableSpace Omega] {n : Nat} (P : Measure Omega)
+    (Y : RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real)
+    (theta R : Real) : Prop :=
+  TraceMGFBoundLIntegral P Y theta
+    (ENNReal.ofReal
+      (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V)))
+
+/-- Typed finite-family Tropp/Lieb trace-mgf comparison primitive.
+
+This is the iteration-shaped interface needed by the Matrix Bernstein
+trace-mgf route after the one-summand matrix-MGF comparison has been proved.
+It is only a `Prop`-valued typed statement. It does not prove Lieb concavity,
+Golden-Thompson, conditional expectation, independence iteration, or the
+trace-mgf provider.
+
+The primitive consumes explicit per-summand matrix-MGF comparisons
+`E exp(theta X_i) <= exp(K_i)`, an independence assumption, full-sum
+trace-exp integrability, and an explicit RHS normalization from
+`sum_i K_i` to the bounded Bernstein coefficient normal form. Its conclusion
+is the bounded semantic trace-mgf target for the random finite sum. The older
+one-step log-form primitive `troppMasterTraceMGFStep_statement` remains
+available for source-level Lieb/Tropp work. -/
+abbrev troppMasterTraceMGFFiniteFamily_statement {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {I : Type*}
+    [Fintype I] {n : Nat}
+    (X : I -> RandomMatrix Omega n n)
+    (K : I -> Matrix (Fin n) (Fin n) Real)
+    (V : Matrix (Fin n) (Fin n) Real)
+    (theta R : Real) : Prop :=
+  (forall i, IsRandomMatrix P (X i)) ->
+    (forall i, RandomSelfAdjointMatrix P (X i)) ->
+      ProbabilityTheory.iIndepFun X P ->
+        (forall i,
+          IntegrableRandomMatrix P
+            (fun omega => matrixExp (SMul.smul theta (X i omega)))) ->
+          IntegrableRealRandomVariable P
+            (traceExpIntegrand (randomMatrixSum X) theta) ->
+            (forall i, IsSelfAdjointMatrix (K i)) ->
+              IsSelfAdjointMatrix V ->
+                0 <= R ->
+                  abs theta * R < 3 ->
+                    (forall i,
+                      MatrixLE
+                        (matrixExpect P
+                          (fun omega =>
+                            matrixExp (SMul.smul theta (X i omega))))
+                        (matrixExp (K i))) ->
+                      Finset.univ.sum (fun i : I => K i) =
+                        SMul.smul (bernsteinMGFCoeff theta R) V ->
+                        TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum X)
+                          V theta R
+
+/-- Thin semantic trace-mgf provider from the finite-family Tropp typed
+primitive.
+
+This theorem does not prove the finite-family Tropp/Lieb primitive. It takes
+that primitive as an explicit assumption and applies it to its fully exposed
+hypotheses. -/
+theorem traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {I : Type*} [Fintype I] {n : Nat}
+    (X : I -> RandomMatrix Omega n n)
+    (K : I -> Matrix (Fin n) (Fin n) Real)
+    (V : Matrix (Fin n) (Fin n) Real) (theta R : Real)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement (P := P) X K V theta R)
+    (hRand : forall i, IsRandomMatrix P (X i))
+    (hSA : forall i, RandomSelfAdjointMatrix P (X i))
+    (hIndep : ProbabilityTheory.iIndepFun X P)
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (fun omega => matrixExp (SMul.smul theta (X i omega))))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum X) theta))
+    (hKSA : forall i, IsSelfAdjointMatrix (K i))
+    (hVSA : IsSelfAdjointMatrix V)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hMGF :
+      forall i,
+        MatrixLE
+          (matrixExpect P
+            (fun omega => matrixExp (SMul.smul theta (X i omega))))
+          (matrixExp (K i)))
+    (hNorm :
+      Finset.univ.sum (fun i : I => K i) =
+        SMul.smul (bernsteinMGFCoeff theta R) V) :
+    TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum X) V theta R :=
+  hTropp hRand hSA hIndep hExpInt hTraceInt hKSA hVSA hR hRange hMGF hNorm
+
+/-- Typed Bernstein-specific scalar-to-matrix functional-calculus primitive.
+
+This records the source-backed lift of the scalar Bernstein exponential
+inequality to the explicit HighDimProb Loewner-style order:
+`exp(theta A) <= I + theta A + g(theta, R) A^2`.
+
+It is only a `Prop`-valued typed statement. The scalar Bernstein inequality,
+CFC expression rewrites, conversion to `MatrixLE`, and
+operator-norm-to-spectral-interval bridge are not proved here. -/
+abbrev bernsteinMatrixExp_le_quadratic_statement {n : Nat}
+    (A : Matrix (Fin n) (Fin n) Real) (theta R : Real) : Prop :=
+  IsSelfAdjointMatrix A ->
+    deterministicOperatorNorm A <= R ->
+      0 <= R ->
+        abs theta * R < 3 ->
+          MatrixLE
+            (matrixExp (SMul.smul theta A))
+            ((1 : Matrix (Fin n) (Fin n) Real) +
+              SMul.smul theta A +
+                SMul.smul (bernsteinMGFCoeff theta R) (matrixSquare A))
+
+end BernsteinFunctionalCalculus
+
+/-! ## Typed single-summand matrix-mgf primitive -/
+
+section SingleSummandMatrixMGF
+
+open scoped MatrixOrder Matrix.Norms.Operator
+
+/-- Typed single-summand matrix MGF variance-proxy primitive.
+
+This records the source-backed Bernstein single-summand step
+`E exp(theta X) <= exp(g(theta, R) V)` in the explicit HighDimProb
+Loewner-style order. It is only a `Prop`-valued typed statement. The scalar
+functional-calculus lift, matrix-valued expectation monotonicity, and
+boundedness-to-spectrum bridge are not proved here.
+
+All assumptions currently needed by the future proof route are explicit:
+measurability, pointwise self-adjointness, integrability of `X`, `X^2`, and
+`exp(theta X)`, entrywise zero mean, pointwise operator-norm boundedness,
+theta-range, self-adjoint/PSD structure of the deterministic comparison
+matrix, and the square/variance-proxy comparison. -/
+abbrev singleSummandMatrixMGFVarianceProxy_statement {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    (X : RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real)
+    (theta R : Real) : Prop :=
+  IsRandomMatrix P X ->
+    RandomSelfAdjointMatrix P X ->
+      IntegrableRandomMatrix P X ->
+        IntegrableRandomMatrix P (randomMatrixSquare X) ->
+          IntegrableRandomMatrix P
+            (fun omega => matrixExp (SMul.smul theta (X omega))) ->
+            matrixExpect P X = 0 ->
+              (forall omega, operatorNorm X omega <= R) ->
+                0 <= R ->
+                  abs theta * R < 3 ->
+                    IsSelfAdjointMatrix V ->
+                      IsPSDMatrix V ->
+                        MatrixLE (matrixSecondMoment P X) V ->
+                          MatrixLE
+                            (matrixExpect P
+                              (fun omega =>
+                                matrixExp (SMul.smul theta (X omega))))
+                            (matrixExp
+                              (SMul.smul (bernsteinMGFCoeff theta R) V))
+
+/-- Single-summand matrix MGF variance-proxy provider assuming the pointwise
+Bernstein functional-calculus primitive.
+
+This theorem does not prove the CFC primitive
+`bernsteinMatrixExp_le_quadratic_statement`; it takes that primitive as an
+explicit pointwise assumption and assembles the expectation monotonicity,
+linearity, variance-proxy comparison, coefficient nonnegativity, and
+exponential lower-bound infrastructure. -/
+theorem singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {n : Nat}
+    (X : RandomMatrix Omega n n)
+    (V : Matrix (Fin n) (Fin n) Real) (theta R : Real)
+    (hCFC :
+      forall omega,
+        bernsteinMatrixExp_le_quadratic_statement (X omega) theta R) :
+  singleSummandMatrixMGFVarianceProxy_statement (P := P) X V theta R := by
+  intro hRand hSA hIntX hIntSq hIntExp hMeanZero hBound hR hRange hVSA hVPSD hSecond
+  let c : Real := bernsteinMGFCoeff theta R
+  let rhsRandom : RandomMatrix Omega n n :=
+    fun omega =>
+      (1 : Matrix (Fin n) (Fin n) Real) + SMul.smul theta (X omega) +
+        SMul.smul c (matrixSquare (X omega))
+  have hConstInt :
+      IntegrableRandomMatrix P
+        (fun _omega => (1 : Matrix (Fin n) (Fin n) Real)) :=
+    integrableRandomMatrix_const (P := P) (1 : Matrix (Fin n) (Fin n) Real)
+  have hThetaInt :
+      IntegrableRandomMatrix P (fun omega => SMul.smul theta (X omega)) :=
+    integrableRandomMatrix_smul theta hIntX
+  have hCoeffInt :
+      IntegrableRandomMatrix P
+        (fun omega => SMul.smul c (matrixSquare (X omega))) := by
+    simpa [c, randomMatrixSquare] using
+      (integrableRandomMatrix_smul c hIntSq)
+  have hRhsInt : IntegrableRandomMatrix P rhsRandom := by
+    exact integrableRandomMatrix_add
+      (integrableRandomMatrix_add hConstInt hThetaInt) hCoeffInt
+  have hPointwise :
+      forall omega,
+        MatrixLE
+          (matrixExp (SMul.smul theta (X omega)))
+          (rhsRandom omega) := by
+    intro omega
+    dsimp [rhsRandom, c]
+    exact hCFC omega (hSA omega) (by simpa [operatorNorm] using hBound omega)
+      hR hRange
+  have hExpectToRhs :
+      MatrixLE
+        (matrixExpect P
+          (fun omega => matrixExp (SMul.smul theta (X omega))))
+        (matrixExpect P rhsRandom) :=
+    matrixExpect_matrixLE_of_pointwise_matrixLE hIntExp hRhsInt hPointwise
+  have hRhsExpect :
+      matrixExpect P rhsRandom =
+        (1 : Matrix (Fin n) (Fin n) Real) +
+          SMul.smul theta (matrixExpect P X) +
+            SMul.smul c (matrixSecondMoment P X) := by
+    have hThetaExp :
+        matrixExpect P (fun omega => SMul.smul theta (X omega)) =
+          SMul.smul theta (matrixExpect P X) :=
+      matrixExpect_smul theta
+    have hCoeffExp :
+        matrixExpect P (fun omega => SMul.smul c (matrixSquare (X omega))) =
+          SMul.smul c (matrixExpect P (randomMatrixSquare X)) := by
+      simpa [c, randomMatrixSquare] using
+        (matrixExpect_smul (P := P) (A := randomMatrixSquare X) c)
+    calc
+      matrixExpect P rhsRandom =
+          matrixExpect P
+              (fun omega =>
+                (1 : Matrix (Fin n) (Fin n) Real) +
+                  SMul.smul theta (X omega)) +
+            matrixExpect P
+              (fun omega => SMul.smul c (matrixSquare (X omega))) := by
+            rw [matrixExpect_add
+              (integrableRandomMatrix_add hConstInt hThetaInt) hCoeffInt]
+      _ =
+          (matrixExpect P
+              (fun _omega => (1 : Matrix (Fin n) (Fin n) Real)) +
+            matrixExpect P (fun omega => SMul.smul theta (X omega))) +
+            matrixExpect P
+              (fun omega => SMul.smul c (matrixSquare (X omega))) := by
+            rw [matrixExpect_add hConstInt hThetaInt]
+      _ =
+        (1 : Matrix (Fin n) (Fin n) Real) +
+          SMul.smul theta (matrixExpect P X) +
+            SMul.smul c (matrixSecondMoment P X) := by
+            simp [matrixExpect_const_of_isProbabilityMeasure, hThetaExp, hCoeffExp,
+              matrixSecondMoment, add_assoc]
+  have hRhsCentered :
+      matrixExpect P rhsRandom =
+        (1 : Matrix (Fin n) (Fin n) Real) +
+          SMul.smul c (matrixSecondMoment P X) := by
+    calc
+      matrixExpect P rhsRandom =
+          (1 : Matrix (Fin n) (Fin n) Real) +
+            SMul.smul theta (matrixExpect P X) +
+              SMul.smul c (matrixSecondMoment P X) := hRhsExpect
+      _ =
+          (1 : Matrix (Fin n) (Fin n) Real) +
+            SMul.smul theta (0 : Matrix (Fin n) (Fin n) Real) +
+              SMul.smul c (matrixSecondMoment P X) := by
+            rw [hMeanZero]
+      _ =
+          (1 : Matrix (Fin n) (Fin n) Real) +
+            SMul.smul c (matrixSecondMoment P X) := by
+            have hThetaZero :
+                SMul.smul theta (0 : Matrix (Fin n) (Fin n) Real) =
+                  (0 : Matrix (Fin n) (Fin n) Real) := by
+              exact smul_zero theta
+            rw [hThetaZero, add_zero]
+  have hRhsToSecond :
+      MatrixLE
+        (matrixExpect P rhsRandom)
+        ((1 : Matrix (Fin n) (Fin n) Real) +
+          SMul.smul c (matrixSecondMoment P X)) :=
+    matrixLE_of_eq hRhsCentered
+  have hCoeffNonneg : 0 <= c := by
+    dsimp [c]
+    exact bernsteinMGFCoeff_nonneg hRange
+  have hSecondToV :
+      MatrixLE
+        ((1 : Matrix (Fin n) (Fin n) Real) +
+          SMul.smul c (matrixSecondMoment P X))
+        ((1 : Matrix (Fin n) (Fin n) Real) + SMul.smul c V) :=
+    matrixLE_add_left (1 : Matrix (Fin n) (Fin n) Real)
+      (matrixLE_smul_of_nonneg hCoeffNonneg hSecond)
+  have hVToExp :
+      MatrixLE
+        ((1 : Matrix (Fin n) (Fin n) Real) + SMul.smul c V)
+        (matrixExp (SMul.smul c V)) :=
+    matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint c hVSA
+  have hFinal :
+      MatrixLE
+        (matrixExpect P
+          (fun omega => matrixExp (SMul.smul theta (X omega))))
+        (matrixExp (SMul.smul c V)) :=
+    matrixLE_trans hExpectToRhs
+      (matrixLE_trans hRhsToSecond (matrixLE_trans hSecondToV hVToExp))
+  simpa [c] using hFinal
+
+end SingleSummandMatrixMGF
 
 /-- Typed target: trace of the exponential of a real self-adjoint matrix is
 nonnegative.
@@ -407,6 +847,20 @@ abbrev traceMGFVarianceProxyBound_statement {Omega : Type*}
     IsPSDMatrix V ->
       0 <= theta ->
         TraceMGFVarianceProxyBound P Y V theta
+
+/-- Typed target for future bounded-Bernstein variance-proxy trace-mgf bounds.
+
+This variant records the denominator coefficient used by the bounded Matrix
+Bernstein single-summand route. The hard trace-mgf provider remains deferred. -/
+abbrev traceMGFBernsteinVarianceProxyBound_statement {Omega : Type*}
+    [MeasurableSpace Omega] {n : Nat} (P : Measure Omega)
+    (Y : RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real)
+    (theta R : Real) : Prop :=
+  RandomSelfAdjointMatrix P Y ->
+    IsPSDMatrix V ->
+      0 <= theta ->
+        abs theta * R < 3 ->
+          TraceMGFBernsteinVarianceProxyBound P Y V theta R
 
 end
 

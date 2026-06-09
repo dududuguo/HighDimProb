@@ -13,6 +13,9 @@ import HighDimProb.RandomMatrix.MatrixOrder
 import HighDimProb.RandomMatrix.Expectation
 import HighDimProb.RandomMatrix.Sums
 import HighDimProb.RandomMatrix.VarianceProxy
+import HighDimProb.RandomMatrix.Spectral
+import HighDimProb.RandomMatrix.TraceExp
+import HighDimProb.RandomMatrix.Laplace
 import HighDimProb.RandomMatrix.Statements
 import HighDimProb.RandomMatrix.ConcentrationStatements
 
@@ -20,4 +23,7 @@ import HighDimProb.RandomMatrix.ConcentrationStatements
 # Random matrices
 
 Aggregate module for the experimental random matrix object layer.
+
+Verified Wikipedia reference:
+* Random matrix: https://en.wikipedia.org/wiki/Random_matrix
 -/

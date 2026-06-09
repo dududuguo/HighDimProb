@@ -290,6 +290,156 @@ theorem matrixQuadraticForm_matrixExpect {Omega : Type*} [MeasurableSpace Omega]
     _ = expect P (fun omega => matrixQuadraticForm (A omega) x) := by
           simp [expect, matrixQuadraticForm]
 
+/-- Entrywise integrability is closed under pointwise matrix subtraction. -/
+theorem integrableRandomMatrix_sub {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} {A B : RandomMatrix Omega m n}
+    (hA : IntegrableRandomMatrix P A)
+    (hB : IntegrableRandomMatrix P B) :
+    IntegrableRandomMatrix P (fun omega => B omega - A omega) := by
+  intro i j
+  change Integrable (fun omega => B omega i j - A omega i j) P
+  exact (hB i j).sub (hA i j)
+
+/-- Entrywise integrability is closed under pointwise matrix addition. -/
+theorem integrableRandomMatrix_add {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} {A B : RandomMatrix Omega m n}
+    (hA : IntegrableRandomMatrix P A)
+    (hB : IntegrableRandomMatrix P B) :
+    IntegrableRandomMatrix P (fun omega => A omega + B omega) := by
+  intro i j
+  change Integrable (fun omega => A omega i j + B omega i j) P
+  exact (hA i j).add (hB i j)
+
+/-- Entrywise integrability is closed under deterministic scalar multiplication. -/
+theorem integrableRandomMatrix_smul {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} (c : Real)
+    {A : RandomMatrix Omega m n} (hA : IntegrableRandomMatrix P A) :
+    IntegrableRandomMatrix P (fun omega => c • A omega) := by
+  intro i j
+  change Integrable (fun omega => c * A omega i j) P
+  exact (hA i j).const_mul c
+
+/-- The zero random matrix is entrywise integrable. -/
+theorem integrableRandomMatrix_zero {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} :
+    IntegrableRandomMatrix P (fun _omega => (0 : Matrix (Fin m) (Fin n) Real)) := by
+  intro i j
+  change Integrable (fun _omega : Omega => (0 : Real)) P
+  exact MeasureTheory.integrable_zero Omega Real P
+
+/-- Constant random matrices are entrywise integrable over finite measures. -/
+theorem integrableRandomMatrix_const {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} [IsFiniteMeasure P] {m n : Nat}
+    (A : Matrix (Fin m) (Fin n) Real) :
+    IntegrableRandomMatrix P (fun _omega => A) := by
+  intro i j
+  change Integrable (fun _omega : Omega => A i j) P
+  exact MeasureTheory.integrable_const (A i j)
+
+/-- Entrywise matrix expectation commutes with pointwise matrix subtraction. -/
+theorem matrixExpect_sub {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} {A B : RandomMatrix Omega m n}
+    (hA : IntegrableRandomMatrix P A)
+    (hB : IntegrableRandomMatrix P B) :
+    matrixExpect P (fun omega => B omega - A omega) =
+      matrixExpect P B - matrixExpect P A := by
+  ext i j
+  simp [matrixExpect, expect, matrixEntry, Matrix.sub_apply]
+  exact MeasureTheory.integral_sub (hB i j) (hA i j)
+
+/-- Entrywise matrix expectation commutes with pointwise matrix addition. -/
+theorem matrixExpect_add {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} {A B : RandomMatrix Omega m n}
+    (hA : IntegrableRandomMatrix P A)
+    (hB : IntegrableRandomMatrix P B) :
+    matrixExpect P (fun omega => A omega + B omega) =
+      matrixExpect P A + matrixExpect P B := by
+  ext i j
+  simp [matrixExpect, expect, matrixEntry, Matrix.add_apply]
+  exact MeasureTheory.integral_add (hA i j) (hB i j)
+
+/-- Entrywise matrix expectation commutes with deterministic scalar multiplication. -/
+theorem matrixExpect_smul {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} (c : Real)
+    {A : RandomMatrix Omega m n} :
+    matrixExpect P (fun omega => c • A omega) =
+      c • matrixExpect P A := by
+  ext i j
+  simp [matrixExpect, expect, matrixEntry, Matrix.smul_apply]
+  exact MeasureTheory.integral_smul c (fun omega => A omega i j)
+
+/-- The expectation of the zero random matrix is zero. -/
+theorem matrixExpect_zero {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} :
+    matrixExpect P (fun _omega => (0 : Matrix (Fin m) (Fin n) Real)) = 0 := by
+  ext i j
+  simp [matrixExpect, expect, matrixEntry]
+
+/-- Entrywise expectation of a constant random matrix. -/
+theorem matrixExpect_const {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} (A : Matrix (Fin m) (Fin n) Real) :
+    matrixExpect P (fun _omega => A) = (P.real Set.univ) • A := by
+  ext i j
+  simp [matrixExpect, expect, matrixEntry, Matrix.smul_apply]
+
+/-- Entrywise expectation of a constant matrix over a probability measure. -/
+theorem matrixExpect_const_of_isProbabilityMeasure {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {m n : Nat} (A : Matrix (Fin m) (Fin n) Real) :
+    matrixExpect P (fun _omega => A) = A := by
+  rw [matrixExpect_const]
+  ext i j
+  simp [Matrix.smul_apply]
+
+/-- Entrywise expectation of the identity matrix over a probability measure. -/
+theorem matrixExpect_one_of_isProbabilityMeasure {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {n : Nat} :
+    matrixExpect P (fun _omega => (1 : Matrix (Fin n) (Fin n) Real)) = 1 := by
+  simpa using
+    (matrixExpect_const_of_isProbabilityMeasure
+      (P := P) (A := (1 : Matrix (Fin n) (Fin n) Real)))
+
+/-- Entrywise expectation preserves pointwise PSD matrices. -/
+theorem isPSDMatrix_matrixExpect_of_pointwise_isPSD {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega}
+    {n : Nat} {A : RandomMatrix Omega n n}
+    (hInt : IntegrableRandomMatrix P A)
+    (hPSD : forall omega, IsPSDMatrix (A omega)) :
+    IsPSDMatrix (matrixExpect P A) := by
+  refine ⟨?_, ?_⟩
+  · apply Matrix.IsSymm.ext
+    intro i j
+    dsimp [matrixExpect, expect]
+    refine integral_congr_ae ?_
+    filter_upwards with omega
+    exact isSymmetricMatrix_apply (hPSD omega).1 i j
+  · intro x
+    rw [matrixQuadraticForm_matrixExpect hInt x]
+    change 0 <= ∫ omega, matrixQuadraticForm (A omega) x ∂P
+    exact MeasureTheory.integral_nonneg fun omega => (hPSD omega).2 x
+
+/-- Entrywise matrix expectation is monotone for the explicit matrix order. -/
+theorem matrixExpect_matrixLE_of_pointwise_matrixLE {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega}
+    {n : Nat} {A B : RandomMatrix Omega n n}
+    (hIntA : IntegrableRandomMatrix P A)
+    (hIntB : IntegrableRandomMatrix P B)
+    (hLE : forall omega, MatrixLE (A omega) (B omega)) :
+    MatrixLE (matrixExpect P A) (matrixExpect P B) := by
+  unfold MatrixLE
+  have hIntSub : IntegrableRandomMatrix P (fun omega => B omega - A omega) :=
+    integrableRandomMatrix_sub hIntA hIntB
+  have hPSD :
+      IsPSDMatrix (matrixExpect P (fun omega => B omega - A omega)) :=
+    isPSDMatrix_matrixExpect_of_pointwise_isPSD hIntSub hLE
+  have hSub :
+      matrixExpect P (fun omega => B omega - A omega) =
+        matrixExpect P B - matrixExpect P A :=
+    matrixExpect_sub hIntA hIntB
+  rw [← hSub]
+  exact hPSD
+
 /-- Typed target: the square of a self-adjoint real matrix is PSD.
 
 The proof requires the identity `xᵀ A² x = (Ax)ᵀ (Ax) = ‖Ax‖² ≥ 0`.

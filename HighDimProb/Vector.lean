@@ -7,5 +7,8 @@ import HighDimProb.SubGaussianVector
 # Random vector branch
 
 Aggregate module for finite-dimensional random-vector infrastructure.
--/
 
+Verified Wikipedia reference:
+* Multivariate random variable:
+  https://en.wikipedia.org/wiki/Multivariate_random_variable
+-/

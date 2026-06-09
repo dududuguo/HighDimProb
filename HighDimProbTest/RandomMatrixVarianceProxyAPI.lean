@@ -42,11 +42,37 @@ variable (hAsqInt : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)
 #check matrixSquare
 #check matrixSquare_apply
 #check matrixQuadraticForm_sum
+#check matrixQuadraticForm_add
+#check matrixQuadraticForm_smul
+#check isPSDMatrix_zero
 #check isPSDMatrix_sum
+#check isPSDMatrix_add
+#check isPSDMatrix_smul_of_nonneg
+#check matrixLE_refl
+#check matrixLE_of_eq
+#check matrixLE_trans
+#check matrixLE_add
+#check matrixLE_add_left
+#check matrixLE_add_right
+#check matrixLE_smul_of_nonneg
 #check randomMatrixSquare
 #check randomMatrixSquare_apply
 #check isRandomMatrix_matrixSquare
 #check matrixQuadraticForm_matrixExpect
+#check integrableRandomMatrix_sub
+#check integrableRandomMatrix_add
+#check integrableRandomMatrix_smul
+#check integrableRandomMatrix_zero
+#check integrableRandomMatrix_const
+#check matrixExpect_sub
+#check matrixExpect_add
+#check matrixExpect_smul
+#check matrixExpect_zero
+#check matrixExpect_const
+#check matrixExpect_const_of_isProbabilityMeasure
+#check matrixExpect_one_of_isProbabilityMeasure
+#check isPSDMatrix_matrixExpect_of_pointwise_isPSD
+#check matrixExpect_matrixLE_of_pointwise_matrixLE
 #check matrixSecondMoment
 #check matrixSecondMoment_apply
 #check matrixVarianceProxy
@@ -72,6 +98,8 @@ variable (hAsqInt : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)
 #check isPSD_matrixVarianceProxy_of_selfAdjoint_statement
 #check matrixBernsteinStatement
 #check matrixBernsteinTraceMGF_statement
+#check matrixBernsteinTraceMGFWithBernsteinCoeff_statement
+#check matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily
 
 #check (randomMatrixSum A : RandomMatrix Omega n n)
 #check (randomMatrixSum A omega : Matrix (Fin n) (Fin n) Real)
@@ -115,12 +143,16 @@ variable (hAsqInt : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)
   forall x : Fin n -> Real,
     matrixQuadraticForm (matrixExpect P (randomMatrixSquare X)) x =
       expect P (fun omega => matrixQuadraticForm (randomMatrixSquare X omega) x))
+#check (integrableRandomMatrix_sub hXsqInt hXsqInt :
+  IntegrableRandomMatrix P
+    (fun omega => randomMatrixSquare X omega - randomMatrixSquare X omega))
 #check (isPSD_matrixSecondMoment_of_selfAdjoint hXSA hXsqInt :
   IsPSDMatrix (matrixSecondMoment P X))
 #check (isPSD_matrixVarianceProxy_of_selfAdjoint P hSA hAsqInt :
   IsPSDMatrix (matrixVarianceProxy P A))
 #check (matrixBernsteinStatement P A sigma2 R c t : Prop)
 #check (matrixBernsteinTraceMGF_statement P A theta : Prop)
+#check (matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R : Prop)
 
 example : MatrixVarianceProxyUpperBound P A V =
     MatrixLE (matrixVarianceProxy P A) V := by
@@ -129,3 +161,114 @@ example : MatrixVarianceProxyUpperBound P A V =
 example : MatrixVarianceProxyNormBound P A sigma2 =
     (matrixVarianceProxyNorm P A <= sigma2) := by
   rfl
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {n : Nat} {X : RandomMatrix Omega n n}
+    (hInt : IntegrableRandomMatrix P X)
+    (hPSD : forall omega, IsPSDMatrix (X omega)) :
+    IsPSDMatrix (matrixExpect P X) := by
+  exact isPSDMatrix_matrixExpect_of_pointwise_isPSD hInt hPSD
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {n : Nat} {X Y : RandomMatrix Omega n n}
+    (hIntX : IntegrableRandomMatrix P X)
+    (hIntY : IntegrableRandomMatrix P Y)
+    (hLE : forall omega, MatrixLE (X omega) (Y omega)) :
+    MatrixLE (matrixExpect P X) (matrixExpect P Y) := by
+  exact matrixExpect_matrixLE_of_pointwise_matrixLE hIntX hIntY hLE
+
+example {n : Nat} (M : Matrix (Fin n) (Fin n) Real) :
+    MatrixLE M M := by
+  exact matrixLE_refl M
+
+example {n : Nat} {M N K : Matrix (Fin n) (Fin n) Real}
+    (hMN : MatrixLE M N) (hNK : MatrixLE N K) :
+    MatrixLE M K := by
+  exact matrixLE_trans hMN hNK
+
+example {n : Nat} {M N K L : Matrix (Fin n) (Fin n) Real}
+    (hMN : MatrixLE M N) (hKL : MatrixLE K L) :
+    MatrixLE (M + K) (N + L) := by
+  exact matrixLE_add hMN hKL
+
+example {n : Nat} {M N : Matrix (Fin n) (Fin n) Real}
+    {a : Real} (ha : 0 <= a) (hMN : MatrixLE M N) :
+    MatrixLE (a • M) (a • N) := by
+  exact matrixLE_smul_of_nonneg ha hMN
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} {X Y : RandomMatrix Omega m n}
+    (hIntX : IntegrableRandomMatrix P X)
+    (hIntY : IntegrableRandomMatrix P Y) :
+    IntegrableRandomMatrix P (fun omega => Y omega - X omega) := by
+  exact integrableRandomMatrix_sub hIntX hIntY
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} {X Y : RandomMatrix Omega m n}
+    (hIntX : IntegrableRandomMatrix P X)
+    (hIntY : IntegrableRandomMatrix P Y) :
+    IntegrableRandomMatrix P (fun omega => X omega + Y omega) := by
+  exact integrableRandomMatrix_add hIntX hIntY
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} {X : RandomMatrix Omega m n}
+    (a : Real) (hIntX : IntegrableRandomMatrix P X) :
+    IntegrableRandomMatrix P (fun omega => a • X omega) := by
+  exact integrableRandomMatrix_smul a hIntX
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} :
+    IntegrableRandomMatrix P
+      (fun _omega => (0 : Matrix (Fin m) (Fin n) Real)) := by
+  exact integrableRandomMatrix_zero
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} [IsFiniteMeasure P] {m n : Nat}
+    (M : Matrix (Fin m) (Fin n) Real) :
+    IntegrableRandomMatrix P (fun _omega => M) := by
+  exact integrableRandomMatrix_const M
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} {X Y : RandomMatrix Omega m n}
+    (hIntX : IntegrableRandomMatrix P X)
+    (hIntY : IntegrableRandomMatrix P Y) :
+    matrixExpect P (fun omega => Y omega - X omega) =
+      matrixExpect P Y - matrixExpect P X := by
+  exact matrixExpect_sub hIntX hIntY
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} {X Y : RandomMatrix Omega m n}
+    (hIntX : IntegrableRandomMatrix P X)
+    (hIntY : IntegrableRandomMatrix P Y) :
+    matrixExpect P (fun omega => X omega + Y omega) =
+      matrixExpect P X + matrixExpect P Y := by
+  exact matrixExpect_add hIntX hIntY
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} {X : RandomMatrix Omega m n}
+    (a : Real) :
+    matrixExpect P (fun omega => a • X omega) =
+      a • matrixExpect P X := by
+  exact matrixExpect_smul a
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} :
+    matrixExpect P (fun _omega => (0 : Matrix (Fin m) (Fin n) Real)) = 0 := by
+  exact matrixExpect_zero
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat}
+    (M : Matrix (Fin m) (Fin n) Real) :
+    matrixExpect P (fun _omega => M) = (P.real Set.univ) • M := by
+  exact matrixExpect_const M
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
+    (M : Matrix (Fin m) (Fin n) Real) :
+    matrixExpect P (fun _omega => M) = M := by
+  exact matrixExpect_const_of_isProbabilityMeasure M
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P] {n : Nat} :
+    matrixExpect P (fun _omega => (1 : Matrix (Fin n) (Fin n) Real)) = 1 := by
+  exact matrixExpect_one_of_isProbabilityMeasure

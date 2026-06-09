@@ -5,16 +5,30 @@ import HighDimProb.Basic
 
 HighDimProb uses Mathlib's probability model:
 `{Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P]`.
+
+Verified Wikipedia reference:
+https://en.wikipedia.org/wiki/Probability_space
 -/
 
 namespace HighDimProb
 
 open MeasureTheory
 
-/-- Alias for a Mathlib measure intended to carry an `IsProbabilityMeasure` instance. -/
+/--
+Alias for a Mathlib measure intended to carry an `IsProbabilityMeasure` instance.
+
+Formula reference: this is the `P` component of the probability triple
+`(Omega, F, P)`; see https://en.wikipedia.org/wiki/Probability_space
+-/
 abbrev ProbabilityMeasure (Ω : Type*) [MeasurableSpace Ω] := Measure Ω
 
-/-- Predicate alias for Mathlib's probability-measure typeclass. -/
+/--
+Predicate alias for Mathlib's probability-measure typeclass.
+
+Formula reference: probability measures assign probabilities to events in the
+event space of `(Omega, F, P)`; see
+https://en.wikipedia.org/wiki/Probability_space
+-/
 abbrev IsProbability {Ω : Type*} [MeasurableSpace Ω] (P : ProbabilityMeasure Ω) : Prop :=
   IsProbabilityMeasure P
 

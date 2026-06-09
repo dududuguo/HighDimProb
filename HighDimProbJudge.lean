@@ -13,3 +13,7 @@ import HighDimProbJudge.RandomMatrix.StatementUse
 import HighDimProbJudge.RandomMatrix.PSDUse
 import HighDimProbJudge.RandomMatrix.SampleCovarianceUse
 import HighDimProbJudge.RandomMatrix.VarianceProxyUse
+import HighDimProbJudge.RandomMatrix.SpectralUse
+import HighDimProbJudge.RandomMatrix.TraceExpUse
+import HighDimProbJudge.RandomMatrix.LaplaceUse
+import HighDimProbJudge.RandomMatrix.MatrixBernsteinUse

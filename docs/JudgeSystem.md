@@ -49,8 +49,9 @@ theorems or typed statements without relying on local test internals.
   PSD and quadratic-form nonnegativity APIs.
 - `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`: matrix square, second
   moment, variance proxy, semantic variance-proxy bounds,
-  variance-proxy norm, self-adjointness lemmas, PSD typed targets, and matrix
-  Bernstein statement surface.
+  variance-proxy norm, self-adjointness lemmas, matrix expectation PSD/order
+  and add/smul/zero/constant normalization lemmas, PSD typed targets, and
+  matrix Bernstein statement surface.
 - `HighDimProbJudge/RandomMatrix/SpectralUse.lean`: lambda-max wrappers,
   ordered endpoint wrappers, quadratic-form bound predicates, monotonicity
   lemmas, two-sided tail events, and spectral tail event APIs.
@@ -105,6 +106,12 @@ lake build HighDimProbJudge
 lake test
 python scripts/judge_policy_check.py
 ```
+
+MB-S9-tropp-shape-refactor adds focused judge coverage for
+`HighDimProb.troppMasterTraceMGFFiniteFamily_statement` in
+`HighDimProbJudge/RandomMatrix/TraceExpUse.lean`. The one-step
+`troppMasterTraceMGFStep_statement` remains covered. The judge examples do not
+prove Lieb, Golden-Thompson, the trace-mgf provider, or Matrix Bernstein.
 
 ## MB-S7A Spectral Judge Coverage
 
@@ -203,6 +210,86 @@ judge cases for `TraceMGFBound`, `TraceMGFBoundLIntegral`,
 Golden-Thompson, Lieb, the full trace-mgf master theorem, the real RHS bridge,
 or Matrix Bernstein.
 
+MB-S9-Tropp-master-typed-primitive adds a TraceExp judge case for
+`troppMasterTraceMGFStep_statement`. The example supplies the typed statement
+as an explicit hypothesis and applies it to all visible assumptions. The judge
+still does not claim Lieb concavity, Golden-Thompson, the trace-mgf provider,
+the full trace-mgf master theorem, the real RHS bridge, or Matrix Bernstein.
+
+MB-S9-single-summand-mgf-typed-primitive adds a TraceExp judge check and
+minimal `Prop` example for `singleSummandMatrixMGFVarianceProxy_statement`.
+The judge does not claim the scalar-to-matrix functional-calculus bridge,
+operator-norm-to-spectral-interval bridge, the trace-mgf provider,
+Golden-Thompson, Lieb, or Matrix Bernstein.
+
+MB-S9-bernstein-cfc-typed-primitive adds a TraceExp judge check and minimal
+`Prop` example for `bernsteinMatrixExp_le_quadratic_statement`. The judge does
+not claim the functional-calculus proof, single-summand MGF theorem,
+operator-norm-to-spectral-interval bridge, the trace-mgf provider,
+Golden-Thompson, Lieb, or Matrix Bernstein.
+
+MB-S9-PSD-expectation-proof adds variance-proxy judge checks for
+`integrableRandomMatrix_sub`, `matrixExpect_sub`,
+`isPSDMatrix_matrixExpect_of_pointwise_isPSD`, and
+`matrixExpect_matrixLE_of_pointwise_matrixLE`. The examples supply explicit
+integrability, PSD, and MatrixLE assumptions and do not claim the
+single-summand MGF theorem, functional calculus, trace-mgf provider,
+Golden-Thompson, Lieb, or Matrix Bernstein.
+
+MB-S9-expectation-linearity-proof adds variance-proxy judge checks for
+`integrableRandomMatrix_add`, `integrableRandomMatrix_smul`,
+`integrableRandomMatrix_zero`, `integrableRandomMatrix_const`,
+`matrixExpect_add`, `matrixExpect_smul`, `matrixExpect_zero`,
+`matrixExpect_const`, `matrixExpect_const_of_isProbabilityMeasure`, and
+`matrixExpect_one_of_isProbabilityMeasure`. The examples supply explicit
+integrability, finite-measure, and probability-measure assumptions where
+needed and do not claim the single-summand MGF theorem, functional calculus,
+trace-mgf provider, Golden-Thompson, Lieb, or Matrix Bernstein.
+
+MB-S9-matrixle-algebra-proof adds variance-proxy judge checks for
+`matrixQuadraticForm_add`, `matrixQuadraticForm_smul`,
+`isPSDMatrix_zero`, `isPSDMatrix_add`,
+`isPSDMatrix_smul_of_nonneg`, `matrixLE_refl`, `matrixLE_of_eq`,
+`matrixLE_trans`, `matrixLE_add`, `matrixLE_add_left`,
+`matrixLE_add_right`, and `matrixLE_smul_of_nonneg`. The examples use only
+explicit MatrixLE/PSD hypotheses and do not claim the single-summand MGF
+theorem, Bernstein CFC proof, trace-mgf provider, Golden-Thompson, Lieb, or
+Matrix Bernstein.
+
+MB-S9-bernstein-coefficient-proof adds TraceExp judge coverage for
+`bernsteinCoefficient_nonneg`. The example passes the explicit
+`abs theta * R < 3` hypothesis and proves only the scalar coefficient
+nonnegativity helper. It does not prove the single-summand provider, the
+Bernstein CFC primitive, the downstream matrix exponential lower bound,
+trace-mgf provider, Golden-Thompson, Lieb, or Matrix Bernstein.
+
+MB-S9-exp-lower-bound-proof adds TraceExp judge coverage for
+`matrixLE_one_add_self_le_matrixExp_of_selfAdjoint` and
+`matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`. The examples pass
+explicit self-adjointness hypotheses and prove only the deterministic matrix
+exponential lower bound plus scalar-multiple wrapper. They do not prove the
+single-summand provider, the Bernstein CFC primitive, trace-mgf provider,
+Golden-Thompson, Lieb, or Matrix Bernstein.
+
+MB-S9-single-summand-provider-under-cfc adds TraceExp judge coverage for
+`singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`.
+The example passes the pointwise typed Bernstein CFC primitive as an explicit
+assumption, along with the typed single-summand assumptions. It does not prove
+the Bernstein CFC primitive, Tropp/Lieb primitive, trace-mgf provider,
+Golden-Thompson, Lieb, or Matrix Bernstein.
+
+MB-S9-rhs-normalization-proof adds TraceExp and concentration statement judge
+coverage for `bernsteinMGFCoeff`, `bernsteinMGFCoeff_nonneg`,
+`TraceMGFBernsteinVarianceProxyBound`,
+`TraceMGFBernsteinVarianceProxyBoundLIntegral`,
+`traceMGFBernsteinVarianceProxyBound_statement`, and
+`matrixBernsteinTraceMGFWithBernsteinCoeff_statement`. The bounded statement
+uses the denominator coefficient `bernsteinMGFCoeff theta R`; the retained
+`matrixBernsteinTraceMGF_statement` remains the old `theta ^ 2 / 2`
+compatibility target. The examples do not prove the trace-mgf provider,
+Bernstein CFC primitive, Tropp/Lieb primitive, Golden-Thompson, Lieb, or
+Matrix Bernstein.
+
 For a full stage verification run:
 
 ```bash
@@ -211,3 +298,20 @@ lake build HighDimProbJudge
 lake test
 python scripts/judge_policy_check.py
 ```
+## MB-S9 Trace-MGF Thin Wrapper Judge Coverage
+
+- `HighDimProbJudge/RandomMatrix/TraceExpUse.lean` checks
+  `traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily`.
+- `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean` and
+  `HighDimProbJudge/RandomMatrix/StatementUse.lean` check
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily`.
+- The finite-family Tropp primitive remains typed only; the judge checks only
+  public API availability and import boundaries.
+
+## MB-S9 Matrix Bernstein Trace-MGF Under Primitives Judge Coverage
+
+- `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean` checks
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
+- The judge check confirms the bounded trace-MGF under-primitives theorem is
+  public. The finite-family Tropp primitive and Bernstein CFC primitive remain
+  typed only.

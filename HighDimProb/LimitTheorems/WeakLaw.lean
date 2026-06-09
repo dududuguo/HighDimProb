@@ -9,6 +9,10 @@ This module records typed weak-law targets backed by the current sample-mean,
 tail, variance, and convergence-in-measure vocabulary. The statements are
 specifications only; independence, iid, and variance-of-sum infrastructure are
 not available yet.
+
+Verified Wikipedia references:
+* Law of large numbers: https://en.wikipedia.org/wiki/Law_of_large_numbers
+* Chebyshev inequality route: https://en.wikipedia.org/wiki/Chebyshev%27s_inequality
 -/
 
 namespace HighDimProb
@@ -20,6 +24,10 @@ noncomputable section
 
 /--
 Typed target for the Chebyshev route to a finite-variance weak law.
+
+Formula reference: this records the Chebyshev-style finite-sample bound
+`P(|sampleMean - mu| >= eps) <= sigmaSq / (n * eps^2)`; see
+https://en.wikipedia.org/wiki/Chebyshev%27s_inequality
 
 The hypotheses are intentionally explicit placeholders: future stages should
 prove the displayed bound from finite variance plus independence/covariance
@@ -37,6 +45,10 @@ abbrev weakLawChebyshevBoundStatement {Omega : Type*} [MeasurableSpace Omega]
 
 /--
 Typed target for finite-variance weak convergence in probability of sample means.
+
+Formula reference: the weak law asserts convergence in probability of sample
+means to the mean under suitable independence/finite-variance hypotheses; see
+https://en.wikipedia.org/wiki/Law_of_large_numbers
 
 This uses Mathlib's `TendstoInMeasure` as the current convergence-in-probability
 vocabulary. A proof is deferred until the project has sequence-level sample
