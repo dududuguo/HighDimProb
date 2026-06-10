@@ -6,19 +6,52 @@ typed `Prop` statements whose objects already exist.
 
 ## Current Public Status
 
-MB-S9 has proved the bounded Matrix Bernstein trace-MGF wrapper under explicit
-primitive assumptions:
+MB-S9 has proved the bounded Matrix Bernstein trace-MGF wrapper, the
+bounded-Bernstein real-to-lintegral semantic bridge, and the explicit-theta
+one-sided quadratic-form upper-tail wrapper under explicit primitive
+assumptions. The generic deterministic trace-exp dimension bound and its
+variance-proxy specialization are also proved, as are the unnormalized and
+normalized explicit-theta scalar-RHS quadratic-form tail wrappers:
 
 ```lean
 matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
+traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound
+matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_primitives
+traceMatrixExp_smul_le_card_exp_of_lambdaMaxOrdered_le
+lambdaMaxOrdered_le_deterministicOperatorNorm
+traceMatrixExp_bernsteinMGFCoeff_matrixVarianceProxy_le_card_exp
+matrixBernsteinQuadraticFormUpperTailScalarRHSWithBernsteinCoeff_under_primitives
+matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives
+```
+
+The tail wrapper keeps the RHS in trace-exponential form:
+
+```text
+exp(-theta*t) * tr exp(SMul.smul (bernsteinMGFCoeff theta R) (matrixVarianceProxy P A))
+```
+
+The scalar-RHS wrapper keeps the RHS intentionally unnormalized:
+
+```text
+ENNReal.ofReal (Real.exp (-(theta * t)) *
+  ((n + 1 : Real) * Real.exp (bernsteinMGFCoeff theta R * sigmaSq)))
+```
+
+The normalized scalar-RHS wrapper rewrites the same explicit-theta bound to:
+
+```text
+ENNReal.ofReal
+  ((n + 1 : Real) *
+    Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq))
 ```
 
 The theorem assumes the finite-family Tropp/Lieb typed primitive and the
 pointwise Bernstein CFC typed primitive explicitly. It does not prove
-Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, or the full Matrix
-Bernstein tail theorem.
+Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, theta optimization,
+lambda-max/operator-norm Matrix Bernstein tails, or the full Matrix Bernstein
+tail theorem.
 
-Next safe task: `MB-S9-trace-mgf-to-laplace-tail-contract`.
+Next safe task: `MB-S9-theta-optimization-contract`.
 ## Target Theorem
 
 For a finite family of independent centered self-adjoint random matrices
@@ -77,7 +110,7 @@ targets only.
 | Variance proxy PSD | `isPSD_matrixVarianceProxy_of_selfAdjoint` |
 | Spectral vocabulary | `lambdaMax`, `lambdaMaxOrdered`, `lambdaMaxOrdered_eq_eigenvalues₀_zero`, `lambdaMin`, `SpectralUpperBound`, `RayleighUpperBound`, `QuadraticFormUpperBound`, `QuadraticFormLowerBound`, `quadraticFormUpperTailEvent`, `quadraticFormLowerTailEvent`, `twoSidedQuadraticFormTailEvent`, `LambdaMaxPSDUpperBound`, `LambdaMaxOrderedPSDUpperBound`, `matrixQuadraticForm_nonneg_of_posSemidef`, `matrixQuadraticForm_smul_one_of_isUnitVector`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound`, `rayleighUpperBound_of_spectralUpperBound`, `lambdaMaxOrdered_is_greatest_eigenvalue`, `lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrdered_rayleighUpperBound`, `lambdaMaxOrdered_smul_of_nonneg`, `lambdaMaxOrdered_le_trace_of_posSemidef`, `matrixQuadraticForm_le_lambdaMaxOrdered_of_lambdaMaxOrderedPSDUpperBound` |
 | Quadratic-form event inclusions | `quadraticFormUpperTailEvent_subset_twoSidedQuadraticFormTailEvent`, `quadraticFormLowerTailEvent_subset_twoSidedQuadraticFormTailEvent` |
-| Matrix exponential and trace | `matrixExp`, `matrixTrace`, `traceMatrixExp`, `traceExpIntegrand`, `traceExpMoment`, `traceExpMomentLIntegral`, `matrixExp_posSemidef_of_selfAdjoint`, `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint`, `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`, `traceMatrixExp_nonneg_of_selfAdjoint`, `traceExpIntegrand_nonneg_of_randomSelfAdjoint`, `traceExpMoment_nonneg_of_randomSelfAdjoint`, `matrixTrace_nonneg_of_posSemidef`, `traceMatrixExp_nonneg_of_matrixExp_posSemidef`, `traceExpMoment_nonneg_of_nonneg`, `traceExpMomentLIntegral_nonneg`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment` |
+| Matrix exponential and trace | `matrixExp`, `matrixTrace`, `traceMatrixExp`, `traceExpIntegrand`, `traceExpMoment`, `traceExpMomentLIntegral`, `matrixExp_posSemidef_of_selfAdjoint`, `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint`, `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`, `traceMatrixExp_nonneg_of_selfAdjoint`, `traceMatrixExp_smul_le_card_exp_of_lambdaMaxOrdered_le`, `traceExpIntegrand_nonneg_of_randomSelfAdjoint`, `traceExpMoment_nonneg_of_randomSelfAdjoint`, `matrixTrace_nonneg_of_posSemidef`, `traceMatrixExp_nonneg_of_matrixExp_posSemidef`, `traceExpMoment_nonneg_of_nonneg`, `traceExpMomentLIntegral_nonneg`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment` |
 | Trace-mgf semantic foundation | `TraceMGFBound`, `TraceMGFBoundLIntegral`, `TraceMGFVarianceProxyBound`, `TraceMGFVarianceProxyBoundLIntegral` |
 | Variance-proxy semantic foundation | `MatrixVarianceProxyUpperBound`, `MatrixVarianceProxyNormBound` |
 | Conditional trace-exp Markov/Laplace bridge | `traceExpThresholdEvent`, `matrixLaplaceRHSLIntegralDiv`, `matrixLaplaceRHSLIntegralDiv_eq_matrixLaplaceRHSLIntegral`, `traceExpThresholdEvent_lintegral_bound`, `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`, `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset` |
@@ -112,7 +145,7 @@ targets only.
 | Matrix exponential PSD from self-adjointness | `matrixExp_posSemidef_of_selfAdjoint_statement`, `matrixExp_posSemidef_of_selfAdjoint` | typed target plus proven theorem |
 | Trace-exp nonnegativity from self-adjointness | `traceMatrixExp_nonneg_of_selfAdjoint_statement`, `traceMatrixExp_nonneg_of_selfAdjoint`, `traceExpMoment_nonneg_statement`, `traceExpIntegrand_nonneg_of_randomSelfAdjoint`, `traceExpMoment_nonneg_of_randomSelfAdjoint` | typed targets plus proven deterministic/random-moment bridges |
 | Trace-exp nonnegativity from explicit hypotheses | `matrixTrace_nonneg_of_posSemidef`, `traceMatrixExp_nonneg_of_matrixExp_posSemidef`, `traceExpMoment_nonneg_of_nonneg`, `traceExpMomentLIntegral_nonneg` | proven |
-| Trace-exp real expectation / lintegral bridge | `traceExpMomentLIntegral_eq_ofReal_statement`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment` | typed target plus proven theorem under explicit integrability and pointwise nonnegativity |
+| Trace-exp real expectation / lintegral bridge | `traceExpMomentLIntegral_eq_ofReal_statement`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment`, `traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound` | typed target plus proved raw bridge under explicit integrability and pointwise nonnegativity; bounded-Bernstein semantic bridge proved under random self-adjointness and trace-exp integrability |
 | Matrix Laplace upper-tail reduction | `matrixLaplaceTransformStatement` | typed `Prop`, unproved |
 | Matrix Laplace upper-tail reduction, lintegral form | `matrixLaplaceTransformLIntegralStatement` | typed `Prop`, unproved |
 | Conditional trace-exp threshold Markov bound | `traceExpThresholdEvent_lintegral_bound` | proven under explicit a.e. measurability |
@@ -385,8 +418,8 @@ explicit `IsPSDMatrix` predicate.
 2. Use the proved concrete lintegral Laplace wrappers
    `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint` and
    `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`.
-3. Bridge the lintegral RHS to the real trace-exp moment/RHS vocabulary under
-   explicit integrability and nonnegativity hypotheses.
+3. Use the proved bounded-Bernstein real-to-lintegral semantic bridge under
+   explicit random self-adjointness and trace-exp integrability.
 4. Prove or import trace-exponential moment inequalities over the
    semantic `TraceMGFBound` / `TraceMGFVarianceProxyBound` vocabulary.
 5. Optimize the resulting scalar parameter to derive the additive Bernstein
@@ -515,10 +548,12 @@ Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
 
 ## Next Safe Task
 
-Stage MB-S9-trace-mgf-to-laplace-tail-contract: audit how the proved bounded
-trace-MGF theorem under explicit primitives connects to the existing
-Laplace/tail layer. Do not prove Lieb, Golden-Thompson, the Bernstein CFC
-primitive, or the full Matrix Bernstein tail theorem in that contract stage.
+Stage MB-S9-trace-mgf-to-laplace-tail-contract-v2: re-audit how the proved
+bounded trace-MGF theorem under explicit primitives and the proved
+real-to-lintegral semantic bridge connect to the existing Laplace/tail layer.
+Do not prove Lieb, Golden-Thompson, the Bernstein CFC primitive,
+dimension/norm reduction, theta optimization, or the full Matrix Bernstein
+tail theorem in that contract stage.
 
 ## MB-S7A Spectral Bridge Typed Split
 
@@ -845,4 +880,18 @@ thin high-level Tropp wrapper. It does not prove the finite-family Tropp/Lieb
 primitive, the Bernstein CFC primitive, Lieb, Golden-Thompson, or the Matrix
 Bernstein tail theorem.
 
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+## MB-S9 Trace-MGF LIntegral Bridge
+
+MB-S9-trace-mgf-lintegral-bridge-proof proves:
+
+```lean
+traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound
+```
+
+This theorem converts the bounded-Bernstein real semantic trace-MGF bound to
+the corresponding lintegral semantic trace-MGF bound under random
+self-adjointness and trace-exp integrability. It does not prove event
+reduction, dimension/norm reduction, theta optimization, Tropp/Lieb, the
+Bernstein CFC primitive, Golden-Thompson, or the Matrix Bernstein tail theorem.
+
+Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract-v2.

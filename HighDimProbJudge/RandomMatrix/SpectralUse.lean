@@ -26,6 +26,7 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.lambdaMaxOrderedPSDUpperBound
 #check HighDimProb.lambdaMaxOrdered_rayleighUpperBound
 #check HighDimProb.lambdaMaxOrdered_smul_of_nonneg
+#check HighDimProb.lambdaMaxOrdered_le_deterministicOperatorNorm
 #check HighDimProb.lambdaMaxOrdered_le_trace_of_posSemidef
 #check HighDimProb.spectralUpperBound_of_lambdaMaxPSDUpperBound
 #check HighDimProb.spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound

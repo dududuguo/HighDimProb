@@ -5,20 +5,33 @@ Current version target: v0.1-alpha
 ## Current Stage
 
 RandomMatrix / Matrix Bernstein mainline: MB-S9 trace-MGF under explicit
-primitives is complete.
+primitives, the real-to-lintegral trace-MGF bridge, and the explicit-theta
+quadratic-form upper-tail wrapper under primitives are complete. The generic
+deterministic trace-exp dimension bound and the variance-proxy specialized
+trace-exp dimension bound are also proved, as is the explicit-theta
+quadratic-form scalar-RHS wrapper under the same primitive assumptions,
+including its normalized exponential-add RHS form.
 
 The latest proved public theorem is:
 
-- `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
+- `matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives`
 
-This theorem packages bounded Matrix Bernstein trace-MGF assumptions under
-explicit primitive assumptions. It does not prove the finite-family
-Tropp/Lieb primitive, the Bernstein CFC primitive, Golden-Thompson, or the
-final Matrix Bernstein tail theorem.
+The wrapper proves a one-sided nonempty-dimensional quadratic-form upper-tail
+bound under explicit primitive assumptions. The normalized scalar-RHS wrapper
+has RHS:
+`ENNReal.ofReal ((n + 1 : Real) * Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq))`.
+The new deterministic theorem proves the generic bound
+`traceMatrixExp (SMul.smul c V) <= (n + 1 : Real) * Real.exp (c * sigmaSq)`
+under `0 <= c` and a direct `lambdaMaxOrdered V hV <= sigmaSq` assumption. The
+variance-proxy specialization instantiates this at `bernsteinMGFCoeff theta R`
+and `matrixVarianceProxy P A` under `MatrixVarianceProxyNormBound P A sigmaSq`.
+It does not prove theta optimization, lambda-max or operator-norm Matrix
+Bernstein tails, Tropp/Lieb, the Bernstein CFC primitive, Golden-Thompson, or
+the final Matrix Bernstein tail theorem.
 
 ## Next Safe Task
 
-- `MB-S9-trace-mgf-to-laplace-tail-contract`
+- `MB-S9-theta-optimization-contract`
 
 ## Public Milestone Summary
 
@@ -1759,8 +1772,9 @@ No current Stage G1E, Stage RM2, Stage LLN0-LLN1, Stage C1, Stage G2A, Stage G2B
 
 Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Stage G2A proves Psi2Bound -> absMomentNat q=2, SubGaussianTail -> absMomentNat q=2, and the analogous first-moment psi1/subExponential pilot. Stage G2B proves Psi2Bound/SubGaussianTail -> absMomentNat q for all natural q with a crude factorial constant. Stage G2C proves `finiteAbsMomentNat -> MemLp`, quantitative `absMomentNat -> realLpNorm`, and the factorial-growth `SubGaussianMomentNat` wrappers. Stage G2D proves the linear `realLpNorm <= C*K*q` consequence. Stage G2E records the sharp route as typed targets, Stage G2E-fix proves the deterministic envelope plus natural-exponent sqrt-growth moment bounds, Stage G2F packages those bounds as `SubGaussianMomentNatSqrt`, Sprint S4 proves `CenteredSubGaussianMGF -> SubGaussianTail (2*K) -> Psi2Bound (4*K) -> SubGaussianMomentNatSqrt (16*K)`, Stage M-real-1 proves `Psi2Bound -> SubGaussianMoment (8*K)` plus `SubGaussianTail -> SubGaussianMoment (16*K)` over arbitrary finite `p : ENNReal`, and Stage M-real-2 proves `Psi1Bound -> SubExponentialMoment (16*K)` plus `SubExponentialTail -> SubExponentialMoment (48*K)`. Finite-gauge variants, reverse/source MGF connectors, centered Chebyshev corollaries, deeper scalar concentration inequalities, physical migration of larger branches, random matrix theorem bridge work, and future lint/import minimization remain future stages.
 
-Random matrix theorem proofs remain blocked by the real RHS matrix Laplace
-bridge, trace-exponential inequalities,
+Random matrix theorem proofs remain blocked by remaining matrix Laplace RHS
+normalization after the semantic lintegral bridge, trace-exponential
+inequalities, dimension/norm reduction, theta optimization,
 spectral/operator-norm tail reductions,
 row/iid-row sampling assumptions for covariance estimation,
 centered empirical covariance conventions, and the sample-covariance
@@ -1772,10 +1786,12 @@ Theorem statements blocked by missing infrastructure are tracked in docs/Theorem
 
 ## Next safe task
 
-Stage MB-S9-trace-mgf-to-laplace-tail-contract - audit how the proved bounded
-trace-MGF theorem under explicit primitives connects to the existing
-Laplace/tail layer. Do not prove Golden-Thompson, Lieb, the Bernstein CFC
-primitive, or the full Matrix Bernstein tail theorem in that contract stage.
+Stage MB-S9-trace-mgf-to-laplace-tail-contract-v2 - re-audit how the proved
+bounded trace-MGF theorem under explicit primitives and the proved
+real-to-lintegral semantic bridge connect to the existing Laplace/tail layer.
+Do not prove Golden-Thompson, Lieb, the Bernstein CFC primitive,
+dimension/norm reduction, theta optimization, or the full Matrix Bernstein
+tail theorem in that contract stage.
 
 Stage MB-S9-Tropp-master-typed-primitive has no build blocker. The trace-exp
 layer now exposes `troppMasterTraceMGFStep_statement`, a typed-only
@@ -1898,4 +1914,14 @@ Tropp and pointwise Bernstein CFC primitive assumptions. The finite-family
 Tropp primitive itself remains typed only. The Bernstein CFC primitive remains
 typed only. No Lieb theorem, Golden-Thompson theorem, or Matrix Bernstein tail
 theorem was proved. Next safe task:
-MB-S9-trace-mgf-to-laplace-tail-contract.
+MB-S9-trace-mgf-lintegral-bridge-proof.
+
+Stage MB-S9-trace-mgf-lintegral-bridge-proof has no build blocker. The
+TraceExp layer now exposes
+`traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound`,
+a narrow bridge from the bounded-Bernstein real semantic trace-MGF bound to the
+matching lintegral semantic trace-MGF bound under random self-adjointness and
+trace-exp integrability. It does not prove event reduction, dimension/norm
+reduction, theta optimization, Tropp/Lieb, the Bernstein CFC primitive,
+Golden-Thompson, or the Matrix Bernstein tail theorem. Next safe task:
+MB-S9-trace-mgf-to-laplace-tail-contract-v2.
