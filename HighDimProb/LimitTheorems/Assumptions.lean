@@ -5,6 +5,10 @@ import Mathlib.Probability.Independence.Basic
 /-!
 # Assumption vocabulary for limit theorems
 
+Verified Wikipedia references:
+* Independent and identically distributed random variables: https://en.wikipedia.org/wiki/Independent_and_identically_distributed_random_variables
+* Independence: https://en.wikipedia.org/wiki/Independence_(probability_theory)
+
 This module records thin, Mathlib-backed assumption wrappers for future weak-law
 proofs. It intentionally does not prove independence consequences or variance
 formulas.

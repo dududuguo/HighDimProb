@@ -7,6 +7,12 @@ import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
 /-!
 # Scalar moment implications
 
+Verified Wikipedia references:
+* Moment: https://en.wikipedia.org/wiki/Moment_(mathematics)
+* Sub-Gaussian distribution: https://en.wikipedia.org/wiki/Sub-Gaussian_distribution
+* Orlicz space: https://en.wikipedia.org/wiki/Orlicz_space
+* Heavy-tailed/subExponential context: https://en.wikipedia.org/wiki/Heavy-tailed_distribution
+
 This file starts the moment side of the scalar concentration implication graph.
 
 The current proved bridges use a natural absolute-moment normal form. In

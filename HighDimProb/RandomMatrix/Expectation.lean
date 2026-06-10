@@ -5,6 +5,10 @@ import HighDimProb.RandomMatrix.Basic
 /-!
 # Entrywise matrix expectation vocabulary
 
+Verified Wikipedia references:
+* Expected value: https://en.wikipedia.org/wiki/Expected_value
+* Random matrix: https://en.wikipedia.org/wiki/Random_matrix
+
 Matrix-valued expectations are represented entrywise. This avoids committing to
 a Bochner-integral API for matrix-valued random variables before the matrix
 concentration proof layer needs it.

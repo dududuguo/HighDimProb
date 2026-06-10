@@ -3,13 +3,19 @@ import HighDimProb.RandomProcess
 /-!
 # Gaussian width vocabulary
 
-Actual Gaussian-width theorems are future work.
+Background Wikipedia references:
+* Gaussian process: https://en.wikipedia.org/wiki/Gaussian_process
+* Mean width: https://en.wikipedia.org/wiki/Mean_width
+* Convex geometry: https://en.wikipedia.org/wiki/Convex_geometry
 
 Note: wiki.md listed `https://en.wikipedia.org/wiki/Gaussian_width`, but this
-was not verified as a dedicated Wikipedia page. No Wikipedia link is embedded
-for the placeholder formula beyond this audit note.  The standard mathematical
-formula usually formalized later is `w(T) = E sup_{t in T} <g, t>` for a
-standard Gaussian vector `g`, but this file does not define that formula.
+was not verified as a dedicated Wikipedia page. The background links above are
+related to the usual mathematical context, not a direct Wikipedia-backed
+formula citation. Actual Gaussian-width theorems are future work.
+
+The standard mathematical formula usually formalized later is
+`w(T) = E sup_{t in T} <g, t>` for a standard Gaussian vector `g`, but this file
+does not define that formula.
 -/
 
 namespace HighDimProb

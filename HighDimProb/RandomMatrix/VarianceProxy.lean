@@ -6,6 +6,15 @@ import HighDimProb.RandomMatrix.Sums
 /-!
 # Matrix variance proxy vocabulary
 
+Verified Wikipedia references:
+* Variance: https://en.wikipedia.org/wiki/Variance
+* Random matrix: https://en.wikipedia.org/wiki/Random_matrix
+* Matrix multiplication: https://en.wikipedia.org/wiki/Matrix_multiplication
+* Operator norm: https://en.wikipedia.org/wiki/Operator_norm
+
+Note: Wikipedia does not provide a dedicated `variance proxy` page; this file
+uses the standard matrix-concentration proxy `sum_i E[A_i^2]`.
+
 This leaf prepares the deterministic variance-proxy objects used by future
 matrix Bernstein statements. Expectations remain entrywise through
 `matrixExpect`, matching the current random-matrix object layer.

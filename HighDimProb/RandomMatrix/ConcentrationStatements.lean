@@ -10,6 +10,12 @@ import Mathlib.Analysis.Normed.Algebra.Spectrum
 /-!
 # Matrix concentration assumption vocabulary and typed statements
 
+Verified Wikipedia references:
+* Matrix Chernoff bound: https://en.wikipedia.org/wiki/Matrix_Chernoff_bound
+* Bernstein inequalities: https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
+* Concentration inequality: https://en.wikipedia.org/wiki/Concentration_inequality
+* Random matrix: https://en.wikipedia.org/wiki/Random_matrix
+
 This file contains assumption vocabulary and theorem-target `Prop`
 specifications for future matrix concentration work. It intentionally does not
 prove matrix Bernstein, matrix Hoeffding, matrix Chernoff, Hanson-Wright, or

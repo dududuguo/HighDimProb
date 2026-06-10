@@ -3,6 +3,14 @@ import HighDimProb.Init
 /-!
 # Finite max-scale and variance-proxy helpers
 
+Verified Wikipedia references:
+* Bernstein inequalities: https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
+* Variance: https://en.wikipedia.org/wiki/Variance
+
+Note: Wikipedia does not provide a dedicated finite `maxScale` or
+`varianceProxy` page; these helpers package the scales used by Bernstein-type
+bounds.
+
 This file contains the small deterministic vocabulary needed by the
 subExponential/Bernstein branch.  The max scale is exposed as a real number,
 but is implemented through a finite supremum in `NNReal` so the empty finite

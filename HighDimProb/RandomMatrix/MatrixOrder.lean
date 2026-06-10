@@ -4,6 +4,11 @@ import HighDimProb.RandomMatrix.SelfAdjoint
 /-!
 # Explicit matrix PSD and Loewner-style vocabulary
 
+Verified Wikipedia references:
+* Loewner order: https://en.wikipedia.org/wiki/Loewner_order
+* Definite matrix: https://en.wikipedia.org/wiki/Definite_matrix
+* Quadratic form: https://en.wikipedia.org/wiki/Quadratic_form
+
 This module deliberately does not install a global order instance on matrices.
 For the matrix concentration statement layer, `IsPSDMatrix` means symmetric
 plus nonnegative quadratic form in the existing HighDimProb double-sum normal
