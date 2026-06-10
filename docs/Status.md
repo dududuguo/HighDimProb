@@ -4,21 +4,23 @@ Current version target: v0.1-alpha
 
 ## Current Stage
 
-RandomMatrix / Matrix Bernstein mainline: MB-S9 trace-MGF under explicit
-primitives is complete.
+RandomMatrix / Matrix Bernstein mainline: MB-S9 trace-MGF-to-Laplace/tail
+contract core is complete.
 
-The latest proved public theorem is:
+The latest proved public theorems are:
 
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
+- `matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral`
+- `quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral`
 
-This theorem packages bounded Matrix Bernstein trace-MGF assumptions under
-explicit primitive assumptions. It does not prove the finite-family
-Tropp/Lieb primitive, the Bernstein CFC primitive, Golden-Thompson, or the
-final Matrix Bernstein tail theorem.
+The contract layer keeps the remaining gaps explicit: the real trace-MGF to
+lintegral bridge, the quadratic-form event-subset bridge, finite-family
+Tropp/Lieb, the Bernstein CFC primitive, Golden-Thompson, and the final Matrix
+Bernstein tail theorem remain unproved.
 
 ## Next Safe Task
 
-- `MB-S9-trace-mgf-to-laplace-tail-contract`
+- `MB-S9-real-to-lintegral-bridge-proof-hardening`
 
 ## Public Milestone Summary
 
@@ -44,6 +46,8 @@ Last known build status:
 
 Last known test status:
 - `lake test` passes
+- `lake build HighDimProbJudge` passes
+- `python scripts/judge_policy_check.py` passes
 ## Completed
 
 - Initial Lean4 package skeleton

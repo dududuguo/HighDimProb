@@ -91,6 +91,8 @@ variable (R sigma2 c c1 c2 t bound K : Real)
 #check matrixBernsteinSelfAdjointStatement
 #check matrixBernsteinLaplacePrerequisitesStatement
 #check matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
+#check matrixBernsteinTraceMGFToLaplaceContract_statement
+#check matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement
 #check operatorNorm_eq_spectralRadius_of_selfAdjointStatement
 #check HighProbabilityBound
 #check highProbabilityBound

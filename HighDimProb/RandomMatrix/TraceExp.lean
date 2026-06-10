@@ -862,6 +862,22 @@ abbrev traceMGFBernsteinVarianceProxyBound_statement {Omega : Type*}
         abs theta * R < 3 ->
           TraceMGFBernsteinVarianceProxyBound P Y V theta R
 
+/-- Typed target: real `TraceMGFBernsteinVarianceProxyBound` plus integrability and
+nonnegativity imply the lintegral `TraceMGFBernsteinVarianceProxyBoundLIntegral`.
+
+This is the bridge from the proved real-valued MB-S9 trace-MGF entry point to the
+lintegral form consumed by the Laplace/tail layer.  The integrability and
+nonnegativity of `traceExpIntegrand` are required because the `LIntegral` route
+works through `ENNReal.ofReal`. -/
+abbrev traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement
+    {Omega : Type*} [MeasurableSpace Omega] {n : Nat} (P : Measure Omega)
+    (Y : RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real)
+    (theta R : Real) : Prop :=
+  IntegrableRealRandomVariable P (traceExpIntegrand Y theta) ->
+    (forall omega, 0 <= traceExpIntegrand Y theta omega) ->
+      TraceMGFBernsteinVarianceProxyBound P Y V theta R ->
+        TraceMGFBernsteinVarianceProxyBoundLIntegral P Y V theta R
+
 end
 
 end HighDimProb

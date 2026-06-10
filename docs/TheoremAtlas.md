@@ -25,7 +25,12 @@ and the Bernstein CFC primitive `bernsteinMatrixExp_le_quadratic_statement`
 remain typed-only. Golden-Thompson and the full Matrix Bernstein tail theorem
 also remain unproved.
 
-Next safe task: `MB-S9-trace-mgf-to-laplace-tail-contract`.
+MB-S9 trace-MGF-to-Laplace/tail contract now adds conditional theorem and
+statement APIs connecting bounded Bernstein lintegral trace-MGF bounds to the
+existing Laplace/tail layer without claiming the missing real-to-lintegral,
+Tropp/Lieb, CFC, or Matrix Bernstein proofs.
+
+Next safe task: `MB-S9-real-to-lintegral-bridge-proof-hardening`.
 ## Milestone 3 scalar implication closeout
 
 This audit separates proved theorem families from typed statements and blocked
@@ -1242,7 +1247,7 @@ future directions.
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Priority: Stage MB-S2 through MB-S9-foundation complete; next task is
-  MB-S9-trace-mgf-to-laplace-tail-contract.
+  MB-S9-real-to-lintegral-bridge-proof-hardening.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1640,7 +1645,7 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is MB-S9-trace-mgf-to-laplace-tail-contract.
+- Priority: next safe task is MB-S9-real-to-lintegral-bridge-proof-hardening.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -1816,7 +1821,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Priority: next safe task is MB-S9-trace-mgf-to-laplace-tail-contract.
+- Priority: next safe task is MB-S9-real-to-lintegral-bridge-proof-hardening.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -1943,4 +1948,25 @@ future directions.
 - Blocker: the finite-family Tropp primitive itself remains typed only; the
   Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and the
   Matrix Bernstein tail theorem remain unproved.
-- Priority: next safe task is MB-S9-trace-mgf-to-laplace-tail-contract.
+- Priority: next safe task is MB-S9-real-to-lintegral-bridge-proof-hardening.
+
+
+## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
+
+- Informal statement: a bounded Bernstein lintegral trace-MGF bound plus the
+  explicit quadratic-form event-subset bridge yields the bounded-Bernstein
+  Laplace/tail RHS.
+- Target Lean declarations:
+  `traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement`,
+  `matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral`,
+  `quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral`,
+  `quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral_statement`,
+  `matrixBernsteinTraceMGFToLaplaceContract_statement`, and
+  `matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement`.
+- Status: conditional Laplace RHS and quadratic-form tail wrappers are proven;
+  real-to-lintegral and randomMatrixSum provider assembly remain typed
+  contracts.
+- Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
+  event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
+  Bernstein tail theorem gaps explicit.
+- Priority: next safe task is MB-S9-real-to-lintegral-bridge-proof-hardening.

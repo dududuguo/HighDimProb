@@ -255,6 +255,54 @@ theorem matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
       theta R hTropp hRand hSA hIndep hExpInt hTraceInt hKSA hVSA hR hRange
       hMGF hNorm
 
+/-- Typed contract: the bounded Matrix Bernstein trace-MGF result connects to the
+Laplace/tail layer through the explicit Bernstein-denominator RHS.
+
+This `abbrev` records the full contract shape that a combined trace-MGF + Laplace
+proof would satisfy, without requiring the event-subset proof or the trace-MGF
+provider theorem.  The parameters use `randomMatrixSum A` as the matrix `Y` and
+`matrixVarianceProxy P A` as the variance-proxy matrix `V`. -/
+abbrev matrixBernsteinTraceMGFToLaplaceContract_statement {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)
+    (A : I -> RandomMatrix Omega n n) (theta t R : Real) : Prop :=
+  AEMeasurable
+    (fun omega => ENNReal.ofReal (traceExpIntegrand (randomMatrixSum A) theta omega)) P ->
+    (quadraticFormUpperTailEvent (randomMatrixSum A) t ⊆
+      traceExpThresholdEvent (randomMatrixSum A) theta t) ->
+      TraceMGFBernsteinVarianceProxyBoundLIntegral P (randomMatrixSum A)
+        (matrixVarianceProxy P A) theta R ->
+        P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+          ENNReal.ofReal (Real.exp (-(theta * t))) *
+            ENNReal.ofReal
+              (traceMatrixExp
+                (SMul.smul (bernsteinMGFCoeff theta R) (matrixVarianceProxy P A)))
+
+/-- Typed contract for feeding the proved MB-S9 bounded trace-MGF result into the
+Laplace/tail layer.
+
+The proved theorem under primitives supplies the premise
+`matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R`; this contract
+keeps the remaining downstream gaps visible instead of hiding them:
+1. AEMeasurability of the trace-exp integrand ENNReal lift,
+2. The event-subset bridge `quadraticFormUpperTailEvent ⊆ traceExpThresholdEvent`,
+3. The real-to-lintegral trace-MGF bridge from `TraceMGFBernsteinVarianceProxyBound`
+   to `TraceMGFBernsteinVarianceProxyBoundLIntegral`.
+-/
+abbrev matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement
+    {Omega : Type*} [MeasurableSpace Omega] (P : Measure Omega)
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (theta t R : Real) : Prop :=
+  let Y := randomMatrixSum A
+  let V := matrixVarianceProxy P A
+  AEMeasurable (fun omega => ENNReal.ofReal (traceExpIntegrand Y theta omega)) P ->
+    (quadraticFormUpperTailEvent Y t ⊆ traceExpThresholdEvent Y theta t) ->
+      traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement P Y V theta R ->
+        matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R ->
+          P (quadraticFormUpperTailEvent Y t) <=
+            ENNReal.ofReal (Real.exp (-(theta * t))) *
+              ENNReal.ofReal
+                (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V))
+
 /-- Typed target for the spectral-radius reduction for self-adjoint matrices.
 
 This records a future bridge between HighDimProb's deterministic L2 operator

@@ -12,7 +12,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `bernsteinMatrixExp_le_quadratic_statement`.
 - The finite-family Tropp/Lieb primitive, Bernstein CFC primitive,
   Golden-Thompson, and the full Matrix Bernstein tail theorem remain unproved.
-- Next safe task: `MB-S9-trace-mgf-to-laplace-tail-contract`.
+- Conditional trace-MGF-to-Laplace/tail contract APIs are now present for
+  the bounded Bernstein denominator route.
+- Next safe task: `MB-S9-real-to-lintegral-bridge-proof-hardening`.
 
 ## `HighDimProb/RandomMatrix/SelfAdjoint.lean`
 
@@ -192,6 +194,8 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `traceMGFVarianceProxyBound_statement`: typed statement.
 - `traceMGFBernsteinVarianceProxyBound_statement`: typed statement for the
   bounded-denominator trace-mgf variance-proxy target.
+- `traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement`: typed
+  target recording the explicit real trace-MGF to lintegral bridge gap.
 
 ## `HighDimProb/RandomMatrix/Laplace.lean`
 
@@ -234,6 +238,14 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `matrixChernoffFromTraceExpLIntegralStatement`: typed statement.
 - `selfAdjointOperatorNormLaplaceStatement`: typed statement.
 - `selfAdjointOperatorNormLaplaceLIntegralStatement`: typed statement.
+- `matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral`:
+  theorem substituting a bounded-Bernstein lintegral trace-MGF bound into the
+  Laplace RHS.
+- `quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral`:
+  conditional theorem combining the event-subset Laplace bridge with the
+  bounded-Bernstein lintegral trace-MGF RHS.
+- `quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral_statement`:
+  typed contract statement for the same conditional route.
 
 ## `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 
@@ -244,10 +256,14 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`: typed statement for
   the bounded Matrix Bernstein trace-mgf target with denominator coefficient
   `bernsteinMGFCoeff theta R`.
+- `matrixBernsteinTraceMGFToLaplaceContract_statement`: randomMatrixSum /
+  matrixVarianceProxy contract for the bounded-Bernstein lintegral route.
+- `matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement`:
+  provider-aware typed contract keeping the real-to-lintegral bridge explicit.
 
 ## Current Blockers
 
-- Trace-MGF to Laplace/tail connection for the bounded MB-S9 result.
+- Proved real trace-MGF to lintegral trace-MGF bridge for the bounded MB-S9 result.
 - Unconditional trace-MGF provider theorem without explicit finite-family
   Tropp assumptions. The bounded theorem under primitives is proved for
   `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`; the finite-family
@@ -281,12 +297,10 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-MB-S9-trace-mgf-to-laplace-tail-contract: audit the next
-Matrix Bernstein route now that
-`matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives` is proved. The
-contract should connect the bounded trace-MGF-under-primitives result to the
-Laplace/tail layer without proving the Bernstein CFC primitive,
-Golden-Thompson, Lieb, or the full Matrix Bernstein tail theorem.
+MB-S9-real-to-lintegral-bridge-proof-hardening: prove or sharpen the
+`traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement` bridge so the
+proved real bounded trace-MGF theorem can feed the lintegral Laplace route
+without hiding integrability/nonnegativity assumptions.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -299,4 +313,4 @@ Golden-Thompson, Lieb, or the full Matrix Bernstein tail theorem.
 - The finite-family Tropp primitive remains typed only. The Bernstein CFC
   primitive remains typed only. No Lieb theorem, Golden-Thompson theorem, or
   Matrix Bernstein tail theorem was proved.
-- Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+- Next safe task: MB-S9-real-to-lintegral-bridge-proof-hardening.

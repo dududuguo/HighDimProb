@@ -18,7 +18,9 @@ pointwise Bernstein CFC typed primitive explicitly. It does not prove
 Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, or the full Matrix
 Bernstein tail theorem.
 
-Next safe task: `MB-S9-trace-mgf-to-laplace-tail-contract`.
+The MB-S9 trace-MGF-to-Laplace/tail contract core is now present through
+conditional bounded-Bernstein lintegral Laplace/tail wrappers. Next safe task:
+`MB-S9-real-to-lintegral-bridge-proof-hardening`.
 ## Target Theorem
 
 For a finite family of independent centered self-adjoint random matrices
@@ -695,7 +697,7 @@ matrixLE_smul_of_nonneg
 The stage does not prove the Bernstein CFC primitive, single-summand MGF
 provider, trace-mgf provider, Golden-Thompson, Lieb, or Matrix Bernstein.
 
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract: re-audit the
+Next safe task: MB-S9-real-to-lintegral-bridge-proof-hardening: re-audit the
 single-summand provider route now that MatrixLE algebra, matrix expectation
 monotonicity, and matrix expectation linearity/normalization are available, or
 block cleanly on the next matrix-mgf prerequisite.
@@ -782,7 +784,7 @@ denominator target. This stage does not prove the trace-mgf provider, the
 Tropp/Lieb primitive, the Bernstein CFC primitive, Golden-Thompson, Lieb, or
 Matrix Bernstein.
 
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+Next safe task: MB-S9-real-to-lintegral-bridge-proof-hardening.
 
 ## MB-S9-tropp-shape-refactor Finite-Family Tropp Interface
 
@@ -803,7 +805,7 @@ The one-step log-form primitive `troppMasterTraceMGFStep_statement` remains
 available. This stage did not prove Lieb, Golden-Thompson, the Tropp
 finite-family primitive, the trace-mgf provider, or Matrix Bernstein.
 
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+Next safe task: MB-S9-real-to-lintegral-bridge-proof-hardening.
 
 ## MB-S9 Trace-MGF Thin Wrapper Status
 
@@ -824,7 +826,7 @@ This stage does not prove the finite-family Tropp/Lieb primitive, the
 one-step Tropp primitive, Lieb concavity, Golden-Thompson, the Bernstein CFC
 primitive, or the Matrix Bernstein tail theorem.
 
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+Next safe task: MB-S9-real-to-lintegral-bridge-proof-hardening.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives
 
@@ -845,4 +847,23 @@ thin high-level Tropp wrapper. It does not prove the finite-family Tropp/Lieb
 primitive, the Bernstein CFC primitive, Lieb, Golden-Thompson, or the Matrix
 Bernstein tail theorem.
 
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+Next safe task: MB-S9-real-to-lintegral-bridge-proof-hardening.
+
+
+## MB-S9 Trace-MGF to Laplace/Tail Contract Status
+
+The contract layer now separates the three routes clearly:
+
+```lean
+traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement
+matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral
+quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral
+matrixBernsteinTraceMGFToLaplaceContract_statement
+matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement
+```
+
+The lintegral Laplace substitution and quadratic-form conditional tail theorem
+are proved. The real trace-MGF to lintegral bridge remains a typed target with
+explicit integrability and nonnegativity assumptions. This stage still does not
+prove Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, or the final
+Matrix Bernstein tail theorem.

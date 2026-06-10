@@ -8,7 +8,8 @@ variable {P : Measure Omega}
 variable {n : Nat}
 variable (Y : RandomMatrix Omega n n)
 variable (L : Omega -> Real)
-variable (theta t rhs : Real)
+variable (theta t rhs R : Real)
+variable (V : Matrix (Fin n) (Fin n) Real)
 variable (hTheta : 0 <= theta)
 variable (hRayleigh : forall omega, RayleighUpperBound (Y omega) (L omega))
 variable (hUpper : forall omega, SpectralUpperBound (Y omega) (L omega))
@@ -19,6 +20,7 @@ variable (hMeas : AEMeasurable
 variable (hSubset :
   quadraticFormUpperTailEvent Y t ⊆ traceExpThresholdEvent Y theta t)
 variable (hDom : TraceExpDominatesQuadraticFormUpperTail Y theta t)
+variable (hBernsteinBound : TraceMGFBernsteinVarianceProxyBoundLIntegral P Y V theta R)
 
 #check matrixLaplaceRHS
 #check matrixLaplaceRHSLIntegral
@@ -43,6 +45,9 @@ variable (hDom : TraceExpDominatesQuadraticFormUpperTail Y theta t)
 #check matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail
 #check matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint
 #check matrixLaplaceTransformLIntegral_of_randomSelfAdjoint
+#check matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral
+#check quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral
+#check quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral_statement
 #check matrixLaplaceTransformStatement
 #check matrixLaplaceTransformLIntegralStatement
 #check matrixChernoffFromTraceExpStatement
@@ -74,6 +79,20 @@ variable (hDom : TraceExpDominatesQuadraticFormUpperTail Y theta t)
   Y theta t hMeas hSubset :
     P (quadraticFormUpperTailEvent Y t) <=
       matrixLaplaceRHSLIntegral P Y theta t)
+#check (matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral
+  Y V theta t R hBernsteinBound :
+    matrixLaplaceRHSLIntegral P Y theta t <=
+      ENNReal.ofReal (Real.exp (-(theta * t))) *
+        ENNReal.ofReal
+          (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V)))
+#check (quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral
+  Y V theta t R hMeas hSubset hBernsteinBound :
+    P (quadraticFormUpperTailEvent Y t) <=
+      ENNReal.ofReal (Real.exp (-(theta * t))) *
+        ENNReal.ofReal
+          (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V)))
+#check (quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral_statement
+  P Y V theta t R : Prop)
 #check (TraceExpDominatesQuadraticFormUpperTail Y theta t : Prop)
 #check (traceExpDominatesQuadraticFormUpperTailStatement (P := P) Y theta t :
   Prop)
@@ -165,6 +184,22 @@ example :
       matrixLaplaceRHSLIntegral P Y theta t := by
   exact matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset
     Y theta t hMeas hSubset
+
+example :
+    matrixLaplaceRHSLIntegral P Y theta t <=
+      ENNReal.ofReal (Real.exp (-(theta * t))) *
+        ENNReal.ofReal
+          (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V)) := by
+  exact matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral
+    Y V theta t R hBernsteinBound
+
+example :
+    P (quadraticFormUpperTailEvent Y t) <=
+      ENNReal.ofReal (Real.exp (-(theta * t))) *
+        ENNReal.ofReal
+          (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V)) := by
+  exact quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral
+    Y V theta t R hMeas hSubset hBernsteinBound
 
 example :
     quadraticFormUpperTailEvent Y t ⊆

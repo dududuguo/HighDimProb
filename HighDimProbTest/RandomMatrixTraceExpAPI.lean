@@ -82,6 +82,7 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check traceMGFBoundLIntegral_statement
 #check traceMGFVarianceProxyBound_statement
 #check traceMGFBernsteinVarianceProxyBound_statement
+#check traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement
 #check traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
 
 #check (matrixExp A : Matrix (Fin n) (Fin n) Real)
@@ -154,6 +155,8 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check (traceMGFBoundLIntegral_statement P Y theta rhsL : Prop)
 #check (traceMGFVarianceProxyBound_statement P Y V theta : Prop)
 #check (traceMGFBernsteinVarianceProxyBound_statement P Y V theta R : Prop)
+#check (traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement
+  P Y V theta R : Prop)
 
 example : traceMatrixExp A = Matrix.trace (NormedSpace.exp A) := by
   rfl
@@ -221,6 +224,15 @@ example :
       TraceMGFBoundLIntegral P Y theta
         (ENNReal.ofReal
           (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V))) := by
+  rfl
+
+example :
+    traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement
+        P Y V theta R =
+      (IntegrableRealRandomVariable P (traceExpIntegrand Y theta) ->
+        (forall omega, 0 <= traceExpIntegrand Y theta omega) ->
+          TraceMGFBernsteinVarianceProxyBound P Y V theta R ->
+            TraceMGFBernsteinVarianceProxyBoundLIntegral P Y V theta R) := by
   rfl
 
 example {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
