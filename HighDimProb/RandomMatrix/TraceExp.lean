@@ -735,6 +735,79 @@ theorem lambdaMaxOrdered_matrixExp
         lambdaMaxOrdered_mem_spectrum_real_for_traceExp A hA, rfl⟩
     exact spectrum_real_le_lambdaMaxOrdered_for_traceExp hExpA hmemTop
 
+/-- Trace-exp is bounded by dimension times the largest exponential eigenvalue.
+
+This is the deterministic eigenvalue-count step used before applying a
+separate spectral/norm bound to the input matrix. -/
+private theorem traceMatrixExp_le_card_mul_exp_lambdaMaxOrdered
+    {n : Nat} {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hA : IsSelfAdjointMatrix A) :
+    traceMatrixExp A <=
+      (n + 1 : Real) * Real.exp (lambdaMaxOrdered A hA) := by
+  classical
+  let hExpA : IsSelfAdjointMatrix (matrixExp A) :=
+    isSelfAdjointMatrix_matrixExp hA
+  let e : Fin (Fintype.card (Fin (n + 1))) ≃ Fin (n + 1) :=
+    Fintype.equivOfCardEq (by simp)
+  have htrace :
+      Matrix.trace (matrixExp A) = ∑ i, hExpA.eigenvalues i :=
+    hExpA.trace_eq_sum_eigenvalues
+  have hterm :
+      ∀ i : Fin (n + 1),
+        hExpA.eigenvalues i <=
+          lambdaMaxOrdered (matrixExp A) hExpA := by
+    intro i
+    have hgreat :=
+      lambdaMaxOrdered_is_greatest_eigenvalue (matrixExp A) hExpA (e.symm i)
+    simpa [lambdaMaxOrdered, Matrix.IsHermitian.eigenvalues, e] using hgreat
+  calc
+    traceMatrixExp A
+        = ∑ i : Fin (n + 1), hExpA.eigenvalues i := by
+          simpa [traceMatrixExp, matrixTrace] using htrace
+    _ <= ∑ _i : Fin (n + 1), lambdaMaxOrdered (matrixExp A) hExpA := by
+          exact Finset.sum_le_sum (by
+            intro i _hi
+            exact hterm i)
+    _ = (n + 1 : Real) * lambdaMaxOrdered (matrixExp A) hExpA := by
+          simp [Finset.sum_const, nsmul_eq_mul]
+    _ = (n + 1 : Real) * Real.exp (lambdaMaxOrdered A hA) := by
+          rw [lambdaMaxOrdered_matrixExp hA]
+
+/-- Deterministic trace-exponential dimension bound under a direct ordered
+lambda-max upper bound.
+
+This is generic deterministic spectral infrastructure.  It does not mention
+random matrices, variance proxies, Bernstein coefficients, or tail bounds. -/
+theorem traceMatrixExp_smul_le_card_exp_of_lambdaMaxOrdered_le
+    {n : Nat} {V : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (c sigmaSq : Real)
+    (hc : 0 <= c)
+    (hV : IsSelfAdjointMatrix V)
+    (hSpec : lambdaMaxOrdered V hV <= sigmaSq) :
+    traceMatrixExp (c • V) <=
+      (n + 1 : Real) * Real.exp (c * sigmaSq) := by
+  let hCV : IsSelfAdjointMatrix (c • V) :=
+    isSelfAdjointMatrix_smul c hV
+  have hTrace :
+      traceMatrixExp (c • V) <=
+        (n + 1 : Real) *
+          Real.exp (lambdaMaxOrdered (c • V) hCV) :=
+    traceMatrixExp_le_card_mul_exp_lambdaMaxOrdered hCV
+  have hLambda :
+      lambdaMaxOrdered (c • V) hCV <= c * sigmaSq := by
+    change
+      lambdaMaxOrdered (c • V) (isSelfAdjointMatrix_smul c hV) <=
+        c * sigmaSq
+    rw [lambdaMaxOrdered_smul_of_nonneg c hc hV]
+    exact mul_le_mul_of_nonneg_left hSpec hc
+  have hExp :
+      Real.exp (lambdaMaxOrdered (c • V) hCV) <=
+        Real.exp (c * sigmaSq) :=
+    Real.exp_le_exp.mpr hLambda
+  have hCardNonneg : 0 <= (n + 1 : Real) := by
+    positivity
+  exact le_trans hTrace (mul_le_mul_of_nonneg_left hExp hCardNonneg)
+
 end LambdaMaxOrderedMatrixExp
 
 /-- Typed target for nonnegativity of the real trace-exponential moment. -/
@@ -805,6 +878,29 @@ theorem traceExpMomentLIntegral_eq_ofReal_traceExpMoment {Omega : Type*}
       ENNReal.ofReal (traceExpMoment P Y theta) := by
   rw [traceExpMomentLIntegral, traceExpMoment]
   exact (ofReal_integral_eq_lintegral_ofReal hInt (ae_of_all P hNonneg)).symm
+
+/-- Convert a bounded-Bernstein real trace-MGF semantic bound into its
+lintegral semantic form.
+
+This is only the real-to-lintegral bridge. It does not prove a trace-MGF
+provider, a Laplace event theorem, dimension/norm reduction, theta
+optimization, or Matrix Bernstein. -/
+theorem traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    (Y : RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real)
+    (theta R : Real)
+    (hY : RandomSelfAdjointMatrix P Y)
+    (hInt : IntegrableRealRandomVariable P (traceExpIntegrand Y theta))
+    (hReal : TraceMGFBernsteinVarianceProxyBound P Y V theta R) :
+    TraceMGFBernsteinVarianceProxyBoundLIntegral P Y V theta R := by
+  have hRaw :
+      traceExpMoment P Y theta <=
+        traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V) := by
+    simpa [TraceMGFBernsteinVarianceProxyBound, TraceMGFBound] using hReal
+  unfold TraceMGFBernsteinVarianceProxyBoundLIntegral TraceMGFBoundLIntegral
+  rw [traceExpMomentLIntegral_eq_ofReal_traceExpMoment
+    Y theta hInt (traceExpIntegrand_nonneg_of_randomSelfAdjoint theta hY)]
+  exact ENNReal.ofReal_le_ofReal hRaw
 
 /-- Typed target for future trace-exponential moment bounds.
 

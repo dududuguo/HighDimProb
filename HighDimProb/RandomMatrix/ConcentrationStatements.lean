@@ -261,6 +261,241 @@ theorem matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
       theta R hTropp hRand hSA hIndep hExpInt hTraceInt hKSA hVSA hR hRange
       hMGF hNorm
 
+/-- Explicit-theta quadratic-form Matrix Bernstein upper-tail wrapper under
+explicit primitive assumptions.
+
+This theorem only connects the bounded trace-MGF provider under primitives to
+the existing lintegral Laplace route. The right-hand side remains the
+trace-exponential expression; no dimension/norm reduction, theta optimization,
+operator-norm tail theorem, Tropp/Lieb proof, or Bernstein CFC proof is
+performed here. -/
+theorem matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_primitives
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (theta R t : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (fun omega => matrixExp (SMul.smul theta (A i omega))))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A) theta))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hTheta : 0 < theta)
+    (hCFC :
+      forall i omega,
+        bernsteinMatrixExp_le_quadratic_statement (A i omega) theta R)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A
+        (fun i => SMul.smul (bernsteinMGFCoeff theta R)
+          (matrixSecondMoment P (A i)))
+        (matrixVarianceProxy P A) theta R) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal (Real.exp (-(theta * t))) *
+        ENNReal.ofReal
+          (traceMatrixExp
+            (SMul.smul (bernsteinMGFCoeff theta R)
+              (matrixVarianceProxy P A))) := by
+  have hReal :
+      matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R :=
+    matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
+      A theta R hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt hBound
+      hR hRange hCFC hTropp
+  have hY : RandomSelfAdjointMatrix P (randomMatrixSum A) :=
+    randomSelfAdjointMatrix_sum hCentered.1.2
+  have hLInt :
+      TraceMGFBernsteinVarianceProxyBoundLIntegral P (randomMatrixSum A)
+        (matrixVarianceProxy P A) theta R :=
+    traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound
+      (randomMatrixSum A) (matrixVarianceProxy P A) theta R hY hTraceInt hReal
+  have hMeas :
+      AEMeasurable
+        (fun omega =>
+          ENNReal.ofReal
+            (traceExpIntegrand (randomMatrixSum A) theta omega)) P :=
+    hTraceInt.aemeasurable.ennreal_ofReal
+  have hSubset :
+      quadraticFormUpperTailEvent (randomMatrixSum A) t ⊆
+        traceExpThresholdEvent (randomMatrixSum A) theta t :=
+    quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_traceExpDominates
+      (randomMatrixSum A) theta t
+      (traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint
+        (randomMatrixSum A) theta t hY hTheta.le)
+  exact
+    quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral
+      (randomMatrixSum A) (matrixVarianceProxy P A) theta t R hMeas hSubset hLInt
+
+/-- Variance-proxy specialization of the deterministic trace-exponential
+dimension bound with the bounded Matrix Bernstein coefficient.
+
+This only reduces the trace-exponential RHS to a scalar dimension/norm RHS. It
+does not apply the tail theorem, multiply by `exp (-theta * t)`, or optimize
+theta. -/
+theorem traceMatrixExp_bernsteinMGFCoeff_matrixVarianceProxy_le_card_exp
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (theta R sigmaSq : Real)
+    (hSA : forall i, RandomSelfAdjointMatrix P (A i))
+    (hRange : abs theta * R < 3)
+    (hNorm : MatrixVarianceProxyNormBound P A sigmaSq) :
+    traceMatrixExp
+      (bernsteinMGFCoeff theta R • matrixVarianceProxy P A) <=
+      (n + 1 : Real) * Real.exp (bernsteinMGFCoeff theta R * sigmaSq) := by
+  let hV : IsSelfAdjointMatrix (matrixVarianceProxy P A) :=
+    isSelfAdjointMatrix_matrixVarianceProxy P hSA
+  have hNorm' :
+      deterministicOperatorNorm (matrixVarianceProxy P A) <= sigmaSq := by
+    simpa [MatrixVarianceProxyNormBound, matrixVarianceProxyNorm,
+      deterministicMatrixVarianceProxyNorm] using hNorm
+  have hSpec :
+      lambdaMaxOrdered (matrixVarianceProxy P A) hV <= sigmaSq :=
+    (lambdaMaxOrdered_le_deterministicOperatorNorm hV).trans hNorm'
+  exact
+    traceMatrixExp_smul_le_card_exp_of_lambdaMaxOrdered_le
+      (bernsteinMGFCoeff theta R) sigmaSq
+      (bernsteinMGFCoeff_nonneg hRange) hV hSpec
+
+/-- Explicit-theta quadratic-form Matrix Bernstein upper-tail wrapper under
+explicit primitive assumptions, with the trace-exponential RHS reduced to the
+scalar dimension/norm form.
+
+The right-hand side is intentionally left as the unnormalized product
+`exp (-(theta * t)) * ((n + 1) * exp (bernsteinMGFCoeff theta R * sigmaSq))`.
+No exponent-add normalization, theta optimization, operator-norm tail theorem,
+Tropp/Lieb proof, or Bernstein CFC proof is performed here. -/
+theorem matrixBernsteinQuadraticFormUpperTailScalarRHSWithBernsteinCoeff_under_primitives
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (theta R t sigmaSq : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (fun omega => matrixExp (SMul.smul theta (A i omega))))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A) theta))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hTheta : 0 < theta)
+    (hNorm : MatrixVarianceProxyNormBound P A sigmaSq)
+    (hCFC :
+      forall i omega,
+        bernsteinMatrixExp_le_quadratic_statement (A i omega) theta R)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A
+        (fun i => SMul.smul (bernsteinMGFCoeff theta R)
+          (matrixSecondMoment P (A i)))
+        (matrixVarianceProxy P A) theta R) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        (Real.exp (-(theta * t)) *
+          ((n + 1 : Real) *
+            Real.exp (bernsteinMGFCoeff theta R * sigmaSq))) := by
+  have hTail :=
+    matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_primitives
+      A theta R t hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt hBound
+      hR hRange hTheta hCFC hTropp
+  have hDim :
+      traceMatrixExp
+        (SMul.smul (bernsteinMGFCoeff theta R) (matrixVarianceProxy P A)) <=
+        (n + 1 : Real) *
+          Real.exp (bernsteinMGFCoeff theta R * sigmaSq) :=
+    traceMatrixExp_bernsteinMGFCoeff_matrixVarianceProxy_le_card_exp
+      A theta R sigmaSq hCentered.1.2 hRange hNorm
+  have hDimENN :
+      ENNReal.ofReal
+        (traceMatrixExp
+          (SMul.smul (bernsteinMGFCoeff theta R)
+            (matrixVarianceProxy P A))) <=
+        ENNReal.ofReal
+          ((n + 1 : Real) *
+            Real.exp (bernsteinMGFCoeff theta R * sigmaSq)) :=
+    ENNReal.ofReal_le_ofReal hDim
+  calc
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t)
+        <= ENNReal.ofReal (Real.exp (-(theta * t))) *
+          ENNReal.ofReal
+            (traceMatrixExp
+              (SMul.smul (bernsteinMGFCoeff theta R)
+                (matrixVarianceProxy P A))) := hTail
+    _ <= ENNReal.ofReal (Real.exp (-(theta * t))) *
+          ENNReal.ofReal
+            ((n + 1 : Real) *
+              Real.exp (bernsteinMGFCoeff theta R * sigmaSq)) := by
+        simpa [mul_comm, mul_left_comm, mul_assoc] using
+          mul_le_mul_right hDimENN (ENNReal.ofReal (Real.exp (-(theta * t))))
+    _ = ENNReal.ofReal
+          (Real.exp (-(theta * t)) *
+            ((n + 1 : Real) *
+              Real.exp (bernsteinMGFCoeff theta R * sigmaSq))) :=
+        (ENNReal.ofReal_mul (le_of_lt (Real.exp_pos (-(theta * t))))).symm
+
+/-- Explicit-theta quadratic-form Matrix Bernstein upper-tail wrapper under
+explicit primitive assumptions, with the scalar RHS normalized into compact
+exponential-add form.
+
+This is only a normalization wrapper around
+`matrixBernsteinQuadraticFormUpperTailScalarRHSWithBernsteinCoeff_under_primitives`.
+It does not optimize theta, prove an operator-norm tail theorem, or prove the
+Tropp/Lieb or Bernstein functional-calculus primitives. -/
+theorem matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (theta R t sigmaSq : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (fun omega => matrixExp (SMul.smul theta (A i omega))))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A) theta))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hTheta : 0 < theta)
+    (hNorm : MatrixVarianceProxyNormBound P A sigmaSq)
+    (hCFC :
+      forall i omega,
+        bernsteinMatrixExp_le_quadratic_statement (A i omega) theta R)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A
+        (fun i => SMul.smul (bernsteinMGFCoeff theta R)
+          (matrixSecondMoment P (A i)))
+        (matrixVarianceProxy P A) theta R) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        ((n + 1 : Real) *
+          Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq)) := by
+  have hUnnormalized :=
+    matrixBernsteinQuadraticFormUpperTailScalarRHSWithBernsteinCoeff_under_primitives
+      A theta R t sigmaSq hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt
+      hBound hR hRange hTheta hNorm hCFC hTropp
+  convert hUnnormalized using 1
+  rw [Real.exp_add]
+  ring_nf
+
 /-- Typed target for the spectral-radius reduction for self-adjoint matrices.
 
 This records a future bridge between HighDimProb's deterministic L2 operator

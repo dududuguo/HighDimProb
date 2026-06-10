@@ -90,6 +90,10 @@ generated knowledge-graph artifacts, validation logs, and planning notes. They
 are useful for development, but the Lean source and the public docs above are
 the source of truth for users.
 
+## Acknowledgements
+
+Thanks to @freezed-corpse-143.
+
 ## Contributing
 
 Small PRs are easiest to review. Search Mathlib first, keep imports narrow, add

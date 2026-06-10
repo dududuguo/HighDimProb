@@ -190,6 +190,19 @@ private theorem lambdaMaxOrdered_mem_spectrum_real {n : Nat}
   have hmem := hA.eigenvalues_mem_spectrum_real (e 0)
   simpa [lambdaMaxOrdered, Matrix.IsHermitian.eigenvalues, e] using hmem
 
+/-- The ordered lambda-max endpoint is bounded by the deterministic L2
+operator norm. -/
+theorem lambdaMaxOrdered_le_deterministicOperatorNorm
+    {n : Nat} {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hA : IsSelfAdjointMatrix A) :
+    lambdaMaxOrdered A hA <= deterministicOperatorNorm A := by
+  have hmem : lambdaMaxOrdered A hA ∈ spectrum Real A :=
+    lambdaMaxOrdered_mem_spectrum_real A hA
+  have hnorm : ‖lambdaMaxOrdered A hA‖ <= ‖A‖ :=
+    spectrum.norm_le_norm_of_mem hmem
+  exact (le_abs_self (lambdaMaxOrdered A hA)).trans (by
+    simpa [Real.norm_eq_abs, deterministicOperatorNorm] using hnorm)
+
 /-- Every real spectral value of a self-adjoint matrix is bounded by the
 ordered endpoint. -/
 private theorem spectrum_real_le_lambdaMaxOrdered {n : Nat}
