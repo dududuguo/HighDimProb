@@ -316,6 +316,83 @@ open scoped MatrixOrder Matrix.Norms.Operator
 def bernsteinMGFCoeff (theta R : Real) : Real :=
   (theta ^ 2 / 2) / (1 - abs theta * R / 3)
 
+/-- Canonical scalar Bernstein optimizing choice for the bounded-MGF
+coefficient.
+
+For positive variance proxy `sigmaSq`, nonnegative radius `R`, and positive
+deviation `t`, this is the usual conservative choice
+`theta = t / (sigmaSq + R * t / 3)`. -/
+def bernsteinThetaChoice (t sigmaSq R : Real) : Real :=
+  t / (sigmaSq + R * t / 3)
+
+/-- Positivity of the Bernstein theta-choice denominator under the standard
+nonnegative parameter assumptions. -/
+lemma bernsteinThetaChoice_den_pos {t sigmaSq R : Real}
+    (hSigma : 0 < sigmaSq) (hR : 0 <= R) (ht : 0 <= t) :
+    0 < sigmaSq + R * t / 3 := by
+  have hnonneg : 0 <= R * t / 3 := by positivity
+  linarith
+
+/-- Nonnegativity of the Bernstein theta choice when its denominator is
+positive. -/
+lemma bernsteinThetaChoice_nonneg {t sigmaSq R : Real} (ht : 0 <= t)
+    (hden : 0 < sigmaSq + R * t / 3) :
+    0 <= bernsteinThetaChoice t sigmaSq R := by
+  exact div_nonneg ht hden.le
+
+/-- Positivity of the Bernstein theta choice when `t` and its denominator are
+positive. -/
+lemma bernsteinThetaChoice_pos {t sigmaSq R : Real} (ht : 0 < t)
+    (hden : 0 < sigmaSq + R * t / 3) :
+    0 < bernsteinThetaChoice t sigmaSq R := by
+  exact div_pos ht hden
+
+/-- The Bernstein theta choice lies in the standard bounded-MGF range
+`|theta| * R < 3`. -/
+lemma bernsteinThetaChoice_range {t sigmaSq R : Real}
+    (hSigma : 0 < sigmaSq) (hR : 0 <= R) (ht : 0 <= t) :
+    abs (bernsteinThetaChoice t sigmaSq R) * R < 3 := by
+  have hdenpos : 0 < sigmaSq + R * t / 3 :=
+    bernsteinThetaChoice_den_pos hSigma hR ht
+  have htheta_nonneg : 0 <= bernsteinThetaChoice t sigmaSq R :=
+    bernsteinThetaChoice_nonneg ht hdenpos
+  rw [abs_of_nonneg htheta_nonneg]
+  by_cases hRt : R * t = 0
+  · have : bernsteinThetaChoice t sigmaSq R * R = 0 := by
+      unfold bernsteinThetaChoice
+      rw [div_mul_eq_mul_div, mul_comm t R, hRt]
+      simp
+    rw [this]
+    norm_num
+  · have hmain : (R * t) / (sigmaSq + R * t / 3) < 3 := by
+      rw [div_lt_iff₀ hdenpos]
+      nlinarith
+    calc
+      bernsteinThetaChoice t sigmaSq R * R =
+          (R * t) / (sigmaSq + R * t / 3) := by
+        unfold bernsteinThetaChoice
+        field_simp [hdenpos.ne']
+      _ < 3 := hmain
+
+/-- Scalar exponent simplification produced by the Bernstein theta choice. -/
+lemma bernsteinThetaChoice_exponent_eq {t sigmaSq R : Real}
+    (hSigma : 0 < sigmaSq) (hR : 0 <= R) (ht : 0 <= t) :
+    -(bernsteinThetaChoice t sigmaSq R * t) +
+        bernsteinMGFCoeff (bernsteinThetaChoice t sigmaSq R) R * sigmaSq =
+      -(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)) := by
+  have hdenpos : 0 < sigmaSq + R * t / 3 :=
+    bernsteinThetaChoice_den_pos hSigma hR ht
+  have htheta_nonneg : 0 <= bernsteinThetaChoice t sigmaSq R :=
+    bernsteinThetaChoice_nonneg ht hdenpos
+  have hsig_ne : sigmaSq ≠ 0 := ne_of_gt hSigma
+  have hden_ne : sigmaSq + R * t / 3 ≠ 0 := ne_of_gt hdenpos
+  have htarget_ne : 2 * sigmaSq + (2 / 3) * R * t ≠ 0 := by
+    nlinarith
+  rw [bernsteinMGFCoeff, abs_of_nonneg htheta_nonneg]
+  unfold bernsteinThetaChoice
+  field_simp [hsig_ne, hden_ne, htarget_ne]
+  ring
+
 /-- Nonnegativity of the Bernstein quadratic coefficient under the standard
 theta-range hypothesis. -/
 theorem bernsteinCoefficient_nonneg {theta R : Real}
@@ -967,6 +1044,22 @@ abbrev traceMGFBernsteinVarianceProxyBound_statement {Omega : Type*}
       0 <= theta ->
         abs theta * R < 3 ->
           TraceMGFBernsteinVarianceProxyBound P Y V theta R
+
+/-- Typed target: real `TraceMGFBernsteinVarianceProxyBound` plus integrability and
+nonnegativity imply the lintegral `TraceMGFBernsteinVarianceProxyBoundLIntegral`.
+
+This is the bridge from the proved real-valued MB-S9 trace-MGF entry point to the
+lintegral form consumed by the Laplace/tail layer.  The integrability and
+nonnegativity of `traceExpIntegrand` are required because the `LIntegral` route
+works through `ENNReal.ofReal`. -/
+abbrev traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement
+    {Omega : Type*} [MeasurableSpace Omega] {n : Nat} (P : Measure Omega)
+    (Y : RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real)
+    (theta R : Real) : Prop :=
+  IntegrableRealRandomVariable P (traceExpIntegrand Y theta) ->
+    (forall omega, 0 <= traceExpIntegrand Y theta omega) ->
+      TraceMGFBernsteinVarianceProxyBound P Y V theta R ->
+        TraceMGFBernsteinVarianceProxyBoundLIntegral P Y V theta R
 
 end
 

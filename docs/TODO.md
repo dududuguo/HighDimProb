@@ -4,31 +4,22 @@
 
 - Done: MB-S9 bounded Matrix Bernstein trace-MGF under explicit primitives
   proved `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
-- The theorem keeps the analytic primitives explicit:
-  `troppMasterTraceMGFFiniteFamily_statement` and pointwise
-  `bernsteinMatrixExp_le_quadratic_statement`.
-- Done: MB-S9-bernstein-cfc-typed-primitive added
-  `bernsteinMatrixExp_le_quadratic_statement` as a typed-only
-  Bernstein-specific scalar-to-matrix functional-calculus primitive.
-- Done: MB-S9 expectation, MatrixLE algebra, Bernstein coefficient, and
-  matrix exponential lower-bound infrastructure was proved for the bounded
-  trace-MGF route.
-- Done: MB-S9-single-summand-provider-under-cfc proved
-  `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`,
-  the single-summand MGF variance-proxy provider under an explicit pointwise
-  Bernstein CFC primitive assumption.
-- Done: MB-S9 trace-MGF wrappers under primitives proved
-  `traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily`,
-  `matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily`,
-  and `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
-- Not proved: functional-calculus proof / Bernstein CFC primitive, full
-  CFC-free single-summand MGF theorem, operator-norm-to-spectral-interval
-  bridge, Lieb concavity, Golden-Thompson, full matrix Laplace real RHS
-  bridge, and the full Matrix Bernstein tail theorem.
-- Next: MB-S9-trace-mgf-to-laplace-tail-contract, a source/API contract for
-  connecting the proved bounded trace-MGF theorem under explicit primitives
-  to the existing Laplace / tail layer without proving Lieb,
-  Golden-Thompson, the Bernstein CFC primitive, or Matrix Bernstein.
+- Done: bounded-Bernstein real-to-lintegral semantic bridge proved
+  `traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound`.
+- Done: explicit-theta one-sided quadratic-form tail wrappers and scalar RHS
+  reductions proved, including
+  `matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives`.
+- Done: MB-S9 theta optimization contract proved `bernsteinThetaChoice`,
+  `bernsteinThetaChoice_range`, `bernsteinThetaChoice_exponent_eq`, and
+  `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`.
+- The optimized theorem remains one-sided, quadratic-form, and under explicit
+  `troppMasterTraceMGFFiniteFamily_statement` plus pointwise
+  `bernsteinMatrixExp_le_quadratic_statement` assumptions.
+- Not proved: lambda-max/operator-norm tail bridge, optimized `t = 0` endpoint,
+  functional-calculus proof / Bernstein CFC primitive, full CFC-free
+  single-summand MGF theorem, Lieb concavity, Golden-Thompson, and the full
+  Matrix Bernstein tail theorem.
+- Next: MB-S9-lambda-max-operator-norm-bridge-contract.
 ## Stage M3 Scalar Closeout TODO Audit
 
 The forward scalar subGaussian proof spine is closed as an experimental
@@ -83,20 +74,20 @@ Stage H0 Rademacher/Hoeffding branch update:
 | Exponential tail integral estimates | Extend fixed-scale exponential-square and exponential-linear tail integral estimates to moment, MGF, and finite-gauge variants. | Mathlib improper integrals, `Real.exp`, layer-cake | medium/hard | Stage S2.1 proves the fixed-scale psi2 and psi1 reverse estimates; broader implication families remain future work. |
 | Scalar covariance split | Keep scalar-only `mean`, `centered`, `Centered`, `variance`, covariance, and second-moment bridges in scalar-owned leaves. | `HighDimProb.Scalar.Centering`, `HighDimProb.Scalar.Variance` | done | Implemented in Stage G1B; `HighDimProb.Covariance` now imports these leaves for backward compatibility and owns vector covariance vocabulary. |
 | Concentration theorem namespace cleanup | Decide whether future concentration theorem names should live under a namespace or keep flat HighDimProb names. | Current `markov_inequality`, `chebyshev_inequality` names | easy/medium | Keep flat names for now to match existing package style; revisit before adding many concentration families. |
-| Law map application bridge | If `X` is measurable and `s` is measurable, `law P X s = P (X â»Â? s)`. | `Measure.map_apply` | easy | Direct wrapper, but kept out of the first object pass. |
+| Law map application bridge | If `X` is measurable and `s` is measurable, `law P X s = P (X^{-1} s)`. | `Measure.map_apply` | easy | Direct wrapper, but kept out of the first object pass. |
 | Expand typed theorem specifications | Add `...Statement : Prop` declarations only after the required object vocabulary exists. | `docs/TheoremAtlas.md`, object-layer definitions | easy/medium | Stage 1S only types specifications supported by existing declarations. |
-| Ïˆâ‚?/ Ïˆâ‚?gauge definitions | Define candidate Ïˆâ‚?and Ïˆâ‚?gauges via infimum over scales satisfying `Psi2Bound` and `Psi1Bound`. | `Psi2Bound`, `Psi1Bound`, order/infimum APIs | medium | Stage 2B implements bound predicates only. |
+| psi2 / psi1 gauge definitions | Define candidate psi2 and psi1 gauges via infimum over scales satisfying `Psi2Bound` and `Psi1Bound`. | `Psi2Bound`, `Psi1Bound`, order/infimum APIs | medium | Stage 2B implements bound predicates only. |
 | Orlicz space vocabulary | Define finite-Orlicz classes once gauge definitions stabilize. | Orlicz bounds or gauges | medium | Bound predicates are enough for the next predicate layers. |
 | Canonical subGaussian predicate | Choose whether HighDimProb should expose a single canonical `SubGaussian` predicate. | `SubGaussianTail`, `SubGaussianMoment`, `CenteredSubGaussianMGF`, `SubGaussianOrlicz` | medium | Stage 3A deliberately keeps formulations separate. |
 | SubGaussian natural/real moment conveniences | Add natural- or real-exponent moment-growth predicates if theorem statements need them. | `SubGaussianMoment`, `SubGaussianMomentNatSqrt`, `eLpNorm`, casts between exponent types | done | Stage G2F adds `SubGaussianMomentNatSqrt`; Stage M-real-1 proves the full finite-`ENNReal` `SubGaussianMoment` bridges with scales `8*K` and `16*K`. |
 | Canonical subExponential predicate | Choose whether HighDimProb should expose a single canonical `SubExponential` predicate. | `SubExponentialTail`, `SubExponentialMoment`, `CenteredSubExponentialMGF`, `SubExponentialOrlicz` | medium | Stage 3B deliberately keeps formulations separate. |
 | SubExponential natural/real moment conveniences | Add natural- or real-exponent moment-growth predicates if theorem statements need them. | `SubExponentialMoment`, `eLpNorm`, casts between exponent types | done | Stage M-real-2 proves all-natural factorial moments, natural linear real-Lp bounds, and full finite-`ENNReal` `SubExponentialMoment` bridges with scales `16*K` and `48*K`; no predicate redesign was needed. |
-| EuclideanSpace random-vector bridges | Relate `Fin n â†?â„` random vectors to `EuclideanSpace â„?(Fin n)` when needed. | `RandomVector`, Mathlib `EuclideanSpace`/`PiLp` APIs | medium | Stage 4A keeps the concrete coordinate representation. |
+| EuclideanSpace random-vector bridges | Relate `Fin n -> Real` random vectors to `EuclideanSpace Real (Fin n)` when needed. | `RandomVector`, Mathlib `EuclideanSpace`/`PiLp` APIs | medium | Stage 4A keeps the concrete coordinate representation. |
 | Finite second moment predicates | Add scalar and vector predicates for finite second moments. | `MemLp`, `coord`, `secondMomentMatrix` | easy/medium | Stage 4B keeps covariance vocabulary assumption-free. |
 | Covariance identity bridge statements | Add typed statements or wrappers for `covariance = secondMoment - mean product`. | `covariance`, `secondMoment`, `ProbabilityTheory.covariance_eq_sub` | medium | Requires integrability hypotheses and theorem-layer discipline. |
 | Covariance matrix structural facts | Prove or wrap symmetry and positive-semidefinite facts for covariance matrices. | `covarianceMatrix`, matrix algebra, finite second moments | hard | Beyond object vocabulary. |
 | Canonical subGaussian vector predicate | Choose whether HighDimProb should expose one canonical `SubGaussianVector` predicate. | `SubGaussianVectorTail`, `SubGaussianVectorMoment`, `CenteredSubGaussianVectorMGF`, `SubGaussianVectorOrlicz` | medium | Stage 4D deliberately keeps vector formulations separate. |
-| Unit-sphere subGaussian vector formulation | Define vector subGaussianity through unit directions or a supremum over the unit sphere. | `directionNorm`, Mathlib sphere/norm APIs, future Ïˆâ‚?gauge | medium | Stage 4D uses nonzero all-direction scaling first. |
+| Unit-sphere subGaussian vector formulation | Define vector subGaussianity through unit directions or a supremum over the unit sphere. | `directionNorm`, Mathlib sphere/norm APIs, future psi2 gauge | medium | Stage 4D uses nonzero all-direction scaling first. |
 | Metric entropy radius bridge lemmas | Relate HighDimProb real-radius wrappers to Mathlib `â„â‰¥0` / `â„â‰¥0âˆž` radii in theorem statements. | `epsilonRadius`, `epsilonERadius`, Mathlib metric APIs | medium | Stage P1 did not need extra bridge lemmas, but future covering-number proofs may. |
 | Metric entropy statement proof wrappers | Prove selected typed statement specifications after radius bridge lemmas are available. | `epsilonNetCoveringNumberStatement`, `packingCoveringInequalityStatement` | medium | Stage P1 proves only the maximal separated net pilot. |
 | Metric entropy real-log wrapper | Define a real-valued metric entropy convention from `coveringNumber`. | `coveringNumber`, `â„•âˆž`, `Real.log` | medium | Stage 5A keeps Mathlib `â„•âˆž` counts and defers finite/infinite conventions. |
@@ -136,17 +127,17 @@ Stage H0 Rademacher/Hoeffding branch update:
 | Independence and iid scalar sample assumptions | Wrap Mathlib independence/iid APIs for scalar sample families. | Mathlib `iIndepFun`, `IndepFun`, `IdentDistrib`, `RealRandomVariable`, finite and sequence-indexed samples | done for typed vocabulary | Stage C1 adds finite-sample and sequence wrappers in `LimitTheorems.Assumptions`; theorem bridges to variance algebra remain future work. |
 | Variance of finite sample sums | Prove variance-of-sum formulas under covariance-zero or independence assumptions. | `variance`, `covariance`, finite sums, independence | hard | Needed for the Chebyshev proof of WLLN. |
 | Tail integral identity | Express moments or expectations by integrating tail probabilities. | Tail probabilities, integrals, measurability | hard | Requires integration theorem work. |
-| All-natural subGaussian moment bound | Prove `SubGaussianTail` controls `absMomentNat` for every natural exponent with explicit constants. | `absMomentNat`, `SubGaussianTail`, layer cake or exponential-square moment estimates | done crude plus sharp Ïˆâ‚?| Stage G2B proves a factorial-growth bound; Stage G2E-fix proves sharp Ïˆâ‚?absolute moments and sharp tail real-Lp growth. |
+| All-natural subGaussian moment bound | Prove `SubGaussianTail` controls `absMomentNat` for every natural exponent with explicit constants. | `absMomentNat`, `SubGaussianTail`, layer cake or exponential-square moment estimates | done crude plus sharp psi2 | Stage G2B proves a factorial-growth bound; Stage G2E-fix proves sharp psi2 absolute moments and sharp tail real-Lp growth. |
 | Natural moment to Lp bridge | Bridge finite/bounded `absMomentNat` to `MemLp` and `realLpNorm` at nonzero natural exponents. | `absMomentNat`, `MemLp`, `eLpNorm`, `ENNReal` rpow APIs | done | Stage G2C proves `memLp_of_finiteAbsMomentNat`, low-exponent wrappers, and quantitative `realLpNorm` bounds. |
-| Sharp subGaussian natural moment growth | Prove `SubGaussianTail` controls `absMomentNat` or `realLpNorm` with `(C*K*sqrt q)^q` / `C*K*sqrt q` growth. | `absMomentNat`, `realLpNorm`, deterministic real inequalities | done for natural real-Lp | Stage G2E-fix proves the deterministic inequality and natural real-Lp bounds with constants `4` for Ïˆâ‚?and `8` for tails; Stage G2F packages them as `SubGaussianMomentNatSqrt`. |
+| Sharp subGaussian natural moment growth | Prove `SubGaussianTail` controls `absMomentNat` or `realLpNorm` with `(C*K*sqrt q)^q` / `C*K*sqrt q` growth. | `absMomentNat`, `realLpNorm`, deterministic real inequalities | done for natural real-Lp | Stage G2E-fix proves the deterministic inequality and natural real-Lp bounds with constants `4` for psi2 and `8` for tails; Stage G2F packages them as `SubGaussianMomentNatSqrt`. |
 | Natural-to-real exponent moment bridge | Extend natural-exponent `realLpNorm` bounds to all finite `p : ENNReal` for the full `SubGaussianMoment` predicate. | `SubGaussianMoment`, `SubGaussianMomentNatSqrt`, `eLpNorm_le_eLpNorm_of_exponent_le`, `ENNReal.toReal`, `Nat.ceil`, `Real.sqrt` | done | Stage M-real-1 proves the ceiling/monotonicity bridge and `subGaussianMoment_of_psi2Bound` / `subGaussianMoment_of_subGaussianTail` with constants `8*K` and `16*K`. |
-| Ïˆâ‚?gauge properties | Prove basic monotonicity, scaling, and finite-gauge facts for the Ïˆâ‚?bound formulation. | `Psi2Bound`, future gauge definition | medium/hard | Gauge object is not implemented yet. |
-| Ïˆâ‚?gauge properties | Prove basic monotonicity, scaling, and finite-gauge facts for the Ïˆâ‚?bound formulation. | `Psi1Bound`, future gauge definition | medium/hard | Gauge object is not implemented yet. |
-| Ïˆâ‚?Ïˆâ‚?scalar moment connectors | Connect Orlicz/tail control to scalar moment formulations. | Orlicz, moments, tail predicates | done for fixed-scale predicates | Fixed-scale subGaussian and subExponential moment connectors are proven: `SubGaussianMoment` scales `8*K`/`16*K`, and `SubExponentialMoment` scales `16*K`/`48*K`; finite-gauge variants and reverse/source MGF connections remain future work. |
-| Ïˆâ‚?to subExponential connectors | Connect `Psi1Bound` / finite Ïˆâ‚?control to tail, moment, and MGF subExponential formulations. | Orlicz, moments, MGF, tail predicates | hard | Fixed-scale tail and Orlicz directions are proven; finite-gauge variants, moments, and MGF connections remain future theorem work. |
-| Tail-to-Orlicz reverse implications | Prove tail bounds imply Ïˆâ‚?Ïˆâ‚?Orlicz bounds, with documented constants. | `SubGaussianTail`, `SubExponentialTail`, `Psi2Bound`, `Psi1Bound`, `lintegral_ofReal_eq_lintegral_tail`, tail integration | done for fixed-scale predicates | Stage S2.1 proves `SubGaussianTail -> Psi2Bound (2*K)` and `SubExponentialTail -> Psi1Bound (3*K)`; finite-gauge, moment, and MGF variants remain. |
+| psi2 gauge properties | Prove basic monotonicity, scaling, and finite-gauge facts for the psi2 bound formulation. | `Psi2Bound`, future gauge definition | medium/hard | Gauge object is not implemented yet. |
+| psi1 gauge properties | Prove basic monotonicity, scaling, and finite-gauge facts for the psi1 bound formulation. | `Psi1Bound`, future gauge definition | medium/hard | Gauge object is not implemented yet. |
+| psi2/psi1 scalar moment connectors | Connect Orlicz/tail control to scalar moment formulations. | Orlicz, moments, tail predicates | done for fixed-scale predicates | Fixed-scale subGaussian and subExponential moment connectors are proven: `SubGaussianMoment` scales `8*K`/`16*K`, and `SubExponentialMoment` scales `16*K`/`48*K`; finite-gauge variants and reverse/source MGF connections remain future work. |
+| psi1 to subExponential connectors | Connect `Psi1Bound` / finite psi1 control to tail, moment, and MGF subExponential formulations. | Orlicz, moments, MGF, tail predicates | hard | Fixed-scale tail and Orlicz directions are proven; finite-gauge variants, moments, and MGF connections remain future theorem work. |
+| Tail-to-Orlicz reverse implications | Prove tail bounds imply psi2/psi1 Orlicz bounds, with documented constants. | `SubGaussianTail`, `SubExponentialTail`, `Psi2Bound`, `Psi1Bound`, `lintegral_ofReal_eq_lintegral_tail`, tail integration | done for fixed-scale predicates | Stage S2.1 proves `SubGaussianTail -> Psi2Bound (2*K)` and `SubExponentialTail -> Psi1Bound (3*K)`; finite-gauge, moment, and MGF variants remain. |
 | Orlicz finite-scale wrappers | Derive finite-tail predicates from `HasFinitePsi2` and `HasFinitePsi1` once gauge/scale selection conventions are clear. | `HasFinitePsi2`, `HasFinitePsi1`, existential scales | medium | Stage G1C proves fixed-scale implications only. |
-| SubGaussian equivalence theorem | Tail, MGF, moments, and Orlicz definitions are equivalent up to constants. | Orlicz norms, moments, concentration lemmas | hard | Forward MGF-to-tail/Ïˆâ‚?natural/full-moment links are proved, but reverse MGF links and finite-gauge norms remain future theorem layers. |
+| SubGaussian equivalence theorem | Tail, MGF, moments, and Orlicz definitions are equivalent up to constants. | Orlicz norms, moments, concentration lemmas | hard | Forward MGF-to-tail/psi2 natural/full-moment links are proved, but reverse MGF links and finite-gauge norms remain future theorem layers. |
 | SubExponential equivalence theorem | Tail, MGF, moments, and Orlicz definitions are equivalent up to constants. | Orlicz norms, moments, concentration lemmas | hard | Future theorem layer. |
 | Equivalence of isotropic formulations | Prove covariance identity and marginal second-moment characterizations of isotropicity. | `IsotropicSecondMoment`, `IsotropicCovariance`, `IsotropicMarginal`, covariance matrix, centered vector, `linearForm` | hard | Stage P2 proves only the matrix/entrywise second-moment bridge; covariance and marginal bridges remain theorem work. |
 | Second-moment identity iff marginal identity | Prove entrywise second-moment isotropicity is equivalent to the marginal second-moment identity. | `IsotropicSecondMoment`, `IsotropicMarginal`, finite sums | hard | Requires bilinear expansion of finite linear marginals under expectation. |
@@ -155,11 +146,11 @@ Stage H0 Rademacher/Hoeffding branch update:
 | Independent unit-variance coordinates imply isotropic | Prove independent zero-mean unit-variance coordinates imply isotropicity. | independence, centeredness, variance, covariance matrix | hard | Requires independence/covariance bridge lemmas. |
 | Covariance matrix symmetry and PSD | Prove or wrap symmetry and positive-semidefinite facts for covariance matrices. | `covarianceMatrix`, finite-second-moment assumptions, matrix order/PSD API | hard | Structural covariance theorem layer. |
 | Equivalence of vector subGaussian predicate forms | Prove tail, moment, MGF, and Orlicz directional vector formulations are equivalent up to constants. | `SubGaussianVectorTail`, `SubGaussianVectorMoment`, `CenteredSubGaussianVectorMGF`, `SubGaussianVectorOrlicz` | hard | Depends on scalar equivalence theorem and directional scale bookkeeping. |
-| All-direction versus unit-direction subGaussian vector | Prove nonzero all-direction scaling is equivalent to the unit-sphere formulation. | `directionNorm`, unit sphere, `marginal`, scalar scaling lemmas | hard | Requires Ïˆâ‚?gauge/norm and zero-direction handling. |
+| All-direction versus unit-direction subGaussian vector | Prove nonzero all-direction scaling is equivalent to the unit-sphere formulation. | `directionNorm`, unit sphere, `marginal`, scalar scaling lemmas | hard | Requires psi2 gauge/norm and zero-direction handling. |
 | Isotropic subGaussian vector theory | Develop theorem statements and proofs for isotropic subGaussian vectors. | `IsotropicSecondMoment`, `IsotropicCovariance`, vector subGaussian predicates | hard | Requires isotropic equivalences and subGaussian vector API stability. |
 | SubGaussian vector norm concentration | Prove concentration of `||X||â‚‚` or `sqNorm X` under isotropic subGaussian assumptions. | isotropic predicates, `sqNorm`, vector subGaussian predicates | hard | Explicitly outside object layer. |
 | Maximal separated set variants | Add any additional global-`Maximal` or cardinal-maximal bridge variants if later stages need them. | `MaximalEpsilonSeparatedIn`, Mathlib `Metric.IsCover.of_maximal_isSeparated`, `Metric.isCover_maximalSeparatedSet` | medium | Stage P1 proves the single-point maximality version. |
-| Packing-covering inequalities | Expose HighDimProb-facing statements for `P(K, 2Îµ) â‰?N(K, Îµ) â‰?P(K, Îµ)`. | Mathlib `Metric.coveringNumber`, `Metric.externalCoveringNumber`, `Metric.packingNumber` | medium | Existing Mathlib theorems should be wrapped in a focused statement layer. |
+| Packing-covering inequalities | Expose HighDimProb-facing statements for `P(K, 2eps) <= N(K, eps) <= P(K, eps)`. | Mathlib `Metric.coveringNumber`, `Metric.externalCoveringNumber`, `Metric.packingNumber` | medium | Existing Mathlib theorems should be wrapped in a focused statement layer. |
 | Stage 5B statement proofs | Prove the Stage 5B typed `Prop` specifications when explicitly assigned. | Stage 5B statement module, Mathlib covering number theorems, real-radius bridges | medium | Current round records only statement targets. |
 | Euclidean ball covering number bounds | Prove or wrap bounds for covering numbers of Euclidean balls. | Euclidean space/sphere APIs, volume or finite-dimensional geometry | hard | Requires Euclidean geometry layer. |
 | Hamming cube covering and packing bounds | Formalize covering/packing estimates for the Hamming cube. | finite cube representation, metric choice, counting | hard | Needs combinatorial metric model. |
@@ -203,8 +194,8 @@ Stage H0 Rademacher/Hoeffding branch update:
 | Concrete trace-exp dominance assembly | Use the `lambdaMaxOrdered` spectral and trace-exp providers to prove `TraceExpDominatesQuadraticFormUpperTail` for random self-adjoint matrices. | `lambdaMaxOrdered_rayleighUpperBound`, `lambdaMaxOrdered_traceExpDominatesUpperBound`, `traceExpDominatesQuadraticFormUpperTail_of_rayleighUpperBound_of_traceExpDominatesUpperBound`, `RandomSelfAdjointMatrix` | done | Implemented in MB-S7C-assemble-dominance as `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`. This did not prove full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein. |
 | Conditional matrix Laplace assembly | Use concrete random self-adjoint dominance with the existing conditional Laplace wrappers to prove the matrix Laplace upper-tail theorem. | `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`, `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`, explicit measurability/integrability hypotheses | done | Implemented in MB-S8-laplace-assembly as `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint` and `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`. This did not prove the real RHS bridge, trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein. |
 | Matrix Laplace real RHS bridge | Connect the lintegral matrix Laplace theorem to the existing real trace-exp moment/RHS vocabulary. | `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment`, explicit integrability and nonnegativity hypotheses | hard | Future task after the current trace-mgf provider contract decision; do not prove trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein in that bridge stage. |
-| Matrix trace-mgf foundation/provider contract | Audit the route for proving the semantic bounded Matrix Bernstein trace-mgf target. | `TraceMGFBound`, `TraceMGFBernsteinVarianceProxyBound`, `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`, matrix-valued independence, variance proxy, Golden-Thompson/Lieb or equivalent matrix-mgf machinery | hard | MB-S9-foundation added only semantic predicates and typed targets; MB-S9 follow-up stages isolated and resolved expectation, MatrixLE algebra, coefficient, lower-bound, provider-under-CFC, and RHS-normalization blockers while leaving Tropp/Lieb and Bernstein CFC primitives typed only. `matrixBernsteinTraceMGF_statement` remains a `theta ^ 2 / 2` compatibility target, not the bounded Bernstein denominator target. Current next safe task: MB-S9-trace-mgf-to-laplace-tail-contract. |
-| Matrix exponential lower bound for Bernstein coefficient | Audit/prove the deterministic bridge `MatrixLE (1 + c â€?V) (matrixExp (c â€?V))` after `bernsteinCoefficient_nonneg`. | `bernsteinCoefficient_nonneg`, `MatrixLE`, `matrixExp`, PSD/self-adjoint variance proxy hypotheses, CFC or spectral exponential lower APIs | done | MB-S9-exp-lower-bound-proof implements this deterministic lower-bound family as `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint` and `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`. MB-S9-single-summand-provider-under-cfc then uses it in `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`. MB-S9-rhs-normalization-proof names the denominator coefficient as `bernsteinMGFCoeff` and adds bounded trace-mgf targets. The Bernstein CFC proof, trace-mgf provider, Golden-Thompson, Lieb, and Matrix Bernstein remain unproved. Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract. |
+| Matrix trace-mgf foundation/provider contract | Audit the route for proving the semantic bounded Matrix Bernstein trace-mgf target. | `TraceMGFBound`, `TraceMGFBernsteinVarianceProxyBound`, `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`, matrix-valued independence, variance proxy, Golden-Thompson/Lieb or equivalent matrix-mgf machinery | hard | MB-S9-foundation added only semantic predicates and typed targets; MB-S9 follow-up stages isolated and resolved expectation, MatrixLE algebra, coefficient, lower-bound, provider-under-CFC, and RHS-normalization blockers while leaving Tropp/Lieb and Bernstein CFC primitives typed only. `matrixBernsteinTraceMGF_statement` remains a `theta ^ 2 / 2` compatibility target, not the bounded Bernstein denominator target. Current next safe task: MB-S9-lambda-max-operator-norm-bridge-contract. |
+| Matrix exponential lower bound for Bernstein coefficient | Audit/prove the deterministic bridge `MatrixLE (1 + c smul V) (matrixExp (c smul V))` after `bernsteinCoefficient_nonneg`. | `bernsteinCoefficient_nonneg`, `MatrixLE`, `matrixExp`, PSD/self-adjoint variance proxy hypotheses, CFC or spectral exponential lower APIs | done | MB-S9-exp-lower-bound-proof implements this deterministic lower-bound family as `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint` and `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`. MB-S9-single-summand-provider-under-cfc then uses it in `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`. MB-S9-rhs-normalization-proof names the denominator coefficient as `bernsteinMGFCoeff` and adds bounded trace-mgf targets. The Bernstein CFC proof, trace-mgf provider, Golden-Thompson, Lieb, and Matrix Bernstein remain unproved. Next safe task: MB-S9-lambda-max-operator-norm-bridge-contract. |
 ## MB-S9 Tropp Shape Refactor Follow-Up
 
 The trace-exp layer now exposes `troppMasterTraceMGFFiniteFamily_statement`,
@@ -219,7 +210,7 @@ safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
 - Still unproved: the finite-family Tropp/Lieb primitive itself.
 - Still unproved: the Bernstein CFC primitive.
 - Still unproved: Lieb, Golden-Thompson, and the Matrix Bernstein tail theorem.
-- Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+- Next safe task: MB-S9-lambda-max-operator-norm-bridge-contract.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives Follow-Up
 
@@ -228,4 +219,4 @@ safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
   and pointwise `bernsteinMatrixExp_le_quadratic_statement`.
 - Still unproved: finite-family Tropp/Lieb primitive, Bernstein CFC primitive,
   Lieb, Golden-Thompson, and Matrix Bernstein tail theorem.
-- Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+- Next safe task: MB-S9-lambda-max-operator-norm-bridge-contract.

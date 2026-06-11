@@ -4,34 +4,31 @@ Current version target: v0.1-alpha
 
 ## Current Stage
 
-RandomMatrix / Matrix Bernstein mainline: MB-S9 trace-MGF under explicit
-primitives, the real-to-lintegral trace-MGF bridge, and the explicit-theta
-quadratic-form upper-tail wrapper under primitives are complete. The generic
-deterministic trace-exp dimension bound and the variance-proxy specialized
-trace-exp dimension bound are also proved, as is the explicit-theta
-quadratic-form scalar-RHS wrapper under the same primitive assumptions,
-including its normalized exponential-add RHS form.
+RandomMatrix / Matrix Bernstein mainline: MB-S9 now includes the bounded
+trace-MGF theorem under explicit primitives, the bounded real-to-lintegral
+trace-MGF bridge, the explicit-theta quadratic-form upper-tail wrappers, the
+dimension/norm scalar RHS reduction, and the theta-optimized scalar Bernstein
+denominator wrapper. The newest layer chooses
+`theta = t / (sigmaSq + R * t / 3)` via `bernsteinThetaChoice` and proves the
+conservative exponent form
+`-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))`.
 
 The latest proved public theorem is:
 
-- `matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives`
+- `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 
 The wrapper proves a one-sided nonempty-dimensional quadratic-form upper-tail
-bound under explicit primitive assumptions. The normalized scalar-RHS wrapper
-has RHS:
-`ENNReal.ofReal ((n + 1 : Real) * Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq))`.
-The new deterministic theorem proves the generic bound
-`traceMatrixExp (SMul.smul c V) <= (n + 1 : Real) * Real.exp (c * sigmaSq)`
-under `0 <= c` and a direct `lambdaMaxOrdered V hV <= sigmaSq` assumption. The
-variance-proxy specialization instantiates this at `bernsteinMGFCoeff theta R`
-and `matrixVarianceProxy P A` under `MatrixVarianceProxyNormBound P A sigmaSq`.
-It does not prove theta optimization, lambda-max or operator-norm Matrix
-Bernstein tails, Tropp/Lieb, the Bernstein CFC primitive, Golden-Thompson, or
-the final Matrix Bernstein tail theorem.
+bound under explicit primitive assumptions, with RHS:
+`ENNReal.ofReal ((n + 1 : Real) * Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))))`.
+Supporting scalar API includes `bernsteinThetaChoice`,
+`bernsteinThetaChoice_range`, and `bernsteinThetaChoice_exponent_eq`. It still
+does not prove lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, the
+Bernstein CFC primitive, Golden-Thompson, the `t = 0` endpoint for the
+optimized wrapper, or the final full Matrix Bernstein tail theorem.
 
 ## Next Safe Task
 
-- `MB-S9-theta-optimization-contract`
+- `MB-S9-lambda-max-operator-norm-bridge-contract`
 
 ## Public Milestone Summary
 
@@ -71,7 +68,7 @@ Last known test status:
 - Stage 1C public API boundary and scaffold cleanup
 - Stage 1R README workflow and future-work documentation
 - Stage 2A Lp and moment vocabulary
-- Stage 2B Orlicz / Ïˆï¿?/ Ïˆï¿?definition layer
+- Stage 2B Orlicz / psi2 / psi1 definition layer
 - Stage 3A subGaussian predicate layer
 - Stage 3B subExponential predicate layer
 - Stage 4A random vector object layer
@@ -210,7 +207,7 @@ Stage 3B implemented:
 - API regression tests for subExponential declarations
 
 Stage 4A implemented:
-- finite-dimensional random-vector alias using `Î© ï¿?Fin n ï¿?â„`
+- finite-dimensional random-vector alias using `Omega -> Fin n -> Real`
 - coordinatewise random-vector measurability predicate
 - coordinate random-variable wrapper and bridge lemmas
 - finite linear marginal wrapper and measurability bridge
@@ -452,7 +449,7 @@ Stage G2C implemented:
 
 Stage G2D implemented:
 - proved `realLpNorm_nat_le_linear_of_psi2Bound` with constant `8` for natural `q >= 1`.
-- proved `realLpNorm_nat_le_linear_of_subGaussianTail` with constant `16`, using the existing `K -> 2*K` tail-to-Ïˆâ‚?scale loss.
+- proved `realLpNorm_nat_le_linear_of_subGaussianTail` with constant `16`, using the existing `K -> 2*K` tail-to-psi2 scale loss.
 - reused `Nat.factorial_le_pow`, `Real.rpow_le_rpow`, `Real.mul_rpow`, `Real.rpow_mul`, `Real.exp_one_lt_three`, and the existing `absMomentNat -> realLpNorm` bridge.
 - documented that the factorial-root route only yields linear `q`; sharp `sqrt(q)` growth remains blocked by missing direct tail-integral/Gamma moment estimates.
 
@@ -827,7 +824,7 @@ Stage J2 implemented:
   safe task.
 
 Milestone Sprint S2 implemented:
-- completed fixed-scale scalar Orlicz/tail implication graph in both directions for Ïˆï¿?and Ïˆï¿?predicates
+- completed fixed-scale scalar Orlicz/tail implication graph in both directions for psi2 and psi1 predicates
 - added `HighDimProb.Concentration.Implications`
 - added `docs/ScalarImplicationGraph.md`
 - hardened concentration aggregate tests
@@ -1351,8 +1348,8 @@ Processed:
 - Lp norm
 - moments
 - Orlicz norm vocabulary
-- Ïˆï¿?norm vocabulary
-- Ïˆï¿?norm vocabulary
+- psi2 norm vocabulary
+- psi1 norm vocabulary
 - subGaussian random variable definitions
 - subExponential random variable definitions
 - random vector object layer
@@ -1412,12 +1409,12 @@ Processed:
 - scalar concentration API cleanup
 - Markov inequality
 - Chebyshev inequality
-- Ïˆï¿?Orlicz bound implies subGaussian tail
-- Ïˆï¿?Orlicz bound implies subExponential tail
+- psi2 Orlicz bound implies subGaussian tail
+- psi1 Orlicz bound implies subExponential tail
 - tail-to-Orlicz reverse implication typed targets
 - layer-cake tail integral bridge
-- Ïˆï¿?tail-to-Orlicz reverse implication
-- Ïˆï¿?tail-to-Orlicz reverse implication
+- psi2 tail-to-Orlicz reverse implication
+- psi1 tail-to-Orlicz reverse implication
 - scalar Orlicz/tail implication graph
 - concentration layer-cake import boundary
 - random matrix theorem statement layer
@@ -1430,7 +1427,7 @@ Processed:
 - all-natural absolute-moment factorial bound
 - natural absolute-moment to `MemLp` / `realLpNorm` bridge
 - factorial-growth natural subGaussian moment predicate
-- crude linear `realLpNorm` growth from Ïˆâ‚?and subGaussian-tail control
+- crude linear `realLpNorm` growth from psi2 and subGaussian-tail control
 - sharp natural-exponent `realLpNorm <= C*K*sqrt(q)` growth
 - sharp natural-exponent subGaussian moment predicate bridge
 - forward centered-MGF-to-tail/psi2/natural-moment implication spine
@@ -1605,7 +1602,7 @@ inequality, and proves the conditional bridges
 `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset` and
 `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset`. These theorems
 require the explicit hypothesis
-`quadraticFormUpperTailEvent Y t âŠ?traceExpThresholdEvent Y theta t`. The full
+`quadraticFormUpperTailEvent Y t subset traceExpThresholdEvent Y theta t`. The full
 `matrixLaplaceTransformStatement`, trace-mgf inequalities, Golden-Thompson,
 Lieb, and matrix Bernstein remain unproved.
 
@@ -1774,8 +1771,7 @@ Fixed-scale psi2 and psi1 tail-to-Orlicz reverse implications are proven. Stage 
 
 Random matrix theorem proofs remain blocked by remaining matrix Laplace RHS
 normalization after the semantic lintegral bridge, trace-exponential
-inequalities, dimension/norm reduction, theta optimization,
-spectral/operator-norm tail reductions,
+inequalities and spectral/operator-norm tail reductions,
 row/iid-row sampling assumptions for covariance estimation,
 centered empirical covariance conventions, and the sample-covariance
 unit-sphere reduction theorem. The major matrix
@@ -1790,7 +1786,7 @@ Stage MB-S9-trace-mgf-to-laplace-tail-contract-v2 - re-audit how the proved
 bounded trace-MGF theorem under explicit primitives and the proved
 real-to-lintegral semantic bridge connect to the existing Laplace/tail layer.
 Do not prove Golden-Thompson, Lieb, the Bernstein CFC primitive,
-dimension/norm reduction, theta optimization, or the full Matrix Bernstein
+lambda-max/operator-norm tail reduction, or the full Matrix Bernstein
 tail theorem in that contract stage.
 
 Stage MB-S9-Tropp-master-typed-primitive has no build blocker. The trace-exp

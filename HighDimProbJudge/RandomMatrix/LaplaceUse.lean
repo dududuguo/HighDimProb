@@ -270,3 +270,35 @@ example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (P : MeasureTheory.Measure Omega)
     (Y : HighDimProb.RandomMatrix Omega n n) (theta t : Real) : Prop :=
   HighDimProb.matrixLaplaceTransformStatement P Y theta t
+
+example {Omega : Type*} [MeasurableSpace Omega] {P : MeasureTheory.Measure Omega}
+    {n : Nat} (Y : HighDimProb.RandomMatrix Omega n n)
+    (V : Matrix (Fin n) (Fin n) Real) (theta t R : Real)
+    (hBound : HighDimProb.TraceMGFBernsteinVarianceProxyBoundLIntegral P Y V theta R) :
+    HighDimProb.matrixLaplaceRHSLIntegral P Y theta t <=
+      ENNReal.ofReal (Real.exp (-(theta * t))) *
+        ENNReal.ofReal
+          (HighDimProb.traceMatrixExp
+            (SMul.smul (HighDimProb.bernsteinMGFCoeff theta R) V)) := by
+  exact
+    HighDimProb.matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral
+      Y V theta t R hBound
+
+example {Omega : Type*} [MeasurableSpace Omega] {P : MeasureTheory.Measure Omega}
+    {n : Nat} (Y : HighDimProb.RandomMatrix Omega n n)
+    (V : Matrix (Fin n) (Fin n) Real) (theta t R : Real)
+    (hMeas : AEMeasurable
+      (fun omega =>
+        ENNReal.ofReal (HighDimProb.traceExpIntegrand Y theta omega)) P)
+    (hSubset :
+      HighDimProb.quadraticFormUpperTailEvent Y t ⊆
+        HighDimProb.traceExpThresholdEvent Y theta t)
+    (hBound : HighDimProb.TraceMGFBernsteinVarianceProxyBoundLIntegral P Y V theta R) :
+    P (HighDimProb.quadraticFormUpperTailEvent Y t) <=
+      ENNReal.ofReal (Real.exp (-(theta * t))) *
+        ENNReal.ofReal
+          (HighDimProb.traceMatrixExp
+            (SMul.smul (HighDimProb.bernsteinMGFCoeff theta R) V)) := by
+  exact
+    HighDimProb.quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral
+      Y V theta t R hMeas hSubset hBound

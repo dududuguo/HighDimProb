@@ -7,10 +7,13 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.matrixBernsteinTraceMGFWithBernsteinCoeff_statement
 #check HighDimProb.matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily
 #check HighDimProb.matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
+#check HighDimProb.matrixBernsteinTraceMGFToLaplaceContract_statement
+#check HighDimProb.matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement
 #check HighDimProb.matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_primitives
 #check HighDimProb.traceMatrixExp_bernsteinMGFCoeff_matrixVarianceProxy_le_card_exp
 #check HighDimProb.matrixBernsteinQuadraticFormUpperTailScalarRHSWithBernsteinCoeff_under_primitives
 #check HighDimProb.matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives
+#check HighDimProb.matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
 #check HighDimProb.matrixVarianceProxyNorm
 #check HighDimProb.PointwiseOperatorNormBound
 #check HighDimProb.IndependentSelfAdjointRandomMatrices
@@ -44,3 +47,17 @@ example {Omega I : Type*} [MeasurableSpace Omega] [Fintype I]
     (A : I -> HighDimProb.RandomMatrix Omega n n)
     (theta R : Real) : Prop :=
   HighDimProb.matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R
+
+example {Omega I : Type*} [MeasurableSpace Omega] [Fintype I]
+    {n : Nat} (P : MeasureTheory.Measure Omega)
+    [MeasureTheory.IsProbabilityMeasure P]
+    (A : I -> HighDimProb.RandomMatrix Omega n n)
+    (theta t R : Real) : Prop :=
+  HighDimProb.matrixBernsteinTraceMGFToLaplaceContract_statement P A theta t R
+
+example {Omega I : Type*} [MeasurableSpace Omega] [Fintype I]
+    {n : Nat} (P : MeasureTheory.Measure Omega)
+    [MeasureTheory.IsProbabilityMeasure P]
+    (A : I -> HighDimProb.RandomMatrix Omega n n)
+    (theta t R : Real) : Prop :=
+  HighDimProb.matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement P A theta t R
