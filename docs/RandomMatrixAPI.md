@@ -31,9 +31,15 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives`.
 - Its RHS is:
   `ENNReal.ofReal ((n + 1 : Real) * Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq))`.
+- Proved theta-choice scalar helpers:
+  `bernsteinThetaChoice`, `bernsteinThetaChoice_range`, and
+  `bernsteinThetaChoice_exponent_eq`.
+- Proved theta-optimized quadratic-form scalar-RHS wrapper under primitives:
+  `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`.
+- Its RHS is:
+  `ENNReal.ofReal ((n + 1 : Real) * Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))))`.
 - Lambda-max/operator-norm Matrix Bernstein tail theorem remains unproved.
-- Theta optimization remains unproved.
-- Next safe task: `MB-S9-theta-optimization-contract`.
+- Next safe task: `MB-S9-lambda-max-operator-norm-bridge-contract`.
 
 ## `HighDimProb/RandomMatrix/SelfAdjoint.lean`
 
@@ -173,6 +179,13 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `TraceMGFBernsteinVarianceProxyBound` for `randomMatrixSum`.
 - `bernsteinMGFCoeff`: def, canonical bounded Matrix Bernstein trace-mgf
   coefficient `(theta ^ 2 / 2) / (1 - abs theta * R / 3)`.
+- `bernsteinThetaChoice`: def, canonical scalar theta choice
+  `t / (sigmaSq + R * t / 3)`.
+- `bernsteinThetaChoice_den_pos`, `bernsteinThetaChoice_nonneg`,
+  `bernsteinThetaChoice_pos`, `bernsteinThetaChoice_range`, and
+  `bernsteinThetaChoice_exponent_eq`: scalar helpers proving denominator
+  positivity, theta positivity/nonnegativity, the bounded-MGF range, and the
+  Bernstein denominator exponent identity.
 - `bernsteinCoefficient_nonneg`: theorem proving nonnegativity of the
   Bernstein quadratic coefficient
   `(theta ^ 2 / 2) / (1 - abs theta * R / 3)` under `abs theta * R < 3`.
@@ -296,6 +309,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
   scalar dimension/norm form.
 - `matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives`:
   theorem normalizing the scalar RHS to exponential-add form.
+- `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`:
+  theorem choosing `bernsteinThetaChoice t sigmaSq R` and rewriting the RHS to
+  the Bernstein denominator exponent
+  `-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))`; still one-sided,
+  quadratic-form, and under explicit primitives.
 - `matrixBernsteinTraceMGFToLaplaceContract_statement`: retained typed
   compatibility contract for the bounded-Bernstein lintegral Laplace route
   specialized to `randomMatrixSum A` and `matrixVarianceProxy P A`.
@@ -314,7 +332,6 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - The older `matrixBernsteinTraceMGF_statement` is retained for the
   `theta ^ 2 / 2` compatibility target and is not the bounded Matrix
   Bernstein RHS.
-- Theta optimization for the bounded Bernstein denominator.
 - Full CFC-free single-summand MGF provider; the current provider theorem
   assumes the pointwise Bernstein CFC primitive explicitly.
 - Functional-calculus proof for
@@ -339,9 +356,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-MB-S9-theta-optimization-contract: analyze the scalar optimization needed to
-choose theta in the normalized explicit-theta scalar RHS. Do not prove
-lambda-max/operator-norm Matrix Bernstein, Tropp/Lieb, Bernstein CFC,
+MB-S9-lambda-max-operator-norm-bridge-contract: plan the bridge from the proved
+one-sided optimized quadratic-form under-primitives tail to lambda-max and then
+operator-norm Matrix Bernstein tails. Do not prove Tropp/Lieb, Bernstein CFC,
 Golden-Thompson, or the full Matrix Bernstein theorem in that contract stage.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
@@ -364,4 +381,6 @@ Golden-Thompson, or the full Matrix Bernstein theorem in that contract stage.
   proved in `ConcentrationStatements.lean`, with intentionally unnormalized RHS.
 - The normalized scalar-RHS quadratic-form wrapper under primitives is now
   proved in `ConcentrationStatements.lean`, with exponential-add RHS.
-- Next safe task: MB-S9-theta-optimization-contract.
+- The theta-optimized scalar-RHS quadratic-form wrapper under primitives is now
+  proved in `ConcentrationStatements.lean`, with Bernstein denominator RHS.
+- Next safe task: MB-S9-lambda-max-operator-norm-bridge-contract.

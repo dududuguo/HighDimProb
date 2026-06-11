@@ -13,7 +13,7 @@ variable (Y : RandomMatrix Omega n n)
 variable {I : Type*} [Fintype I]
 variable (Xfam : I -> RandomMatrix Omega n n)
 variable (Kfam : I -> Matrix (Fin n) (Fin n) Real)
-variable (theta rhs R : Real)
+variable (theta rhs R t sigmaSq : Real)
 variable (rhsL : ENNReal)
 variable (hA : IsSelfAdjointMatrix A)
 variable (hB : IsSelfAdjointMatrix B)
@@ -59,6 +59,12 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check troppMasterTraceMGFStep_statement
 #check troppMasterTraceMGFFiniteFamily_statement
 #check bernsteinMGFCoeff
+#check bernsteinThetaChoice
+#check bernsteinThetaChoice_den_pos
+#check bernsteinThetaChoice_nonneg
+#check bernsteinThetaChoice_pos
+#check bernsteinThetaChoice_range
+#check bernsteinThetaChoice_exponent_eq
 #check bernsteinCoefficient_nonneg
 #check bernsteinMGFCoeff_nonneg
 #check TraceMGFBernsteinVarianceProxyBound
@@ -117,6 +123,23 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check (TraceMGFVarianceProxyBound P Y V theta : Prop)
 #check (TraceMGFVarianceProxyBoundLIntegral P Y V theta : Prop)
 #check (bernsteinMGFCoeff theta R : Real)
+#check (bernsteinThetaChoice t sigmaSq R : Real)
+#check (bernsteinThetaChoice_den_pos (t := t) (sigmaSq := sigmaSq) (R := R) :
+  0 < sigmaSq -> 0 <= R -> 0 <= t -> 0 < sigmaSq + R * t / 3)
+#check (bernsteinThetaChoice_nonneg (t := t) (sigmaSq := sigmaSq) (R := R) :
+  0 <= t -> 0 < sigmaSq + R * t / 3 ->
+    0 <= bernsteinThetaChoice t sigmaSq R)
+#check (bernsteinThetaChoice_pos (t := t) (sigmaSq := sigmaSq) (R := R) :
+  0 < t -> 0 < sigmaSq + R * t / 3 ->
+    0 < bernsteinThetaChoice t sigmaSq R)
+#check (bernsteinThetaChoice_range (t := t) (sigmaSq := sigmaSq) (R := R) :
+  0 < sigmaSq -> 0 <= R -> 0 <= t ->
+    abs (bernsteinThetaChoice t sigmaSq R) * R < 3)
+#check (bernsteinThetaChoice_exponent_eq (t := t) (sigmaSq := sigmaSq) (R := R) :
+  0 < sigmaSq -> 0 <= R -> 0 <= t ->
+    -(bernsteinThetaChoice t sigmaSq R * t) +
+        bernsteinMGFCoeff (bernsteinThetaChoice t sigmaSq R) R * sigmaSq =
+      -(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))
 #check (troppMasterTraceMGFStep_statement (P := P) A Y : Prop)
 #check (troppMasterTraceMGFFiniteFamily_statement (P := P) Xfam Kfam V theta R :
   Prop)

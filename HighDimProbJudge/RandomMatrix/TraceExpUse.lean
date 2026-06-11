@@ -28,6 +28,12 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.troppMasterTraceMGFStep_statement
 #check HighDimProb.troppMasterTraceMGFFiniteFamily_statement
 #check HighDimProb.bernsteinMGFCoeff
+#check HighDimProb.bernsteinThetaChoice
+#check HighDimProb.bernsteinThetaChoice_den_pos
+#check HighDimProb.bernsteinThetaChoice_nonneg
+#check HighDimProb.bernsteinThetaChoice_pos
+#check HighDimProb.bernsteinThetaChoice_range
+#check HighDimProb.bernsteinThetaChoice_exponent_eq
 #check HighDimProb.bernsteinCoefficient_nonneg
 #check HighDimProb.bernsteinMGFCoeff_nonneg
 #check HighDimProb.TraceMGFBernsteinVarianceProxyBound

@@ -7,11 +7,9 @@ typed `Prop` statements whose objects already exist.
 ## Current Public Status
 
 MB-S9 has proved the bounded Matrix Bernstein trace-MGF wrapper, the
-bounded-Bernstein real-to-lintegral semantic bridge, and the explicit-theta
-one-sided quadratic-form upper-tail wrapper under explicit primitive
-assumptions. The generic deterministic trace-exp dimension bound and its
-variance-proxy specialization are also proved, as are the unnormalized and
-normalized explicit-theta scalar-RHS quadratic-form tail wrappers:
+bounded-Bernstein real-to-lintegral semantic bridge, the explicit-theta
+one-sided quadratic-form upper-tail wrappers, the scalar dimension/norm RHS
+reduction, and the theta-optimized scalar-RHS quadratic-form tail wrapper.
 
 ```lean
 matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
@@ -22,36 +20,28 @@ lambdaMaxOrdered_le_deterministicOperatorNorm
 traceMatrixExp_bernsteinMGFCoeff_matrixVarianceProxy_le_card_exp
 matrixBernsteinQuadraticFormUpperTailScalarRHSWithBernsteinCoeff_under_primitives
 matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives
+bernsteinThetaChoice
+bernsteinThetaChoice_range
+bernsteinThetaChoice_exponent_eq
+matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
 ```
 
-The tail wrapper keeps the RHS in trace-exponential form:
-
-```text
-exp(-theta*t) * tr exp(SMul.smul (bernsteinMGFCoeff theta R) (matrixVarianceProxy P A))
-```
-
-The scalar-RHS wrapper keeps the RHS intentionally unnormalized:
-
-```text
-ENNReal.ofReal (Real.exp (-(theta * t)) *
-  ((n + 1 : Real) * Real.exp (bernsteinMGFCoeff theta R * sigmaSq)))
-```
-
-The normalized scalar-RHS wrapper rewrites the same explicit-theta bound to:
+The optimized wrapper chooses `theta = t / (sigmaSq + R * t / 3)` and proves
+the Bernstein denominator RHS:
 
 ```text
 ENNReal.ofReal
   ((n + 1 : Real) *
-    Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq))
+    Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))))
 ```
 
 The theorem assumes the finite-family Tropp/Lieb typed primitive and the
 pointwise Bernstein CFC typed primitive explicitly. It does not prove
-Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, theta optimization,
-lambda-max/operator-norm Matrix Bernstein tails, or the full Matrix Bernstein
-tail theorem.
+Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, the `t = 0` endpoint
+for the optimized wrapper, lambda-max/operator-norm Matrix Bernstein tails, or
+the full Matrix Bernstein tail theorem.
 
-Next safe task: `MB-S9-theta-optimization-contract`.
+Next safe task: `MB-S9-lambda-max-operator-norm-bridge-contract`.
 ## Target Theorem
 
 For a finite family of independent centered self-adjoint random matrices
@@ -149,7 +139,7 @@ targets only.
 | Matrix Laplace upper-tail reduction | `matrixLaplaceTransformStatement` | typed `Prop`, unproved |
 | Matrix Laplace upper-tail reduction, lintegral form | `matrixLaplaceTransformLIntegralStatement` | typed `Prop`, unproved |
 | Conditional trace-exp threshold Markov bound | `traceExpThresholdEvent_lintegral_bound` | proven under explicit a.e. measurability |
-| Conditional quadratic-form Laplace bridge | `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`, `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset` | proven only under explicit subset hypothesis `quadraticFormUpperTailEvent Y t âŠ?traceExpThresholdEvent Y theta t` |
+| Conditional quadratic-form Laplace bridge | `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`, `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset` | proven only under explicit subset hypothesis `quadraticFormUpperTailEvent Y t ï¿½?traceExpThresholdEvent Y theta t` |
 | Trace-exp dominance target | `traceExpDominatesQuadraticFormUpperTailStatement`, `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint` | typed `Prop` statement plus proved concrete random self-adjoint assembly from the `lambdaMaxOrdered` Rayleigh and trace-exp providers |
 | Conditional dominance-named Laplace bridge | `matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint`, `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint` | dominance-hypothesis wrappers plus concrete random self-adjoint lintegral Laplace wrappers proved under explicit a.e. measurability and `0 <= theta` |
 | Chernoff step from trace-exp bound | `matrixChernoffFromTraceExpStatement` | typed `Prop`, unproved |
@@ -242,7 +232,7 @@ matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset
 The quadratic-form Laplace bridge is intentionally conditional. It assumes:
 
 ```lean
-quadraticFormUpperTailEvent Y t âŠ?traceExpThresholdEvent Y theta t
+quadraticFormUpperTailEvent Y t ï¿½?traceExpThresholdEvent Y theta t
 ```
 
 The current repository does not prove that subset. Therefore
@@ -310,7 +300,7 @@ MB-S7B-scalar-endpoint proves:
 lambdaMaxOrdered_smul_of_nonneg
 ```
 
-This shows that `lambdaMaxOrdered (theta â€?A)` agrees with
+This shows that `lambdaMaxOrdered (theta ï¿½?A)` agrees with
 `theta * lambdaMaxOrdered A hA` for `0 <= theta` using the ordered endpoint and
 real spectrum APIs. It resolves the scalar-multiplication split in the
 trace-exp provider plan only. It does not prove the `lambdaMaxOrdered`
@@ -552,7 +542,7 @@ Stage MB-S9-trace-mgf-to-laplace-tail-contract-v2: re-audit how the proved
 bounded trace-MGF theorem under explicit primitives and the proved
 real-to-lintegral semantic bridge connect to the existing Laplace/tail layer.
 Do not prove Lieb, Golden-Thompson, the Bernstein CFC primitive,
-dimension/norm reduction, theta optimization, or the full Matrix Bernstein
+lambda-max/operator-norm tail reduction, or the full Matrix Bernstein
 tail theorem in that contract stage.
 
 ## MB-S7A Spectral Bridge Typed Split
@@ -603,7 +593,7 @@ matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound
 
 The direct theorem behind `matrixQuadraticForm_le_lambdaMax_statement` remains
 unproved. The remaining blocker is the spectral endpoint/order theorem giving
-`((lambdaMax A hA) â€?1 - A).PosSemidef` for self-adjoint
+`((lambdaMax A hA) ï¿½?1 - A).PosSemidef` for self-adjoint
 `A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real`.
 
 Dimension handling remains `Fin (n + 1)` for lambda wrappers, with the
@@ -621,7 +611,7 @@ matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound
 ```
 
 `LambdaMaxPSDUpperBound A hA` is an abbreviation for the endpoint premise
-`((lambdaMax A hA) â€?1 - A).PosSemidef`. The wrapper theorem is only a direct
+`((lambdaMax A hA) ï¿½?1 - A).PosSemidef`. The wrapper theorem is only a direct
 reuse of the MB-S7A-fix helper; it does not prove the endpoint premise or the
 unconditional Rayleigh theorem.
 
@@ -891,7 +881,7 @@ traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBo
 This theorem converts the bounded-Bernstein real semantic trace-MGF bound to
 the corresponding lintegral semantic trace-MGF bound under random
 self-adjointness and trace-exp integrability. It does not prove event
-reduction, dimension/norm reduction, theta optimization, Tropp/Lieb, the
+reduction, lambda-max/operator-norm tail reduction, Tropp/Lieb, the
 Bernstein CFC primitive, Golden-Thompson, or the Matrix Bernstein tail theorem.
 
 The downstream compatibility contract APIs remain available:

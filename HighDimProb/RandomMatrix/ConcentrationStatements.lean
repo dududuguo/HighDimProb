@@ -496,6 +496,86 @@ theorem matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_unde
   rw [Real.exp_add]
   ring_nf
 
+/-- Theta-optimized quadratic-form Matrix Bernstein upper-tail wrapper under
+explicit primitive assumptions.
+
+This packages the explicit-theta scalar RHS using the conservative Bernstein
+choice `theta = t / (sigmaSq + R * t / 3)`, yielding the usual denominator
+exponent `-t^2 / (2*sigmaSq + (2/3)*R*t)`. It remains a one-sided
+quadratic-form theorem under explicit Tropp/Lieb and Bernstein CFC primitives;
+it is not an operator-norm Matrix Bernstein theorem. -/
+theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (R t sigmaSq : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (fun omega =>
+            matrixExp
+              (SMul.smul (bernsteinThetaChoice t sigmaSq R) (A i omega))))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A)
+          (bernsteinThetaChoice t sigmaSq R)))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hSigma : 0 < sigmaSq)
+    (hR : 0 <= R)
+    (ht : 0 < t)
+    (hNorm : MatrixVarianceProxyNormBound P A sigmaSq)
+    (hCFC :
+      forall i omega,
+        bernsteinMatrixExp_le_quadratic_statement (A i omega)
+          (bernsteinThetaChoice t sigmaSq R) R)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A
+        (fun i => SMul.smul
+          (bernsteinMGFCoeff (bernsteinThetaChoice t sigmaSq R) R)
+          (matrixSecondMoment P (A i)))
+        (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        ((n + 1 : Real) *
+          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) := by
+  let theta := bernsteinThetaChoice t sigmaSq R
+  have hden : 0 < sigmaSq + R * t / 3 :=
+    bernsteinThetaChoice_den_pos hSigma hR ht.le
+  have hTheta : 0 < theta := by
+    simpa [theta] using bernsteinThetaChoice_pos ht hden
+  have hRange : abs theta * R < 3 := by
+    simpa [theta] using bernsteinThetaChoice_range hSigma hR ht.le
+  have hExpIntTheta :
+      forall i,
+        IntegrableRandomMatrix P
+          (fun omega => matrixExp (SMul.smul theta (A i omega))) := by
+    exact hExpInt
+  have hTraceIntTheta :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A) theta) := by
+    exact hTraceInt
+  have hCFCTheta :
+      forall i omega,
+        bernsteinMatrixExp_le_quadratic_statement (A i omega) theta R := by
+    exact hCFC
+  have hTroppTheta :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A
+        (fun i => SMul.smul (bernsteinMGFCoeff theta R)
+          (matrixSecondMoment P (A i)))
+        (matrixVarianceProxy P A) theta R := by
+    exact hTropp
+  have hTail :=
+    matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives
+      A theta R t sigmaSq hCentered hIndepSA hIntX hIntSq hExpIntTheta
+      hTraceIntTheta hBound hR hRange hTheta hNorm hCFCTheta hTroppTheta
+  simpa [theta, bernsteinThetaChoice_exponent_eq hSigma hR ht.le] using hTail
+
 abbrev matrixBernsteinTraceMGFToLaplaceContract_statement {Omega : Type*}
     [MeasurableSpace Omega] {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)
     (A : I -> RandomMatrix Omega n n) (theta t R : Real) : Prop :=

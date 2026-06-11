@@ -30,7 +30,7 @@ statement APIs connecting bounded Bernstein lintegral trace-MGF bounds to the
 existing Laplace/tail layer without claiming the missing real-to-lintegral,
 Tropp/Lieb, CFC, or Matrix Bernstein proofs.
 
-Next safe task: `MB-S9-real-to-lintegral-bridge-proof-hardening`.
+Next safe task: `MB-S9-lambda-max-operator-norm-bridge-contract`.
 ## Milestone 3 scalar implication closeout
 
 This audit separates proved theorem families from typed statements and blocked
@@ -336,7 +336,7 @@ future directions.
 - Informal statement: if the exponential-square Orlicz bound holds at scale `K`, then the absolute tail has Gaussian decay with the same scale and constant `2`.
 - Target Lean statement: `subGaussianTail_of_psi2Bound`
 - Required objects: `Psi2Bound`, `SubGaussianTail`, `absTailProb`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
-- Required definitions: ψ�?bound via shifted exponential `lintegral`, two-sided absolute-tail predicate, positive scale.
+- Required definitions: ψ�?bound via shifted exponential `lintegral`, two-sided absolute-tail predicate, positive scale.
 - Required bridge lemmas: `lintegral_exp_sq_div_le_two_of_psi2Bound`, Mathlib `MeasureTheory.meas_ge_le_lintegral_div`, exponential monotonicity, square monotonicity, `ENNReal.ofReal` division bridge.
 - Status: proven
 - Blocker: none for the probability-measure/measurable-variable formulation. The full equivalence theorem and gauge/norm formulations remain future work.
@@ -348,7 +348,7 @@ future directions.
 - Informal statement: if the exponential-linear Orlicz bound holds at scale `K`, then the absolute tail has exponential decay with the same scale and constant `2`.
 - Target Lean statement: `subExponentialTail_of_psi1Bound`
 - Required objects: `Psi1Bound`, `SubExponentialTail`, `absTailProb`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
-- Required definitions: ψ�?bound via shifted exponential `lintegral`, two-sided absolute-tail predicate, positive scale.
+- Required definitions: ψ�?bound via shifted exponential `lintegral`, two-sided absolute-tail predicate, positive scale.
 - Required bridge lemmas: `lintegral_exp_abs_div_le_two_of_psi1Bound`, Mathlib `MeasureTheory.meas_ge_le_lintegral_div`, exponential monotonicity, `ENNReal.ofReal` division bridge.
 - Status: proven
 - Blocker: none for the probability-measure/measurable-variable formulation. The full equivalence theorem and gauge/norm formulations remain future work.
@@ -483,7 +483,7 @@ future directions.
 - Book heading: `次高斯性质`, `次高斯随机变量`, `次高斯范数`
 - Informal statement: tail, moment, MGF, and Orlicz characterizations of subGaussian variables are equivalent up to constants.
 - Target Lean statement: blocked until a precise equivalence statement and constants are selected.
-- Required objects: real random variables, tail probabilities, moments, Mathlib MGF predicate, ψ�?Orlicz control.
+- Required objects: real random variables, tail probabilities, moments, Mathlib MGF predicate, ψ�?Orlicz control.
 - Required definitions: `SubGaussianTail`, `SubGaussianMoment`, `CenteredSubGaussianMGF`, `SubGaussianOrlicz`, `HasSubGaussianOrlicz`; fixed-scale tail/Orlicz, natural moment, and MGF-to-tail directions now have proved bridges.
 - Required bridge lemmas: expectation of exponentials, tail/moment integration.
 - Status: blocked
@@ -495,7 +495,7 @@ future directions.
 - Book heading: `次指数性质`, `次指数随机变量`, `次指数范数`
 - Informal statement: tail, moment, MGF, and Orlicz characterizations of subExponential variables are equivalent up to constants.
 - Target Lean statement: blocked until a precise equivalence statement and constants are selected.
-- Required objects: real random variables, tail probabilities, moments, exponential moments, ψ�?Orlicz control.
+- Required objects: real random variables, tail probabilities, moments, exponential moments, ψ�?Orlicz control.
 - Required definitions: `SubExponentialTail`, `SubExponentialMoment`, `CenteredSubExponentialMGF`, `SubExponentialOrlicz`, `HasSubExponentialOrlicz`; fixed-scale tail/Orlicz and the full finite-`ENNReal` moment bridge now have proved connectors.
 - Required bridge lemmas: expectation of exponentials, tail/moment integration.
 - Status: blocked
@@ -625,12 +625,12 @@ future directions.
 ## high-dimensional subGaussian vector characterizations
 - Book heading: `高维次高斯分布`, `次高斯范数`
 - Informal statement: a random vector is subGaussian when all one-dimensional marginals are subGaussian; the usual norm is a supremum over unit directions.
-- Target Lean statement: blocked until scalar equivalence theorems, ψ�?gauges/norms, and unit-sphere vocabulary are available.
+- Target Lean statement: blocked until scalar equivalence theorems, ψ�?gauges/norms, and unit-sphere vocabulary are available.
 - Required objects: `RandomVector`, `marginal`, `directionNorm`, scalar subGaussian predicate forms.
 - Required definitions: Stage 4D predicate forms `SubGaussianVectorOrlicz`, `HasSubGaussianVectorOrlicz`, `SubGaussianVectorTail`, `SubGaussianVectorMoment`, and `CenteredSubGaussianVectorMGF` exist.
 - Required bridge lemmas: scalar subGaussian equivalences, scaling of marginals, all-direction/unit-sphere equivalence.
 - Status: blocked
-- Blocker: Stage 4D only provides object-level predicate forms and does not define ψ�?vector norms or prove equivalences.
+- Blocker: Stage 4D only provides object-level predicate forms and does not define ψ�?vector norms or prove equivalences.
 - Target module: `HighDimProb/SubGaussianVector.lean`
 - Priority: v0.2
 
@@ -1081,7 +1081,7 @@ future directions.
 ## Matrix lambda-max / Operator-norm Bridge (MC4-cleanup)
 
 - Book heading: spectral radius equals operator norm for self-adjoint matrices
-- Informal statement: for a self-adjoint real matrix, `‖A�?= max |λ_i(A)|`
+- Informal statement: for a self-adjoint real matrix, `‖A�?= max |λ_i(A)|`
 - Target Lean statement: `operatorNorm_eq_spectralRadius_of_selfAdjointStatement`
 - Required objects: `deterministicOperatorNorm`, `spectralRadius`,
   `Matrix.IsHermitian.eigenvalues`
@@ -1247,7 +1247,7 @@ future directions.
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Priority: Stage MB-S2 through MB-S9-foundation complete; next task is
-  MB-S9-real-to-lintegral-bridge-proof-hardening.
+  MB-S9-lambda-max-operator-norm-bridge-contract.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1297,7 +1297,7 @@ future directions.
   `matrixLaplaceRHSLIntegral`, and `quadraticFormUpperTailEvent`.
 - Status: proven conditional bridge.
 - Blocker: the subset
-  `quadraticFormUpperTailEvent Y t �?traceExpThresholdEvent Y theta t` is not
+  `quadraticFormUpperTailEvent Y t �?traceExpThresholdEvent Y theta t` is not
   proved. Full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, and matrix
   Bernstein remain unproved.
 - Target module: `HighDimProb/RandomMatrix/Laplace.lean`
@@ -1373,7 +1373,7 @@ future directions.
 
 - Book heading: matrix Laplace transform method for matrix Bernstein.
 - Informal statement: for `0 <= theta`, the canonical ordered endpoint of
-  `theta �?A` is `theta * lambdaMaxOrdered A hA`.
+  `theta �?A` is `theta * lambdaMaxOrdered A hA`.
 - Target Lean declarations: `lambdaMaxOrdered_smul_of_nonneg`.
 - Required objects: `lambdaMaxOrdered`, `isSelfAdjointMatrix_smul`, Mathlib
   real spectrum scaling, Hermitian real spectrum membership, and ordered
@@ -1429,7 +1429,7 @@ future directions.
 ## Ordered Endpoint Trace-Exp Provider (MB-S7B-provider-close)
 
 - Book heading: matrix Laplace transform method for matrix Bernstein.
-- Informal statement: for `0 <= theta`, the trace exponential of `theta �?A`
+- Informal statement: for `0 <= theta`, the trace exponential of `theta �?A`
   dominates `exp (theta * lambdaMaxOrdered A hA)`.
 - Target Lean declaration: `lambdaMaxOrdered_traceExpDominatesUpperBound`.
 - Required objects: `TraceExpDominatesUpperBound`, `lambdaMaxOrdered`,
@@ -1645,13 +1645,13 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is MB-S9-real-to-lintegral-bridge-proof-hardening.
+- Priority: next safe task is MB-S9-lambda-max-operator-norm-bridge-contract.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
 - Book heading: structural PSD facts for matrix Bernstein
 - Informal statement: if A is self-adjoint then A² is PSD; if A is self-adjoint
-  random then E[A²] is PSD; the variance proxy Σ�?E[A_i²] is PSD
+  random then E[A²] is PSD; the variance proxy Σ�?E[A_i²] is PSD
 - Target Lean statements: `isPSD_matrixSquare_of_selfAdjoint`,
   `isPSD_matrixSecondMoment_of_selfAdjoint`,
   `isPSD_matrixVarianceProxy_of_selfAdjoint`
@@ -1698,7 +1698,7 @@ future directions.
 
 - Book heading: matrix Laplace transform prerequisites / Rayleigh reduction.
 - Informal statement: a Loewner-style endpoint bound
-  `((lambdaMax A hA) �?1 - A).PosSemidef` is enough to prove the explicit
+  `((lambdaMax A hA) �?1 - A).PosSemidef` is enough to prove the explicit
   HighDimProb unit-vector Rayleigh statement.
 - Target Lean declarations: `LambdaMaxPSDUpperBound`,
   `matrixQuadraticForm_nonneg_of_posSemidef`,
@@ -1815,13 +1815,13 @@ future directions.
   theta-range hypothesis, and real division nonnegativity.
 - Status: proved, API-tested, and judge-tested.
 - Blocker: the single-summand provider, Bernstein CFC proof, matrix
-  exponential lower bound `MatrixLE (1 + c �?V) (matrixExp (c �?V))`,
+  exponential lower bound `MatrixLE (1 + c �?V) (matrixExp (c �?V))`,
   trace-mgf provider, Golden-Thompson, Lieb, and Matrix Bernstein remain
   unproved.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Priority: next safe task is MB-S9-real-to-lintegral-bridge-proof-hardening.
+- Priority: next safe task is MB-S9-lambda-max-operator-norm-bridge-contract.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -1948,8 +1948,25 @@ future directions.
 - Blocker: the finite-family Tropp primitive itself remains typed only; the
   Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and the
   Matrix Bernstein tail theorem remain unproved.
-- Priority: next safe task is MB-S9-real-to-lintegral-bridge-proof-hardening.
+- Priority: next safe task is MB-S9-lambda-max-operator-norm-bridge-contract.
 
+
+
+
+## Matrix Bernstein Theta Optimization Contract (MB-S9)
+
+- Informal statement: choosing `theta = t / (sigmaSq + R * t / 3)` in the
+  normalized explicit-theta scalar RHS yields the Bernstein denominator
+  exponent `-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))`.
+- Target Lean declarations:
+  `bernsteinThetaChoice`, `bernsteinThetaChoice_range`,
+  `bernsteinThetaChoice_exponent_eq`, and
+  `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`.
+- Status: proved, API-tested, and judge-tested.
+- Blocker: the result is still one-sided and quadratic-form under explicit
+  Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
+  bridges and the full Matrix Bernstein theorem remain unproved.
+- Priority: next safe task is MB-S9-lambda-max-operator-norm-bridge-contract.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -1969,4 +1986,4 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Priority: next safe task is MB-S9-real-to-lintegral-bridge-proof-hardening.
+- Priority: next safe task is MB-S9-lambda-max-operator-norm-bridge-contract.
