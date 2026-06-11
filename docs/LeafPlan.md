@@ -143,7 +143,7 @@
   `bernsteinCoefficient_nonneg`, a proved scalar helper for the Bernstein
   coefficient used by the typed CFC and single-summand MGF primitives.
 - The single-summand provider remains unproved. The downstream matrix
-  exponential lower bound `MatrixLE (1 + c â€?V) (matrixExp (c â€?V))`, the
+  exponential lower bound `MatrixLE (1 + c smul V) (matrixExp (c smul V))`, the
   Bernstein CFC primitive proof, trace-mgf provider, Golden-Thompson, Lieb,
   and Matrix Bernstein remain unproved.
 - Next safe task was MB-S9-exp-lower-bound-contract.

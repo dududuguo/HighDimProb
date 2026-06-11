@@ -46,6 +46,7 @@ import HighDimProb.Experimental
 Good starting points:
 
 - `docs/RandomMatrixAPI.md` for the current RandomMatrix / Matrix Bernstein API.
+- `HighDimProb/Examples/` for small API usage examples.
 - `docs/JudgeSystem.md` for the judge suite.
 - `docs/Workflow.md` for the project workflow.
 - `docs/Status.md` for the current development state.
@@ -92,7 +93,7 @@ the source of truth for users.
 
 ## Acknowledgements
 
-Thanks to @freezed-corpse-143.
+Thanks to [@freezed-corpse-143](https://github.com/freezed-corpse-143).
 
 ## Contributing
 

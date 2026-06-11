@@ -2,21 +2,7 @@ name: CI
 
 on:
   push:
-    paths-ignore:
-      - "**/*.md"
-      - ".codebase-memory/**"
-      - "docbuild/**"
-      - "docs/**"
-      - "external/**"
-      - "tools/**"
   pull_request:
-    paths-ignore:
-      - "**/*.md"
-      - ".codebase-memory/**"
-      - "docbuild/**"
-      - "docs/**"
-      - "external/**"
-      - "tools/**"
   workflow_dispatch:
 
 permissions:
@@ -27,9 +13,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  text-quality:
+    name: Text quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Reject encoding artifacts
+        run: python .github/scripts/check_text_quality.py
+
   build:
     name: Build and test
     runs-on: ubuntu-latest
+    needs: text-quality
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -44,8 +41,11 @@ jobs:
           use-github-cache: true
           use-mathlib-cache: true
 
-      - name: Build
+      - name: Build library
         run: lake build
+
+      - name: Build API judge
+        run: lake build HighDimProbJudge
 
       - name: Test
         run: lake test

@@ -9,7 +9,7 @@ Infrastructure:
 - Stage 1C public API boundary: stable root import plus experimental scaffold aggregate
 - Stage 1R README workflow and future-work documentation
 - Stage 2A Lp and moment vocabulary
-- Stage 2B Orlicz / Ïˆâ‚?/ Ïˆâ‚?bound vocabulary
+- Stage 2B Orlicz / psi2 / psi1 bound vocabulary
 - Stage 3A subGaussian predicate forms
 - Stage 3B subExponential predicate forms
 - Stage 4A random vector object layer
@@ -87,8 +87,8 @@ Processed:
 - Lp norm
 - moment
 - Orlicz norm vocabulary
-- Ïˆâ‚?norm vocabulary
-- Ïˆâ‚?norm vocabulary
+- psi2 norm vocabulary
+- psi1 norm vocabulary
 - subGaussian random variable definitions
 - subExponential random variable definitions
 - subExponential proof-friendly lintegral MGF predicate
@@ -225,7 +225,7 @@ Processed with proof:
 - subGaussian tail implies all natural absolute moments with scale loss `K -> 2 * K` and a crude factorial constant
 - finite natural absolute moments imply `MemLp` for nonzero natural exponents, with explicit measurability
 - natural absolute-moment bounds imply corresponding `realLpNorm` bounds
-- Ïˆâ‚?and subGaussian-tail bounds imply crude linear-in-`q` `realLpNorm` growth
+- psi2 and subGaussian-tail bounds imply crude linear-in-`q` `realLpNorm` growth
 - sharp natural-exponent `sqrt(q)` moment-growth route proved through a deterministic real inequality
 - psi2 and subGaussian-tail bounds imply `SubGaussianMomentNat` with factorial growth
 - psi2 and subGaussian-tail bounds imply `SubGaussianMomentNatSqrt` with constants `4` and `8`
@@ -267,8 +267,8 @@ Processed with proof:
 - covariance-form isotropicity implies centered vector
 - Frobenius-square nonnegativity
 - sample-covariance diagonal nonnegativity
-- Ïˆâ‚?Orlicz bound implies subGaussian tail
-- Ïˆâ‚?Orlicz bound implies subExponential tail
+- psi2 Orlicz bound implies subGaussian tail
+- psi1 Orlicz bound implies subExponential tail
 
 Resolved in Stage RM2:
 - `quadraticForm_sampleCovariance_eq_sum_sq` rewrites the explicit double-sum quadratic form of `sampleCovariance A` into `(1 / (m : Real)) * sum k, (sum i, A omega k i * x i)^2`.
@@ -670,7 +670,7 @@ Resolved in Stage MB-S7A-fix:
   matrices on explicit HighDimProb unit vectors.
 - Proved `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, a
   conditional Rayleigh conversion from the explicit PSD premise
-  `((lambdaMax A hA) â€?1 - A).PosSemidef`.
+  `((lambdaMax A hA) smul 1 - A).PosSemidef`.
 - Did not prove the endpoint/order theorem producing that PSD premise, the
   direct Rayleigh theorem, trace-exp spectral dominance, full matrix Laplace,
   trace-mgf, Golden-Thompson, Lieb, or matrix Bernstein.

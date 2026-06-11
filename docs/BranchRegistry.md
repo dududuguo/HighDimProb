@@ -203,7 +203,7 @@ It is a planning document, not a request to physically move existing files.
   limit-theorem APIs after the current matrix Bernstein bridge surface remains
   green.
 
-## MC4-cleanup â€?Matrix Concentration Statement Honesty
+## MC4-cleanup -> Matrix Concentration Statement Honesty
 
 - Stage: MC4-cleanup
 - Date: 2026-02-03 (approximate)
@@ -284,7 +284,7 @@ It is a planning document, not a request to physically move existing files.
 - Proven: Mathlib PSD implies nonnegativity of the explicit HighDimProb
   quadratic form; scalar identity matrices evaluate to the scalar on explicit
   unit vectors; the Rayleigh typed statement follows from the explicit PSD
-  premise `((lambdaMax A hA) â€?1 - A).PosSemidef`.
+  premise `((lambdaMax A hA) smul 1 - A).PosSemidef`.
 - Typed only: direct Rayleigh bridge from explicit `matrixQuadraticForm` /
   `IsUnitVector` to `lambdaMax`.
 - Blocked: endpoint-order/PSD bridge for `lambdaMax`, trace-exp spectral
