@@ -610,12 +610,13 @@ abbrev matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement
   let V := matrixVarianceProxy P A
   AEMeasurable (fun omega => ENNReal.ofReal (traceExpIntegrand Y theta omega)) P ->
     (quadraticFormUpperTailEvent Y t ⊆ traceExpThresholdEvent Y theta t) ->
-      traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement P Y V theta R ->
-        matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R ->
-          P (quadraticFormUpperTailEvent Y t) <=
-            ENNReal.ofReal (Real.exp (-(theta * t))) *
-              ENNReal.ofReal
-                (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V))
+      IntegrableRealRandomVariable P (traceExpIntegrand Y theta) ->
+        (forall omega, 0 <= traceExpIntegrand Y theta omega) ->
+          matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R ->
+            P (quadraticFormUpperTailEvent Y t) <=
+              ENNReal.ofReal (Real.exp (-(theta * t))) *
+                ENNReal.ofReal
+                  (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V))
 
 /-- Typed target for the spectral-radius reduction for self-adjoint matrices.
 

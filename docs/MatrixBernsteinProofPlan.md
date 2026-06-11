@@ -139,7 +139,7 @@ targets only.
 | Matrix Laplace upper-tail reduction | `matrixLaplaceTransformStatement` | typed `Prop`, unproved |
 | Matrix Laplace upper-tail reduction, lintegral form | `matrixLaplaceTransformLIntegralStatement` | typed `Prop`, unproved |
 | Conditional trace-exp threshold Markov bound | `traceExpThresholdEvent_lintegral_bound` | proven under explicit a.e. measurability |
-| Conditional quadratic-form Laplace bridge | `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`, `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset` | proven only under explicit subset hypothesis `quadraticFormUpperTailEvent Y t �?traceExpThresholdEvent Y theta t` |
+| Conditional quadratic-form Laplace bridge | `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset`, `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset` | proven only under explicit subset hypothesis `quadraticFormUpperTailEvent Y t subset traceExpThresholdEvent Y theta t` |
 | Trace-exp dominance target | `traceExpDominatesQuadraticFormUpperTailStatement`, `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint` | typed `Prop` statement plus proved concrete random self-adjoint assembly from the `lambdaMaxOrdered` Rayleigh and trace-exp providers |
 | Conditional dominance-named Laplace bridge | `matrixLaplaceTransformLIntegralDiv_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`, `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint`, `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint` | dominance-hypothesis wrappers plus concrete random self-adjoint lintegral Laplace wrappers proved under explicit a.e. measurability and `0 <= theta` |
 | Chernoff step from trace-exp bound | `matrixChernoffFromTraceExpStatement` | typed `Prop`, unproved |
@@ -232,7 +232,7 @@ matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset
 The quadratic-form Laplace bridge is intentionally conditional. It assumes:
 
 ```lean
-quadraticFormUpperTailEvent Y t �?traceExpThresholdEvent Y theta t
+quadraticFormUpperTailEvent Y t subset traceExpThresholdEvent Y theta t
 ```
 
 The current repository does not prove that subset. Therefore
@@ -300,7 +300,7 @@ MB-S7B-scalar-endpoint proves:
 lambdaMaxOrdered_smul_of_nonneg
 ```
 
-This shows that `lambdaMaxOrdered (theta �?A)` agrees with
+This shows that `lambdaMaxOrdered (theta smul A)` agrees with
 `theta * lambdaMaxOrdered A hA` for `0 <= theta` using the ordered endpoint and
 real spectrum APIs. It resolves the scalar-multiplication split in the
 trace-exp provider plan only. It does not prove the `lambdaMaxOrdered`
@@ -593,7 +593,7 @@ matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound
 
 The direct theorem behind `matrixQuadraticForm_le_lambdaMax_statement` remains
 unproved. The remaining blocker is the spectral endpoint/order theorem giving
-`((lambdaMax A hA) �?1 - A).PosSemidef` for self-adjoint
+`((lambdaMax A hA) smul 1 - A).PosSemidef` for self-adjoint
 `A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real`.
 
 Dimension handling remains `Fin (n + 1)` for lambda wrappers, with the
@@ -611,7 +611,7 @@ matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound
 ```
 
 `LambdaMaxPSDUpperBound A hA` is an abbreviation for the endpoint premise
-`((lambdaMax A hA) �?1 - A).PosSemidef`. The wrapper theorem is only a direct
+`((lambdaMax A hA) smul 1 - A).PosSemidef`. The wrapper theorem is only a direct
 reuse of the MB-S7A-fix helper; it does not prove the endpoint premise or the
 unconditional Rayleigh theorem.
 

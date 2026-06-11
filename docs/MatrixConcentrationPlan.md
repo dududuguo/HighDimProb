@@ -81,7 +81,7 @@ prove matrix Laplace, trace-mgf inequalities, or matrix Bernstein.
 Stage MB-S5 proves the generic lintegral Markov/Laplace step for the
 trace-exponential threshold event and the conditional quadratic-form bridge
 under the explicit subset hypothesis
-`quadraticFormUpperTailEvent Y t �?traceExpThresholdEvent Y theta t`. It does
+`quadraticFormUpperTailEvent Y t subset traceExpThresholdEvent Y theta t`. It does
 not prove that subset, trace-mgf inequalities, full matrix Laplace, or matrix
 Bernstein.
 
@@ -315,7 +315,7 @@ MB-S2 strengthens the statement layer without changing theorem meanings:
 No matrix Laplace theorem, trace-mgf theorem, Rayleigh theorem, or matrix
 Bernstein theorem is proved in MB-S2.
 
-## Stage MC4-cleanup �?Matrix Concentration Statement Honesty
+## Stage MC4-cleanup -> Matrix Concentration Statement Honesty
 
 Stage MC4-cleanup removes misleading statement targets whose bodies were just
 `True`, and keeps matrix Laplace / trace exponential work as documentation-only
@@ -465,7 +465,7 @@ HighDimProb `traceExpIntegrand`, `traceExpMomentLIntegral`,
 `matrixLaplaceRHSLIntegral`, and `quadraticFormUpperTailEvent` vocabulary.
 
 Status: conditional bridge proved and API-tested. The missing pointwise subset
-`quadraticFormUpperTailEvent Y t �?traceExpThresholdEvent Y theta t` is not
+`quadraticFormUpperTailEvent Y t subset traceExpThresholdEvent Y theta t` is not
 proved, so the full matrix Laplace theorem, trace-mgf inequalities,
 Golden-Thompson, Lieb, and matrix Bernstein remain unproved.
 
@@ -554,11 +554,11 @@ were source/API-backed:
   quadratic form on an explicit HighDimProb unit vector.
 - `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef` proves
   `matrixQuadraticForm_le_lambdaMax_statement A hA` from the explicit PSD
-  premise `((lambdaMax A hA) �?1 - A).PosSemidef`.
+  premise `((lambdaMax A hA) smul 1 - A).PosSemidef`.
 
 Status: helper lemmas proved and API/judge-tested. The direct Rayleigh theorem
 remains unproved because the endpoint/order theorem producing
-`((lambdaMax A hA) �?1 - A).PosSemidef` is still missing. Trace-exp spectral
+`((lambdaMax A hA) smul 1 - A).PosSemidef` is still missing. Trace-exp spectral
 dominance, full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, Hanson-Wright,
 and matrix Bernstein remain unproved.
 
@@ -568,7 +568,7 @@ MB-S7A-clean does not prove new spectral mathematics. It consolidates the
 spectral bridge surface by naming the repeated endpoint PSD premise:
 
 - `LambdaMaxPSDUpperBound A hA` abbreviates
-  `((lambdaMax A hA) �?1 - A).PosSemidef`.
+  `((lambdaMax A hA) smul 1 - A).PosSemidef`.
 - `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound` reuses the
   MB-S7A-fix helper to derive `matrixQuadraticForm_le_lambdaMax_statement A hA`
   from that named premise.
@@ -618,7 +618,7 @@ Hanson-Wright, and matrix Bernstein remain unproved.
 Stage MB-S7A-abstract pauses proof progress and introduces semantic spectral
 abstractions:
 
-- `SpectralUpperBound A L` names the PSD/Loewner statement that `L �?1 - A` is
+- `SpectralUpperBound A L` names the PSD/Loewner statement that `L smul 1 - A` is
   positive semidefinite.
 - `RayleighUpperBound A L` names the explicit HighDimProb unit-vector quadratic
   form bound by `L`.
@@ -893,7 +893,7 @@ The trace-exp layer now exposes `troppMasterTraceMGFFiniteFamily_statement`,
 a typed-only finite-family Tropp/Lieb iteration primitive for the bounded
 Matrix Bernstein trace-mgf route. It links per-summand matrix-MGF `MatrixLE`
 comparisons, `iIndepFun` independence, trace-exp integrability, and
-`sum_i K_i = bernsteinMGFCoeff theta R �?V` normalization to
+`sum_i K_i = bernsteinMGFCoeff theta R smul V` normalization to
 `TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum X) V theta R`.
 
 The one-step `troppMasterTraceMGFStep_statement` remains available. No Lieb,

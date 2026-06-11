@@ -68,7 +68,7 @@ Last known test status:
 - Stage 1C public API boundary and scaffold cleanup
 - Stage 1R README workflow and future-work documentation
 - Stage 2A Lp and moment vocabulary
-- Stage 2B Orlicz / ψ�?/ ψ�?definition layer
+- Stage 2B Orlicz / psi2 / psi1 definition layer
 - Stage 3A subGaussian predicate layer
 - Stage 3B subExponential predicate layer
 - Stage 4A random vector object layer
@@ -207,7 +207,7 @@ Stage 3B implemented:
 - API regression tests for subExponential declarations
 
 Stage 4A implemented:
-- finite-dimensional random-vector alias using `Ω �?Fin n �?ℝ`
+- finite-dimensional random-vector alias using `Omega -> Fin n -> Real`
 - coordinatewise random-vector measurability predicate
 - coordinate random-variable wrapper and bridge lemmas
 - finite linear marginal wrapper and measurability bridge
@@ -449,7 +449,7 @@ Stage G2C implemented:
 
 Stage G2D implemented:
 - proved `realLpNorm_nat_le_linear_of_psi2Bound` with constant `8` for natural `q >= 1`.
-- proved `realLpNorm_nat_le_linear_of_subGaussianTail` with constant `16`, using the existing `K -> 2*K` tail-to-ψ�?scale loss.
+- proved `realLpNorm_nat_le_linear_of_subGaussianTail` with constant `16`, using the existing `K -> 2*K` tail-to-psi2 scale loss.
 - reused `Nat.factorial_le_pow`, `Real.rpow_le_rpow`, `Real.mul_rpow`, `Real.rpow_mul`, `Real.exp_one_lt_three`, and the existing `absMomentNat -> realLpNorm` bridge.
 - documented that the factorial-root route only yields linear `q`; sharp `sqrt(q)` growth remains blocked by missing direct tail-integral/Gamma moment estimates.
 
@@ -824,7 +824,7 @@ Stage J2 implemented:
   safe task.
 
 Milestone Sprint S2 implemented:
-- completed fixed-scale scalar Orlicz/tail implication graph in both directions for ψ�?and ψ�?predicates
+- completed fixed-scale scalar Orlicz/tail implication graph in both directions for psi2 and psi1 predicates
 - added `HighDimProb.Concentration.Implications`
 - added `docs/ScalarImplicationGraph.md`
 - hardened concentration aggregate tests
@@ -1348,8 +1348,8 @@ Processed:
 - Lp norm
 - moments
 - Orlicz norm vocabulary
-- ψ�?norm vocabulary
-- ψ�?norm vocabulary
+- psi2 norm vocabulary
+- psi1 norm vocabulary
 - subGaussian random variable definitions
 - subExponential random variable definitions
 - random vector object layer
@@ -1409,12 +1409,12 @@ Processed:
 - scalar concentration API cleanup
 - Markov inequality
 - Chebyshev inequality
-- ψ�?Orlicz bound implies subGaussian tail
-- ψ�?Orlicz bound implies subExponential tail
+- psi2 Orlicz bound implies subGaussian tail
+- psi1 Orlicz bound implies subExponential tail
 - tail-to-Orlicz reverse implication typed targets
 - layer-cake tail integral bridge
-- ψ�?tail-to-Orlicz reverse implication
-- ψ�?tail-to-Orlicz reverse implication
+- psi2 tail-to-Orlicz reverse implication
+- psi1 tail-to-Orlicz reverse implication
 - scalar Orlicz/tail implication graph
 - concentration layer-cake import boundary
 - random matrix theorem statement layer
@@ -1427,7 +1427,7 @@ Processed:
 - all-natural absolute-moment factorial bound
 - natural absolute-moment to `MemLp` / `realLpNorm` bridge
 - factorial-growth natural subGaussian moment predicate
-- crude linear `realLpNorm` growth from ψ�?and subGaussian-tail control
+- crude linear `realLpNorm` growth from psi2 and subGaussian-tail control
 - sharp natural-exponent `realLpNorm <= C*K*sqrt(q)` growth
 - sharp natural-exponent subGaussian moment predicate bridge
 - forward centered-MGF-to-tail/psi2/natural-moment implication spine
@@ -1602,7 +1602,7 @@ inequality, and proves the conditional bridges
 `matrixLaplaceTransformLIntegralDiv_of_traceExpThreshold_subset` and
 `matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset`. These theorems
 require the explicit hypothesis
-`quadraticFormUpperTailEvent Y t �?traceExpThresholdEvent Y theta t`. The full
+`quadraticFormUpperTailEvent Y t subset traceExpThresholdEvent Y theta t`. The full
 `matrixLaplaceTransformStatement`, trace-mgf inequalities, Golden-Thompson,
 Lieb, and matrix Bernstein remain unproved.
 
