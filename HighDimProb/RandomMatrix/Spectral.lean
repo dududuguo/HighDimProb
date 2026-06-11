@@ -7,6 +7,12 @@ import HighDimProb.RandomMatrix.OperatorNorm
 /-!
 # Spectral and quadratic-form event vocabulary
 
+Verified Wikipedia references:
+* Eigenvalues and eigenvectors: https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors
+* Spectral theorem: https://en.wikipedia.org/wiki/Spectral_theorem
+* Operator norm: https://en.wikipedia.org/wiki/Operator_norm
+* Loewner order: https://en.wikipedia.org/wiki/Loewner_order
+
 This module starts the matrix Bernstein spectral layer. Mathlib provides
 Hermitian eigenvalues, but HighDimProb does not yet have a proved lambda-max
 Rayleigh quotient bridge. We therefore expose two honest layers:
@@ -183,6 +189,19 @@ private theorem lambdaMaxOrdered_mem_spectrum_real {n : Nat}
     Fintype.equivOfCardEq (by simp)
   have hmem := hA.eigenvalues_mem_spectrum_real (e 0)
   simpa [lambdaMaxOrdered, Matrix.IsHermitian.eigenvalues, e] using hmem
+
+/-- The ordered lambda-max endpoint is bounded by the deterministic L2
+operator norm. -/
+theorem lambdaMaxOrdered_le_deterministicOperatorNorm
+    {n : Nat} {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hA : IsSelfAdjointMatrix A) :
+    lambdaMaxOrdered A hA <= deterministicOperatorNorm A := by
+  have hmem : lambdaMaxOrdered A hA ∈ spectrum Real A :=
+    lambdaMaxOrdered_mem_spectrum_real A hA
+  have hnorm : ‖lambdaMaxOrdered A hA‖ <= ‖A‖ :=
+    spectrum.norm_le_norm_of_mem hmem
+  exact (le_abs_self (lambdaMaxOrdered A hA)).trans (by
+    simpa [Real.norm_eq_abs, deterministicOperatorNorm] using hnorm)
 
 /-- Every real spectral value of a self-adjoint matrix is bounded by the
 ordered endpoint. -/

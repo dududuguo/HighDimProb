@@ -12,9 +12,28 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `bernsteinMatrixExp_le_quadratic_statement`.
 - The finite-family Tropp/Lieb primitive, Bernstein CFC primitive,
   Golden-Thompson, and the full Matrix Bernstein tail theorem remain unproved.
-- Conditional trace-MGF-to-Laplace/tail contract APIs are now present for
-  the bounded Bernstein denominator route.
-- Next safe task: `MB-S9-real-to-lintegral-bridge-proof-hardening`.
+- Proved real-to-lintegral bridge:
+  `traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound`.
+- Proved explicit-theta quadratic-form upper-tail wrapper under primitives:
+  `matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_primitives`.
+- Its RHS remains trace-exponential:
+  `exp(-theta*t) * tr exp(SMul.smul (bernsteinMGFCoeff theta R) (matrixVarianceProxy P A))`.
+- Proved generic deterministic trace-exp dimension bound:
+  `traceMatrixExp_smul_le_card_exp_of_lambdaMaxOrdered_le`.
+- Proved variance-proxy specialized trace-exp dimension bound:
+  `traceMatrixExp_bernsteinMGFCoeff_matrixVarianceProxy_le_card_exp`.
+- Proved explicit-theta quadratic-form scalar-RHS wrapper under primitives:
+  `matrixBernsteinQuadraticFormUpperTailScalarRHSWithBernsteinCoeff_under_primitives`.
+- Its RHS is intentionally unnormalized:
+  `ENNReal.ofReal (Real.exp (-(theta * t)) * ((n + 1 : Real) * Real.exp (bernsteinMGFCoeff theta R * sigmaSq)))`.
+- Proved normalized explicit-theta quadratic-form scalar-RHS wrapper under
+  primitives:
+  `matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives`.
+- Its RHS is:
+  `ENNReal.ofReal ((n + 1 : Real) * Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq))`.
+- Lambda-max/operator-norm Matrix Bernstein tail theorem remains unproved.
+- Theta optimization remains unproved.
+- Next safe task: `MB-S9-theta-optimization-contract`.
 
 ## `HighDimProb/RandomMatrix/SelfAdjoint.lean`
 
@@ -38,6 +57,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `lambdaMax_eq_lambdaMaxOrdered_statement`: typed statement.
 - `lambdaMaxOrdered_is_greatest_eigenvalue`: theorem.
 - `lambdaMaxOrdered_smul_of_nonneg`: theorem.
+- `lambdaMaxOrdered_le_deterministicOperatorNorm`: theorem.
 - `lambdaMaxOrdered_le_trace_of_posSemidef`: theorem.
 - `LambdaMaxPSDUpperBound`: abbrev, semantic provider predicate for legacy
   `lambdaMax`.
@@ -162,6 +182,10 @@ mainline. It is documentation only; theorem status is not upgraded here.
   using the bounded Bernstein denominator coefficient.
 - `TraceMGFBernsteinVarianceProxyBoundLIntegral`: def, semantic lintegral
   trace-mgf bound using the bounded Bernstein denominator coefficient.
+- `traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound`:
+  theorem converting the bounded-Bernstein real semantic trace-mgf bound into
+  the corresponding lintegral semantic trace-mgf bound under random
+  self-adjointness and trace-exp integrability.
 - `bernsteinMatrixExp_le_quadratic_statement`: typed statement for the
   Bernstein-specific scalar-to-matrix functional-calculus primitive, with
   explicit self-adjointness, deterministic operator-norm bound, nonnegative
@@ -178,6 +202,10 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `traceMatrixExp_nonneg_of_selfAdjoint_statement`: typed statement.
 - `traceMatrixExp_nonneg_of_selfAdjoint`: theorem.
 - `lambdaMaxOrdered_matrixExp`: theorem.
+- `traceMatrixExp_smul_le_card_exp_of_lambdaMaxOrdered_le`: theorem proving
+  `traceMatrixExp (SMul.smul c V) <= (n + 1 : Real) * Real.exp (c * sigmaSq)` from
+  `0 <= c`, self-adjointness of `V`, and
+  `lambdaMaxOrdered V hV <= sigmaSq`.
 - `traceExpMoment_nonneg_statement`: typed statement.
 - `traceExpMoment_nonneg_of_nonneg`: theorem.
 - `traceExpIntegrand_nonneg_of_randomSelfAdjoint`: theorem.
@@ -194,8 +222,6 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `traceMGFVarianceProxyBound_statement`: typed statement.
 - `traceMGFBernsteinVarianceProxyBound_statement`: typed statement for the
   bounded-denominator trace-mgf variance-proxy target.
-- `traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement`: typed
-  target recording the explicit real trace-MGF to lintegral bridge gap.
 
 ## `HighDimProb/RandomMatrix/Laplace.lean`
 
@@ -232,20 +258,21 @@ mainline. It is documentation only; theorem status is not upgraded here.
   conditional theorem.
 - `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint`: theorem.
 - `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`: theorem.
+- `matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral`:
+  theorem substituting a bounded-Bernstein lintegral trace-MGF bound into the
+  product-form Laplace RHS.
+- `quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral`:
+  conditional theorem combining the event-subset Laplace bridge with the
+  bounded-Bernstein lintegral trace-MGF RHS.
+- `quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral_statement`:
+  typed target for the reusable bounded-Bernstein lintegral trace-MGF to
+  quadratic-form Laplace contract.
 - `matrixLaplaceTransformStatement`: typed statement.
 - `matrixLaplaceTransformLIntegralStatement`: typed statement.
 - `matrixChernoffFromTraceExpStatement`: typed statement.
 - `matrixChernoffFromTraceExpLIntegralStatement`: typed statement.
 - `selfAdjointOperatorNormLaplaceStatement`: typed statement.
 - `selfAdjointOperatorNormLaplaceLIntegralStatement`: typed statement.
-- `matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral`:
-  theorem substituting a bounded-Bernstein lintegral trace-MGF bound into the
-  Laplace RHS.
-- `quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral`:
-  conditional theorem combining the event-subset Laplace bridge with the
-  bounded-Bernstein lintegral trace-MGF RHS.
-- `quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral_statement`:
-  typed contract statement for the same conditional route.
 
 ## `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 
@@ -256,14 +283,30 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`: typed statement for
   the bounded Matrix Bernstein trace-mgf target with denominator coefficient
   `bernsteinMGFCoeff theta R`.
-- `matrixBernsteinTraceMGFToLaplaceContract_statement`: randomMatrixSum /
-  matrixVarianceProxy contract for the bounded-Bernstein lintegral route.
+- `matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_primitives`:
+  theorem proving the explicit-theta one-sided quadratic-form upper-tail
+  bound under the same explicit Tropp/Lieb and Bernstein CFC primitive
+  assumptions, with trace-exponential RHS
+  `exp(-theta*t) * tr exp(bernsteinMGFCoeff theta R • matrixVarianceProxy P A)`.
+- `traceMatrixExp_bernsteinMGFCoeff_matrixVarianceProxy_le_card_exp`: theorem
+  specializing the trace-exp dimension bound to `bernsteinMGFCoeff theta R`
+  and `matrixVarianceProxy P A` under `MatrixVarianceProxyNormBound`.
+- `matrixBernsteinQuadraticFormUpperTailScalarRHSWithBernsteinCoeff_under_primitives`:
+  theorem reducing the explicit-theta quadratic-form RHS to the unnormalized
+  scalar dimension/norm form.
+- `matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives`:
+  theorem normalizing the scalar RHS to exponential-add form.
+- `matrixBernsteinTraceMGFToLaplaceContract_statement`: retained typed
+  compatibility contract for the bounded-Bernstein lintegral Laplace route
+  specialized to `randomMatrixSum A` and `matrixVarianceProxy P A`.
 - `matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement`:
-  provider-aware typed contract keeping the real-to-lintegral bridge explicit.
+  retained provider-aware typed contract keeping the bounded trace-MGF premise
+  explicit at the Matrix Bernstein layer.
 
 ## Current Blockers
 
-- Proved real trace-MGF to lintegral trace-MGF bridge for the bounded MB-S9 result.
+- Full lambda-max/operator-norm Matrix Bernstein tail connection beyond the
+  proved one-sided quadratic-form explicit-theta scalar-RHS wrapper.
 - Unconditional trace-MGF provider theorem without explicit finite-family
   Tropp assumptions. The bounded theorem under primitives is proved for
   `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`; the finite-family
@@ -271,8 +314,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - The older `matrixBernsteinTraceMGF_statement` is retained for the
   `theta ^ 2 / 2` compatibility target and is not the bounded Matrix
   Bernstein RHS.
-- Real RHS / real expectation bridge for the concrete lintegral Laplace
-  wrappers.
+- Theta optimization for the bounded Bernstein denominator.
 - Full CFC-free single-summand MGF provider; the current provider theorem
   assumes the pointwise Bernstein CFC primitive explicitly.
 - Functional-calculus proof for
@@ -297,10 +339,10 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-MB-S9-real-to-lintegral-bridge-proof-hardening: prove or sharpen the
-`traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement` bridge so the
-proved real bounded trace-MGF theorem can feed the lintegral Laplace route
-without hiding integrability/nonnegativity assumptions.
+MB-S9-theta-optimization-contract: analyze the scalar optimization needed to
+choose theta in the normalized explicit-theta scalar RHS. Do not prove
+lambda-max/operator-norm Matrix Bernstein, Tropp/Lieb, Bernstein CFC,
+Golden-Thompson, or the full Matrix Bernstein theorem in that contract stage.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -313,4 +355,13 @@ without hiding integrability/nonnegativity assumptions.
 - The finite-family Tropp primitive remains typed only. The Bernstein CFC
   primitive remains typed only. No Lieb theorem, Golden-Thompson theorem, or
   Matrix Bernstein tail theorem was proved.
-- Next safe task: MB-S9-real-to-lintegral-bridge-proof-hardening.
+- The generic bounded-Bernstein real-to-lintegral semantic bridge is now
+  proved in `TraceExp.lean`.
+- The explicit-theta one-sided quadratic-form upper-tail wrapper under
+  primitives is now proved in `ConcentrationStatements.lean`, with
+  trace-exponential RHS.
+- The explicit-theta scalar-RHS quadratic-form wrapper under primitives is now
+  proved in `ConcentrationStatements.lean`, with intentionally unnormalized RHS.
+- The normalized scalar-RHS quadratic-form wrapper under primitives is now
+  proved in `ConcentrationStatements.lean`, with exponential-add RHS.
+- Next safe task: MB-S9-theta-optimization-contract.

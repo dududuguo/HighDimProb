@@ -69,6 +69,7 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check traceMatrixExp_nonneg_of_selfAdjoint_statement
 #check traceMatrixExp_nonneg_of_selfAdjoint
 #check lambdaMaxOrdered_matrixExp
+#check traceMatrixExp_smul_le_card_exp_of_lambdaMaxOrdered_le
 #check traceExpMoment_nonneg_statement
 #check traceExpMoment_nonneg_of_nonneg
 #check traceExpIntegrand_nonneg_of_randomSelfAdjoint
@@ -84,6 +85,7 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check traceMGFBernsteinVarianceProxyBound_statement
 #check traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement
 #check traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
+#check traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound
 
 #check (matrixExp A : Matrix (Fin n) (Fin n) Real)
 #check (matrixTrace A : Real)

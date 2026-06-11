@@ -3,6 +3,16 @@ import HighDimProb.RandomMatrix.TraceExp
 /-!
 # Matrix Laplace statement vocabulary
 
+Verified Wikipedia references:
+* Matrix exponential: https://en.wikipedia.org/wiki/Matrix_exponential
+* Trace: https://en.wikipedia.org/wiki/Trace_(linear_algebra)
+* Chernoff bound: https://en.wikipedia.org/wiki/Chernoff_bound
+* Matrix Chernoff bound: https://en.wikipedia.org/wiki/Matrix_Chernoff_bound
+
+Note: despite the file name, the comments here cite the trace-exponential
+Laplace method used in matrix concentration, not the classical integral
+Laplace transform page.
+
 This module records honest typed targets for the future matrix Laplace method.
 It does not prove a matrix Laplace theorem, matrix Chernoff theorem, trace-mgf
 bound, or matrix Bernstein theorem.
@@ -368,52 +378,56 @@ theorem matrixLaplaceTransformLIntegral_of_randomSelfAdjoint
     (traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint
       Y theta t hY hTheta)
 
-/-- Conditional theorem: a bounded-Bernstein lintegral trace-MGF bound substitutes into
-the Laplace RHS to produce the explicit Bernstein-denominator RHS normal form.
+/-- Substitute a bounded-Bernstein lintegral trace-MGF bound into the product
+form of the matrix Laplace RHS.
 
-This is the lintegral-level bridge from `TraceMGFBernsteinVarianceProxyBoundLIntegral`
-to `matrixLaplaceRHSLIntegral`.  It does not require integrability or nonnegativity
-hypotheses because the lintegral route already works through `ENNReal`. -/
+This is a reusable lintegral-level bridge. It does not need real integrability
+or nonnegativity hypotheses because those belong to whatever theorem produces
+the lintegral trace-MGF bound. -/
 theorem matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
-    (Y : RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real) (theta t R : Real)
+    (Y : RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real)
+    (theta t R : Real)
     (hBound : TraceMGFBernsteinVarianceProxyBoundLIntegral P Y V theta R) :
     matrixLaplaceRHSLIntegral P Y theta t <=
       ENNReal.ofReal (Real.exp (-(theta * t))) *
-        ENNReal.ofReal (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V)) := by
+        ENNReal.ofReal
+          (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V)) := by
   unfold matrixLaplaceRHSLIntegral
   simpa [mul_comm, mul_left_comm, mul_assoc] using
     mul_le_mul_left hBound (ENNReal.ofReal (Real.exp (-(theta * t))))
 
-/-- Conditional theorem: quadratic-form upper tail probability bounded by the
-explicit Bernstein-denominator RHS normal form, given the event-subset bridge and
-a bounded-Bernstein lintegral trace-MGF bound.
+/-- Conditional quadratic-form upper-tail bound from an explicit event-subset
+bridge and a bounded-Bernstein lintegral trace-MGF bound.
 
-This composes the existing conditional Laplace bridge (`matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset`)
-with `matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral`.
-It is still not a matrix Bernstein tail theorem: the event-subset hypothesis and the
-trace-MGF bound remain explicit. -/
+This packages the reusable PR-style contract without hiding the two required
+inputs: the event subset and the lintegral trace-MGF provider. -/
 theorem quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
-    (Y : RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real) (theta t R : Real)
+    (Y : RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real)
+    (theta t R : Real)
     (hMeas : AEMeasurable
       (fun omega => ENNReal.ofReal (traceExpIntegrand Y theta omega)) P)
-    (hSubset : quadraticFormUpperTailEvent Y t ⊆ traceExpThresholdEvent Y theta t)
+    (hSubset :
+      quadraticFormUpperTailEvent Y t ⊆ traceExpThresholdEvent Y theta t)
     (hBound : TraceMGFBernsteinVarianceProxyBoundLIntegral P Y V theta R) :
     P (quadraticFormUpperTailEvent Y t) <=
       ENNReal.ofReal (Real.exp (-(theta * t))) *
-        ENNReal.ofReal (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V)) :=
+        ENNReal.ofReal
+          (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V)) :=
   calc
-    P (quadraticFormUpperTailEvent Y t) <= matrixLaplaceRHSLIntegral P Y theta t :=
-      matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset Y theta t hMeas hSubset
+    P (quadraticFormUpperTailEvent Y t)
+        <= matrixLaplaceRHSLIntegral P Y theta t :=
+          matrixLaplaceTransformLIntegral_of_traceExpThreshold_subset
+            Y theta t hMeas hSubset
     _ <= ENNReal.ofReal (Real.exp (-(theta * t))) *
-          ENNReal.ofReal (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V)) :=
-      matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral Y V theta t R hBound
+          ENNReal.ofReal
+            (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V)) :=
+          matrixLaplaceRHSLIntegral_le_of_traceMGFBernsteinVarianceProxyBoundLIntegral
+            Y V theta t R hBound
 
-/-- Typed target for the Matrix Bernstein trace-MGF to Laplace contract:
-`TraceMGFBernsteinVarianceProxyBoundLIntegral` implies the quadratic-form upper tail
-bound with explicit Bernstein-denominator RHS.  This `abbrev` records the full
-contract shape without requiring the event-subset proof or the trace-MGF proof. -/
+/-- Typed target for the reusable bounded-Bernstein lintegral trace-MGF to
+quadratic-form Laplace contract. -/
 abbrev quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral_statement
     {Omega : Type*} [MeasurableSpace Omega] {n : Nat} (P : Measure Omega)
     (Y : RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real)
@@ -423,7 +437,8 @@ abbrev quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBou
       TraceMGFBernsteinVarianceProxyBoundLIntegral P Y V theta R ->
         P (quadraticFormUpperTailEvent Y t) <=
           ENNReal.ofReal (Real.exp (-(theta * t))) *
-            ENNReal.ofReal (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V))
+            ENNReal.ofReal
+              (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V))
 
 /-- Typed target for the matrix Laplace transform upper-tail reduction.
 

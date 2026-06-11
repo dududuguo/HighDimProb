@@ -4,6 +4,12 @@ import HighDimProb.Lp
 /-!
 # Scalar centering
 
+Verified Wikipedia reference:
+* Expected value: https://en.wikipedia.org/wiki/Expected_value
+
+Note: central moments are related background, but this file only defines
+mean-zero centering and does not develop central-moment formulas.
+
 Scalar mean, centering, and centeredness vocabulary for real random variables.
 -/
 

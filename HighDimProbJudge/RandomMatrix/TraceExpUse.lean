@@ -38,6 +38,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.traceMatrixExp_nonneg_of_selfAdjoint_statement
 #check HighDimProb.traceMatrixExp_nonneg_of_selfAdjoint
 #check HighDimProb.lambdaMaxOrdered_matrixExp
+#check HighDimProb.traceMatrixExp_smul_le_card_exp_of_lambdaMaxOrdered_le
 #check HighDimProb.traceExpMoment_nonneg_statement
 #check HighDimProb.traceExpMoment_nonneg_of_nonneg
 #check HighDimProb.traceExpIntegrand_nonneg_of_randomSelfAdjoint
@@ -52,6 +53,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.traceMGFVarianceProxyBound_statement
 #check HighDimProb.traceMGFBernsteinVarianceProxyBound_statement
 #check HighDimProb.traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
+#check HighDimProb.traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound
 
 example {n : Nat} (A : Matrix (Fin n) (Fin n) Real) :
     HighDimProb.traceMatrixExp A =

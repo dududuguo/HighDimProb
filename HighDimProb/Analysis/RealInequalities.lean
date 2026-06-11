@@ -4,6 +4,14 @@ import Mathlib.Tactic
 /-!
 # Real inequalities for moment growth
 
+Verified Wikipedia references:
+* Exponential function: https://en.wikipedia.org/wiki/Exponential_function
+* Gaussian function: https://en.wikipedia.org/wiki/Gaussian_function
+
+Note: real-analysis background is available at
+https://en.wikipedia.org/wiki/Real_analysis, but the formulas below are
+specifically exponential/Gaussian-tail envelope inequalities.
+
 This file contains small deterministic real-analysis helpers used by the
 concentration moment layer.  It deliberately avoids probability assumptions.
 -/

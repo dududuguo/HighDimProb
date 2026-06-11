@@ -5,6 +5,11 @@ import Mathlib.MeasureTheory.Integral.Layercake
 /-!
 # Tail-to-Orlicz proof boundary
 
+Verified Wikipedia references:
+* Layer-cake representation: https://en.wikipedia.org/wiki/Layer_cake_representation
+* Orlicz space: https://en.wikipedia.org/wiki/Orlicz_space
+* Markov's inequality: https://en.wikipedia.org/wiki/Markov%27s_inequality
+
 This module develops the first reverse implication from scalar tail bounds to
 Orlicz bounds, together with reusable layer-cake bridges for future proofs.
 

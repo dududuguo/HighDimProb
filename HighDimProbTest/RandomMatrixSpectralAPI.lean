@@ -45,6 +45,7 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check lambdaMaxOrderedPSDUpperBound
 #check lambdaMaxOrdered_rayleighUpperBound
 #check lambdaMaxOrdered_smul_of_nonneg
+#check lambdaMaxOrdered_le_deterministicOperatorNorm
 #check lambdaMaxOrdered_le_trace_of_posSemidef
 #check spectralUpperBound_of_lambdaMaxPSDUpperBound
 #check spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound
