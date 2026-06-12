@@ -161,6 +161,75 @@ theorem ntkGram_quadraticForm_tail_traceExp_under_primitives
       h.operatorNormBound h.radiusNonneg h.thetaRange h.thetaPositive
       h.cfcPrimitive h.troppPrimitive
 
+/-- Optimized-theta assumptions needed to use Matrix Bernstein for an
+NTK/random-feature Gram matrix.
+
+The analytic assumptions involving exponentials, CFC, and Tropp are specialized
+at the canonical Bernstein choice `bernsteinThetaChoice t sigmaSq R`. This keeps
+the optimized usage theorem free of an explicit `theta`, `thetaRange`, or
+`thetaPositive` assumption. -/
+structure NTKGramOptimizedMatrixBernsteinAssumptions {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {n width : Nat}
+    (J : Fin width -> RandomNTKFeatureVector Omega n)
+    (A : Fin width -> RandomMatrix Omega (n + 1) (n + 1))
+    (R t sigmaSq : Real) : Prop where
+  ntkAdapter : IsCenteredNTKGramSummandFamily (P := P) J A
+  centered : CenteredSelfAdjointRandomMatrixFamily P A
+  independentSelfAdjoint : IndependentSelfAdjointRandomMatrices P A
+  integrable : forall a, IntegrableRandomMatrix P (A a)
+  squareIntegrable : forall a, IntegrableRandomMatrix P (randomMatrixSquare (A a))
+  expIntegrable :
+    forall a,
+      IntegrableRandomMatrix P
+        (fun omega =>
+          matrixExp
+            (SMul.smul (bernsteinThetaChoice t sigmaSq R) (A a omega)))
+  traceExpIntegrable :
+    IntegrableRealRandomVariable P
+      (traceExpIntegrand (randomMatrixSum A)
+        (bernsteinThetaChoice t sigmaSq R))
+  operatorNormBound : PointwiseOperatorNormBound A R
+  sigmaPositive : 0 < sigmaSq
+  radiusNonneg : 0 <= R
+  deviationPositive : 0 < t
+  varianceProxyNormBound : MatrixVarianceProxyNormBound P A sigmaSq
+  cfcPrimitive :
+    forall a omega,
+      bernsteinMatrixExp_le_quadratic_statement (A a omega)
+        (bernsteinThetaChoice t sigmaSq R) R
+  troppPrimitive :
+    troppMasterTraceMGFFiniteFamily_statement
+      (P := P) A
+      (fun a => SMul.smul
+        (bernsteinMGFCoeff (bernsteinThetaChoice t sigmaSq R) R)
+        (matrixSecondMoment P (A a)))
+      (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R
+
+/-- NTK-style quadratic-form upper-tail bound with the optimized scalar
+Matrix Bernstein RHS.
+
+This usage theorem has no explicit theta parameter. The theta choice and scalar
+optimization are supplied by the existing Matrix Bernstein theorem. -/
+theorem ntkGram_quadraticForm_tail_optimized_under_primitives
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {n width : Nat}
+    (J : Fin width -> RandomNTKFeatureVector Omega n)
+    (A : Fin width -> RandomMatrix Omega (n + 1) (n + 1))
+    (R t sigmaSq : Real)
+    (h : NTKGramOptimizedMatrixBernsteinAssumptions
+      (P := P) J A R t sigmaSq) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        ((n + 1 : Real) *
+          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) := by
+  exact
+    matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+      A R t sigmaSq h.centered h.independentSelfAdjoint h.integrable
+      h.squareIntegrable h.expIntegrable h.traceExpIntegrable
+      h.operatorNormBound h.sigmaPositive h.radiusNonneg h.deviationPositive
+      h.varianceProxyNormBound h.cfcPrimitive h.troppPrimitive
+
 end
 
 end HighDimProb.Examples.RandomMatrix.NTKGramUsage

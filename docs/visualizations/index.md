@@ -39,6 +39,12 @@ Regenerate the official upstream `importGraph` output with:
 .\tools\build_import_graph.ps1
 ```
 
+Or from Bash/Git Bash:
+
+```bash
+./tools/build_import_graph.sh
+```
+
 ## Status Policy
 
 - `stable` means reachable through `import HighDimProb`.

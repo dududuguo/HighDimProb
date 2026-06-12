@@ -64,7 +64,7 @@ Planned leaves for these branches are tracked in `docs/LeafPlan.md`. Ownership, 
 
 Stage V1 adds human/agent-facing diagrams for this tree in
 `docs/visualizations/module_tree.mmd`, and the generated Lean import graph in
-`docs/visualizations/import_graph.dot`.
+`docs/visualizations/lake_import_graph.dot`.
 
 ## Stage SC-final Import Decision
 

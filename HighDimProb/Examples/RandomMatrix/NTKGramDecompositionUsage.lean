@@ -225,6 +225,42 @@ theorem ntkJacobianGram_quadraticForm_tail_traceExp_under_primitives
       (P := P) (fun a => randomJacobianFeatureVector J a) A theta R t sigmaSq
       h.matrixBernsteinReady
 
+/-- Jacobian-decomposition assumptions plus the optimized NTK Gram Matrix
+Bernstein assumptions.
+
+The `centeredJacobianAdapter` field records the concrete decomposition. The
+`matrixBernsteinReady` field exposes all optimized analytic Matrix Bernstein
+assumptions through the existing `NTKGramUsage` structure. -/
+structure NTKJacobianGramOptimizedMatrixBernsteinAssumptions {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {width n : Nat}
+    (J : RandomJacobianFeatureTable Omega width n)
+    (A : Fin width -> RandomMatrix Omega (n + 1) (n + 1))
+    (R t sigmaSq : Real) : Prop where
+  centeredJacobianAdapter : IsCenteredJacobianGramSummandFamily (P := P) J A
+  matrixBernsteinReady :
+    NTKGramOptimizedMatrixBernsteinAssumptions
+      (P := P) (fun a => randomJacobianFeatureVector J a) A R t sigmaSq
+
+/-- Jacobian-decomposed NTK Gram quadratic-form upper-tail bound with the
+optimized scalar Matrix Bernstein RHS. -/
+theorem ntkJacobianGram_quadraticForm_tail_optimized_under_primitives
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {width n : Nat}
+    (J : RandomJacobianFeatureTable Omega width n)
+    (A : Fin width -> RandomMatrix Omega (n + 1) (n + 1))
+    (R t sigmaSq : Real)
+    (h : NTKJacobianGramOptimizedMatrixBernsteinAssumptions
+      (P := P) J A R t sigmaSq) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        ((n + 1 : Real) *
+          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) := by
+  exact
+    ntkGram_quadraticForm_tail_optimized_under_primitives
+      (P := P) (fun a => randomJacobianFeatureVector J a) A R t sigmaSq
+      h.matrixBernsteinReady
+
 end
 
 end HighDimProb.Examples.RandomMatrix.NTKGramDecompositionUsage

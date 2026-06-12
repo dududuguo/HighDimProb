@@ -43,7 +43,7 @@ Workflow file:
 - docs/Workflow.md
 
 Project path:
-- C:\Users\User\research\HighDimProb
+- repository root
 
 Reference notes:
 - Not present in the current checkout; expected path was previously recorded
@@ -786,9 +786,10 @@ Stage V1 implemented:
 - added curated Mermaid diagrams for the root module tree, scalar
   concentration spine, Hoeffding path, Bernstein path, random matrix branch,
   and KG-to-Lean validation path.
-- added `scripts/visualize_imports.py`, a Python standard-library line-based
-  import extractor for `HighDimProb.lean` and `HighDimProb/**/*.lean`.
-- generated `docs/visualizations/import_graph.dot` from the current Lean import
+- added the official upstream `importGraph` workflow through
+  `tools/build_import_graph.sh` and `tools/build_import_graph.ps1`.
+- generated `docs/visualizations/lake_import_graph.dot` and
+  `docs/visualizations/lake_import_graph.html` from the current Lean import
   graph.
 - no Lean source files, theorem meanings, or optional dependencies were
   changed.
@@ -1708,8 +1709,9 @@ trace-mgf, Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
 
 Stage V1 has no build blocker. The visualization layer is documentation/script
 infrastructure only: curated Mermaid diagrams live under
-`docs/visualizations/`, and `scripts/visualize_imports.py` regenerates the DOT
-import graph from Lean import lines using only the Python standard library.
+`docs/visualizations/`, and `tools/build_import_graph.sh` or
+`tools/build_import_graph.ps1` regenerates the official upstream import graph
+from current Lean imports.
 No Lean theorem, statement, or module import meaning changed.
 
 Stage J1 has no build blocker. The judge suite is a separate compile-time

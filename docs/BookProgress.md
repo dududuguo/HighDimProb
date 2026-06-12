@@ -633,9 +633,9 @@ Resolved in Stage V1:
 - Added curated Mermaid diagrams for the module tree, scalar concentration
   proof spine, Hoeffding path, Bernstein path, random matrix branch, and
   KG-to-Lean validation path.
-- Added generated `docs/visualizations/import_graph.dot` and the standard
-  library script `scripts/visualize_imports.py` that regenerates it from Lean
-  import lines.
+- Added generated `docs/visualizations/lake_import_graph.dot` and
+  `docs/visualizations/lake_import_graph.html`, regenerated through the
+  upstream `importGraph` helper scripts in `tools/`.
 - Did not prove new theorems, change theorem meanings, or add optional
   dependencies.
 

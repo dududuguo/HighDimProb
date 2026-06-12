@@ -134,8 +134,9 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/BookStatements.lean`: checks typed statement specifications.
 - `HighDimProbTest/NoDeepMathYet.lean`: policy marker for theorem-heavy tests deferred to later layers.
 - `docs/visualizations/` is documentation-only. Stage V1 verifies it by
-  running `python scripts/visualize_imports.py`, `lake build`, and `lake test`;
-  no Lean API test is added because no Lean declaration is introduced.
+  running the import-graph helper script for the local shell, `lake build`, and
+  `lake test`; no Lean API test is added because no Lean declaration is
+  introduced.
 - `HighDimProbJudge`: compile-time OJ-style judge library for downstream API
   use cases. It is built separately with `lake build HighDimProbJudge`.
 - Stage J2 expands `HighDimProbJudge` with downstream-style judge files for

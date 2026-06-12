@@ -1142,21 +1142,21 @@
 ## Stage V1 Lean path visualization infrastructure
 
 - Concrete version chosen: add a documentation-only visualization layer under
-  `docs/visualizations/` plus a small import-graph generator in
-  `scripts/visualize_imports.py`.
+  `docs/visualizations/` plus the upstream `importGraph` wrapper scripts in
+  `tools/`.
 - Diagram decision: keep semantic theorem/proof-spine diagrams curated from the
   milestone and branch docs, because theorem status needs human wording such as
   `proven`, `typed Prop`, `conservative`, `sharp`, and `TODO`.
-- Import decision: generate `docs/visualizations/import_graph.dot` from actual
-  Lean import lines so the import graph can be refreshed without a full Lean
-  parser.
-- Dependency decision: the script uses only the Python standard library and no
-  optional rendering dependency is added. Graphviz and Mermaid renderers remain
-  optional viewer tools.
+- Import decision: generate `docs/visualizations/lake_import_graph.dot` and
+  `docs/visualizations/lake_import_graph.html` from Lean's upstream
+  `importGraph` tool.
+- Dependency decision: no optional rendering dependency is added. Graphviz and
+  Mermaid renderers remain optional viewer tools.
 - Scope decision: no Lean declarations, theorem statements, theorem meanings,
   or proof statuses are changed in this stage.
-- Future upgrade path: regenerate `import_graph.dot` after import changes and
-  keep curated diagrams aligned with milestone closeouts.
+- Future upgrade path: regenerate `lake_import_graph.dot` and
+  `lake_import_graph.html` after import changes and keep curated diagrams
+  aligned with milestone closeouts.
 
 ## Stage J1 HighDimProb compile-time judge suite
 
