@@ -30,7 +30,7 @@ statement APIs connecting bounded Bernstein lintegral trace-MGF bounds to the
 existing Laplace/tail layer without claiming the missing real-to-lintegral,
 Tropp/Lieb, CFC, or Matrix Bernstein proofs.
 
-Next safe task: `RM-PSD-nullspace-converse`.
+Next safe task: `RM-expectation-contraction`.
 ## Milestone 3 scalar implication closeout
 
 This audit separates proved theorem families from typed statements and blocked
@@ -1247,7 +1247,7 @@ future directions.
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Priority: Stage MB-S2 through MB-S9-foundation complete; next task is
-  RM-PSD-nullspace-converse.
+  RM-expectation-contraction.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1645,7 +1645,7 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is RM-PSD-nullspace-converse.
+- Priority: next safe task is RM-expectation-contraction.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -1821,7 +1821,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Priority: next safe task is RM-PSD-nullspace-converse.
+- Priority: next safe task is RM-expectation-contraction.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -1948,7 +1948,7 @@ future directions.
 - Blocker: the finite-family Tropp primitive itself remains typed only; the
   Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and the
   Matrix Bernstein tail theorem remain unproved.
-- Priority: next safe task is RM-PSD-nullspace-converse.
+- Priority: next safe task is RM-expectation-contraction.
 
 
 
@@ -1966,7 +1966,7 @@ future directions.
 - Blocker: the result is still one-sided and quadratic-form under explicit
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
-- Priority: next safe task is RM-PSD-nullspace-converse.
+- Priority: next safe task is RM-expectation-contraction.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -1986,7 +1986,7 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Priority: next safe task is RM-PSD-nullspace-converse.
+- Priority: next safe task is RM-expectation-contraction.
 
 ## RM Centered Operator-Norm Bound
 
@@ -2002,8 +2002,8 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this is only an algebraic explicit-bound wrapper.  It does not prove
   vector-to-rank-one matrix measurability/integrability, expectation
-  contraction, PSD nullspace converse, or Matrix Bernstein tails.
-- Priority: next safe task is RM-PSD-nullspace-converse.
+  contraction, Matrix Bernstein tails.
+- Priority: next safe task is RM-expectation-contraction.
 
 
 ## RM Vector-to-Rank-One Matrix Measurability / Integrability
@@ -2018,5 +2018,24 @@ future directions.
   `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove integrability from measurability alone,
-  expectation contraction, PSD nullspace converse, or Matrix Bernstein tails.
-- Priority: next safe task is RM-PSD-nullspace-converse.
+  expectation contraction, Matrix Bernstein tails.
+- Priority: next safe task is RM-expectation-contraction.
+
+
+## RM PSD Nullspace Converse
+
+- Informal statement: for a real positive semidefinite matrix `A`, the zero
+  quadratic-form condition `xᵀ A x = 0` is equivalent to the kernel condition
+  `A x = 0`; HighDimProb exposes this in both Mathlib `Matrix.PosSemidef` and
+  explicit `IsPSDMatrix` vocabulary.
+- Target Lean declarations:
+  `posSemidef_of_isPSDMatrix`,
+  `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`,
+  `matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero`,
+  `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix`, and
+  `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`.
+- Status: proven, API-tested, and judge-tested.
+- Blocker: this is only a deterministic PSD kernel bridge. It does not prove
+  expectation contraction, covariance expectation identities, or Matrix
+  Bernstein tails.
+- Priority: next safe task is RM-expectation-contraction.

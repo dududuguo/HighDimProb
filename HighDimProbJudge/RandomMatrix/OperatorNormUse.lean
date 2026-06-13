@@ -3,8 +3,8 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.isRealRandomVariable_operatorNorm
 #check HighDimProb.deterministicOperatorNorm_sub_le_add
 #check HighDimProb.rankOneOperatorNorm_le_vectorSqNorm
-#check HighDimProb.BoundedOperatorNorm_rankOne_of_sqNorm_bound
-#check HighDimProb.PointwiseOperatorNormBound_rankOne_of_sqNorm_bound
+#check HighDimProb.BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound
+#check HighDimProb.PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound
 #check HighDimProb.BoundedOperatorNorm_centered_of_bound_expect_bound
 #check HighDimProb.PointwiseOperatorNormBound_centered_of_bound_expect_bound
 #check HighDimProb.PointwiseOperatorNormBound_centered_of_bound_expect_bound_same
@@ -26,7 +26,7 @@ example {Omega : Type*} [MeasurableSpace Omega]
 
 example {n : Nat} (v : Fin n -> Real) :
     HighDimProb.deterministicOperatorNorm
-      (fun i j : Fin n => v i * v j) <= HighDimProb.vectorSqNorm v := by
+      (HighDimProb.rankOneMatrix v) <= HighDimProb.vectorSqNorm v := by
   exact HighDimProb.rankOneOperatorNorm_le_vectorSqNorm v
 
 example {m n : Nat} (A B : Matrix (Fin m) (Fin n) Real) :
@@ -36,11 +36,10 @@ example {m n : Nat} (A B : Matrix (Fin m) (Fin n) Real) :
 
 example {Omega : Type*} [MeasurableSpace Omega] {I : Type*} {n : Nat}
     (X : I -> Omega -> Fin n -> Real) (R : Real)
-    (hR : 0 <= R)
     (hX : forall i omega, HighDimProb.vectorSqNorm (X i omega) <= R) :
     HighDimProb.PointwiseOperatorNormBound
-      (fun i omega a b => X i omega a * X i omega b) R := by
-  exact HighDimProb.PointwiseOperatorNormBound_rankOne_of_sqNorm_bound X R hR hX
+      (fun i => HighDimProb.rankOneRandomMatrix (X i)) R := by
+  exact HighDimProb.PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound X R hX
 
 example {Omega : Type*} [MeasurableSpace Omega] {I : Type*} {m n : Nat}
     (P : MeasureTheory.Measure Omega) (X : I -> HighDimProb.RandomMatrix Omega m n)

@@ -18,8 +18,8 @@ variable (K R : Real)
 #check IsotropicRowsSecondMoment
 #check IsotropicRowsCovariance
 #check CenteredEntries
-#check BoundedOperatorNorm_rankOne_of_sqNorm_bound
-#check PointwiseOperatorNormBound_rankOne_of_sqNorm_bound
+#check BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound
+#check PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound
 #check BoundedOperatorNorm_centered_of_bound_expect_bound
 #check PointwiseOperatorNormBound_centered_of_bound_expect_bound
 #check PointwiseOperatorNormBound_centered_of_bound_expect_bound_same
@@ -30,12 +30,11 @@ variable (K R : Real)
 #check (IsotropicRowsSecondMoment P A : Prop)
 #check (IsotropicRowsCovariance P A : Prop)
 #check (CenteredEntries P A : Prop)
-#check (PointwiseOperatorNormBound_rankOne_of_sqNorm_bound
+#check (PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound
   (X := X) (R := R) :
-  0 <= R ->
   (forall i omega, vectorSqNorm (X i omega) <= R) ->
   PointwiseOperatorNormBound
-    (fun i omega a b => X i omega a * X i omega b) R)
+    (fun i => rankOneRandomMatrix (X i)) R)
 #check (BoundedOperatorNorm_centered_of_bound_expect_bound
   (P := P) (X := A) (R := R) (Rexp := K) :
   BoundedOperatorNorm A R ->

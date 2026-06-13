@@ -14,8 +14,8 @@
   `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`.
 - Done: rank-one operator-norm prerequisite slice added
   `rankOneOperatorNorm_le_vectorSqNorm`,
-  `BoundedOperatorNorm_rankOne_of_sqNorm_bound`, and
-  `PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`.
+  `BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound`, and
+  `PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound`.
 - Done: centered operator-norm prerequisite slice added
   `deterministicOperatorNorm_sub_le_add`,
   `BoundedOperatorNorm_centered_of_bound_expect_bound`,
@@ -25,14 +25,20 @@
   added `rankOneRandomMatrix`, `isRandomMatrix_rankOneRandomMatrix`,
   `integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`, and
   `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.
+- Done: PSD nullspace converse prerequisite slice added
+  `posSemidef_of_isPSDMatrix`,
+  `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`,
+  `matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero`,
+  `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix`, and
+  `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`.
 - The optimized theorem remains one-sided, quadratic-form, and under explicit
   `troppMasterTraceMGFFiniteFamily_statement` plus pointwise
   `bernsteinMatrixExp_le_quadratic_statement` assumptions.
-- Not proved: PSD nullspace converse, lambda-max/operator-norm
+- Not proved: expectation contraction, lambda-max/operator-norm
   tail bridge, optimized `t = 0` endpoint, functional-calculus proof /
   Bernstein CFC primitive, full CFC-free single-summand MGF theorem, Lieb
   concavity, Golden-Thompson, and the full Matrix Bernstein tail theorem.
-- Next: RM-PSD-nullspace-converse.
+- Next: RM-expectation-contraction.
 ## Stage M3 Scalar Closeout TODO Audit
 
 The forward scalar subGaussian proof spine is closed as an experimental
@@ -207,8 +213,8 @@ Stage H0 Rademacher/Hoeffding branch update:
 | Concrete trace-exp dominance assembly | Use the `lambdaMaxOrdered` spectral and trace-exp providers to prove `TraceExpDominatesQuadraticFormUpperTail` for random self-adjoint matrices. | `lambdaMaxOrdered_rayleighUpperBound`, `lambdaMaxOrdered_traceExpDominatesUpperBound`, `traceExpDominatesQuadraticFormUpperTail_of_rayleighUpperBound_of_traceExpDominatesUpperBound`, `RandomSelfAdjointMatrix` | done | Implemented in MB-S7C-assemble-dominance as `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`. This did not prove full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein. |
 | Conditional matrix Laplace assembly | Use concrete random self-adjoint dominance with the existing conditional Laplace wrappers to prove the matrix Laplace upper-tail theorem. | `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`, `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`, explicit measurability/integrability hypotheses | done | Implemented in MB-S8-laplace-assembly as `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint` and `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`. This did not prove the real RHS bridge, trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein. |
 | Matrix Laplace real RHS bridge | Connect the lintegral matrix Laplace theorem to the existing real trace-exp moment/RHS vocabulary. | `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment`, explicit integrability and nonnegativity hypotheses | hard | Future task after the current trace-mgf provider contract decision; do not prove trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein in that bridge stage. |
-| Matrix trace-mgf foundation/provider contract | Audit the route for proving the semantic bounded Matrix Bernstein trace-mgf target. | `TraceMGFBound`, `TraceMGFBernsteinVarianceProxyBound`, `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`, matrix-valued independence, variance proxy, Golden-Thompson/Lieb or equivalent matrix-mgf machinery | hard | MB-S9-foundation added only semantic predicates and typed targets; MB-S9 follow-up stages isolated and resolved expectation, MatrixLE algebra, coefficient, lower-bound, provider-under-CFC, and RHS-normalization blockers while leaving Tropp/Lieb and Bernstein CFC primitives typed only. `matrixBernsteinTraceMGF_statement` remains a `theta ^ 2 / 2` compatibility target, not the bounded Bernstein denominator target. Current next safe task: RM-PSD-nullspace-converse. |
-| Matrix exponential lower bound for Bernstein coefficient | Audit/prove the deterministic bridge `MatrixLE (1 + c smul V) (matrixExp (c smul V))` after `bernsteinCoefficient_nonneg`. | `bernsteinCoefficient_nonneg`, `MatrixLE`, `matrixExp`, PSD/self-adjoint variance proxy hypotheses, CFC or spectral exponential lower APIs | done | MB-S9-exp-lower-bound-proof implements this deterministic lower-bound family as `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint` and `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`. MB-S9-single-summand-provider-under-cfc then uses it in `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`. MB-S9-rhs-normalization-proof names the denominator coefficient as `bernsteinMGFCoeff` and adds bounded trace-mgf targets. The Bernstein CFC proof, trace-mgf provider, Golden-Thompson, Lieb, and Matrix Bernstein remain unproved. Next safe task: RM-PSD-nullspace-converse. |
+| Matrix trace-mgf foundation/provider contract | Audit the route for proving the semantic bounded Matrix Bernstein trace-mgf target. | `TraceMGFBound`, `TraceMGFBernsteinVarianceProxyBound`, `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`, matrix-valued independence, variance proxy, Golden-Thompson/Lieb or equivalent matrix-mgf machinery | hard | MB-S9-foundation added only semantic predicates and typed targets; MB-S9 follow-up stages isolated and resolved expectation, MatrixLE algebra, coefficient, lower-bound, provider-under-CFC, and RHS-normalization blockers while leaving Tropp/Lieb and Bernstein CFC primitives typed only. `matrixBernsteinTraceMGF_statement` remains a `theta ^ 2 / 2` compatibility target, not the bounded Bernstein denominator target. Current next safe task: RM-expectation-contraction. |
+| Matrix exponential lower bound for Bernstein coefficient | Audit/prove the deterministic bridge `MatrixLE (1 + c smul V) (matrixExp (c smul V))` after `bernsteinCoefficient_nonneg`. | `bernsteinCoefficient_nonneg`, `MatrixLE`, `matrixExp`, PSD/self-adjoint variance proxy hypotheses, CFC or spectral exponential lower APIs | done | MB-S9-exp-lower-bound-proof implements this deterministic lower-bound family as `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint` and `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`. MB-S9-single-summand-provider-under-cfc then uses it in `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`. MB-S9-rhs-normalization-proof names the denominator coefficient as `bernsteinMGFCoeff` and adds bounded trace-mgf targets. The Bernstein CFC proof, trace-mgf provider, Golden-Thompson, Lieb, and Matrix Bernstein remain unproved. Next safe task: RM-expectation-contraction. |
 ## MB-S9 Tropp Shape Refactor Follow-Up
 
 The trace-exp layer now exposes `troppMasterTraceMGFFiniteFamily_statement`,
@@ -223,7 +229,7 @@ safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
 - Still unproved: the finite-family Tropp/Lieb primitive itself.
 - Still unproved: the Bernstein CFC primitive.
 - Still unproved: Lieb, Golden-Thompson, and the Matrix Bernstein tail theorem.
-- Next safe task: RM-PSD-nullspace-converse.
+- Next safe task: RM-expectation-contraction.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives Follow-Up
 
@@ -232,4 +238,4 @@ safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
   and pointwise `bernsteinMatrixExp_le_quadratic_statement`.
 - Still unproved: finite-family Tropp/Lieb primitive, Bernstein CFC primitive,
   Lieb, Golden-Thompson, and Matrix Bernstein tail theorem.
-- Next safe task: RM-PSD-nullspace-converse.
+- Next safe task: RM-expectation-contraction.

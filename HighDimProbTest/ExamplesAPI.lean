@@ -16,9 +16,39 @@ import HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
 
 open HighDimProb
 open HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
+open HighDimProb.Examples.RandomMatrix.KernelNullspaceUsage
 
 variable {rankOneN : Nat}
 variable (rankOneV : RankOneVector rankOneN)
 
 #check (rankOneOperatorNorm_le_vectorSqNorm rankOneV :
-  deterministicOperatorNorm (rankOneOuter rankOneV) <= vectorSqNorm rankOneV)
+  deterministicOperatorNorm (rankOneMatrix rankOneV) <= vectorSqNorm rankOneV)
+
+variable {kernelN : Nat}
+variable (kernelA : Matrix (Fin (kernelN + 1)) (Fin (kernelN + 1)) Real)
+variable (kernelX : Fin (kernelN + 1) -> Real)
+variable (kernelHPSD : Matrix.PosSemidef kernelA)
+variable (kernelHExplicitPSD : IsPSDMatrix kernelA)
+
+#check matrixAction_eq_mulVec
+#check invisible_of_quadraticNull_of_posSemidef
+#check invisible_of_quadraticNull_of_psd
+#check randomInvisible_of_quadraticNull_of_posSemidef
+#check randomInvisible_of_quadraticNull_of_psd
+#check psdQuadraticNullImpliesInvisible_of_core
+
+example :
+    matrixAction kernelA kernelX = Matrix.mulVec kernelA kernelX := by
+  exact matrixAction_eq_mulVec kernelA kernelX
+
+example (hNull : KernelQuadraticNullDirection kernelA kernelX) :
+    KernelInvisibleDirection kernelA kernelX := by
+  exact invisible_of_quadraticNull_of_posSemidef kernelHPSD hNull
+
+example (hNull : KernelQuadraticNullDirection kernelA kernelX) :
+    KernelInvisibleDirection kernelA kernelX := by
+  exact invisible_of_quadraticNull_of_psd kernelHExplicitPSD hNull
+
+example :
+    PSDQuadraticNullImpliesInvisible kernelA := by
+  exact psdQuadraticNullImpliesInvisible_of_core kernelA

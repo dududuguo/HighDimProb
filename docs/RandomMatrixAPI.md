@@ -41,8 +41,8 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - Lambda-max/operator-norm Matrix Bernstein tail theorem remains unproved.
 - Proved rank-one operator-norm prerequisite bridge:
   `rankOneOperatorNorm_le_vectorSqNorm`,
-  `BoundedOperatorNorm_rankOne_of_sqNorm_bound`, and
-  `PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`.
+  `BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound`, and
+  `PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound`.
 - Proved centered operator-norm prerequisite bridge under an explicit expectation
   operator-norm bound:
   `deterministicOperatorNorm_sub_le_add`,
@@ -53,15 +53,23 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `rankOneRandomMatrix`, `isRandomMatrix_rankOneRandomMatrix`,
   `integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`, and
   `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.
-- Next safe task: `RM-PSD-nullspace-converse`.
+- Proved PSD nullspace converse bridge:
+  `posSemidef_of_isPSDMatrix`,
+  `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`,
+  `matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero`,
+  `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix`, and
+  `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`.
+- Next safe task: `RM-expectation-contraction`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
 - `RandomMatrix`: abbrev, finite-dimensional real random matrix.
 - `matrixEntry`: def, entry random variable.
 - `IsRandomMatrix`: abbrev, entrywise measurability predicate.
+- `rankOneMatrix`: def, deterministic rank-one self outer-product matrix.
 - `rankOneRandomMatrix`: def, vector-to-rank-one random matrix with entries
   `X_i * X_j`.
+- `rankOneMatrix_apply`: theorem.
 - `rankOneRandomMatrix_apply`: theorem.
 - `matrixEntry_rankOneRandomMatrix`: theorem.
 - `isRandomMatrix_rankOneRandomMatrix`: theorem, entrywise measurability from
@@ -127,6 +135,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `selfAdjointOperatorNormTailViaQuadraticFormStatement`: typed statement.
 - `lambdaMax_le_iff_quadraticForm_le_statement`: typed statement.
 - `operatorNorm_eq_max_abs_lambda_statement`: typed statement.
+- `posSemidef_of_isPSDMatrix`: theorem, converts HighDimProb explicit PSD to Mathlib `Matrix.PosSemidef`.
+- `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`: theorem, PSD quadratic-form zero iff kernel membership.
+- `matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero`: theorem, one-way Mathlib-PSD nullspace converse.
+- `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix`: theorem, explicit-PSD iff variant.
+- `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`: theorem, one-way explicit-PSD nullspace converse.
 
 ## `HighDimProb/RandomMatrix/OperatorNorm.lean`
 
@@ -147,14 +160,14 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 - `BoundedOperatorNorm`: def, pointwise operator-norm bound for one random
   matrix.
-- `BoundedOperatorNorm_rankOne_of_sqNorm_bound`: theorem, rank-one pointwise
-  wrapper from vector squared-norm bounds.
+- `BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound`: theorem, rank-one
+  pointwise wrapper from vector squared-norm bounds.
 - `BoundedOperatorNorm_centered_of_bound_expect_bound`: theorem, centered
   wrapper from a pointwise bound plus an explicit expectation operator-norm
   bound.
 - `PointwiseOperatorNormBound`: def, indexed pointwise operator-norm bound.
-- `PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`: theorem, indexed
-  rank-one wrapper from vector squared-norm bounds.
+- `PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound`: theorem,
+  indexed rank-one wrapper from vector squared-norm bounds.
 - `PointwiseOperatorNormBound_centered_of_bound_expect_bound`: theorem, indexed
   centered wrapper with explicit expectation bound.
 - `PointwiseOperatorNormBound_centered_of_bound_expect_bound_same`: theorem,
@@ -427,7 +440,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-RM-PSD-nullspace-converse: next prove or isolate the positive-semidefinite nullspace converse needed by covariance-style examples. Do not prove lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC, Golden-Thompson, expectation contraction, or the full Matrix Bernstein theorem in that stage.
+RM-expectation-contraction: next audit whether the existing boundedness and expectation APIs can prove a narrow operator-norm expectation contraction wrapper, or record the exact missing assumptions. Do not prove lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC, Golden-Thompson, or the full Matrix Bernstein theorem in that stage.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -451,4 +464,4 @@ RM-PSD-nullspace-converse: next prove or isolate the positive-semidefinite nulls
   proved in `ConcentrationStatements.lean`, with exponential-add RHS.
 - The theta-optimized scalar-RHS quadratic-form wrapper under primitives is now
   proved in `ConcentrationStatements.lean`, with Bernstein denominator RHS.
-- Next safe task: RM-PSD-nullspace-converse.
+- Next safe task: RM-expectation-contraction.

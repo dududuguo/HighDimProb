@@ -94,19 +94,18 @@ def BoundedOperatorNorm {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
 
 /--
 A pointwise squared-vector-norm bound gives an operator-norm bound for the
-rank-one random matrix `omega |-> X(omega) X(omega)^T`.
+named rank-one random matrix `rankOneRandomMatrix X`.
 
 Formula reference: the deterministic ingredient is
 `||v v^T||op <= ||v||_2^2` for a rank-one outer product; see
 https://en.wikipedia.org/wiki/Outer_product and
 https://en.wikipedia.org/wiki/Operator_norm
 -/
-theorem BoundedOperatorNorm_rankOne_of_sqNorm_bound {Omega : Type*}
+theorem BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound {Omega : Type*}
     [MeasurableSpace Omega] {n : Nat}
-    (X : Omega -> Fin n -> Real) (R : Real)
-    (_hR : 0 <= R)
+    (X : RandomVector Omega n) (R : Real)
     (hX : forall omega, vectorSqNorm (X omega) <= R) :
-    BoundedOperatorNorm (fun omega i j => X omega i * X omega j) R := by
+    BoundedOperatorNorm (rankOneRandomMatrix X) R := by
   intro omega
   exact (rankOneOperatorNorm_le_vectorSqNorm (X omega)).trans (hX omega)
 
@@ -152,23 +151,22 @@ def PointwiseOperatorNormBound {Omega : Type*} [MeasurableSpace Omega]
   forall i, BoundedOperatorNorm (A i) R
 
 /--
-Family version of the rank-one operator-norm bridge: if every vector sample has
-`vectorSqNorm <= R`, then the associated rank-one matrix family is pointwise
-operator-norm bounded by `R`.
+Family version of the named rank-one operator-norm bridge: if every vector
+sample has `vectorSqNorm <= R`, then the associated rank-one matrix family is
+pointwise operator-norm bounded by `R`.
 
 Formula reference: this packages the outer-product bound
 `||v v^T||op <= ||v||_2^2`; see
 https://en.wikipedia.org/wiki/Outer_product and
 https://en.wikipedia.org/wiki/Operator_norm
 -/
-theorem PointwiseOperatorNormBound_rankOne_of_sqNorm_bound {Omega : Type*}
+theorem PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound {Omega : Type*}
     [MeasurableSpace Omega] {I : Type*} {n : Nat}
-    (X : I -> Omega -> Fin n -> Real) (R : Real)
-    (hR : 0 <= R)
+    (X : I -> RandomVector Omega n) (R : Real)
     (hX : forall i omega, vectorSqNorm (X i omega) <= R) :
-    PointwiseOperatorNormBound (fun i omega a b => X i omega a * X i omega b) R := by
+    PointwiseOperatorNormBound (fun i => rankOneRandomMatrix (X i)) R := by
   intro i
-  exact BoundedOperatorNorm_rankOne_of_sqNorm_bound (X i) R hR (hX i)
+  exact BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound (X i) R (hX i)
 
 /--
 Family version of the centered operator-norm bridge under an explicit bound on

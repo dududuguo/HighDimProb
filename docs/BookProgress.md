@@ -981,8 +981,8 @@ is proved:
 
 ```lean
 rankOneOperatorNorm_le_vectorSqNorm
-BoundedOperatorNorm_rankOne_of_sqNorm_bound
-PointwiseOperatorNormBound_rankOne_of_sqNorm_bound
+BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound
+PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound
 ```
 
 The deterministic lemma proves the finite-dimensional bound
@@ -992,8 +992,7 @@ squared-norm bounds into `BoundedOperatorNorm` and
 `PointwiseOperatorNormBound` for rank-one random matrices.
 
 This is not a centered summand bound, not a vector-to-matrix
-measurability/integrability bridge, not a PSD nullspace converse, and not a
-Matrix Bernstein tail theorem. Next safe task: RM-PSD-nullspace-converse.
+measurability/integrability bridge, not a Matrix Bernstein tail theorem. Next safe task: RM-expectation-contraction.
 
 ## RM centered operator-norm prerequisite progress
 
@@ -1014,7 +1013,7 @@ The deterministic lemma packages the matrix operator-norm triangle inequality
 contraction theorem and does not prove entrywise integrability or
 vector-to-rank-one measurability.
 
-Next safe task: RM-PSD-nullspace-converse.
+Next safe task: RM-expectation-contraction.
 
 
 ## RM vector-to-rank-one matrix measurability / integrability prerequisite progress
@@ -1032,7 +1031,28 @@ The bridge defines the rank-one random matrix entrywise as `X_i * X_j`, proves
 entrywise measurability from `IsRandomVector`, and proves entrywise
 integrability only under explicit product-integrability assumptions or explicit
 coordinate `MemLp ... 2` assumptions.  It does not prove integrability from
-measurability alone, expectation contraction, PSD nullspace converse, or Matrix
+measurability alone, expectation contraction, Matrix
 Bernstein tails.
 
-Next safe task: RM-PSD-nullspace-converse.
+Next safe task: RM-expectation-contraction.
+
+
+## RM PSD nullspace converse prerequisite progress
+
+The PSD nullspace converse prerequisite slice is proved:
+
+```lean
+posSemidef_of_isPSDMatrix
+matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef
+matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero
+matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix
+matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero
+```
+
+The core bridge wraps Mathlib's `Matrix.PosSemidef.dotProduct_mulVec_zero_iff`
+into HighDimProb's explicit `matrixQuadraticForm` and `IsPSDMatrix` vocabulary.
+The examples layer now derives invisible/kernel directions from PSD
+quadratic-null directions through the core declarations. This is not an
+expectation contraction theorem and not a Matrix Bernstein tail theorem.
+
+Next safe task: RM-expectation-contraction.
