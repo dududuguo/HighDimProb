@@ -8,6 +8,8 @@ variable {n : Nat}
 variable (A : RandomMatrix Omega n n)
 variable (M : Matrix (Fin n) (Fin n) Real)
 variable (x : Fin n -> Real)
+variable (hMPSD : Matrix.PosSemidef M)
+variable (hMExplicitPSD : IsPSDMatrix M)
 variable (L : Real)
 variable (t : Real)
 variable (Z : Omega -> Real)
@@ -50,6 +52,11 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check spectralUpperBound_of_lambdaMaxPSDUpperBound
 #check spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound
 #check matrixQuadraticForm_nonneg_of_posSemidef
+#check posSemidef_of_isPSDMatrix
+#check matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef
+#check matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero
+#check matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix
+#check matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero
 #check matrixQuadraticForm_smul_one_of_isUnitVector
 #check rayleighUpperBound_of_spectralUpperBound
 #check matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef
@@ -164,6 +171,28 @@ example :
 example (hPSD : M.PosSemidef) :
     0 <= matrixQuadraticForm M x := by
   exact matrixQuadraticForm_nonneg_of_posSemidef hPSD x
+
+example :
+    Matrix.PosSemidef M := by
+  exact posSemidef_of_isPSDMatrix hMExplicitPSD
+
+example :
+    matrixQuadraticForm M x = 0 <-> Matrix.mulVec M x = 0 := by
+  exact matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef hMPSD x
+
+example (hx : matrixQuadraticForm M x = 0) :
+    Matrix.mulVec M x = 0 := by
+  exact matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero hMPSD hx
+
+example :
+    matrixQuadraticForm M x = 0 <-> Matrix.mulVec M x = 0 := by
+  exact matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix
+    hMExplicitPSD x
+
+example (hx : matrixQuadraticForm M x = 0) :
+    Matrix.mulVec M x = 0 := by
+  exact matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero
+    hMExplicitPSD hx
 
 example (hx : IsUnitVector x) :
     matrixQuadraticForm (t • (1 : Matrix (Fin n) (Fin n) Real)) x = t := by

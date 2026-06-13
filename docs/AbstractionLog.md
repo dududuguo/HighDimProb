@@ -1231,7 +1231,7 @@
 - Review decision: independent code review approved the change; architectural
   review flagged the risk that centered APIs can look analytically stronger than
   they are, so Lean comments and docs now state the explicit-bound-only boundary.
-- Future upgrade path: next handle PSD nullspace converse as a separate concept cluster.
+- Future upgrade path: next handle RM-expectation-contraction as a separate concept cluster.
 
 
 ## RM vector-to-rank-one matrix measurability / integrability bridge
@@ -1248,6 +1248,22 @@
 - Layering decision: keep the object/measurability bridge in `Basic.lean` and
   integrability bridges in `Expectation.lean`, where `IntegrableRandomMatrix` is
   defined.
-- Future upgrade path: next handle PSD nullspace converse as a separate concept
-  cluster; expectation contraction and Matrix Bernstein tails remain out of
+- Future upgrade path: next handle RM-expectation-contraction as a separate concept
+  cluster; Matrix Bernstein tails remain out of
   scope.
+
+
+## RM PSD nullspace converse bridge
+
+- Concrete version chosen: wrap Mathlib's `Matrix.PosSemidef.dotProduct_mulVec_zero_iff`
+  in HighDimProb's explicit `matrixQuadraticForm` vocabulary, then provide the
+  `IsPSDMatrix` conversion through `posSemidef_of_isPSDMatrix`.
+- Layering decision: keep the core deterministic bridge in `Spectral.lean` and
+  route the examples-local kernel/invisible-direction adapter through it,
+  instead of keeping a local compatibility predicate as the only API.
+- Source/comment decision: theorem comments cite public PSD-square-root and
+  nullspace-converse references so readers can verify the mathematical fact.
+- Boundary decision: this stage proves only deterministic PSD kernel facts; it
+  does not infer expectation contraction, covariance PSD from integrability, or
+  Matrix Bernstein tail statements.
+- Future upgrade path: next handle RM-expectation-contraction as a separate concept cluster.

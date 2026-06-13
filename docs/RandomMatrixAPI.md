@@ -53,7 +53,13 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `rankOneRandomMatrix`, `isRandomMatrix_rankOneRandomMatrix`,
   `integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`, and
   `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.
-- Next safe task: `RM-PSD-nullspace-converse`.
+- Proved PSD nullspace converse bridge:
+  `posSemidef_of_isPSDMatrix`,
+  `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`,
+  `matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero`,
+  `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix`, and
+  `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`.
+- Next safe task: `RM-expectation-contraction`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
@@ -127,6 +133,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `selfAdjointOperatorNormTailViaQuadraticFormStatement`: typed statement.
 - `lambdaMax_le_iff_quadraticForm_le_statement`: typed statement.
 - `operatorNorm_eq_max_abs_lambda_statement`: typed statement.
+- `posSemidef_of_isPSDMatrix`: theorem, converts HighDimProb explicit PSD to Mathlib `Matrix.PosSemidef`.
+- `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`: theorem, PSD quadratic-form zero iff kernel membership.
+- `matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero`: theorem, one-way Mathlib-PSD nullspace converse.
+- `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix`: theorem, explicit-PSD iff variant.
+- `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`: theorem, one-way explicit-PSD nullspace converse.
 
 ## `HighDimProb/RandomMatrix/OperatorNorm.lean`
 
@@ -427,7 +438,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-RM-PSD-nullspace-converse: next prove or isolate the positive-semidefinite nullspace converse needed by covariance-style examples. Do not prove lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC, Golden-Thompson, expectation contraction, or the full Matrix Bernstein theorem in that stage.
+RM-expectation-contraction: next audit whether the existing boundedness and expectation APIs can prove a narrow operator-norm expectation contraction wrapper, or record the exact missing assumptions. Do not prove lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC, Golden-Thompson, or the full Matrix Bernstein theorem in that stage.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -451,4 +462,4 @@ RM-PSD-nullspace-converse: next prove or isolate the positive-semidefinite nulls
   proved in `ConcentrationStatements.lean`, with exponential-add RHS.
 - The theta-optimized scalar-RHS quadratic-form wrapper under primitives is now
   proved in `ConcentrationStatements.lean`, with Bernstein denominator RHS.
-- Next safe task: RM-PSD-nullspace-converse.
+- Next safe task: RM-expectation-contraction.

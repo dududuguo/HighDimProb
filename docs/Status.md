@@ -14,7 +14,7 @@ integrability bridges for covariance-style examples.
 
 The latest proved public theorem is:
 
-- `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`
+- `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`
 
 Supporting proved API also includes `rankOneRandomMatrix`,
 `isRandomMatrix_rankOneRandomMatrix`,
@@ -27,18 +27,21 @@ rank-one operator-norm bridge `rankOneOperatorNorm_le_vectorSqNorm`,
 `PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`. The new vector-to-matrix
 bridge proves entrywise measurability from `IsRandomVector`; entrywise
 integrability is proved only from explicit product-integrability assumptions or
-explicit coordinate `MemLp ... 2` assumptions. It does not prove integrability
-from measurability alone, expectation contraction, the PSD nullspace converse,
-lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, the Bernstein CFC
-primitive, Golden-Thompson, the `t = 0` endpoint for the optimized wrapper, or
-the final full Matrix Bernstein tail theorem.
+explicit coordinate `MemLp ... 2` assumptions. The new PSD nullspace bridge
+exposes `posSemidef_of_isPSDMatrix`,
+`matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`, and the
+one-way Mathlib-/explicit-PSD kernel wrappers. It does not prove integrability
+from measurability alone, expectation contraction, lambda-max/operator-norm
+Matrix Bernstein tails, Tropp/Lieb, the Bernstein CFC primitive,
+Golden-Thompson, the `t = 0` endpoint for the optimized wrapper, or the final
+full Matrix Bernstein tail theorem.
 The previous optimized quadratic-form theorem remains
 `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-PSD-nullspace-converse`
+- `RM-expectation-contraction`
 
 ## Public Milestone Summary
 
@@ -1793,7 +1796,6 @@ theorems.
 
 Theorem statements blocked by missing infrastructure are tracked in docs/TheoremAtlas.md.
 
-## Next safe task
 
 Stage MB-S9-trace-mgf-to-laplace-tail-contract-v2 - re-audit how the proved
 bounded trace-MGF theorem under explicit primitives and the proved
@@ -1933,8 +1935,21 @@ matching lintegral semantic trace-MGF bound under random self-adjointness and
 trace-exp integrability. It does not prove event reduction, dimension/norm
 reduction, theta optimization, Tropp/Lieb, the Bernstein CFC primitive,
 Golden-Thompson, or the Matrix Bernstein tail theorem. Next safe task:
-MB-S9-trace-mgf-to-laplace-tail-contract-v2.
+RM-expectation-contraction.
+
+
+Stage RM-PSD-nullspace-converse has no build blocker. The Spectral layer now
+exposes `posSemidef_of_isPSDMatrix`,
+`matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`,
+`matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero`,
+`matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix`, and
+`matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`. The examples
+layer now routes quadratic-null PSD directions to invisible/kernel directions
+through the core bridge. This stage does not prove expectation contraction,
+lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC,
+Golden-Thompson, or the full Matrix Bernstein theorem. Next safe task:
+RM-expectation-contraction.
 
 ## Next safe task
 
-- `RM-PSD-nullspace-converse`
+- `RM-expectation-contraction`

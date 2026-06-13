@@ -31,6 +31,11 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.spectralUpperBound_of_lambdaMaxPSDUpperBound
 #check HighDimProb.spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound
 #check HighDimProb.matrixQuadraticForm_nonneg_of_posSemidef
+#check HighDimProb.posSemidef_of_isPSDMatrix
+#check HighDimProb.matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef
+#check HighDimProb.matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero
+#check HighDimProb.matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix
+#check HighDimProb.matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero
 #check HighDimProb.matrixQuadraticForm_smul_one_of_isUnitVector
 #check HighDimProb.rayleighUpperBound_of_spectralUpperBound
 #check HighDimProb.matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef
@@ -133,6 +138,39 @@ example {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
     (x : Fin n -> Real) (hA : A.PosSemidef) :
     0 <= HighDimProb.matrixQuadraticForm A x := by
   exact HighDimProb.matrixQuadraticForm_nonneg_of_posSemidef hA x
+
+example {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
+    (hA : HighDimProb.IsPSDMatrix A) :
+    Matrix.PosSemidef A := by
+  exact HighDimProb.posSemidef_of_isPSDMatrix hA
+
+example {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
+    (x : Fin n -> Real) (hA : A.PosSemidef) :
+    HighDimProb.matrixQuadraticForm A x = 0 <->
+      Matrix.mulVec A x = 0 := by
+  exact HighDimProb.matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef
+    hA x
+
+example {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
+    (x : Fin n -> Real) (hA : A.PosSemidef)
+    (hx : HighDimProb.matrixQuadraticForm A x = 0) :
+    Matrix.mulVec A x = 0 := by
+  exact HighDimProb.matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero
+    hA hx
+
+example {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
+    (x : Fin n -> Real) (hA : HighDimProb.IsPSDMatrix A) :
+    HighDimProb.matrixQuadraticForm A x = 0 <->
+      Matrix.mulVec A x = 0 := by
+  exact HighDimProb.matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix
+    hA x
+
+example {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
+    (x : Fin n -> Real) (hA : HighDimProb.IsPSDMatrix A)
+    (hx : HighDimProb.matrixQuadraticForm A x = 0) :
+    Matrix.mulVec A x = 0 := by
+  exact HighDimProb.matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero
+    hA hx
 
 example {n : Nat} (x : Fin n -> Real) (c : Real)
     (hx : HighDimProb.IsUnitVector x) :

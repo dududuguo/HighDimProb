@@ -380,6 +380,67 @@ theorem matrixQuadraticForm_nonneg_of_posSemidef {n : Nat}
   simpa [matrixQuadraticForm, dotProduct, Matrix.mulVec,
     Finset.mul_sum, Finset.sum_mul, mul_assoc] using h
 
+/-- HighDimProb's explicit PSD predicate gives Mathlib positive
+semidefiniteness.
+
+Formula reference: positive semidefinite real matrices are characterized by a
+nonnegative quadratic form; see https://en.wikipedia.org/wiki/Definite_matrix .
+This bridge keeps the explicit HighDimProb assumptions visible while exposing
+Mathlib's `Matrix.PosSemidef` API. -/
+theorem posSemidef_of_isPSDMatrix {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (hA : IsPSDMatrix A) :
+    A.PosSemidef := by
+  apply Matrix.PosSemidef.of_dotProduct_mulVec_nonneg
+  · apply Matrix.IsHermitian.ext
+    intro i j
+    simpa using Matrix.IsSymm.apply hA.1 i j
+  · intro x
+    have hx := hA.2 x
+    simpa [matrixQuadraticForm, dotProduct, Matrix.mulVec,
+      Finset.mul_sum, Finset.sum_mul, mul_assoc] using hx
+
+/-- PSD nullspace converse in HighDimProb's explicit quadratic-form vocabulary.
+
+Formula reference: for a positive semidefinite matrix, a zero quadratic form
+forces the vector into the kernel; one proof uses the PSD square root, see
+https://en.wikipedia.org/wiki/Definite_matrix#Square_root .  This theorem is a
+thin wrapper over Mathlib's `Matrix.PosSemidef.dotProduct_mulVec_zero_iff`. -/
+theorem matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (hA : A.PosSemidef)
+    (x : Fin n -> Real) :
+    matrixQuadraticForm A x = 0 <-> Matrix.mulVec A x = 0 := by
+  have h := hA.dotProduct_mulVec_zero_iff x
+  simpa [matrixQuadraticForm, dotProduct, Matrix.mulVec,
+    Finset.mul_sum, Finset.sum_mul, mul_assoc] using h
+
+/-- One-way PSD nullspace converse from a zero HighDimProb quadratic form. -/
+theorem matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (hA : A.PosSemidef)
+    {x : Fin n -> Real} (hx : matrixQuadraticForm A x = 0) :
+    Matrix.mulVec A x = 0 :=
+  (matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef hA x).mp hx
+
+/-- Explicit-PSD version of the PSD nullspace iff.
+
+Formula reference: the statement is the usual PSD nullspace converse for
+symmetric positive semidefinite real matrices; see
+https://math.stackexchange.com/questions/3918031/prove-that-if-xtax-0-rightarrow-ax-0 .
+-/
+theorem matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (hA : IsPSDMatrix A)
+    (x : Fin n -> Real) :
+    matrixQuadraticForm A x = 0 <-> Matrix.mulVec A x = 0 :=
+  matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef
+    (posSemidef_of_isPSDMatrix hA) x
+
+/-- One-way explicit-PSD nullspace converse from a zero HighDimProb quadratic
+form. -/
+theorem matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (hA : IsPSDMatrix A)
+    {x : Fin n -> Real} (hx : matrixQuadraticForm A x = 0) :
+    Matrix.mulVec A x = 0 :=
+  (matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix hA x).mp hx
+
 /-- Scalar-matrix quadratic form over an explicit unit vector.
 
 This is the small algebraic bridge needed to turn a Loewner-order upper bound
