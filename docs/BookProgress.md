@@ -973,3 +973,24 @@ finite-family Tropp typed primitive into the high-level bounded trace-MGF
 statement. The finite-family Tropp primitive, Bernstein CFC primitive, Lieb,
 Golden-Thompson, and Matrix Bernstein tail theorem remain unproved.
 Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+
+## RM rank-one operator-norm prerequisite progress
+
+The first rank-one prerequisite slice for covariance-style RandomMatrix examples
+is proved:
+
+```lean
+rankOneOperatorNorm_le_vectorSqNorm
+BoundedOperatorNorm_rankOne_of_sqNorm_bound
+PointwiseOperatorNormBound_rankOne_of_sqNorm_bound
+```
+
+The deterministic lemma proves the finite-dimensional bound
+`||v vᵀ||op <= ||v||₂²` using the existing `deterministicOperatorNorm` /
+Mathlib L2 operator-norm convention. The wrappers turn pointwise vector
+squared-norm bounds into `BoundedOperatorNorm` and
+`PointwiseOperatorNormBound` for rank-one random matrices.
+
+This is not a centered summand bound, not a vector-to-matrix
+measurability/integrability bridge, not a PSD nullspace converse, and not a
+Matrix Bernstein tail theorem. Next safe task: RM-centered-operator-norm-bound.

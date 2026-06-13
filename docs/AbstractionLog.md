@@ -1199,3 +1199,20 @@
 - Remaining upgrade path: prove matrix Laplace / trace-mgf inequalities and
   spectral/operator-norm tail reductions using this trace-exp positivity
   bridge as infrastructure.
+
+## RM rank-one operator-norm boundedness bridge
+
+- Concrete version chosen: prove the rank-one self-outer-product bound directly
+  against `deterministicOperatorNorm` instead of introducing a new rank-one
+  matrix object or changing the matrix norm convention.
+- Proof-pattern decision: view `v vᵀ` as the linear map `x ↦ <v, x> v` and use
+  Cauchy--Schwarz plus `ContinuousLinearMap.opNorm_le_bound` under Mathlib's
+  scoped L2 operator norm.
+- Assumption decision: the random wrappers consume an explicit pointwise
+  `vectorSqNorm <= R` hypothesis and keep the nonnegative-radius argument
+  visible, rather than inferring expectation or centered bounds.
+- Comment/source decision: Lean comments include public operator-norm and outer
+  product URLs so readers can verify the mathematical formula.
+- Future upgrade path: next add the centered operator-norm triangle wrapper;
+  then handle vector-to-rank-one measurability/integrability and PSD nullspace
+  converse as separate concept clusters.

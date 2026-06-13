@@ -8,27 +8,27 @@ RandomMatrix / Matrix Bernstein mainline: MB-S9 now includes the bounded
 trace-MGF theorem under explicit primitives, the bounded real-to-lintegral
 trace-MGF bridge, the explicit-theta quadratic-form upper-tail wrappers, the
 dimension/norm scalar RHS reduction, and the theta-optimized scalar Bernstein
-denominator wrapper. The newest layer chooses
-`theta = t / (sigmaSq + R * t / 3)` via `bernsteinThetaChoice` and proves the
-conservative exponent form
-`-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))`.
+denominator wrapper. The current prerequisite cleanup also adds the first
+rank-one operator-norm bridge for covariance-style examples.
 
 The latest proved public theorem is:
 
-- `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
+- `PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`
 
-The wrapper proves a one-sided nonempty-dimensional quadratic-form upper-tail
-bound under explicit primitive assumptions, with RHS:
-`ENNReal.ofReal ((n + 1 : Real) * Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))))`.
-Supporting scalar API includes `bernsteinThetaChoice`,
-`bernsteinThetaChoice_range`, and `bernsteinThetaChoice_exponent_eq`. It still
-does not prove lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, the
-Bernstein CFC primitive, Golden-Thompson, the `t = 0` endpoint for the
-optimized wrapper, or the final full Matrix Bernstein tail theorem.
+Supporting proved API also includes `rankOneOperatorNorm_le_vectorSqNorm` and
+`BoundedOperatorNorm_rankOne_of_sqNorm_bound`. These are deterministic /
+pointwise boundedness bridges only: they do not prove centered summand
+boundedness, vector-to-rank-one matrix measurability or integrability, the PSD
+nullspace converse, lambda-max/operator-norm Matrix Bernstein tails,
+Tropp/Lieb, the Bernstein CFC primitive, Golden-Thompson, the `t = 0` endpoint
+for the optimized wrapper, or the final full Matrix Bernstein tail theorem.
+The previous optimized quadratic-form theorem remains
+`matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
+under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `MB-S9-lambda-max-operator-norm-bridge-contract`
+- `RM-centered-operator-norm-bound`
 
 ## Public Milestone Summary
 
@@ -140,6 +140,7 @@ Last known test status:
 - Stage V1 Lean path visualization infrastructure
 - Stage J1 HighDimProb compile-time OJ / judge suite
 - Stage J2 expanded HighDimProb judge coverage
+- Stage RM-rank-one operator-norm bound for covariance-style rank-one matrices
 
 Stage 1A implemented:
 - probability-space convention

@@ -22,7 +22,7 @@ compatibility APIs around the bounded-Bernstein lintegral Laplace route:
 `matrixBernsteinTraceMGFToLaplaceContract_statement` and
 `matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement`.
 
-Next safe task: `MB-S9-lambda-max-operator-norm-bridge-contract`.
+Next safe task: `RM-centered-operator-norm-bound`.
 Stage MC1 starts the matrix concentration branch after the scalar concentration
 closeout. It adds the assumption vocabulary, explicit matrix order vocabulary,
 matrix expectation wrappers, and typed theorem-statement layer needed before
