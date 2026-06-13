@@ -165,14 +165,27 @@ def OrthogonalToFeature {n : Nat}
     (v : RankOneVector n) (x : Fin (n + 1) -> Real) : Prop :=
   (Finset.univ.sum fun i : Fin (n + 1) => v i * x i) = 0
 
+/-- Explicit action formula for a rank-one outer product. -/
+def rankOneOuterMatrixAction {n : Nat}
+    (v : RankOneVector n) (x : Fin (n + 1) -> Real) :
+    Fin (n + 1) -> Real :=
+  fun i => v i *
+    (Finset.univ.sum fun j : Fin (n + 1) => v j * x j)
+
+@[simp]
+theorem rankOneOuterMatrixAction_apply {n : Nat}
+    (v : RankOneVector n) (x : Fin (n + 1) -> Real)
+    (i : Fin (n + 1)) :
+    rankOneOuterMatrixAction v x i =
+      v i * (Finset.univ.sum fun j : Fin (n + 1) => v j * x j) := by
+  rfl
+
 /-- Matrix action of a rank-one outer product. -/
 theorem rankOneOuter_matrixAction {n : Nat}
     (v : RankOneVector n) (x : Fin (n + 1) -> Real) :
-    matrixAction (rankOneOuter v) x =
-      fun i => v i *
-        (Finset.univ.sum fun j : Fin (n + 1) => v j * x j) := by
+    matrixAction (rankOneOuter v) x = rankOneOuterMatrixAction v x := by
   ext i
-  simp [matrixAction, rankOneOuter]
+  simp [matrixAction, rankOneOuter, rankOneOuterMatrixAction]
   rw [Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro j _hj
@@ -186,6 +199,8 @@ theorem rankOneOuter_invisible_of_orthogonal {n : Nat}
   unfold KernelInvisibleDirection
   rw [rankOneOuter_matrixAction]
   ext i
+  unfold rankOneOuterMatrixAction
+  unfold OrthogonalToFeature at h
   rw [h]
   simp
 

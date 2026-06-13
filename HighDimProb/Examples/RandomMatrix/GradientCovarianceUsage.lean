@@ -209,8 +209,7 @@ structure GradientCovarianceMatrixBernsteinAssumptions {Omega : Type*}
   squareIntegrable : forall b, IntegrableRandomMatrix P (randomMatrixSquare (A b))
   expIntegrable :
     forall b,
-      IntegrableRandomMatrix P
-        (fun omega => matrixExp (SMul.smul theta (A b omega)))
+      IntegrableRandomMatrix P (matrixExpScaledFamily A theta b)
   traceExpIntegrable :
     IntegrableRealRandomVariable P
       (traceExpIntegrand (randomMatrixSum A) theta)
@@ -224,9 +223,7 @@ structure GradientCovarianceMatrixBernsteinAssumptions {Omega : Type*}
       bernsteinMatrixExp_le_quadratic_statement (A b omega) theta R
   troppPrimitive :
     troppMasterTraceMGFFiniteFamily_statement
-      (P := P) A
-      (fun b => SMul.smul (bernsteinMGFCoeff theta R)
-        (matrixSecondMoment P (A b)))
+      (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
       (matrixVarianceProxy P A) theta R
 
 /-- Gradient covariance quadratic-form upper-tail bound with the normalized
@@ -294,9 +291,7 @@ structure GradientCovarianceOptimizedMatrixBernsteinAssumptions {Omega : Type*}
   expIntegrable :
     forall b,
       IntegrableRandomMatrix P
-        (fun omega =>
-          matrixExp
-            (SMul.smul (bernsteinThetaChoice t sigmaSq R) (A b omega)))
+        (matrixExpScaledFamily A (bernsteinThetaChoice t sigmaSq R) b)
   traceExpIntegrable :
     IntegrableRealRandomVariable P
       (traceExpIntegrand (randomMatrixSum A)
@@ -313,9 +308,8 @@ structure GradientCovarianceOptimizedMatrixBernsteinAssumptions {Omega : Type*}
   troppPrimitive :
     troppMasterTraceMGFFiniteFamily_statement
       (P := P) A
-      (fun b => SMul.smul
-        (bernsteinMGFCoeff (bernsteinThetaChoice t sigmaSq R) R)
-        (matrixSecondMoment P (A b)))
+      (bernsteinSecondMomentComparisonFamily P A
+        (bernsteinThetaChoice t sigmaSq R) R)
       (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R
 
 /-- Gradient covariance quadratic-form upper-tail bound with the optimized

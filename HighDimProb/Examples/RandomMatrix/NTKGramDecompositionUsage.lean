@@ -107,6 +107,19 @@ theorem randomJacobianFeatureVector_apply {Omega : Type*}
     randomJacobianFeatureVector J a omega i = J omega a i := by
   rfl
 
+/-- Family of random Jacobian feature vectors indexed by feature coordinate. -/
+def randomJacobianFeatureVectorFamily {Omega : Type*} [MeasurableSpace Omega]
+    {width n : Nat} (J : RandomJacobianFeatureTable Omega width n) :
+    Fin width -> RandomNTKFeatureVector Omega n :=
+  fun a => randomJacobianFeatureVector J a
+
+@[simp]
+theorem randomJacobianFeatureVectorFamily_apply {Omega : Type*}
+    [MeasurableSpace Omega] {width n : Nat}
+    (J : RandomJacobianFeatureTable Omega width n) (a : Fin width) :
+    randomJacobianFeatureVectorFamily J a = randomJacobianFeatureVector J a := by
+  rfl
+
 /-- Random rank-one Gram contribution from one Jacobian-feature coordinate. -/
 def randomJacobianGramContribution {Omega : Type*} [MeasurableSpace Omega]
     {width n : Nat} (J : RandomJacobianFeatureTable Omega width n)
@@ -183,7 +196,7 @@ structure NTKJacobianGramMatrixBernsteinAssumptions {Omega : Type*}
   centeredJacobianAdapter : IsCenteredJacobianGramSummandFamily (P := P) J A
   matrixBernsteinReady :
     NTKGramMatrixBernsteinAssumptions
-      (P := P) (fun a => randomJacobianFeatureVector J a) A theta R sigmaSq
+      (P := P) (randomJacobianFeatureVectorFamily J) A theta R sigmaSq
 
 /-- Jacobian-decomposed NTK Gram quadratic-form upper-tail bound with the
 normalized scalar Matrix Bernstein RHS. -/
@@ -201,7 +214,7 @@ theorem ntkJacobianGram_quadraticForm_tail_scalar_exp_under_primitives
           Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq)) := by
   exact
     ntkGram_quadraticForm_tail_scalar_exp_under_primitives
-      (P := P) (fun a => randomJacobianFeatureVector J a) A theta R t sigmaSq
+      (P := P) (randomJacobianFeatureVectorFamily J) A theta R t sigmaSq
       h.matrixBernsteinReady
 
 /-- Jacobian-decomposed NTK Gram quadratic-form upper-tail bound with the
@@ -222,7 +235,7 @@ theorem ntkJacobianGram_quadraticForm_tail_traceExp_under_primitives
               (matrixVarianceProxy P A))) := by
   exact
     ntkGram_quadraticForm_tail_traceExp_under_primitives
-      (P := P) (fun a => randomJacobianFeatureVector J a) A theta R t sigmaSq
+      (P := P) (randomJacobianFeatureVectorFamily J) A theta R t sigmaSq
       h.matrixBernsteinReady
 
 /-- Jacobian-decomposition assumptions plus the optimized NTK Gram Matrix
@@ -240,7 +253,7 @@ structure NTKJacobianGramOptimizedMatrixBernsteinAssumptions {Omega : Type*}
   centeredJacobianAdapter : IsCenteredJacobianGramSummandFamily (P := P) J A
   matrixBernsteinReady :
     NTKGramOptimizedMatrixBernsteinAssumptions
-      (P := P) (fun a => randomJacobianFeatureVector J a) A R t sigmaSq
+      (P := P) (randomJacobianFeatureVectorFamily J) A R t sigmaSq
 
 /-- Jacobian-decomposed NTK Gram quadratic-form upper-tail bound with the
 optimized scalar Matrix Bernstein RHS. -/
@@ -258,7 +271,7 @@ theorem ntkJacobianGram_quadraticForm_tail_optimized_under_primitives
           Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) := by
   exact
     ntkGram_quadraticForm_tail_optimized_under_primitives
-      (P := P) (fun a => randomJacobianFeatureVector J a) A R t sigmaSq
+      (P := P) (randomJacobianFeatureVectorFamily J) A R t sigmaSq
       h.matrixBernsteinReady
 
 end

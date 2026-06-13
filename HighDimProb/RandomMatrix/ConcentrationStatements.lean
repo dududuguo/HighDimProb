@@ -133,6 +133,41 @@ abbrev matrixBernsteinTraceMGFWithBernsteinCoeff_statement {Omega : Type*}
   TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum A)
     (matrixVarianceProxy P A) theta R
 
+/-- Matrix-exponential family `i |-> exp(theta * A_i)`. -/
+def matrixExpScaledFamily {Omega : Type*} [MeasurableSpace Omega]
+    {I : Type*} {n : Nat} (A : I -> RandomMatrix Omega n n)
+    (theta : Real) :
+    I -> RandomMatrix Omega n n :=
+  fun i omega => matrixExp (SMul.smul theta (A i omega))
+
+@[simp]
+theorem matrixExpScaledFamily_apply {Omega : Type*} [MeasurableSpace Omega]
+    {I : Type*} {n : Nat} (A : I -> RandomMatrix Omega n n)
+    (theta : Real) (i : I) (omega : Omega) :
+    matrixExpScaledFamily A theta i omega =
+      matrixExp (SMul.smul theta (A i omega)) :=
+  rfl
+
+/-- Bernstein coefficient times the per-summand matrix second moment. -/
+def bernsteinSecondMomentComparisonFamily {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} {n : Nat}
+    (P : Measure Omega) (A : I -> RandomMatrix Omega n n)
+    (theta R : Real) :
+    I -> Matrix (Fin n) (Fin n) Real :=
+  fun i =>
+    SMul.smul (bernsteinMGFCoeff theta R)
+      (matrixSecondMoment P (A i))
+
+@[simp]
+theorem bernsteinSecondMomentComparisonFamily_apply {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} {n : Nat}
+    (P : Measure Omega) (A : I -> RandomMatrix Omega n n)
+    (theta R : Real) (i : I) :
+    bernsteinSecondMomentComparisonFamily P A theta R i =
+      SMul.smul (bernsteinMGFCoeff theta R)
+        (matrixSecondMoment P (A i)) :=
+  rfl
+
 /-- Thin high-level bounded Matrix Bernstein trace-mgf wrapper from the
 finite-family Tropp typed primitive.
 
@@ -153,8 +188,7 @@ theorem matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFa
     (hIndep : ProbabilityTheory.iIndepFun A P)
     (hExpInt :
       forall i,
-        IntegrableRandomMatrix P
-          (fun omega => matrixExp (SMul.smul theta (A i omega))))
+        IntegrableRandomMatrix P (matrixExpScaledFamily A theta i))
     (hTraceInt :
       IntegrableRealRandomVariable P
         (traceExpIntegrand (randomMatrixSum A) theta))
@@ -165,16 +199,28 @@ theorem matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFa
     (hMGF :
       forall i,
         MatrixLE
-          (matrixExpect P
-            (fun omega => matrixExp (SMul.smul theta (A i omega))))
+          (matrixExpect P (matrixExpScaledFamily A theta i))
           (matrixExp (K i)))
     (hNorm :
       Finset.univ.sum (fun i : I => K i) =
         SMul.smul (bernsteinMGFCoeff theta R) (matrixVarianceProxy P A)) :
-    matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R :=
-  traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
-    A K (matrixVarianceProxy P A) theta R hTropp hRand hSA hIndep hExpInt
-    hTraceInt hKSA hVSA hR hRange hMGF hNorm
+    matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R := by
+  have hExpInt' :
+      forall i,
+        IntegrableRandomMatrix P
+          (fun omega => matrixExp (SMul.smul theta (A i omega))) := by
+    simpa [matrixExpScaledFamily] using hExpInt
+  have hMGF' :
+      forall i,
+        MatrixLE
+          (matrixExpect P
+            (fun omega => matrixExp (SMul.smul theta (A i omega))))
+          (matrixExp (K i)) := by
+    simpa [matrixExpScaledFamily] using hMGF
+  exact
+    traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
+      A K (matrixVarianceProxy P A) theta R hTropp hRand hSA hIndep hExpInt'
+      hTraceInt hKSA hVSA hR hRange hMGF' hNorm
 
 /-- Bounded Matrix Bernstein trace-mgf provider under explicit primitive
 assumptions.
@@ -193,8 +239,7 @@ theorem matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
     (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
     (hExpInt :
       forall i,
-        IntegrableRandomMatrix P
-          (fun omega => matrixExp (SMul.smul theta (A i omega))))
+        IntegrableRandomMatrix P (matrixExpScaledFamily A theta i))
     (hTraceInt :
       IntegrableRealRandomVariable P
         (traceExpIntegrand (randomMatrixSum A) theta))
@@ -206,9 +251,7 @@ theorem matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
         bernsteinMatrixExp_le_quadratic_statement (A i omega) theta R)
     (hTropp :
       troppMasterTraceMGFFiniteFamily_statement
-        (P := P) A
-        (fun i => SMul.smul (bernsteinMGFCoeff theta R)
-          (matrixSecondMoment P (A i)))
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
         (matrixVarianceProxy P A) theta R) :
     matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R := by
   have hFam : SelfAdjointRandomMatrixFamily P A := hCentered.1
@@ -219,45 +262,41 @@ theorem matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
   have hKSA :
       forall i,
         IsSelfAdjointMatrix
-          (SMul.smul (bernsteinMGFCoeff theta R)
-            (matrixSecondMoment P (A i))) := by
+          (bernsteinSecondMomentComparisonFamily P A theta R i) := by
     intro i
-    exact isSelfAdjointMatrix_smul (bernsteinMGFCoeff theta R)
-      (isSelfAdjointMatrix_matrixSecondMoment (hSA i))
+    simpa [bernsteinSecondMomentComparisonFamily] using
+      isSelfAdjointMatrix_smul (bernsteinMGFCoeff theta R)
+        (isSelfAdjointMatrix_matrixSecondMoment (hSA i))
   have hVSA : IsSelfAdjointMatrix (matrixVarianceProxy P A) :=
     isSelfAdjointMatrix_matrixVarianceProxy P hSA
   have hMGF :
       forall i,
         MatrixLE
-          (matrixExpect P
-            (fun omega => matrixExp (SMul.smul theta (A i omega))))
+          (matrixExpect P (matrixExpScaledFamily A theta i))
           (matrixExp
             (SMul.smul (bernsteinMGFCoeff theta R)
               (matrixSecondMoment P (A i)))) := by
     intro i
-    exact
+    simpa [matrixExpScaledFamily] using
       singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic
         (A i) (matrixSecondMoment P (A i)) theta R (hCFC i)
-        (hRand i) (hSA i) (hIntX i) (hIntSq i) (hExpInt i)
+        (hRand i) (hSA i) (hIntX i) (hIntSq i)
+        (by simpa [matrixExpScaledFamily] using hExpInt i)
         (hMeanZero i) (hBound i) hR hRange
         (isSelfAdjointMatrix_matrixSecondMoment (hSA i))
         (isPSD_matrixSecondMoment_of_selfAdjoint (hSA i) (hIntSq i))
         (matrixLE_refl (matrixSecondMoment P (A i)))
   have hNorm :
       Finset.univ.sum
-          (fun i : I =>
-            SMul.smul (bernsteinMGFCoeff theta R)
-              (matrixSecondMoment P (A i))) =
+          (bernsteinSecondMomentComparisonFamily P A theta R) =
         SMul.smul (bernsteinMGFCoeff theta R) (matrixVarianceProxy P A) := by
-    simpa [matrixVarianceProxy] using
+    simpa [bernsteinSecondMomentComparisonFamily, matrixVarianceProxy] using
       (Finset.smul_sum (s := Finset.univ)
         (f := fun i : I => matrixSecondMoment P (A i))
         (r := bernsteinMGFCoeff theta R)).symm
   exact
     matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily
-      A
-      (fun i => SMul.smul (bernsteinMGFCoeff theta R)
-        (matrixSecondMoment P (A i)))
+      A (bernsteinSecondMomentComparisonFamily P A theta R)
       theta R hTropp hRand hSA hIndep hExpInt hTraceInt hKSA hVSA hR hRange
       hMGF hNorm
 
@@ -280,8 +319,7 @@ theorem matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_primitives
     (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
     (hExpInt :
       forall i,
-        IntegrableRandomMatrix P
-          (fun omega => matrixExp (SMul.smul theta (A i omega))))
+        IntegrableRandomMatrix P (matrixExpScaledFamily A theta i))
     (hTraceInt :
       IntegrableRealRandomVariable P
         (traceExpIntegrand (randomMatrixSum A) theta))
@@ -294,9 +332,7 @@ theorem matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_primitives
         bernsteinMatrixExp_le_quadratic_statement (A i omega) theta R)
     (hTropp :
       troppMasterTraceMGFFiniteFamily_statement
-        (P := P) A
-        (fun i => SMul.smul (bernsteinMGFCoeff theta R)
-          (matrixSecondMoment P (A i)))
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
         (matrixVarianceProxy P A) theta R) :
     P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
       ENNReal.ofReal (Real.exp (-(theta * t))) *
@@ -383,8 +419,7 @@ theorem matrixBernsteinQuadraticFormUpperTailScalarRHSWithBernsteinCoeff_under_p
     (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
     (hExpInt :
       forall i,
-        IntegrableRandomMatrix P
-          (fun omega => matrixExp (SMul.smul theta (A i omega))))
+        IntegrableRandomMatrix P (matrixExpScaledFamily A theta i))
     (hTraceInt :
       IntegrableRealRandomVariable P
         (traceExpIntegrand (randomMatrixSum A) theta))
@@ -398,9 +433,7 @@ theorem matrixBernsteinQuadraticFormUpperTailScalarRHSWithBernsteinCoeff_under_p
         bernsteinMatrixExp_le_quadratic_statement (A i omega) theta R)
     (hTropp :
       troppMasterTraceMGFFiniteFamily_statement
-        (P := P) A
-        (fun i => SMul.smul (bernsteinMGFCoeff theta R)
-          (matrixSecondMoment P (A i)))
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
         (matrixVarianceProxy P A) theta R) :
     P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
       ENNReal.ofReal
@@ -465,8 +498,7 @@ theorem matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_unde
     (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
     (hExpInt :
       forall i,
-        IntegrableRandomMatrix P
-          (fun omega => matrixExp (SMul.smul theta (A i omega))))
+        IntegrableRandomMatrix P (matrixExpScaledFamily A theta i))
     (hTraceInt :
       IntegrableRealRandomVariable P
         (traceExpIntegrand (randomMatrixSum A) theta))
@@ -480,9 +512,7 @@ theorem matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_unde
         bernsteinMatrixExp_le_quadratic_statement (A i omega) theta R)
     (hTropp :
       troppMasterTraceMGFFiniteFamily_statement
-        (P := P) A
-        (fun i => SMul.smul (bernsteinMGFCoeff theta R)
-          (matrixSecondMoment P (A i)))
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
         (matrixVarianceProxy P A) theta R) :
     P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
       ENNReal.ofReal
@@ -516,9 +546,7 @@ theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoef
     (hExpInt :
       forall i,
         IntegrableRandomMatrix P
-          (fun omega =>
-            matrixExp
-              (SMul.smul (bernsteinThetaChoice t sigmaSq R) (A i omega))))
+          (matrixExpScaledFamily A (bernsteinThetaChoice t sigmaSq R) i))
     (hTraceInt :
       IntegrableRealRandomVariable P
         (traceExpIntegrand (randomMatrixSum A)
@@ -535,9 +563,8 @@ theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoef
     (hTropp :
       troppMasterTraceMGFFiniteFamily_statement
         (P := P) A
-        (fun i => SMul.smul
-          (bernsteinMGFCoeff (bernsteinThetaChoice t sigmaSq R) R)
-          (matrixSecondMoment P (A i)))
+        (bernsteinSecondMomentComparisonFamily P A
+          (bernsteinThetaChoice t sigmaSq R) R)
         (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R) :
     P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
       ENNReal.ofReal
@@ -552,9 +579,8 @@ theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoef
     simpa [theta] using bernsteinThetaChoice_range hSigma hR ht.le
   have hExpIntTheta :
       forall i,
-        IntegrableRandomMatrix P
-          (fun omega => matrixExp (SMul.smul theta (A i omega))) := by
-    exact hExpInt
+        IntegrableRandomMatrix P (matrixExpScaledFamily A theta i) := by
+    simpa [theta] using hExpInt
   have hTraceIntTheta :
       IntegrableRealRandomVariable P
         (traceExpIntegrand (randomMatrixSum A) theta) := by
@@ -565,11 +591,9 @@ theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoef
     exact hCFC
   have hTroppTheta :
       troppMasterTraceMGFFiniteFamily_statement
-        (P := P) A
-        (fun i => SMul.smul (bernsteinMGFCoeff theta R)
-          (matrixSecondMoment P (A i)))
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
         (matrixVarianceProxy P A) theta R := by
-    exact hTropp
+    simpa [theta] using hTropp
   have hTail :=
     matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives
       A theta R t sigmaSq hCentered hIndepSA hIntX hIntSq hExpIntTheta

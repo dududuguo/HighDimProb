@@ -14,7 +14,7 @@ variable (B : I -> RandomMatrix Omega n n)
 variable (X : RandomMatrix Omega m n)
 variable (M N : Matrix (Fin n) (Fin n) Real)
 variable (x : Fin n -> Real)
-variable (R sigma2 c c1 c2 t bound K : Real)
+variable (R theta sigma2 c c1 c2 t bound K : Real)
 
 #check instMeasurableSpaceMatrix
 #check IsSymmetricMatrix
@@ -39,8 +39,10 @@ variable (R sigma2 c c1 c2 t bound K : Real)
 #check matrixExpect
 #check IntegrableRandomMatrix
 #check centeredRandomMatrix
+#check centeredRandomMatrixFamily
 #check matrixExpect_apply
 #check centeredRandomMatrix_apply
+#check centeredRandomMatrixFamily_apply
 #check CenteredRandomSelfAdjointMatrices
 #check IndependentRandomMatrices
 #check SelfAdjointRandomMatrixFamily
@@ -90,6 +92,10 @@ variable (R sigma2 c c1 c2 t bound K : Real)
 #check matrixBernsteinStatement
 #check matrixBernsteinSelfAdjointStatement
 #check matrixBernsteinLaplacePrerequisitesStatement
+#check matrixExpScaledFamily
+#check matrixExpScaledFamily_apply
+#check bernsteinSecondMomentComparisonFamily
+#check bernsteinSecondMomentComparisonFamily_apply
 #check matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
 #check matrixBernsteinTraceMGFToLaplaceContract_statement
 #check matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement
@@ -117,6 +123,7 @@ variable (R sigma2 c c1 c2 t bound K : Real)
 #check (matrixExpect P X : Matrix (Fin m) (Fin n) Real)
 #check (IntegrableRandomMatrix P X : Prop)
 #check (centeredRandomMatrix P X : RandomMatrix Omega m n)
+#check (centeredRandomMatrixFamily P B : I -> RandomMatrix Omega n n)
 #check (CenteredRandomSelfAdjointMatrices P B : Prop)
 #check (IndependentRandomMatrices P B : Prop)
 #check (SelfAdjointRandomMatrixFamily P B : Prop)
@@ -186,6 +193,9 @@ variable (R sigma2 c c1 c2 t bound K : Real)
 #check (matrixBernsteinStatement P B sigma2 R c t : Prop)
 #check (matrixBernsteinSelfAdjointStatement P B sigma2 R c1 c2 t : Prop)
 #check (matrixBernsteinLaplacePrerequisitesStatement P A c t : Prop)
+#check (matrixExpScaledFamily B theta : I -> RandomMatrix Omega n n)
+#check (bernsteinSecondMomentComparisonFamily P B theta R :
+  I -> Matrix (Fin n) (Fin n) Real)
 #check (operatorNorm_eq_spectralRadius_of_selfAdjointStatement M : Prop)
 #check (HighProbabilityBound P (Set.univ : Set Omega) 1 : Prop)
 #check (highProbabilityBound P (Set.univ : Set Omega) 1 : Prop)

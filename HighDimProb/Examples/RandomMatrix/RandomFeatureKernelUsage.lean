@@ -191,8 +191,7 @@ structure RandomFeatureKernelMatrixBernsteinAssumptions {Omega : Type*}
   squareIntegrable : forall a, IntegrableRandomMatrix P (randomMatrixSquare (A a))
   expIntegrable :
     forall a,
-      IntegrableRandomMatrix P
-        (fun omega => matrixExp (SMul.smul theta (A a omega)))
+      IntegrableRandomMatrix P (matrixExpScaledFamily A theta a)
   traceExpIntegrable :
     IntegrableRealRandomVariable P
       (traceExpIntegrand (randomMatrixSum A) theta)
@@ -206,9 +205,7 @@ structure RandomFeatureKernelMatrixBernsteinAssumptions {Omega : Type*}
       bernsteinMatrixExp_le_quadratic_statement (A a omega) theta R
   troppPrimitive :
     troppMasterTraceMGFFiniteFamily_statement
-      (P := P) A
-      (fun a => SMul.smul (bernsteinMGFCoeff theta R)
-        (matrixSecondMoment P (A a)))
+      (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
       (matrixVarianceProxy P A) theta R
 
 /-- Random-feature kernel quadratic-form upper-tail bound with the normalized
@@ -276,9 +273,7 @@ structure RandomFeatureKernelOptimizedMatrixBernsteinAssumptions {Omega : Type*}
   expIntegrable :
     forall a,
       IntegrableRandomMatrix P
-        (fun omega =>
-          matrixExp
-            (SMul.smul (bernsteinThetaChoice t sigmaSq R) (A a omega)))
+        (matrixExpScaledFamily A (bernsteinThetaChoice t sigmaSq R) a)
   traceExpIntegrable :
     IntegrableRealRandomVariable P
       (traceExpIntegrand (randomMatrixSum A)
@@ -295,9 +290,8 @@ structure RandomFeatureKernelOptimizedMatrixBernsteinAssumptions {Omega : Type*}
   troppPrimitive :
     troppMasterTraceMGFFiniteFamily_statement
       (P := P) A
-      (fun a => SMul.smul
-        (bernsteinMGFCoeff (bernsteinThetaChoice t sigmaSq R) R)
-        (matrixSecondMoment P (A a)))
+      (bernsteinSecondMomentComparisonFamily P A
+        (bernsteinThetaChoice t sigmaSq R) R)
       (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R
 
 /-- Random-feature kernel quadratic-form upper-tail bound with the optimized

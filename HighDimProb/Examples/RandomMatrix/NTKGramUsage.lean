@@ -95,8 +95,7 @@ structure NTKGramMatrixBernsteinAssumptions {Omega : Type*}
   squareIntegrable : forall a, IntegrableRandomMatrix P (randomMatrixSquare (A a))
   expIntegrable :
     forall a,
-      IntegrableRandomMatrix P
-        (fun omega => matrixExp (SMul.smul theta (A a omega)))
+      IntegrableRandomMatrix P (matrixExpScaledFamily A theta a)
   traceExpIntegrable :
     IntegrableRealRandomVariable P
       (traceExpIntegrand (randomMatrixSum A) theta)
@@ -110,9 +109,7 @@ structure NTKGramMatrixBernsteinAssumptions {Omega : Type*}
       bernsteinMatrixExp_le_quadratic_statement (A a omega) theta R
   troppPrimitive :
     troppMasterTraceMGFFiniteFamily_statement
-      (P := P) A
-      (fun a => SMul.smul (bernsteinMGFCoeff theta R)
-        (matrixSecondMoment P (A a)))
+      (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
       (matrixVarianceProxy P A) theta R
 
 /-- NTK-style quadratic-form upper-tail bound with the normalized scalar RHS.
@@ -182,9 +179,7 @@ structure NTKGramOptimizedMatrixBernsteinAssumptions {Omega : Type*}
   expIntegrable :
     forall a,
       IntegrableRandomMatrix P
-        (fun omega =>
-          matrixExp
-            (SMul.smul (bernsteinThetaChoice t sigmaSq R) (A a omega)))
+        (matrixExpScaledFamily A (bernsteinThetaChoice t sigmaSq R) a)
   traceExpIntegrable :
     IntegrableRealRandomVariable P
       (traceExpIntegrand (randomMatrixSum A)
@@ -201,9 +196,8 @@ structure NTKGramOptimizedMatrixBernsteinAssumptions {Omega : Type*}
   troppPrimitive :
     troppMasterTraceMGFFiniteFamily_statement
       (P := P) A
-      (fun a => SMul.smul
-        (bernsteinMGFCoeff (bernsteinThetaChoice t sigmaSq R) R)
-        (matrixSecondMoment P (A a)))
+      (bernsteinSecondMomentComparisonFamily P A
+        (bernsteinThetaChoice t sigmaSq R) R)
       (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R
 
 /-- NTK-style quadratic-form upper-tail bound with the optimized scalar

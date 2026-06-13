@@ -17,7 +17,10 @@ theorems or typed statements without relying on local test internals.
   no forbidden Lean tokens in source/tests/judge files, no theorem-like
   True-bodied declarations including multi-line declarations, no accidental
   stable-root import of `HighDimProb.Experimental`, no non-experimental judge
-  imports of `HighDimProb.Experimental`, and complete judge-root imports.
+  imports of `HighDimProb.Experimental`, complete judge-root imports, and no
+  anonymous function families in checked public example declaration signatures.
+  Introduce a named `def` or `abbrev` before exposing such a family in a theorem,
+  structure field, or downstream-facing adapter.
 
 ## Current Coverage
 

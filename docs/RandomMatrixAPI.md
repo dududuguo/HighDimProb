@@ -81,6 +81,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `matrixExpect`: def, entrywise matrix expectation.
 - `IntegrableRandomMatrix`: def, entrywise integrability predicate.
 - `centeredRandomMatrix`: def.
+- `centeredRandomMatrixFamily`: def, indexed family obtained by centering each
+  random matrix in a family.
+- `centeredRandomMatrixFamily_apply`: theorem.
 - `integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`: theorem,
   rank-one entrywise integrability from explicit product integrability.
 - `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`: theorem, rank-one
@@ -380,6 +383,12 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`: typed statement for
   the bounded Matrix Bernstein trace-mgf target with denominator coefficient
   `bernsteinMGFCoeff theta R`.
+- `matrixExpScaledFamily`: def, matrix-exponential random-matrix family
+  `i |-> exp(theta * A_i)`.
+- `matrixExpScaledFamily_apply`: theorem.
+- `bernsteinSecondMomentComparisonFamily`: def, Bernstein coefficient times
+  the per-summand second moment.
+- `bernsteinSecondMomentComparisonFamily_apply`: theorem.
 - `matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_primitives`:
   theorem proving the explicit-theta one-sided quadratic-form upper-tail
   bound under the same explicit Tropp/Lieb and Bernstein CFC primitive

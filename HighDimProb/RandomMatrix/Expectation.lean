@@ -51,6 +51,20 @@ theorem centeredRandomMatrix_apply {Omega : Type*} [MeasurableSpace Omega]
     centeredRandomMatrix P A omega i j = A omega i j - matrixExpect P A i j :=
   rfl
 
+/-- Indexed family obtained by centering every random matrix in a family. -/
+def centeredRandomMatrixFamily {Omega : Type*} [MeasurableSpace Omega]
+    {I : Type*} {m n : Nat} (P : Measure Omega)
+    (A : I -> RandomMatrix Omega m n) :
+    I -> RandomMatrix Omega m n :=
+  fun i => centeredRandomMatrix P (A i)
+
+@[simp]
+theorem centeredRandomMatrixFamily_apply {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} {m n : Nat}
+    (P : Measure Omega) (A : I -> RandomMatrix Omega m n) (i : I) :
+    centeredRandomMatrixFamily P A i = centeredRandomMatrix P (A i) :=
+  rfl
+
 /--
 Rank-one self outer products are entrywise integrable when every coordinate
 product is explicitly integrable.
