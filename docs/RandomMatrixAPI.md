@@ -43,7 +43,13 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `rankOneOperatorNorm_le_vectorSqNorm`,
   `BoundedOperatorNorm_rankOne_of_sqNorm_bound`, and
   `PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`.
-- Next safe task: `RM-centered-operator-norm-bound`.
+- Proved centered operator-norm prerequisite bridge under an explicit expectation
+  operator-norm bound:
+  `deterministicOperatorNorm_sub_le_add`,
+  `BoundedOperatorNorm_centered_of_bound_expect_bound`,
+  `PointwiseOperatorNormBound_centered_of_bound_expect_bound`, and
+  `PointwiseOperatorNormBound_centered_of_bound_expect_bound_same`.
+- Next safe task: `RM-vector-to-matrix-measurability-integrability`.
 
 ## `HighDimProb/RandomMatrix/SelfAdjoint.lean`
 
@@ -101,6 +107,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `deterministicOperatorNorm`: def, deterministic matrix operator norm using the
   same scoped L2 convention.
 - `deterministicOperatorNorm_apply`: theorem, definitional bridge.
+- `deterministicOperatorNorm_sub_le_add`: theorem, deterministic triangle bound.
 - `rankOneOperatorNorm_le_vectorSqNorm`: theorem, `||v vᵀ||op <= ||v||₂²`.
 - `matVecSqNorm`: def.
 - `randomMatVecSqNorm`: def.
@@ -115,9 +122,16 @@ mainline. It is documentation only; theorem status is not upgraded here.
   matrix.
 - `BoundedOperatorNorm_rankOne_of_sqNorm_bound`: theorem, rank-one pointwise
   wrapper from vector squared-norm bounds.
+- `BoundedOperatorNorm_centered_of_bound_expect_bound`: theorem, centered
+  wrapper from a pointwise bound plus an explicit expectation operator-norm
+  bound.
 - `PointwiseOperatorNormBound`: def, indexed pointwise operator-norm bound.
 - `PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`: theorem, indexed
   rank-one wrapper from vector squared-norm bounds.
+- `PointwiseOperatorNormBound_centered_of_bound_expect_bound`: theorem, indexed
+  centered wrapper with explicit expectation bound.
+- `PointwiseOperatorNormBound_centered_of_bound_expect_bound_same`: theorem,
+  same-radius centered wrapper.
 - `UniformOperatorNormBound`: abbrev.
 - `AeOperatorNormBound`: def.
 
@@ -386,10 +400,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-RM-centered-operator-norm-bound: plan the bridge from the proved
-one-sided optimized quadratic-form under-primitives tail to lambda-max and then
-operator-norm Matrix Bernstein tails. Do not prove Tropp/Lieb, Bernstein CFC,
-Golden-Thompson, or the full Matrix Bernstein theorem in that contract stage.
+RM-vector-to-matrix-measurability-integrability: next prove or isolate the entrywise measurability / integrability bridge from vector random variables to rank-one random matrices. Do not prove PSD nullspace converse, lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC, Golden-Thompson, or the full Matrix Bernstein theorem in that stage.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -413,4 +424,4 @@ Golden-Thompson, or the full Matrix Bernstein theorem in that contract stage.
   proved in `ConcentrationStatements.lean`, with exponential-add RHS.
 - The theta-optimized scalar-RHS quadratic-form wrapper under primitives is now
   proved in `ConcentrationStatements.lean`, with Bernstein denominator RHS.
-- Next safe task: RM-centered-operator-norm-bound.
+- Next safe task: RM-vector-to-matrix-measurability-integrability.

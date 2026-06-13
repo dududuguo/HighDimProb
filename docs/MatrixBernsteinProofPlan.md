@@ -41,7 +41,13 @@ Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, the `t = 0` endpoint
 for the optimized wrapper, lambda-max/operator-norm Matrix Bernstein tails, or
 the full Matrix Bernstein tail theorem.
 
-Next safe task: `RM-centered-operator-norm-bound`.
+Next safe task: `RM-vector-to-matrix-measurability-integrability`.
+
+RM prerequisite update: the centered operator-norm bridge is now proved via
+`deterministicOperatorNorm_sub_le_add` and the explicit-expectation-bound
+wrappers in `Assumptions.lean`.  It does not prove vector-to-matrix
+measurability/integrability, PSD nullspace converse, or expectation contraction.
+
 ## Target Theorem
 
 For a finite family of independent centered self-adjoint random matrices

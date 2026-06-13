@@ -993,4 +993,25 @@ squared-norm bounds into `BoundedOperatorNorm` and
 
 This is not a centered summand bound, not a vector-to-matrix
 measurability/integrability bridge, not a PSD nullspace converse, and not a
-Matrix Bernstein tail theorem. Next safe task: RM-centered-operator-norm-bound.
+Matrix Bernstein tail theorem. Next safe task: RM-vector-to-matrix-measurability-integrability.
+
+## RM centered operator-norm prerequisite progress
+
+The centered boundedness slice for covariance-style RandomMatrix examples is
+proved:
+
+```lean
+deterministicOperatorNorm_sub_le_add
+BoundedOperatorNorm_centered_of_bound_expect_bound
+PointwiseOperatorNormBound_centered_of_bound_expect_bound
+PointwiseOperatorNormBound_centered_of_bound_expect_bound_same
+```
+
+The deterministic lemma packages the matrix operator-norm triangle inequality
+`||A - B||op <= ||A||op + ||B||op`.  The random-matrix wrappers apply this to
+`centeredRandomMatrix P X` under an explicit bound on
+`deterministicOperatorNorm (matrixExpect P X)`.  This is not an expectation
+contraction theorem and does not prove entrywise integrability or
+vector-to-rank-one measurability.
+
+Next safe task: RM-vector-to-matrix-measurability-integrability.

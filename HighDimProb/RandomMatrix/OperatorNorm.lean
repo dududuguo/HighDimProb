@@ -83,6 +83,21 @@ theorem deterministicOperatorNorm_apply {m n : Nat}
   rfl
 
 /--
+The deterministic operator norm satisfies the triangle inequality for
+subtraction.
+
+Formula reference: this is the norm triangle inequality
+`||A - B|| <= ||A|| + ||B||` for the matrix norm induced by the Euclidean
+operator norm; see https://en.wikipedia.org/wiki/Operator_norm and
+https://en.wikipedia.org/wiki/Matrix_norm
+-/
+theorem deterministicOperatorNorm_sub_le_add {m n : Nat}
+    (A B : Matrix (Fin m) (Fin n) Real) :
+    deterministicOperatorNorm (A - B) <=
+      deterministicOperatorNorm A + deterministicOperatorNorm B := by
+  simpa [deterministicOperatorNorm] using norm_sub_le A B
+
+/--
 Rank-one self-outer products have operator norm bounded by the squared
 Euclidean norm of the vector.
 
