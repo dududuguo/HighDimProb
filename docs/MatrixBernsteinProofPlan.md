@@ -41,7 +41,7 @@ Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, the `t = 0` endpoint
 for the optimized wrapper, lambda-max/operator-norm Matrix Bernstein tails, or
 the full Matrix Bernstein tail theorem.
 
-Next safe task: `MB-S9-lambda-max-operator-norm-bridge-contract`.
+Next safe task: `RM-centered-operator-norm-bound`.
 ## Target Theorem
 
 For a finite family of independent centered self-adjoint random matrices

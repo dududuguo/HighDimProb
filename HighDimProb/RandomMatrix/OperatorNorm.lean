@@ -83,6 +83,48 @@ theorem deterministicOperatorNorm_apply {m n : Nat}
   rfl
 
 /--
+Rank-one self-outer products have operator norm bounded by the squared
+Euclidean norm of the vector.
+
+Formula reference: for the outer product `v vᵀ`, multiplication sends
+`x` to `<v, x> v`; Cauchy--Schwarz gives
+`||<v, x> v||₂ <= ||v||₂^2 ||x||₂`, hence the induced operator-norm bound.
+See https://en.wikipedia.org/wiki/Outer_product and
+https://en.wikipedia.org/wiki/Operator_norm
+-/
+theorem rankOneOperatorNorm_le_vectorSqNorm {n : Nat}
+    (v : Fin n -> Real) :
+    deterministicOperatorNorm (fun i j : Fin n => v i * v j) <= vectorSqNorm v := by
+  rw [deterministicOperatorNorm, Matrix.l2_opNorm_def]
+  refine ContinuousLinearMap.opNorm_le_bound _ (vectorSqNorm_nonneg v) ?_
+  intro y
+  have happly :
+      (((Matrix.toEuclideanLin (𝕜 := Real) (m := Fin n) (n := Fin n)).trans
+            LinearMap.toContinuousLinearMap)
+          (fun i j : Fin n => v i * v j) y) =
+        (inner Real (WithLp.toLp 2 v : EuclideanSpace Real (Fin n)) y) •
+          (WithLp.toLp 2 v : EuclideanSpace Real (Fin n)) := by
+    ext i
+    simp [Matrix.toLpLin_apply, Matrix.mulVec, dotProduct, inner]
+    rw [Finset.sum_mul]
+    apply Finset.sum_congr rfl
+    intro j _
+    ring
+  rw [happly]
+  calc
+    ‖(inner Real (WithLp.toLp 2 v : EuclideanSpace Real (Fin n)) y) •
+          (WithLp.toLp 2 v : EuclideanSpace Real (Fin n))‖
+        = |inner Real (WithLp.toLp 2 v : EuclideanSpace Real (Fin n)) y| *
+            ‖(WithLp.toLp 2 v : EuclideanSpace Real (Fin n))‖ := by
+          rw [norm_smul, Real.norm_eq_abs]
+    _ <= ‖(WithLp.toLp 2 v : EuclideanSpace Real (Fin n))‖ * ‖y‖ *
+            ‖(WithLp.toLp 2 v : EuclideanSpace Real (Fin n))‖ := by
+          exact mul_le_mul_of_nonneg_right (abs_real_inner_le_norm _ _) (norm_nonneg _)
+    _ = vectorSqNorm v * ‖y‖ := by
+          rw [vectorSqNorm_eq_norm_sq_toLp]
+          ring
+
+/--
 Squared Euclidean norm of the deterministic matrix-vector product.
 
 Formula reference: this is the squared vector norm

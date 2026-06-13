@@ -39,7 +39,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - Its RHS is:
   `ENNReal.ofReal ((n + 1 : Real) * Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))))`.
 - Lambda-max/operator-norm Matrix Bernstein tail theorem remains unproved.
-- Next safe task: `MB-S9-lambda-max-operator-norm-bridge-contract`.
+- Proved rank-one operator-norm prerequisite bridge:
+  `rankOneOperatorNorm_le_vectorSqNorm`,
+  `BoundedOperatorNorm_rankOne_of_sqNorm_bound`, and
+  `PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`.
+- Next safe task: `RM-centered-operator-norm-bound`.
 
 ## `HighDimProb/RandomMatrix/SelfAdjoint.lean`
 
@@ -90,6 +94,32 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `selfAdjointOperatorNormTailViaQuadraticFormStatement`: typed statement.
 - `lambdaMax_le_iff_quadraticForm_le_statement`: typed statement.
 - `operatorNorm_eq_max_abs_lambda_statement`: typed statement.
+
+## `HighDimProb/RandomMatrix/OperatorNorm.lean`
+
+- `operatorNorm`: def, random-matrix operator norm as a real random variable.
+- `deterministicOperatorNorm`: def, deterministic matrix operator norm using the
+  same scoped L2 convention.
+- `deterministicOperatorNorm_apply`: theorem, definitional bridge.
+- `rankOneOperatorNorm_le_vectorSqNorm`: theorem, `||v vᵀ||op <= ||v||₂²`.
+- `matVecSqNorm`: def.
+- `randomMatVecSqNorm`: def.
+- `OperatorNormBoundSq`: def.
+- `operatorNorm_le_of_operatorNormBoundSq`: theorem.
+- `operatorNormBoundSq_of_operatorNorm_le`: theorem.
+- `isRealRandomVariable_operatorNorm`: theorem.
+
+## `HighDimProb/RandomMatrix/Assumptions.lean`
+
+- `BoundedOperatorNorm`: def, pointwise operator-norm bound for one random
+  matrix.
+- `BoundedOperatorNorm_rankOne_of_sqNorm_bound`: theorem, rank-one pointwise
+  wrapper from vector squared-norm bounds.
+- `PointwiseOperatorNormBound`: def, indexed pointwise operator-norm bound.
+- `PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`: theorem, indexed
+  rank-one wrapper from vector squared-norm bounds.
+- `UniformOperatorNormBound`: abbrev.
+- `AeOperatorNormBound`: def.
 
 ## `HighDimProb/RandomMatrix/MatrixOrder.lean`
 
@@ -356,7 +386,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-MB-S9-lambda-max-operator-norm-bridge-contract: plan the bridge from the proved
+RM-centered-operator-norm-bound: plan the bridge from the proved
 one-sided optimized quadratic-form under-primitives tail to lambda-max and then
 operator-norm Matrix Bernstein tails. Do not prove Tropp/Lieb, Bernstein CFC,
 Golden-Thompson, or the full Matrix Bernstein theorem in that contract stage.
@@ -383,4 +413,4 @@ Golden-Thompson, or the full Matrix Bernstein theorem in that contract stage.
   proved in `ConcentrationStatements.lean`, with exponential-add RHS.
 - The theta-optimized scalar-RHS quadratic-form wrapper under primitives is now
   proved in `ConcentrationStatements.lean`, with Bernstein denominator RHS.
-- Next safe task: MB-S9-lambda-max-operator-norm-bridge-contract.
+- Next safe task: RM-centered-operator-norm-bound.

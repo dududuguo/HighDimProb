@@ -5,12 +5,15 @@ open HighDimProb
 
 variable {Omega : Type*} [MeasurableSpace Omega]
 variable {P : Measure Omega} [IsProbabilityMeasure P]
+variable {I : Type*}
 variable {m n : Nat}
 variable (A : RandomMatrix Omega m n)
 variable (B C : RandomMatrix Omega n n)
 variable (M : Matrix (Fin m) (Fin n) Real)
 variable (S T : Matrix (Fin n) (Fin n) Real)
 variable (x : Fin n -> Real)
+variable (v : Fin n -> Real)
+variable (X : I -> Omega -> Fin n -> Real)
 variable (L t bound : Real)
 variable (hA : IsRandomMatrix P A)
 
@@ -31,6 +34,7 @@ variable (hA : IsRandomMatrix P A)
 #check instOpensMeasurableSpaceMatrixL2Operator
 #check deterministicOperatorNorm
 #check deterministicOperatorNorm_apply
+#check rankOneOperatorNorm_le_vectorSqNorm
 #check matVecSqNorm
 #check matVecSqNorm_apply
 #check matVecSqNorm_nonneg
@@ -61,6 +65,8 @@ variable (hA : IsRandomMatrix P A)
 #check (IsUnitVector x : Prop)
 #check (unitSphere n : Set (Fin n -> Real))
 #check (deterministicOperatorNorm M : Real)
+#check (rankOneOperatorNorm_le_vectorSqNorm v :
+  deterministicOperatorNorm (fun i j : Fin n => v i * v j) <= vectorSqNorm v)
 #check (matVecSqNorm M x : Real)
 #check (randomMatVecSqNorm A x : RealRandomVariable Omega)
 #check (sqNorm_matVec_eq_matVecSqNorm A x : forall omega, sqNorm (matVec A x) omega = matVecSqNorm (A omega) x)
@@ -77,6 +83,12 @@ variable (hA : IsRandomMatrix P A)
 #check (operatorNorm_le_of_operatorNormBoundSqStatement M L : Prop)
 #check (operatorNormBoundSq_of_operatorNorm_leStatement M L : Prop)
 #check (operatorNormMeasurabilityStatement P A : Prop)
+#check (PointwiseOperatorNormBound_rankOne_of_sqNorm_bound
+  (X := X) (R := L) :
+  0 <= L ->
+  (forall i omega, vectorSqNorm (X i omega) <= L) ->
+  PointwiseOperatorNormBound
+    (fun i omega a b => X i omega a * X i omega b) L)
 #check (matrixQuadraticForm_sub T S x :
   matrixQuadraticForm (T - S) x = matrixQuadraticForm T x - matrixQuadraticForm S x)
 #check (quadraticForm_le_of_matrixLE (A := S) (B := T) : MatrixLE S T -> forall x, matrixQuadraticForm S x <= matrixQuadraticForm T x)
