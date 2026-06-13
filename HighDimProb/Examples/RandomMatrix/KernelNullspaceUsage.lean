@@ -215,36 +215,6 @@ theorem gradientOuter_invisible_of_orthogonal {n : Nat}
   simpa [gradientOuter_eq_rankOneOuter] using
     rankOneOuter_invisible_of_orthogonal (v := g) (x := x) h
 
-/-- Example-local adapter for the PSD converse.
-
-For PSD matrices the mathematical statement is that `x^T A x = 0` should
-force `A x = 0`. This predicate is kept as compatibility vocabulary for older
-examples; `psdQuadraticNullImpliesInvisible_of_core` below supplies it from the
-core PSD nullspace bridge. -/
-def PSDQuadraticNullImpliesInvisible {n : Nat}
-    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real) : Prop :=
-  IsPSDMatrix A ->
-    forall x : Fin (n + 1) -> Real,
-      KernelQuadraticNullDirection A x -> KernelInvisibleDirection A x
-
-/-- The core PSD nullspace bridge supplies the examples-local adapter. -/
-theorem psdQuadraticNullImpliesInvisible_of_core {n : Nat}
-    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real) :
-    PSDQuadraticNullImpliesInvisible A := by
-  intro hPSD x hNull
-  exact invisible_of_quadraticNull_of_psd hPSD hNull
-
-/-- Use the local PSD-nullspace adapter to turn a quadratic-null direction into
-an invisible direction. -/
-theorem invisible_of_quadraticNull_of_psd_adapter {n : Nat}
-    {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
-    {x : Fin (n + 1) -> Real}
-    (hAdapter : PSDQuadraticNullImpliesInvisible A)
-    (hPSD : IsPSDMatrix A)
-    (hNull : KernelQuadraticNullDirection A x) :
-    KernelInvisibleDirection A x :=
-  hAdapter hPSD x hNull
-
 end
 
 end HighDimProb.Examples.RandomMatrix.KernelNullspaceUsage

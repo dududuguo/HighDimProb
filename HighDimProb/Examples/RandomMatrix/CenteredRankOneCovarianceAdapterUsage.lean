@@ -9,9 +9,10 @@ contribution can be converted into a centered random matrix summand
 `X - E[X]` using the existing entrywise `matrixExpect` API.
 
 It proves the expectation-zero property from existing matrix expectation
-lemmas. Hard analytic facts such as vector-level measurability implying
-matrix-level self-adjoint Matrix Bernstein hypotheses remain explicit
-example-local assumptions.
+lemmas. The uncentered rank-one contribution now reuses the named
+`rankOneRandomMatrix` API, so vector-level second-moment hypotheses can supply
+entrywise integrability. Matrix-level centered measurability and
+self-adjointness remain explicit example-local assumptions.
 -/
 
 namespace HighDimProb.Examples.RandomMatrix.CenteredRankOneCovarianceAdapterUsage
@@ -29,7 +30,7 @@ abbrev RandomRankOneVector (Omega : Type*) [MeasurableSpace Omega] (n : Nat) :=
 def rankOneCovarianceContribution {Omega : Type*} [MeasurableSpace Omega]
     {n : Nat} (X : RandomRankOneVector Omega n) :
     RandomMatrix Omega (n + 1) (n + 1) :=
-  fun omega => rankOneOuter (X omega)
+  rankOneRandomMatrix X
 
 @[simp]
 theorem rankOneCovarianceContribution_apply {Omega : Type*}
@@ -60,7 +61,8 @@ theorem rankOneCovarianceContribution_selfAdjoint {Omega : Type*}
     (X : RandomRankOneVector Omega n) :
     RandomSelfAdjointMatrix P (rankOneCovarianceContribution X) := by
   intro omega
-  exact rankOneOuter_selfAdjoint (X omega)
+  simpa [rankOneCovarianceContribution, rankOneRandomMatrix, rankOneMatrix,
+    rankOneOuter] using rankOneOuter_selfAdjoint (X omega)
 
 /-- The uncentered rank-one contribution is pointwise PSD. -/
 theorem rankOneCovarianceContribution_psd {Omega : Type*}
@@ -68,7 +70,30 @@ theorem rankOneCovarianceContribution_psd {Omega : Type*}
     (X : RandomRankOneVector Omega n) :
     RandomPSDMatrix P (rankOneCovarianceContribution X) := by
   intro omega
-  exact rankOneOuter_psd (X omega)
+  simpa [rankOneCovarianceContribution, rankOneRandomMatrix, rankOneMatrix,
+    rankOneOuter] using rankOneOuter_psd (X omega)
+
+/-- Vector measurability gives entrywise random-matrix measurability for the
+uncentered rank-one covariance contribution. -/
+theorem isRandomMatrix_rankOneCovarianceContribution {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    {X : RandomRankOneVector Omega n}
+    (hX : IsRandomVector P X) :
+    IsRandomMatrix P (rankOneCovarianceContribution X) := by
+  simpa [rankOneCovarianceContribution] using
+    (isRandomMatrix_rankOneRandomMatrix (P := P) (X := X) hX)
+
+/-- Coordinate second moments give entrywise integrability of the uncentered
+rank-one covariance contribution. -/
+theorem integrable_rankOneCovarianceContribution_of_memLp_two {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    {X : RandomRankOneVector Omega n}
+    (hX : forall j : Fin (n + 1),
+      MemLpRealRandomVariable P (coord X j) 2) :
+    IntegrableRandomMatrix P (rankOneCovarianceContribution X) := by
+  simpa [rankOneCovarianceContribution] using
+    (integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
+      (P := P) (X := X) hX)
 
 /-- Entrywise integrability of the uncentered rank-one contribution gives
 entrywise integrability of its centered version. -/
@@ -116,15 +141,17 @@ def centeredRankOneCovarianceSummandFamily {Omega : Type*}
 /-- Local assumptions needed to expose the centered rank-one family through
 the Matrix Bernstein centered self-adjoint predicate.
 
-These assumptions are example-local adapters waiting for future core support
-from vector-level hypotheses to random-matrix measurability and
-self-adjointness. -/
+Second-moment integrability is derived through the rank-one random-matrix
+bridge above. Centered measurability and self-adjointness are still explicit
+because this example does not bundle a general centered self-adjointness
+theorem. -/
 structure CenteredRankOneCovarianceMatrixAdapter {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
     {I : Type*} {n : Nat}
     (X : I -> RandomRankOneVector Omega n) : Prop where
-  uncenteredIntegrable :
-    forall i, IntegrableRandomMatrix P (rankOneCovarianceContribution (X i))
+  coordinateMemLpTwo :
+    forall i, forall j : Fin (n + 1),
+      MemLpRealRandomVariable P (coord (X i) j) 2
   centeredIsRandom :
     forall i, IsRandomMatrix P
       (centeredRankOneCovarianceSummand (P := P) (X i))
@@ -144,7 +171,9 @@ theorem centeredRankOneCovariance_family_centeredSelfAdjoint
   exact And.intro (And.intro h.centeredIsRandom h.centeredSelfAdjoint)
     (fun i =>
       matrixExpect_centeredRankOneCovarianceSummand
-        (P := P) (X := X i) (h.uncenteredIntegrable i))
+        (P := P) (X := X i)
+        (integrable_rankOneCovarianceContribution_of_memLp_two
+          (P := P) (X := X i) (h.coordinateMemLpTwo i)))
 
 end
 

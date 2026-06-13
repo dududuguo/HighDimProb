@@ -6,10 +6,10 @@ import HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
 
 This examples-only file records the intended bridge from gradient norm bounds
 to Matrix Bernstein operator-norm assumptions for rank-one covariance
-summands. The current core API has the relevant operator-norm predicates, but
-does not yet provide a theorem that bounds the operator norm of `g g^T` by a
-gradient squared norm, nor the centered version after subtracting an
-expectation. Those bridges are exposed as precise example-local assumptions.
+summands. The uncentered rank-one bridge now follows from the named
+`rankOneRandomMatrix` operator-norm API. The centered bridge still keeps the
+expectation operator-norm bound explicit, then applies the core centering
+triangle wrapper.
 -/
 
 namespace HighDimProb.Examples.RandomMatrix.GradientNormToOperatorBoundUsage
@@ -37,6 +37,12 @@ theorem gradientSqNorm_nonneg {n : Nat} (g : GradientVector n) :
   unfold gradientSqNorm
   exact Finset.sum_nonneg fun i _hi => sq_nonneg (g i)
 
+/-- The example-local gradient norm is the core squared-vector norm. -/
+@[simp]
+theorem gradientSqNorm_eq_vectorSqNorm {n : Nat} (g : GradientVector n) :
+    gradientSqNorm g = vectorSqNorm g := by
+  rfl
+
 /-- A pointwise squared-gradient-norm bound for a random gradient table. -/
 def GradientSqNormBound {Omega : Type*} [MeasurableSpace Omega]
     {batch n : Nat} (G : RandomGradientTable Omega batch n) (R : Real) :
@@ -44,17 +50,11 @@ def GradientSqNormBound {Omega : Type*} [MeasurableSpace Omega]
   forall b omega, gradientSqNorm (G omega b) <= R
 
 /-- Example-local bridge from a squared-gradient-norm bound to an operator-norm
-bound on uncentered rank-one covariance contributions.
-
-This is a precise adapter assumption waiting for future core support for the
-deterministic fact `||g g^T|| <= ||g||^2`. -/
+bound on uncentered rank-one covariance contributions. -/
 structure RankOneGradientOperatorNormBridge {Omega : Type*}
     [MeasurableSpace Omega] {batch n : Nat}
     (G : RandomGradientTable Omega batch n) (R : Real) : Prop where
   gradientSqNormBound : GradientSqNormBound G R
-  uncenteredOperatorNormBound :
-    forall b omega,
-      operatorNorm (randomGradientCovarianceContribution G b) omega <= R
 
 /-- The uncentered bridge supplies the Matrix Bernstein pointwise
 operator-norm predicate for the uncentered rank-one family. -/
@@ -63,24 +63,38 @@ theorem uncenteredGradientCovariance_pointwiseOperatorNormBound
     (G : RandomGradientTable Omega batch n) (R : Real)
     (h : RankOneGradientOperatorNormBridge G R) :
     PointwiseOperatorNormBound
-      (fun b : Fin batch => randomGradientCovarianceContribution G b) R := by
-  intro b omega
-  exact h.uncenteredOperatorNormBound b omega
+      (randomGradientCovarianceContributionFamily G) R := by
+  have hRankOne :
+      PointwiseOperatorNormBound
+        (fun b : Fin batch => rankOneRandomMatrix (randomGradientVector G b)) R :=
+    PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound
+      (fun b : Fin batch => randomGradientVector G b) R
+      (by
+        intro b omega
+        simpa [gradientSqNorm_eq_vectorSqNorm] using
+          h.gradientSqNormBound b omega)
+  simpa [randomGradientCovarianceContributionFamily,
+    randomGradientCovarianceContribution, randomGradientVector,
+    gradientCovarianceContribution, gradientOuter, rankOneRandomMatrix,
+    rankOneMatrix] using hRankOne
 
 /-- Example-local bridge from gradient norm control to the centered summand
 operator-norm bound used by the Matrix Bernstein examples.
 
-The `centeredOperatorNormBound` field is intentionally explicit: deriving it
-from `gradientSqNormBound` needs future core facts about rank-one operator
-norms and the effect of subtracting entrywise expectations. -/
+The expectation operator-norm bound remains explicit: this example does not
+try to prove an expectation contraction theorem from the pointwise sample
+bound. -/
 structure CenteredGradientCovarianceOperatorNormAdapter {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {batch n : Nat}
     (G : RandomGradientTable Omega batch n)
     (A : Fin batch -> RandomMatrix Omega (n + 1) (n + 1))
-    (R : Real) : Prop where
+    (R Rexp : Real) : Prop where
   centeredAdapter : IsCenteredGradientCovarianceSummandFamily (P := P) G A
   gradientSqNormBound : GradientSqNormBound G R
-  centeredOperatorNormBound : PointwiseOperatorNormBound A R
+  expectationOperatorNormBound :
+    forall b,
+      deterministicOperatorNorm
+        (matrixExpect P (randomGradientCovarianceContributionFamily G b)) <= Rexp
 
 /-- The centered adapter supplies the exact `PointwiseOperatorNormBound`
 assumption consumed by the gradient covariance Matrix Bernstein examples. -/
@@ -89,10 +103,27 @@ theorem centeredGradientCovariance_pointwiseOperatorNormBound
     {batch n : Nat}
     (G : RandomGradientTable Omega batch n)
     (A : Fin batch -> RandomMatrix Omega (n + 1) (n + 1))
-    (R : Real)
-    (h : CenteredGradientCovarianceOperatorNormAdapter (P := P) G A R) :
-    PointwiseOperatorNormBound A R :=
-  h.centeredOperatorNormBound
+    (R Rexp : Real)
+    (h : CenteredGradientCovarianceOperatorNormAdapter (P := P) G A R Rexp) :
+    PointwiseOperatorNormBound A (R + Rexp) := by
+  have hUncentered :
+      PointwiseOperatorNormBound
+        (randomGradientCovarianceContributionFamily G) R :=
+    uncenteredGradientCovariance_pointwiseOperatorNormBound G R
+      ⟨h.gradientSqNormBound⟩
+  have hCentered :
+      PointwiseOperatorNormBound
+        (fun b : Fin batch =>
+          centeredRandomMatrix P
+            (randomGradientCovarianceContributionFamily G b)) (R + Rexp) :=
+    PointwiseOperatorNormBound_centered_of_bound_expect_bound P
+      (randomGradientCovarianceContributionFamily G) R Rexp
+      hUncentered h.expectationOperatorNormBound
+  rw [h.centeredAdapter]
+  simpa [centeredGradientCovarianceSummands,
+    centeredGradientCovarianceContribution,
+    randomGradientCovarianceContributionFamily, centeredRandomMatrix] using
+    hCentered
 
 /-- Rank-one gradient covariance contributions are structurally PSD; the
 operator-norm part is separate from this PSD fact. -/

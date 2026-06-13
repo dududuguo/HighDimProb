@@ -125,6 +125,21 @@ theorem randomGradientCovarianceContribution_apply {Omega : Type*}
       G omega b i * G omega b j := by
   rfl
 
+/-- The uncentered family of rank-one gradient covariance contributions. -/
+def randomGradientCovarianceContributionFamily {Omega : Type*}
+    [MeasurableSpace Omega] {batch n : Nat}
+    (G : RandomGradientTable Omega batch n) :
+    Fin batch -> RandomMatrix Omega (n + 1) (n + 1) :=
+  fun b => randomGradientCovarianceContribution G b
+
+@[simp]
+theorem randomGradientCovarianceContributionFamily_apply {Omega : Type*}
+    [MeasurableSpace Omega] {batch n : Nat}
+    (G : RandomGradientTable Omega batch n) (b : Fin batch) :
+    randomGradientCovarianceContributionFamily G b =
+      randomGradientCovarianceContribution G b := by
+  rfl
+
 /-- Random empirical gradient covariance matrix. -/
 def randomEmpiricalGradientCovariance {Omega : Type*}
     [MeasurableSpace Omega] {batch n : Nat}

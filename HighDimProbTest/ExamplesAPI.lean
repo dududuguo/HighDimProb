@@ -15,6 +15,9 @@ import HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage
 import HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
 
 open HighDimProb
+open HighDimProb.Examples.RandomMatrix.CenteredRankOneCovarianceAdapterUsage
+open HighDimProb.Examples.RandomMatrix.GradientCovarianceUsage
+open HighDimProb.Examples.RandomMatrix.GradientNormToOperatorBoundUsage
 open HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
 open HighDimProb.Examples.RandomMatrix.KernelNullspaceUsage
 
@@ -35,7 +38,12 @@ variable (kernelHExplicitPSD : IsPSDMatrix kernelA)
 #check invisible_of_quadraticNull_of_psd
 #check randomInvisible_of_quadraticNull_of_posSemidef
 #check randomInvisible_of_quadraticNull_of_psd
-#check psdQuadraticNullImpliesInvisible_of_core
+
+#check randomGradientCovarianceContributionFamily
+#check uncenteredGradientCovariance_pointwiseOperatorNormBound
+#check centeredGradientCovariance_pointwiseOperatorNormBound
+#check isRandomMatrix_rankOneCovarianceContribution
+#check integrable_rankOneCovarianceContribution_of_memLp_two
 
 example :
     matrixAction kernelA kernelX = Matrix.mulVec kernelA kernelX := by
@@ -48,7 +56,3 @@ example (hNull : KernelQuadraticNullDirection kernelA kernelX) :
 example (hNull : KernelQuadraticNullDirection kernelA kernelX) :
     KernelInvisibleDirection kernelA kernelX := by
   exact invisible_of_quadraticNull_of_psd kernelHExplicitPSD hNull
-
-example :
-    PSDQuadraticNullImpliesInvisible kernelA := by
-  exact psdQuadraticNullImpliesInvisible_of_core kernelA
