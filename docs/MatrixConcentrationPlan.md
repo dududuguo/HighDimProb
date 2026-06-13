@@ -22,12 +22,16 @@ compatibility APIs around the bounded-Bernstein lintegral Laplace route:
 `matrixBernsteinTraceMGFToLaplaceContract_statement` and
 `matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement`.
 
-Next safe task: `RM-vector-to-matrix-measurability-integrability`.
+Next safe task: `RM-PSD-nullspace-converse`.
 
 RM prerequisite update: the centered operator-norm bridge is now proved via
 `deterministicOperatorNorm_sub_le_add` and the explicit-expectation-bound
-wrappers in `Assumptions.lean`.  It does not prove vector-to-matrix
-measurability/integrability, PSD nullspace converse, or expectation contraction.
+wrappers in `Assumptions.lean`.  The vector-to-rank-one matrix bridge is also
+proved via `rankOneRandomMatrix`, `isRandomMatrix_rankOneRandomMatrix`,
+`integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`, and
+`integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.  It does not prove
+PSD nullspace converse, expectation contraction, or integrability from
+measurability alone.
 
 Stage MC1 starts the matrix concentration branch after the scalar concentration
 closeout. It adds the assumption vocabulary, explicit matrix order vocabulary,

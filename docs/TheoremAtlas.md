@@ -30,7 +30,7 @@ statement APIs connecting bounded Bernstein lintegral trace-MGF bounds to the
 existing Laplace/tail layer without claiming the missing real-to-lintegral,
 Tropp/Lieb, CFC, or Matrix Bernstein proofs.
 
-Next safe task: `RM-vector-to-matrix-measurability-integrability`.
+Next safe task: `RM-PSD-nullspace-converse`.
 ## Milestone 3 scalar implication closeout
 
 This audit separates proved theorem families from typed statements and blocked
@@ -1247,7 +1247,7 @@ future directions.
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Priority: Stage MB-S2 through MB-S9-foundation complete; next task is
-  RM-vector-to-matrix-measurability-integrability.
+  RM-PSD-nullspace-converse.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1645,7 +1645,7 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is RM-vector-to-matrix-measurability-integrability.
+- Priority: next safe task is RM-PSD-nullspace-converse.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -1821,7 +1821,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Priority: next safe task is RM-vector-to-matrix-measurability-integrability.
+- Priority: next safe task is RM-PSD-nullspace-converse.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -1948,7 +1948,7 @@ future directions.
 - Blocker: the finite-family Tropp primitive itself remains typed only; the
   Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and the
   Matrix Bernstein tail theorem remain unproved.
-- Priority: next safe task is RM-vector-to-matrix-measurability-integrability.
+- Priority: next safe task is RM-PSD-nullspace-converse.
 
 
 
@@ -1966,7 +1966,7 @@ future directions.
 - Blocker: the result is still one-sided and quadratic-form under explicit
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
-- Priority: next safe task is RM-vector-to-matrix-measurability-integrability.
+- Priority: next safe task is RM-PSD-nullspace-converse.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -1986,7 +1986,7 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Priority: next safe task is RM-vector-to-matrix-measurability-integrability.
+- Priority: next safe task is RM-PSD-nullspace-converse.
 
 ## RM Centered Operator-Norm Bound
 
@@ -2003,4 +2003,20 @@ future directions.
 - Blocker: this is only an algebraic explicit-bound wrapper.  It does not prove
   vector-to-rank-one matrix measurability/integrability, expectation
   contraction, PSD nullspace converse, or Matrix Bernstein tails.
-- Priority: next safe task is RM-vector-to-matrix-measurability-integrability.
+- Priority: next safe task is RM-PSD-nullspace-converse.
+
+
+## RM Vector-to-Rank-One Matrix Measurability / Integrability
+
+- Informal statement: a finite random vector `X : Ω -> Fin n -> ℝ` defines a
+  rank-one random matrix with entries `X_i * X_j`; coordinate measurability
+  gives entrywise matrix measurability, and entrywise product integrability or
+  coordinate second-moment assumptions give entrywise matrix integrability.
+- Target Lean declarations: `rankOneRandomMatrix`,
+  `isRandomMatrix_rankOneRandomMatrix`,
+  `integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`, and
+  `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.
+- Status: proven, API-tested, and judge-tested.
+- Blocker: this does not prove integrability from measurability alone,
+  expectation contraction, PSD nullspace converse, or Matrix Bernstein tails.
+- Priority: next safe task is RM-PSD-nullspace-converse.

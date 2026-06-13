@@ -8,32 +8,37 @@ RandomMatrix / Matrix Bernstein mainline: MB-S9 now includes the bounded
 trace-MGF theorem under explicit primitives, the bounded real-to-lintegral
 trace-MGF bridge, the explicit-theta quadratic-form upper-tail wrappers, the
 dimension/norm scalar RHS reduction, and the theta-optimized scalar Bernstein
-denominator wrapper. The current prerequisite cleanup also adds rank-one and
-centered operator-norm bridges for covariance-style examples.
+denominator wrapper. The current prerequisite cleanup also adds rank-one,
+centered operator-norm, and vector-to-rank-one matrix measurability /
+integrability bridges for covariance-style examples.
 
 The latest proved public theorem is:
 
-- `PointwiseOperatorNormBound_centered_of_bound_expect_bound_same`
+- `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`
 
-Supporting proved API also includes `deterministicOperatorNorm_sub_le_add`,
+Supporting proved API also includes `rankOneRandomMatrix`,
+`isRandomMatrix_rankOneRandomMatrix`,
+`integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`, the centered
+bridge `deterministicOperatorNorm_sub_le_add`,
 `BoundedOperatorNorm_centered_of_bound_expect_bound`,
 `PointwiseOperatorNormBound_centered_of_bound_expect_bound`, the earlier
-rank-one bridge `rankOneOperatorNorm_le_vectorSqNorm`,
+rank-one operator-norm bridge `rankOneOperatorNorm_le_vectorSqNorm`,
 `BoundedOperatorNorm_rankOne_of_sqNorm_bound`, and
-`PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`. These are deterministic /
-pointwise boundedness bridges only: the centered bridge requires an explicit
-operator-norm bound on `matrixExpect P X` and does not prove expectation
-contraction, vector-to-rank-one matrix measurability or integrability, the PSD
-nullspace converse, lambda-max/operator-norm Matrix Bernstein tails,
-Tropp/Lieb, the Bernstein CFC primitive, Golden-Thompson, the `t = 0` endpoint
-for the optimized wrapper, or the final full Matrix Bernstein tail theorem.
+`PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`. The new vector-to-matrix
+bridge proves entrywise measurability from `IsRandomVector`; entrywise
+integrability is proved only from explicit product-integrability assumptions or
+explicit coordinate `MemLp ... 2` assumptions. It does not prove integrability
+from measurability alone, expectation contraction, the PSD nullspace converse,
+lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, the Bernstein CFC
+primitive, Golden-Thompson, the `t = 0` endpoint for the optimized wrapper, or
+the final full Matrix Bernstein tail theorem.
 The previous optimized quadratic-form theorem remains
 `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-vector-to-matrix-measurability-integrability`
+- `RM-PSD-nullspace-converse`
 
 ## Public Milestone Summary
 
@@ -1929,3 +1934,7 @@ trace-exp integrability. It does not prove event reduction, dimension/norm
 reduction, theta optimization, Tropp/Lieb, the Bernstein CFC primitive,
 Golden-Thompson, or the Matrix Bernstein tail theorem. Next safe task:
 MB-S9-trace-mgf-to-laplace-tail-contract-v2.
+
+## Next safe task
+
+- `RM-PSD-nullspace-converse`

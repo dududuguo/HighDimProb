@@ -41,12 +41,16 @@ Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, the `t = 0` endpoint
 for the optimized wrapper, lambda-max/operator-norm Matrix Bernstein tails, or
 the full Matrix Bernstein tail theorem.
 
-Next safe task: `RM-vector-to-matrix-measurability-integrability`.
+Next safe task: `RM-PSD-nullspace-converse`.
 
 RM prerequisite update: the centered operator-norm bridge is now proved via
 `deterministicOperatorNorm_sub_le_add` and the explicit-expectation-bound
-wrappers in `Assumptions.lean`.  It does not prove vector-to-matrix
-measurability/integrability, PSD nullspace converse, or expectation contraction.
+wrappers in `Assumptions.lean`.  The vector-to-rank-one matrix bridge is also
+proved via `rankOneRandomMatrix`, `isRandomMatrix_rankOneRandomMatrix`,
+`integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`, and
+`integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.  It does not prove
+PSD nullspace converse, expectation contraction, or integrability from
+measurability alone.
 
 ## Target Theorem
 
