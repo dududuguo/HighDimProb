@@ -109,18 +109,18 @@ https://en.wikipedia.org/wiki/Operator_norm
 -/
 theorem rankOneOperatorNorm_le_vectorSqNorm {n : Nat}
     (v : Fin n -> Real) :
-    deterministicOperatorNorm (fun i j : Fin n => v i * v j) <= vectorSqNorm v := by
+    deterministicOperatorNorm (rankOneMatrix v) <= vectorSqNorm v := by
   rw [deterministicOperatorNorm, Matrix.l2_opNorm_def]
   refine ContinuousLinearMap.opNorm_le_bound _ (vectorSqNorm_nonneg v) ?_
   intro y
   have happly :
       (((Matrix.toEuclideanLin (𝕜 := Real) (m := Fin n) (n := Fin n)).trans
             LinearMap.toContinuousLinearMap)
-          (fun i j : Fin n => v i * v j) y) =
+          (rankOneMatrix v) y) =
         (inner Real (WithLp.toLp 2 v : EuclideanSpace Real (Fin n)) y) •
           (WithLp.toLp 2 v : EuclideanSpace Real (Fin n)) := by
     ext i
-    simp [Matrix.toLpLin_apply, Matrix.mulVec, dotProduct, inner]
+    simp [rankOneMatrix, Matrix.toLpLin_apply, Matrix.mulVec, dotProduct, inner]
     rw [Finset.sum_mul]
     apply Finset.sum_congr rfl
     intro j _

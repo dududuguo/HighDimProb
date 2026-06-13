@@ -14,8 +14,8 @@
   `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`.
 - Done: rank-one operator-norm prerequisite slice added
   `rankOneOperatorNorm_le_vectorSqNorm`,
-  `BoundedOperatorNorm_rankOne_of_sqNorm_bound`, and
-  `PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`.
+  `BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound`, and
+  `PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound`.
 - Done: centered operator-norm prerequisite slice added
   `deterministicOperatorNorm_sub_le_add`,
   `BoundedOperatorNorm_centered_of_bound_expect_bound`,

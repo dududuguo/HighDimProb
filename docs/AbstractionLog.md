@@ -1202,15 +1202,15 @@
 
 ## RM rank-one operator-norm boundedness bridge
 
-- Concrete version chosen: prove the rank-one self-outer-product bound directly
-  against `deterministicOperatorNorm` instead of introducing a new rank-one
-  matrix object or changing the matrix norm convention.
+- Concrete version chosen: expose the self-outer product as the named
+  `rankOneMatrix` / `rankOneRandomMatrix` vocabulary while keeping the existing
+  `deterministicOperatorNorm` convention.
 - Proof-pattern decision: view `v vᵀ` as the linear map `x ↦ <v, x> v` and use
   Cauchy--Schwarz plus `ContinuousLinearMap.opNorm_le_bound` under Mathlib's
   scoped L2 operator norm.
 - Assumption decision: the random wrappers consume an explicit pointwise
-  `vectorSqNorm <= R` hypothesis and keep the nonnegative-radius argument
-  visible, rather than inferring expectation or centered bounds.
+  `vectorSqNorm <= R` hypothesis without a separate `0 <= R` parameter; they do
+  not infer expectation or centered bounds.
 - Comment/source decision: Lean comments include public operator-norm and outer
   product URLs so readers can verify the mathematical formula.
 - Future upgrade path: next add the centered operator-norm triangle wrapper;

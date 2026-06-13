@@ -23,8 +23,8 @@ bridge `deterministicOperatorNorm_sub_le_add`,
 `BoundedOperatorNorm_centered_of_bound_expect_bound`,
 `PointwiseOperatorNormBound_centered_of_bound_expect_bound`, the earlier
 rank-one operator-norm bridge `rankOneOperatorNorm_le_vectorSqNorm`,
-`BoundedOperatorNorm_rankOne_of_sqNorm_bound`, and
-`PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`. The new vector-to-matrix
+`BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound`, and
+`PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound`. The new vector-to-matrix
 bridge proves entrywise measurability from `IsRandomVector`; entrywise
 integrability is proved only from explicit product-integrability assumptions or
 explicit coordinate `MemLp ... 2` assumptions. The new PSD nullspace bridge

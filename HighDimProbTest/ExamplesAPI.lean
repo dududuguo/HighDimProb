@@ -22,7 +22,7 @@ variable {rankOneN : Nat}
 variable (rankOneV : RankOneVector rankOneN)
 
 #check (rankOneOperatorNorm_le_vectorSqNorm rankOneV :
-  deterministicOperatorNorm (rankOneOuter rankOneV) <= vectorSqNorm rankOneV)
+  deterministicOperatorNorm (rankOneMatrix rankOneV) <= vectorSqNorm rankOneV)
 
 variable {kernelN : Nat}
 variable (kernelA : Matrix (Fin (kernelN + 1)) (Fin (kernelN + 1)) Real)

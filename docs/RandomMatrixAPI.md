@@ -41,8 +41,8 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - Lambda-max/operator-norm Matrix Bernstein tail theorem remains unproved.
 - Proved rank-one operator-norm prerequisite bridge:
   `rankOneOperatorNorm_le_vectorSqNorm`,
-  `BoundedOperatorNorm_rankOne_of_sqNorm_bound`, and
-  `PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`.
+  `BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound`, and
+  `PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound`.
 - Proved centered operator-norm prerequisite bridge under an explicit expectation
   operator-norm bound:
   `deterministicOperatorNorm_sub_le_add`,
@@ -66,8 +66,10 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `RandomMatrix`: abbrev, finite-dimensional real random matrix.
 - `matrixEntry`: def, entry random variable.
 - `IsRandomMatrix`: abbrev, entrywise measurability predicate.
+- `rankOneMatrix`: def, deterministic rank-one self outer-product matrix.
 - `rankOneRandomMatrix`: def, vector-to-rank-one random matrix with entries
   `X_i * X_j`.
+- `rankOneMatrix_apply`: theorem.
 - `rankOneRandomMatrix_apply`: theorem.
 - `matrixEntry_rankOneRandomMatrix`: theorem.
 - `isRandomMatrix_rankOneRandomMatrix`: theorem, entrywise measurability from
@@ -158,14 +160,14 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 - `BoundedOperatorNorm`: def, pointwise operator-norm bound for one random
   matrix.
-- `BoundedOperatorNorm_rankOne_of_sqNorm_bound`: theorem, rank-one pointwise
-  wrapper from vector squared-norm bounds.
+- `BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound`: theorem, rank-one
+  pointwise wrapper from vector squared-norm bounds.
 - `BoundedOperatorNorm_centered_of_bound_expect_bound`: theorem, centered
   wrapper from a pointwise bound plus an explicit expectation operator-norm
   bound.
 - `PointwiseOperatorNormBound`: def, indexed pointwise operator-norm bound.
-- `PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`: theorem, indexed
-  rank-one wrapper from vector squared-norm bounds.
+- `PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound`: theorem,
+  indexed rank-one wrapper from vector squared-norm bounds.
 - `PointwiseOperatorNormBound_centered_of_bound_expect_bound`: theorem, indexed
   centered wrapper with explicit expectation bound.
 - `PointwiseOperatorNormBound_centered_of_bound_expect_bound_same`: theorem,

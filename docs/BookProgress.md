@@ -981,8 +981,8 @@ is proved:
 
 ```lean
 rankOneOperatorNorm_le_vectorSqNorm
-BoundedOperatorNorm_rankOne_of_sqNorm_bound
-PointwiseOperatorNormBound_rankOne_of_sqNorm_bound
+BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound
+PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound
 ```
 
 The deterministic lemma proves the finite-dimensional bound

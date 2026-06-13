@@ -65,6 +65,24 @@ theorem matrixEntry_apply {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
   rfl
 
 /--
+Deterministic rank-one self outer-product matrix associated to a vector.
+
+Formula reference: the outer product has entries `x_i * x_j`; see
+https://en.wikipedia.org/wiki/Outer_product .
+-/
+def rankOneMatrix {n : Nat} (x : Fin n -> Real) : Matrix (Fin n) (Fin n) Real :=
+  fun i j => x i * x j
+
+/--
+Formula reference: this unfolds the rank-one outer-product entry `x_i * x_j`;
+see https://en.wikipedia.org/wiki/Outer_product .
+-/
+@[simp]
+theorem rankOneMatrix_apply {n : Nat} (x : Fin n -> Real) (i j : Fin n) :
+    rankOneMatrix x i j = x i * x j :=
+  rfl
+
+/--
 Rank-one self outer-product random matrix associated to a random vector.
 
 Formula reference: the outer product has entries `x_i * x_j`; see
@@ -75,7 +93,7 @@ https://en.wikipedia.org/wiki/Random_vector .
 -/
 def rankOneRandomMatrix {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (X : RandomVector Omega n) : RandomMatrix Omega n n :=
-  fun omega i j => X omega i * X omega j
+  fun omega => rankOneMatrix (X omega)
 
 /--
 Formula reference: this unfolds the rank-one outer-product entry

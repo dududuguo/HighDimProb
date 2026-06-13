@@ -8,6 +8,7 @@ variable {P : Measure Omega} [IsProbabilityMeasure P]
 variable {m n : Nat}
 variable (A : RandomMatrix Omega m n)
 variable (X : RandomVector Omega n)
+variable (x : Fin n -> Real)
 variable (i : Fin m) (j : Fin n)
 variable (a b : Fin n)
 variable (hA : IsRandomMatrix P A)
@@ -17,6 +18,8 @@ variable (hX : IsRandomVector P X)
 #check matrixEntry
 #check IsRandomMatrix
 #check matrixEntry_apply
+#check rankOneMatrix
+#check rankOneMatrix_apply
 #check rankOneRandomMatrix
 #check rankOneRandomMatrix_apply
 #check matrixEntry_rankOneRandomMatrix
@@ -26,6 +29,9 @@ variable (hX : IsRandomVector P X)
 #check measurable_randomMatrix_of_isRandomMatrix
 
 #check (matrixEntry A i j : RealRandomVariable Omega)
+#check (rankOneMatrix x : Matrix (Fin n) (Fin n) Real)
+#check (rankOneMatrix_apply x : forall a b,
+  rankOneMatrix x a b = x a * x b)
 #check (rankOneRandomMatrix X : RandomMatrix Omega n n)
 #check (rankOneRandomMatrix_apply X : forall omega a b,
   rankOneRandomMatrix X omega a b = X omega a * X omega b)
