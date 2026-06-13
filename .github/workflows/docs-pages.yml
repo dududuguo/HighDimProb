@@ -22,8 +22,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: github-pages
-  cancel-in-progress: false
+  group: docs-pages-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:

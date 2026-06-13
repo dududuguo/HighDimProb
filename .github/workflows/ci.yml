@@ -23,6 +23,9 @@ jobs:
       - name: Reject encoding artifacts
         run: python .github/scripts/check_text_quality.py
 
+      - name: Repository policy check
+        run: python scripts/judge_policy_check.py
+
   build:
     name: Build and test
     runs-on: ubuntu-latest
