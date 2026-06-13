@@ -49,7 +49,34 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `BoundedOperatorNorm_centered_of_bound_expect_bound`,
   `PointwiseOperatorNormBound_centered_of_bound_expect_bound`, and
   `PointwiseOperatorNormBound_centered_of_bound_expect_bound_same`.
-- Next safe task: `RM-vector-to-matrix-measurability-integrability`.
+- Proved vector-to-rank-one matrix measurability/integrability bridge:
+  `rankOneRandomMatrix`, `isRandomMatrix_rankOneRandomMatrix`,
+  `integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`, and
+  `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.
+- Next safe task: `RM-PSD-nullspace-converse`.
+
+## `HighDimProb/RandomMatrix/Basic.lean`
+
+- `RandomMatrix`: abbrev, finite-dimensional real random matrix.
+- `matrixEntry`: def, entry random variable.
+- `IsRandomMatrix`: abbrev, entrywise measurability predicate.
+- `rankOneRandomMatrix`: def, vector-to-rank-one random matrix with entries
+  `X_i * X_j`.
+- `rankOneRandomMatrix_apply`: theorem.
+- `matrixEntry_rankOneRandomMatrix`: theorem.
+- `isRandomMatrix_rankOneRandomMatrix`: theorem, entrywise measurability from
+  `IsRandomVector`.
+- `measurable_randomMatrix_of_isRandomMatrix`: theorem.
+
+## `HighDimProb/RandomMatrix/Expectation.lean`
+
+- `matrixExpect`: def, entrywise matrix expectation.
+- `IntegrableRandomMatrix`: def, entrywise integrability predicate.
+- `centeredRandomMatrix`: def.
+- `integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`: theorem,
+  rank-one entrywise integrability from explicit product integrability.
+- `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`: theorem, rank-one
+  entrywise integrability from coordinate `MemLp ... 2` assumptions.
 
 ## `HighDimProb/RandomMatrix/SelfAdjoint.lean`
 
@@ -400,7 +427,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-RM-vector-to-matrix-measurability-integrability: next prove or isolate the entrywise measurability / integrability bridge from vector random variables to rank-one random matrices. Do not prove PSD nullspace converse, lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC, Golden-Thompson, or the full Matrix Bernstein theorem in that stage.
+RM-PSD-nullspace-converse: next prove or isolate the positive-semidefinite nullspace converse needed by covariance-style examples. Do not prove lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC, Golden-Thompson, expectation contraction, or the full Matrix Bernstein theorem in that stage.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -424,4 +451,4 @@ RM-vector-to-matrix-measurability-integrability: next prove or isolate the entry
   proved in `ConcentrationStatements.lean`, with exponential-add RHS.
 - The theta-optimized scalar-RHS quadratic-form wrapper under primitives is now
   proved in `ConcentrationStatements.lean`, with Bernstein denominator RHS.
-- Next safe task: RM-vector-to-matrix-measurability-integrability.
+- Next safe task: RM-PSD-nullspace-converse.

@@ -65,6 +65,40 @@ theorem matrixEntry_apply {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
   rfl
 
 /--
+Rank-one self outer-product random matrix associated to a random vector.
+
+Formula reference: the outer product has entries `x_i * x_j`; see
+https://en.wikipedia.org/wiki/Outer_product .  This declaration only exposes
+the object-level vector-to-matrix map; measurability and integrability remain
+separate assumptions/bridges, matching the random-vector convention at
+https://en.wikipedia.org/wiki/Random_vector .
+-/
+def rankOneRandomMatrix {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
+    (X : RandomVector Omega n) : RandomMatrix Omega n n :=
+  fun omega i j => X omega i * X omega j
+
+/--
+Formula reference: this unfolds the rank-one outer-product entry
+`X_i(omega) * X_j(omega)`; see https://en.wikipedia.org/wiki/Outer_product .
+-/
+@[simp]
+theorem rankOneRandomMatrix_apply {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
+    (X : RandomVector Omega n) (omega : Omega) (i j : Fin n) :
+    rankOneRandomMatrix X omega i j = X omega i * X omega j :=
+  rfl
+
+/--
+Formula reference: the matrix entry of a rank-one outer product is the product
+of the corresponding vector coordinates; see
+https://en.wikipedia.org/wiki/Outer_product .
+-/
+@[simp]
+theorem matrixEntry_rankOneRandomMatrix {Omega : Type*} [MeasurableSpace Omega]
+    {n : Nat} (X : RandomVector Omega n) (i j : Fin n) (omega : Omega) :
+    matrixEntry (rankOneRandomMatrix X) i j omega = X omega i * X omega j :=
+  rfl
+
+/--
 Entries of an `IsRandomMatrix` are real random variables.
 
 Formula reference: entrywise random-variable structure is the finite-matrix
@@ -76,6 +110,22 @@ theorem isRealRandomVariable_matrixEntry {Omega : Type*} [MeasurableSpace Omega]
     (hA : IsRandomMatrix P A) (i : Fin m) (j : Fin n) :
     IsRealRandomVariable P (matrixEntry A i j) :=
   hA i j
+
+/--
+Rank-one self outer products of random vectors are random matrices.
+
+Formula reference: each entry is the product `X_i * X_j`; measurability follows
+from closure of measurable real functions under multiplication.  See
+https://en.wikipedia.org/wiki/Outer_product and
+https://en.wikipedia.org/wiki/Measurable_function .
+-/
+theorem isRandomMatrix_rankOneRandomMatrix {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {n : Nat} {X : RandomVector Omega n}
+    (hX : IsRandomVector P X) :
+    IsRandomMatrix P (rankOneRandomMatrix X) := by
+  intro i j
+  dsimp [IsRealRandomVariable, IsRandomVariable, matrixEntry, rankOneRandomMatrix]
+  exact (hX i).mul (hX j)
 
 /--
 Entrywise measurability gives measurability of the matrix-valued map.

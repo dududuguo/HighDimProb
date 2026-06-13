@@ -1231,5 +1231,23 @@
 - Review decision: independent code review approved the change; architectural
   review flagged the risk that centered APIs can look analytically stronger than
   they are, so Lean comments and docs now state the explicit-bound-only boundary.
-- Future upgrade path: next handle vector-to-rank-one matrix measurability /
-  integrability as a separate concept cluster, then PSD nullspace converse.
+- Future upgrade path: next handle PSD nullspace converse as a separate concept cluster.
+
+
+## RM vector-to-rank-one matrix measurability / integrability bridge
+
+- Concrete version chosen: introduce `rankOneRandomMatrix` in the basic random
+  matrix layer, with entries `X_i * X_j`, instead of continuing to duplicate the
+  anonymous lambda shape in downstream examples.
+- Measurability decision: prove `isRandomMatrix_rankOneRandomMatrix` from
+  `IsRandomVector` by entrywise measurable multiplication, matching the existing
+  sample-covariance proof style.
+- Integrability decision: add one explicit product-integrability bridge and one
+  square-moment bridge via `MemLp.integrable_mul`; do not infer integrability
+  from measurability alone.
+- Layering decision: keep the object/measurability bridge in `Basic.lean` and
+  integrability bridges in `Expectation.lean`, where `IntegrableRandomMatrix` is
+  defined.
+- Future upgrade path: next handle PSD nullspace converse as a separate concept
+  cluster; expectation contraction and Matrix Bernstein tails remain out of
+  scope.

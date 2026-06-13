@@ -10,6 +10,7 @@ variable {m n : Nat}
 variable (A : I -> RandomMatrix Omega n n)
 variable (X : RandomMatrix Omega n n)
 variable (Y : RandomMatrix Omega m n)
+variable (Z : RandomVector Omega n)
 variable (M V : Matrix (Fin n) (Fin n) Real)
 variable (i : I)
 variable (omega : Omega)
@@ -17,6 +18,9 @@ variable (r cidx : Fin n)
 variable (R sigma2 c theta t : Real)
 variable (hA : forall i, IsRandomMatrix P (A i))
 variable (hX : IsRandomMatrix P X)
+variable (hProdZ : forall i : Fin n, forall j : Fin n,
+  IntegrableRealRandomVariable P (fun omega => Z omega i * Z omega j))
+variable (hZ2 : forall i : Fin n, MemLpRealRandomVariable P (coord Z i) 2)
 variable (hSA : forall i, RandomSelfAdjointMatrix P (A i))
 variable (hM : IsSelfAdjointMatrix M)
 variable (hXSA : RandomSelfAdjointMatrix P X)
@@ -35,6 +39,8 @@ variable (hAsqInt : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)
 #check CenteredSelfAdjointRandomMatrixFamily
 #check CenteredRandomSelfAdjointMatrices
 #check IntegrableRandomMatrix
+#check integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products
+#check integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
 #check BoundedOperatorNorm
 #check PointwiseOperatorNormBound
 #check UniformOperatorNormBound
@@ -115,6 +121,12 @@ variable (hAsqInt : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)
 #check (CenteredSelfAdjointRandomMatrixFamily P A : Prop)
 #check (CenteredRandomSelfAdjointMatrices P A : Prop)
 #check (IntegrableRandomMatrix P X : Prop)
+#check (integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products
+  (X := Z) hProdZ :
+  IntegrableRandomMatrix P (rankOneRandomMatrix Z))
+#check (integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
+  (X := Z) hZ2 :
+  IntegrableRandomMatrix P (rankOneRandomMatrix Z))
 #check (BoundedOperatorNorm X R : Prop)
 #check (PointwiseOperatorNormBound A R : Prop)
 #check (UniformOperatorNormBound A R : Prop)

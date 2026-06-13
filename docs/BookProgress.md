@@ -993,7 +993,7 @@ squared-norm bounds into `BoundedOperatorNorm` and
 
 This is not a centered summand bound, not a vector-to-matrix
 measurability/integrability bridge, not a PSD nullspace converse, and not a
-Matrix Bernstein tail theorem. Next safe task: RM-vector-to-matrix-measurability-integrability.
+Matrix Bernstein tail theorem. Next safe task: RM-PSD-nullspace-converse.
 
 ## RM centered operator-norm prerequisite progress
 
@@ -1014,4 +1014,25 @@ The deterministic lemma packages the matrix operator-norm triangle inequality
 contraction theorem and does not prove entrywise integrability or
 vector-to-rank-one measurability.
 
-Next safe task: RM-vector-to-matrix-measurability-integrability.
+Next safe task: RM-PSD-nullspace-converse.
+
+
+## RM vector-to-rank-one matrix measurability / integrability prerequisite progress
+
+The vector-to-rank-one matrix prerequisite slice is proved:
+
+```lean
+rankOneRandomMatrix
+isRandomMatrix_rankOneRandomMatrix
+integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products
+integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
+```
+
+The bridge defines the rank-one random matrix entrywise as `X_i * X_j`, proves
+entrywise measurability from `IsRandomVector`, and proves entrywise
+integrability only under explicit product-integrability assumptions or explicit
+coordinate `MemLp ... 2` assumptions.  It does not prove integrability from
+measurability alone, expectation contraction, PSD nullspace converse, or Matrix
+Bernstein tails.
+
+Next safe task: RM-PSD-nullspace-converse.
