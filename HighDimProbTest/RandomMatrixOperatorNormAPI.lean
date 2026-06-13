@@ -34,6 +34,7 @@ variable (hA : IsRandomMatrix P A)
 #check instOpensMeasurableSpaceMatrixL2Operator
 #check deterministicOperatorNorm
 #check deterministicOperatorNorm_apply
+#check deterministicOperatorNorm_sub_le_add
 #check rankOneOperatorNorm_le_vectorSqNorm
 #check matVecSqNorm
 #check matVecSqNorm_apply
@@ -65,6 +66,8 @@ variable (hA : IsRandomMatrix P A)
 #check (IsUnitVector x : Prop)
 #check (unitSphere n : Set (Fin n -> Real))
 #check (deterministicOperatorNorm M : Real)
+#check (deterministicOperatorNorm_sub_le_add M M :
+  deterministicOperatorNorm (M - M) <= deterministicOperatorNorm M + deterministicOperatorNorm M)
 #check (rankOneOperatorNorm_le_vectorSqNorm v :
   deterministicOperatorNorm (fun i j : Fin n => v i * v j) <= vectorSqNorm v)
 #check (matVecSqNorm M x : Real)

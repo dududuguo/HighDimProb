@@ -1216,3 +1216,20 @@
 - Future upgrade path: next add the centered operator-norm triangle wrapper;
   then handle vector-to-rank-one measurability/integrability and PSD nullspace
   converse as separate concept clusters.
+
+## RM centered operator-norm boundedness bridge
+
+- Concrete version chosen: prove the deterministic triangle inequality for the
+  existing `deterministicOperatorNorm`, then package it for `centeredRandomMatrix`
+  using an explicit bound on `matrixExpect P X`.
+- Assumption decision: the wrappers require both the pointwise bound on `X` and
+  the deterministic operator-norm bound on `E X`; they do not infer expectation
+  contraction from boundedness.
+- Layering decision: this remains an algebraic boundedness bridge over the
+  current entrywise expectation vocabulary.  It deliberately does not prove
+  entrywise integrability or vector-to-rank-one measurability.
+- Review decision: independent code review approved the change; architectural
+  review flagged the risk that centered APIs can look analytically stronger than
+  they are, so Lean comments and docs now state the explicit-bound-only boundary.
+- Future upgrade path: next handle vector-to-rank-one matrix measurability /
+  integrability as a separate concept cluster, then PSD nullspace converse.

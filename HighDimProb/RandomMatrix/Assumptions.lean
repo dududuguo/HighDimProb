@@ -110,6 +110,41 @@ theorem BoundedOperatorNorm_rankOne_of_sqNorm_bound {Omega : Type*}
   intro omega
   exact (rankOneOperatorNorm_le_vectorSqNorm (X omega)).trans (hX omega)
 
+/--
+If a random matrix and its deterministic entrywise expectation have explicit
+operator-norm bounds, then the centered random matrix is bounded by the sum of
+those two bounds.
+
+This is only an algebraic triangle-inequality wrapper around the existing
+`matrixExpect` / `centeredRandomMatrix` vocabulary. It does not prove
+entrywise integrability, measurability, or any contraction theorem bounding
+`||E X||op` from the pointwise bound on `X`; the expectation norm bound is an
+explicit hypothesis.
+
+Formula reference: centering uses `X(omega) - E X`, and the proof is the
+operator-norm triangle inequality `||X(omega) - E X|| <= ||X(omega)|| +
+||E X||`; see https://en.wikipedia.org/wiki/Operator_norm and the sample
+covariance/expectation background at
+https://en.wikipedia.org/wiki/Sample_mean_and_covariance
+-/
+theorem BoundedOperatorNorm_centered_of_bound_expect_bound {Omega : Type*}
+    [MeasurableSpace Omega] {m n : Nat}
+    (P : Measure Omega) (X : RandomMatrix Omega m n) (R Rexp : Real)
+    (hX : BoundedOperatorNorm X R)
+    (hExp : deterministicOperatorNorm (matrixExpect P X) <= Rexp) :
+    BoundedOperatorNorm (centeredRandomMatrix P X) (R + Rexp) := by
+  intro omega
+  have hTri :
+      deterministicOperatorNorm (X omega - matrixExpect P X) <=
+        deterministicOperatorNorm (X omega) +
+          deterministicOperatorNorm (matrixExpect P X) :=
+    deterministicOperatorNorm_sub_le_add (X omega) (matrixExpect P X)
+  have hBound :
+      deterministicOperatorNorm (X omega) +
+          deterministicOperatorNorm (matrixExpect P X) <= R + Rexp :=
+    add_le_add (hX omega) hExp
+  exact hTri.trans hBound
+
 /-- Pointwise uniform operator-norm bound for a matrix family. -/
 def PointwiseOperatorNormBound {Omega : Type*} [MeasurableSpace Omega]
     {I : Type*} {m n : Nat} (A : I -> RandomMatrix Omega m n)
@@ -134,6 +169,47 @@ theorem PointwiseOperatorNormBound_rankOne_of_sqNorm_bound {Omega : Type*}
     PointwiseOperatorNormBound (fun i omega a b => X i omega a * X i omega b) R := by
   intro i
   exact BoundedOperatorNorm_rankOne_of_sqNorm_bound (X i) R hR (hX i)
+
+/--
+Family version of the centered operator-norm bridge under an explicit bound on
+each deterministic expectation.
+
+This is the family form of the algebraic wrapper above. It intentionally keeps
+the expectation operator-norm bound as a hypothesis and does not establish
+integrability or expectation contraction.
+
+Formula reference: this packages the triangle-bound route
+`||X_i(omega) - E X_i|| <= ||X_i(omega)|| + ||E X_i||`; see
+https://en.wikipedia.org/wiki/Operator_norm and
+https://en.wikipedia.org/wiki/Sample_mean_and_covariance
+-/
+theorem PointwiseOperatorNormBound_centered_of_bound_expect_bound {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} {m n : Nat}
+    (P : Measure Omega) (X : I -> RandomMatrix Omega m n) (R Rexp : Real)
+    (hX : PointwiseOperatorNormBound X R)
+    (hExp : forall i, deterministicOperatorNorm (matrixExpect P (X i)) <= Rexp) :
+    PointwiseOperatorNormBound (fun i => centeredRandomMatrix P (X i)) (R + Rexp) := by
+  intro i
+  exact BoundedOperatorNorm_centered_of_bound_expect_bound P (X i) R Rexp
+    (hX i) (hExp i)
+
+/--
+Same-radius centered operator-norm wrapper: if both `X_i(omega)` and
+`E X_i` are bounded by `R`, then the centered family is bounded by `R + R`.
+
+This remains an explicit-bound wrapper; the hypothesis on `E X_i` is not
+derived from the pointwise bound on `X_i`.
+
+Formula reference: this is the special case `R_exp = R` of the operator-norm
+triangle inequality; see https://en.wikipedia.org/wiki/Operator_norm
+-/
+theorem PointwiseOperatorNormBound_centered_of_bound_expect_bound_same {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} {m n : Nat}
+    (P : Measure Omega) (X : I -> RandomMatrix Omega m n) (R : Real)
+    (hX : PointwiseOperatorNormBound X R)
+    (hExp : forall i, deterministicOperatorNorm (matrixExpect P (X i)) <= R) :
+    PointwiseOperatorNormBound (fun i => centeredRandomMatrix P (X i)) (R + R) := by
+  exact PointwiseOperatorNormBound_centered_of_bound_expect_bound P X R R hX hExp
 
 /-- Alias emphasizing that the uniform bound is pointwise, not a.e. -/
 abbrev UniformOperatorNormBound {Omega : Type*} [MeasurableSpace Omega]

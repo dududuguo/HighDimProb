@@ -8,17 +8,22 @@ RandomMatrix / Matrix Bernstein mainline: MB-S9 now includes the bounded
 trace-MGF theorem under explicit primitives, the bounded real-to-lintegral
 trace-MGF bridge, the explicit-theta quadratic-form upper-tail wrappers, the
 dimension/norm scalar RHS reduction, and the theta-optimized scalar Bernstein
-denominator wrapper. The current prerequisite cleanup also adds the first
-rank-one operator-norm bridge for covariance-style examples.
+denominator wrapper. The current prerequisite cleanup also adds rank-one and
+centered operator-norm bridges for covariance-style examples.
 
 The latest proved public theorem is:
 
-- `PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`
+- `PointwiseOperatorNormBound_centered_of_bound_expect_bound_same`
 
-Supporting proved API also includes `rankOneOperatorNorm_le_vectorSqNorm` and
-`BoundedOperatorNorm_rankOne_of_sqNorm_bound`. These are deterministic /
-pointwise boundedness bridges only: they do not prove centered summand
-boundedness, vector-to-rank-one matrix measurability or integrability, the PSD
+Supporting proved API also includes `deterministicOperatorNorm_sub_le_add`,
+`BoundedOperatorNorm_centered_of_bound_expect_bound`,
+`PointwiseOperatorNormBound_centered_of_bound_expect_bound`, the earlier
+rank-one bridge `rankOneOperatorNorm_le_vectorSqNorm`,
+`BoundedOperatorNorm_rankOne_of_sqNorm_bound`, and
+`PointwiseOperatorNormBound_rankOne_of_sqNorm_bound`. These are deterministic /
+pointwise boundedness bridges only: the centered bridge requires an explicit
+operator-norm bound on `matrixExpect P X` and does not prove expectation
+contraction, vector-to-rank-one matrix measurability or integrability, the PSD
 nullspace converse, lambda-max/operator-norm Matrix Bernstein tails,
 Tropp/Lieb, the Bernstein CFC primitive, Golden-Thompson, the `t = 0` endpoint
 for the optimized wrapper, or the final full Matrix Bernstein tail theorem.
@@ -28,7 +33,7 @@ under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-centered-operator-norm-bound`
+- `RM-vector-to-matrix-measurability-integrability`
 
 ## Public Milestone Summary
 

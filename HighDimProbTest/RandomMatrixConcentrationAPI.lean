@@ -126,6 +126,16 @@ variable (R sigma2 c c1 c2 t bound K : Real)
 #check (PointwiseOperatorNormBound B R : Prop)
 #check (UniformOperatorNormBound B R : Prop)
 #check (AeOperatorNormBound P B R : Prop)
+#check (BoundedOperatorNorm_centered_of_bound_expect_bound
+  (P := P) (X := A) (R := R) (Rexp := c) :
+  BoundedOperatorNorm A R ->
+  deterministicOperatorNorm (matrixExpect P A) <= c ->
+  BoundedOperatorNorm (centeredRandomMatrix P A) (R + c))
+#check (PointwiseOperatorNormBound_centered_of_bound_expect_bound
+  (P := P) (X := B) (R := R) (Rexp := c) :
+  PointwiseOperatorNormBound B R ->
+  (forall i, deterministicOperatorNorm (matrixExpect P (B i)) <= c) ->
+  PointwiseOperatorNormBound (fun i => centeredRandomMatrix P (B i)) (R + c))
 #check (randomMatrixSum B : RandomMatrix Omega n n)
 #check (MatrixVarianceProxy P B : Matrix (Fin n) (Fin n) Real)
 #check (matrixVarianceProxy P B : Matrix (Fin n) (Fin n) Real)

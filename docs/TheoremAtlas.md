@@ -30,7 +30,7 @@ statement APIs connecting bounded Bernstein lintegral trace-MGF bounds to the
 existing Laplace/tail layer without claiming the missing real-to-lintegral,
 Tropp/Lieb, CFC, or Matrix Bernstein proofs.
 
-Next safe task: `RM-centered-operator-norm-bound`.
+Next safe task: `RM-vector-to-matrix-measurability-integrability`.
 ## Milestone 3 scalar implication closeout
 
 This audit separates proved theorem families from typed statements and blocked
@@ -1247,7 +1247,7 @@ future directions.
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Priority: Stage MB-S2 through MB-S9-foundation complete; next task is
-  RM-centered-operator-norm-bound.
+  RM-vector-to-matrix-measurability-integrability.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1645,7 +1645,7 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is RM-centered-operator-norm-bound.
+- Priority: next safe task is RM-vector-to-matrix-measurability-integrability.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -1821,7 +1821,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Priority: next safe task is RM-centered-operator-norm-bound.
+- Priority: next safe task is RM-vector-to-matrix-measurability-integrability.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -1948,7 +1948,7 @@ future directions.
 - Blocker: the finite-family Tropp primitive itself remains typed only; the
   Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and the
   Matrix Bernstein tail theorem remain unproved.
-- Priority: next safe task is RM-centered-operator-norm-bound.
+- Priority: next safe task is RM-vector-to-matrix-measurability-integrability.
 
 
 
@@ -1966,7 +1966,7 @@ future directions.
 - Blocker: the result is still one-sided and quadratic-form under explicit
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
-- Priority: next safe task is RM-centered-operator-norm-bound.
+- Priority: next safe task is RM-vector-to-matrix-measurability-integrability.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -1986,4 +1986,21 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Priority: next safe task is RM-centered-operator-norm-bound.
+- Priority: next safe task is RM-vector-to-matrix-measurability-integrability.
+
+## RM Centered Operator-Norm Bound
+
+- Informal statement: if a random matrix family has pointwise operator-norm
+  bound `R` and each entrywise expectation matrix has deterministic
+  operator-norm bound `Rexp`, then the centered family is pointwise bounded by
+  `R + Rexp`.
+- Target Lean declarations:
+  `deterministicOperatorNorm_sub_le_add`,
+  `BoundedOperatorNorm_centered_of_bound_expect_bound`,
+  `PointwiseOperatorNormBound_centered_of_bound_expect_bound`, and
+  `PointwiseOperatorNormBound_centered_of_bound_expect_bound_same`.
+- Status: proven, API-tested, and judge-tested.
+- Blocker: this is only an algebraic explicit-bound wrapper.  It does not prove
+  vector-to-rank-one matrix measurability/integrability, expectation
+  contraction, PSD nullspace converse, or Matrix Bernstein tails.
+- Priority: next safe task is RM-vector-to-matrix-measurability-integrability.
