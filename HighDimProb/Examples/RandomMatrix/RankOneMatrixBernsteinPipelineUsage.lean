@@ -27,13 +27,12 @@ def centeredRankOnePipelineSummands {Omega : Type*}
     I -> RandomMatrix Omega (n + 1) (n + 1) :=
   centeredRankOneCovarianceSummandFamily (P := P) X
 
-/-- The pipeline summands are centered versions of the uncentered rank-one
-family. -/
-theorem centeredRankOnePipelineSummands_eq_centered {Omega : Type*}
+/-- The pipeline summands are the core centered rank-one random-matrix family. -/
+theorem centeredRankOnePipelineSummands_eq_centeredRankOneFamily {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {I : Type*} {n : Nat}
     (X : I -> RandomRankOneVector Omega n) :
     centeredRankOnePipelineSummands (P := P) X =
-      centeredRandomMatrixFamily P (rankOneCovarianceContributionFamily X) := by
+      centeredRankOneRandomMatrixFamily P X := by
   rfl
 
 /-- Assumptions for the optimized Matrix Bernstein pipeline.

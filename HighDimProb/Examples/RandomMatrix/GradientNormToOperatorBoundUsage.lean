@@ -7,9 +7,9 @@ import HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
 This examples-only file records the intended bridge from gradient norm bounds
 to Matrix Bernstein operator-norm assumptions for rank-one covariance
 summands. The uncentered rank-one bridge now follows from the named
-`rankOneRandomMatrix` operator-norm API. The centered bridge still keeps the
-expectation operator-norm bound explicit, then applies the core centering
-triangle wrapper.
+`rankOneRandomMatrix` operator-norm API. The centered bridge follows from the
+named centered rank-one operator-norm API, so this example does not rederive
+the expectation-contraction route locally.
 -/
 
 namespace HighDimProb.Examples.RandomMatrix.GradientNormToOperatorBoundUsage
@@ -81,49 +81,48 @@ theorem uncenteredGradientCovariance_pointwiseOperatorNormBound
 /-- Example-local bridge from gradient norm control to the centered summand
 operator-norm bound used by the Matrix Bernstein examples.
 
-The expectation operator-norm bound remains explicit: this example does not
-try to prove an expectation contraction theorem from the pointwise sample
-bound. -/
+This uses the public centered rank-one operator-norm adapter. The extra
+random-vector and second-moment fields are exactly the hypotheses needed by
+the core expectation-contraction step. -/
 structure CenteredGradientCovarianceOperatorNormAdapter {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {batch n : Nat}
     (G : RandomGradientTable Omega batch n)
     (A : Fin batch -> RandomMatrix Omega (n + 1) (n + 1))
-    (R Rexp : Real) : Prop where
+    (R : Real) : Prop where
   centeredAdapter : IsCenteredGradientCovarianceSummandFamily (P := P) G A
+  randomVector :
+    forall b, IsRandomVector P (randomGradientVectorFamily G b)
+  coordinateMemLpTwo :
+    forall b, forall j : Fin (n + 1),
+      MemLpRealRandomVariable P (coord (randomGradientVectorFamily G b) j) 2
   gradientSqNormBound : GradientSqNormBound G R
-  expectationOperatorNormBound :
-    forall b,
-      deterministicOperatorNorm
-        (matrixExpect P (randomGradientCovarianceContributionFamily G b)) <= Rexp
+  radiusNonneg : 0 <= R
 
 /-- The centered adapter supplies the exact `PointwiseOperatorNormBound`
 assumption consumed by the gradient covariance Matrix Bernstein examples. -/
 theorem centeredGradientCovariance_pointwiseOperatorNormBound
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
-    {batch n : Nat}
+    [IsProbabilityMeasure P] {batch n : Nat}
     (G : RandomGradientTable Omega batch n)
     (A : Fin batch -> RandomMatrix Omega (n + 1) (n + 1))
-    (R Rexp : Real)
-    (h : CenteredGradientCovarianceOperatorNormAdapter (P := P) G A R Rexp) :
-    PointwiseOperatorNormBound A (R + Rexp) := by
-  have hUncentered :
-      PointwiseOperatorNormBound
-        (randomGradientCovarianceContributionFamily G) R :=
-    uncenteredGradientCovariance_pointwiseOperatorNormBound G R
-      ⟨h.gradientSqNormBound⟩
+    (R : Real)
+    (h : CenteredGradientCovarianceOperatorNormAdapter (P := P) G A R) :
+    PointwiseOperatorNormBound A (2 * R) := by
+  have hSq :
+      forall b omega,
+        vectorSqNorm (randomGradientVectorFamily G b omega) <= R := by
+    intro b omega
+    simpa [randomGradientVectorFamily, randomGradientVector,
+      gradientSqNorm_eq_vectorSqNorm] using h.gradientSqNormBound b omega
   have hCentered :
       PointwiseOperatorNormBound
-        (fun b : Fin batch =>
-          centeredRandomMatrix P
-            (randomGradientCovarianceContributionFamily G b)) (R + Rexp) :=
-    PointwiseOperatorNormBound_centered_of_bound_expect_bound P
-      (randomGradientCovarianceContributionFamily G) R Rexp
-      hUncentered h.expectationOperatorNormBound
+        (centeredRankOneRandomMatrixFamily P (randomGradientVectorFamily G))
+        (2 * R) :=
+    PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound
+      (P := P) (X := randomGradientVectorFamily G) (R := R)
+      h.randomVector h.coordinateMemLpTwo hSq h.radiusNonneg
   rw [h.centeredAdapter]
-  simpa [centeredGradientCovarianceSummands,
-    centeredGradientCovarianceContribution,
-    randomGradientCovarianceContributionFamily, centeredRandomMatrix] using
-    hCentered
+  simpa [centeredGradientCovarianceSummands] using hCentered
 
 /-- Rank-one gradient covariance contributions are structurally PSD; the
 operator-norm part is separate from this PSD fact. -/
