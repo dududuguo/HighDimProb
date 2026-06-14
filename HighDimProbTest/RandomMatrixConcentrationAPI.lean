@@ -12,6 +12,7 @@ variable {m n : Nat}
 variable (A : RandomMatrix Omega n n)
 variable (B : I -> RandomMatrix Omega n n)
 variable (X : RandomMatrix Omega m n)
+variable (V : RandomVector Omega n)
 variable (M N : Matrix (Fin n) (Fin n) Real)
 variable (x : Fin n -> Real)
 variable (R theta sigma2 c c1 c2 t bound K : Real)
@@ -28,7 +29,9 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check matrixQuadraticForm_sum
 #check IsPSDMatrix
 #check isPSDMatrix_sum
+#check isPSDMatrix_rankOneMatrix
 #check RandomPSDMatrix
+#check randomPSDMatrix_rankOneRandomMatrix
 #check MatrixLE
 #check matrixQuadraticForm_apply
 #check isPSDMatrix_quadraticForm_nonneg
@@ -40,6 +43,9 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check IntegrableRandomMatrix
 #check centeredRandomMatrix
 #check centeredRandomMatrixFamily
+#check rankOneRandomMatrixFamily
+#check centeredRankOneRandomMatrix
+#check centeredRankOneRandomMatrixFamily
 #check matrixExpect_apply
 #check centeredRandomMatrix_apply
 #check centeredRandomMatrixFamily_apply
@@ -119,6 +125,10 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check (matrixQuadraticForm M x : Real)
 #check (IsPSDMatrix M : Prop)
 #check (RandomPSDMatrix P A : Prop)
+#check (isPSDMatrix_rankOneMatrix x : IsPSDMatrix (rankOneMatrix x))
+#check (randomPSDMatrix_rankOneRandomMatrix
+  (P := P) (X := V) :
+  RandomPSDMatrix P (rankOneRandomMatrix V))
 #check (MatrixLE M N : Prop)
 #check (matrixExpect P X : Matrix (Fin m) (Fin n) Real)
 #check (IntegrableRandomMatrix P X : Prop)
@@ -142,7 +152,7 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
   (P := P) (X := B) (R := R) (Rexp := c) :
   PointwiseOperatorNormBound B R ->
   (forall i, deterministicOperatorNorm (matrixExpect P (B i)) <= c) ->
-  PointwiseOperatorNormBound (fun i => centeredRandomMatrix P (B i)) (R + c))
+  PointwiseOperatorNormBound (centeredRandomMatrixFamily P B) (R + c))
 #check (randomMatrixSum B : RandomMatrix Omega n n)
 #check (MatrixVarianceProxy P B : Matrix (Fin n) (Fin n) Real)
 #check (matrixVarianceProxy P B : Matrix (Fin n) (Fin n) Real)

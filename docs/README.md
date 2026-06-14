@@ -6,6 +6,9 @@ Lean source and the root `README.md` remain the source of truth for users.
 If you are new to the project, start with the public-facing files:
 
 - `RandomMatrixAPI.md`: current RandomMatrix / Matrix Bernstein API surface.
+- `AssumptionVocabulary.md`: assumption predicates and where they belong,
+  especially the distinction between core RandomMatrix objects and
+  `RandomMatrix.Assumptions` theorem-interface adapters.
 - `JudgeSystem.md`: downstream-style API judge suite.
 - `LeanTooling.md`: local Lean, doc-gen4, and import-graph tooling.
 - `Workflow.md`: how changes are usually made.

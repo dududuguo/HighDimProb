@@ -1231,14 +1231,17 @@
 - Review decision: independent code review approved the change; architectural
   review flagged the risk that centered APIs can look analytically stronger than
   they are, so Lean comments and docs now state the explicit-bound-only boundary.
-- Future upgrade path: next handle RM-expectation-contraction as a separate concept cluster.
+- Follow-up status: RM-S1/S2 now supplies expectation contraction and centered
+  `2 * R` wrappers; RM-S3/RM-S4 now supply the centered rank-one structural
+  and operator-norm adapters.
 
 
 ## RM vector-to-rank-one matrix measurability / integrability bridge
 
-- Concrete version chosen: introduce `rankOneRandomMatrix` in the basic random
-  matrix layer, with entries `X_i * X_j`, instead of continuing to duplicate the
-  anonymous lambda shape in downstream examples.
+- Concrete version chosen: introduce `rankOneRandomMatrix` and
+  `rankOneRandomMatrixFamily` in the basic random matrix layer, with entries
+  `X_i * X_j`, instead of continuing to duplicate inline family expressions in
+  downstream examples.
 - Measurability decision: prove `isRandomMatrix_rankOneRandomMatrix` from
   `IsRandomVector` by entrywise measurable multiplication, matching the existing
   sample-covariance proof style.
@@ -1248,9 +1251,28 @@
 - Layering decision: keep the object/measurability bridge in `Basic.lean` and
   integrability bridges in `Expectation.lean`, where `IntegrableRandomMatrix` is
   defined.
-- Future upgrade path: next handle RM-expectation-contraction as a separate concept
-  cluster; Matrix Bernstein tails remain out of
+- Follow-up status: centered rank-one structural and operator-norm adapters are
+  now named and proved in RM-S3/RM-S4; Matrix Bernstein tails remain out of
   scope.
+
+
+## RM centered rank-one adapter naming
+
+- Concrete version chosen: introduce `centeredRankOneRandomMatrix` and
+  `centeredRankOneRandomMatrixFamily` so covariance-style downstream code can
+  refer to centered rank-one summands through a stable public API.
+- Structural decision: prove measurability, finite-measure integrability,
+  self-adjointness, and centered-family membership through the existing
+  `centeredRandomMatrix` and `rankOneRandomMatrix` layers instead of creating a
+  separate covariance-specific object.
+- Operator-norm decision: prove the single-matrix and family `2 * R` wrappers
+  by composing the rank-one operator-norm bridge with expectation contraction
+  and the generic centered pointwise operator-norm wrapper.
+- Boundary decision: these adapters do not prove the sample-covariance
+  deviation adapter contract, operator-norm Matrix Bernstein tails, Tropp/Lieb,
+  Bernstein CFC, or Golden-Thompson.
+- Future upgrade path: RM-S5 should express the sample-covariance deviation
+  route using these named centered rank-one summands.
 
 
 ## RM PSD nullspace converse bridge
@@ -1264,6 +1286,7 @@
 - Source/comment decision: theorem comments cite public PSD-square-root and
   nullspace-converse references so readers can verify the mathematical fact.
 - Boundary decision: this stage proves only deterministic PSD kernel facts; it
-  does not infer expectation contraction, covariance PSD from integrability, or
-  Matrix Bernstein tail statements.
-- Future upgrade path: next handle RM-expectation-contraction as a separate concept cluster.
+  does not infer covariance PSD from integrability, sample-covariance
+  deviation contracts, or Matrix Bernstein tail statements.
+- Future upgrade path: RM-S5 should connect the named centered rank-one
+  adapters to sample-covariance deviation statements.

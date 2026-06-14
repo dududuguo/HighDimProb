@@ -47,6 +47,42 @@ def RandomPSDMatrix {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (_P : Measure Omega) (A : RandomMatrix Omega n n) : Prop :=
   forall omega, IsPSDMatrix (A omega)
 
+/--
+Rank-one self outer products are PSD in the explicit quadratic-form order.
+
+Formula reference: for a real vector `x`, the quadratic form of `x x^T` at
+`y` is `(y^T x)^2`, hence nonnegative; see
+https://en.wikipedia.org/wiki/Outer_product and
+https://en.wikipedia.org/wiki/Definite_matrix .
+-/
+theorem isPSDMatrix_rankOneMatrix {n : Nat} (x : Fin n -> Real) :
+    IsPSDMatrix (rankOneMatrix x) := by
+  refine ⟨?_, ?_⟩
+  · apply Matrix.IsSymm.ext
+    intro i j
+    simp [rankOneMatrix, mul_comm]
+  · intro y
+    have hquad :
+        matrixQuadraticForm (rankOneMatrix x) y =
+          (Finset.univ.sum fun i : Fin n => y i * x i) ^ 2 := by
+      simp [matrixQuadraticForm, rankOneMatrix]
+      rw [sq, Finset.sum_mul_sum]
+      apply Finset.sum_congr rfl
+      intro i _
+      apply Finset.sum_congr rfl
+      intro j _
+      ring
+    rw [hquad]
+    exact sq_nonneg _
+
+/-- The rank-one random matrix associated to a real random vector is pointwise PSD. -/
+theorem randomPSDMatrix_rankOneRandomMatrix {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    (X : RandomVector Omega n) :
+    RandomPSDMatrix P (rankOneRandomMatrix X) := by
+  intro omega
+  exact isPSDMatrix_rankOneMatrix (X omega)
+
 /-- Loewner-style comparison without declaring a global matrix order instance. -/
 def MatrixLE {n : Nat} (A B : Matrix (Fin n) (Fin n) Real) : Prop :=
   IsPSDMatrix (B - A)

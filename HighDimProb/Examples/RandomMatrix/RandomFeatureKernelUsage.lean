@@ -110,12 +110,25 @@ theorem randomFeatureVector_apply {Omega : Type*} [MeasurableSpace Omega]
     randomFeatureVector Phi a omega i = Phi omega a i := by
   rfl
 
+/-- Family of random-feature vectors indexed by sampled feature coordinate. -/
+def randomFeatureVectorFamily {Omega : Type*} [MeasurableSpace Omega]
+    {numFeatures n : Nat} (Phi : RandomFeatureTable Omega numFeatures n) :
+    Fin numFeatures -> RandomNTKFeatureVector Omega n :=
+  randomFeatureVector Phi
+
+@[simp]
+theorem randomFeatureVectorFamily_apply {Omega : Type*} [MeasurableSpace Omega]
+    {numFeatures n : Nat} (Phi : RandomFeatureTable Omega numFeatures n)
+    (a : Fin numFeatures) :
+    randomFeatureVectorFamily Phi a = randomFeatureVector Phi a := by
+  rfl
+
 /-- Random rank-one kernel contribution from one feature coordinate. -/
 def randomFeatureKernelContribution {Omega : Type*} [MeasurableSpace Omega]
     {numFeatures n : Nat} (Phi : RandomFeatureTable Omega numFeatures n)
     (a : Fin numFeatures) :
     RandomMatrix Omega (n + 1) (n + 1) :=
-  fun omega => featureKernelContribution (Phi omega) a
+  ntkGramContribution (randomFeatureVector Phi a)
 
 @[simp]
 theorem randomFeatureKernelContribution_apply {Omega : Type*}
@@ -143,9 +156,8 @@ theorem randomEmpiricalFeatureKernel_apply {Omega : Type*}
 
 /-- Centered rank-one random-feature kernel contribution for one coordinate.
 
-This is an example-local adapter expression waiting for future core support:
-feature-level hypotheses should eventually imply measurability,
-self-adjointness, integrability, centering, and norm bounds. -/
+This reuses the NTK-facing centered rank-one adapter; feature-level analytic
+hypotheses remain explicit in the Matrix Bernstein assumptions below. -/
 def centeredRandomFeatureKernelContribution {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {numFeatures n : Nat}
     (Phi : RandomFeatureTable Omega numFeatures n) (a : Fin numFeatures) :
@@ -157,7 +169,7 @@ def centeredRandomFeatureKernelSummands {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {numFeatures n : Nat}
     (Phi : RandomFeatureTable Omega numFeatures n) :
     Fin numFeatures -> RandomMatrix Omega (n + 1) (n + 1) :=
-  fun a => centeredRandomFeatureKernelContribution (P := P) Phi a
+  centeredNTKGramSummands (P := P) (randomFeatureVectorFamily Phi)
 
 /-- Example-local adapter from concrete random-feature kernels to the abstract
 summand family used by Matrix Bernstein.

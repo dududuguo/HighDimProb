@@ -9,6 +9,7 @@ import HighDimProbJudge.Concentration.SubGaussianUse
 import HighDimProbJudge.Concentration.RademacherUse
 import HighDimProbJudge.Concentration.SumsUse
 import HighDimProbJudge.RandomMatrix.OperatorNormUse
+import HighDimProbJudge.RandomMatrix.CenteredStructuralUse
 import HighDimProbJudge.RandomMatrix.StatementUse
 import HighDimProbJudge.RandomMatrix.PSDUse
 import HighDimProbJudge.RandomMatrix.SampleCovarianceUse

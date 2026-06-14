@@ -20,13 +20,6 @@ open HighDimProb.Examples.RandomMatrix.CenteredSelfAdjointClosureUsage
 
 noncomputable section
 
-/-- The uncentered rank-one covariance family associated with random vectors. -/
-def rankOneCovarianceContributionFamily {Omega : Type*}
-    [MeasurableSpace Omega] {I : Type*} {n : Nat}
-    (X : I -> RandomRankOneVector Omega n) :
-    I -> RandomMatrix Omega (n + 1) (n + 1) :=
-  fun i => rankOneCovarianceContribution (X i)
-
 /-- The centered rank-one covariance family used as Matrix Bernstein summands. -/
 def centeredRankOnePipelineSummands {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {I : Type*} {n : Nat}
@@ -43,28 +36,9 @@ theorem centeredRankOnePipelineSummands_eq_centered {Omega : Type*}
       centeredRandomMatrixFamily P (rankOneCovarianceContributionFamily X) := by
   rfl
 
-/-- Matrix-exponential random matrix family used by the rank-one pipeline. -/
-def centeredRankOnePipelineMatrixExp {Omega : Type*}
-    [MeasurableSpace Omega] {P : Measure Omega} {I : Type*} {n : Nat}
-    (X : I -> RandomRankOneVector Omega n) (theta : Real) (i : I) :
-    RandomMatrix Omega (n + 1) (n + 1) :=
-  fun omega =>
-    matrixExp
-      (SMul.smul theta (centeredRankOnePipelineSummands (P := P) X i omega))
-
-/-- Bernstein comparison family used by the rank-one pipeline Tropp
-primitive. -/
-def centeredRankOnePipelineBernsteinComparison {Omega : Type*}
-    [MeasurableSpace Omega] {P : Measure Omega} {I : Type*} {n : Nat}
-    (X : I -> RandomRankOneVector Omega n) (theta R : Real) :
-    I -> Matrix (Fin (n + 1)) (Fin (n + 1)) Real :=
-  fun i =>
-    SMul.smul (bernsteinMGFCoeff theta R)
-      (matrixSecondMoment P (centeredRankOnePipelineSummands (P := P) X i))
-
 /-- Assumptions for the optimized Matrix Bernstein pipeline.
 
-The first three fields are rank-one construction facts from vector-level
+The first two fields are rank-one construction facts from vector-level
 assumptions. The remaining fields are the Matrix Bernstein hypotheses that
 still need to be supplied explicitly in the examples layer. -/
 structure RankOneMatrixBernsteinPipelineAssumptions {Omega : Type*}
@@ -76,10 +50,6 @@ structure RankOneMatrixBernsteinPipelineAssumptions {Omega : Type*}
   coordinateMemLpTwo :
     forall i, forall j : Fin (n + 1),
       MemLpRealRandomVariable P (coord (X i) j) 2
-  expectationSelfAdjoint :
-    forall i,
-      IsSelfAdjointMatrix
-        (matrixExpect P (rankOneCovarianceContributionFamily X i))
   independentSelfAdjoint :
     IndependentSelfAdjointRandomMatrices P
       (centeredRankOnePipelineSummands (P := P) X)
@@ -90,7 +60,8 @@ structure RankOneMatrixBernsteinPipelineAssumptions {Omega : Type*}
   expIntegrable :
     forall i,
       IntegrableRandomMatrix P
-        (centeredRankOnePipelineMatrixExp (P := P) X
+        (matrixExpScaledFamily
+          (centeredRankOnePipelineSummands (P := P) X)
           (bernsteinThetaChoice t sigmaSq R) i)
   traceExpIntegrable :
     IntegrableRealRandomVariable P
@@ -115,7 +86,8 @@ structure RankOneMatrixBernsteinPipelineAssumptions {Omega : Type*}
     troppMasterTraceMGFFiniteFamily_statement
       (P := P)
       (centeredRankOnePipelineSummands (P := P) X)
-      (centeredRankOnePipelineBernsteinComparison (P := P) X
+      (bernsteinSecondMomentComparisonFamily P
+        (centeredRankOnePipelineSummands (P := P) X)
         (bernsteinThetaChoice t sigmaSq R) R)
       (matrixVarianceProxy P
         (centeredRankOnePipelineSummands (P := P) X))
@@ -129,24 +101,13 @@ theorem centeredRankOnePipeline_centeredSelfAdjoint {Omega : Type*}
     (hRandom : forall i, IsRandomVector P (X i))
     (hMemLp :
       forall i, forall j : Fin (n + 1),
-        MemLpRealRandomVariable P (coord (X i) j) 2)
-    (hExpect :
-      forall i,
-        IsSelfAdjointMatrix
-          (matrixExpect P (rankOneCovarianceContributionFamily X i))) :
+        MemLpRealRandomVariable P (coord (X i) j) 2) :
     CenteredSelfAdjointRandomMatrixFamily P
       (centeredRankOnePipelineSummands (P := P) X) := by
-  rw [centeredRankOnePipelineSummands_eq_centered]
-  exact centeredRandomMatrix_family_centeredSelfAdjoint
-    (P := P) (rankOneCovarianceContributionFamily X)
-    (fun i =>
-      isRandomMatrix_rankOneCovarianceContribution
-        (P := P) (X := X i) (hRandom i))
-    (fun i => rankOneCovarianceContribution_selfAdjoint (P := P) (X i))
-    hExpect
-    (fun i =>
-      integrable_rankOneCovarianceContribution_of_memLp_two
-        (P := P) (X := X i) (hMemLp i))
+  simpa [centeredRankOnePipelineSummands,
+    centeredRankOneCovarianceSummandFamily] using
+    (centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two
+      (P := P) (X := X) hRandom hMemLp)
 
 /-- The rank-one pipeline supplies centered summand integrability. -/
 theorem centeredRankOnePipeline_integrable {Omega : Type*}
@@ -159,9 +120,9 @@ theorem centeredRankOnePipeline_integrable {Omega : Type*}
     (i : I) :
     IntegrableRandomMatrix P
       (centeredRankOnePipelineSummands (P := P) X i) := by
-  exact integrable_centeredRankOneCovarianceSummand
-    (P := P) (X := X i)
-    (integrable_rankOneCovarianceContribution_of_memLp_two
+  simpa [centeredRankOnePipelineSummands,
+    centeredRankOneCovarianceSummandFamily] using
+    (centeredRankOneRandomMatrix_integrable_of_memLp_two
       (P := P) (X := X i) (hMemLp i))
 
 /-- Optimized Matrix Bernstein tail bound for the centered rank-one covariance
@@ -178,40 +139,18 @@ theorem rankOnePipeline_quadraticForm_tail_optimized_under_primitives
       ENNReal.ofReal
         ((n + 1 : Real) *
           Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) := by
-  have hExpIntegrable :
-      forall i,
-        IntegrableRandomMatrix P
-          (fun omega =>
-            matrixExp
-              (SMul.smul (bernsteinThetaChoice t sigmaSq R)
-                (centeredRankOnePipelineSummands (P := P) X i omega))) := by
-    intro i
-    simpa [centeredRankOnePipelineMatrixExp] using h.expIntegrable i
-  have hTropp :
-      troppMasterTraceMGFFiniteFamily_statement
-        (P := P)
-        (centeredRankOnePipelineSummands (P := P) X)
-        (fun i => SMul.smul
-          (bernsteinMGFCoeff (bernsteinThetaChoice t sigmaSq R) R)
-          (matrixSecondMoment P
-            (centeredRankOnePipelineSummands (P := P) X i)))
-        (matrixVarianceProxy P
-          (centeredRankOnePipelineSummands (P := P) X))
-        (bernsteinThetaChoice t sigmaSq R) R := by
-    simpa [centeredRankOnePipelineBernsteinComparison] using h.troppPrimitive
   exact
     matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
       (centeredRankOnePipelineSummands (P := P) X) R t sigmaSq
       (centeredRankOnePipeline_centeredSelfAdjoint
-        (P := P) X h.randomVector h.coordinateMemLpTwo
-        h.expectationSelfAdjoint)
+        (P := P) X h.randomVector h.coordinateMemLpTwo)
       h.independentSelfAdjoint
       (centeredRankOnePipeline_integrable
         (P := P) X h.coordinateMemLpTwo)
-      h.squareIntegrable hExpIntegrable h.traceExpIntegrable
+      h.squareIntegrable h.expIntegrable h.traceExpIntegrable
       h.operatorNormBound h.sigmaPositive h.radiusNonneg
       h.deviationPositive h.varianceProxyNormBound h.cfcPrimitive
-      hTropp
+      h.troppPrimitive
 
 end
 

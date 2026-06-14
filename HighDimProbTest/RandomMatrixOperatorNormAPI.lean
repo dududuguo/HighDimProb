@@ -37,6 +37,7 @@ variable (hA : IsRandomMatrix P A)
 #check deterministicOperatorNorm_sub_le_add
 #check rankOneMatrix
 #check rankOneMatrix_apply
+#check rankOneRandomMatrixFamily
 #check rankOneOperatorNorm_le_vectorSqNorm
 #check matVecSqNorm
 #check matVecSqNorm_apply
@@ -92,7 +93,7 @@ variable (hA : IsRandomMatrix P A)
   (X := X) (R := L) :
   (forall i omega, vectorSqNorm (X i omega) <= L) ->
   PointwiseOperatorNormBound
-    (fun i => rankOneRandomMatrix (X i)) L)
+    (rankOneRandomMatrixFamily X) L)
 #check (matrixQuadraticForm_sub T S x :
   matrixQuadraticForm (T - S) x = matrixQuadraticForm T x - matrixQuadraticForm S x)
 #check (quadraticForm_le_of_matrixLE (A := S) (B := T) : MatrixLE S T -> forall x, matrixQuadraticForm S x <= matrixQuadraticForm T x)

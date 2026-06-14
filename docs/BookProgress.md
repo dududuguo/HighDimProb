@@ -956,7 +956,7 @@ matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily
 ```
 
 This is not a proof of Lieb concavity, Golden-Thompson, the Bernstein CFC
-primitive, or Matrix Bernstein. Next safe task:
+primitive, or Matrix Bernstein. Follow-up at the time:
 MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives Progress
@@ -972,7 +972,7 @@ The theorem packages the existing single-summand provider under CFC and the
 finite-family Tropp typed primitive into the high-level bounded trace-MGF
 statement. The finite-family Tropp primitive, Bernstein CFC primitive, Lieb,
 Golden-Thompson, and Matrix Bernstein tail theorem remain unproved.
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## RM rank-one operator-norm prerequisite progress
 
@@ -991,8 +991,11 @@ Mathlib L2 operator-norm convention. The wrappers turn pointwise vector
 squared-norm bounds into `BoundedOperatorNorm` and
 `PointwiseOperatorNormBound` for rank-one random matrices.
 
-This is not a centered summand bound, not a vector-to-matrix
-measurability/integrability bridge, not a Matrix Bernstein tail theorem. Next safe task: RM-expectation-contraction.
+This was not a centered summand bound, not a vector-to-matrix
+measurability/integrability bridge, and not a Matrix Bernstein tail theorem.
+The centered rank-one structural and operator-norm follow-ups are now complete
+in RM-S3/RM-S4. Current next safe task:
+RM-S5-sample-covariance-deviation-adapter-contract.
 
 ## RM centered operator-norm prerequisite progress
 
@@ -1008,12 +1011,13 @@ PointwiseOperatorNormBound_centered_of_bound_expect_bound_same
 
 The deterministic lemma packages the matrix operator-norm triangle inequality
 `||A - B||op <= ||A||op + ||B||op`.  The random-matrix wrappers apply this to
-`centeredRandomMatrix P X` under an explicit bound on
-`deterministicOperatorNorm (matrixExpect P X)`.  This is not an expectation
-contraction theorem and does not prove entrywise integrability or
-vector-to-rank-one measurability.
+`centeredRandomMatrix P X`; the newer expectation-contraction wrapper now
+derives the deterministic expectation bound from pointwise `R` boundedness,
+entrywise integrability, and probability mass one.  This does not prove
+entrywise integrability or vector-to-rank-one measurability.
 
-Next safe task: RM-expectation-contraction.
+The centered rank-one follow-up is now complete in RM-S3/RM-S4. Current next
+safe task: RM-S5-sample-covariance-deviation-adapter-contract.
 
 
 ## RM vector-to-rank-one matrix measurability / integrability prerequisite progress
@@ -1022,6 +1026,7 @@ The vector-to-rank-one matrix prerequisite slice is proved:
 
 ```lean
 rankOneRandomMatrix
+rankOneRandomMatrixFamily
 isRandomMatrix_rankOneRandomMatrix
 integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products
 integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
@@ -1030,11 +1035,45 @@ integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
 The bridge defines the rank-one random matrix entrywise as `X_i * X_j`, proves
 entrywise measurability from `IsRandomVector`, and proves entrywise
 integrability only under explicit product-integrability assumptions or explicit
-coordinate `MemLp ... 2` assumptions.  It does not prove integrability from
-measurability alone, expectation contraction, Matrix
-Bernstein tails.
+coordinate `MemLp ... 2` assumptions. Centered rank-one structural and
+operator-norm adapters are now complete; the remaining gap here is
+integrability from measurability alone and Matrix Bernstein tails.
 
-Next safe task: RM-expectation-contraction.
+Current next safe task: RM-S5-sample-covariance-deviation-adapter-contract.
+
+
+## RM centered rank-one structural adapter progress
+
+The centered rank-one structural adapter slice is proved:
+
+```lean
+centeredRankOneRandomMatrix
+centeredRankOneRandomMatrixFamily
+centeredRankOneRandomMatrix_isRandomMatrix
+centeredRankOneRandomMatrix_integrable_of_memLp_two
+centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two
+```
+
+The adapters name the centered rank-one covariance summands used by downstream
+Matrix Bernstein examples, preserving entrywise measurability, entrywise
+integrability under coordinate `MemLp ... 2`, self-adjointness, and zero
+entrywise expectation under `[IsProbabilityMeasure P]`.
+
+
+## RM centered rank-one operator-norm adapter progress
+
+The centered rank-one operator-norm adapter slice is proved:
+
+```lean
+BoundedOperatorNorm_centeredRankOneRandomMatrix_of_sqNorm_bound
+PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound
+```
+
+The wrappers combine the rank-one operator-norm bridge with expectation
+contraction and the centered `2 * R` family wrapper. They do not prove the
+sample-covariance deviation adapter contract or Matrix Bernstein tails.
+
+Current next safe task: RM-S5-sample-covariance-deviation-adapter-contract.
 
 
 ## RM PSD nullspace converse prerequisite progress
@@ -1053,6 +1092,7 @@ The core bridge wraps Mathlib's `Matrix.PosSemidef.dotProduct_mulVec_zero_iff`
 into HighDimProb's explicit `matrixQuadraticForm` and `IsPSDMatrix` vocabulary.
 The examples layer now derives invisible/kernel directions from PSD
 quadratic-null directions through the core declarations. This is not an
-expectation contraction theorem and not a Matrix Bernstein tail theorem.
+expectation-identity theorem for covariance objects and not a Matrix
+Bernstein tail theorem.
 
-Next safe task: RM-expectation-contraction.
+Current next safe task: RM-S5-sample-covariance-deviation-adapter-contract.

@@ -4,44 +4,75 @@ Current version target: v0.1-alpha
 
 ## Current Stage
 
-RandomMatrix / Matrix Bernstein mainline: MB-S9 now includes the bounded
+RandomMatrix / Matrix Bernstein mainline: RM-S0 adds centered structural API
+for `centeredRandomMatrix` and `centeredRandomMatrixFamily`, RM-S1/S2 add
+expectation operator-norm contraction plus centered pointwise operator-norm
+wrappers, RM-S3 adds centered rank-one structural adapters, and RM-S4 adds
+centered rank-one operator-norm adapters. Centered
+summands can inherit entrywise measurability, entrywise integrability,
+self-adjointness, zero entrywise expectation, and `2 * R` operator-norm bounds
+from the uncentered family under the existing assumptions. MB-S9 already
+includes the bounded
 trace-MGF theorem under explicit primitives, the bounded real-to-lintegral
 trace-MGF bridge, the explicit-theta quadratic-form upper-tail wrappers, the
 dimension/norm scalar RHS reduction, and the theta-optimized scalar Bernstein
 denominator wrapper. The current prerequisite cleanup also adds rank-one,
-centered operator-norm, and vector-to-rank-one matrix measurability /
-integrability bridges for covariance-style examples.
+centered structural, centered operator-norm, and vector-to-rank-one matrix
+measurability / integrability bridges for covariance-style examples.
 
 The latest proved public theorem is:
 
-- `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`
+- `PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound`
 
 Supporting proved API also includes `rankOneRandomMatrix`,
 `isRandomMatrix_rankOneRandomMatrix`,
-`integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`, the centered
-bridge `deterministicOperatorNorm_sub_le_add`,
+`integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`,
+`integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`,
+`isSelfAdjointMatrix_rankOneMatrix`,
+`randomSelfAdjointMatrix_rankOneRandomMatrix`,
+`isPSDMatrix_rankOneMatrix`,
+`randomPSDMatrix_rankOneRandomMatrix`,
+`centeredRankOneRandomMatrix_isRandomMatrix`,
+`centeredRankOneRandomMatrix_integrable_of_memLp_two`,
+`centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two`,
+`isRandomMatrix_centeredRandomMatrix`,
+`integrableRandomMatrix_centeredRandomMatrix`,
+`isSelfAdjointMatrix_matrixExpect_of_randomSelfAdjoint`,
+`randomSelfAdjointMatrix_centeredRandomMatrix`,
+`matrixExpect_centeredRandomMatrix`,
+`selfAdjointRandomMatrixFamily_centeredRandomMatrixFamily`, the centered
+bridge `matrixExpect_eq_integral_l2Operator`, `matrixExpect_eq_integral`,
+`deterministicOperatorNorm_matrixExpect_le_of_boundedOperatorNorm`,
+`expectationOperatorNormBound_of_pointwiseOperatorNormBound`,
+`deterministicOperatorNorm_sub_le_add`,
 `BoundedOperatorNorm_centered_of_bound_expect_bound`,
-`PointwiseOperatorNormBound_centered_of_bound_expect_bound`, the earlier
+`PointwiseOperatorNormBound_centered_of_bound_expect_bound`,
+`BoundedOperatorNorm_centered_of_boundedOperatorNorm`,
+`PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound`,
+`PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound_same`, the earlier
 rank-one operator-norm bridge `rankOneOperatorNorm_le_vectorSqNorm`,
 `BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound`, and
-`PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound`. The new vector-to-matrix
+`PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound`,
+`BoundedOperatorNorm_centeredRankOneRandomMatrix_of_sqNorm_bound`, and
+`PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound`. The new vector-to-matrix
 bridge proves entrywise measurability from `IsRandomVector`; entrywise
 integrability is proved only from explicit product-integrability assumptions or
 explicit coordinate `MemLp ... 2` assumptions. The new PSD nullspace bridge
 exposes `posSemidef_of_isPSDMatrix`,
 `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`, and the
 one-way Mathlib-/explicit-PSD kernel wrappers. It does not prove integrability
-from measurability alone, expectation contraction, lambda-max/operator-norm
-Matrix Bernstein tails, Tropp/Lieb, the Bernstein CFC primitive,
+from measurability alone, lambda-max/operator-norm Matrix Bernstein tails,
+Tropp/Lieb, the Bernstein CFC primitive,
 Golden-Thompson, the `t = 0` endpoint for the optimized wrapper, or the final
-full Matrix Bernstein tail theorem.
+full Matrix Bernstein tail theorem. No full Matrix Bernstein, Tropp/Lieb,
+Bernstein CFC, or Golden-Thompson theorem was proved by RM-S4.
 The previous optimized quadratic-form theorem remains
 `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-expectation-contraction`
+- `RM-S5-sample-covariance-deviation-adapter-contract`
 
 ## Public Milestone Summary
 
@@ -1893,15 +1924,15 @@ statement layer now exposes
 `TraceMGFVarianceProxyBound` and `matrixBernsteinTraceMGF_statement` use the
 old `theta ^ 2 / 2` coefficient and are not the bounded Matrix Bernstein
 denominator target. The trace-mgf provider, Tropp/Lieb primitive proof,
-Bernstein CFC primitive proof, and Matrix Bernstein remain unproved. Next safe
-task: MB-S9-trace-mgf-to-laplace-tail-contract.
+Bernstein CFC primitive proof, and Matrix Bernstein remain unproved. Follow-up
+at the time: MB-S9-trace-mgf-to-laplace-tail-contract.
 
 Stage MB-S9-tropp-shape-refactor has no build blocker. The TraceExp layer now
 exposes `troppMasterTraceMGFFiniteFamily_statement`, a typed-only
 finite-family Tropp/Lieb iteration primitive for the bounded Matrix Bernstein
 trace-mgf route. The one-step `troppMasterTraceMGFStep_statement` remains
 available. No Lieb theorem, Golden-Thompson theorem, trace-mgf provider
-theorem, or Matrix Bernstein theorem was proved. Next safe task:
+theorem, or Matrix Bernstein theorem was proved. Follow-up at the time:
 MB-S9-trace-mgf-to-laplace-tail-contract.
 
 Stage MB-S9-trace-mgf-provider-thin-wrapper-proof has no build blocker. The
@@ -1914,7 +1945,7 @@ exposes
 the corresponding high-level bounded Matrix Bernstein trace-MGF wrapper. The
 finite-family Tropp primitive itself remains typed only. The Bernstein CFC
 primitive remains typed only. No Lieb theorem, Golden-Thompson theorem, or
-Matrix Bernstein tail theorem was proved. Next safe task:
+Matrix Bernstein tail theorem was proved. Follow-up at the time:
 MB-S9-trace-mgf-to-laplace-tail-contract.
 
 Stage MB-S9-matrix-bernstein-trace-mgf-under-primitives-proof has no build
@@ -1924,7 +1955,7 @@ bounded Matrix Bernstein trace-MGF statement under explicit finite-family
 Tropp and pointwise Bernstein CFC primitive assumptions. The finite-family
 Tropp primitive itself remains typed only. The Bernstein CFC primitive remains
 typed only. No Lieb theorem, Golden-Thompson theorem, or Matrix Bernstein tail
-theorem was proved. Next safe task:
+theorem was proved. Follow-up at the time:
 MB-S9-trace-mgf-lintegral-bridge-proof.
 
 Stage MB-S9-trace-mgf-lintegral-bridge-proof has no build blocker. The
@@ -1934,8 +1965,18 @@ a narrow bridge from the bounded-Bernstein real semantic trace-MGF bound to the
 matching lintegral semantic trace-MGF bound under random self-adjointness and
 trace-exp integrability. It does not prove event reduction, dimension/norm
 reduction, theta optimization, Tropp/Lieb, the Bernstein CFC primitive,
-Golden-Thompson, or the Matrix Bernstein tail theorem. Next safe task:
-RM-expectation-contraction.
+Golden-Thompson, or the Matrix Bernstein tail theorem.
+
+Stage RM-S1/S2 expectation contraction and centered operator-norm API has no
+build blocker. The RandomMatrix layer now exposes `matrixExpect_eq_integral`,
+`deterministicOperatorNorm_matrixExpect_le_of_boundedOperatorNorm`,
+`expectationOperatorNormBound_of_pointwiseOperatorNormBound`,
+`BoundedOperatorNorm_centered_of_boundedOperatorNorm`,
+`PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound`, and
+`PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound_same`. It
+does not prove lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb,
+Bernstein CFC, Golden-Thompson, or the full Matrix Bernstein theorem. The
+centered rank-one follow-up is now completed by RM-S3.
 
 
 Stage RM-PSD-nullspace-converse has no build blocker. The Spectral layer now
@@ -1945,11 +1986,28 @@ exposes `posSemidef_of_isPSDMatrix`,
 `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix`, and
 `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`. The examples
 layer now routes quadratic-null PSD directions to invisible/kernel directions
-through the core bridge. This stage does not prove expectation contraction,
-lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC,
-Golden-Thompson, or the full Matrix Bernstein theorem. Next safe task:
-RM-expectation-contraction.
+through the core bridge. This stage does not prove lambda-max/operator-norm
+Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC, Golden-Thompson, or the
+full Matrix Bernstein theorem. The then-next centered rank-one structural
+follow-up is now completed by RM-S3.
 
-## Next safe task
+Stage RM-S3 centered rank-one random matrix adapter has no build blocker. The
+RandomMatrix layer now exposes `randomSelfAdjointMatrix_rankOneRandomMatrix`,
+`randomPSDMatrix_rankOneRandomMatrix`,
+`centeredRankOneRandomMatrix_isRandomMatrix`,
+`centeredRankOneRandomMatrix_integrable_of_memLp_two`, and
+`centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two`, reusing the
+existing `rankOneRandomMatrix`, rank-one integrability, and S0 centered
+structural APIs. The then-next centered rank-one operator-norm follow-up is now
+completed by RM-S4. This stage did not prove full Matrix Bernstein, Tropp/Lieb,
+Bernstein CFC, Golden-Thompson, or the operator-norm tail theorem.
 
-- `RM-expectation-contraction`
+Stage RM-S4 centered rank-one operator-norm adapter has no build blocker. The
+RandomMatrix layer now exposes
+`BoundedOperatorNorm_centeredRankOneRandomMatrix_of_sqNorm_bound` and
+`PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound`,
+reusing the rank-one operator-norm bridge, expectation contraction, and S2
+centered operator-norm wrappers. This stage does not prove full Matrix
+Bernstein, Tropp/Lieb, Bernstein CFC, Golden-Thompson, or the operator-norm
+tail theorem. The current follow-up is recorded in the top-level next-task
+section.

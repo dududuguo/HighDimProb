@@ -733,7 +733,7 @@ It is a planning document, not a request to physically move existing files.
   `matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily`.
 - Remaining unproved: finite-family Tropp/Lieb primitive, Bernstein CFC
   primitive, Lieb, Golden-Thompson, Matrix Bernstein tail theorem.
-- Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+- Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives Branch
 
@@ -743,4 +743,4 @@ It is a planning document, not a request to physically move existing files.
   `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
 - Remaining unproved: finite-family Tropp/Lieb primitive, Bernstein CFC
   primitive, Lieb, Golden-Thompson, Matrix Bernstein tail theorem.
-- Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+- Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract.

@@ -22,18 +22,26 @@ compatibility APIs around the bounded-Bernstein lintegral Laplace route:
 `matrixBernsteinTraceMGFToLaplaceContract_statement` and
 `matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement`.
 
-Next safe task: `RM-expectation-contraction`.
+Next safe task: `RM-S5-sample-covariance-deviation-adapter-contract`.
 
-RM prerequisite update: the centered operator-norm bridge is now proved via
-`deterministicOperatorNorm_sub_le_add` and the explicit-expectation-bound
-wrappers in `Assumptions.lean`.  The vector-to-rank-one matrix bridge is also
-proved via `rankOneRandomMatrix`, `isRandomMatrix_rankOneRandomMatrix`,
+RM prerequisite update: the centered structural API, expectation
+operator-norm contraction, centered `2 * R` operator-norm wrappers, and named
+centered rank-one structural/operator-norm adapters are now proved via
+`matrixExpect_eq_integral`,
+`deterministicOperatorNorm_matrixExpect_le_of_boundedOperatorNorm`,
+`BoundedOperatorNorm_centered_of_boundedOperatorNorm`, and
+`PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound`.  The
+vector-to-rank-one matrix bridge is also proved via `rankOneRandomMatrix`,
+`rankOneRandomMatrixFamily`, `centeredRankOneRandomMatrix`,
+`centeredRankOneRandomMatrixFamily`,
+`isRandomMatrix_rankOneRandomMatrix`,
 `integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`, and
 `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.  The PSD nullspace
 converse bridge is proved via `posSemidef_of_isPSDMatrix`,
 `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`, and the
-one-way Mathlib-/explicit-PSD kernel wrappers. It does not prove expectation
-contraction or integrability from measurability alone.
+one-way Mathlib-/explicit-PSD kernel wrappers. It does not prove the
+sample-covariance deviation adapter contract or integrability from
+measurability alone.
 
 Stage MC1 starts the matrix concentration branch after the scalar concentration
 closeout. It adds the assumption vocabulary, explicit matrix order vocabulary,
@@ -928,7 +936,7 @@ finite-family Tropp primitive remains typed only, the Bernstein CFC primitive
 remains typed only, and no Lieb, Golden-Thompson, or Matrix Bernstein tail
 theorem was proved.
 
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives
 
@@ -945,4 +953,4 @@ The theorem keeps both analytic primitives explicit:
 the Bernstein CFC primitive, Golden-Thompson, or the Matrix Bernstein tail
 theorem.
 
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract.

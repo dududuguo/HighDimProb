@@ -111,7 +111,7 @@ theorem randomJacobianFeatureVector_apply {Omega : Type*}
 def randomJacobianFeatureVectorFamily {Omega : Type*} [MeasurableSpace Omega]
     {width n : Nat} (J : RandomJacobianFeatureTable Omega width n) :
     Fin width -> RandomNTKFeatureVector Omega n :=
-  fun a => randomJacobianFeatureVector J a
+  randomJacobianFeatureVector J
 
 @[simp]
 theorem randomJacobianFeatureVectorFamily_apply {Omega : Type*}
@@ -125,7 +125,7 @@ def randomJacobianGramContribution {Omega : Type*} [MeasurableSpace Omega]
     {width n : Nat} (J : RandomJacobianFeatureTable Omega width n)
     (a : Fin width) :
     RandomMatrix Omega (n + 1) (n + 1) :=
-  fun omega => jacobianGramContribution (J omega) a
+  ntkGramContribution (randomJacobianFeatureVector J a)
 
 @[simp]
 theorem randomJacobianGramContribution_apply {Omega : Type*}
@@ -153,9 +153,8 @@ theorem randomEmpiricalNTKGram_apply {Omega : Type*}
 
 /-- Centered random Jacobian Gram contribution for one feature coordinate.
 
-This uses the existing example's entrywise expectation-centered NTK Gram
-contribution. Future core support could derive its measurability,
-self-adjointness, and integrability from feature-level assumptions. -/
+This reuses the NTK-facing centered rank-one adapter; feature-level analytic
+assumptions remain explicit in the Matrix Bernstein structures below. -/
 def centeredJacobianGramContribution {Omega : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} {width n : Nat}
     (J : RandomJacobianFeatureTable Omega width n) (a : Fin width) :
@@ -167,14 +166,13 @@ def centeredJacobianGramSummands {Omega : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} {width n : Nat}
     (J : RandomJacobianFeatureTable Omega width n) :
     Fin width -> RandomMatrix Omega (n + 1) (n + 1) :=
-  fun a => centeredJacobianGramContribution (P := P) J a
+  centeredNTKGramSummands (P := P) (randomJacobianFeatureVectorFamily J)
 
 /-- Example-local adapter from a concrete Jacobian decomposition to the abstract
 summand family used by Matrix Bernstein.
 
-This is an adapter assumption waiting for future core support; it is not a
-proof that arbitrary neural-network Jacobians satisfy Matrix Bernstein
-hypotheses. -/
+This adapter is semantic glue only; it is not a proof that arbitrary
+neural-network Jacobians satisfy Matrix Bernstein hypotheses. -/
 def IsCenteredJacobianGramSummandFamily {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {width n : Nat}
     (J : RandomJacobianFeatureTable Omega width n)

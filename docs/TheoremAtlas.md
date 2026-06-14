@@ -30,7 +30,7 @@ statement APIs connecting bounded Bernstein lintegral trace-MGF bounds to the
 existing Laplace/tail layer without claiming the missing real-to-lintegral,
 Tropp/Lieb, CFC, or Matrix Bernstein proofs.
 
-Next safe task: `RM-expectation-contraction`.
+Next safe task: `RM-S5-sample-covariance-deviation-adapter-contract`.
 ## Milestone 3 scalar implication closeout
 
 This audit separates proved theorem families from typed statements and blocked
@@ -1246,8 +1246,8 @@ future directions.
   `HighDimProbTest/RandomMatrixTraceExpAPI.lean`,
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
-- Priority: Stage MB-S2 through MB-S9-foundation complete; next task is
-  RM-expectation-contraction.
+- Priority: Stage MB-S2 through MB-S9-foundation complete; current next task is
+  RM-S5-sample-covariance-deviation-adapter-contract.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1538,7 +1538,8 @@ future directions.
 - Required objects: `matrixExpect`, `IntegrableRandomMatrix`, `IsPSDMatrix`,
   `MatrixLE`, and `matrixQuadraticForm_matrixExpect`.
 - Helper declarations: `integrableRandomMatrix_sub`, `matrixExpect_sub`.
-- Status: proven, API-tested, and judge-tested.
+- Status: proven
+- Coverage: API-tested and judge-tested.
 - Target module: `HighDimProb/RandomMatrix/VarianceProxy.lean`
 - Test module: `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`
@@ -1645,7 +1646,7 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is RM-expectation-contraction.
+- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -1821,7 +1822,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Priority: next safe task is RM-expectation-contraction.
+- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -1948,7 +1949,7 @@ future directions.
 - Blocker: the finite-family Tropp primitive itself remains typed only; the
   Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and the
   Matrix Bernstein tail theorem remain unproved.
-- Priority: next safe task is RM-expectation-contraction.
+- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
 
 
 
@@ -1966,7 +1967,7 @@ future directions.
 - Blocker: the result is still one-sided and quadratic-form under explicit
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
-- Priority: next safe task is RM-expectation-contraction.
+- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -1986,24 +1987,86 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Priority: next safe task is RM-expectation-contraction.
+- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+
+## RM Centered Structural API
+
+- Informal statement: `centeredRandomMatrix P X` preserves entrywise
+  measurability, entrywise integrability over finite measures, and
+  self-adjointness; under `[IsProbabilityMeasure P]` and entrywise
+  integrability its entrywise expectation is zero.  The family wrapper turns a
+  `SelfAdjointRandomMatrixFamily P A` plus per-index integrability into a
+  `CenteredSelfAdjointRandomMatrixFamily P (centeredRandomMatrixFamily P A)`.
+- Target Lean declarations:
+  `isRandomMatrix_centeredRandomMatrix`,
+  `integrableRandomMatrix_centeredRandomMatrix`,
+  `isSelfAdjointMatrix_matrixExpect_of_randomSelfAdjoint`,
+  `randomSelfAdjointMatrix_centeredRandomMatrix`,
+  `matrixExpect_centeredRandomMatrix`,
+  `selfAdjointRandomMatrixFamily_centeredRandomMatrixFamily`, and
+  `centeredSelfAdjointRandomMatrixFamily_centeredRandomMatrixFamily`.
+- Status: proven, API-tested, and judge-tested.
+- API gap recorded: this structural layer only proves centered measurability,
+  integrability, self-adjointness, and zero entrywise expectation.  The
+  operator-norm layer now supplies the Bochner bridge and expectation
+  contraction.
+- Blocker: none for structural centeredness.
+- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
 
 ## RM Centered Operator-Norm Bound
 
 - Informal statement: if a random matrix family has pointwise operator-norm
-  bound `R` and each entrywise expectation matrix has deterministic
-  operator-norm bound `Rexp`, then the centered family is pointwise bounded by
-  `R + Rexp`.
+  bound `R`, entrywise integrability, and the existing entrywise measurability
+  assumptions, then `matrixExpect` is bounded by `R` and the centered family is
+  pointwise bounded by `2 * R` (or by `R + R` in the same-radius wrapper).
 - Target Lean declarations:
+  `matrixExpect_eq_integral_l2Operator`, `matrixExpect_eq_integral`,
+  `deterministicOperatorNorm_matrixExpect_le_of_boundedOperatorNorm`,
+  `expectationOperatorNormBound_of_pointwiseOperatorNormBound`,
   `deterministicOperatorNorm_sub_le_add`,
   `BoundedOperatorNorm_centered_of_bound_expect_bound`,
-  `PointwiseOperatorNormBound_centered_of_bound_expect_bound`, and
-  `PointwiseOperatorNormBound_centered_of_bound_expect_bound_same`.
+  `PointwiseOperatorNormBound_centered_of_bound_expect_bound`,
+  `PointwiseOperatorNormBound_centered_of_bound_expect_bound_same`,
+  `BoundedOperatorNorm_centered_of_boundedOperatorNorm`,
+  `PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound`, and
+  `PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound_same`.
 - Status: proven, API-tested, and judge-tested.
-- Blocker: this is only an algebraic explicit-bound wrapper.  It does not prove
-  vector-to-rank-one matrix measurability/integrability, expectation
-  contraction, Matrix Bernstein tails.
-- Priority: next safe task is RM-expectation-contraction.
+- Blocker: this does not prove sample-covariance deviation adapters or Matrix
+  Bernstein tails.
+- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+
+
+## RM Centered Rank-One Structural Adapter
+
+- Informal statement: the named centered rank-one random matrix
+  `centeredRankOneRandomMatrix P X` is entrywise random whenever `X` is a
+  random vector, entrywise integrable under coordinate `MemLp ... 2`
+  assumptions over finite measures, and forms a centered self-adjoint family in
+  indexed form under `[IsProbabilityMeasure P]`.
+- Target Lean declarations: `centeredRankOneRandomMatrix`,
+  `centeredRankOneRandomMatrixFamily`,
+  `centeredRankOneRandomMatrix_isRandomMatrix`,
+  `centeredRankOneRandomMatrix_integrable_of_memLp_two`, and
+  `centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two`.
+- Status: proven, API-tested, and judge-tested.
+- Blocker: this does not prove sample-covariance deviation adapters or Matrix
+  Bernstein tails.
+- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+
+
+## RM Centered Rank-One Operator-Norm Adapter
+
+- Informal statement: pointwise squared-vector-norm bounds and coordinate
+  second-moment assumptions give `2 * R` pointwise operator-norm bounds for the
+  named centered rank-one random matrix and its indexed family.
+- Target Lean declarations:
+  `BoundedOperatorNorm_centeredRankOneRandomMatrix_of_sqNorm_bound` and
+  `PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound`.
+- Status: proven, API-tested, and judge-tested.
+- Blocker: this does not prove sample-covariance deviation adapters,
+  lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC,
+  or Golden-Thompson.
+- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
 
 
 ## RM Vector-to-Rank-One Matrix Measurability / Integrability
@@ -2012,14 +2075,14 @@ future directions.
   rank-one random matrix with entries `X_i * X_j`; coordinate measurability
   gives entrywise matrix measurability, and entrywise product integrability or
   coordinate second-moment assumptions give entrywise matrix integrability.
-- Target Lean declarations: `rankOneRandomMatrix`,
+- Target Lean declarations: `rankOneRandomMatrix`, `rankOneRandomMatrixFamily`,
   `isRandomMatrix_rankOneRandomMatrix`,
   `integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`, and
   `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove integrability from measurability alone,
-  expectation contraction, Matrix Bernstein tails.
-- Priority: next safe task is RM-expectation-contraction.
+  sample-covariance deviation adapters, or Matrix Bernstein tails.
+- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
 
 
 ## RM PSD Nullspace Converse
@@ -2036,6 +2099,6 @@ future directions.
   `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this is only a deterministic PSD kernel bridge. It does not prove
-  expectation contraction, covariance expectation identities, or Matrix
-  Bernstein tails.
-- Priority: next safe task is RM-expectation-contraction.
+  covariance expectation identities, sample-covariance deviation adapters, or
+  Matrix Bernstein tails.
+- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.

@@ -8,7 +8,9 @@ import HighDimProb.RandomMatrix.MatrixOrder
 
 This examples-only file records the structural facts about rank-one outer
 products used by the NTK, random-feature kernel, and gradient covariance
-examples. It does not add core matrix-order API.
+examples. `rankOneOuter` is only a domain-facing alias for the core
+`rankOneMatrix`; new reusable matrix facts should live in the core
+RandomMatrix modules rather than being reproved here.
 -/
 
 namespace HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
@@ -24,7 +26,7 @@ abbrev RankOneVector (n : Nat) :=
 /-- Rank-one outer product `v v^T`. -/
 def rankOneOuter {n : Nat} (v : RankOneVector n) :
     Matrix (Fin (n + 1)) (Fin (n + 1)) Real :=
-  fun i j => v i * v j
+  rankOneMatrix v
 
 @[simp]
 theorem rankOneOuter_apply {n : Nat} (v : RankOneVector n)
@@ -35,18 +37,12 @@ theorem rankOneOuter_apply {n : Nat} (v : RankOneVector n)
 /-- Rank-one outer products are symmetric. -/
 theorem rankOneOuter_symmetric {n : Nat} (v : RankOneVector n) :
     IsSymmetricMatrix (rankOneOuter v) := by
-  apply Matrix.IsSymm.ext
-  intro i j
-  simp [rankOneOuter]
-  ring
+  simpa [rankOneOuter] using (isPSDMatrix_rankOneMatrix v).1
 
 /-- Rank-one outer products are self-adjoint over the reals. -/
 theorem rankOneOuter_selfAdjoint {n : Nat} (v : RankOneVector n) :
     IsSelfAdjointMatrix (rankOneOuter v) := by
-  apply Matrix.IsHermitian.ext
-  intro i j
-  simp [rankOneOuter]
-  ring
+  simpa [rankOneOuter] using isSelfAdjointMatrix_rankOneMatrix v
 
 private theorem sum_sum_mul_eq_sq {n : Nat} (u : Fin (n + 1) -> Real) :
     (Finset.univ.sum fun i : Fin (n + 1) =>
@@ -86,8 +82,7 @@ theorem rankOneOuter_quadraticForm_nonneg {n : Nat}
 /-- Rank-one outer products are PSD in the HighDimProb matrix-order API. -/
 theorem rankOneOuter_psd {n : Nat} (v : RankOneVector n) :
     IsPSDMatrix (rankOneOuter v) := by
-  exact And.intro (rankOneOuter_symmetric v)
-    (fun x => rankOneOuter_quadraticForm_nonneg v x)
+  simpa [rankOneOuter] using isPSDMatrix_rankOneMatrix v
 
 /-- The NTK example's outer product is the same rank-one construction. -/
 theorem ntkGramOuter_eq_rankOneOuter {n : Nat}

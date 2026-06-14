@@ -96,6 +96,17 @@ def rankOneRandomMatrix {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
   fun omega => rankOneMatrix (X omega)
 
 /--
+Indexed family of rank-one self outer-product random matrices.
+
+This names the family-level adapter so downstream APIs can refer to the
+rank-one matrix family directly.
+-/
+def rankOneRandomMatrixFamily {Omega : Type*} [MeasurableSpace Omega]
+    {I : Type*} {n : Nat} (X : I -> RandomVector Omega n) :
+    I -> RandomMatrix Omega n n :=
+  rankOneRandomMatrix ∘ X
+
+/--
 Formula reference: this unfolds the rank-one outer-product entry
 `X_i(omega) * X_j(omega)`; see https://en.wikipedia.org/wiki/Outer_product .
 -/
@@ -103,6 +114,13 @@ Formula reference: this unfolds the rank-one outer-product entry
 theorem rankOneRandomMatrix_apply {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (X : RandomVector Omega n) (omega : Omega) (i j : Fin n) :
     rankOneRandomMatrix X omega i j = X omega i * X omega j :=
+  rfl
+
+@[simp]
+theorem rankOneRandomMatrixFamily_apply {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} {n : Nat}
+    (X : I -> RandomVector Omega n) (i : I) :
+    rankOneRandomMatrixFamily X i = rankOneRandomMatrix (X i) :=
   rfl
 
 /--

@@ -66,9 +66,9 @@ theorem uncenteredGradientCovariance_pointwiseOperatorNormBound
       (randomGradientCovarianceContributionFamily G) R := by
   have hRankOne :
       PointwiseOperatorNormBound
-        (fun b : Fin batch => rankOneRandomMatrix (randomGradientVector G b)) R :=
+        (rankOneRandomMatrixFamily (randomGradientVectorFamily G)) R :=
     PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound
-      (fun b : Fin batch => randomGradientVector G b) R
+      (randomGradientVectorFamily G) R
       (by
         intro b omega
         simpa [gradientSqNorm_eq_vectorSqNorm] using

@@ -28,7 +28,7 @@ abbrev RandomNTKFeatureVector (Omega : Type*) [MeasurableSpace Omega] (n : Nat) 
 /-- Rank-one Gram contribution `v v^T` from one feature/Jacobian vector. -/
 def ntkGramOuter {n : Nat} (v : NTKFeatureVector n) :
     Matrix (Fin (n + 1)) (Fin (n + 1)) Real :=
-  fun i j => v i * v j
+  rankOneMatrix v
 
 @[simp]
 theorem ntkGramOuter_apply {n : Nat} (v : NTKFeatureVector n)
@@ -40,7 +40,7 @@ theorem ntkGramOuter_apply {n : Nat} (v : NTKFeatureVector n)
 def ntkGramContribution {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (J : RandomNTKFeatureVector Omega n) :
     RandomMatrix Omega (n + 1) (n + 1) :=
-  fun omega => ntkGramOuter (J omega)
+  rankOneRandomMatrix J
 
 @[simp]
 theorem ntkGramContribution_apply {Omega : Type*} [MeasurableSpace Omega]
@@ -51,25 +51,26 @@ theorem ntkGramContribution_apply {Omega : Type*} [MeasurableSpace Omega]
 
 /-- Centered rank-one Gram contribution for one feature.
 
-The expectation is entrywise, using the existing `matrixExpect` API. -/
+This is the NTK-facing name for the core centered rank-one random-matrix API;
+the expectation is still entrywise through `matrixExpect`. -/
 def centeredNTKGramContribution {Omega : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} {n : Nat} (J : RandomNTKFeatureVector Omega n) :
     RandomMatrix Omega (n + 1) (n + 1) :=
-  fun omega => ntkGramContribution J omega - matrixExpect P (ntkGramContribution J)
+  centeredRankOneRandomMatrix P J
 
 /-- The centered NTK Gram summand family indexed by finite random features. -/
 def centeredNTKGramSummands {Omega : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} {n width : Nat}
     (J : Fin width -> RandomNTKFeatureVector Omega n) :
     Fin width -> RandomMatrix Omega (n + 1) (n + 1) :=
-  fun a => centeredNTKGramContribution (P := P) (J a)
+  centeredRankOneRandomMatrixFamily P J
 
 /-- Example-local adapter tying an arbitrary Matrix Bernstein summand family to
 centered NTK/random-feature Gram contributions.
 
-This is intentionally an assumption-level adapter. Future core support could
-derive self-adjointness, measurability, integrability, and centering from
-feature-level hypotheses, but this example keeps those facts explicit. -/
+This is intentionally an assumption-level adapter. The structural centered
+rank-one object is now shared with the core API; this example still keeps the
+feature-level analytic hypotheses explicit. -/
 def IsCenteredNTKGramSummandFamily {Omega : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} {n width : Nat}
     (J : Fin width -> RandomNTKFeatureVector Omega n)

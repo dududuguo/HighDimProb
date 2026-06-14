@@ -38,7 +38,9 @@
   - Stage M-real-1: real-exponent `SubGaussianMoment` bridge
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
-  - Next: choose one major branch; matrix Bernstein, Hanson-Wright, and WLLN/SLLN remain separate future directions
+  - Current repository next task:
+    RM-S5-sample-covariance-deviation-adapter-contract; matrix Bernstein,
+    Hanson-Wright, and WLLN/SLLN remain separate future directions
 - OrliczToTail
 - TailToOrlicz
 - MomentImplications
@@ -95,7 +97,7 @@
 - HansonWrightStatements
 - JLStatements
 - CovarianceEstimationStatements
-- Next: Stage MB-S9-trace-mgf-to-laplace-tail-contract. Audit
+- Follow-up at the time: Stage MB-S9-trace-mgf-to-laplace-tail-contract. Audit
   the trace-mgf provider route now that the single-summand MGF provider is
   proved under explicit pointwise Bernstein CFC assumptions and the bounded
   Bernstein RHS coefficient is normalized, while the Bernstein CFC primitive
@@ -196,7 +198,7 @@
   and bounded-RHS normalization. The one-step Tropp primitive remains
   available, and no Lieb, Golden-Thompson, trace-mgf provider, or Matrix
   Bernstein theorem was proved.
-- Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+- Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract.
 ## MB-S9 Trace-MGF Thin Wrapper Leaf
 
 - Completed leaf: prove thin wrappers from

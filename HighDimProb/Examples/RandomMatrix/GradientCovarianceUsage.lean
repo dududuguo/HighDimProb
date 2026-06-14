@@ -25,7 +25,7 @@ abbrev GradientVector (n : Nat) :=
 /-- Rank-one gradient covariance contribution `g g^T`. -/
 def gradientOuter {n : Nat} (g : GradientVector n) :
     Matrix (Fin (n + 1)) (Fin (n + 1)) Real :=
-  fun i j => g i * g j
+  rankOneMatrix g
 
 @[simp]
 theorem gradientOuter_apply {n : Nat} (g : GradientVector n)
@@ -109,12 +109,24 @@ theorem randomGradientVector_apply {Omega : Type*} [MeasurableSpace Omega]
     randomGradientVector G b omega i = G omega b i := by
   rfl
 
+/-- Family of random gradient vectors indexed by the batch/sample coordinate. -/
+def randomGradientVectorFamily {Omega : Type*} [MeasurableSpace Omega]
+    {batch n : Nat} (G : RandomGradientTable Omega batch n) :
+    Fin batch -> RandomVector Omega (n + 1) :=
+  randomGradientVector G
+
+@[simp]
+theorem randomGradientVectorFamily_apply {Omega : Type*} [MeasurableSpace Omega]
+    {batch n : Nat} (G : RandomGradientTable Omega batch n) (b : Fin batch) :
+    randomGradientVectorFamily G b = randomGradientVector G b := by
+  rfl
+
 /-- Random rank-one gradient covariance contribution from one batch coordinate. -/
 def randomGradientCovarianceContribution {Omega : Type*}
     [MeasurableSpace Omega] {batch n : Nat}
     (G : RandomGradientTable Omega batch n) (b : Fin batch) :
     RandomMatrix Omega (n + 1) (n + 1) :=
-  fun omega => gradientCovarianceContribution (G omega) b
+  rankOneRandomMatrix (randomGradientVector G b)
 
 @[simp]
 theorem randomGradientCovarianceContribution_apply {Omega : Type*}
@@ -130,7 +142,7 @@ def randomGradientCovarianceContributionFamily {Omega : Type*}
     [MeasurableSpace Omega] {batch n : Nat}
     (G : RandomGradientTable Omega batch n) :
     Fin batch -> RandomMatrix Omega (n + 1) (n + 1) :=
-  fun b => randomGradientCovarianceContribution G b
+  rankOneRandomMatrixFamily (randomGradientVectorFamily G)
 
 @[simp]
 theorem randomGradientCovarianceContributionFamily_apply {Omega : Type*}
@@ -158,23 +170,21 @@ theorem randomEmpiricalGradientCovariance_apply {Omega : Type*}
 
 /-- Centered rank-one gradient covariance contribution for one batch coordinate.
 
-This is an example-local adapter expression waiting for future core support:
-gradient-level hypotheses should eventually imply measurability,
-self-adjointness, integrability, centering, and norm bounds. -/
+This is the gradient-facing name for the core centered rank-one random-matrix
+API. The Matrix Bernstein examples still keep the gradient-level analytic
+hypotheses explicit. -/
 def centeredGradientCovarianceContribution {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {batch n : Nat}
     (G : RandomGradientTable Omega batch n) (b : Fin batch) :
     RandomMatrix Omega (n + 1) (n + 1) :=
-  fun omega =>
-    randomGradientCovarianceContribution G b omega -
-      matrixExpect P (randomGradientCovarianceContribution G b)
+  centeredRankOneRandomMatrix P (randomGradientVector G b)
 
 /-- Centered gradient covariance summand family for Matrix Bernstein. -/
 def centeredGradientCovarianceSummands {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {batch n : Nat}
     (G : RandomGradientTable Omega batch n) :
     Fin batch -> RandomMatrix Omega (n + 1) (n + 1) :=
-  fun b => centeredGradientCovarianceContribution (P := P) G b
+  centeredRankOneRandomMatrixFamily P (randomGradientVectorFamily G)
 
 /-- Example-local adapter from concrete gradient covariance summands to the
 abstract family used by Matrix Bernstein.

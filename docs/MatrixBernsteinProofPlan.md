@@ -41,18 +41,35 @@ Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, the `t = 0` endpoint
 for the optimized wrapper, lambda-max/operator-norm Matrix Bernstein tails, or
 the full Matrix Bernstein tail theorem.
 
-Next safe task: `RM-expectation-contraction`.
+Next safe task: `RM-S5-sample-covariance-deviation-adapter-contract`.
 
-RM prerequisite update: the centered operator-norm bridge is now proved via
-`deterministicOperatorNorm_sub_le_add` and the explicit-expectation-bound
-wrappers in `Assumptions.lean`.  The vector-to-rank-one matrix bridge is also
-proved via `rankOneRandomMatrix`, `isRandomMatrix_rankOneRandomMatrix`,
+RM prerequisite update: the entrywise `matrixExpect` to Bochner integral bridge
+and expectation operator-norm contraction are now proved via
+`matrixExpect_eq_integral` and
+`deterministicOperatorNorm_matrixExpect_le_of_boundedOperatorNorm`. The
+centered operator-norm wrappers are now proved via
+`BoundedOperatorNorm_centered_of_boundedOperatorNorm` and
+`PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound`. The
+vector-to-rank-one matrix bridge is also proved via `rankOneRandomMatrix`,
+`isRandomMatrix_rankOneRandomMatrix`,
 `integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`, and
-`integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.  The PSD nullspace
+`integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`. Centered rank-one
+random matrix structural adapters are now proved via
+`randomSelfAdjointMatrix_rankOneRandomMatrix`,
+`randomPSDMatrix_rankOneRandomMatrix`,
+`centeredRankOneRandomMatrix_isRandomMatrix`,
+`centeredRankOneRandomMatrix_integrable_of_memLp_two`, and
+`centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two`. Centered
+rank-one operator-norm adapters are now proved via
+`BoundedOperatorNorm_centeredRankOneRandomMatrix_of_sqNorm_bound` and
+`PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound`,
+reusing expectation contraction and the S2 centered operator-norm wrappers. The
+PSD nullspace
 converse bridge is proved via `posSemidef_of_isPSDMatrix`,
 `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`, and the
-one-way Mathlib-/explicit-PSD kernel wrappers. It does not prove expectation
-contraction or integrability from measurability alone.
+one-way Mathlib-/explicit-PSD kernel wrappers. This does not prove
+integrability from measurability alone, full Matrix Bernstein, Tropp/Lieb,
+Bernstein CFC, or Golden-Thompson.
 
 ## Target Theorem
 
@@ -732,7 +749,7 @@ matrixLE_smul_of_nonneg
 The stage does not prove the Bernstein CFC primitive, single-summand MGF
 provider, trace-mgf provider, Golden-Thompson, Lieb, or Matrix Bernstein.
 
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract: re-audit the
+Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract; re-audit the
 single-summand provider route now that MatrixLE algebra, matrix expectation
 monotonicity, and matrix expectation linearity/normalization are available, or
 block cleanly on the next matrix-mgf prerequisite.
@@ -819,7 +836,7 @@ denominator target. This stage does not prove the trace-mgf provider, the
 Tropp/Lieb primitive, the Bernstein CFC primitive, Golden-Thompson, Lieb, or
 Matrix Bernstein.
 
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## MB-S9-tropp-shape-refactor Finite-Family Tropp Interface
 
@@ -840,7 +857,7 @@ The one-step log-form primitive `troppMasterTraceMGFStep_statement` remains
 available. This stage did not prove Lieb, Golden-Thompson, the Tropp
 finite-family primitive, the trace-mgf provider, or Matrix Bernstein.
 
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## MB-S9 Trace-MGF Thin Wrapper Status
 
@@ -861,7 +878,7 @@ This stage does not prove the finite-family Tropp/Lieb primitive, the
 one-step Tropp primitive, Lieb concavity, Golden-Thompson, the Bernstein CFC
 primitive, or the Matrix Bernstein tail theorem.
 
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract.
+Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives
 
@@ -907,4 +924,4 @@ They package the same bounded-Bernstein lintegral Laplace route with
 `randomMatrixSum A` and `matrixVarianceProxy P A` visible at the Matrix
 Bernstein layer.
 
-Next safe task: MB-S9-trace-mgf-to-laplace-tail-contract-v2.
+Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract-v2.

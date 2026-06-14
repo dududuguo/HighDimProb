@@ -3,6 +3,29 @@
 This index records the public RandomMatrix API used by the Matrix Bernstein
 mainline. It is documentation only; theorem status is not upgraded here.
 
+## Contributor Module Guide
+
+- Put core objects and pointwise algebra in the object layer:
+  `Basic`, `Expectation`, `SelfAdjoint`, `MatrixOrder`, `OperatorNorm`,
+  `Sums`, `VarianceProxy`, `Spectral`, `TraceExp`, `Laplace`, and
+  `ConcentrationStatements`.
+- Use `Assumptions.lean` for theorem-interface vocabulary: named predicates
+  and thin adapters that convert existing objects into hypotheses consumed by
+  Matrix Bernstein examples. Despite the name, it is not a dumping ground for
+  arbitrary facts.
+- Prefer named family adapters over inline families in public theorem
+  statements and examples. For rank-one covariance-style code, use
+  `rankOneRandomMatrixFamily`, `centeredRandomMatrixFamily`, and
+  `centeredRankOneRandomMatrixFamily`.
+- Domain-specific examples may keep readable names such as
+  `rankOneCovarianceContribution`, but those names should be thin aliases or
+  wrappers over the public RandomMatrix API rather than separate reproofs.
+- When an example needs an indexed random-vector family, name that family
+  first, then feed it to the shared rank-one adapters. Existing examples use
+  names such as `randomGradientVectorFamily`,
+  `randomJacobianFeatureVectorFamily`, and `randomFeatureVectorFamily` for this
+  purpose.
+
 ## Current Public Status
 
 - Proved MB-S9 theorem:
@@ -43,23 +66,54 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `rankOneOperatorNorm_le_vectorSqNorm`,
   `BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound`, and
   `PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound`.
+- Proved centered rank-one operator-norm adapters:
+  `BoundedOperatorNorm_centeredRankOneRandomMatrix_of_sqNorm_bound` and
+  `PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound`.
+  These reuse expectation contraction and the S2 centered operator-norm
+  wrappers.
 - Proved centered operator-norm prerequisite bridge under an explicit expectation
   operator-norm bound:
   `deterministicOperatorNorm_sub_le_add`,
   `BoundedOperatorNorm_centered_of_bound_expect_bound`,
   `PointwiseOperatorNormBound_centered_of_bound_expect_bound`, and
   `PointwiseOperatorNormBound_centered_of_bound_expect_bound_same`.
+- Proved expectation contraction and centered pointwise operator-norm wrappers:
+  `matrixExpect_eq_integral_l2Operator`, `matrixExpect_eq_integral`,
+  `deterministicOperatorNorm_matrixExpect_le_of_boundedOperatorNorm`,
+  `expectationOperatorNormBound_of_pointwiseOperatorNormBound`,
+  `BoundedOperatorNorm_centered_of_boundedOperatorNorm`,
+  `PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound`, and
+  `PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound_same`.
 - Proved vector-to-rank-one matrix measurability/integrability bridge:
-  `rankOneRandomMatrix`, `isRandomMatrix_rankOneRandomMatrix`,
+  `rankOneRandomMatrix`, `rankOneRandomMatrixFamily`,
+  `isRandomMatrix_rankOneRandomMatrix`,
   `integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`, and
   `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.
+- Proved centered rank-one random matrix structural adapters:
+  `centeredRankOneRandomMatrix`, `centeredRankOneRandomMatrixFamily`,
+  `isSelfAdjointMatrix_rankOneMatrix`,
+  `randomSelfAdjointMatrix_rankOneRandomMatrix`,
+  `isPSDMatrix_rankOneMatrix`, `randomPSDMatrix_rankOneRandomMatrix`,
+  `centeredRankOneRandomMatrix_isRandomMatrix`,
+  `centeredRankOneRandomMatrix_integrable_of_memLp_two`, and
+  `centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two`.
+- Proved centered structural bridge:
+  `isRandomMatrix_centeredRandomMatrix`,
+  `integrableRandomMatrix_centeredRandomMatrix`,
+  `isSelfAdjointMatrix_matrixExpect_of_randomSelfAdjoint`,
+  `randomSelfAdjointMatrix_centeredRandomMatrix`,
+  `matrixExpect_centeredRandomMatrix`,
+  `selfAdjointRandomMatrixFamily_centeredRandomMatrixFamily`, and
+  `centeredSelfAdjointRandomMatrixFamily_centeredRandomMatrixFamily`.
 - Proved PSD nullspace converse bridge:
   `posSemidef_of_isPSDMatrix`,
   `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`,
   `matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero`,
   `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix`, and
   `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`.
-- Next safe task: `RM-expectation-contraction`.
+- No full Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or Golden-Thompson
+  theorem was proved by the centered rank-one operator-norm adapter stage.
+- Next safe task: `RM-S5-sample-covariance-deviation-adapter-contract`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
@@ -69,8 +123,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `rankOneMatrix`: def, deterministic rank-one self outer-product matrix.
 - `rankOneRandomMatrix`: def, vector-to-rank-one random matrix with entries
   `X_i * X_j`.
+- `rankOneRandomMatrixFamily`: def, named indexed family of rank-one random
+  matrices.
 - `rankOneMatrix_apply`: theorem.
 - `rankOneRandomMatrix_apply`: theorem.
+- `rankOneRandomMatrixFamily_apply`: theorem.
 - `matrixEntry_rankOneRandomMatrix`: theorem.
 - `isRandomMatrix_rankOneRandomMatrix`: theorem, entrywise measurability from
   `IsRandomVector`.
@@ -80,10 +137,26 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 - `matrixExpect`: def, entrywise matrix expectation.
 - `IntegrableRandomMatrix`: def, entrywise integrability predicate.
+- `matrixExpect_eq_integral_l2Operator`: theorem, Bochner-integrable matrix
+  random variables have entrywise `matrixExpect` equal to the Bochner integral.
+- `matrixExpect_eq_integral`: theorem, entrywise-integrable random matrices
+  have entrywise `matrixExpect` equal to the Bochner integral.
 - `centeredRandomMatrix`: def.
+- `centeredRankOneRandomMatrix`: def, named centered rank-one random matrix
+  adapter.
+- `centeredRankOneRandomMatrixFamily`: def, named indexed centered rank-one
+  random matrix adapter.
+- `isRandomMatrix_centeredRandomMatrix`: theorem, centering preserves entrywise
+  measurability.
+- `integrableRandomMatrix_centeredRandomMatrix`: theorem, centering preserves
+  entrywise integrability over finite measures.
 - `centeredRandomMatrixFamily`: def, indexed family obtained by centering each
   random matrix in a family.
 - `centeredRandomMatrixFamily_apply`: theorem.
+- `centeredRankOneRandomMatrix_apply`: theorem.
+- `centeredRankOneRandomMatrixFamily_apply`: theorem.
+- `matrixExpect_centeredRandomMatrix`: theorem, an integrable centered random
+  matrix has zero entrywise expectation under a probability measure.
 - `integrableRandomMatrix_rankOneRandomMatrix_of_integrable_products`: theorem,
   rank-one entrywise integrability from explicit product integrability.
 - `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`: theorem, rank-one
@@ -95,6 +168,10 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `IsSelfAdjointMatrix`: abbrev.
 - `RandomSymmetricMatrix`: def.
 - `RandomSelfAdjointMatrix`: def.
+- `isSelfAdjointMatrix_rankOneMatrix`: theorem, rank-one self outer products
+  are self-adjoint.
+- `randomSelfAdjointMatrix_rankOneRandomMatrix`: theorem, pointwise
+  self-adjointness of `rankOneRandomMatrix`.
 - `isSelfAdjointMatrix_smul`: theorem.
 - `isSelfAdjointMatrix_neg`: theorem.
 - `randomSelfAdjointMatrix_smul`: theorem.
@@ -163,18 +240,53 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 - `BoundedOperatorNorm`: def, pointwise operator-norm bound for one random
   matrix.
+- `deterministicOperatorNorm_matrixExpect_le_of_boundedOperatorNorm`: theorem,
+  expectation operator-norm contraction from entrywise integrability and a
+  pointwise operator-norm bound.
 - `BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound`: theorem, rank-one
   pointwise wrapper from vector squared-norm bounds.
 - `BoundedOperatorNorm_centered_of_bound_expect_bound`: theorem, centered
   wrapper from a pointwise bound plus an explicit expectation operator-norm
   bound.
+- `BoundedOperatorNorm_centered_of_boundedOperatorNorm`: theorem, centered
+  single-matrix wrapper with bound `2 * R`.
+- `BoundedOperatorNorm_centeredRankOneRandomMatrix_of_sqNorm_bound`: theorem,
+  centered rank-one single-matrix wrapper with bound `2 * R` from vector
+  squared-norm, random-vector, and coordinate `MemLp ... 2` assumptions.
 - `PointwiseOperatorNormBound`: def, indexed pointwise operator-norm bound.
+- `expectationOperatorNormBound_of_pointwiseOperatorNormBound`: theorem,
+  family expectation operator-norm contraction.
 - `PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound`: theorem,
   indexed rank-one wrapper from vector squared-norm bounds.
 - `PointwiseOperatorNormBound_centered_of_bound_expect_bound`: theorem, indexed
   centered wrapper with explicit expectation bound.
 - `PointwiseOperatorNormBound_centered_of_bound_expect_bound_same`: theorem,
   same-radius centered wrapper.
+- `PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound`: theorem,
+  centered family wrapper with bound `2 * R`.
+- `PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound_same`:
+  theorem, same wrapper in the `R + R` style.
+- `PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound`:
+  theorem, centered rank-one family wrapper with bound `2 * R` from pointwise
+  squared-vector-norm, random-vector, and coordinate `MemLp ... 2`
+  assumptions.
+- `isSelfAdjointMatrix_matrixExpect_of_randomSelfAdjoint`: theorem, the
+  entrywise expectation of a pointwise self-adjoint random matrix is
+  self-adjoint.
+- `randomSelfAdjointMatrix_centeredRandomMatrix`: theorem, centering preserves
+  pointwise self-adjointness.
+- `selfAdjointRandomMatrixFamily_centeredRandomMatrixFamily`: theorem,
+  centering preserves the self-adjoint family predicate.
+- `centeredSelfAdjointRandomMatrixFamily_centeredRandomMatrixFamily`: theorem,
+  centering an integrable self-adjoint family gives a centered self-adjoint
+  family under a probability measure.
+- `centeredRankOneRandomMatrix_isRandomMatrix`: theorem, centered rank-one
+  measurability from `IsRandomVector`.
+- `centeredRankOneRandomMatrix_integrable_of_memLp_two`: theorem, centered
+  rank-one entrywise integrability from coordinate `MemLp ... 2`.
+- `centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two`: theorem,
+  centered rank-one families are centered self-adjoint under random-vector
+  measurability and coordinate `MemLp ... 2` assumptions.
 - `UniformOperatorNormBound`: abbrev.
 - `AeOperatorNormBound`: def.
 
@@ -183,6 +295,10 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `matrixQuadraticForm`: def.
 - `IsPSDMatrix`: def.
 - `RandomPSDMatrix`: def.
+- `isPSDMatrix_rankOneMatrix`: theorem, rank-one self outer products are PSD in
+  the explicit quadratic-form order.
+- `randomPSDMatrix_rankOneRandomMatrix`: theorem, pointwise PSD wrapper for
+  `rankOneRandomMatrix`.
 - `MatrixLE`: def, explicit Loewner-style predicate.
 - `matrixQuadraticForm_sub`: theorem.
 - `matrixQuadraticForm_sum`: theorem.
@@ -449,7 +565,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-RM-expectation-contraction: next audit whether the existing boundedness and expectation APIs can prove a narrow operator-norm expectation contraction wrapper, or record the exact missing assumptions. Do not prove lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC, Golden-Thompson, or the full Matrix Bernstein theorem in that stage.
+RM-S5-sample-covariance-deviation-adapter-contract: next determine the minimal
+API needed to express sample covariance deviation as a centered rank-one random
+matrix sum suitable for the existing Matrix Bernstein statement layer. Do not
+prove lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein
+CFC, Golden-Thompson, or the full Matrix Bernstein theorem in that stage.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -473,4 +593,4 @@ RM-expectation-contraction: next audit whether the existing boundedness and expe
   proved in `ConcentrationStatements.lean`, with exponential-add RHS.
 - The theta-optimized scalar-RHS quadratic-form wrapper under primitives is now
   proved in `ConcentrationStatements.lean`, with Bernstein denominator RHS.
-- Next safe task: RM-expectation-contraction.
+- Next safe task: RM-S5-sample-covariance-deviation-adapter-contract.

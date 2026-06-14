@@ -20,6 +20,8 @@ open HighDimProb.Examples.RandomMatrix.GradientCovarianceUsage
 open HighDimProb.Examples.RandomMatrix.GradientNormToOperatorBoundUsage
 open HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
 open HighDimProb.Examples.RandomMatrix.KernelNullspaceUsage
+open HighDimProb.Examples.RandomMatrix.NTKGramDecompositionUsage
+open HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage
 
 variable {rankOneN : Nat}
 variable (rankOneV : RankOneVector rankOneN)
@@ -40,6 +42,9 @@ variable (kernelHExplicitPSD : IsPSDMatrix kernelA)
 #check randomInvisible_of_quadraticNull_of_psd
 
 #check randomGradientCovarianceContributionFamily
+#check randomGradientVectorFamily
+#check randomJacobianFeatureVectorFamily
+#check randomFeatureVectorFamily
 #check uncenteredGradientCovariance_pointwiseOperatorNormBound
 #check centeredGradientCovariance_pointwiseOperatorNormBound
 #check isRandomMatrix_rankOneCovarianceContribution

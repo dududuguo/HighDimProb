@@ -94,6 +94,30 @@ theorem randomSelfAdjointMatrix_apply {Omega : Type*} [MeasurableSpace Omega]
   hA omega
 
 /--
+Rank-one self outer products are self-adjoint.
+
+Formula reference: the real outer product `x x^T` is symmetric, hence
+self-adjoint in finite dimensions; see https://en.wikipedia.org/wiki/Outer_product
+and https://en.wikipedia.org/wiki/Self-adjoint_operator .
+-/
+theorem isSelfAdjointMatrix_rankOneMatrix {n : Nat} (x : Fin n -> Real) :
+    IsSelfAdjointMatrix (rankOneMatrix x) := by
+  apply Matrix.IsHermitian.ext
+  intro i j
+  simp [rankOneMatrix, mul_comm]
+
+/--
+The rank-one random matrix associated to a real random vector is pointwise
+self-adjoint.
+-/
+theorem randomSelfAdjointMatrix_rankOneRandomMatrix {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    (X : RandomVector Omega n) :
+    RandomSelfAdjointMatrix P (rankOneRandomMatrix X) := by
+  intro omega
+  exact isSelfAdjointMatrix_rankOneMatrix (X omega)
+
+/--
 Formula reference: multiplying a real self-adjoint finite matrix by a real
 scalar preserves self-adjointness; see
 https://en.wikipedia.org/wiki/Self-adjoint_operator

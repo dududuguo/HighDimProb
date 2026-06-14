@@ -3,6 +3,12 @@
 This audit records which mathematical assumptions already have HighDimProb
 declarations and which are still missing. It is a planning document only.
 
+For RandomMatrix, `HighDimProb.RandomMatrix.Assumptions` is the
+theorem-interface layer: it contains named assumption predicates and thin
+adapters consumed by concentration statements. Core objects and algebra should
+remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
+`MatrixOrder`, and `OperatorNorm`.
+
 ## Scalar
 
 | Assumption | Existing declaration | Missing declaration | Mathlib object | Target module | Priority | Blockers |
@@ -39,7 +45,7 @@ declarations and which are still missing. It is a planning document only.
 | iid rows | none | `IIDRows` | independence + row laws | future `HighDimProb.RandomMatrix.Independence` | high | Needs row-vector distribution vocabulary. |
 | isotropic rows | `IsotropicRowsSecondMoment`, `IsotropicRowsCovariance` | none | row-vector isotropic predicates | `HighDimProb.RandomMatrix.Assumptions` | done | Existing row predicates are sufficient for statement prerequisites. |
 | subGaussian rows | `SubGaussianRowsOrlicz` | tail/moment row variants optional | scalar/vector subGaussian predicates | `HighDimProb.RandomMatrix.Assumptions` | done/medium | Orlicz row form exists; other formulations can be added after vector implication lifting. |
-| bounded operator norm | `BoundedOperatorNorm` | operator-norm measurability theorem | Mathlib matrix norm | `HighDimProb.RandomMatrix.ConcentrationStatements` | done/medium | Predicate exists; future proofs need measurability and unit-sphere/action bridges. |
+| bounded operator norm | `BoundedOperatorNorm`, `PointwiseOperatorNormBound`, `isRealRandomVariable_operatorNorm` | a.e. versus pointwise policy refinements only | Mathlib matrix norm | `HighDimProb.RandomMatrix.Assumptions`, `HighDimProb.RandomMatrix.OperatorNorm` | done/medium | Pointwise predicates and measurability bridges exist; `AeOperatorNormBound` is kept separate so statements do not hide the distinction. |
 | symmetric/self-adjoint random matrix | `RandomSymmetricMatrix`, `RandomSelfAdjointMatrix` | none | `Matrix.IsSymm`, `Matrix.IsHermitian` | `HighDimProb.RandomMatrix.SelfAdjoint` | done | Stage MC1 implements pointwise matrix predicates and random-matrix wrappers. |
 | PSD random matrix | `RandomPSDMatrix`, `IsPSDMatrix`, `MatrixLE` | Gram/row-Gram PSD wrappers optional | explicit quadratic forms | `HighDimProb.RandomMatrix.MatrixOrder` | done/medium | Stage MC1 chooses explicit PSD/order vocabulary and proves sample covariance PSD. |
 | matrix-valued independence | `IndependentRandomMatrices` | independent entries/rows remain separate | `ProbabilityTheory.iIndepFun` | `HighDimProb.RandomMatrix.ConcentrationStatements` | done/medium | Stage MC1 adds a product measurable-space instance for matrices; row/entry sampling assumptions remain future work. |
@@ -48,7 +54,8 @@ declarations and which are still missing. It is a planning document only.
 
 - Matrix concentration theorem statements now typecheck as `Prop`s in
   `HighDimProb.RandomMatrix.ConcentrationStatements`, but proofs remain blocked.
-- The next implementation branch should add operator-norm measurability and
-  matrix-vector/unit-sphere bridges before matrix Bernstein is attempted.
+- Operator-norm measurability, centered operator-norm contraction, and named
+  centered rank-one adapters are now proved. The next RandomMatrix branch is
+  `RM-S5-sample-covariance-deviation-adapter-contract`.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.
