@@ -11,18 +11,32 @@ and the theta-optimized scalar RHS wrapper
 The optimized wrapper chooses `bernsteinThetaChoice t sigmaSq R =
 t / (sigmaSq + R * t / 3)` and gives RHS
 `ENNReal.ofReal ((n + 1 : Real) * Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))))`.
+The sample-covariance specialization
+`sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
+is also proved under explicit row independence, explicit variance-proxy,
+integrability, Tropp, and CFC primitive assumptions.
+The sample-covariance tail surface now uses the core helper names
+`sampleCovarianceCenteredRankOneRadius`, `sampleCovarianceTailTheta`, and
+`sampleCovarianceQuadraticFormTailRHS`.
 The theorem remains one-sided, quadratic-form, nonempty-dimensional, and under
 explicit finite-family Tropp/Lieb plus pointwise Bernstein CFC primitive
-assumptions. Lambda-max/full operator-norm Matrix Bernstein tails, the typed
-primitives themselves, Golden-Thompson/Lieb proofs, Bernstein CFC proof, and
-the optimized `t = 0` endpoint remain unproved.
+assumptions. Lambda-max/full operator-norm Matrix Bernstein tails, unconditional
+sample-covariance concentration, variance-proxy control, the typed primitives
+themselves, Golden-Thompson/Lieb proofs, Bernstein CFC proof, and the optimized
+`t = 0` endpoint remain unproved.
 
 The downstream trace-MGF-to-Laplace/tail contract names are retained as typed
 compatibility APIs around the bounded-Bernstein lintegral Laplace route:
 `matrixBernsteinTraceMGFToLaplaceContract_statement` and
 `matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement`.
 
-Next safe task: `RM-S5-sample-covariance-deviation-adapter-contract`.
+RM-S5E adds the example-layer wrapper
+`sampleCovariance_quadraticForm_tail_usage`, which calls the S5D theorem
+directly while keeping the variance proxy, independence, integrability, Tropp,
+and CFC assumptions explicit. It does not define parallel radius/theta/RHS
+helpers.
+
+Next safe task: `RM-S5F-sample-covariance-variance-proxy-control-contract`.
 
 RM prerequisite update: the centered structural API, expectation
 operator-norm contraction, centered `2 * R` operator-norm wrappers, and named
@@ -39,9 +53,16 @@ vector-to-rank-one matrix bridge is also proved via `rankOneRandomMatrix`,
 `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.  The PSD nullspace
 converse bridge is proved via `posSemidef_of_isPSDMatrix`,
 `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`, and the
-one-way Mathlib-/explicit-PSD kernel wrappers. It does not prove the
-sample-covariance deviation adapter contract or integrability from
-measurability alone.
+one-way Mathlib-/explicit-PSD kernel wrappers. The sample covariance row
+rank-one sum and centering bridges are also proved via
+`sampleCovarianceRowRankOneFamily`,
+`centeredSampleCovarianceRowRankOneFamily`,
+`sampleCovariance_eq_normalized_rowRankOne_sum` and
+`sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`; the
+conditional quadratic-form sample-covariance tail wrapper is proved via
+`sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`.
+It does not prove unconditional variance-proxy control, unconditional sample
+covariance concentration, or integrability from measurability alone.
 
 Stage MC1 starts the matrix concentration branch after the scalar concentration
 closeout. It adds the assumption vocabulary, explicit matrix order vocabulary,

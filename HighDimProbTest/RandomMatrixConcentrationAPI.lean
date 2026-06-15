@@ -110,6 +110,10 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check matrixBernsteinQuadraticFormUpperTailScalarRHSWithBernsteinCoeff_under_primitives
 #check matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives
 #check matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+#check sampleCovarianceCenteredRankOneRadius
+#check sampleCovarianceTailTheta
+#check sampleCovarianceQuadraticFormTailRHS
+#check sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy
 #check operatorNorm_eq_spectralRadius_of_selfAdjointStatement
 #check HighProbabilityBound
 #check highProbabilityBound
@@ -206,6 +210,10 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check (matrixExpScaledFamily B theta : I -> RandomMatrix Omega n n)
 #check (bernsteinSecondMomentComparisonFamily P B theta R :
   I -> Matrix (Fin n) (Fin n) Real)
+#check (sampleCovarianceCenteredRankOneRadius R : Real)
+#check (sampleCovarianceTailTheta (m := m) R t sigma2 : Real)
+#check (sampleCovarianceQuadraticFormTailRHS (m := m) (n := n) R t sigma2 :
+  ENNReal)
 #check (operatorNorm_eq_spectralRadius_of_selfAdjointStatement M : Prop)
 #check (HighProbabilityBound P (Set.univ : Set Omega) 1 : Prop)
 #check (highProbabilityBound P (Set.univ : Set Omega) 1 : Prop)

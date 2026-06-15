@@ -30,7 +30,20 @@ statement APIs connecting bounded Bernstein lintegral trace-MGF bounds to the
 existing Laplace/tail layer without claiming the missing real-to-lintegral,
 Tropp/Lieb, CFC, or Matrix Bernstein proofs.
 
-Next safe task: `RM-S5-sample-covariance-deviation-adapter-contract`.
+RM-S5D proves the conditional sample-covariance quadratic-form tail wrapper
+`sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
+under explicit variance-proxy and Matrix Bernstein primitive assumptions, with
+`sampleCovarianceCenteredRankOneRadius`, `sampleCovarianceTailTheta`, and
+`sampleCovarianceQuadraticFormTailRHS` as the core named tail helpers. It does
+not prove unconditional sample-covariance concentration or an
+operator-norm Matrix Bernstein theorem.
+RM-S5E adds the example-layer wrapper
+`sampleCovariance_quadraticForm_tail_usage`, keeping the same assumptions
+explicit for sample-covariance usage files.
+
+Next safe task:
+`RM-S5F-sample-covariance-variance-proxy-control-contract`.
+
 ## Milestone 3 scalar implication closeout
 
 This audit separates proved theorem families from typed statements and blocked
@@ -1039,6 +1052,92 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/Algebra.lean`
 - Priority: Stage RM2
 
+## sample covariance row rank-one sum bridge
+- Book heading: sample covariance and Matrix Bernstein prerequisites
+- Informal statement: the uncentered sample covariance should be the normalized
+  finite sum of row rank-one random matrices.
+- Target Lean statements: `sampleCovarianceRowRankOneSum`,
+  `normalizedSampleCovarianceRowRankOneSum`,
+  `sampleCovariance_eq_normalized_rowRankOne_sum`
+- Required objects: `sampleCovariance`, `rowVector`, `rankOneRandomMatrixFamily`,
+  and `randomMatrixSum`.
+- Required definitions: named row rank-one finite-sum objects.
+- Required bridge lemmas: finite matrix extensionality and entrywise unfolding
+  of row rank-one random matrices.
+- Status: proven
+- Blocker: none for the algebraic representation. This does not prove sample
+  covariance concentration or Matrix Bernstein assumptions.
+- Target module: `HighDimProb/RandomMatrix/Algebra.lean`
+- Priority: RM-S5A
+
+## centered sample covariance row rank-one sum bridge
+- Book heading: sample covariance and Matrix Bernstein prerequisites
+- Informal statement: the centered sample covariance deviation should be the
+  normalized finite sum of centered row rank-one random matrices.
+- Target Lean statements: `centeredSampleCovarianceRowRankOneSum`,
+  `normalizedCenteredSampleCovarianceRowRankOneSum`,
+  `sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`
+- Required objects: `centeredRandomMatrix`, `sampleCovariance`, `rowVector`,
+  `centeredRankOneRandomMatrixFamily`, `randomMatrixSum`, and
+  `IntegrableRandomMatrix`.
+- Required definitions: named centered row rank-one finite-sum objects.
+- Required bridge lemmas: finite-sum linearity of integrals, entrywise matrix
+  expectation unfolding, and finite matrix extensionality.
+- Status: proven
+- Blocker: none for the algebraic centered representation. This does not prove
+  row independence, variance-proxy bounds, sample covariance concentration, or
+  Matrix Bernstein tails.
+- Target module: `HighDimProb/RandomMatrix/Algebra.lean`
+- Priority: RM-S5B
+
+## sample covariance quadratic-form Matrix Bernstein tail wrapper
+- Book heading: sample covariance and Matrix Bernstein prerequisites
+- Informal statement: under explicit row measurability, coordinate `MemLp 2`,
+  row squared-norm, row independence, centered square/exponential/trace
+  integrability, scalar variance-proxy, Tropp, and CFC primitive assumptions,
+  the centered sample covariance satisfies the optimized one-sided
+  quadratic-form Matrix Bernstein tail bound.
+- Target Lean statement:
+  `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
+- Required objects: `centeredRandomMatrix`, `sampleCovariance`,
+  `centeredSampleCovarianceRowRankOneFamily`,
+  `centeredSampleCovarianceRowRankOneSum`, `MatrixVarianceProxyNormBound`, and
+  `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`.
+- Required definitions: S5A/S5B named sample-covariance row rank-one sum
+  objects, `sampleCovarianceCenteredRankOneRadius`,
+  `sampleCovarianceTailTheta`, `sampleCovarianceQuadraticFormTailRHS`, and
+  S3/S4 centered rank-one adapters.
+- Required bridge lemmas: sample covariance centered-sum equality and
+  quadratic-form scalar multiplication for the `(1 / m)` normalization.
+- Status: proven conditional wrapper
+- Blocker: none for the wrapper with explicit assumptions. Unconditional
+  variance-proxy control, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and
+  lambda-max/operator-norm Matrix Bernstein tails remain unproved.
+- Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
+- Priority: RM-S5D
+
+## sample covariance quadratic-form tail usage wrapper
+- Book heading: sample covariance and Matrix Bernstein usage examples
+- Informal statement: example-level sample covariance tail code should call the
+  S5D theorem through a named assumptions bundle and the core scalar RHS rather
+  than manually composing the centered sample-covariance bridge and optimized
+  Matrix Bernstein wrapper.
+- Target Lean statement: `sampleCovariance_quadraticForm_tail_usage`
+- Required objects: `SampleCovarianceTailAssumptions`,
+  core `sampleCovarianceQuadraticFormTailRHS`,
+  `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`.
+- Required definitions: S5D sample-covariance tail wrapper and the S5A/S5B
+  row-rank-one sum bridges it uses internally.
+- Required bridge lemmas: none beyond S5D; this is an example-layer wrapper.
+- Status: example API
+- Blocker: variance-proxy control, Tropp/Lieb, Bernstein CFC,
+  Golden-Thompson, and lambda-max/operator-norm Matrix Bernstein tails remain
+  explicit or unproved.
+- Target module: `HighDimProb/Examples/RandomMatrix/SampleCovarianceTailUsage.lean`
+- Status note: RM-S5E complete.
+- Current next safe task:
+  RM-S5F-sample-covariance-variance-proxy-control-contract.
+
 ## sample covariance PSD bridge
 - Book heading: sample covariance and PSD prerequisites
 - Informal statement: the uncentered sample covariance matrix is symmetric and positive semidefinite in the explicit HighDimProb quadratic-form sense.
@@ -1247,7 +1346,7 @@ future directions.
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Priority: Stage MB-S2 through MB-S9-foundation complete; current next task is
-  RM-S5-sample-covariance-deviation-adapter-contract.
+  RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1646,7 +1745,7 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -1822,7 +1921,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -1949,7 +2048,7 @@ future directions.
 - Blocker: the finite-family Tropp primitive itself remains typed only; the
   Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and the
   Matrix Bernstein tail theorem remain unproved.
-- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 
 
@@ -1967,7 +2066,7 @@ future directions.
 - Blocker: the result is still one-sided and quadratic-form under explicit
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
-- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -1987,7 +2086,7 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 ## RM Centered Structural API
 
@@ -2011,7 +2110,7 @@ future directions.
   operator-norm layer now supplies the Bochner bridge and expectation
   contraction.
 - Blocker: none for structural centeredness.
-- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 ## RM Centered Operator-Norm Bound
 
@@ -2031,9 +2130,9 @@ future directions.
   `PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound`, and
   `PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound_same`.
 - Status: proven, API-tested, and judge-tested.
-- Blocker: this does not prove sample-covariance deviation adapters or Matrix
-  Bernstein tails.
-- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+- Blocker: this does not prove sample-covariance Matrix Bernstein assumption
+  adapters or Matrix Bernstein tails.
+- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 
 ## RM Centered Rank-One Structural Adapter
@@ -2049,9 +2148,9 @@ future directions.
   `centeredRankOneRandomMatrix_integrable_of_memLp_two`, and
   `centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two`.
 - Status: proven, API-tested, and judge-tested.
-- Blocker: this does not prove sample-covariance deviation adapters or Matrix
-  Bernstein tails.
-- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+- Blocker: this does not prove sample-covariance Matrix Bernstein assumption
+  adapters or Matrix Bernstein tails.
+- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 
 ## RM Centered Rank-One Operator-Norm Adapter
@@ -2063,10 +2162,10 @@ future directions.
   `BoundedOperatorNorm_centeredRankOneRandomMatrix_of_sqNorm_bound` and
   `PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound`.
 - Status: proven, API-tested, and judge-tested.
-- Blocker: this does not prove sample-covariance deviation adapters,
-  lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC,
-  or Golden-Thompson.
-- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+- Blocker: this does not prove sample-covariance Matrix Bernstein assumption
+  adapters, lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb,
+  Bernstein CFC, or Golden-Thompson.
+- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 
 ## RM Vector-to-Rank-One Matrix Measurability / Integrability
@@ -2081,8 +2180,9 @@ future directions.
   `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove integrability from measurability alone,
-  sample-covariance deviation adapters, or Matrix Bernstein tails.
-- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+  sample-covariance Matrix Bernstein assumption adapters, or Matrix Bernstein
+  tails.
+- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 
 ## RM PSD Nullspace Converse
@@ -2099,6 +2199,6 @@ future directions.
   `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this is only a deterministic PSD kernel bridge. It does not prove
-  covariance expectation identities, sample-covariance deviation adapters, or
-  Matrix Bernstein tails.
-- Priority: next safe task is RM-S5-sample-covariance-deviation-adapter-contract.
+  covariance expectation identities, sample-covariance Matrix Bernstein
+  assumption adapters, or Matrix Bernstein tails.
+- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.

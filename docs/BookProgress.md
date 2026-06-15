@@ -994,8 +994,10 @@ squared-norm bounds into `BoundedOperatorNorm` and
 This was not a centered summand bound, not a vector-to-matrix
 measurability/integrability bridge, and not a Matrix Bernstein tail theorem.
 The centered rank-one structural and operator-norm follow-ups are now complete
-in RM-S3/RM-S4. Current next safe task:
-RM-S5-sample-covariance-deviation-adapter-contract.
+in RM-S3/RM-S4, and S5D now proves the conditional sample-covariance
+quadratic-form tail wrapper under explicit primitive assumptions. RM-S5E adds
+the example-layer usage wrapper. Current next safe task:
+RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 ## RM centered operator-norm prerequisite progress
 
@@ -1016,8 +1018,10 @@ derives the deterministic expectation bound from pointwise `R` boundedness,
 entrywise integrability, and probability mass one.  This does not prove
 entrywise integrability or vector-to-rank-one measurability.
 
-The centered rank-one follow-up is now complete in RM-S3/RM-S4. Current next
-safe task: RM-S5-sample-covariance-deviation-adapter-contract.
+The centered rank-one follow-up is now complete in RM-S3/RM-S4, and the S5D
+conditional sample-covariance quadratic-form tail wrapper is proved. RM-S5E
+adds the example-layer usage wrapper. Current next safe task:
+RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 
 ## RM vector-to-rank-one matrix measurability / integrability prerequisite progress
@@ -1039,7 +1043,10 @@ coordinate `MemLp ... 2` assumptions. Centered rank-one structural and
 operator-norm adapters are now complete; the remaining gap here is
 integrability from measurability alone and Matrix Bernstein tails.
 
-Current next safe task: RM-S5-sample-covariance-deviation-adapter-contract.
+RM-S5E example cleanup is complete. The example usage wrapper now reuses the
+core sample-covariance tail helper names instead of defining local
+radius/theta/RHS copies. Current next safe task:
+RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 
 ## RM centered rank-one structural adapter progress
@@ -1070,10 +1077,13 @@ PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound
 ```
 
 The wrappers combine the rank-one operator-norm bridge with expectation
-contraction and the centered `2 * R` family wrapper. They do not prove the
-sample-covariance deviation adapter contract or Matrix Bernstein tails.
+contraction and the centered `2 * R` family wrapper. The later RM-S5A/RM-S5B
+stages prove the sample-covariance row rank-one sum and centered deviation
+bridges; RM-S5D proves the conditional sample-covariance quadratic-form tail
+wrapper under explicit variance-proxy and primitive assumptions.
 
-Current next safe task: RM-S5-sample-covariance-deviation-adapter-contract.
+RM-S5E example cleanup is complete. Current next safe task:
+RM-S5F-sample-covariance-variance-proxy-control-contract.
 
 
 ## RM PSD nullspace converse prerequisite progress
@@ -1095,4 +1105,5 @@ quadratic-null directions through the core declarations. This is not an
 expectation-identity theorem for covariance objects and not a Matrix
 Bernstein tail theorem.
 
-Current next safe task: RM-S5-sample-covariance-deviation-adapter-contract.
+RM-S5E example cleanup is complete. Current next safe task:
+RM-S5F-sample-covariance-variance-proxy-control-contract.

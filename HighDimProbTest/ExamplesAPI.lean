@@ -13,6 +13,7 @@ import HighDimProb.Examples.RandomMatrix.NTKGramDecompositionUsage
 import HighDimProb.Examples.RandomMatrix.NTKGramUsage
 import HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage
 import HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
+import HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage
 
 open HighDimProb
 open HighDimProb.Examples.RandomMatrix.CenteredRankOneCovarianceAdapterUsage
@@ -22,6 +23,7 @@ open HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
 open HighDimProb.Examples.RandomMatrix.KernelNullspaceUsage
 open HighDimProb.Examples.RandomMatrix.NTKGramDecompositionUsage
 open HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage
+open HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage
 
 variable {rankOneN : Nat}
 variable (rankOneV : RankOneVector rankOneN)
@@ -49,6 +51,11 @@ variable (kernelHExplicitPSD : IsPSDMatrix kernelA)
 #check centeredGradientCovariance_pointwiseOperatorNormBound
 #check isRandomMatrix_rankOneCovarianceContribution
 #check integrable_rankOneCovarianceContribution_of_memLp_two
+#check sampleCovarianceCenteredRankOneRadius
+#check sampleCovarianceTailTheta
+#check sampleCovarianceQuadraticFormTailRHS
+#check SampleCovarianceTailAssumptions
+#check sampleCovariance_quadraticForm_tail_usage
 
 example :
     matrixAction kernelA kernelX = Matrix.mulVec kernelA kernelX := by

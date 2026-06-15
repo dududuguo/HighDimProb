@@ -54,8 +54,13 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
 
 - Matrix concentration theorem statements now typecheck as `Prop`s in
   `HighDimProb.RandomMatrix.ConcentrationStatements`, but proofs remain blocked.
-- Operator-norm measurability, centered operator-norm contraction, and named
-  centered rank-one adapters are now proved. The next RandomMatrix branch is
-  `RM-S5-sample-covariance-deviation-adapter-contract`.
+- Operator-norm measurability, centered operator-norm contraction, named
+  centered rank-one adapters, and sample covariance row rank-one centering
+  bridges are now proved. The S5D conditional sample-covariance
+  quadratic-form tail wrapper is also proved under explicit variance-proxy and
+  primitive assumptions, using core radius/theta/RHS helper names rather than
+  example-local copies. RM-S5E adds an example-layer usage wrapper that keeps
+  those assumptions explicit. The next RandomMatrix branch is
+  `RM-S5F-sample-covariance-variance-proxy-control-contract`.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.

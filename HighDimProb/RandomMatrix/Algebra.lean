@@ -1,5 +1,8 @@
 import HighDimProb.RandomMatrix.SampleCovariance
+import HighDimProb.RandomMatrix.Expectation
 import HighDimProb.RandomMatrix.QuadraticForm
+import HighDimProb.RandomMatrix.RowsCols
+import HighDimProb.RandomMatrix.Sums
 
 /-!
 # Algebraic bridges for random matrices
@@ -42,6 +45,183 @@ theorem sum_rowDot_sq_nonneg {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
     (A : RandomMatrix Omega m n) (x : Fin n -> Real) (omega : Omega) :
     0 <= Finset.univ.sum fun k : Fin m => (rowDot A x k omega) ^ 2 :=
   Finset.sum_nonneg fun k _ => rowDot_sq_nonneg A x k omega
+
+/-- Row rank-one family behind the sample covariance. -/
+abbrev sampleCovarianceRowRankOneFamily {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (A : RandomMatrix Omega m n) :
+    Fin m -> RandomMatrix Omega n n :=
+  rankOneRandomMatrixFamily (rowVector A)
+
+@[simp]
+theorem sampleCovarianceRowRankOneFamily_apply {Omega : Type*}
+    [MeasurableSpace Omega] {m n : Nat}
+    (A : RandomMatrix Omega m n) (k : Fin m) :
+    sampleCovarianceRowRankOneFamily A k =
+      rankOneRandomMatrix (rowVector A k) :=
+  rfl
+
+/-- Centered row rank-one family behind the centered sample covariance. -/
+abbrev centeredSampleCovarianceRowRankOneFamily {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {m n : Nat}
+    (A : RandomMatrix Omega m n) :
+    Fin m -> RandomMatrix Omega n n :=
+  centeredRankOneRandomMatrixFamily P (rowVector A)
+
+@[simp]
+theorem centeredSampleCovarianceRowRankOneFamily_apply {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {m n : Nat}
+    (A : RandomMatrix Omega m n) (k : Fin m) :
+    centeredSampleCovarianceRowRankOneFamily (P := P) A k =
+      centeredRankOneRandomMatrix P (rowVector A k) :=
+  rfl
+
+/--
+Unnormalized sum of the row rank-one random matrices behind the sample
+covariance.
+
+This names the reusable right-hand side before the scalar `(1 / m)` factor is
+applied.
+-/
+def sampleCovarianceRowRankOneSum {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (A : RandomMatrix Omega m n) : RandomMatrix Omega n n :=
+  randomMatrixSum (sampleCovarianceRowRankOneFamily A)
+
+/--
+Normalized row rank-one sum with the same scaling convention as
+`sampleCovariance`.
+-/
+def normalizedSampleCovarianceRowRankOneSum {Omega : Type*}
+    [MeasurableSpace Omega] {m n : Nat}
+    (A : RandomMatrix Omega m n) : RandomMatrix Omega n n :=
+  fun omega => (1 / (m : Real)) • sampleCovarianceRowRankOneSum A omega
+
+/--
+Unnormalized sum of centered row rank-one random matrices.
+
+This is the named summand family used by the centered sample-covariance
+deviation bridge.
+-/
+def centeredSampleCovarianceRowRankOneSum {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {m n : Nat}
+    (A : RandomMatrix Omega m n) : RandomMatrix Omega n n :=
+  randomMatrixSum (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+
+/--
+Normalized centered row rank-one sum with the same `(1 / m)` scaling convention
+as `sampleCovariance`.
+-/
+def normalizedCenteredSampleCovarianceRowRankOneSum {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {m n : Nat}
+    (A : RandomMatrix Omega m n) : RandomMatrix Omega n n :=
+  fun omega =>
+    (1 / (m : Real)) • centeredSampleCovarianceRowRankOneSum (P := P) A omega
+
+/--
+Matrix-level rank-one sum form of the uncentered sample covariance.
+
+This rewrites the existing entrywise definition `(1 / m) A^T A` as a
+named normalized finite sum of the existing row rank-one random matrices.
+-/
+theorem sampleCovariance_eq_normalized_rowRankOne_sum
+    {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (A : RandomMatrix Omega m n) :
+    sampleCovariance A = normalizedSampleCovarianceRowRankOneSum A := by
+  funext omega
+  ext i j
+  have hEntry :
+      sampleCovarianceRowRankOneSum A omega i j =
+        Finset.univ.sum fun k : Fin m => A omega k i * A omega k j := by
+    simp [sampleCovarianceRowRankOneSum, randomMatrixSum, Matrix.sum_apply]
+  calc
+    sampleCovariance A omega i j =
+        (1 / (m : Real)) *
+          Finset.univ.sum (fun k : Fin m => A omega k i * A omega k j) := by
+      rfl
+    _ = (1 / (m : Real)) *
+        sampleCovarianceRowRankOneSum A omega i j := by
+      rw [hEntry]
+    _ = normalizedSampleCovarianceRowRankOneSum A omega i j := by
+      rfl
+
+/--
+Centered sample covariance as a normalized sum of centered row rank-one
+summands.
+
+This is the deviation form of `sampleCovariance_eq_normalized_rowRankOne_sum`:
+the left side is `sampleCovariance A - E[sampleCovariance A]`, and the right
+side centers each row outer product before summing.
+-/
+theorem sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} {m n : Nat}
+    (A : RandomMatrix Omega m n)
+    (hInt : forall k : Fin m,
+      IntegrableRandomMatrix P (rankOneRandomMatrix (rowVector A k))) :
+    centeredRandomMatrix P (sampleCovariance A) =
+      normalizedCenteredSampleCovarianceRowRankOneSum (P := P) A := by
+  funext omega
+  ext i j
+  have hIntEntry :
+      forall k : Fin m, Integrable (fun omega => A omega k i * A omega k j) P := by
+    intro k
+    change Integrable (matrixEntry (rankOneRandomMatrix (rowVector A k)) i j) P
+    exact hInt k i j
+  have hExpect :
+      matrixExpect P (sampleCovariance A) i j =
+        (1 / (m : Real)) *
+          Finset.univ.sum
+            (fun k : Fin m =>
+              matrixExpect P (rankOneRandomMatrix (rowVector A k)) i j) := by
+    calc
+      matrixExpect P (sampleCovariance A) i j =
+          ∫ omega, (1 / (m : Real)) *
+            Finset.univ.sum (fun k : Fin m => A omega k i * A omega k j) ∂P := by
+        rfl
+      _ = (1 / (m : Real)) *
+          ∫ omega, Finset.univ.sum (fun k : Fin m => A omega k i * A omega k j) ∂P := by
+        rw [integral_const_mul]
+      _ = (1 / (m : Real)) *
+          Finset.univ.sum
+            (fun k : Fin m => ∫ omega, A omega k i * A omega k j ∂P) := by
+        rw [integral_finset_sum]
+        intro k _
+        exact hIntEntry k
+      _ = (1 / (m : Real)) *
+          Finset.univ.sum
+            (fun k : Fin m =>
+              matrixExpect P (rankOneRandomMatrix (rowVector A k)) i j) := by
+        rfl
+  calc
+    centeredRandomMatrix P (sampleCovariance A) omega i j =
+        (1 / (m : Real)) *
+          Finset.univ.sum (fun k : Fin m => A omega k i * A omega k j) -
+        (1 / (m : Real)) *
+          Finset.univ.sum
+            (fun k : Fin m =>
+              matrixExpect P (rankOneRandomMatrix (rowVector A k)) i j) := by
+      rw [centeredRandomMatrix_apply, hExpect]
+      rfl
+    _ = (1 / (m : Real)) *
+        (Finset.univ.sum (fun k : Fin m => A omega k i * A omega k j) -
+          Finset.univ.sum
+            (fun k : Fin m =>
+              matrixExpect P (rankOneRandomMatrix (rowVector A k)) i j)) := by
+      ring
+    _ = (1 / (m : Real)) *
+        Finset.univ.sum
+          (fun k : Fin m =>
+            A omega k i * A omega k j -
+              matrixExpect P (rankOneRandomMatrix (rowVector A k)) i j) := by
+      rw [Finset.sum_sub_distrib]
+    _ = normalizedCenteredSampleCovarianceRowRankOneSum (P := P) A omega i j := by
+      unfold normalizedCenteredSampleCovarianceRowRankOneSum
+        centeredSampleCovarianceRowRankOneSum randomMatrixSum
+        centeredSampleCovarianceRowRankOneFamily centeredRankOneRandomMatrixFamily
+        centeredRandomMatrixFamily rankOneRandomMatrixFamily centeredRandomMatrix
+        rankOneRandomMatrix rankOneMatrix rowVector
+      rw [Matrix.smul_apply]
+      rw [Matrix.sum_apply]
+      rw [smul_eq_mul]
+      simp only [Function.comp_apply]
 
 private theorem sum_sum_mul_eq_sq {n : Nat} (u : Fin n -> Real) :
     (Finset.univ.sum fun i : Fin n =>

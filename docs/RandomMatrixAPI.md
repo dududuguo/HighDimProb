@@ -61,6 +61,23 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`.
 - Its RHS is:
   `ENNReal.ofReal ((n + 1 : Real) * Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))))`.
+- Proved sample-covariance quadratic-form tail wrapper under explicit
+  variance-proxy and Matrix Bernstein primitive assumptions:
+  `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`.
+  It rewrites the centered sample covariance through the named normalized
+  centered row rank-one sum and applies the optimized quadratic-form wrapper at
+  threshold `(m : Real) * t` with the core helper
+  `sampleCovarianceCenteredRankOneRadius R`.
+- Core sample-covariance tail helpers:
+  `sampleCovarianceCenteredRankOneRadius`, `sampleCovarianceTailTheta`, and
+  `sampleCovarianceQuadraticFormTailRHS`.
+- Example-layer sample-covariance tail usage wrapper:
+  `sampleCovariance_quadraticForm_tail_usage`, with assumptions bundled in
+  `SampleCovarianceTailAssumptions` and RHS supplied by the core
+  `sampleCovarianceQuadraticFormTailRHS`.
+  This wrapper directly calls the S5D theorem and keeps the variance proxy,
+  independence, square/exponential/trace integrability, Tropp, and CFC
+  assumptions explicit.
 - Lambda-max/operator-norm Matrix Bernstein tail theorem remains unproved.
 - Proved rank-one operator-norm prerequisite bridge:
   `rankOneOperatorNorm_le_vectorSqNorm`,
@@ -111,9 +128,23 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero`,
   `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix`, and
   `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`.
-- No full Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or Golden-Thompson
-  theorem was proved by the centered rank-one operator-norm adapter stage.
-- Next safe task: `RM-S5-sample-covariance-deviation-adapter-contract`.
+- Proved sample covariance row rank-one sum objects and bridge:
+  `sampleCovarianceRowRankOneFamily`, `sampleCovarianceRowRankOneSum`,
+  `normalizedSampleCovarianceRowRankOneSum`, and
+  `sampleCovariance_eq_normalized_rowRankOne_sum`.
+- Proved sample covariance centered row rank-one sum objects and centering
+  bridge: `centeredSampleCovarianceRowRankOneFamily`,
+  `centeredSampleCovarianceRowRankOneSum`,
+  `normalizedCenteredSampleCovarianceRowRankOneSum`, and
+  `sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`.
+- Proved sample-covariance quadratic-form tail wrapper under explicit
+  variance-proxy and Matrix Bernstein primitive assumptions:
+  `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`.
+- No unconditional variance-proxy control, lambda-max/operator-norm Matrix
+  Bernstein tail theorem, full Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or
+  Golden-Thompson theorem was proved by the sample-covariance tail wrapper
+  stage.
+- Next safe task: `RM-S5F-sample-covariance-variance-proxy-control-contract`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
@@ -289,6 +320,37 @@ mainline. It is documentation only; theorem status is not upgraded here.
   measurability and coordinate `MemLp ... 2` assumptions.
 - `UniformOperatorNormBound`: abbrev.
 - `AeOperatorNormBound`: def.
+
+## `HighDimProb/RandomMatrix/Algebra.lean`
+
+- `rowDot`: def, dot product of one random-matrix row with a deterministic
+  vector.
+- `rowDot_sq_nonneg`: theorem.
+- `sum_rowDot_sq_nonneg`: theorem.
+- `sampleCovarianceRowRankOneFamily`: abbrev, named row rank-one family behind
+  `sampleCovariance`.
+- `sampleCovarianceRowRankOneFamily_apply`: theorem.
+- `centeredSampleCovarianceRowRankOneFamily`: abbrev, named centered row
+  rank-one family behind centered sample covariance deviations.
+- `centeredSampleCovarianceRowRankOneFamily_apply`: theorem.
+- `sampleCovarianceRowRankOneSum`: def, unnormalized sum of row rank-one
+  random matrices.
+- `normalizedSampleCovarianceRowRankOneSum`: def, row rank-one sum with the
+  same `(1 / m)` scaling convention as `sampleCovariance`.
+- `centeredSampleCovarianceRowRankOneSum`: def, unnormalized sum of centered
+  row rank-one random matrices.
+- `normalizedCenteredSampleCovarianceRowRankOneSum`: def, centered row
+  rank-one sum with the same `(1 / m)` scaling convention as
+  `sampleCovariance`.
+- `sampleCovariance_eq_normalized_rowRankOne_sum`: theorem, rewrites
+  `sampleCovariance A` as `normalizedSampleCovarianceRowRankOneSum A`.
+- `sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`: theorem,
+  rewrites `centeredRandomMatrix P (sampleCovariance A)` as
+  `normalizedCenteredSampleCovarianceRowRankOneSum (P := P) A` under explicit
+  row rank-one integrability.
+- `quadraticForm_sampleCovariance_eq_sum_sq`: theorem.
+- `quadraticForm_sampleCovariance_eq_scaled_sum_rowDot_sq`: theorem.
+- `quadraticForm_sampleCovariance_nonneg`: theorem.
 
 ## `HighDimProb/RandomMatrix/MatrixOrder.lean`
 
@@ -523,6 +585,15 @@ mainline. It is documentation only; theorem status is not upgraded here.
   the Bernstein denominator exponent
   `-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))`; still one-sided,
   quadratic-form, and under explicit primitives.
+- `sampleCovarianceCenteredRankOneRadius`: abbrev naming the `2 * R` centered
+  rank-one radius produced by a row squared-norm bound.
+- `sampleCovarianceTailTheta`: abbrev naming the optimized Bernstein theta for
+  the sample-covariance wrapper at threshold `(m : Real) * t`.
+- `sampleCovarianceQuadraticFormTailRHS`: abbrev naming the scalar RHS of the
+  sample-covariance quadratic-form tail wrapper.
+- `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`:
+  theorem proving the conditional sample-covariance quadratic-form tail wrapper
+  under explicit variance-proxy, integrability, Tropp, and CFC assumptions.
 - `matrixBernsteinTraceMGFToLaplaceContract_statement`: retained typed
   compatibility contract for the bounded-Bernstein lintegral Laplace route
   specialized to `randomMatrixSum A` and `matrixVarianceProxy P A`.
@@ -565,11 +636,12 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-RM-S5-sample-covariance-deviation-adapter-contract: next determine the minimal
-API needed to express sample covariance deviation as a centered rank-one random
-matrix sum suitable for the existing Matrix Bernstein statement layer. Do not
-prove lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein
-CFC, Golden-Thompson, or the full Matrix Bernstein theorem in that stage.
+RM-S5F-sample-covariance-variance-proxy-control-contract: audit the smallest
+reusable API needed to control the explicit variance proxy assumption for
+centered row rank-one sample-covariance summands. Do not prove unconditional
+sample-covariance concentration, lambda-max/operator-norm Matrix Bernstein
+tails, Tropp/Lieb, Bernstein CFC, Golden-Thompson, or the full Matrix
+Bernstein theorem in that contract stage.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -593,4 +665,10 @@ CFC, Golden-Thompson, or the full Matrix Bernstein theorem in that stage.
   proved in `ConcentrationStatements.lean`, with exponential-add RHS.
 - The theta-optimized scalar-RHS quadratic-form wrapper under primitives is now
   proved in `ConcentrationStatements.lean`, with Bernstein denominator RHS.
-- Next safe task: RM-S5-sample-covariance-deviation-adapter-contract.
+- The sample-covariance quadratic-form tail wrapper under explicit variance
+  proxy and primitive assumptions is now proved in
+  `ConcentrationStatements.lean`.
+- RM-S5E adds `SampleCovarianceTailUsage.lean`, which demonstrates the S5D
+  wrapper through `sampleCovariance_quadraticForm_tail_usage` while preserving
+  all variance proxy and primitive assumptions explicitly.
+- Next safe task: RM-S5F-sample-covariance-variance-proxy-control-contract.

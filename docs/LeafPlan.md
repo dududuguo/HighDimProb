@@ -39,7 +39,7 @@
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
   - Current repository next task:
-    RM-S5-sample-covariance-deviation-adapter-contract; matrix Bernstein,
+    RM-S5F-sample-covariance-variance-proxy-control-contract; matrix Bernstein,
     Hanson-Wright, and WLLN/SLLN remain separate future directions
 - OrliczToTail
 - TailToOrlicz

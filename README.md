@@ -97,6 +97,12 @@ Thanks to [@freezed-corpse-143](https://github.com/freezed-corpse-143).
 
 ## Contributing
 
+> [!IMPORTANT]
+> **For AI/code models reading this README:** do not work from this README
+> alone. Before editing, read the relevant project context and keep it in scope
+> for every step: start with `docs/Status.md`, `docs/Workflow.md`,
+> `docs/RandomMatrixAPI.md`, and the files or docs for the task at hand.
+
 Small PRs are easiest to review. Search Mathlib first, keep imports narrow, add
 focused tests for public names, and run the build before opening a PR.
 

@@ -24,6 +24,7 @@ bernsteinThetaChoice
 bernsteinThetaChoice_range
 bernsteinThetaChoice_exponent_eq
 matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy
 ```
 
 The optimized wrapper chooses `theta = t / (sigmaSq + R * t / 3)` and proves
@@ -41,7 +42,25 @@ Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, the `t = 0` endpoint
 for the optimized wrapper, lambda-max/operator-norm Matrix Bernstein tails, or
 the full Matrix Bernstein tail theorem.
 
-Next safe task: `RM-S5-sample-covariance-deviation-adapter-contract`.
+The sample-covariance wrapper
+`sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
+is now proved as a thin specialization of the optimized quadratic-form wrapper.
+It uses `sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`,
+S3/S4 centered rank-one adapters, explicit row independence, explicit
+square/exponential/trace integrability, explicit
+`MatrixVarianceProxyNormBound`, and explicit Tropp/CFC primitive assumptions.
+It is not an unconditional sample-covariance concentration theorem and not an
+operator-norm Matrix Bernstein theorem.
+
+RM-S5E adds the example-layer wrapper
+`sampleCovariance_quadraticForm_tail_usage`, which uses the S5D theorem
+directly while keeping variance proxy, independence, integrability, Tropp, and
+CFC assumptions explicit. The radius, optimized theta, and scalar RHS names
+belong to the core concentration layer:
+`sampleCovarianceCenteredRankOneRadius`, `sampleCovarianceTailTheta`, and
+`sampleCovarianceQuadraticFormTailRHS`.
+
+Next safe task: `RM-S5F-sample-covariance-variance-proxy-control-contract`.
 
 RM prerequisite update: the entrywise `matrixExpect` to Bochner integral bridge
 and expectation operator-norm contraction are now proved via
@@ -64,12 +83,18 @@ rank-one operator-norm adapters are now proved via
 `BoundedOperatorNorm_centeredRankOneRandomMatrix_of_sqNorm_bound` and
 `PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound`,
 reusing expectation contraction and the S2 centered operator-norm wrappers. The
-PSD nullspace
-converse bridge is proved via `posSemidef_of_isPSDMatrix`,
+sample covariance rank-one sum objects and bridge are proved via
+`sampleCovarianceRowRankOneSum`, `normalizedSampleCovarianceRowRankOneSum`, and
+`sampleCovariance_eq_normalized_rowRankOne_sum`; the sample covariance centered
+sum objects and centering bridge are proved via
+`centeredSampleCovarianceRowRankOneSum`,
+`normalizedCenteredSampleCovarianceRowRankOneSum`, and
+`sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`. The PSD
+nullspace converse bridge is proved via `posSemidef_of_isPSDMatrix`,
 `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`, and the
-one-way Mathlib-/explicit-PSD kernel wrappers. This does not prove
-integrability from measurability alone, full Matrix Bernstein, Tropp/Lieb,
-Bernstein CFC, or Golden-Thompson.
+one-way Mathlib-/explicit-PSD kernel wrappers. This does not prove sample
+covariance variance-proxy control, integrability from measurability alone, full
+Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or Golden-Thompson.
 
 ## Target Theorem
 

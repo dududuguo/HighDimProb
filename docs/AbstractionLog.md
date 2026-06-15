@@ -1268,11 +1268,13 @@
 - Operator-norm decision: prove the single-matrix and family `2 * R` wrappers
   by composing the rank-one operator-norm bridge with expectation contraction
   and the generic centered pointwise operator-norm wrapper.
-- Boundary decision: these adapters do not prove the sample-covariance
-  deviation adapter contract, operator-norm Matrix Bernstein tails, Tropp/Lieb,
-  Bernstein CFC, or Golden-Thompson.
-- Future upgrade path: RM-S5 should express the sample-covariance deviation
-  route using these named centered rank-one summands.
+- Boundary decision: these adapters do not themselves prove the sample
+  covariance row rank-one sum bridge, the centered sample covariance deviation
+  bridge, operator-norm Matrix Bernstein tails, Tropp/Lieb, Bernstein CFC, or
+  Golden-Thompson.
+- Follow-up resolved: RM-S5A/RM-S5B express the sample-covariance deviation
+  route through named row rank-one and centered row rank-one sums. The remaining
+  upgrade path is the Matrix Bernstein assumption adapter for those summands.
 
 
 ## RM PSD nullspace converse bridge
@@ -1286,7 +1288,26 @@
 - Source/comment decision: theorem comments cite public PSD-square-root and
   nullspace-converse references so readers can verify the mathematical fact.
 - Boundary decision: this stage proves only deterministic PSD kernel facts; it
-  does not infer covariance PSD from integrability, sample-covariance
-  deviation contracts, or Matrix Bernstein tail statements.
-- Future upgrade path: RM-S5 should connect the named centered rank-one
-  adapters to sample-covariance deviation statements.
+  does not infer covariance PSD from integrability, sample covariance
+  concentration, or Matrix Bernstein tail statements.
+- Follow-up resolved: RM-S5A/RM-S5B connect the named centered rank-one
+  adapters to sample-covariance deviation statements. The remaining upgrade
+  path is the Matrix Bernstein assumption adapter for those summands.
+
+
+## RM sample covariance tail helper consolidation
+
+- Concrete version chosen: promote the sample-covariance tail radius, optimized
+  theta, and scalar RHS to core `ConcentrationStatements.lean` helpers:
+  `sampleCovarianceCenteredRankOneRadius`, `sampleCovarianceTailTheta`, and
+  `sampleCovarianceQuadraticFormTailRHS`.
+- Object-layer decision: add `sampleCovarianceRowRankOneFamily` and
+  `centeredSampleCovarianceRowRankOneFamily` in `Algebra.lean`, then define the
+  existing row-rank-one sums through those names.
+- Example-layer decision: `SampleCovarianceTailUsage.lean` keeps only the
+  assumptions bundle and usage wrapper; it does not define local copies of the
+  radius, theta, or RHS.
+- Boundary decision: this cleanup changes the public API shape but not the
+  theorem strength. Variance-proxy control, Tropp/Lieb, Bernstein CFC,
+  lambda-max/operator-norm tails, and unconditional sample-covariance
+  concentration remain future work.

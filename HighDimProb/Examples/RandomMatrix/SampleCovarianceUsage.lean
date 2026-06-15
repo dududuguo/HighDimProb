@@ -1,11 +1,12 @@
+import HighDimProb.RandomMatrix.Algebra
 import HighDimProb.RandomMatrix.ConcentrationStatements
 
 /-!
 # Sample covariance usage example
 
 This examples-only file records structural sample-covariance facts already
-available from the RandomMatrix API. It does not prove a sample-covariance
-deviation theorem.
+available from the RandomMatrix API. The centered bridge is an algebraic
+deviation identity, not a concentration theorem.
 -/
 
 namespace HighDimProb.Examples.RandomMatrix.SampleCovarianceUsage
@@ -35,6 +36,24 @@ theorem sampleCovarianceEntry_usage {Omega : Type*} [MeasurableSpace Omega]
       (1 / (m : Real)) *
         Finset.univ.sum fun k : Fin m => A omega k i * A omega k j := by
   rfl
+
+/-- Existing API: the uncentered sample covariance is the normalized row
+rank-one sum. -/
+theorem sampleCovariance_rankOneSum_usage {Omega : Type*}
+    [MeasurableSpace Omega] {m n : Nat} (A : DataMatrix Omega m n) :
+    sampleCovariance A = normalizedSampleCovarianceRowRankOneSum A := by
+  exact sampleCovariance_eq_normalized_rowRankOne_sum A
+
+/-- Existing API: the centered sample covariance is the normalized centered row
+rank-one sum under explicit row rank-one integrability. -/
+theorem sampleCovariance_centeredRankOneSum_usage {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {m n : Nat}
+    (A : DataMatrix Omega m n)
+    (hInt : forall k : Fin m,
+      IntegrableRandomMatrix P (rankOneRandomMatrix (rowVector A k))) :
+    centeredRandomMatrix P (sampleCovariance A) =
+      normalizedCenteredSampleCovarianceRowRankOneSum (P := P) A := by
+  exact sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum A hInt
 
 /-- Existing API: sample-covariance entries are measurable when the data matrix
 is entrywise measurable. -/

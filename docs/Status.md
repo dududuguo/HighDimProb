@@ -8,10 +8,14 @@ RandomMatrix / Matrix Bernstein mainline: RM-S0 adds centered structural API
 for `centeredRandomMatrix` and `centeredRandomMatrixFamily`, RM-S1/S2 add
 expectation operator-norm contraction plus centered pointwise operator-norm
 wrappers, RM-S3 adds centered rank-one structural adapters, and RM-S4 adds
-centered rank-one operator-norm adapters. Centered
+centered rank-one operator-norm adapters. RM-S5A proves the matrix-level
+sample covariance rank-one sum object and bridge, and RM-S5B proves the sample
+covariance centered rank-one sum object and centering bridge. Centered
 summands can inherit entrywise measurability, entrywise integrability,
 self-adjointness, zero entrywise expectation, and `2 * R` operator-norm bounds
-from the uncentered family under the existing assumptions. MB-S9 already
+from the uncentered family under the existing assumptions. RM-S5D now proves
+the conditional sample-covariance quadratic-form tail wrapper under explicit
+variance-proxy and Matrix Bernstein primitive assumptions. MB-S9 already
 includes the bounded
 trace-MGF theorem under explicit primitives, the bounded real-to-lintegral
 trace-MGF bridge, the explicit-theta quadratic-form upper-tail wrappers, the
@@ -19,10 +23,21 @@ dimension/norm scalar RHS reduction, and the theta-optimized scalar Bernstein
 denominator wrapper. The current prerequisite cleanup also adds rank-one,
 centered structural, centered operator-norm, and vector-to-rank-one matrix
 measurability / integrability bridges for covariance-style examples.
+RM-S5E adds the example-layer usage wrapper
+`sampleCovariance_quadraticForm_tail_usage`, with
+`SampleCovarianceTailAssumptions` keeping the variance proxy, independence,
+integrability, Tropp, and CFC assumptions explicit. The sample-covariance tail
+surface now uses core helper names
+`sampleCovarianceCenteredRankOneRadius`, `sampleCovarianceTailTheta`, and
+`sampleCovarianceQuadraticFormTailRHS` rather than example-local copies.
 
 The latest proved public theorem is:
 
-- `PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound`
+- `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
+
+The latest public example-layer wrapper is:
+
+- `sampleCovariance_quadraticForm_tail_usage`
 
 Supporting proved API also includes `rankOneRandomMatrix`,
 `isRandomMatrix_rankOneRandomMatrix`,
@@ -54,7 +69,17 @@ rank-one operator-norm bridge `rankOneOperatorNorm_le_vectorSqNorm`,
 `BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound`, and
 `PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound`,
 `BoundedOperatorNorm_centeredRankOneRandomMatrix_of_sqNorm_bound`, and
-`PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound`. The new vector-to-matrix
+`PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound`,
+`sampleCovarianceRowRankOneFamily`,
+`centeredSampleCovarianceRowRankOneFamily`,
+`sampleCovarianceRowRankOneSum`,
+`normalizedSampleCovarianceRowRankOneSum`,
+`centeredSampleCovarianceRowRankOneSum`,
+`normalizedCenteredSampleCovarianceRowRankOneSum`,
+`sampleCovariance_eq_normalized_rowRankOne_sum`,
+`sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`, and
+`sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`.
+The new vector-to-matrix
 bridge proves entrywise measurability from `IsRandomVector`; entrywise
 integrability is proved only from explicit product-integrability assumptions or
 explicit coordinate `MemLp ... 2` assumptions. The new PSD nullspace bridge
@@ -64,15 +89,16 @@ one-way Mathlib-/explicit-PSD kernel wrappers. It does not prove integrability
 from measurability alone, lambda-max/operator-norm Matrix Bernstein tails,
 Tropp/Lieb, the Bernstein CFC primitive,
 Golden-Thompson, the `t = 0` endpoint for the optimized wrapper, or the final
-full Matrix Bernstein tail theorem. No full Matrix Bernstein, Tropp/Lieb,
-Bernstein CFC, or Golden-Thompson theorem was proved by RM-S4.
+full Matrix Bernstein tail theorem. No unconditional sample covariance
+concentration theorem, full Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or
+Golden-Thompson theorem was proved by RM-S5D.
 The previous optimized quadratic-form theorem remains
 `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-S5-sample-covariance-deviation-adapter-contract`
+- `RM-S5F-sample-covariance-variance-proxy-control-contract`
 
 ## Public Milestone Summary
 
@@ -1126,6 +1152,12 @@ Important existing declarations:
 - `rowDot_sq_nonneg`
 - `sum_rowDot_sq_nonneg`
 - `quadraticForm_sampleCovariance_eq_scaled_sum_rowDot_sq`
+- `sampleCovarianceRowRankOneSum`
+- `normalizedSampleCovarianceRowRankOneSum`
+- `centeredSampleCovarianceRowRankOneSum`
+- `normalizedCenteredSampleCovarianceRowRankOneSum`
+- `sampleCovariance_eq_normalized_rowRankOne_sum`
+- `sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`
 - `IndependentSample`
 - `PairwiseIndependentFinSample`
 - `IdenticallyDistributedSample`
@@ -2011,3 +2043,24 @@ centered operator-norm wrappers. This stage does not prove full Matrix
 Bernstein, Tropp/Lieb, Bernstein CFC, Golden-Thompson, or the operator-norm
 tail theorem. The current follow-up is recorded in the top-level next-task
 section.
+
+Stage RM-S5A sample covariance rank-one sum proof has no build blocker. The
+RandomMatrix algebra layer now exposes
+`sampleCovarianceRowRankOneSum`,
+`normalizedSampleCovarianceRowRankOneSum`, and
+`sampleCovariance_eq_normalized_rowRankOne_sum`, proving that the existing
+uncentered `sampleCovariance A` is the named normalized sum of existing row
+rank-one matrices. This stage does not prove sample covariance deviation, a
+centering bridge, Matrix Bernstein, Tropp/Lieb, Bernstein CFC,
+Golden-Thompson, or the operator-norm tail theorem.
+
+Stage RM-S5B sample covariance centering bridge proof has no build blocker. The
+RandomMatrix algebra layer now exposes
+`centeredSampleCovarianceRowRankOneSum`,
+`normalizedCenteredSampleCovarianceRowRankOneSum`, and
+`sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`, proving that
+`centeredRandomMatrix P (sampleCovariance A)` is the named normalized centered
+row rank-one sum under explicit row rank-one integrability. This stage does not
+prove sample covariance concentration, Matrix Bernstein assumptions, Matrix
+Bernstein, Tropp/Lieb, Bernstein CFC, Golden-Thompson, or the operator-norm tail
+theorem.

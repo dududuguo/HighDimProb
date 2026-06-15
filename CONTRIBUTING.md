@@ -33,6 +33,8 @@ lake test
 7. Update docs.
 8. Run `lake build` and `lake test`.
 
+For code-model assisted, PLZ READ `docs/Workflow.md` first.
+
 ## PR Title Categories
 
 Use one of these prefixes:
