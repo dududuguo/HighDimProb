@@ -577,6 +577,30 @@ theorem lambdaMaxOrdered_rayleighUpperBound
   rayleighUpperBound_of_spectralUpperBound
     (lambdaMaxOrdered_spectralUpperBound hA)
 
+/-- The ordered lambda-max endpoint is attained by an explicit unit
+eigenvector in HighDimProb's quadratic-form convention. -/
+private theorem exists_unitVector_matrixQuadraticForm_eq_lambdaMaxOrdered
+    {n : Nat} (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : IsSelfAdjointMatrix A) :
+    exists x : Fin (n + 1) -> Real,
+      IsUnitVector x /\ matrixQuadraticForm A x = lambdaMaxOrdered A hA := by
+  classical
+  let e : Fin (Fintype.card (Fin (n + 1))) ≃ Fin (n + 1) :=
+    Fintype.equivOfCardEq (by simp)
+  let idx : Fin (n + 1) := e 0
+  let x : Fin (n + 1) -> Real := fun i => hA.eigenvectorBasis idx i
+  refine ⟨x, ?_, ?_⟩
+  · apply isUnitVector_of_norm_toLp_eq_one
+    simp [x, hA.eigenvectorBasis.norm_eq_one idx]
+  · have hquad :
+        matrixQuadraticForm A x = hA.eigenvalues idx := by
+      simpa [x, matrixQuadraticForm, dotProduct, Matrix.mulVec,
+        Finset.mul_sum, Finset.sum_mul, mul_assoc] using
+        (hA.eigenvalues_eq idx).symm
+    have hidx : hA.eigenvalues idx = lambdaMaxOrdered A hA := by
+      simp [lambdaMaxOrdered, Matrix.IsHermitian.eigenvalues, idx, e]
+    exact hquad.trans hidx
+
 /-- Conditional Rayleigh conversion from a Mathlib Loewner-style premise.
 
 The hard spectral fact is the premise
@@ -723,6 +747,21 @@ theorem quadraticFormUpperTailEvent_subset_matrixUpperBoundTailEvent_of_spectral
     quadraticFormUpperTailEvent_subset_matrixUpperBoundTailEvent_of_rayleighUpperBound
       A L t (fun omega => rayleighUpperBound_of_spectralUpperBound (hUpper omega))
 
+/-- Ordered lambda-max upper-tail events reduce to the existing explicit
+quadratic-form upper-tail event by taking an eigenvector attaining the ordered
+endpoint. -/
+theorem lambdaMaxOrderedUpperTailEvent_subset_quadraticFormUpperTailEvent
+    {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
+    (A : RandomMatrix Omega (n + 1) (n + 1))
+    (hA : forall omega, IsSelfAdjointMatrix (A omega)) (t : Real) :
+    lambdaMaxOrderedUpperTailEvent A hA t <=
+      quadraticFormUpperTailEvent A t := by
+  intro omega hTail
+  change t <= lambdaMaxOrdered (A omega) (hA omega) at hTail
+  rcases exists_unitVector_matrixQuadraticForm_eq_lambdaMaxOrdered
+      (A omega) (hA omega) with ⟨x, hx, hquad⟩
+  exact ⟨x, hx, hquad.symm ▸ hTail⟩
+
 /-- Conditional event-level Rayleigh bridge from the explicit unit-sphere
 quadratic-form upper tail to the lambda-max upper tail. -/
 theorem quadraticFormUpperTailEvent_subset_lambdaMaxUpperTailEvent_of_matrixQuadraticForm_le_lambdaMax
@@ -768,6 +807,26 @@ def quadraticFormLowerTailEvent {Omega : Type*} [MeasurableSpace Omega]
     {n : Nat} (A : RandomMatrix Omega n n) (t : Real) : Set Omega :=
   {omega | exists x : Fin n -> Real,
     IsUnitVector x /\ matrixQuadraticForm (A omega) x <= t}
+
+/-- A reflected lower quadratic-form tail is an upper tail for the pointwise
+negated matrix. -/
+theorem quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg
+    {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
+    (A : RandomMatrix Omega n n) (t : Real) :
+    quadraticFormLowerTailEvent A (-t) ⊆
+      quadraticFormUpperTailEvent (fun omega => -(A omega)) t := by
+  intro omega hTail
+  rcases hTail with ⟨x, hx, hquad⟩
+  refine ⟨x, hx, ?_⟩
+  have hneg :
+      matrixQuadraticForm (-(A omega)) x =
+        -matrixQuadraticForm (A omega) x := by
+    rw [show -(A omega) = (-1 : Real) • A omega by simp,
+      matrixQuadraticForm_smul]
+    ring
+  change t <= matrixQuadraticForm (-(A omega)) x
+  rw [hneg]
+  simpa using neg_le_neg hquad
 
 /-- Operator-norm tail event for square random matrices.
 

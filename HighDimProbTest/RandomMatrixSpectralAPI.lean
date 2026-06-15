@@ -74,6 +74,7 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check quadraticFormUpperTailEvent_subset_scalarUpperTailEvent_of_rayleighUpperBound
 #check quadraticFormUpperTailEvent_subset_matrixUpperBoundTailEvent_of_rayleighUpperBound
 #check quadraticFormUpperTailEvent_subset_matrixUpperBoundTailEvent_of_spectralUpperBound
+#check lambdaMaxOrderedUpperTailEvent_subset_quadraticFormUpperTailEvent
 #check quadraticFormUpperTailEvent_subset_lambdaMaxUpperTailEvent_of_matrixQuadraticForm_le_lambdaMax
 #check quadraticFormUpperTailEvent_subset_lambdaMaxOrderedUpperTailEvent_of_matrixQuadraticForm_le_lambdaMaxOrdered
 #check not_isUnitVector_fin_zero
@@ -84,6 +85,7 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check SelfAdjointOperatorNormTailEvent
 #check selfAdjointOperatorNormTailEvent
 #check twoSidedQuadraticFormTailEvent
+#check quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg
 #check quadraticFormUpperTailEvent_subset_twoSidedQuadraticFormTailEvent
 #check quadraticFormLowerTailEvent_subset_twoSidedQuadraticFormTailEvent
 #check selfAdjointOperatorNormTailViaQuadraticFormStatement
@@ -257,6 +259,10 @@ example
       A Z t hUpper
 
 example :
+    lambdaMaxOrderedUpperTailEvent B hB t <= quadraticFormUpperTailEvent B t := by
+  exact lambdaMaxOrderedUpperTailEvent_subset_quadraticFormUpperTailEvent B hB t
+
+example :
     lambdaMaxUpperTailEvent B hB t =
       matrixUpperBoundTailEvent B
         (fun omega => lambdaMax (B omega) (hB omega)) t := by
@@ -295,3 +301,8 @@ example :
 example :
     quadraticFormLowerTailEvent A (-t) ⊆ twoSidedQuadraticFormTailEvent A t := by
   exact quadraticFormLowerTailEvent_subset_twoSidedQuadraticFormTailEvent A t
+
+example :
+    quadraticFormLowerTailEvent A (-t) ⊆
+      quadraticFormUpperTailEvent (fun omega => -(A omega)) t := by
+  exact quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg A t

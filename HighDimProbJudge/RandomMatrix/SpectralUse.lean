@@ -53,6 +53,7 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.quadraticFormUpperTailEvent_subset_scalarUpperTailEvent_of_rayleighUpperBound
 #check HighDimProb.quadraticFormUpperTailEvent_subset_matrixUpperBoundTailEvent_of_rayleighUpperBound
 #check HighDimProb.quadraticFormUpperTailEvent_subset_matrixUpperBoundTailEvent_of_spectralUpperBound
+#check HighDimProb.lambdaMaxOrderedUpperTailEvent_subset_quadraticFormUpperTailEvent
 #check HighDimProb.quadraticFormUpperTailEvent_subset_lambdaMaxUpperTailEvent_of_matrixQuadraticForm_le_lambdaMax
 #check HighDimProb.quadraticFormUpperTailEvent_subset_lambdaMaxOrderedUpperTailEvent_of_matrixQuadraticForm_le_lambdaMaxOrdered
 #check HighDimProb.not_isUnitVector_fin_zero
@@ -63,6 +64,7 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.SelfAdjointOperatorNormTailEvent
 #check HighDimProb.selfAdjointOperatorNormTailEvent
 #check HighDimProb.twoSidedQuadraticFormTailEvent
+#check HighDimProb.quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg
 #check HighDimProb.quadraticFormUpperTailEvent_subset_twoSidedQuadraticFormTailEvent
 #check HighDimProb.quadraticFormLowerTailEvent_subset_twoSidedQuadraticFormTailEvent
 #check HighDimProb.selfAdjointOperatorNormTailViaQuadraticFormStatement
@@ -108,6 +110,14 @@ example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     HighDimProb.quadraticFormUpperTailEvent A t ⊆
       HighDimProb.twoSidedQuadraticFormTailEvent A t := by
   exact HighDimProb.quadraticFormUpperTailEvent_subset_twoSidedQuadraticFormTailEvent A t
+
+example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
+    (A : HighDimProb.RandomMatrix Omega n n) (t : Real) :
+    HighDimProb.quadraticFormLowerTailEvent A (-t) ⊆
+      HighDimProb.quadraticFormUpperTailEvent (fun omega => -(A omega)) t := by
+  exact
+    HighDimProb.quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg
+      A t
 
 example {n : Nat}
     (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
@@ -284,6 +294,15 @@ example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
   exact
     HighDimProb.quadraticFormUpperTailEvent_subset_matrixUpperBoundTailEvent_of_spectralUpperBound
       A Z t hUpper
+
+example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
+    (A : HighDimProb.RandomMatrix Omega (n + 1) (n + 1)) (t : Real)
+    (hA : forall omega, HighDimProb.IsSelfAdjointMatrix (A omega)) :
+    HighDimProb.lambdaMaxOrderedUpperTailEvent A hA t <=
+      HighDimProb.quadraticFormUpperTailEvent A t := by
+  exact
+    HighDimProb.lambdaMaxOrderedUpperTailEvent_subset_quadraticFormUpperTailEvent
+      A hA t
 
 example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (A : HighDimProb.RandomMatrix Omega (n + 1) (n + 1)) (t : Real)

@@ -121,12 +121,12 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - `HighDimProbTest/RandomMatrixSampleCovarianceAPI.lean`: checks Gram, row Gram, and sample covariance vocabulary declarations.
 - `HighDimProbTest/RandomMatrixQuadraticFormAPI.lean`: checks quadratic and bilinear form vocabulary declarations.
 - `HighDimProbTest/RandomMatrixOperatorNormAPI.lean`: checks the experimental L2 operator-norm wrapper, MC2 unit-vector vocabulary, explicit matrix-vector squared norm bridge, squared operator-norm bound predicates, retained exact bridge typed statements, proved MC2-fix bridge theorems, and the proved operator-norm measurability theorem.
-- `HighDimProbTest/RandomMatrixSpectralAPI.lean`: checks MC5.1/MB-S2 spectral wrappers, MB-S7A-index ordered endpoint wrappers, MB-S7A-abstract semantic spectral upper-bound abstractions, quadratic-form bound predicates, monotonicity lemmas, PSD nullspace bridges, RM-S6 rank-one kernel/nullspace helpers, two-sided tail event vocabulary, subset lemmas, and typed spectral bridge targets.
+- `HighDimProbTest/RandomMatrixSpectralAPI.lean`: checks MC5.1/MB-S2 spectral wrappers, MB-S7A-index ordered endpoint wrappers, MB-S7A-abstract semantic spectral upper-bound abstractions, quadratic-form bound predicates, monotonicity lemmas, PSD nullspace bridges, RM-S6 rank-one kernel/nullspace helpers, two-sided tail event vocabulary, subset lemmas including the RM-S7B lower-tail-to-negated-upper-tail bridge, and typed spectral bridge targets.
 - `HighDimProbTest/RandomMatrixTraceExpAPI.lean`: checks MC5.2/MB-S2 matrix exponential, trace, trace-exponential moment, lintegral trace-exp moment, self-adjointness preservation, semantic trace-mgf predicates, and typed trace-exponential / trace-mgf bound targets.
 - `HighDimProbTest/RandomMatrixLaplaceAPI.lean`: checks MC5.3/MB-S2 matrix Laplace RHS vocabulary, lintegral RHS vocabulary, MB-S5 trace-exp threshold/conditional Markov-Laplace bridge declarations, MB-S6 explicit dominance and conditional dominance-wrapper declarations, MB-S7B-semantic trace-exp upper-bound dominance/event bridges, and typed Laplace/Chernoff/operator-norm statement targets.
 - `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean`: checks Stage MC3 finite random-matrix sums, matrix-valued independence/self-adjoint family assumptions, entrywise matrix integrability, pointwise/a.e. operator-norm-bound predicates, matrix square/second-moment/variance-proxy declarations, semantic variance-proxy bound predicates, scalar variance-proxy norm, compatibility aliases, MB-S1 PSD square/second-moment/variance-proxy theorems, MB-S9 matrix expectation PSD/order and add/smul/zero/constant normalization theorems, and the updated matrix Bernstein typed statement.
 - `HighDimProbTest/RandomMatrixStatementsAPI.lean`: checks random-matrix theorem statement declarations that are currently honest to type.
-- `HighDimProbTest/RandomMatrixConcentrationAPI.lean`: checks Stage MC1 matrix symmetry/self-adjoint, PSD/order, matrix expectation/integrability, concentration-assumption vocabulary, sample-covariance PSD bridge, MC2 quadratic-form monotonicity and unit-sphere operator-norm typed target, MC2-fix operator-norm bridge theorem names, MC3 finite-sum/variance-proxy vocabulary, MC4-cleanup statement honesty names, and typed matrix concentration statement targets.
+- `HighDimProbTest/RandomMatrixConcentrationAPI.lean`: checks Stage MC1 matrix symmetry/self-adjoint, PSD/order, matrix expectation/integrability, concentration-assumption vocabulary, sample-covariance PSD bridge, MC2 quadratic-form monotonicity and unit-sphere operator-norm typed target, MC2-fix operator-norm bridge theorem names, MC3 finite-sum/variance-proxy vocabulary, MC4-cleanup statement honesty names, typed matrix concentration statement targets, the RM-S7B two-sided quadratic-form Matrix Bernstein wrapper, and the RM-S7C conditional self-adjoint operator-norm wrapper.
 - `HighDimProbTest/RandomMatrixProofsAPI.lean`: checks small random-matrix proof declarations such as Frobenius-square nonnegativity, sample-covariance diagonal nonnegativity, row-dot helpers, and the sample-covariance quadratic-form algebra/nonnegativity bridge.
 - `HighDimProbTest/LimitTheoremsAPI.lean`: checks experimental limit-theorem sample mean vocabulary, finite-sum measurability/integrability bridges, independence/iid assumption wrappers, and weak-law typed statements.
 - `HighDimProbTest/NetsMetricEntropyAPI.lean`: downstream-style Mathlib-backed nets, covering, and packing examples.
@@ -288,6 +288,47 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
 - Coverage proves only the ordered endpoint provider/Rayleigh route. It does
   not claim trace-exp spectral dominance, full matrix Laplace, trace-mgf,
   Golden-Thompson, Lieb, or Matrix Bernstein.
+
+## RM-S7A Lambda-Max Tail Bridge Coverage
+
+- `HighDimProbTest/RandomMatrixSpectralAPI.lean` and
+  `HighDimProbJudge/RandomMatrix/SpectralUse.lean` both check
+  `lambdaMaxOrderedUpperTailEvent_subset_quadraticFormUpperTailEvent`.
+- The examples apply the bridge with only the existing pointwise
+  `hA : forall omega, IsSelfAdjointMatrix (A omega)` witness.
+- Coverage proves the ordered lambda-max upper-tail event reduction into the
+  explicit quadratic-form upper-tail event. It does not claim the legacy
+  `lambdaMax` compatibility bridge, self-adjoint operator-norm reduction,
+  full matrix Laplace, trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein.
+
+## RM-S7B Two-Sided Quadratic-Form Tail Wrapper Coverage
+
+- `HighDimProbTest/RandomMatrixSpectralAPI.lean` and
+  `HighDimProbJudge/RandomMatrix/SpectralUse.lean` check
+  `quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg`.
+- `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
+  `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
+  `HighDimProbJudge/RandomMatrix/StatementUse.lean` check
+  `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`.
+- Coverage proves only the two-sided quadratic-form wrapper under explicit
+  assumptions for both signs. It does not claim a self-adjoint operator-norm
+  tail, finite-net reduction, variance-proxy control, Tropp/Lieb, Bernstein
+  CFC, Golden-Thompson, or a CFC-free Matrix Bernstein theorem.
+
+## RM-S7C Self-Adjoint Operator-Norm Tail Wrapper Coverage
+
+- `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
+  `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
+  `HighDimProbJudge/RandomMatrix/StatementUse.lean` check
+  `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`.
+- `external/validation/rm-s7c-self-adjoint-operator-norm-tail-wrapper/RM_S7C_SelfAdjointOperatorNormTailProbe.lean`
+  checks the public wrapper and a minimal bridge-transfer example from
+  `SelfAdjointOperatorNormTailEvent` to `twoSidedQuadraticFormTailEvent`.
+- Coverage proves only the conditional self-adjoint operator-norm wrapper under
+  explicit `selfAdjointOperatorNormTailViaQuadraticFormStatement` and RM-S7B
+  assumptions. It does not prove the bridge, variance-proxy control,
+  Tropp/Lieb, Bernstein CFC, Golden-Thompson, or a CFC-free Matrix Bernstein
+  theorem.
 
 ## MB-S7B-scalar-endpoint Ordered Endpoint Coverage
 
@@ -539,3 +580,13 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
 - This coverage confirms the public wrapper is exported. It does not prove
   Tropp/Lieb, the Bernstein CFC primitive, or the Matrix Bernstein tail
   theorem.
+
+## RM-S7D Sample Covariance Operator-Norm Tail Contract Coverage
+
+- `external/validation/rm-s7d-sample-covariance-operator-norm-tail-wrapper-contract/RM_S7D_SampleCovarianceOperatorNormTailProbe.lean`
+  checks the existing sample-covariance deviation route, the RM-S7C
+  self-adjoint operator-norm wrapper, and the S0-S5 positive-sign structural
+  discharge facts.
+- No new public Lean theorem, test, or judge check is added in RM-S7D because
+  the contract classifies the next missing piece as the sample-covariance
+  operator-norm normalization event bridge.

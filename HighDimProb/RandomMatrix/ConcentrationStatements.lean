@@ -601,6 +601,340 @@ theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoef
       hTraceIntTheta hBound hR hRange hTheta hNorm hCFCTheta hTroppTheta
   simpa [theta, bernsteinThetaChoice_exponent_eq hSigma hR ht.le] using hTail
 
+/-- Two-sided quadratic-form Matrix Bernstein wrapper under explicit primitive
+assumptions for both `A` and the pointwise negated summand family.
+
+This combines the existing optimized upper-tail theorem for `A` with the same
+theorem applied to `fun i omega => -(A i omega)`, then uses the finite union
+bound for the existing `twoSidedQuadraticFormTailEvent`. It does not prove any
+negation transfer for independence, variance proxies, CFC primitives, Tropp
+primitives, or integrability. -/
+theorem matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (R Rneg t sigmaSq sigmaSqNeg : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily A (bernsteinThetaChoice t sigmaSq R) i))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A)
+          (bernsteinThetaChoice t sigmaSq R)))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hSigma : 0 < sigmaSq)
+    (hR : 0 <= R)
+    (ht : 0 < t)
+    (hNorm : MatrixVarianceProxyNormBound P A sigmaSq)
+    (hCFC :
+      forall i omega,
+        bernsteinMatrixExp_le_quadratic_statement (A i omega)
+          (bernsteinThetaChoice t sigmaSq R) R)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A
+        (bernsteinSecondMomentComparisonFamily P A
+          (bernsteinThetaChoice t sigmaSq R) R)
+        (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R)
+    (hCenteredNeg :
+      CenteredSelfAdjointRandomMatrixFamily P
+        (fun i : I => fun omega : Omega => -(A i omega)))
+    (hIndepSANeg :
+      IndependentSelfAdjointRandomMatrices P
+        (fun i : I => fun omega : Omega => -(A i omega)))
+    (hIntXNeg :
+      forall i,
+        IntegrableRandomMatrix P
+          ((fun i : I => fun omega : Omega => -(A i omega)) i))
+    (hIntSqNeg :
+      forall i,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare
+            ((fun i : I => fun omega : Omega => -(A i omega)) i)))
+    (hExpIntNeg :
+      forall i,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily
+            (fun i : I => fun omega : Omega => -(A i omega))
+            (bernsteinThetaChoice t sigmaSqNeg Rneg) i))
+    (hTraceIntNeg :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand
+          (randomMatrixSum
+            (fun i : I => fun omega : Omega => -(A i omega)))
+          (bernsteinThetaChoice t sigmaSqNeg Rneg)))
+    (hBoundNeg :
+      PointwiseOperatorNormBound
+        (fun i : I => fun omega : Omega => -(A i omega)) Rneg)
+    (hSigmaNeg : 0 < sigmaSqNeg)
+    (hRNeg : 0 <= Rneg)
+    (hNormNeg :
+      MatrixVarianceProxyNormBound P
+        (fun i : I => fun omega : Omega => -(A i omega)) sigmaSqNeg)
+    (hCFCNeg :
+      forall i omega,
+        bernsteinMatrixExp_le_quadratic_statement
+          ((fun i : I => fun omega : Omega => -(A i omega)) i omega)
+          (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
+    (hTroppNeg :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) (fun i : I => fun omega : Omega => -(A i omega))
+        (bernsteinSecondMomentComparisonFamily P
+          (fun i : I => fun omega : Omega => -(A i omega))
+          (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
+        (matrixVarianceProxy P
+          (fun i : I => fun omega : Omega => -(A i omega)))
+        (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg) :
+    P (twoSidedQuadraticFormTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        ((n + 1 : Real) *
+          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
+        ENNReal.ofReal
+          ((n + 1 : Real) *
+            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
+  let Aneg : I -> RandomMatrix Omega (n + 1) (n + 1) :=
+    fun i omega => -(A i omega)
+  have hUpper :
+      P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+        ENNReal.ofReal
+          ((n + 1 : Real) *
+            Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) :=
+    matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+      (P := P) (A := A) (R := R) (t := t) (sigmaSq := sigmaSq)
+      hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt hBound
+      hSigma hR ht hNorm hCFC hTropp
+  have hUpperNeg :
+      P (quadraticFormUpperTailEvent (randomMatrixSum Aneg) t) <=
+        ENNReal.ofReal
+          ((n + 1 : Real) *
+            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) :=
+    matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+      (P := P) (A := Aneg) (R := Rneg) (t := t) (sigmaSq := sigmaSqNeg)
+      (by
+        change CenteredSelfAdjointRandomMatrixFamily P
+          (fun i : I => fun omega : Omega => -(A i omega))
+        exact hCenteredNeg)
+      (by
+        change IndependentSelfAdjointRandomMatrices P
+          (fun i : I => fun omega : Omega => -(A i omega))
+        exact hIndepSANeg)
+      (by
+        change forall i,
+          IntegrableRandomMatrix P
+            ((fun i : I => fun omega : Omega => -(A i omega)) i)
+        exact hIntXNeg)
+      (by
+        change forall i,
+          IntegrableRandomMatrix P
+            (randomMatrixSquare
+              ((fun i : I => fun omega : Omega => -(A i omega)) i))
+        exact hIntSqNeg)
+      (by
+        change forall i,
+          IntegrableRandomMatrix P
+            (matrixExpScaledFamily
+              (fun i : I => fun omega : Omega => -(A i omega))
+              (bernsteinThetaChoice t sigmaSqNeg Rneg) i)
+        exact hExpIntNeg)
+      (by
+        change IntegrableRealRandomVariable P
+          (traceExpIntegrand
+            (randomMatrixSum
+              (fun i : I => fun omega : Omega => -(A i omega)))
+            (bernsteinThetaChoice t sigmaSqNeg Rneg))
+        exact hTraceIntNeg)
+      (by
+        change PointwiseOperatorNormBound
+          (fun i : I => fun omega : Omega => -(A i omega)) Rneg
+        exact hBoundNeg)
+      hSigmaNeg hRNeg ht
+      (by
+        change MatrixVarianceProxyNormBound P
+          (fun i : I => fun omega : Omega => -(A i omega)) sigmaSqNeg
+        exact hNormNeg)
+      (by
+        change forall i omega,
+          bernsteinMatrixExp_le_quadratic_statement
+            ((fun i : I => fun omega : Omega => -(A i omega)) i omega)
+            (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg
+        exact hCFCNeg)
+      (by
+        change troppMasterTraceMGFFiniteFamily_statement
+          (P := P) (fun i : I => fun omega : Omega => -(A i omega))
+          (bernsteinSecondMomentComparisonFamily P
+            (fun i : I => fun omega : Omega => -(A i omega))
+            (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
+          (matrixVarianceProxy P
+            (fun i : I => fun omega : Omega => -(A i omega)))
+          (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg
+        exact hTroppNeg)
+  have hNegSum :
+      randomMatrixSum Aneg =
+        fun omega : Omega => -(randomMatrixSum A omega) := by
+    funext omega
+    ext r c
+    dsimp [randomMatrixSum, Aneg]
+    rw [Matrix.sum_apply]
+    change (Finset.univ.sum fun i : I => (-(A i omega)) r c) =
+      -((Finset.univ.sum fun i : I => A i omega) r c)
+    rw [Matrix.sum_apply]
+    change (Finset.univ.sum fun i : I => -(A i omega r c)) =
+      -(Finset.univ.sum fun i : I => A i omega r c)
+    exact
+      Finset.sum_neg_distrib (s := (Finset.univ : Finset I))
+        (f := fun i : I => A i omega r c)
+  have hLowerSubset :
+      quadraticFormLowerTailEvent (randomMatrixSum A) (-t) ⊆
+        quadraticFormUpperTailEvent (randomMatrixSum Aneg) t := by
+    simpa [hNegSum] using
+      quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg
+        (randomMatrixSum A) t
+  have hLower :
+      P (quadraticFormLowerTailEvent (randomMatrixSum A) (-t)) <=
+        ENNReal.ofReal
+          ((n + 1 : Real) *
+            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) :=
+    (measure_mono hLowerSubset).trans hUpperNeg
+  calc
+    P (twoSidedQuadraticFormTailEvent (randomMatrixSum A) t)
+        <= P (quadraticFormUpperTailEvent (randomMatrixSum A) t) +
+          P (quadraticFormLowerTailEvent (randomMatrixSum A) (-t)) := by
+            simpa [twoSidedQuadraticFormTailEvent] using
+              (measure_union_le
+                (quadraticFormUpperTailEvent (randomMatrixSum A) t)
+                (quadraticFormLowerTailEvent (randomMatrixSum A) (-t)) :
+                  P (quadraticFormUpperTailEvent (randomMatrixSum A) t ∪
+                    quadraticFormLowerTailEvent (randomMatrixSum A) (-t)) <=
+                    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) +
+                      P (quadraticFormLowerTailEvent (randomMatrixSum A) (-t)))
+    _ <= ENNReal.ofReal
+          ((n + 1 : Real) *
+            Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
+        ENNReal.ofReal
+          ((n + 1 : Real) *
+            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
+            exact add_le_add hUpper hLower
+
+/-- Self-adjoint operator-norm Matrix Bernstein wrapper under the explicit
+operator-norm-to-two-sided-quadratic-form bridge.
+
+This is the smallest honest operator-norm tail wrapper currently available:
+it reuses the proved two-sided quadratic-form wrapper and assumes the existing
+typed bridge `selfAdjointOperatorNormTailViaQuadraticFormStatement` for the
+random sum. All analytic primitives and sign-specific assumptions remain
+explicit exactly as in the two-sided quadratic-form theorem. -/
+theorem matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (R Rneg t sigmaSq sigmaSqNeg : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily A (bernsteinThetaChoice t sigmaSq R) i))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A)
+          (bernsteinThetaChoice t sigmaSq R)))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hSigma : 0 < sigmaSq)
+    (hR : 0 <= R)
+    (ht : 0 < t)
+    (hOperatorBridge :
+      selfAdjointOperatorNormTailViaQuadraticFormStatement
+        (randomMatrixSum A) t)
+    (hNorm : MatrixVarianceProxyNormBound P A sigmaSq)
+    (hCFC :
+      forall i omega,
+        bernsteinMatrixExp_le_quadratic_statement (A i omega)
+          (bernsteinThetaChoice t sigmaSq R) R)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A
+        (bernsteinSecondMomentComparisonFamily P A
+          (bernsteinThetaChoice t sigmaSq R) R)
+        (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R)
+    (hCenteredNeg :
+      CenteredSelfAdjointRandomMatrixFamily P
+        (fun i : I => fun omega : Omega => -(A i omega)))
+    (hIndepSANeg :
+      IndependentSelfAdjointRandomMatrices P
+        (fun i : I => fun omega : Omega => -(A i omega)))
+    (hIntXNeg :
+      forall i,
+        IntegrableRandomMatrix P
+          ((fun i : I => fun omega : Omega => -(A i omega)) i))
+    (hIntSqNeg :
+      forall i,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare
+            ((fun i : I => fun omega : Omega => -(A i omega)) i)))
+    (hExpIntNeg :
+      forall i,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily
+            (fun i : I => fun omega : Omega => -(A i omega))
+            (bernsteinThetaChoice t sigmaSqNeg Rneg) i))
+    (hTraceIntNeg :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand
+          (randomMatrixSum
+            (fun i : I => fun omega : Omega => -(A i omega)))
+          (bernsteinThetaChoice t sigmaSqNeg Rneg)))
+    (hBoundNeg :
+      PointwiseOperatorNormBound
+        (fun i : I => fun omega : Omega => -(A i omega)) Rneg)
+    (hSigmaNeg : 0 < sigmaSqNeg)
+    (hRNeg : 0 <= Rneg)
+    (hNormNeg :
+      MatrixVarianceProxyNormBound P
+        (fun i : I => fun omega : Omega => -(A i omega)) sigmaSqNeg)
+    (hCFCNeg :
+      forall i omega,
+        bernsteinMatrixExp_le_quadratic_statement
+          ((fun i : I => fun omega : Omega => -(A i omega)) i omega)
+          (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
+    (hTroppNeg :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) (fun i : I => fun omega : Omega => -(A i omega))
+        (bernsteinSecondMomentComparisonFamily P
+          (fun i : I => fun omega : Omega => -(A i omega))
+          (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
+        (matrixVarianceProxy P
+          (fun i : I => fun omega : Omega => -(A i omega)))
+        (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg) :
+    P (SelfAdjointOperatorNormTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        ((n + 1 : Real) *
+          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
+        ENNReal.ofReal
+          ((n + 1 : Real) *
+            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
+  have hSumSelfAdj :
+      RandomSelfAdjointMatrix P (randomMatrixSum A) :=
+    randomSelfAdjointMatrix_sum (P := P) (A := A) hCentered.1.2
+  have hSubset :
+      SelfAdjointOperatorNormTailEvent (randomMatrixSum A) t <=
+        twoSidedQuadraticFormTailEvent (randomMatrixSum A) t :=
+    hOperatorBridge hSumSelfAdj ht.le
+  exact (measure_mono hSubset).trans
+    (matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+      (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
+      (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
+      hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt hBound
+      hSigma hR ht hNorm hCFC hTropp hCenteredNeg hIndepSANeg
+      hIntXNeg hIntSqNeg hExpIntNeg hTraceIntNeg hBoundNeg hSigmaNeg
+      hRNeg hNormNeg hCFCNeg hTroppNeg)
+
 /-- Centered rank-one radius produced by a row squared-norm bound `R`. -/
 abbrev sampleCovarianceCenteredRankOneRadius (R : Real) : Real :=
   2 * R

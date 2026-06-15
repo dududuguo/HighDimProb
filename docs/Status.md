@@ -37,10 +37,32 @@ infrastructure is added. RM-S6 adds deterministic rank-one kernel/nullspace
 bridges for quadratic forms, single rank-one kernel membership, and finite sums
 of rank-one matrices. The rank-one kernel/nullspace examples now reuse those
 core bridges instead of reproving rank-one invisible-direction algebra locally.
+RM-S7A proves the deterministic ordered lambda-max upper-tail event bridge
+`lambdaMaxOrderedUpperTailEvent_subset_quadraticFormUpperTailEvent`, reducing
+the existing ordered endpoint event to the explicit unit-vector quadratic-form
+upper-tail event under only the existing pointwise self-adjointness witness.
+RM-S7B proves the two-sided quadratic-form Matrix Bernstein wrapper
+`matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`,
+combining the optimized one-sided quadratic-form tail for `A` with the same
+one-sided wrapper for pointwise `-A`; all variance-proxy, integrability,
+independence, CFC, and Tropp assumptions remain explicit for both signs.
+RM-S7C proves the conditional self-adjoint operator-norm tail wrapper
+`matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
+by applying the typed operator-norm-to-two-sided-quadratic-form bridge to the
+random matrix sum and then reusing the RM-S7B two-sided wrapper.
+RM-S7D audits the completed sample-covariance deviation route against that
+wrapper and classifies the sample-covariance operator-norm tail as blocked
+only by the missing normalization event bridge from
+`centeredRandomMatrix P (sampleCovariance A)` to the unnormalized centered
+row-rank-one sum at threshold `(m : Real) * t`; no core Lean source theorem is
+added in RM-S7D.
 
-The latest proved public theorem is:
+The latest proved public declarations are:
 
-- `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
+- `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
+- `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
+- `quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg`
+- `lambdaMaxOrderedUpperTailEvent_subset_quadraticFormUpperTailEvent`
 
 The latest public example-layer wrapper is:
 
@@ -91,8 +113,13 @@ rank-one operator-norm bridge `rankOneOperatorNorm_le_vectorSqNorm`,
 `centeredSampleCovarianceRowRankOneSum`,
 `normalizedCenteredSampleCovarianceRowRankOneSum`,
 `sampleCovariance_eq_normalized_rowRankOne_sum`,
-`sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`, and
-`sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`.
+`sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`,
+`sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`,
+`lambdaMaxOrderedUpperTailEvent_subset_quadraticFormUpperTailEvent`,
+`quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg`,
+`matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`,
+and
+`matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`.
 The new vector-to-matrix
 bridge proves entrywise measurability from `IsRandomVector`; entrywise
 integrability is proved only from explicit product-integrability assumptions or
@@ -109,13 +136,19 @@ for the optimized wrapper, or the final full Matrix Bernstein tail theorem. No
 unconditional sample covariance concentration theorem, variance-proxy control
 theorem, full Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or Golden-Thompson
 theorem was proved by RM-S5D/RM-S6.
-The previous optimized quadratic-form theorem remains
+The self-adjoint operator-norm reduction to the two-sided quadratic-form event
+remains typed only through `selfAdjointOperatorNormTailViaQuadraticFormStatement`;
+RM-S7C therefore keeps that bridge as an explicit theorem assumption.
+RM-S7D also records the sample-covariance normalization event bridge as the
+first missing bridge before a public sample-covariance operator-norm tail
+wrapper can be a thin application of RM-S7C.
+The previous optimized one-sided quadratic-form theorem remains
 `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-S7-next-random-matrix-leaf-selection`
+- `RM-S7E-prove-sample-covariance-operator-norm-normalization-event-bridge`
 
 ## Public Milestone Summary
 
@@ -1747,6 +1780,40 @@ semantic route. Legacy `lambdaMax` and the typed
 unchanged. Trace-exp spectral dominance, full matrix Laplace, trace-mgf,
 Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
 
+Stage RM-S7A-lambda-max-tail-bridge has no build blocker. The spectral layer
+now exposes `lambdaMaxOrderedUpperTailEvent_subset_quadraticFormUpperTailEvent`,
+the reverse ordered endpoint event bridge into the existing explicit
+quadratic-form upper-tail event. The proof uses Mathlib's Hermitian
+`eigenvectorBasis`, `eigenvalues_eq`, the existing `lambdaMaxOrdered` endpoint,
+and HighDimProb's `isUnitVector_of_norm_toLp_eq_one` / `matrixQuadraticForm`
+normal form. It does not prove an operator-norm tail theorem, the legacy
+`lambdaMax` compatibility bridge, full matrix Laplace, trace-mgf,
+Golden-Thompson, Lieb, or Matrix Bernstein.
+
+Stage RM-S7B-two-sided-quadratic-form-tail-wrapper has no build blocker. The
+spectral layer now exposes
+`quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg`, and the
+concentration statement layer proves
+`matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
+by combining the existing optimized one-sided theorem for `A` and pointwise
+`-A` with the finite union bound. This stage keeps sign-specific variance
+proxies, integrability, independence, CFC primitives, and Tropp primitives
+explicit. It does not prove the self-adjoint operator-norm tail, finite-net
+reduction, variance-proxy control, Tropp/Lieb, Bernstein CFC, Golden-Thompson,
+or a CFC-free Matrix Bernstein theorem.
+
+Stage RM-S7C-self-adjoint-operator-norm-tail-wrapper has no build blocker. The
+concentration statement layer now proves
+`matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
+by deriving self-adjointness of `randomMatrixSum A`, applying the explicit
+`selfAdjointOperatorNormTailViaQuadraticFormStatement (randomMatrixSum A) t`
+bridge, and transferring the RM-S7B two-sided quadratic-form bound by
+`measure_mono`. This stage is conditional on the typed bridge and keeps all
+positive/negative variance-proxy, radius, integrability, independence, CFC, and
+Tropp assumptions explicit. It does not prove the operator-norm bridge,
+finite-net reduction, variance-proxy control, Tropp/Lieb, Bernstein CFC,
+Golden-Thompson, or a CFC-free Matrix Bernstein theorem.
+
 Stage MB-S7B-semantic has no build blocker. The Laplace layer now has
 `TraceExpDominatesUpperBound` as the semantic deterministic trace-exp
 dominance predicate, plus generic event bridges from `matrixUpperBoundTailEvent`
@@ -2081,3 +2148,12 @@ row rank-one sum under explicit row rank-one integrability. This stage does not
 prove sample covariance concentration, Matrix Bernstein assumptions, Matrix
 Bernstein, Tropp/Lieb, Bernstein CFC, Golden-Thompson, or the operator-norm tail
 theorem.
+
+Stage RM-S7D sample-covariance operator-norm tail contract has no new core
+theorem. The audit confirms RM-S7C can bound the unnormalized centered
+row-rank-one sum under explicit two-sided primitives, while the public centered
+sample-covariance event still needs a normalization event bridge from
+`centeredRandomMatrix P (sampleCovariance A)` to
+`centeredSampleCovarianceRowRankOneSum (P := P) A` at threshold
+`(m : Real) * t`. The classification is
+`SAMPLE_COVARIANCE_OPERATOR_NORM_EVENT_BRIDGE_REQUIRED`.
