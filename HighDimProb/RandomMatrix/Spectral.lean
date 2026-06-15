@@ -441,6 +441,93 @@ theorem matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero {n : Nat}
     Matrix.mulVec A x = 0 :=
   (matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix hA x).mp hx
 
+/-! ## Rank-one kernel/nullspace bridges -/
+
+/-- Finite sum of deterministic rank-one outer-product matrices. -/
+def rankOneMatrixSum {I : Type*} [Fintype I] {n : Nat}
+    (v : I -> Fin n -> Real) : Matrix (Fin n) (Fin n) Real :=
+  Finset.univ.sum fun a : I => rankOneMatrix (v a)
+
+/-- The quadratic form of a rank-one outer product is the squared feature
+inner product. -/
+theorem rankOneMatrix_quadraticForm_eq_inner_sq {n : Nat}
+    (v x : Fin n -> Real) :
+    matrixQuadraticForm (rankOneMatrix v) x =
+      (Finset.univ.sum fun i : Fin n => v i * x i) ^ 2 := by
+  have hquad :
+      matrixQuadraticForm (rankOneMatrix v) x =
+        (Finset.univ.sum fun i : Fin n => x i * v i) ^ 2 := by
+    simp [matrixQuadraticForm, rankOneMatrix]
+    rw [sq, Finset.sum_mul_sum]
+    apply Finset.sum_congr rfl
+    intro i _
+    apply Finset.sum_congr rfl
+    intro j _
+    ring
+  rw [hquad]
+  congr 1
+  apply Finset.sum_congr rfl
+  intro i _
+  ring
+
+/-- A direction is in the kernel of a rank-one matrix exactly when it is
+orthogonal to the generating vector. -/
+theorem rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero {n : Nat}
+    (v x : Fin n -> Real) :
+    Matrix.mulVec (rankOneMatrix v) x = 0 <->
+      (Finset.univ.sum fun i : Fin n => v i * x i) = 0 := by
+  constructor
+  · intro h
+    have hquad :
+        matrixQuadraticForm (rankOneMatrix v) x = 0 :=
+      (matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix
+        (isPSDMatrix_rankOneMatrix v) x).mpr h
+    rw [rankOneMatrix_quadraticForm_eq_inner_sq] at hquad
+    exact sq_eq_zero_iff.mp hquad
+  · intro h
+    ext i
+    calc
+      Matrix.mulVec (rankOneMatrix v) x i
+          = v i * (Finset.univ.sum fun j : Fin n => v j * x j) := by
+            simp [Matrix.mulVec, dotProduct, rankOneMatrix, Finset.mul_sum,
+              mul_assoc]
+      _ = 0 := by
+            rw [h, mul_zero]
+
+/-- A vector killed by every rank-one summand is killed by their finite sum. -/
+theorem rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero {I : Type*} [Fintype I]
+    {n : Nat} (v : I -> Fin n -> Real) (x : Fin n -> Real)
+    (h : forall a : I,
+      (Finset.univ.sum fun j : Fin n => v a j * x j) = 0) :
+    Matrix.mulVec (rankOneMatrixSum v) x = 0 := by
+  ext i
+  calc
+    Matrix.mulVec (rankOneMatrixSum v) x i
+        = Finset.univ.sum fun j : Fin n =>
+            (Finset.univ.sum fun a : I => v a i * v a j) * x j := by
+          simp [rankOneMatrixSum, Matrix.mulVec, Matrix.sum_apply,
+            dotProduct, rankOneMatrix]
+    _ = Finset.univ.sum fun j : Fin n =>
+          Finset.univ.sum fun a : I => (v a i * v a j) * x j := by
+          apply Finset.sum_congr rfl
+          intro j _
+          rw [Finset.sum_mul]
+    _ = Finset.univ.sum fun a : I =>
+          Finset.univ.sum fun j : Fin n => (v a i * v a j) * x j := by
+          rw [Finset.sum_comm]
+    _ = Finset.univ.sum fun a : I =>
+          Matrix.mulVec (rankOneMatrix (v a)) x i := by
+          apply Finset.sum_congr rfl
+          intro a _
+          simp [Matrix.mulVec, dotProduct, rankOneMatrix, mul_assoc]
+    _ = 0 := by
+          apply Finset.sum_eq_zero
+          intro a _
+          have ha :
+              Matrix.mulVec (rankOneMatrix (v a)) x = 0 :=
+            (rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero (v a) x).mpr (h a)
+          simp [ha]
+
 /-- Scalar-matrix quadratic form over an explicit unit vector.
 
 This is the small algebraic bridge needed to turn a Loewner-order upper bound

@@ -30,6 +30,10 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check IsPSDMatrix
 #check isPSDMatrix_sum
 #check isPSDMatrix_rankOneMatrix
+#check rankOneMatrixSum
+#check rankOneMatrix_quadraticForm_eq_inner_sq
+#check rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero
+#check rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero
 #check RandomPSDMatrix
 #check randomPSDMatrix_rankOneRandomMatrix
 #check MatrixLE

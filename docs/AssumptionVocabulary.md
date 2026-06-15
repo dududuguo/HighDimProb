@@ -60,7 +60,10 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
   quadratic-form tail wrapper is also proved under explicit variance-proxy and
   primitive assumptions, using core radius/theta/RHS helper names rather than
   example-local copies. RM-S5E adds an example-layer usage wrapper that keeps
-  those assumptions explicit. The next RandomMatrix branch is
-  `RM-S5F-sample-covariance-variance-proxy-control-contract`.
+  those assumptions explicit. RM-S5F confirms that variance-proxy control
+  remains an explicit assumption until future moment/operator-norm/order
+  infrastructure exists. RM-S6 adds deterministic rank-one kernel/nullspace
+  bridges in `Spectral.lean`, and the examples now reuse those bridges. The
+  next RandomMatrix branch is `RM-S7-next-random-matrix-leaf-selection`.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.

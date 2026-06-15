@@ -16,7 +16,7 @@ lake build
 lake test
 ```
 
-The main public import is:
+The stable public import is:
 
 ```lean
 import HighDimProb
@@ -34,6 +34,13 @@ Experimental and fast-moving modules are kept under:
 import HighDimProb.Experimental
 ```
 
+The active RandomMatrix / Matrix Bernstein surface can also be imported
+directly when you are working on that experimental branch:
+
+```lean
+import HighDimProb.RandomMatrix
+```
+
 ## What Is In The Repo
 
 - `HighDimProb/`: the Lean library.
@@ -46,10 +53,11 @@ import HighDimProb.Experimental
 Good starting points:
 
 - `docs/RandomMatrixAPI.md` for the current RandomMatrix / Matrix Bernstein API.
+- `docs/Status.md` for the current proved, conditional, and blocked theorem
+  status.
 - `HighDimProb/Examples/` for small API usage examples.
 - `docs/JudgeSystem.md` for the judge suite.
 - `docs/Workflow.md` for the project workflow.
-- `docs/Status.md` for the current development state.
 - `docs/References.md` for the external references behind the MVP areas.
 
 ## Judge Checks
@@ -110,3 +118,8 @@ Please do not add `sorry`, `admit`, axioms, fake theorem bodies, or custom
 probability infrastructure when existing Mathlib objects can do the job.
 
 See `CONTRIBUTING.md` for the fuller checklist.
+
+## License
+
+HighDimProb is licensed under the Apache License, Version 2.0, matching
+the Lean and Mathlib licensing model. See `LICENSE` for details.

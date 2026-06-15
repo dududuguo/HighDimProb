@@ -60,7 +60,20 @@ belong to the core concentration layer:
 `sampleCovarianceCenteredRankOneRadius`, `sampleCovarianceTailTheta`, and
 `sampleCovarianceQuadraticFormTailRHS`.
 
-Next safe task: `RM-S5F-sample-covariance-variance-proxy-control-contract`.
+RM-S5F keeps sample-covariance variance-proxy control as an explicit
+assumption for now.
+
+RM-S6 adds deterministic rank-one kernel/nullspace API:
+`rankOneMatrixSum`, `rankOneMatrix_quadraticForm_eq_inner_sq`,
+`rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero`, and
+`rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero`.
+It reuses `rankOneMatrix`, `matrixQuadraticForm`, `Matrix.mulVec`, finite
+sums, and the PSD-nullspace bridge without adding a general nullspace theory.
+
+The rank-one nullspace examples now reuse these core bridges where they remove
+local action/sum algebra.
+
+Next safe task: `RM-S7-next-random-matrix-leaf-selection`.
 
 RM prerequisite update: the entrywise `matrixExpect` to Bochner integral bridge
 and expectation operator-norm contraction are now proved via
@@ -92,9 +105,14 @@ sum objects and centering bridge are proved via
 `sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`. The PSD
 nullspace converse bridge is proved via `posSemidef_of_isPSDMatrix`,
 `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`, and the
-one-way Mathlib-/explicit-PSD kernel wrappers. This does not prove sample
-covariance variance-proxy control, integrability from measurability alone, full
-Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or Golden-Thompson.
+one-way Mathlib-/explicit-PSD kernel wrappers. The deterministic rank-one
+kernel/nullspace bridge uses
+`rankOneMatrixSum`, `rankOneMatrix_quadraticForm_eq_inner_sq`,
+`rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero`, and
+`rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero`. This does not prove sample
+covariance variance-proxy control, integrability from measurability alone,
+effective dimension, restricted Matrix Bernstein, full Matrix Bernstein,
+Tropp/Lieb, Bernstein CFC, or Golden-Thompson.
 
 ## Target Theorem
 
@@ -262,7 +280,7 @@ The proof uses Mathlib's scoped matrix Loewner order and CFC theorem
 `Matrix.nonneg_iff_posSemidef`. Matrix Laplace and trace-mgf inequalities
 remain unproved.
 
-The old True-bodied `traceExpMomentBoundStatement` placeholder remains deleted.
+The old True-bodied `traceExpMomentBoundStatement` declaration remains deleted.
 MC5.2 adds a new meaningful `traceExpMomentBoundStatement` over
 `traceExpMoment`. MC5.3 adds a new meaningful
 `matrixLaplaceTransformStatement` over `quadraticFormUpperTailEvent` and

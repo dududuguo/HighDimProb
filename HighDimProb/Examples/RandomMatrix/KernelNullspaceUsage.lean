@@ -197,12 +197,9 @@ theorem rankOneOuter_invisible_of_orthogonal {n : Nat}
     (h : OrthogonalToFeature v x) :
     KernelInvisibleDirection (rankOneOuter v) x := by
   unfold KernelInvisibleDirection
-  rw [rankOneOuter_matrixAction]
-  ext i
-  unfold rankOneOuterMatrixAction
-  unfold OrthogonalToFeature at h
-  rw [h]
-  simp
+  rw [matrixAction_eq_mulVec]
+  simpa [rankOneOuter, OrthogonalToFeature] using
+    (rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero v x).2 h
 
 /-- NTK rank-one Gram contribution: orthogonal directions are invisible. -/
 theorem ntkGramOuter_invisible_of_orthogonal {n : Nat}

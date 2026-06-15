@@ -57,6 +57,10 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero
 #check matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix
 #check matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero
+#check rankOneMatrixSum
+#check rankOneMatrix_quadraticForm_eq_inner_sq
+#check rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero
+#check rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero
 #check matrixQuadraticForm_smul_one_of_isUnitVector
 #check rayleighUpperBound_of_spectralUpperBound
 #check matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef

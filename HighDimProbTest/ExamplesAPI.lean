@@ -13,6 +13,7 @@ import HighDimProb.Examples.RandomMatrix.NTKGramDecompositionUsage
 import HighDimProb.Examples.RandomMatrix.NTKGramUsage
 import HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage
 import HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
+import HighDimProb.Examples.RandomMatrix.RankOneKernelNullspaceUsage
 import HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage
 
 open HighDimProb
@@ -22,6 +23,7 @@ open HighDimProb.Examples.RandomMatrix.GradientNormToOperatorBoundUsage
 open HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
 open HighDimProb.Examples.RandomMatrix.KernelNullspaceUsage
 open HighDimProb.Examples.RandomMatrix.NTKGramDecompositionUsage
+open HighDimProb.Examples.RandomMatrix.RankOneKernelNullspaceUsage
 open HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage
 open HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage
 
@@ -42,6 +44,10 @@ variable (kernelHExplicitPSD : IsPSDMatrix kernelA)
 #check invisible_of_quadraticNull_of_psd
 #check randomInvisible_of_quadraticNull_of_posSemidef
 #check randomInvisible_of_quadraticNull_of_psd
+#check rankOneKernelSum_invisible_of_forall_orthogonal
+#check rankOneKernelSum_quadraticNull_of_forall_orthogonal
+#check featureKernelSum_invisible_of_forall_orthogonal
+#check gradientCovarianceSum_invisible_of_forall_orthogonal
 
 #check randomGradientCovarianceContributionFamily
 #check randomGradientVectorFamily

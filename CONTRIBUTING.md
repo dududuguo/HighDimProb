@@ -6,9 +6,12 @@ HighDimProb is a Mathlib-compatible ergonomic layer for high-dimensional probabi
 
 HighDimProb is currently Milestone 1 / v0.1-alpha.
 
-- Stable probability object layer exists.
-- High-dimensional modules are experimental.
-- Deep theorem proving has not started.
+- The stable root import is intentionally small.
+- The scalar concentration branch is the most stable theorem surface.
+- RandomMatrix, Matrix Bernstein, and limit-theorem modules are experimental.
+- RandomMatrix theorem work is active, but several Matrix Bernstein results are
+  still conditional on explicit primitive assumptions. See
+  `docs/Status.md` and `docs/RandomMatrixAPI.md` before contributing there.
 
 ## Build
 
@@ -33,7 +36,7 @@ lake test
 7. Update docs.
 8. Run `lake build` and `lake test`.
 
-For code-model assisted, PLZ READ `docs/Workflow.md` first.
+For model-assisted contributions, read `docs/Workflow.md` first.
 
 ## PR Title Categories
 
@@ -74,13 +77,21 @@ Stable v0.1 modules are imported through:
 import HighDimProb
 ```
 
-Experimental v0.2+ modules are imported through:
+Experimental modules are imported through:
 
 ```lean
 import HighDimProb.Experimental
 ```
 
-No module is promoted from experimental to stable without tests, docs, a `docs/Status.md` update, and a stable root import audit.
+Active branch aggregates, such as RandomMatrix, may also be imported directly
+while they remain experimental:
+
+```lean
+import HighDimProb.RandomMatrix
+```
+
+No module is promoted from experimental to stable without tests, docs, a
+`docs/Status.md` update, and a stable root import audit.
 
 ## Hard Rules
 
@@ -91,7 +102,7 @@ No module is promoted from experimental to stable without tests, docs, a `docs/S
 - No custom probability universe.
 - No custom random variable structure.
 - No linear translation of the book.
-- No deep theorem PR before the required object layer exists.
+- No theorem PR that skips the required object layer or Mathlib search.
 - Every public declaration needs a test.
 - Docs must be updated together with code.
 

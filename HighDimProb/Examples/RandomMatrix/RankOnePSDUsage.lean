@@ -2,6 +2,7 @@ import HighDimProb.Examples.RandomMatrix.NTKGramUsage
 import HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage
 import HighDimProb.Examples.RandomMatrix.GradientCovarianceUsage
 import HighDimProb.RandomMatrix.MatrixOrder
+import HighDimProb.RandomMatrix.Spectral
 
 /-!
 # Rank-one PSD usage example
@@ -44,33 +45,12 @@ theorem rankOneOuter_selfAdjoint {n : Nat} (v : RankOneVector n) :
     IsSelfAdjointMatrix (rankOneOuter v) := by
   simpa [rankOneOuter] using isSelfAdjointMatrix_rankOneMatrix v
 
-private theorem sum_sum_mul_eq_sq {n : Nat} (u : Fin (n + 1) -> Real) :
-    (Finset.univ.sum fun i : Fin (n + 1) =>
-      Finset.univ.sum fun j : Fin (n + 1) => u i * u j) =
-      (Finset.univ.sum fun i : Fin (n + 1) => u i) ^ 2 := by
-  rw [pow_two, Finset.sum_mul]
-  apply Finset.sum_congr rfl
-  intro i _hi
-  rw [Finset.mul_sum]
-
 /-- The quadratic form of `v v^T` is the square of the projection onto `v`. -/
 theorem rankOneOuter_matrixQuadraticForm {n : Nat}
     (v x : RankOneVector n) :
     matrixQuadraticForm (rankOneOuter v) x =
       (Finset.univ.sum fun i : Fin (n + 1) => v i * x i) ^ 2 := by
-  calc
-    matrixQuadraticForm (rankOneOuter v) x
-        = Finset.univ.sum fun i : Fin (n + 1) =>
-            Finset.univ.sum fun j : Fin (n + 1) =>
-              (v i * x i) * (v j * x j) := by
-          simp [matrixQuadraticForm, rankOneOuter]
-          apply Finset.sum_congr rfl
-          intro i _hi
-          apply Finset.sum_congr rfl
-          intro j _hj
-          ring
-    _ = (Finset.univ.sum fun i : Fin (n + 1) => v i * x i) ^ 2 := by
-          exact sum_sum_mul_eq_sq (fun i : Fin (n + 1) => v i * x i)
+  simpa [rankOneOuter] using rankOneMatrix_quadraticForm_eq_inner_sq v x
 
 /-- The rank-one quadratic form is nonnegative. -/
 theorem rankOneOuter_quadraticForm_nonneg {n : Nat}

@@ -30,6 +30,13 @@ integrability, Tropp, and CFC assumptions explicit. The sample-covariance tail
 surface now uses core helper names
 `sampleCovarianceCenteredRankOneRadius`, `sampleCovarianceTailTheta`, and
 `sampleCovarianceQuadraticFormTailRHS` rather than example-local copies.
+RM-S5F audits variance-proxy control for the centered row-rank-one
+sample-covariance family and classifies the current public contract as keeping
+`MatrixVarianceProxyNormBound` explicit until future moment/operator-norm/order
+infrastructure is added. RM-S6 adds deterministic rank-one kernel/nullspace
+bridges for quadratic forms, single rank-one kernel membership, and finite sums
+of rank-one matrices. The rank-one kernel/nullspace examples now reuse those
+core bridges instead of reproving rank-one invisible-direction algebra locally.
 
 The latest proved public theorem is:
 
@@ -38,6 +45,13 @@ The latest proved public theorem is:
 The latest public example-layer wrapper is:
 
 - `sampleCovariance_quadraticForm_tail_usage`
+
+The latest deterministic rank-one nullspace API is:
+
+- `rankOneMatrixSum`
+- `rankOneMatrix_quadraticForm_eq_inner_sq`
+- `rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero`
+- `rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero`
 
 Supporting proved API also includes `rankOneRandomMatrix`,
 `isRandomMatrix_rankOneRandomMatrix`,
@@ -85,20 +99,23 @@ integrability is proved only from explicit product-integrability assumptions or
 explicit coordinate `MemLp ... 2` assumptions. The new PSD nullspace bridge
 exposes `posSemidef_of_isPSDMatrix`,
 `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`, and the
-one-way Mathlib-/explicit-PSD kernel wrappers. It does not prove integrability
-from measurability alone, lambda-max/operator-norm Matrix Bernstein tails,
-Tropp/Lieb, the Bernstein CFC primitive,
-Golden-Thompson, the `t = 0` endpoint for the optimized wrapper, or the final
-full Matrix Bernstein tail theorem. No unconditional sample covariance
-concentration theorem, full Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or
-Golden-Thompson theorem was proved by RM-S5D.
+one-way Mathlib-/explicit-PSD kernel wrappers. The rank-one nullspace slice
+exposes the quadratic-form square formula, rank-one kernel iff orthogonality,
+and finite rank-one sum kernel membership from per-feature orthogonality. It does
+not prove integrability from measurability alone, effective dimension,
+restricted Matrix Bernstein, lambda-max/operator-norm Matrix Bernstein tails,
+Tropp/Lieb, the Bernstein CFC primitive, Golden-Thompson, the `t = 0` endpoint
+for the optimized wrapper, or the final full Matrix Bernstein tail theorem. No
+unconditional sample covariance concentration theorem, variance-proxy control
+theorem, full Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or Golden-Thompson
+theorem was proved by RM-S5D/RM-S6.
 The previous optimized quadratic-form theorem remains
 `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-S5F-sample-covariance-variance-proxy-control-contract`
+- `RM-S7-next-random-matrix-leaf-selection`
 
 ## Public Milestone Summary
 
@@ -822,13 +839,13 @@ Stage MC4-cleanup implemented:
   pointwise operator-norm boundedness, variance proxy norm bound,
   positivity/nonnegativity, and denominator positivity assumptions.
 - corrected matrix Bernstein comments and documentation so matrix Laplace and
-  trace-exponential placeholders are documentation-only until honest Lean
+  trace-exponential targets are documentation-only until honest Lean
   objects exist; MB-S1 later proves the PSD variance-proxy algebra.
 - updated `docs/MatrixBernsteinProofPlan.md` to separate proven
   infrastructure, typed statements, and documentation-only matrix Laplace /
   trace exponential TODOs.
 - updated random-matrix concentration and variance-proxy API tests and removed
-  checks for the deleted placeholder declarations.
+  checks for the deleted temporary declarations.
 - did not prove matrix Bernstein, matrix Laplace, trace exponential bounds,
   Hanson-Wright, covariance estimation, or any matrix concentration theorem.
 

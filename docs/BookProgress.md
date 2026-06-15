@@ -168,7 +168,7 @@ Processed:
 
 Scaffold exists, not processed as stable API:
 - random process vocabulary
-- Gaussian width placeholder vocabulary
+- Gaussian width scaffold vocabulary
 - empirical process vocabulary
 - signal recovery vocabulary
 - limit theorem scaffold and sample mean vocabulary
@@ -996,8 +996,10 @@ measurability/integrability bridge, and not a Matrix Bernstein tail theorem.
 The centered rank-one structural and operator-norm follow-ups are now complete
 in RM-S3/RM-S4, and S5D now proves the conditional sample-covariance
 quadratic-form tail wrapper under explicit primitive assumptions. RM-S5E adds
-the example-layer usage wrapper. Current next safe task:
-RM-S5F-sample-covariance-variance-proxy-control-contract.
+the example-layer usage wrapper. RM-S5F keeps variance-proxy control as an
+explicit assumption. The rank-one nullspace examples now reuse the S6 core
+bridges. Current next safe task:
+RM-S7-next-random-matrix-leaf-selection.
 
 ## RM centered operator-norm prerequisite progress
 
@@ -1020,8 +1022,10 @@ entrywise integrability or vector-to-rank-one measurability.
 
 The centered rank-one follow-up is now complete in RM-S3/RM-S4, and the S5D
 conditional sample-covariance quadratic-form tail wrapper is proved. RM-S5E
-adds the example-layer usage wrapper. Current next safe task:
-RM-S5F-sample-covariance-variance-proxy-control-contract.
+adds the example-layer usage wrapper. RM-S5F keeps variance-proxy control as an
+explicit assumption. The rank-one nullspace examples now reuse the S6 core
+bridges. Current next safe task:
+RM-S7-next-random-matrix-leaf-selection.
 
 
 ## RM vector-to-rank-one matrix measurability / integrability prerequisite progress
@@ -1045,8 +1049,10 @@ integrability from measurability alone and Matrix Bernstein tails.
 
 RM-S5E example cleanup is complete. The example usage wrapper now reuses the
 core sample-covariance tail helper names instead of defining local
-radius/theta/RHS copies. Current next safe task:
-RM-S5F-sample-covariance-variance-proxy-control-contract.
+radius/theta/RHS copies. RM-S5F keeps variance-proxy control explicit. The
+rank-one nullspace examples now reuse the S6 core bridges. Current next safe
+task:
+RM-S7-next-random-matrix-leaf-selection.
 
 
 ## RM centered rank-one structural adapter progress
@@ -1082,8 +1088,9 @@ stages prove the sample-covariance row rank-one sum and centered deviation
 bridges; RM-S5D proves the conditional sample-covariance quadratic-form tail
 wrapper under explicit variance-proxy and primitive assumptions.
 
-RM-S5E example cleanup is complete. Current next safe task:
-RM-S5F-sample-covariance-variance-proxy-control-contract.
+RM-S5F variance-proxy control contract is complete. The rank-one nullspace
+example cleanup is complete. Current next safe task:
+RM-S7-next-random-matrix-leaf-selection.
 
 
 ## RM PSD nullspace converse prerequisite progress
@@ -1105,5 +1112,34 @@ quadratic-null directions through the core declarations. This is not an
 expectation-identity theorem for covariance objects and not a Matrix
 Bernstein tail theorem.
 
-RM-S5E example cleanup is complete. Current next safe task:
-RM-S5F-sample-covariance-variance-proxy-control-contract.
+RM-S5F variance-proxy control contract is complete. The rank-one nullspace
+example cleanup is complete. Current next safe task:
+RM-S7-next-random-matrix-leaf-selection.
+
+
+## RM rank-one kernel nullspace API progress
+
+The deterministic rank-one kernel/nullspace slice is implemented/proved:
+
+```lean
+rankOneMatrixSum
+rankOneMatrix_quadraticForm_eq_inner_sq
+rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero
+rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero
+```
+
+The bridge exposes the squared-inner-product formula for `rankOneMatrix`,
+the iff between rank-one kernel membership and orthogonality to the generating
+vector, and finite rank-one sum kernel membership from per-generator
+orthogonality.
+It reuses `rankOneMatrix`, `matrixQuadraticForm`, `Matrix.mulVec`,
+`Finset.univ.sum`, and the existing PSD nullspace bridge. It does not define a
+general nullspace theory, prove effective dimension, restricted Matrix
+Bernstein, sample covariance concentration, Tropp/Lieb, Bernstein CFC, or
+Golden-Thompson.
+
+The rank-one nullspace examples now reuse the S6 core bridges where they remove
+local action/sum algebra.
+
+Current next safe task:
+RM-S7-next-random-matrix-leaf-selection.

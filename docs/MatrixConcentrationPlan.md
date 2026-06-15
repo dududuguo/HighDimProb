@@ -36,7 +36,18 @@ directly while keeping the variance proxy, independence, integrability, Tropp,
 and CFC assumptions explicit. It does not define parallel radius/theta/RHS
 helpers.
 
-Next safe task: `RM-S5F-sample-covariance-variance-proxy-control-contract`.
+RM-S5F keeps sample-covariance variance-proxy control as an explicit
+assumption for now.
+
+RM-S6 adds deterministic rank-one kernel/nullspace bridges:
+`rankOneMatrixSum`, `rankOneMatrix_quadraticForm_eq_inner_sq`,
+`rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero`, and
+`rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero`.
+
+The rank-one nullspace examples now reuse these core bridges where they remove
+local action/sum algebra.
+
+Next safe task: `RM-S7-next-random-matrix-leaf-selection`.
 
 RM prerequisite update: the centered structural API, expectation
 operator-norm contraction, centered `2 * R` operator-norm wrappers, and named
@@ -53,8 +64,12 @@ vector-to-rank-one matrix bridge is also proved via `rankOneRandomMatrix`,
 `integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two`.  The PSD nullspace
 converse bridge is proved via `posSemidef_of_isPSDMatrix`,
 `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef`, and the
-one-way Mathlib-/explicit-PSD kernel wrappers. The sample covariance row
-rank-one sum and centering bridges are also proved via
+one-way Mathlib-/explicit-PSD kernel wrappers. The deterministic rank-one
+kernel/nullspace bridge uses
+`rankOneMatrixSum`, `rankOneMatrix_quadraticForm_eq_inner_sq`,
+`rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero`, and
+`rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero`. The sample covariance row rank-one
+sum and centering bridges are also proved via
 `sampleCovarianceRowRankOneFamily`,
 `centeredSampleCovarianceRowRankOneFamily`,
 `sampleCovariance_eq_normalized_rowRankOne_sum` and
@@ -305,8 +320,8 @@ unproved.
 - `PointwiseOperatorNormBound` and `AeOperatorNormBound` are separate names.
   Current matrix concentration statements use the pointwise predicate so the
   a.e. strengthening is not hidden.
-- Matrix Bernstein/Hoeffding/Chernoff constants in statements are placeholders
-  for future proof targets, not proved sharp constants.
+- Matrix Bernstein/Hoeffding/Chernoff constants in statements are symbolic
+  parameters for future proof targets, not proved sharp constants.
 - `OperatorNormBoundSq` records squared matrix-vector bounds over unit vectors
   and Stage MC2-fix proves its comparison with the scoped Mathlib L2 operator
   norm while keeping the explicit predicate available for theorem statements.

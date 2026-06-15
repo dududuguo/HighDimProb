@@ -40,9 +40,20 @@ operator-norm Matrix Bernstein theorem.
 RM-S5E adds the example-layer wrapper
 `sampleCovariance_quadraticForm_tail_usage`, keeping the same assumptions
 explicit for sample-covariance usage files.
+RM-S5F audits variance-proxy control and keeps
+`MatrixVarianceProxyNormBound` explicit for the sample-covariance tail wrapper
+until future moment/operator-norm/order infrastructure exists.
+
+RM-S6 adds the deterministic rank-one kernel/nullspace API
+`rankOneMatrixSum`, `rankOneMatrix_quadraticForm_eq_inner_sq`,
+`rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero`, and
+`rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero`. These expose rank-one
+quadratic-form, kernel, and finite-sum kernel-membership facts for kernel/NTK,
+random-feature, and covariance examples without adding a general nullspace
+theory.
 
 Next safe task:
-`RM-S5F-sample-covariance-variance-proxy-control-contract`.
+`RM-S7-next-random-matrix-leaf-selection`.
 
 ## Milestone 3 scalar implication closeout
 
@@ -902,7 +913,7 @@ future directions.
 - Target Lean statement: `matrixBernsteinStatement`.
 - Required objects: random matrices, self-adjoint matrix predicates, centered matrix variables, `operatorNorm`, finite random-matrix sums, matrix square/second moments, variance proxy, independence.
 - Required definitions: Stage 6A random matrix object layer exists; Stage 6B adds `operatorNorm`; Stage MC1 adds self-adjoint, matrix order, matrix expectation, and typed statement vocabulary; Stage MC2/MC2-fix adds explicit unit-vector/operator-norm bridges and operator-norm measurability; Stage MC3 adds `randomMatrixSum`, `IndependentSelfAdjointRandomMatrices`, `CenteredSelfAdjointRandomMatrixFamily`, `PointwiseOperatorNormBound`, `matrixSecondMoment`, `matrixVarianceProxy`, and `matrixVarianceProxyNorm`; Stage MC4-cleanup adds `IntegrableRandomMatrix`; MB-S1 adds the PSD square/second-moment/variance-proxy proof layer and refines the additive-form `matrixBernsteinSelfAdjointStatement`.
-- Required bridge lemmas: matrix-valued measurability, independence of matrix-valued variables, self-adjoint finite-sum algebra, matrix square measurability, matrix Laplace-transform infrastructure, spectral/operator-norm tail reductions, and self-adjoint dilation if rectangular variants are used. MC2-fix supplies the basic operator-norm comparison and measurability bridges; MC3 supplies random-matrix sum and variance-proxy infrastructure; MC4-cleanup removes meaningless Laplace/trace `True` placeholders and keeps those as documentation-only TODOs; MB-S1 supplies PSD variance-proxy algebra.
+- Required bridge lemmas: matrix-valued measurability, independence of matrix-valued variables, self-adjoint finite-sum algebra, matrix square measurability, matrix Laplace-transform infrastructure, spectral/operator-norm tail reductions, and self-adjoint dilation if rectangular variants are used. MC2-fix supplies the basic operator-norm comparison and measurability bridges; MC3 supplies random-matrix sum and variance-proxy infrastructure; MC4-cleanup removes meaningless Laplace/trace `True` declarations and keeps those as documentation-only TODOs; MB-S1 supplies PSD variance-proxy algebra.
 - Status: typed-prop
 - Blocker: theorem proof is beyond MB-S1 and MC5.4. The additive statement remains an operator-norm tail target and still requires spectral/operator-norm tail reductions, a proof of the typed matrix Laplace-transform target, trace/exponential-moment inequalities, and likely a final decision between pointwise and a.e. norm-bounded assumptions. PSD variance-proxy algebra is no longer a blocker.
 - Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
@@ -1135,8 +1146,33 @@ future directions.
   explicit or unproved.
 - Target module: `HighDimProb/Examples/RandomMatrix/SampleCovarianceTailUsage.lean`
 - Status note: RM-S5E complete.
+
+## sample covariance variance-proxy control contract
+- Book heading: sample covariance and Matrix Bernstein prerequisites
+- Informal statement: the S5D/S5E sample-covariance tail wrapper should keep
+  the scalar matrix-variance-proxy norm bound explicit unless a reusable
+  moment/operator-norm/order theorem can derive it for centered row rank-one
+  summands.
+- Target Lean statement: no production theorem in S5F.
+- Required objects: `MatrixVarianceProxyNormBound`,
+  `MatrixVarianceProxyUpperBound`, `matrixVarianceProxy`,
+  `matrixVarianceProxyNorm`,
+  `centeredSampleCovarianceRowRankOneFamily`,
+  `centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two`,
+  `PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound`,
+  and `isPSD_matrixVarianceProxy_of_selfAdjoint`.
+- Required definitions: S5D/S5E sample-covariance tail wrapper surfaces and
+  S3/S4 centered rank-one adapters.
+- Required bridge lemmas: a future theorem-level control result would need
+  deterministic matrix-order-to-operator-norm monotonicity or a concrete
+  row-rank-one fourth-moment/covariance bound. These are not yet available.
+- Status: contract complete; explicit assumption retained.
+- Blocker: future theorem-level variance-proxy control needs additional
+  moment/operator-norm/order infrastructure.
+- Target module: validation artifact only.
+- Status note: RM-S5F complete.
 - Current next safe task:
-  RM-S5F-sample-covariance-variance-proxy-control-contract.
+  RM-S7-next-random-matrix-leaf-selection.
 
 ## sample covariance PSD bridge
 - Book heading: sample covariance and PSD prerequisites
@@ -1346,7 +1382,7 @@ future directions.
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Priority: Stage MB-S2 through MB-S9-foundation complete; current next task is
-  RM-S5F-sample-covariance-variance-proxy-control-contract.
+  RM-S7-next-random-matrix-leaf-selection.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1745,7 +1781,7 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
+- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -1921,7 +1957,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
+- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -2048,7 +2084,7 @@ future directions.
 - Blocker: the finite-family Tropp primitive itself remains typed only; the
   Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and the
   Matrix Bernstein tail theorem remain unproved.
-- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
+- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
 
 
 
@@ -2066,7 +2102,7 @@ future directions.
 - Blocker: the result is still one-sided and quadratic-form under explicit
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
-- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
+- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -2086,7 +2122,7 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
+- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
 
 ## RM Centered Structural API
 
@@ -2110,7 +2146,7 @@ future directions.
   operator-norm layer now supplies the Bochner bridge and expectation
   contraction.
 - Blocker: none for structural centeredness.
-- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
+- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
 
 ## RM Centered Operator-Norm Bound
 
@@ -2132,7 +2168,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
+- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
 
 
 ## RM Centered Rank-One Structural Adapter
@@ -2150,7 +2186,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
+- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
 
 
 ## RM Centered Rank-One Operator-Norm Adapter
@@ -2165,7 +2201,7 @@ future directions.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters, lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb,
   Bernstein CFC, or Golden-Thompson.
-- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
+- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
 
 
 ## RM Vector-to-Rank-One Matrix Measurability / Integrability
@@ -2182,7 +2218,7 @@ future directions.
 - Blocker: this does not prove integrability from measurability alone,
   sample-covariance Matrix Bernstein assumption adapters, or Matrix Bernstein
   tails.
-- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
+- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
 
 
 ## RM PSD Nullspace Converse
@@ -2201,4 +2237,4 @@ future directions.
 - Blocker: this is only a deterministic PSD kernel bridge. It does not prove
   covariance expectation identities, sample-covariance Matrix Bernstein
   assumption adapters, or Matrix Bernstein tails.
-- Priority: next safe task is RM-S5F-sample-covariance-variance-proxy-control-contract.
+- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.

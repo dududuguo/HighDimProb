@@ -78,6 +78,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
   This wrapper directly calls the S5D theorem and keeps the variance proxy,
   independence, square/exponential/trace integrability, Tropp, and CFC
   assumptions explicit.
+- RM-S5F variance-proxy control audit: no production theorem was added. The
+  public sample-covariance tail contract should continue to assume
+  `MatrixVarianceProxyNormBound P (centeredSampleCovarianceRowRankOneFamily (P := P) A) sigmaSq`
+  explicitly until future moment/operator-norm/order infrastructure can derive
+  it.
 - Lambda-max/operator-norm Matrix Bernstein tail theorem remains unproved.
 - Proved rank-one operator-norm prerequisite bridge:
   `rankOneOperatorNorm_le_vectorSqNorm`,
@@ -128,6 +133,16 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero`,
   `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix`, and
   `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`.
+- Deterministic rank-one kernel/nullspace API:
+  `rankOneMatrixSum`,
+  `rankOneMatrix_quadraticForm_eq_inner_sq`,
+  `rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero`, and
+  `rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero`.
+  This reuses the existing `rankOneMatrix`, `matrixQuadraticForm`,
+  `Matrix.mulVec`, finite sums, and PSD-nullspace bridge; it does not introduce
+  a parallel rank-one or nullspace theory.
+- The kernel/nullspace examples now route rank-one invisible-direction proofs
+  through the core API instead of local finite-sum algebra.
 - Proved sample covariance row rank-one sum objects and bridge:
   `sampleCovarianceRowRankOneFamily`, `sampleCovarianceRowRankOneSum`,
   `normalizedSampleCovarianceRowRankOneSum`, and
@@ -144,7 +159,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
   Bernstein tail theorem, full Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or
   Golden-Thompson theorem was proved by the sample-covariance tail wrapper
   stage.
-- Next safe task: `RM-S5F-sample-covariance-variance-proxy-control-contract`.
+- Next safe task: `RM-S7-next-random-matrix-leaf-selection`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
@@ -251,6 +266,14 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero`: theorem, one-way Mathlib-PSD nullspace converse.
 - `matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix`: theorem, explicit-PSD iff variant.
 - `matrix_mulVec_eq_zero_of_isPSDMatrix_quadraticForm_eq_zero`: theorem, one-way explicit-PSD nullspace converse.
+- `rankOneMatrixSum`: def, finite sum of deterministic rank-one
+  outer-product matrices.
+- `rankOneMatrix_quadraticForm_eq_inner_sq`: theorem, rank-one quadratic
+  form as a squared inner product.
+- `rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero`: theorem, rank-one kernel
+  membership iff orthogonality to the generating vector.
+- `rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero`: theorem, finite rank-one
+  sum kernel membership from per-summand orthogonality.
 
 ## `HighDimProb/RandomMatrix/OperatorNorm.lean`
 
@@ -636,12 +659,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-RM-S5F-sample-covariance-variance-proxy-control-contract: audit the smallest
-reusable API needed to control the explicit variance proxy assumption for
-centered row rank-one sample-covariance summands. Do not prove unconditional
-sample-covariance concentration, lambda-max/operator-norm Matrix Bernstein
-tails, Tropp/Lieb, Bernstein CFC, Golden-Thompson, or the full Matrix
-Bernstein theorem in that contract stage.
+RM-S7-next-random-matrix-leaf-selection: choose the next RandomMatrix leaf after the completed
+sample-covariance explicit-variance-proxy wrapper, sample-covariance example
+surface, and rank-one nullspace example cleanup.
+RM-S5F keeps sample-covariance variance-proxy control explicit until future
+moment/operator-norm/order infrastructure is available.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -671,4 +693,10 @@ Bernstein theorem in that contract stage.
 - RM-S5E adds `SampleCovarianceTailUsage.lean`, which demonstrates the S5D
   wrapper through `sampleCovariance_quadraticForm_tail_usage` while preserving
   all variance proxy and primitive assumptions explicitly.
-- Next safe task: RM-S5F-sample-covariance-variance-proxy-control-contract.
+- RM-S5F confirms that variance-proxy control remains an explicit assumption
+  rather than a directly supported theorem.
+- RM-S6 adds the deterministic rank-one kernel/nullspace bridge in
+  `Spectral.lean`.
+- The rank-one nullspace examples now use the S6 core bridge where it removes
+  local action/sum algebra.
+- Next safe task: RM-S7-next-random-matrix-leaf-selection.
