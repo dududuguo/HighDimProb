@@ -38,11 +38,12 @@ under explicit variance-proxy and Matrix Bernstein primitive assumptions, with
 not prove unconditional sample-covariance concentration or an
 operator-norm Matrix Bernstein theorem.
 RM-S5E adds the example-layer wrapper
-`sampleCovariance_quadraticForm_tail_usage`, keeping the same assumptions
-explicit for sample-covariance usage files.
-RM-S5F audits variance-proxy control and keeps
-`MatrixVarianceProxyNormBound` explicit for the sample-covariance tail wrapper
-until future moment/operator-norm/order infrastructure exists.
+`sampleCovariance_quadraticForm_tail_usage`; the current example wrapper uses
+the bounded-row theorem and no longer asks for the positive-side
+`MatrixVarianceProxyNormBound`.
+RM-VP proves crude variance-proxy control from pointwise operator-norm bounds
+and specializes it to centered rank-one and sample-covariance row rank-one
+families.
 RM-S7E/RM-S7F prove the sample-covariance operator-norm event bridge
 `sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum`
 and the conditional operator-norm tail wrapper
@@ -66,7 +67,7 @@ random-feature, and covariance examples without adding a general nullspace
 theory.
 
 Next safe task:
-`RM-ON-human-integration-review`.
+`RM-negative-family-adapters`.
 
 ## Milestone 3 scalar implication closeout
 
@@ -1155,9 +1156,8 @@ future directions.
   row-rank-one sum bridges it uses internally.
 - Required bridge lemmas: none beyond S5D; this is an example-layer wrapper.
 - Status: example API
-- Blocker: variance-proxy control, Tropp/Lieb, Bernstein CFC,
-  Golden-Thompson, and unconditional lambda-max/operator-norm Matrix
-  Bernstein tails remain explicit or unproved.
+- Blocker: Tropp/Lieb, Bernstein CFC, Golden-Thompson, and unconditional
+  lambda-max/operator-norm Matrix Bernstein tails remain explicit or unproved.
 - Target module: `HighDimProb/Examples/RandomMatrix/SampleCovarianceTailUsage.lean`
 - Status note: RM-S5E complete.
 
@@ -1175,9 +1175,11 @@ future directions.
 - Required bridge lemmas:
   `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`.
 - Status: proven nonempty wrapper under explicit primitive assumptions
-- Blocker: arbitrary-dimensional operator-norm reduction, variance-proxy
-  control, Tropp/Lieb, Bernstein CFC, Golden-Thompson, full Matrix Bernstein,
-  and sample-covariance concentration remain unproved.
+- Blocker: sharp variance control, Tropp/Lieb, Bernstein CFC,
+  Golden-Thompson, full Matrix Bernstein, and sample-covariance concentration
+  remain unproved. The arbitrary positive-threshold operator-norm route is
+  proved separately; the original arbitrary `0 <= t` statement is false at
+  `Fin 0`, `t = 0`.
 - Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - Test modules: `HighDimProbTest/RandomMatrixConcentrationAPI.lean`
 - Judge modules: `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean` and
@@ -1188,41 +1190,53 @@ future directions.
 - Book heading: sample covariance and Matrix Bernstein prerequisites
 - Informal statement: under explicit row measurability, coordinate `MemLp 2`,
   row squared-norm, row independence, centered square/exponential/trace
-  integrability, both-sign scalar variance-proxy bounds, Tropp, and CFC, the
-  centered sample covariance satisfies the nonempty two-sided operator-norm
-  tail bound without an explicit spectral-bridge assumption.
+  integrability, bounded-row crude variance-proxy control, Tropp, and CFC, the
+  centered sample covariance satisfies the nonempty and arbitrary
+  positive-threshold two-sided operator-norm tail bounds without an explicit
+  spectral-bridge assumption.
 - Target Lean statements:
   `sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum`
   and
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`,
-  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy`
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy`,
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`,
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`
 - Required objects: `SelfAdjointOperatorNormTailEvent`,
   `centeredRandomMatrix`, `sampleCovariance`,
   `centeredSampleCovarianceRowRankOneSum`,
   `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`,
   `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives`,
+  `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives`,
   `selfAdjointOperatorNormTailViaQuadraticFormStatement`, and
-  `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`.
+  `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`,
+  `selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos`.
 - Required bridge lemmas: sample covariance centered-sum equality and the
   proved S7E operator-norm event bridge.
-- Status: proven retained conditional wrapper and proven nonempty wrapper.
-- Blocker: variance-proxy control, Tropp/Lieb, Bernstein CFC,
-  Golden-Thompson, arbitrary-dimensional operator-norm reduction, full Matrix
-  Bernstein, and unconditional sample-covariance concentration remain
-  unproved.
+- Status: proven retained conditional wrapper, proven nonempty wrapper,
+  proven arbitrary positive-threshold wrapper, and proven bounded-row crude
+  variance-proxy wrapper.
+- Blocker: sharp variance control, Tropp/Lieb, Bernstein CFC,
+  Golden-Thompson, full Matrix Bernstein, and unconditional sample-covariance
+  concentration remain unproved. The original arbitrary `0 <= t` spectral
+  bridge is false at `Fin 0`, `t = 0`.
 - Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - Test modules: `HighDimProbTest/RandomMatrixConcentrationAPI.lean` and
   `HighDimProbTest/ExamplesAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`
-- Priority: RM-ON-human-integration-review.
+- Priority: RM-negative-family-adapters.
 
-## sample covariance variance-proxy control contract
+## sample covariance variance-proxy control
 - Book heading: sample covariance and Matrix Bernstein prerequisites
-- Informal statement: the S5D/S5E sample-covariance tail wrapper should keep
-  the scalar matrix-variance-proxy norm bound explicit unless a reusable
-  moment/operator-norm/order theorem can derive it for centered row rank-one
-  summands.
-- Target Lean statement: no production theorem in S5F.
+- Informal statement: pointwise operator-norm control should produce a reusable
+  crude `MatrixVarianceProxyNormBound`, then specialize to centered rank-one
+  and sample-covariance row rank-one summands.
+- Target Lean statements:
+  `MatrixVarianceProxyNormBound_of_pointwiseOperatorNormBound`,
+  `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound`,
+  `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound`,
+  `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound`,
+  and
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`.
 - Required objects: `MatrixVarianceProxyNormBound`,
   `MatrixVarianceProxyUpperBound`, `matrixVarianceProxy`,
   `matrixVarianceProxyNorm`,
@@ -1232,16 +1246,19 @@ future directions.
   and `isPSD_matrixVarianceProxy_of_selfAdjoint`.
 - Required definitions: S5D/S5E sample-covariance tail wrapper surfaces and
   S3/S4 centered rank-one adapters.
-- Required bridge lemmas: a future theorem-level control result would need
-  deterministic matrix-order-to-operator-norm monotonicity or a concrete
-  row-rank-one fourth-moment/covariance bound. These are not yet available.
-- Status: contract complete; explicit assumption retained.
-- Blocker: future theorem-level variance-proxy control needs additional
-  moment/operator-norm/order infrastructure.
-- Target module: validation artifact only.
-- Status note: RM-S5F complete.
+- Required bridge lemmas: deterministic norm submultiplicativity, norm of
+  matrix expectation bounded by the integral of pointwise norms, and finite
+  sum norm bounds.
+- Status: proven crude theorem family; sharp fourth-moment variance control is
+  not proved.
+- Blocker: none for crude bounded-row variance-proxy control. Sharp
+  moment-optimal control remains future work.
+- Target module: `HighDimProb/RandomMatrix/VarianceProxy.lean`,
+  `HighDimProb/RandomMatrix/Assumptions.lean`, and
+  `HighDimProb/RandomMatrix/ConcentrationStatements.lean`.
+- Status note: RM-VP complete.
 - Current next safe task:
-  RM-ON-human-integration-review.
+  RM-negative-family-adapters.
 
 ## sample covariance PSD bridge
 - Book heading: sample covariance and PSD prerequisites
@@ -1452,7 +1469,7 @@ future directions.
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Priority: Stage MB-S2 through MB-S9-foundation complete; current next task is
-  RM-ON-human-integration-review.
+  RM-negative-family-adapters.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1851,7 +1868,7 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is RM-ON-human-integration-review.
+- Priority: next safe task is RM-negative-family-adapters.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -2027,7 +2044,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Priority: next safe task is RM-ON-human-integration-review.
+- Priority: next safe task is RM-negative-family-adapters.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -2154,7 +2171,7 @@ future directions.
 - Blocker: the finite-family Tropp primitive itself remains typed only; the
   Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and the
   Matrix Bernstein tail theorem remain unproved.
-- Priority: next safe task is RM-ON-human-integration-review.
+- Priority: next safe task is RM-negative-family-adapters.
 
 
 
@@ -2172,7 +2189,7 @@ future directions.
 - Blocker: the result is still one-sided and quadratic-form under explicit
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
-- Priority: next safe task is RM-ON-human-integration-review.
+- Priority: next safe task is RM-negative-family-adapters.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -2192,7 +2209,7 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Priority: next safe task is RM-ON-human-integration-review.
+- Priority: next safe task is RM-negative-family-adapters.
 
 ## RM Centered Structural API
 
@@ -2216,7 +2233,7 @@ future directions.
   operator-norm layer now supplies the Bochner bridge and expectation
   contraction.
 - Blocker: none for structural centeredness.
-- Priority: next safe task is RM-ON-human-integration-review.
+- Priority: next safe task is RM-negative-family-adapters.
 
 ## RM Centered Operator-Norm Bound
 
@@ -2238,7 +2255,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Priority: next safe task is RM-ON-human-integration-review.
+- Priority: next safe task is RM-negative-family-adapters.
 
 
 ## RM Centered Rank-One Structural Adapter
@@ -2256,7 +2273,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Priority: next safe task is RM-ON-human-integration-review.
+- Priority: next safe task is RM-negative-family-adapters.
 
 
 ## RM Centered Rank-One Operator-Norm Adapter
@@ -2271,7 +2288,7 @@ future directions.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters, lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb,
   Bernstein CFC, or Golden-Thompson.
-- Priority: next safe task is RM-ON-human-integration-review.
+- Priority: next safe task is RM-negative-family-adapters.
 
 
 ## RM Vector-to-Rank-One Matrix Measurability / Integrability
@@ -2288,7 +2305,7 @@ future directions.
 - Blocker: this does not prove integrability from measurability alone,
   sample-covariance Matrix Bernstein assumption adapters, or Matrix Bernstein
   tails.
-- Priority: next safe task is RM-ON-human-integration-review.
+- Priority: next safe task is RM-negative-family-adapters.
 
 
 ## RM PSD Nullspace Converse
@@ -2307,4 +2324,4 @@ future directions.
 - Blocker: this is only a deterministic PSD kernel bridge. It does not prove
   covariance expectation identities, sample-covariance Matrix Bernstein
   assumption adapters, or Matrix Bernstein tails.
-- Priority: next safe task is RM-ON-human-integration-review.
+- Priority: next safe task is RM-negative-family-adapters.

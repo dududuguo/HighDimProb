@@ -24,16 +24,19 @@ denominator wrapper. The current prerequisite cleanup also adds rank-one,
 centered structural, centered operator-norm, and vector-to-rank-one matrix
 measurability / integrability bridges for covariance-style examples.
 RM-S5E adds the example-layer usage wrapper
-`sampleCovariance_quadraticForm_tail_usage`, with
-`SampleCovarianceTailAssumptions` keeping the variance proxy, independence,
-integrability, Tropp, and CFC assumptions explicit. The sample-covariance tail
-surface now uses core helper names
+`sampleCovariance_quadraticForm_tail_usage`. The current bounded-row version
+uses `SampleCovarianceTailAssumptions` to derive the crude variance proxy
+internally while keeping independence, integrability, Tropp, and CFC
+assumptions explicit. The sample-covariance tail surface now uses core helper names
 `sampleCovarianceCenteredRankOneRadius`, `sampleCovarianceTailTheta`, and
 `sampleCovarianceQuadraticFormTailRHS` rather than example-local copies.
-RM-S5F audits variance-proxy control for the centered row-rank-one
-sample-covariance family and classifies the current public contract as keeping
-`MatrixVarianceProxyNormBound` explicit until future moment/operator-norm/order
-infrastructure is added. RM-S6 adds deterministic rank-one kernel/nullspace
+The RM variance-proxy control leaf proves a reusable crude control route:
+pointwise operator-norm bounds give `MatrixVarianceProxyNormBound` with RHS
+`(Fintype.card I : Real) * R ^ 2`, centered rank-one squared-norm bounds give
+`(Fintype.card I : Real) * (2 * R) ^ 2`, and the sample-covariance row
+rank-one family gets the named bound
+`sampleCovarianceCenteredRankOneVarianceProxyBound R`. RM-S6 adds deterministic
+rank-one kernel/nullspace
 bridges for quadratic forms, single rank-one kernel membership, and finite sums
 of rank-one matrices. The rank-one kernel/nullspace examples now reuse those
 core bridges instead of reproving rank-one invisible-direction algebra locally.
@@ -56,17 +59,54 @@ only by the missing normalization event bridge from
 `centeredRandomMatrix P (sampleCovariance A)` to the unnormalized centered
 row-rank-one sum at threshold `(m : Real) * t`; no core Lean source theorem is
 added in RM-S7D.
+The RM-ON arbitrary-dimension spectral bridge leaf proves that the original
+arbitrary-dimensional bridge with only `0 <= t` is false at the zero-dimensional
+endpoint `Fin 0` when `t = 0`, and adds the corrected positive-threshold route:
+`selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos` and
+`selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos`. It also adds the
+positive-threshold arbitrary self-adjoint operator-norm Matrix Bernstein
+wrapper and the positive-threshold arbitrary sample-covariance operator-norm
+wrapper under the existing explicit primitive assumptions. The bridge-explicit
+conditional wrappers and nonempty wrappers remain available.
 
-The latest proved public declarations are:
+The latest proved public declarations fall into three routes:
 
-- `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
-- `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
-- `quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg`
-- `lambdaMaxOrderedUpperTailEvent_subset_quadraticFormUpperTailEvent`
+1. RandomMatrix optimized quadratic-form / operator-norm tail route:
+   `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`,
+   `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`,
+   `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`,
+   `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives`,
+   `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives`,
+   `quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg`,
+   `lambdaMaxOrderedUpperTailEvent_subset_quadraticFormUpperTailEvent`,
+   `selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos`, and
+   `selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos`.
+2. Sample covariance wrapper route:
+   `sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum`,
+   `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`,
+   `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound`,
+   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`,
+   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy`,
+   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`,
+   and
+   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`.
+3. Crude variance-proxy control route:
+   `pointwiseOperatorNormVarianceProxyNormRHS`,
+   `deterministicOperatorNorm_matrixSquare_le_sq`,
+   `deterministicOperatorNorm_matrixSquare_le_sq_of_le`,
+   `deterministicOperatorNorm_matrixSecondMoment_le_sq_of_forall`,
+   `matrixVarianceProxyNorm_le_pointwiseOperatorNormVarianceProxyNormRHS`,
+   `MatrixVarianceProxyNormBound_of_pointwiseOperatorNormBound`,
+   `centeredRankOneVarianceProxyNormRHS`,
+   `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound`,
+   `sampleCovarianceCenteredRankOneVarianceProxyBound`,
+   `sampleCovarianceCenteredRankOneVarianceProxyBound_pos`, and
+   `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound`.
 
 The latest public example-layer wrapper is:
 
 - `sampleCovariance_quadraticForm_tail_usage`
+- `sampleCovariance_operatorNorm_tail_usage`
 
 The latest deterministic rank-one nullspace API is:
 
@@ -119,7 +159,10 @@ rank-one operator-norm bridge `rankOneOperatorNorm_le_vectorSqNorm`,
 `quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg`,
 `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`,
 and
-`matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`.
+`matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`,
+`matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives`,
+and
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`.
 The new vector-to-matrix
 bridge proves entrywise measurability from `IsRandomVector`; entrywise
 integrability is proved only from explicit product-integrability assumptions or
@@ -130,25 +173,30 @@ one-way Mathlib-/explicit-PSD kernel wrappers. The rank-one nullspace slice
 exposes the quadratic-form square formula, rank-one kernel iff orthogonality,
 and finite rank-one sum kernel membership from per-feature orthogonality. It does
 not prove integrability from measurability alone, effective dimension,
-restricted Matrix Bernstein, lambda-max/operator-norm Matrix Bernstein tails,
+restricted Matrix Bernstein, lambda-max Matrix Bernstein tails,
 Tropp/Lieb, the Bernstein CFC primitive, Golden-Thompson, the `t = 0` endpoint
 for the optimized wrapper, or the final full Matrix Bernstein tail theorem. No
-unconditional sample covariance concentration theorem, variance-proxy control
-theorem, full Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or Golden-Thompson
-theorem was proved by RM-S5D/RM-S6.
+unconditional sample covariance concentration theorem, sharp moment-optimal
+variance proxy, full Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or
+Golden-Thompson theorem was proved by the RM-S5/RM-S7/RM-ON/RM-VP leaves.
 The self-adjoint operator-norm reduction to the two-sided quadratic-form event
-remains typed only through `selfAdjointOperatorNormTailViaQuadraticFormStatement`;
-RM-S7C therefore keeps that bridge as an explicit theorem assumption.
-RM-S7D also records the sample-covariance normalization event bridge as the
-first missing bridge before a public sample-covariance operator-norm tail
-wrapper can be a thin application of RM-S7C.
+is proved for nonempty dimensions and for arbitrary dimensions under the
+necessary `0 < t` assumption. The original typed statement
+`selfAdjointOperatorNormTailViaQuadraticFormStatement` keeps only `0 <= t` and
+is false at `Fin 0`, `t = 0`; it remains a typed contract, not a theorem.
+Sample covariance now has retained bridge-explicit, nonempty, and arbitrary
+positive-threshold operator-norm wrappers, plus bounded-row wrappers that
+derive the positive-side crude variance proxy internally. The operator-norm
+bounded-row wrapper still exposes the negative-family structure, pointwise
+bound, square/exponential/trace integrability, independence, Tropp, and CFC
+primitive assumptions explicitly.
 The previous optimized one-sided quadratic-form theorem remains
 `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-S7E-prove-sample-covariance-operator-norm-normalization-event-bridge`
+- `RM-negative-family-adapters`
 
 ## Public Milestone Summary
 

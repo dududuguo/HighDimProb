@@ -26,6 +26,8 @@ variable (hM : IsSelfAdjointMatrix M)
 variable (hXSA : RandomSelfAdjointMatrix P X)
 variable (hXsqInt : IntegrableRandomMatrix P (randomMatrixSquare X))
 variable (hAsqInt : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+variable (hBoundA : PointwiseOperatorNormBound A R)
+variable (hRnonneg : 0 <= R)
 
 #check randomMatrixSum
 #check randomMatrixSum_apply
@@ -92,6 +94,14 @@ variable (hAsqInt : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)
 #check matrixVarianceProxyNorm
 #check matrixVarianceProxyNorm_apply
 #check MatrixVarianceProxyNormBound
+#check pointwiseOperatorNormVarianceProxyNormRHS
+#check deterministicOperatorNorm_matrixSquare_le_sq
+#check deterministicOperatorNorm_matrixSquare_le_sq_of_le
+#check deterministicOperatorNorm_matrixSecondMoment_le_sq_of_forall
+#check matrixVarianceProxyNorm_le_pointwiseOperatorNormVarianceProxyNormRHS
+#check MatrixVarianceProxyNormBound_of_pointwiseOperatorNormBound
+#check centeredRankOneVarianceProxyNormRHS
+#check MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound
 #check isSelfAdjointMatrix_matrixSquare_of_isSelfAdjointMatrix
 #check matrixQuadraticForm_matrixSquare_eq_matVecSqNorm_of_selfAdjoint
 #check isPSD_matrixSquare_of_selfAdjoint
@@ -144,8 +154,11 @@ variable (hAsqInt : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)
 #check (deterministicMatrixVarianceProxyNorm V : Real)
 #check (matrixVarianceProxyNorm P A : Real)
 #check (MatrixVarianceProxyNormBound P A sigma2 : Prop)
+#check (pointwiseOperatorNormVarianceProxyNormRHS (I := I) R : Real)
 #check (isSelfAdjointMatrix_matrixSquare_of_isSelfAdjointMatrix hM :
   IsSelfAdjointMatrix (matrixSquare M))
+#check (deterministicOperatorNorm_matrixSquare_le_sq M :
+  deterministicOperatorNorm (matrixSquare M) <= deterministicOperatorNorm M ^ 2)
 #check (matrixQuadraticForm_matrixSquare_eq_matVecSqNorm_of_selfAdjoint hM :
   forall x : Fin n -> Real, matrixQuadraticForm (matrixSquare M) x = matVecSqNorm M x)
 #check (isPSD_matrixSquare_of_selfAdjoint hM :
@@ -165,6 +178,17 @@ variable (hAsqInt : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)
 #check (matrixBernsteinStatement P A sigma2 R c t : Prop)
 #check (matrixBernsteinTraceMGF_statement P A theta : Prop)
 #check (matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R : Prop)
+
+section PointwiseVarianceProxyNormBound
+
+variable [IsProbabilityMeasure P]
+
+#check (MatrixVarianceProxyNormBound_of_pointwiseOperatorNormBound
+  (P := P) (A := A) (R := R) hAsqInt hBoundA hRnonneg :
+  MatrixVarianceProxyNormBound P A
+    (pointwiseOperatorNormVarianceProxyNormRHS (I := I) R))
+
+end PointwiseVarianceProxyNormBound
 
 example : MatrixVarianceProxyUpperBound P A V =
     MatrixLE (matrixVarianceProxy P A) V := by

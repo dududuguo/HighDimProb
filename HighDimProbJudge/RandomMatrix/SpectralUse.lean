@@ -60,6 +60,7 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.not_isUnitVector_fin_zero
 #check HighDimProb.unitSphere_empty_of_zero_dim
 #check HighDimProb.quadraticFormUpperTailEvent_empty_of_zero_dim
+#check HighDimProb.selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos
 #check HighDimProb.quadraticFormUpperTailEvent
 #check HighDimProb.quadraticFormLowerTailEvent
 #check HighDimProb.SelfAdjointOperatorNormTailEvent
@@ -70,6 +71,7 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.quadraticFormLowerTailEvent_subset_twoSidedQuadraticFormTailEvent
 #check HighDimProb.selfAdjointOperatorNormTailViaQuadraticFormStatement
 #check HighDimProb.selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty
+#check HighDimProb.selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos
 #check HighDimProb.lambdaMax_le_iff_quadraticForm_le_statement
 #check HighDimProb.operatorNorm_eq_max_abs_lambda_statement
 
@@ -359,6 +361,16 @@ example {Omega : Type*} [MeasurableSpace Omega]
     (A : HighDimProb.RandomMatrix Omega 0 0) (t : Real) :
     HighDimProb.quadraticFormUpperTailEvent A t = ∅ := by
   exact HighDimProb.quadraticFormUpperTailEvent_empty_of_zero_dim A t
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    (A : HighDimProb.RandomMatrix Omega 0 0) {t : Real} (ht : 0 < t) :
+    HighDimProb.SelfAdjointOperatorNormTailEvent A t = ∅ := by
+  exact HighDimProb.selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos A ht
+
+example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
+    (A : HighDimProb.RandomMatrix Omega n n) {t : Real} (ht : 0 < t) :
+    HighDimProb.selfAdjointOperatorNormTailViaQuadraticFormStatement A t := by
+  exact HighDimProb.selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos A ht
 
 example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (A : HighDimProb.RandomMatrix Omega (n + 1) (n + 1)) (t : Real) :

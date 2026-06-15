@@ -28,9 +28,17 @@ sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy
 matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
 matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
 matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives
+matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives
 sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum
 sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy
 sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy
+sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy
+MatrixVarianceProxyNormBound_of_pointwiseOperatorNormBound
+MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound
+MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound
+sampleCovarianceCenteredRankOneVarianceProxyBound
+sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound
+sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound
 ```
 
 The optimized wrapper chooses `theta = t / (sigmaSq + R * t / 3)` and proves
@@ -45,16 +53,19 @@ ENNReal.ofReal
 The theorem assumes the finite-family Tropp/Lieb typed primitive and the
 pointwise Bernstein CFC typed primitive explicitly. It does not prove
 Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, the `t = 0` endpoint
-for the optimized wrapper, unconditional lambda-max/operator-norm Matrix
-Bernstein tails, or the full Matrix Bernstein tail theorem.
+for the optimized wrapper, unconditional lambda-max Matrix Bernstein tails, or
+the full Matrix Bernstein tail theorem.
 
-The sample-covariance wrapper
+The retained sample-covariance wrapper
 `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
 is now proved as a thin specialization of the optimized quadratic-form wrapper.
 It uses `sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`,
 S3/S4 centered rank-one adapters, explicit row independence, explicit
 square/exponential/trace integrability, explicit
 `MatrixVarianceProxyNormBound`, and explicit Tropp/CFC primitive assumptions.
+The bounded-row wrapper
+`sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound` now
+derives the positive-side crude variance proxy from the row squared-norm bound.
 It is not an unconditional sample-covariance concentration theorem and not an
 operator-norm Matrix Bernstein theorem.
 
@@ -64,12 +75,13 @@ is now proved using the centered sample-covariance deviation equality. The
 conditional sample-covariance operator-norm wrapper
 `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`
 is now proved as a thin specialization of the conditional self-adjoint
-operator-norm Matrix Bernstein wrapper. It keeps
-`MatrixVarianceProxyNormBound`, Tropp/CFC primitives, integrability,
-independence, and
+operator-norm Matrix Bernstein wrapper. The bounded-row wrapper
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`
+uses the crude variance-proxy theorem for the positive family and the general
+pointwise-bound theorem for the negative family. It keeps Tropp/CFC primitives,
+integrability, independence, negative-family pointwise bounds, and
 `selfAdjointOperatorNormTailViaQuadraticFormStatement` explicit. It does not
-prove sample-covariance variance-proxy control or discharge the general
-spectral-bridge assumption.
+prove sharp variance control or discharge all negative-family assumptions.
 
 The nonempty self-adjoint operator-norm Matrix Bernstein wrapper
 `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives`
@@ -79,19 +91,34 @@ bridge-explicit wrapper. The nonempty sample-covariance wrapper
 `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy`
 then reuses that nonempty Matrix Bernstein wrapper. These theorems do not prove
 variance-proxy control, Tropp/Lieb, the Bernstein CFC primitive,
-Golden-Thompson, arbitrary-dimensional operator-norm reduction, or full Matrix
-Bernstein.
+Golden-Thompson, or full Matrix Bernstein.
+
+The arbitrary-dimensional self-adjoint operator-norm route is now proved on the
+corrected positive-threshold contract. The zero-dimensional endpoint
+`selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos` and the arbitrary
+bridge `selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos` show that
+`0 < t` is sufficient; the original typed statement with only `0 <= t` is false
+at `Fin 0`, `t = 0`. The corresponding Matrix Bernstein wrapper
+`matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives`
+and sample-covariance wrapper
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`
+reuse the existing bridge-explicit/nonempty wrappers and keep variance proxy,
+integrability, independence, Tropp, and CFC assumptions explicit.
 
 RM-S5E adds the example-layer wrapper
-`sampleCovariance_quadraticForm_tail_usage`, which uses the S5D theorem
-directly while keeping variance proxy, independence, integrability, Tropp, and
-CFC assumptions explicit. The radius, optimized theta, and scalar RHS names
+`sampleCovariance_quadraticForm_tail_usage`; the current version uses the
+bounded-row theorem directly while keeping independence, integrability, Tropp,
+and CFC assumptions explicit. The radius, crude variance proxy, optimized theta, and scalar RHS names
 belong to the core concentration layer:
-`sampleCovarianceCenteredRankOneRadius`, `sampleCovarianceTailTheta`, and
+`sampleCovarianceCenteredRankOneRadius`,
+`sampleCovarianceCenteredRankOneVarianceProxyBound`,
+`sampleCovarianceTailTheta`, and
 `sampleCovarianceQuadraticFormTailRHS`.
 
-RM-S5F keeps sample-covariance variance-proxy control as an explicit
-assumption for now.
+RM-VP proves a reusable crude variance-proxy control path from pointwise
+operator-norm bounds and specializes it to centered rank-one and
+sample-covariance row rank-one families. It does not prove sharp fourth-moment
+or moment-optimal variance bounds.
 
 RM-S6 adds deterministic rank-one kernel/nullspace API:
 `rankOneMatrixSum`, `rankOneMatrix_quadraticForm_eq_inner_sq`,
@@ -103,7 +130,7 @@ sums, and the PSD-nullspace bridge without adding a general nullspace theory.
 The rank-one nullspace examples now reuse these core bridges where they remove
 local action/sum algebra.
 
-Next safe task: `RM-ON-human-integration-review`.
+Next safe task: `RM-negative-family-adapters`.
 
 RM-ON-S4 update: the nonempty self-adjoint operator-norm Matrix Bernstein
 wrapper
@@ -148,10 +175,11 @@ one-way Mathlib-/explicit-PSD kernel wrappers. The deterministic rank-one
 kernel/nullspace bridge uses
 `rankOneMatrixSum`, `rankOneMatrix_quadraticForm_eq_inner_sq`,
 `rankOneMatrix_mulVec_eq_zero_iff_inner_eq_zero`, and
-`rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero`. This does not prove sample
-covariance variance-proxy control, integrability from measurability alone,
-effective dimension, restricted Matrix Bernstein, full Matrix Bernstein,
-Tropp/Lieb, Bernstein CFC, or Golden-Thompson.
+`rankOneSum_mulVec_eq_zero_of_forall_inner_eq_zero`. The RM-VP leaf proves the
+crude variance-proxy route, but this does not prove integrability from
+measurability alone, sharp variance control, effective dimension, restricted
+Matrix Bernstein, full Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or
+Golden-Thompson.
 
 ## Target Theorem
 
@@ -237,7 +265,7 @@ targets only.
 | Self-adjoint norm/eigenvalue endpoint bridge | `operatorNorm_eq_max_abs_lambda_statement` | typed `Prop`, unproved |
 | Lambda-max endpoint ordering bridge | `lambdaMax_is_greatest_eigenvalue_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue` | legacy statement typed/unproved; ordered endpoint theorem proved for `eigenvalues?` |
 | Lambda-min endpoint ordering bridge | `lambdaMin_is_least_eigenvalue_statement` | typed `Prop`, unproved |
-| Self-adjoint operator-norm tail via quadratic forms | `selfAdjointOperatorNormTailViaQuadraticFormStatement`, `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty` | arbitrary-`n` typed `Prop`; nonempty `Fin (n + 1)` theorem proved |
+| Self-adjoint operator-norm tail via quadratic forms | `selfAdjointOperatorNormTailViaQuadraticFormStatement`, `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`, `selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos`, `selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos` | arbitrary-`n` typed `Prop`; nonempty `Fin (n + 1)` theorem and arbitrary positive-threshold theorem proved; original `0 <= t` arbitrary statement is false at `Fin 0`, `t = 0` |
 | Trace-exponential moment bound | `traceExpMomentBoundStatement` | typed `Prop`, unproved |
 | Variance-proxy trace-exponential bound | `traceExpVarianceProxyBoundStatement` | typed `Prop`, unproved |
 | Semantic trace-mgf bound provider | `traceMGFBound_statement`, `traceMGFBoundLIntegral_statement` | typed `Prop`, unproved |
@@ -264,9 +292,11 @@ targets only.
 The current proof-ready route is:
 
 1. Use `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty` when
-   the matrix dimension is in the nonempty `Fin (n + 1)` shape, and keep the
-   general `selfAdjointOperatorNormTailViaQuadraticFormStatement` explicit for
-   arbitrary-`n` wrapper contracts.
+   the matrix dimension is in the nonempty `Fin (n + 1)` shape. Use
+   `selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos` for arbitrary
+   dimensions when `0 < t`; keep the general
+   `selfAdjointOperatorNormTailViaQuadraticFormStatement` explicit only for
+   retained bridge-explicit wrapper contracts.
 2. Use `twoSidedQuadraticFormTailEvent` as the honest event vocabulary while
    the legacy direct lambda/operator-norm endpoint theorem remains unproved.
 3. Prove the one-sided `matrixLaplaceTransformStatement` or its lintegral

@@ -902,6 +902,30 @@ def SelfAdjointOperatorNormTailEvent {Omega : Type*} [MeasurableSpace Omega]
     {n : Nat} (A : RandomMatrix Omega n n) (t : Real) : Set Omega :=
   {omega | t <= operatorNorm A omega}
 
+/-- In dimension zero, a positive-threshold self-adjoint operator-norm tail is
+empty.
+
+The positivity assumption is essential: at threshold `0`, the operator-norm
+tail is nonempty on any nonempty sample space because matrix norms are
+nonnegative, while the explicit unit-sphere quadratic-form events are empty. -/
+theorem selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos
+    {Omega : Type*} [MeasurableSpace Omega]
+    (A : RandomMatrix Omega 0 0) {t : Real} (ht : 0 < t) :
+    SelfAdjointOperatorNormTailEvent A t = ∅ := by
+  ext omega
+  constructor
+  · intro hTail
+    have hA_zero : A omega = 0 := by
+      ext i j
+      exact Fin.elim0 i
+    have hnorm : norm (A omega) = 0 := by
+      simp [hA_zero]
+    have ht_zero : t <= 0 := by
+      simpa [SelfAdjointOperatorNormTailEvent, operatorNorm, hnorm] using hTail
+    linarith
+  · intro hEmpty
+    cases hEmpty
+
 /-- Lowercase compatibility alias for the self-adjoint operator-norm tail
 event vocabulary. -/
 abbrev selfAdjointOperatorNormTailEvent {Omega : Type*} [MeasurableSpace Omega]
@@ -980,6 +1004,27 @@ theorem selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty
           t <= abs (matrixQuadraticForm (A omega) x) := ht_abs
           _ = -matrixQuadraticForm (A omega) x := abs_of_nonpos hq_nonpos
       linarith⟩
+
+/-- Positive-threshold arbitrary-dimensional self-adjoint operator-norm tail
+events reduce to the explicit two-sided quadratic-form tail event.
+
+The proof keeps the zero-dimensional endpoint explicit: positive thresholds make
+the operator-norm tail empty in dimension zero, while successor dimensions reuse
+the nonempty spectral bridge. -/
+theorem selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos
+    {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
+    (A : RandomMatrix Omega n n) {t : Real} (ht : 0 < t) :
+    selfAdjointOperatorNormTailViaQuadraticFormStatement A t := by
+  cases n with
+  | zero =>
+      intro _hA _ht omega hTail
+      have hEmpty :
+          SelfAdjointOperatorNormTailEvent A t = ∅ :=
+        selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos A ht
+      rw [hEmpty] at hTail
+      cases hTail
+  | succ n =>
+      exact selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty A t
 
 /-- Typed target for the future Rayleigh quotient bridge between Mathlib
 Hermitian eigenvalues and HighDimProb's explicit unit-sphere quadratic form. -/

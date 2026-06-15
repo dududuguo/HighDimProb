@@ -81,6 +81,7 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check not_isUnitVector_fin_zero
 #check unitSphere_empty_of_zero_dim
 #check quadraticFormUpperTailEvent_empty_of_zero_dim
+#check selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos
 #check quadraticFormUpperTailEvent
 #check quadraticFormLowerTailEvent
 #check SelfAdjointOperatorNormTailEvent
@@ -91,6 +92,7 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check quadraticFormLowerTailEvent_subset_twoSidedQuadraticFormTailEvent
 #check selfAdjointOperatorNormTailViaQuadraticFormStatement
 #check selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty
+#check selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos
 #check lambdaMax_le_iff_quadraticForm_le_statement
 #check operatorNorm_eq_max_abs_lambda_statement
 
@@ -126,6 +128,9 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check (selfAdjointOperatorNormTailViaQuadraticFormStatement A t : Prop)
 #check (selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty B t :
   selfAdjointOperatorNormTailViaQuadraticFormStatement B t)
+#check (selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos A
+  (show 0 < (1 : Real) by norm_num) :
+    selfAdjointOperatorNormTailViaQuadraticFormStatement A 1)
 #check (lambdaMax_le_iff_quadraticForm_le_statement H hH t : Prop)
 #check (operatorNorm_eq_max_abs_lambda_statement H hH : Prop)
 

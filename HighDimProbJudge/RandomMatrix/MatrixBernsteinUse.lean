@@ -20,13 +20,20 @@ open HighDimProb
 #check HighDimProb.matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
 #check HighDimProb.matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
 #check HighDimProb.matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives
+#check HighDimProb.matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives
 #check HighDimProb.sampleCovarianceCenteredRankOneRadius
+#check HighDimProb.sampleCovarianceCenteredRankOneVarianceProxyBound
+#check HighDimProb.sampleCovarianceCenteredRankOneVarianceProxyBound_pos
+#check HighDimProb.MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound
 #check HighDimProb.sampleCovarianceTailTheta
 #check HighDimProb.sampleCovarianceQuadraticFormTailRHS
 #check HighDimProb.sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy
+#check HighDimProb.sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound
 #check HighDimProb.sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum
 #check HighDimProb.sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy
 #check HighDimProb.sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy
+#check HighDimProb.sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy
+#check HighDimProb.sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound
 #check HighDimProb.matrixVarianceProxyNorm
 #check HighDimProb.PointwiseOperatorNormBound
 #check HighDimProb.IndependentSelfAdjointRandomMatrices
@@ -299,11 +306,12 @@ variable
 example :
     P (SelfAdjointOperatorNormTailEvent
         (centeredRandomMatrix P (sampleCovariance A)) t) <=
-      sampleCovarianceQuadraticFormTailRHS (m := m) (n := n) R t sigmaSq +
+      sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n + 1) R t sigmaSq +
         sampleCovarianceQuadraticFormTailRHS
-          (m := m) (n := n) Rneg t sigmaSqNeg := by
+          (m := m) (n := n + 1) Rneg t sigmaSqNeg := by
   exact
-    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy
+    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy
       (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
       (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
       hm hMeas hLp hSq hIndep hIntSq hExpInt hTraceInt hSigma hR ht

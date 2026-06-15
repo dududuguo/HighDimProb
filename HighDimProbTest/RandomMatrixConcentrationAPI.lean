@@ -117,13 +117,20 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
 #check matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
 #check matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives
+#check matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives
 #check sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum
 #check sampleCovarianceCenteredRankOneRadius
+#check sampleCovarianceCenteredRankOneVarianceProxyBound
+#check sampleCovarianceCenteredRankOneVarianceProxyBound_pos
+#check MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound
 #check sampleCovarianceTailTheta
 #check sampleCovarianceQuadraticFormTailRHS
 #check sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy
+#check sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound
 #check sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy
 #check sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy
+#check sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy
+#check sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound
 #check operatorNorm_eq_spectralRadius_of_selfAdjointStatement
 #check HighProbabilityBound
 #check highProbabilityBound
@@ -221,6 +228,7 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check (bernsteinSecondMomentComparisonFamily P B theta R :
   I -> Matrix (Fin n) (Fin n) Real)
 #check (sampleCovarianceCenteredRankOneRadius R : Real)
+#check (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R : Real)
 #check (sampleCovarianceTailTheta (m := m) R t sigma2 : Real)
 #check (sampleCovarianceQuadraticFormTailRHS (m := m) (n := n) R t sigma2 :
   ENNReal)
@@ -450,11 +458,12 @@ variable
 example :
     P (SelfAdjointOperatorNormTailEvent
         (centeredRandomMatrix P (sampleCovariance Xne)) t) <=
-      sampleCovarianceQuadraticFormTailRHS (m := m) (n := n) R t sigmaSq +
+      sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n + 1) R t sigmaSq +
         sampleCovarianceQuadraticFormTailRHS
-          (m := m) (n := n) Rneg t sigmaSqNeg := by
+          (m := m) (n := n + 1) Rneg t sigmaSqNeg := by
   exact
-    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy
+    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy
       (P := P) (A := Xne) (R := R) (Rneg := Rneg) (t := t)
       (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
       hm hMeas hLp hSq hIndep hIntSq hExpInt hTraceInt hSigma hR ht

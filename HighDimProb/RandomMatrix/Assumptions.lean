@@ -3,6 +3,7 @@ import HighDimProb.RandomMatrix.Expectation
 import HighDimProb.RandomMatrix.OperatorNorm
 import HighDimProb.RandomMatrix.RowsCols
 import HighDimProb.RandomMatrix.SelfAdjoint
+import HighDimProb.RandomMatrix.VarianceProxy
 import HighDimProb.SubGaussianVector
 import HighDimProb.Isotropic
 
@@ -315,6 +316,25 @@ def PointwiseOperatorNormBound {Omega : Type*} [MeasurableSpace Omega]
     (R : Real) : Prop :=
   forall i, BoundedOperatorNorm (A i) R
 
+/-- A pointwise operator-norm bound controls the variance-proxy norm by the
+crude bound `cardinality * R^2`, provided the squared summands are entrywise
+integrable. -/
+theorem MatrixVarianceProxyNormBound_of_pointwiseOperatorNormBound
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    {A : I -> RandomMatrix Omega n n} {R : Real}
+    (hInt : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hR : 0 <= R) :
+    MatrixVarianceProxyNormBound P A
+      (pointwiseOperatorNormVarianceProxyNormRHS (I := I) R) := by
+  dsimp [MatrixVarianceProxyNormBound]
+  exact matrixVarianceProxyNorm_le_pointwiseOperatorNormVarianceProxyNormRHS
+    (P := P) (A := A) (R := R) hInt
+    (fun i omega => by
+      simpa [operatorNorm, deterministicOperatorNorm] using hBound i omega)
+    hR
+
 /--
 Family wrapper for expectation operator-norm contraction under a pointwise
 operator-norm bound.
@@ -508,6 +528,39 @@ theorem PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound
     hRankInt
     (PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound X R hSq)
     hR
+
+/-- Crude centered rank-one variance-proxy norm RHS from a pointwise
+squared-vector-norm bound. -/
+abbrev centeredRankOneVarianceProxyNormRHS {I : Type*} [Fintype I]
+    (R : Real) : Real :=
+  pointwiseOperatorNormVarianceProxyNormRHS (I := I) (2 * R)
+
+/-- Centered rank-one variance-proxy norm bound from a pointwise squared-vector
+norm bound and explicit square-integrability of the centered summands. -/
+theorem MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    {X : I -> RandomVector Omega n} {R : Real}
+    (hMeas : forall i, IsRandomVector P (X i))
+    (hLp : forall i, forall j : Fin n,
+      MemLpRealRandomVariable P (coord (X i) j) 2)
+    (hSq : forall i omega, vectorSqNorm (X i omega) <= R)
+    (hR : 0 <= R)
+    (hIntSq :
+      forall i,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare ((centeredRankOneRandomMatrixFamily P X) i))) :
+    MatrixVarianceProxyNormBound P
+      (centeredRankOneRandomMatrixFamily P X)
+      (centeredRankOneVarianceProxyNormRHS (I := I) R) := by
+  have hRadius : 0 <= 2 * R := by
+    nlinarith
+  exact MatrixVarianceProxyNormBound_of_pointwiseOperatorNormBound
+    (P := P) (A := centeredRankOneRandomMatrixFamily P X) (R := 2 * R)
+    hIntSq
+    (PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound
+      (P := P) (X := X) hMeas hLp hSq hR)
+    hRadius
 
 /-- Alias emphasizing that the uniform bound is pointwise, not a.e. -/
 abbrev UniformOperatorNormBound {Omega : Type*} [MeasurableSpace Omega]

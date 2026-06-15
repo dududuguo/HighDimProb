@@ -55,20 +55,23 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
 - Matrix concentration theorem statements now typecheck as `Prop`s in
   `HighDimProb.RandomMatrix.ConcentrationStatements`, but proofs remain blocked.
 - Operator-norm measurability, centered operator-norm contraction, named
-  centered rank-one adapters, and sample covariance row rank-one centering
-  bridges are now proved. The S5D conditional sample-covariance
-  quadratic-form tail wrapper is also proved under explicit variance-proxy and
-  primitive assumptions, using core radius/theta/RHS helper names rather than
-  example-local copies. RM-S5E adds an example-layer usage wrapper that keeps
-  those assumptions explicit. RM-S5F confirms that variance-proxy control
-  remains an explicit assumption until future moment/operator-norm/order
-  infrastructure exists. RM-S6 adds deterministic rank-one kernel/nullspace
+  centered rank-one adapters, sample covariance row rank-one centering bridges,
+  and crude variance-proxy control from pointwise operator-norm bounds are now
+  proved. The bounded-row sample-covariance quadratic-form wrapper derives the
+  positive-side variance proxy using
+  `sampleCovarianceCenteredRankOneVarianceProxyBound`; independence,
+  square/exponential/trace integrability, Tropp, and CFC assumptions remain
+  explicit. RM-S6 adds deterministic rank-one kernel/nullspace
   bridges in `Spectral.lean`, RM-S7E/RM-S7F add the conditional
   sample-covariance operator-norm event bridge and tail wrapper, and RM-ON-S4
   adds the nonempty operator-norm Matrix Bernstein wrapper while keeping
   variance proxy, Tropp, CFC, independence, and integrability assumptions
   explicit. RM-ON-S5 adds the nonempty sample-covariance operator-norm wrapper
-  without an explicit spectral-bridge assumption. The next RandomMatrix branch
-  is `RM-ON-human-integration-review`.
+  without an explicit spectral-bridge assumption. The arbitrary-dimensional
+  bridge leaf adds the corrected `0 < t` spectral bridge and arbitrary
+  operator-norm Matrix Bernstein/sample-covariance wrappers while keeping
+  Tropp, CFC, independence, and integrability assumptions explicit. The
+  original arbitrary `0 <= t` bridge remains false at `Fin 0`, `t = 0`. The
+  next RandomMatrix branch is `RM-negative-family-adapters`.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.

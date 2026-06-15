@@ -145,6 +145,93 @@ def MatrixVarianceProxyNormBound {Omega : Type*} [MeasurableSpace Omega]
     (A : I -> RandomMatrix Omega n n) (sigma2 : Real) : Prop :=
   matrixVarianceProxyNorm P A <= sigma2
 
+/-- Crude scalar RHS for variance-proxy norm control from a pointwise
+operator-norm bound. -/
+abbrev pointwiseOperatorNormVarianceProxyNormRHS {I : Type*} [Fintype I]
+    (R : Real) : Real :=
+  (Fintype.card I : Real) * R ^ 2
+
+/-- The deterministic operator norm of a matrix square is bounded by the square
+of the deterministic operator norm. -/
+theorem deterministicOperatorNorm_matrixSquare_le_sq {n : Nat}
+    (A : Matrix (Fin n) (Fin n) Real) :
+    deterministicOperatorNorm (matrixSquare A) <=
+      deterministicOperatorNorm A ^ 2 := by
+  simpa [deterministicOperatorNorm, matrixSquare, pow_two] using norm_mul_le A A
+
+/-- A deterministic operator-norm bound controls the operator norm of the matrix
+square with the squared radius. -/
+theorem deterministicOperatorNorm_matrixSquare_le_sq_of_le {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} {R : Real}
+    (hA : deterministicOperatorNorm A <= R) (hR : 0 <= R) :
+    deterministicOperatorNorm (matrixSquare A) <= R ^ 2 := by
+  have hsq :
+      deterministicOperatorNorm (matrixSquare A) <=
+        deterministicOperatorNorm A ^ 2 :=
+    deterministicOperatorNorm_matrixSquare_le_sq A
+  have hnorm_nonneg : 0 <= deterministicOperatorNorm A := by
+    exact norm_nonneg A
+  have hsqR : deterministicOperatorNorm A ^ 2 <= R ^ 2 := by
+    nlinarith
+  exact hsq.trans hsqR
+
+/-- A pointwise operator-norm bound on a random matrix controls the operator
+norm of its matrix second moment, provided the squared random matrix is
+entrywise integrable. -/
+theorem deterministicOperatorNorm_matrixSecondMoment_le_sq_of_forall
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {n : Nat} {A : RandomMatrix Omega n n}
+    {R : Real}
+    (hInt : IntegrableRandomMatrix P (randomMatrixSquare A))
+    (hBound : forall omega, deterministicOperatorNorm (A omega) <= R)
+    (hR : 0 <= R) :
+    deterministicOperatorNorm (matrixSecondMoment P A) <= R ^ 2 := by
+  have hBridge :
+      matrixSecondMoment P A =
+        MeasureTheory.integral P (fun omega => randomMatrixSquare A omega) := by
+    exact matrixExpect_eq_integral (P := P) (A := randomMatrixSquare A) hInt
+  calc
+    deterministicOperatorNorm (matrixSecondMoment P A)
+        = norm (matrixSecondMoment P A) := rfl
+    _ =
+        norm (MeasureTheory.integral P (fun omega => randomMatrixSquare A omega)) := by
+          rw [hBridge]
+    _ <= R ^ 2 * P.real Set.univ := by
+          apply MeasureTheory.norm_integral_le_of_norm_le_const
+          filter_upwards with omega
+          have hsq :
+              deterministicOperatorNorm (matrixSquare (A omega)) <= R ^ 2 :=
+            deterministicOperatorNorm_matrixSquare_le_sq_of_le (hBound omega) hR
+          simpa [randomMatrixSquare, deterministicOperatorNorm] using hsq
+    _ = R ^ 2 := by
+          simp
+
+/-- A pointwise operator-norm bound on every summand controls the scalar norm of
+the matrix variance proxy by the crude finite-family bound
+`cardinality * R^2`. -/
+theorem matrixVarianceProxyNorm_le_pointwiseOperatorNormVarianceProxyNormRHS
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    {A : I -> RandomMatrix Omega n n} {R : Real}
+    (hInt : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hBound : forall i omega, deterministicOperatorNorm (A i omega) <= R)
+    (hR : 0 <= R) :
+    matrixVarianceProxyNorm P A <=
+      pointwiseOperatorNormVarianceProxyNormRHS (I := I) R := by
+  dsimp [matrixVarianceProxyNorm, deterministicMatrixVarianceProxyNorm,
+    matrixVarianceProxy, pointwiseOperatorNormVarianceProxyNormRHS]
+  calc
+    norm (Finset.univ.sum fun i : I => matrixSecondMoment P (A i))
+        <= Finset.univ.sum fun i : I => norm (matrixSecondMoment P (A i)) := by
+          exact norm_sum_le _ _
+    _ <= Finset.univ.sum fun _i : I => R ^ 2 := by
+          apply Finset.sum_le_sum
+          intro i _
+          exact deterministicOperatorNorm_matrixSecondMoment_le_sq_of_forall
+            (P := P) (A := A i) (R := R) (hInt i) (hBound i) hR
+    _ = (Fintype.card I : Real) * R ^ 2 := by
+          simp
+
 /-- The square of a self-adjoint real matrix is self-adjoint. -/
 theorem isSelfAdjointMatrix_matrixSquare_of_isSelfAdjointMatrix {n : Nat}
     {A : Matrix (Fin n) (Fin n) Real} (hA : IsSelfAdjointMatrix A) :

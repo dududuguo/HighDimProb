@@ -1001,12 +1001,12 @@ measurability/integrability bridge, and not a Matrix Bernstein tail theorem.
 The centered rank-one structural and operator-norm follow-ups are now complete
 in RM-S3/RM-S4, and S5D now proves the conditional sample-covariance
 quadratic-form tail wrapper under explicit primitive assumptions. RM-S5E adds
-the example-layer usage wrapper. RM-S5F keeps variance-proxy control as an
-explicit assumption. The rank-one nullspace examples now reuse the S6 core
-bridges. RM-S7E/RM-S7F add the conditional sample-covariance operator-norm
-event bridge and tail wrapper. RM-ON-S5 adds the nonempty wrapper without an
-explicit spectral-bridge assumption. Current next safe task:
-RM-ON-human-integration-review.
+the example-layer usage wrapper. RM-VP now proves crude variance-proxy control
+from pointwise operator-norm bounds. The rank-one nullspace examples now reuse
+the S6 core bridges. RM-S7E/RM-S7F add the conditional sample-covariance
+operator-norm event bridge and tail wrapper. RM-ON-S5 adds the nonempty wrapper
+without an explicit spectral-bridge assumption. Current next safe task:
+RM-negative-family-adapters.
 
 ## RM centered operator-norm prerequisite progress
 
@@ -1029,10 +1029,10 @@ entrywise integrability or vector-to-rank-one measurability.
 
 The centered rank-one follow-up is now complete in RM-S3/RM-S4, and the S5D
 conditional sample-covariance quadratic-form tail wrapper is proved. RM-S5E
-adds the example-layer usage wrapper. RM-S5F keeps variance-proxy control as an
-explicit assumption. The rank-one nullspace examples now reuse the S6 core
-bridges. Current next safe task:
-RM-ON-human-integration-review.
+adds the example-layer usage wrapper. RM-VP now proves crude variance-proxy
+control from pointwise operator-norm bounds. The rank-one nullspace examples
+now reuse the S6 core bridges. Current next safe task:
+RM-negative-family-adapters.
 
 
 ## RM vector-to-rank-one matrix measurability / integrability prerequisite progress
@@ -1056,10 +1056,10 @@ integrability from measurability alone and Matrix Bernstein tails.
 
 RM-S5E example cleanup is complete. The example usage wrapper now reuses the
 core sample-covariance tail helper names instead of defining local
-radius/theta/RHS copies. RM-S5F keeps variance-proxy control explicit. The
+radius/theta/RHS copies. RM-VP now proves crude variance-proxy control. The
 rank-one nullspace examples now reuse the S6 core bridges. Current next safe
 task:
-RM-ON-human-integration-review.
+RM-negative-family-adapters.
 
 
 ## RM centered rank-one structural adapter progress
@@ -1092,12 +1092,14 @@ PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound
 The wrappers combine the rank-one operator-norm bridge with expectation
 contraction and the centered `2 * R` family wrapper. The later RM-S5A/RM-S5B
 stages prove the sample-covariance row rank-one sum and centered deviation
-bridges; RM-S5D proves the conditional sample-covariance quadratic-form tail
-wrapper under explicit variance-proxy and primitive assumptions.
+bridges; RM-S5D proves the retained conditional sample-covariance
+quadratic-form tail wrapper under explicit variance-proxy and primitive
+assumptions.
 
-RM-S5F variance-proxy control contract is complete. The rank-one nullspace
-example cleanup is complete. Current next safe task:
-RM-ON-human-integration-review.
+RM-VP variance-proxy control is complete. It proves the crude pointwise
+operator-norm route and the centered rank-one / sample-covariance row
+rank-one specializations. The rank-one nullspace example cleanup is complete.
+Current next safe task: RM-negative-family-adapters.
 
 
 ## RM PSD nullspace converse prerequisite progress
@@ -1119,9 +1121,8 @@ quadratic-null directions through the core declarations. This is not an
 expectation-identity theorem for covariance objects and not a Matrix
 Bernstein tail theorem.
 
-RM-S5F variance-proxy control contract is complete. The rank-one nullspace
-example cleanup is complete. Current next safe task:
-RM-ON-human-integration-review.
+RM-VP variance-proxy control is complete. The rank-one nullspace example
+cleanup is complete. Current next safe task: RM-negative-family-adapters.
 
 
 ## RM rank-one kernel nullspace API progress
@@ -1149,4 +1150,4 @@ The rank-one nullspace examples now reuse the S6 core bridges where they remove
 local action/sum algebra.
 
 Current next safe task:
-RM-ON-human-integration-review.
+RM-negative-family-adapters.

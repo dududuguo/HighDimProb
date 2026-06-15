@@ -61,16 +61,18 @@
 - Concrete version chosen: RM-ON-S4 adds a nonempty `Fin (n + 1)` wrapper that
   reuses the conditional self-adjoint operator-norm Matrix Bernstein theorem
   and supplies `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`.
-- Possible general version: replace the conditional theorem with a single
-  arbitrary-dimensional unconditional theorem.
-- Reason for not generalizing yet: the S3 bridge is intentionally nonempty;
-  the zero-dimensional endpoint is not covered.
-- Lean/mathlib obstruction: arbitrary-dimensional operator-norm reduction
-  needs a separate statement/proof shape and cannot be obtained from the
-  nonempty witness lemma.
-- Future upgrade path: keep the conditional theorem for arbitrary bridge
-  assumptions, and add specialized wrappers only when a proved bridge matches
-  the target API.
+- General version now available: RM-ON arbitrary-dimension cleanup adds the
+  positive-threshold arbitrary wrapper by splitting off the zero-dimensional
+  empty-tail endpoint and reusing the nonempty bridge in successor dimensions.
+- Endpoint boundary: the original arbitrary `0 <= t` bridge is false at
+  `Fin 0`, `t = 0`, so the bridge-explicit theorem remains useful while the
+  corrected arbitrary wrapper requires `0 < t`.
+- Remaining obstruction: variance-proxy control, Tropp/Lieb, Bernstein CFC,
+  Golden-Thompson, and full Matrix Bernstein remain separate theorem
+  obligations.
+- Future upgrade path: keep the conditional theorem for explicit bridge
+  assumptions and continue reducing analytic primitive assumptions only through
+  named wrappers.
 
 ## Nonempty sample-covariance operator-norm wrapper
 
@@ -78,14 +80,17 @@
   operator-norm wrapper that reuses the existing sample-covariance
   normalization event bridge and the RM-ON-S4 nonempty Matrix Bernstein
   wrapper.
-- Possible general version: replace all sample-covariance operator-norm APIs
-  with one arbitrary-dimensional theorem.
-- Reason for not generalizing yet: the proved spectral bridge is only the
-  nonempty `Fin (n + 1)` bridge, while the conditional theorem remains useful
-  whenever another bridge is supplied explicitly.
-- Lean/mathlib obstruction: variance-proxy control, Tropp/Lieb, Bernstein CFC,
-  and arbitrary-dimensional operator-norm reduction are separate theorem
-  obligations, not consequences of the nonempty wrapper.
+- General version now available: the sample-covariance operator-norm surface has
+  an arbitrary positive-threshold wrapper that reuses the arbitrary
+  positive-threshold Matrix Bernstein wrapper and existing normalization event
+  bridge.
+- Reason for retaining older APIs: the conditional theorem remains useful
+  whenever another bridge is supplied explicitly, and the nonempty wrapper is
+  still a clean specialization with no positive-threshold case split exposed to
+  downstream users.
+- Lean/mathlib obstruction: variance-proxy control, Tropp/Lieb, and Bernstein
+  CFC are separate theorem obligations, not consequences of the spectral
+  wrapper.
 - Future upgrade path: keep variance-proxy and primitive assumptions explicit,
   and add broader sample-covariance theorem surfaces only after the required
   analytic or arbitrary-dimensional bridges are proved.
@@ -1342,6 +1347,26 @@
   assumptions bundle and usage wrapper; it does not define local copies of the
   radius, theta, or RHS.
 - Boundary decision: this cleanup changes the public API shape but not the
-  theorem strength. Variance-proxy control, Tropp/Lieb, Bernstein CFC,
-  lambda-max/operator-norm tails, and unconditional sample-covariance
-  concentration remain future work.
+  theorem strength. The later RM-VP leaf proves crude variance-proxy control
+  from pointwise operator-norm bounds; sharp variance control, Tropp/Lieb,
+  Bernstein CFC, lambda-max/operator-norm tails, and unconditional
+  sample-covariance concentration remain future work.
+
+## RM variance-proxy control
+
+- Concrete version chosen: prove a crude scalar norm bound for
+  `matrixVarianceProxy` from `PointwiseOperatorNormBound` and explicit
+  square-integrability, then specialize it to centered rank-one and
+  sample-covariance row rank-one families.
+- Public RHS decision: name
+  `pointwiseOperatorNormVarianceProxyNormRHS R = (Fintype.card I : Real) * R ^ 2`
+  and `sampleCovarianceCenteredRankOneVarianceProxyBound R =
+  (m : Real) * sampleCovarianceCenteredRankOneRadius R ^ 2` rather than
+  unfolding long expressions in downstream wrappers.
+- Boundary decision: this proves useful crude variance-proxy control, not a
+  sharp fourth-moment or moment-optimal bound. Square-integrability,
+  independence, Tropp, CFC, and exponential/trace integrability assumptions
+  remain explicit in the tail wrappers.
+- Follow-up path: `RM-negative-family-adapters` should remove duplicated
+  negative-family structural and pointwise-bound assumptions from the
+  bounded-row operator-norm wrapper where existing APIs support it.
