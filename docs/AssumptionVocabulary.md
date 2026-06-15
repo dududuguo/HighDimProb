@@ -13,8 +13,8 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
 
 | Assumption | Existing declaration | Missing declaration | Mathlib object | Target module | Priority | Blockers |
 | --- | --- | --- | --- | --- | --- | --- |
-| pointwise nonnegative | direct hypothesis `∀ ω, 0 ≤ X ω` | named predicate optional | order on `ℝ` | `HighDimProb.Concentration.Basic` | low | Current direct hypothesis is usable for Markov. |
-| a.e. nonnegative | none | `AEStronglyNonnegative` or wrapper | `0 ≤ᵐ[P] X` | `HighDimProb.Concentration.Basic` | medium | Need policy for pointwise vs a.e. APIs. |
+| pointwise nonnegative | direct hypothesis `forall omega, 0 <= X omega` | named predicate optional | order on `Real` | `HighDimProb.Concentration.Basic` | low | Current direct hypothesis is usable for Markov. |
+| a.e. nonnegative | none | `AEStronglyNonnegative` or wrapper | `0 <=?[P] X` | `HighDimProb.Concentration.Basic` | medium | Need policy for pointwise vs a.e. APIs. |
 | integrable | `IntegrableRealRandomVariable P X` | none | `Integrable X P` | `HighDimProb.Expectation` | done | Existing wrapper works. |
 | square-integrable | `MemLpRealRandomVariable P X 2` | optional named alias | `MemLp X 2 P` | `HighDimProb.Lp` | low | Chebyshev uses the current wrapper. |
 | centered | `Centered P X` | none | integral zero | `HighDimProb.Scalar.Centering` | done | Scalar centering is re-exported for concentration. |
@@ -63,7 +63,12 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
   those assumptions explicit. RM-S5F confirms that variance-proxy control
   remains an explicit assumption until future moment/operator-norm/order
   infrastructure exists. RM-S6 adds deterministic rank-one kernel/nullspace
-  bridges in `Spectral.lean`, and the examples now reuse those bridges. The
-  next RandomMatrix branch is `RM-S7-next-random-matrix-leaf-selection`.
+  bridges in `Spectral.lean`, RM-S7E/RM-S7F add the conditional
+  sample-covariance operator-norm event bridge and tail wrapper, and RM-ON-S4
+  adds the nonempty operator-norm Matrix Bernstein wrapper while keeping
+  variance proxy, Tropp, CFC, independence, and integrability assumptions
+  explicit. RM-ON-S5 adds the nonempty sample-covariance operator-norm wrapper
+  without an explicit spectral-bridge assumption. The next RandomMatrix branch
+  is `RM-ON-human-integration-review`.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.

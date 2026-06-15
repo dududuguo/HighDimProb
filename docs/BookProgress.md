@@ -73,6 +73,7 @@ Infrastructure:
 - Stage MB-S4 matrix exponential PSD bridge
 - Stage MB-S5 conditional trace-exponential Markov/Laplace bridge
 - Stage MB-S9 semantic trace-mgf and variance-proxy foundation
+- Stage RM-ON-S4 nonempty operator-norm Matrix Bernstein wrapper
 - Milestone Sprint S2 scalar concentration proof spine + random matrix statement layer
 - Milestone Sprint S3 small branch proof battery
 
@@ -101,7 +102,7 @@ Processed:
 - second moment matrix vocabulary
 - isotropic random vector vocabulary
 - high-dimensional subGaussian random vector vocabulary
-- ε-net vocabulary
+- epsilon-net vocabulary
 - separated set vocabulary
 - covering number vocabulary
 - packing number vocabulary
@@ -202,6 +203,10 @@ Processed as experimental object layer:
 - scalar absolute natural-moment vocabulary for concentration
 - natural absolute-moment to `MemLp` / `realLpNorm` bridge for nonzero natural exponents
 - sharp natural-exponent subGaussian moment predicate bridge
+- nonempty self-adjoint operator-norm Matrix Bernstein wrapper under explicit
+  primitive assumptions
+- nonempty sample-covariance self-adjoint operator-norm wrapper under explicit
+  variance-proxy and primitive assumptions
 
 Processed at statement-layer level only:
 - weak law Chebyshev sample mean bound
@@ -688,15 +693,15 @@ Resolved in Stage MB-S7A-clean:
 Stage MB-S7A-order:
 - No theorem status was upgraded and no Lean source declaration was added.
 - Mathlib's ordered endpoint control is available for
-  `Matrix.IsHermitian.eigenvalues₀`, but current HighDimProb `lambdaMax` uses
+  `Matrix.IsHermitian.eigenvalues?`, but current HighDimProb `lambdaMax` uses
   the reindexed `Matrix.IsHermitian.eigenvalues`.
 - MB-S7A-index resolves this by adding a separate ordered wrapper instead of
   changing the legacy `lambdaMax` meaning.
 
 Resolved in Stage MB-S7A-index:
 - Preserved the existing public `lambdaMax` API and added the separate ordered
-  endpoint wrapper `lambdaMaxOrdered`, defined directly as `hA.eigenvalues₀ 0`.
-- Proved `lambdaMaxOrdered_eq_eigenvalues₀_zero` and
+  endpoint wrapper `lambdaMaxOrdered`, defined directly as `hA.eigenvalues? 0`.
+- Proved `lambdaMaxOrdered_eq_eigenvalues?_zero` and
   `lambdaMaxOrdered_is_greatest_eigenvalue`.
 - Added the honest legacy compatibility target
   `lambdaMax_eq_lambdaMaxOrdered_statement`.
@@ -986,7 +991,7 @@ PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound
 ```
 
 The deterministic lemma proves the finite-dimensional bound
-`||v vᵀ||op <= ||v||₂²` using the existing `deterministicOperatorNorm` /
+`||v v?||op <= ||v||?^2 using the existing `deterministicOperatorNorm` /
 Mathlib L2 operator-norm convention. The wrappers turn pointwise vector
 squared-norm bounds into `BoundedOperatorNorm` and
 `PointwiseOperatorNormBound` for rank-one random matrices.
@@ -998,8 +1003,10 @@ in RM-S3/RM-S4, and S5D now proves the conditional sample-covariance
 quadratic-form tail wrapper under explicit primitive assumptions. RM-S5E adds
 the example-layer usage wrapper. RM-S5F keeps variance-proxy control as an
 explicit assumption. The rank-one nullspace examples now reuse the S6 core
-bridges. Current next safe task:
-RM-S7-next-random-matrix-leaf-selection.
+bridges. RM-S7E/RM-S7F add the conditional sample-covariance operator-norm
+event bridge and tail wrapper. RM-ON-S5 adds the nonempty wrapper without an
+explicit spectral-bridge assumption. Current next safe task:
+RM-ON-human-integration-review.
 
 ## RM centered operator-norm prerequisite progress
 
@@ -1025,7 +1032,7 @@ conditional sample-covariance quadratic-form tail wrapper is proved. RM-S5E
 adds the example-layer usage wrapper. RM-S5F keeps variance-proxy control as an
 explicit assumption. The rank-one nullspace examples now reuse the S6 core
 bridges. Current next safe task:
-RM-S7-next-random-matrix-leaf-selection.
+RM-ON-human-integration-review.
 
 
 ## RM vector-to-rank-one matrix measurability / integrability prerequisite progress
@@ -1052,7 +1059,7 @@ core sample-covariance tail helper names instead of defining local
 radius/theta/RHS copies. RM-S5F keeps variance-proxy control explicit. The
 rank-one nullspace examples now reuse the S6 core bridges. Current next safe
 task:
-RM-S7-next-random-matrix-leaf-selection.
+RM-ON-human-integration-review.
 
 
 ## RM centered rank-one structural adapter progress
@@ -1090,7 +1097,7 @@ wrapper under explicit variance-proxy and primitive assumptions.
 
 RM-S5F variance-proxy control contract is complete. The rank-one nullspace
 example cleanup is complete. Current next safe task:
-RM-S7-next-random-matrix-leaf-selection.
+RM-ON-human-integration-review.
 
 
 ## RM PSD nullspace converse prerequisite progress
@@ -1114,7 +1121,7 @@ Bernstein tail theorem.
 
 RM-S5F variance-proxy control contract is complete. The rank-one nullspace
 example cleanup is complete. Current next safe task:
-RM-S7-next-random-matrix-leaf-selection.
+RM-ON-human-integration-review.
 
 
 ## RM rank-one kernel nullspace API progress
@@ -1142,4 +1149,4 @@ The rank-one nullspace examples now reuse the S6 core bridges where they remove
 local action/sum algebra.
 
 Current next safe task:
-RM-S7-next-random-matrix-leaf-selection.
+RM-ON-human-integration-review.

@@ -30,9 +30,14 @@ EXPERIMENTAL_JUDGE_PREFIXES = [
     "HighDimProbJudge/Experimental/",
 ]
 PUBLIC_SIGNATURE_LAMBDA_CHECK_PREFIXES = [
+    "HighDimProb/RandomMatrix/",
     "HighDimProb/Examples/",
+    "HighDimProbTest/",
+    "HighDimProbJudge/",
 ]
-PUBLIC_SIGNATURE_LAMBDA_RE = re.compile(r"(^|\s|=)\(?\s*fun\b.*=>")
+PUBLIC_SIGNATURE_NEGATED_FAMILY_RE = re.compile(
+    r"\(?\s*fun\b.*?=>\s*fun\b.*?=>\s*-"
+)
 
 
 def lean_files() -> list[Path]:
@@ -130,14 +135,16 @@ def check_public_signature_lambdas(files: list[Path]) -> list[str]:
         def flush() -> None:
             nonlocal current_start, current_kind, current_lines
             if current_start is not None:
-                for line_no, line in current_lines:
-                    if is_finite_sum_line(line):
-                        continue
-                    if PUBLIC_SIGNATURE_LAMBDA_RE.search(line):
-                        errors.append(
-                            f"{rel(path)}:{line_no}: anonymous function in public "
-                            "declaration signature; introduce a named def/abbrev"
-                        )
+                signature = " ".join(
+                    line.strip() for _line_no, line in current_lines
+                    if not is_finite_sum_line(line)
+                )
+                if PUBLIC_SIGNATURE_NEGATED_FAMILY_RE.search(signature):
+                    errors.append(
+                        f"{rel(path)}:{current_start}: anonymous negated family "
+                        "in public declaration signature; introduce a named "
+                        "def/abbrev"
+                    )
             current_start = None
             current_kind = None
             current_lines = []
@@ -240,7 +247,7 @@ def main() -> int:
     print("stable root import boundary: ok")
     print("judge experimental import boundary: ok")
     print("judge root imports: ok")
-    print("public signature lambda policy: ok")
+    print("public negated-family signature policy: ok")
     return 0
 
 

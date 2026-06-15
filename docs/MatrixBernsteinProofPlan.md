@@ -25,6 +25,12 @@ bernsteinThetaChoice_range
 bernsteinThetaChoice_exponent_eq
 matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
 sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy
+matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives
+sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum
+sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy
+sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy
 ```
 
 The optimized wrapper chooses `theta = t / (sigmaSq + R * t / 3)` and proves
@@ -39,8 +45,8 @@ ENNReal.ofReal
 The theorem assumes the finite-family Tropp/Lieb typed primitive and the
 pointwise Bernstein CFC typed primitive explicitly. It does not prove
 Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, the `t = 0` endpoint
-for the optimized wrapper, lambda-max/operator-norm Matrix Bernstein tails, or
-the full Matrix Bernstein tail theorem.
+for the optimized wrapper, unconditional lambda-max/operator-norm Matrix
+Bernstein tails, or the full Matrix Bernstein tail theorem.
 
 The sample-covariance wrapper
 `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
@@ -51,6 +57,30 @@ square/exponential/trace integrability, explicit
 `MatrixVarianceProxyNormBound`, and explicit Tropp/CFC primitive assumptions.
 It is not an unconditional sample-covariance concentration theorem and not an
 operator-norm Matrix Bernstein theorem.
+
+The sample-covariance operator-norm event bridge
+`sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum`
+is now proved using the centered sample-covariance deviation equality. The
+conditional sample-covariance operator-norm wrapper
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`
+is now proved as a thin specialization of the conditional self-adjoint
+operator-norm Matrix Bernstein wrapper. It keeps
+`MatrixVarianceProxyNormBound`, Tropp/CFC primitives, integrability,
+independence, and
+`selfAdjointOperatorNormTailViaQuadraticFormStatement` explicit. It does not
+prove sample-covariance variance-proxy control or discharge the general
+spectral-bridge assumption.
+
+The nonempty self-adjoint operator-norm Matrix Bernstein wrapper
+`matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives`
+is proved for `Fin (n + 1)` square dimensions by supplying
+`selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty` to the retained
+bridge-explicit wrapper. The nonempty sample-covariance wrapper
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy`
+then reuses that nonempty Matrix Bernstein wrapper. These theorems do not prove
+variance-proxy control, Tropp/Lieb, the Bernstein CFC primitive,
+Golden-Thompson, arbitrary-dimensional operator-norm reduction, or full Matrix
+Bernstein.
 
 RM-S5E adds the example-layer wrapper
 `sampleCovariance_quadraticForm_tail_usage`, which uses the S5D theorem
@@ -73,7 +103,16 @@ sums, and the PSD-nullspace bridge without adding a general nullspace theory.
 The rank-one nullspace examples now reuse these core bridges where they remove
 local action/sum algebra.
 
-Next safe task: `RM-S7-next-random-matrix-leaf-selection`.
+Next safe task: `RM-ON-human-integration-review`.
+
+RM-ON-S4 update: the nonempty self-adjoint operator-norm Matrix Bernstein
+wrapper
+`matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives`
+is proved by reusing the conditional wrapper and
+`selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`. The wrapper
+removes only the explicit spectral-bridge assumption for `Fin (n + 1)` square
+dimensions; Tropp, CFC, variance-proxy, independence, and integrability
+assumptions remain explicit.
 
 RM prerequisite update: the entrywise `matrixExpect` to Bochner integral bridge
 and expectation operator-norm contraction are now proved via
@@ -170,7 +209,7 @@ targets only.
 | Second moment self-adjointness | `isSelfAdjointMatrix_matrixSecondMoment` |
 | Variance proxy self-adjointness | `isSelfAdjointMatrix_matrixVarianceProxy` |
 | Variance proxy PSD | `isPSD_matrixVarianceProxy_of_selfAdjoint` |
-| Spectral vocabulary | `lambdaMax`, `lambdaMaxOrdered`, `lambdaMaxOrdered_eq_eigenvalues₀_zero`, `lambdaMin`, `SpectralUpperBound`, `RayleighUpperBound`, `QuadraticFormUpperBound`, `QuadraticFormLowerBound`, `quadraticFormUpperTailEvent`, `quadraticFormLowerTailEvent`, `twoSidedQuadraticFormTailEvent`, `LambdaMaxPSDUpperBound`, `LambdaMaxOrderedPSDUpperBound`, `matrixQuadraticForm_nonneg_of_posSemidef`, `matrixQuadraticForm_smul_one_of_isUnitVector`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound`, `rayleighUpperBound_of_spectralUpperBound`, `lambdaMaxOrdered_is_greatest_eigenvalue`, `lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrdered_rayleighUpperBound`, `lambdaMaxOrdered_smul_of_nonneg`, `lambdaMaxOrdered_le_trace_of_posSemidef`, `matrixQuadraticForm_le_lambdaMaxOrdered_of_lambdaMaxOrderedPSDUpperBound` |
+| Spectral vocabulary | `lambdaMax`, `lambdaMaxOrdered`, `lambdaMaxOrdered_eq_eigenvalues?_zero`, `lambdaMin`, `SpectralUpperBound`, `RayleighUpperBound`, `QuadraticFormUpperBound`, `QuadraticFormLowerBound`, `quadraticFormUpperTailEvent`, `quadraticFormLowerTailEvent`, `twoSidedQuadraticFormTailEvent`, `LambdaMaxPSDUpperBound`, `LambdaMaxOrderedPSDUpperBound`, `matrixQuadraticForm_nonneg_of_posSemidef`, `matrixQuadraticForm_smul_one_of_isUnitVector`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMaxPSDUpperBound`, `rayleighUpperBound_of_spectralUpperBound`, `lambdaMaxOrdered_is_greatest_eigenvalue`, `lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrdered_rayleighUpperBound`, `lambdaMaxOrdered_smul_of_nonneg`, `lambdaMaxOrdered_le_trace_of_posSemidef`, `matrixQuadraticForm_le_lambdaMaxOrdered_of_lambdaMaxOrderedPSDUpperBound` |
 | Quadratic-form event inclusions | `quadraticFormUpperTailEvent_subset_twoSidedQuadraticFormTailEvent`, `quadraticFormLowerTailEvent_subset_twoSidedQuadraticFormTailEvent` |
 | Matrix exponential and trace | `matrixExp`, `matrixTrace`, `traceMatrixExp`, `traceExpIntegrand`, `traceExpMoment`, `traceExpMomentLIntegral`, `matrixExp_posSemidef_of_selfAdjoint`, `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint`, `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`, `traceMatrixExp_nonneg_of_selfAdjoint`, `traceMatrixExp_smul_le_card_exp_of_lambdaMaxOrdered_le`, `traceExpIntegrand_nonneg_of_randomSelfAdjoint`, `traceExpMoment_nonneg_of_randomSelfAdjoint`, `matrixTrace_nonneg_of_posSemidef`, `traceMatrixExp_nonneg_of_matrixExp_posSemidef`, `traceExpMoment_nonneg_of_nonneg`, `traceExpMomentLIntegral_nonneg`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment` |
 | Trace-mgf semantic foundation | `TraceMGFBound`, `TraceMGFBoundLIntegral`, `TraceMGFVarianceProxyBound`, `TraceMGFVarianceProxyBoundLIntegral` |
@@ -196,9 +235,9 @@ targets only.
 | PSD variance proxy compatibility target | `isPSD_matrixVarianceProxy_of_selfAdjoint_statement` | typed `Prop`; theorem proved with per-summand square integrability |
 | Lambda-max/Rayleigh bridge | `lambdaMax_le_iff_quadraticForm_le_statement`, `matrixQuadraticForm_le_lambdaMax_statement`, `matrixQuadraticForm_le_lambdaMax_of_lambdaMax_sub_posSemidef`, `lambdaMax_eq_lambdaMaxOrdered_statement`, `matrixQuadraticForm_le_lambdaMaxOrdered_statement`, `lambdaMaxOrdered_spectralUpperBound`, `lambdaMaxOrderedPSDUpperBound`, `lambdaMaxOrdered_rayleighUpperBound`, `lambdaMaxOrdered_smul_of_nonneg`, `lambdaMaxOrdered_le_trace_of_posSemidef` | legacy direct theorem typed/unproved; ordered endpoint wrapper added; semantic provider, ordered Rayleigh wrappers, nonnegative scalar-multiplication endpoint theorem, and trace endpoint theorem proved for the `lambdaMaxOrdered` route |
 | Self-adjoint norm/eigenvalue endpoint bridge | `operatorNorm_eq_max_abs_lambda_statement` | typed `Prop`, unproved |
-| Lambda-max endpoint ordering bridge | `lambdaMax_is_greatest_eigenvalue_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue` | legacy statement typed/unproved; ordered endpoint theorem proved for `eigenvalues₀` |
+| Lambda-max endpoint ordering bridge | `lambdaMax_is_greatest_eigenvalue_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue` | legacy statement typed/unproved; ordered endpoint theorem proved for `eigenvalues?` |
 | Lambda-min endpoint ordering bridge | `lambdaMin_is_least_eigenvalue_statement` | typed `Prop`, unproved |
-| Self-adjoint operator-norm tail via quadratic forms | `selfAdjointOperatorNormTailViaQuadraticFormStatement` | typed `Prop`, unproved |
+| Self-adjoint operator-norm tail via quadratic forms | `selfAdjointOperatorNormTailViaQuadraticFormStatement`, `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty` | arbitrary-`n` typed `Prop`; nonempty `Fin (n + 1)` theorem proved |
 | Trace-exponential moment bound | `traceExpMomentBoundStatement` | typed `Prop`, unproved |
 | Variance-proxy trace-exponential bound | `traceExpVarianceProxyBoundStatement` | typed `Prop`, unproved |
 | Semantic trace-mgf bound provider | `traceMGFBound_statement`, `traceMGFBoundLIntegral_statement` | typed `Prop`, unproved |
@@ -224,10 +263,12 @@ targets only.
 
 The current proof-ready route is:
 
-1. Use `selfAdjointOperatorNormTailViaQuadraticFormStatement` as the future
-   bridge from operator-norm tails to two-sided quadratic-form tails.
+1. Use `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty` when
+   the matrix dimension is in the nonempty `Fin (n + 1)` shape, and keep the
+   general `selfAdjointOperatorNormTailViaQuadraticFormStatement` explicit for
+   arbitrary-`n` wrapper contracts.
 2. Use `twoSidedQuadraticFormTailEvent` as the honest event vocabulary while
-   the exact Rayleigh/operator-norm theorem is unproved.
+   the legacy direct lambda/operator-norm endpoint theorem remains unproved.
 3. Prove the one-sided `matrixLaplaceTransformStatement` or its lintegral
    variant `matrixLaplaceTransformLIntegralStatement` over
    `quadraticFormUpperTailEvent`.
@@ -695,10 +736,10 @@ Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
 ## MB-S7A-order Endpoint Ordering Probe
 
 MB-S7A-order did not add Lean source declarations. The probe found that
-Mathlib proves the ordered endpoint fact for `Matrix.IsHermitian.eigenvalues₀`
-via `Matrix.IsHermitian.eigenvalues₀_antitone`, but the current HighDimProb
+Mathlib proves the ordered endpoint fact for `Matrix.IsHermitian.eigenvalues?`
+via `Matrix.IsHermitian.eigenvalues?_antitone`, but the current HighDimProb
 `lambdaMax` wrapper is defined through `Matrix.IsHermitian.eigenvalues`, which
-reindexes `eigenvalues₀` using `Fintype.equivOfCardEq`. No local or Mathlib API
+reindexes `eigenvalues?` using `Fintype.equivOfCardEq`. No local or Mathlib API
 currently proves that this reindex maps `0 : Fin (n + 1)` to the first ordered
 eigenvalue index or preserves order. Therefore `LambdaMaxPSDUpperBound A hA`
 and `lambdaMax_is_greatest_eigenvalue_statement` remain unproved.
@@ -710,7 +751,7 @@ canonical ordered endpoint route:
 
 ```lean
 lambdaMaxOrdered
-lambdaMaxOrdered_eq_eigenvalues₀_zero
+lambdaMaxOrdered_eq_eigenvalues?_zero
 lambdaMax_eq_lambdaMaxOrdered_statement
 lambdaMaxOrdered_is_greatest_eigenvalue_statement
 lambdaMaxOrdered_is_greatest_eigenvalue
@@ -721,9 +762,9 @@ lambdaMaxOrderedUpperTailEvent
 quadraticFormUpperTailEvent_subset_lambdaMaxOrderedUpperTailEvent_of_matrixQuadraticForm_le_lambdaMaxOrdered
 ```
 
-`lambdaMaxOrdered A hA` is definitionally `hA.eigenvalues₀ 0`, and
+`lambdaMaxOrdered A hA` is definitionally `hA.eigenvalues? 0`, and
 `lambdaMaxOrdered_is_greatest_eigenvalue` is proved by
-`Matrix.IsHermitian.eigenvalues₀_antitone`. The legacy bridge
+`Matrix.IsHermitian.eigenvalues?_antitone`. The legacy bridge
 `lambdaMax_eq_lambdaMaxOrdered_statement` remains a typed statement because
 Mathlib's `eigenvalues` reindex still goes through `Fintype.equivOfCardEq`.
 The unconditional endpoint PSD theorem, direct Rayleigh theorem, trace-exp

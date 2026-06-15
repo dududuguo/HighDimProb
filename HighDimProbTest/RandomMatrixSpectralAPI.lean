@@ -46,6 +46,7 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check lambdaMaxOrdered_spectralUpperBound
 #check lambdaMaxOrderedPSDUpperBound
 #check lambdaMaxOrdered_rayleighUpperBound
+#check exists_unitVector_abs_matrixQuadraticForm_eq_deterministicOperatorNorm
 #check lambdaMaxOrdered_smul_of_nonneg
 #check lambdaMaxOrdered_le_deterministicOperatorNorm
 #check lambdaMaxOrdered_le_trace_of_posSemidef
@@ -89,6 +90,7 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check quadraticFormUpperTailEvent_subset_twoSidedQuadraticFormTailEvent
 #check quadraticFormLowerTailEvent_subset_twoSidedQuadraticFormTailEvent
 #check selfAdjointOperatorNormTailViaQuadraticFormStatement
+#check selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty
 #check lambdaMax_le_iff_quadraticForm_le_statement
 #check operatorNorm_eq_max_abs_lambda_statement
 
@@ -110,6 +112,10 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check (matrixQuadraticForm_le_lambdaMaxOrdered_statement H hH : Prop)
 #check (LambdaMaxPSDUpperBound H hH : Prop)
 #check (LambdaMaxOrderedPSDUpperBound H hH : Prop)
+#check (exists_unitVector_abs_matrixQuadraticForm_eq_deterministicOperatorNorm hH :
+  exists x : Fin (d + 1) -> Real,
+    IsUnitVector x /\
+      abs (matrixQuadraticForm H x) = deterministicOperatorNorm H)
 #check (lambdaMaxUpperTailEvent B hB t : Set Omega)
 #check (lambdaMaxOrderedUpperTailEvent B hB t : Set Omega)
 #check (quadraticFormUpperTailEvent A t : Set Omega)
@@ -118,6 +124,8 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check (selfAdjointOperatorNormTailEvent A t : Set Omega)
 #check (twoSidedQuadraticFormTailEvent A t : Set Omega)
 #check (selfAdjointOperatorNormTailViaQuadraticFormStatement A t : Prop)
+#check (selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty B t :
+  selfAdjointOperatorNormTailViaQuadraticFormStatement B t)
 #check (lambdaMax_le_iff_quadraticForm_le_statement H hH t : Prop)
 #check (operatorNorm_eq_max_abs_lambda_statement H hH : Prop)
 
@@ -164,6 +172,12 @@ example :
 example :
     matrixQuadraticForm_le_lambdaMaxOrdered_statement H hH := by
   exact lambdaMaxOrdered_rayleighUpperBound hH
+
+example :
+    exists x : Fin (d + 1) -> Real,
+      IsUnitVector x /\
+        abs (matrixQuadraticForm H x) = deterministicOperatorNorm H := by
+  exact exists_unitVector_abs_matrixQuadraticForm_eq_deterministicOperatorNorm hH
 
 example (theta : Real) (hTheta : 0 <= theta) :
     lambdaMaxOrdered (theta • H) (isSelfAdjointMatrix_smul theta hH) =
@@ -306,3 +320,12 @@ example :
     quadraticFormLowerTailEvent A (-t) ⊆
       quadraticFormUpperTailEvent (fun omega => -(A omega)) t := by
   exact quadraticFormLowerTailEvent_subset_quadraticFormUpperTailEvent_neg A t
+
+example :
+    selfAdjointOperatorNormTailViaQuadraticFormStatement B t := by
+  exact selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty B t
+
+example (ht : 0 <= t) :
+    SelfAdjointOperatorNormTailEvent B t ⊆
+      twoSidedQuadraticFormTailEvent B t := by
+  exact selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty B t hB ht

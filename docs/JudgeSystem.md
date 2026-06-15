@@ -18,9 +18,9 @@ theorems or typed statements without relying on local test internals.
   True-bodied declarations including multi-line declarations, no accidental
   stable-root import of `HighDimProb.Experimental`, no non-experimental judge
   imports of `HighDimProb.Experimental`, complete judge-root imports, and no
-  anonymous function families in checked public example declaration signatures.
+  anonymous negated random-matrix families in checked public signatures.
   Introduce a named `def` or `abbrev` before exposing such a family in a theorem,
-  structure field, or downstream-facing adapter.
+  structure field, test surface, judge surface, or downstream-facing adapter.
 
 ## Current Coverage
 

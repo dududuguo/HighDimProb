@@ -38,7 +38,21 @@ BAD_PATTERNS = {
     "\u00c3": "Latin-1 mojibake marker for UTF-8 text",
     "\u00c2": "Latin-1 mojibake marker for UTF-8 text",
     "\u00e2\u20ac": "mojibake marker for UTF-8 punctuation",
+    "\u9227": "Chinese mojibake marker, often from double-decoded math notation",
+    "\u9208": "Chinese mojibake marker, often from double-decoded math notation",
+    "\u9229": "Chinese mojibake marker, often from double-decoded math notation",
+    "\u922e": "Chinese mojibake marker, often from double-decoded math notation",
+    "\u922f": "Chinese mojibake marker, often from double-decoded math notation",
+    "\u922d": "Chinese mojibake marker, often from double-decoded math notation",
+    "\u5cac": "Chinese mojibake marker, often from double-decoded math notation",
+    "\u866b": "Chinese mojibake marker, often from double-decoded math notation",
+    "\u87fd": "Chinese mojibake marker, often from double-decoded math notation",
+    "\u8804": "Chinese mojibake marker, often from double-decoded math notation",
 }
+
+PRIVATE_USE_RANGES = (
+    (0xE000, 0xF8FF),
+)
 
 
 def git_files() -> list[Path]:
@@ -83,6 +97,16 @@ def main() -> int:
                 shown = pattern.encode("unicode_escape").decode("ascii")
                 failures.append(f"{path}:{line}:{col}: {shown}: {reason}")
                 start = index + len(pattern)
+
+        for index, char in enumerate(text):
+            codepoint = ord(char)
+            if any(start <= codepoint <= end for start, end in PRIVATE_USE_RANGES):
+                line, col = line_col(text, index)
+                shown = f"U+{codepoint:04X}"
+                failures.append(
+                    f"{path}:{line}:{col}: {shown}: private-use character, "
+                    "usually from broken transcoding"
+                )
 
     if failures:
         print("Text quality check failed. Fix the following encoding artifacts:")

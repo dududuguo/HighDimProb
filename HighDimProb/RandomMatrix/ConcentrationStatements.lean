@@ -141,6 +141,23 @@ def matrixExpScaledFamily {Omega : Type*} [MeasurableSpace Omega]
     I -> RandomMatrix Omega n n :=
   fun i omega => matrixExp (SMul.smul theta (A i omega))
 
+/-- Pointwise negation of a random-matrix family.
+
+This names the negative-sign family used by two-sided Bernstein wrappers so
+public theorem signatures do not expose anonymous lambda expressions. -/
+abbrev negRandomMatrixFamily {Omega : Type*} [MeasurableSpace Omega]
+    {I : Type*} {m n : Nat}
+    (A : I -> RandomMatrix Omega m n) :
+    I -> RandomMatrix Omega m n :=
+  fun i omega => -(A i omega)
+
+@[simp]
+theorem negRandomMatrixFamily_apply {Omega : Type*} [MeasurableSpace Omega]
+    {I : Type*} {m n : Nat}
+    (A : I -> RandomMatrix Omega m n) (i : I) (omega : Omega) :
+    negRandomMatrixFamily A i omega = -(A i omega) :=
+  rfl
+
 @[simp]
 theorem matrixExpScaledFamily_apply {Omega : Type*} [MeasurableSpace Omega]
     {I : Type*} {n : Nat} (A : I -> RandomMatrix Omega n n)
@@ -605,7 +622,7 @@ theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoef
 assumptions for both `A` and the pointwise negated summand family.
 
 This combines the existing optimized upper-tail theorem for `A` with the same
-theorem applied to `fun i omega => -(A i omega)`, then uses the finite union
+theorem applied to `negRandomMatrixFamily A`, then uses the finite union
 bound for the existing `twoSidedQuadraticFormTailEvent`. It does not prove any
 negation transfer for independence, variance proxies, CFC primitives, Tropp
 primitives, or integrability. -/
@@ -643,52 +660,52 @@ theorem matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinC
         (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R)
     (hCenteredNeg :
       CenteredSelfAdjointRandomMatrixFamily P
-        (fun i : I => fun omega : Omega => -(A i omega)))
+        (negRandomMatrixFamily A))
     (hIndepSANeg :
       IndependentSelfAdjointRandomMatrices P
-        (fun i : I => fun omega : Omega => -(A i omega)))
+        (negRandomMatrixFamily A))
     (hIntXNeg :
       forall i,
         IntegrableRandomMatrix P
-          ((fun i : I => fun omega : Omega => -(A i omega)) i))
+          ((negRandomMatrixFamily A) i))
     (hIntSqNeg :
       forall i,
         IntegrableRandomMatrix P
           (randomMatrixSquare
-            ((fun i : I => fun omega : Omega => -(A i omega)) i)))
+            ((negRandomMatrixFamily A) i)))
     (hExpIntNeg :
       forall i,
         IntegrableRandomMatrix P
           (matrixExpScaledFamily
-            (fun i : I => fun omega : Omega => -(A i omega))
+            (negRandomMatrixFamily A)
             (bernsteinThetaChoice t sigmaSqNeg Rneg) i))
     (hTraceIntNeg :
       IntegrableRealRandomVariable P
         (traceExpIntegrand
           (randomMatrixSum
-            (fun i : I => fun omega : Omega => -(A i omega)))
+            (negRandomMatrixFamily A))
           (bernsteinThetaChoice t sigmaSqNeg Rneg)))
     (hBoundNeg :
       PointwiseOperatorNormBound
-        (fun i : I => fun omega : Omega => -(A i omega)) Rneg)
+        (negRandomMatrixFamily A) Rneg)
     (hSigmaNeg : 0 < sigmaSqNeg)
     (hRNeg : 0 <= Rneg)
     (hNormNeg :
       MatrixVarianceProxyNormBound P
-        (fun i : I => fun omega : Omega => -(A i omega)) sigmaSqNeg)
+        (negRandomMatrixFamily A) sigmaSqNeg)
     (hCFCNeg :
       forall i omega,
         bernsteinMatrixExp_le_quadratic_statement
-          ((fun i : I => fun omega : Omega => -(A i omega)) i omega)
+          ((negRandomMatrixFamily A) i omega)
           (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
     (hTroppNeg :
       troppMasterTraceMGFFiniteFamily_statement
-        (P := P) (fun i : I => fun omega : Omega => -(A i omega))
+        (P := P) (negRandomMatrixFamily A)
         (bernsteinSecondMomentComparisonFamily P
-          (fun i : I => fun omega : Omega => -(A i omega))
+          (negRandomMatrixFamily A)
           (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
         (matrixVarianceProxy P
-          (fun i : I => fun omega : Omega => -(A i omega)))
+          (negRandomMatrixFamily A))
         (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg) :
     P (twoSidedQuadraticFormTailEvent (randomMatrixSum A) t) <=
       ENNReal.ofReal
@@ -698,7 +715,7 @@ theorem matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinC
           ((n + 1 : Real) *
             Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
   let Aneg : I -> RandomMatrix Omega (n + 1) (n + 1) :=
-    fun i omega => -(A i omega)
+    negRandomMatrixFamily A
   have hUpper :
       P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
         ENNReal.ofReal
@@ -717,60 +734,60 @@ theorem matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinC
       (P := P) (A := Aneg) (R := Rneg) (t := t) (sigmaSq := sigmaSqNeg)
       (by
         change CenteredSelfAdjointRandomMatrixFamily P
-          (fun i : I => fun omega : Omega => -(A i omega))
+          (negRandomMatrixFamily A)
         exact hCenteredNeg)
       (by
         change IndependentSelfAdjointRandomMatrices P
-          (fun i : I => fun omega : Omega => -(A i omega))
+          (negRandomMatrixFamily A)
         exact hIndepSANeg)
       (by
         change forall i,
           IntegrableRandomMatrix P
-            ((fun i : I => fun omega : Omega => -(A i omega)) i)
+            ((negRandomMatrixFamily A) i)
         exact hIntXNeg)
       (by
         change forall i,
           IntegrableRandomMatrix P
             (randomMatrixSquare
-              ((fun i : I => fun omega : Omega => -(A i omega)) i))
+              ((negRandomMatrixFamily A) i))
         exact hIntSqNeg)
       (by
         change forall i,
           IntegrableRandomMatrix P
             (matrixExpScaledFamily
-              (fun i : I => fun omega : Omega => -(A i omega))
+              (negRandomMatrixFamily A)
               (bernsteinThetaChoice t sigmaSqNeg Rneg) i)
         exact hExpIntNeg)
       (by
         change IntegrableRealRandomVariable P
           (traceExpIntegrand
             (randomMatrixSum
-              (fun i : I => fun omega : Omega => -(A i omega)))
+              (negRandomMatrixFamily A))
             (bernsteinThetaChoice t sigmaSqNeg Rneg))
         exact hTraceIntNeg)
       (by
         change PointwiseOperatorNormBound
-          (fun i : I => fun omega : Omega => -(A i omega)) Rneg
+          (negRandomMatrixFamily A) Rneg
         exact hBoundNeg)
       hSigmaNeg hRNeg ht
       (by
         change MatrixVarianceProxyNormBound P
-          (fun i : I => fun omega : Omega => -(A i omega)) sigmaSqNeg
+          (negRandomMatrixFamily A) sigmaSqNeg
         exact hNormNeg)
       (by
         change forall i omega,
           bernsteinMatrixExp_le_quadratic_statement
-            ((fun i : I => fun omega : Omega => -(A i omega)) i omega)
+            ((negRandomMatrixFamily A) i omega)
             (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg
         exact hCFCNeg)
       (by
         change troppMasterTraceMGFFiniteFamily_statement
-          (P := P) (fun i : I => fun omega : Omega => -(A i omega))
+          (P := P) (negRandomMatrixFamily A)
           (bernsteinSecondMomentComparisonFamily P
-            (fun i : I => fun omega : Omega => -(A i omega))
+            (negRandomMatrixFamily A)
             (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
           (matrixVarianceProxy P
-            (fun i : I => fun omega : Omega => -(A i omega)))
+            (negRandomMatrixFamily A))
           (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg
         exact hTroppNeg)
   have hNegSum :
@@ -865,52 +882,52 @@ theorem matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernstei
         (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R)
     (hCenteredNeg :
       CenteredSelfAdjointRandomMatrixFamily P
-        (fun i : I => fun omega : Omega => -(A i omega)))
+        (negRandomMatrixFamily A))
     (hIndepSANeg :
       IndependentSelfAdjointRandomMatrices P
-        (fun i : I => fun omega : Omega => -(A i omega)))
+        (negRandomMatrixFamily A))
     (hIntXNeg :
       forall i,
         IntegrableRandomMatrix P
-          ((fun i : I => fun omega : Omega => -(A i omega)) i))
+          ((negRandomMatrixFamily A) i))
     (hIntSqNeg :
       forall i,
         IntegrableRandomMatrix P
           (randomMatrixSquare
-            ((fun i : I => fun omega : Omega => -(A i omega)) i)))
+            ((negRandomMatrixFamily A) i)))
     (hExpIntNeg :
       forall i,
         IntegrableRandomMatrix P
           (matrixExpScaledFamily
-            (fun i : I => fun omega : Omega => -(A i omega))
+            (negRandomMatrixFamily A)
             (bernsteinThetaChoice t sigmaSqNeg Rneg) i))
     (hTraceIntNeg :
       IntegrableRealRandomVariable P
         (traceExpIntegrand
           (randomMatrixSum
-            (fun i : I => fun omega : Omega => -(A i omega)))
+            (negRandomMatrixFamily A))
           (bernsteinThetaChoice t sigmaSqNeg Rneg)))
     (hBoundNeg :
       PointwiseOperatorNormBound
-        (fun i : I => fun omega : Omega => -(A i omega)) Rneg)
+        (negRandomMatrixFamily A) Rneg)
     (hSigmaNeg : 0 < sigmaSqNeg)
     (hRNeg : 0 <= Rneg)
     (hNormNeg :
       MatrixVarianceProxyNormBound P
-        (fun i : I => fun omega : Omega => -(A i omega)) sigmaSqNeg)
+        (negRandomMatrixFamily A) sigmaSqNeg)
     (hCFCNeg :
       forall i omega,
         bernsteinMatrixExp_le_quadratic_statement
-          ((fun i : I => fun omega : Omega => -(A i omega)) i omega)
+          ((negRandomMatrixFamily A) i omega)
           (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
     (hTroppNeg :
       troppMasterTraceMGFFiniteFamily_statement
-        (P := P) (fun i : I => fun omega : Omega => -(A i omega))
+        (P := P) (negRandomMatrixFamily A)
         (bernsteinSecondMomentComparisonFamily P
-          (fun i : I => fun omega : Omega => -(A i omega))
+          (negRandomMatrixFamily A)
           (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
         (matrixVarianceProxy P
-          (fun i : I => fun omega : Omega => -(A i omega)))
+          (negRandomMatrixFamily A))
         (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg) :
     P (SelfAdjointOperatorNormTailEvent (randomMatrixSum A) t) <=
       ENNReal.ofReal
@@ -935,6 +952,184 @@ theorem matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernstei
       hIntXNeg hIntSqNeg hExpIntNeg hTraceIntNeg hBoundNeg hSigmaNeg
       hRNeg hNormNeg hCFCNeg hTroppNeg)
 
+/-- Self-adjoint operator-norm Matrix Bernstein wrapper in nonempty square
+dimensions under explicit primitive assumptions.
+
+This specializes the conditional operator-norm wrapper to matrices indexed by
+`Fin (n + 1)`, where the S3 bridge
+`selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty` discharges the
+operator-norm-to-two-sided-quadratic-form event reduction. Variance proxies,
+integrability, independence, CFC, and Tropp primitives remain explicit for both
+signs. -/
+theorem matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (R Rneg t sigmaSq sigmaSqNeg : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily A (bernsteinThetaChoice t sigmaSq R) i))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A)
+          (bernsteinThetaChoice t sigmaSq R)))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hSigma : 0 < sigmaSq)
+    (hR : 0 <= R)
+    (ht : 0 < t)
+    (hNorm : MatrixVarianceProxyNormBound P A sigmaSq)
+    (hCFC :
+      forall i omega,
+        bernsteinMatrixExp_le_quadratic_statement (A i omega)
+          (bernsteinThetaChoice t sigmaSq R) R)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A
+        (bernsteinSecondMomentComparisonFamily P A
+          (bernsteinThetaChoice t sigmaSq R) R)
+        (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R)
+    (hCenteredNeg :
+      CenteredSelfAdjointRandomMatrixFamily P
+        (negRandomMatrixFamily A))
+    (hIndepSANeg :
+      IndependentSelfAdjointRandomMatrices P
+        (negRandomMatrixFamily A))
+    (hIntXNeg :
+      forall i,
+        IntegrableRandomMatrix P
+          ((negRandomMatrixFamily A) i))
+    (hIntSqNeg :
+      forall i,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare
+            ((negRandomMatrixFamily A) i)))
+    (hExpIntNeg :
+      forall i,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily
+            (negRandomMatrixFamily A)
+            (bernsteinThetaChoice t sigmaSqNeg Rneg) i))
+    (hTraceIntNeg :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand
+          (randomMatrixSum
+            (negRandomMatrixFamily A))
+          (bernsteinThetaChoice t sigmaSqNeg Rneg)))
+    (hBoundNeg :
+      PointwiseOperatorNormBound
+        (negRandomMatrixFamily A) Rneg)
+    (hSigmaNeg : 0 < sigmaSqNeg)
+    (hRNeg : 0 <= Rneg)
+    (hNormNeg :
+      MatrixVarianceProxyNormBound P
+        (negRandomMatrixFamily A) sigmaSqNeg)
+    (hCFCNeg :
+      forall i omega,
+        bernsteinMatrixExp_le_quadratic_statement
+          ((negRandomMatrixFamily A) i omega)
+          (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
+    (hTroppNeg :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) (negRandomMatrixFamily A)
+        (bernsteinSecondMomentComparisonFamily P
+          (negRandomMatrixFamily A)
+          (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
+        (matrixVarianceProxy P
+          (negRandomMatrixFamily A))
+        (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg) :
+    P (SelfAdjointOperatorNormTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        ((n + 1 : Real) *
+          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
+        ENNReal.ofReal
+          ((n + 1 : Real) *
+            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
+  exact
+    matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+      (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
+      (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
+      hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt hBound
+      hSigma hR ht
+      (selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty
+        (randomMatrixSum A) t)
+      hNorm hCFC hTropp hCenteredNeg hIndepSANeg hIntXNeg hIntSqNeg
+      hExpIntNeg hTraceIntNeg hBoundNeg hSigmaNeg hRNeg hNormNeg
+      hCFCNeg hTroppNeg
+
+/-- Sample-covariance operator-norm event bridge to the unnormalized centered
+row rank-one sum.
+
+This is the operator-norm analogue of the normalization bridge used by the
+quadratic-form sample-covariance wrapper. It transports the public centered
+sample-covariance deviation event to the centered row rank-one sum at threshold
+`(m : Real) * t`. The row rank-one integrability hypothesis is exactly the one
+needed by `sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum`.
+-/
+theorem sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {m n : Nat}
+    (A : RandomMatrix Omega m (n + 1)) (t : Real)
+    (hm : 0 < m)
+    (hInt :
+      forall k : Fin m,
+        IntegrableRandomMatrix P (rankOneRandomMatrix (rowVector A k))) :
+    SelfAdjointOperatorNormTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t ⊆
+      SelfAdjointOperatorNormTailEvent
+        (centeredSampleCovarianceRowRankOneSum (P := P) A)
+        ((m : Real) * t) := by
+  intro omega hTail
+  change t <= operatorNorm (centeredRandomMatrix P (sampleCovariance A)) omega at hTail
+  have hmReal : 0 < (m : Real) := by
+    exact_mod_cast hm
+  have hDevEq :=
+    congrFun
+      (sampleCovariance_deviation_eq_normalized_centered_rowRankOne_sum
+        (P := P) A hInt) omega
+  have hNorm :
+      operatorNorm (centeredRandomMatrix P (sampleCovariance A)) omega =
+        (1 / (m : Real)) *
+          operatorNorm (centeredSampleCovarianceRowRankOneSum (P := P) A)
+            omega := by
+    calc
+      operatorNorm (centeredRandomMatrix P (sampleCovariance A)) omega =
+          norm (centeredRandomMatrix P (sampleCovariance A) omega) := rfl
+      _ =
+          norm ((1 / (m : Real)) •
+            centeredSampleCovarianceRowRankOneSum (P := P) A omega) := by
+            rw [hDevEq]
+            rfl
+      _ =
+          |1 / (m : Real)| *
+            norm (centeredSampleCovarianceRowRankOneSum (P := P) A omega) := by
+            rw [norm_smul, Real.norm_eq_abs]
+      _ =
+          (1 / (m : Real)) *
+            operatorNorm (centeredSampleCovarianceRowRankOneSum (P := P) A)
+              omega := by
+            rw [abs_of_nonneg (one_div_nonneg.mpr hmReal.le)]
+            rfl
+  change (m : Real) * t <=
+    operatorNorm (centeredSampleCovarianceRowRankOneSum (P := P) A) omega
+  rw [hNorm] at hTail
+  have hScaled :=
+    mul_le_mul_of_nonneg_left hTail hmReal.le
+  calc
+    (m : Real) * t <=
+        (m : Real) *
+          ((1 / (m : Real)) *
+            operatorNorm (centeredSampleCovarianceRowRankOneSum (P := P) A)
+              omega) := hScaled
+    _ =
+        operatorNorm (centeredSampleCovarianceRowRankOneSum (P := P) A)
+          omega := by
+          field_simp [ne_of_gt hmReal]
+
 /-- Centered rank-one radius produced by a row squared-norm bound `R`. -/
 abbrev sampleCovarianceCenteredRankOneRadius (R : Real) : Real :=
   2 * R
@@ -952,6 +1147,24 @@ abbrev sampleCovarianceQuadraticFormTailRHS {m n : Nat}
       Real.exp (-(((m : Real) * t) ^ 2 /
         (2 * sigmaSq + (2 / 3) *
           sampleCovarianceCenteredRankOneRadius R * ((m : Real) * t)))))
+
+/-- Negative centered row-rank-one family for sample covariance wrappers. -/
+abbrev centeredSampleCovarianceRowRankOneFamilyNeg
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {m n : Nat}
+    (A : RandomMatrix Omega m n) :
+    Fin m -> RandomMatrix Omega n n :=
+  negRandomMatrixFamily
+    (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+
+/-- Sum of the negative centered row-rank-one sample-covariance family. -/
+abbrev centeredSampleCovarianceRowRankOneSumNeg
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {m n : Nat}
+    (A : RandomMatrix Omega m n) :
+    RandomMatrix Omega n n :=
+  randomMatrixSum
+    (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
 
 /--
 Sample covariance quadratic-form upper-tail wrapper under explicit Matrix
@@ -1156,6 +1369,447 @@ theorem sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_pr
             (centeredSampleCovarianceRowRankOneSum (P := P) A omega) x := by
         field_simp [ne_of_gt hmReal]
   exact le_trans (measure_mono hSubset) hMBNamed
+
+/-- Sample-covariance self-adjoint operator-norm tail wrapper under explicit
+variance-proxy and Matrix Bernstein primitive assumptions.
+
+This transports the public centered sample-covariance operator-norm event to
+the unnormalized centered row rank-one sum, then applies the conditional
+self-adjoint operator-norm Matrix Bernstein wrapper. The operator-norm spectral
+bridge remains explicit through
+`selfAdjointOperatorNormTailViaQuadraticFormStatement`; variance proxies,
+integrability, independence, CFC, and Tropp primitives remain explicit for both
+signs.
+-/
+theorem sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m (n + 1))
+    (R Rneg t sigmaSq sigmaSqNeg : Real)
+    (hm : 0 < m)
+    (hMeas : IsRandomMatrix P A)
+    (hLp :
+      forall k : Fin m, forall j : Fin (n + 1),
+        MemLpRealRandomVariable P (matrixEntry A k j) 2)
+    (hSq :
+      forall k : Fin m, forall omega,
+        vectorSqNorm (rowVector A k omega) <= R)
+    (hIndep :
+      IndependentRandomMatrices P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A))
+    (hIntSq :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare
+            ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k)))
+    (hExpInt :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily
+            (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+            (sampleCovarianceTailTheta (m := m) R t sigmaSq)
+            k))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand
+          (centeredSampleCovarianceRowRankOneSum (P := P) A)
+          (sampleCovarianceTailTheta (m := m) R t sigmaSq)))
+    (hSigma : 0 < sigmaSq)
+    (hR : 0 <= R)
+    (ht : 0 < t)
+    (hOperatorBridge :
+      selfAdjointOperatorNormTailViaQuadraticFormStatement
+        (centeredSampleCovarianceRowRankOneSum (P := P) A)
+        ((m : Real) * t))
+    (hNorm :
+      MatrixVarianceProxyNormBound P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A) sigmaSq)
+    (hCFC :
+      forall k : Fin m, forall omega,
+        bernsteinMatrixExp_le_quadratic_statement
+          ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k omega)
+          (sampleCovarianceTailTheta (m := m) R t sigmaSq)
+          (sampleCovarianceCenteredRankOneRadius R))
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P)
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        (bernsteinSecondMomentComparisonFamily P
+          (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+          (sampleCovarianceTailTheta (m := m) R t sigmaSq)
+          (sampleCovarianceCenteredRankOneRadius R))
+        (matrixVarianceProxy P
+          (centeredSampleCovarianceRowRankOneFamily (P := P) A))
+        (sampleCovarianceTailTheta (m := m) R t sigmaSq)
+        (sampleCovarianceCenteredRankOneRadius R))
+    (hCenteredNeg :
+      CenteredSelfAdjointRandomMatrixFamily P
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A))
+    (hIndepSANeg :
+      IndependentSelfAdjointRandomMatrices P
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A))
+    (hIntXNeg :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) k))
+    (hIntSqNeg :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare
+            ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) k)))
+    (hExpIntNeg :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily
+            (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+            (sampleCovarianceTailTheta (m := m) Rneg t sigmaSqNeg)
+            k))
+    (hTraceIntNeg :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand
+          (centeredSampleCovarianceRowRankOneSumNeg (P := P) A)
+          (sampleCovarianceTailTheta (m := m) Rneg t sigmaSqNeg)))
+    (hBoundNeg :
+      PointwiseOperatorNormBound
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+        (sampleCovarianceCenteredRankOneRadius Rneg))
+    (hSigmaNeg : 0 < sigmaSqNeg)
+    (hRNeg : 0 <= Rneg)
+    (hNormNeg :
+      MatrixVarianceProxyNormBound P
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+        sigmaSqNeg)
+    (hCFCNeg :
+      forall k : Fin m, forall omega,
+        bernsteinMatrixExp_le_quadratic_statement
+          ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+            k omega)
+          (sampleCovarianceTailTheta (m := m) Rneg t sigmaSqNeg)
+          (sampleCovarianceCenteredRankOneRadius Rneg))
+    (hTroppNeg :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P)
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+        (bernsteinSecondMomentComparisonFamily P
+          (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+          (sampleCovarianceTailTheta (m := m) Rneg t sigmaSqNeg)
+          (sampleCovarianceCenteredRankOneRadius Rneg))
+        (matrixVarianceProxy P
+          (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A))
+        (sampleCovarianceTailTheta (m := m) Rneg t sigmaSqNeg)
+        (sampleCovarianceCenteredRankOneRadius Rneg)) :
+    P (SelfAdjointOperatorNormTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t) <=
+      sampleCovarianceQuadraticFormTailRHS (m := m) (n := n) R t sigmaSq +
+        sampleCovarianceQuadraticFormTailRHS (m := m) (n := n) Rneg t sigmaSqNeg := by
+  have hmReal : 0 < (m : Real) := by
+    exact_mod_cast hm
+  have hRowsRandom :
+      forall k : Fin m, IsRandomVector P (rowVector A k) := by
+    intro k
+    exact isRandomVector_rowVector hMeas k
+  have hRowsLp :
+      forall k : Fin m, forall j : Fin (n + 1),
+        MemLpRealRandomVariable P (coord (rowVector A k) j) 2 := by
+    intro k j
+    change MemLpRealRandomVariable P (matrixEntry A k j) 2
+    exact hLp k j
+  have hRowsRankOneInt :
+      forall k : Fin m,
+        IntegrableRandomMatrix P (rankOneRandomMatrix (rowVector A k)) := by
+    intro k
+    exact integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
+      (P := P) (X := rowVector A k) (hRowsLp k)
+  have hCentered :
+      CenteredSelfAdjointRandomMatrixFamily P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A) :=
+    centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two
+      (P := P) (X := rowVector A) hRowsRandom hRowsLp
+  have hIndepSA :
+      IndependentSelfAdjointRandomMatrices P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A) := by
+    exact ⟨hCentered.1, hIndep⟩
+  have hIntX :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k) := by
+    intro k
+    change IntegrableRandomMatrix P
+      (centeredRankOneRandomMatrix P (rowVector A k))
+    exact centeredRankOneRandomMatrix_integrable_of_memLp_two
+      (P := P) (X := rowVector A k) (hRowsLp k)
+  have hBound :
+      PointwiseOperatorNormBound
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        (sampleCovarianceCenteredRankOneRadius R) :=
+    PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound
+      (P := P) (X := rowVector A) hRowsRandom hRowsLp hSq hR
+  have hRadius : 0 <= sampleCovarianceCenteredRankOneRadius R := by
+    simpa [sampleCovarianceCenteredRankOneRadius] using show 0 <= 2 * R by
+      nlinarith
+  have hRadiusNeg : 0 <= sampleCovarianceCenteredRankOneRadius Rneg := by
+    simpa [sampleCovarianceCenteredRankOneRadius] using show 0 <= 2 * Rneg by
+      nlinarith
+  have hmt : 0 < (m : Real) * t := by
+    exact mul_pos hmReal ht
+  have hSubset :
+      SelfAdjointOperatorNormTailEvent
+          (centeredRandomMatrix P (sampleCovariance A)) t ⊆
+        SelfAdjointOperatorNormTailEvent
+          (centeredSampleCovarianceRowRankOneSum (P := P) A)
+          ((m : Real) * t) :=
+    sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum
+      (P := P) A t hm hRowsRankOneInt
+  have hMB :
+      P (SelfAdjointOperatorNormTailEvent
+          (centeredSampleCovarianceRowRankOneSum (P := P) A)
+          ((m : Real) * t)) <=
+        sampleCovarianceQuadraticFormTailRHS (m := m) (n := n) R t sigmaSq +
+          sampleCovarianceQuadraticFormTailRHS
+            (m := m) (n := n) Rneg t sigmaSqNeg := by
+    simpa [sampleCovarianceQuadraticFormTailRHS,
+      sampleCovarianceTailTheta, sampleCovarianceCenteredRankOneRadius] using
+      matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+        (P := P)
+        (A := centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        (R := sampleCovarianceCenteredRankOneRadius R)
+        (Rneg := sampleCovarianceCenteredRankOneRadius Rneg)
+        (t := (m : Real) * t) (sigmaSq := sigmaSq)
+        (sigmaSqNeg := sigmaSqNeg)
+        hCentered hIndepSA hIntX hIntSq hExpInt
+        (by
+          change IntegrableRealRandomVariable P
+            (traceExpIntegrand
+              (centeredSampleCovarianceRowRankOneSum (P := P) A)
+              (sampleCovarianceTailTheta (m := m) R t sigmaSq))
+          exact hTraceInt)
+        hBound hSigma hRadius hmt
+        (by
+          change selfAdjointOperatorNormTailViaQuadraticFormStatement
+            (centeredSampleCovarianceRowRankOneSum (P := P) A)
+            ((m : Real) * t)
+          exact hOperatorBridge)
+        hNorm hCFC hTropp hCenteredNeg hIndepSANeg hIntXNeg hIntSqNeg
+        hExpIntNeg hTraceIntNeg hBoundNeg hSigmaNeg hRadiusNeg hNormNeg
+        hCFCNeg hTroppNeg
+  exact (measure_mono hSubset).trans hMB
+
+/-- Sample-covariance self-adjoint operator-norm tail wrapper in nonempty
+dimensions under explicit variance-proxy and Matrix Bernstein primitive
+assumptions.
+
+This is the nonempty-square version of
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`.
+It transports the public centered sample-covariance operator-norm event to the
+unnormalized centered row rank-one sum, then applies the S4 nonempty
+self-adjoint operator-norm Matrix Bernstein wrapper. The spectral bridge is
+therefore supplied internally by the Matrix Bernstein wrapper; variance
+proxies, integrability, independence, CFC, and Tropp primitives remain explicit
+for both signs.
+-/
+theorem sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m (n + 1))
+    (R Rneg t sigmaSq sigmaSqNeg : Real)
+    (hm : 0 < m)
+    (hMeas : IsRandomMatrix P A)
+    (hLp :
+      forall k : Fin m, forall j : Fin (n + 1),
+        MemLpRealRandomVariable P (matrixEntry A k j) 2)
+    (hSq :
+      forall k : Fin m, forall omega,
+        vectorSqNorm (rowVector A k omega) <= R)
+    (hIndep :
+      IndependentRandomMatrices P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A))
+    (hIntSq :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare
+            ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k)))
+    (hExpInt :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily
+            (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+            (sampleCovarianceTailTheta (m := m) R t sigmaSq)
+            k))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand
+          (centeredSampleCovarianceRowRankOneSum (P := P) A)
+          (sampleCovarianceTailTheta (m := m) R t sigmaSq)))
+    (hSigma : 0 < sigmaSq)
+    (hR : 0 <= R)
+    (ht : 0 < t)
+    (hNorm :
+      MatrixVarianceProxyNormBound P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A) sigmaSq)
+    (hCFC :
+      forall k : Fin m, forall omega,
+        bernsteinMatrixExp_le_quadratic_statement
+          ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k omega)
+          (sampleCovarianceTailTheta (m := m) R t sigmaSq)
+          (sampleCovarianceCenteredRankOneRadius R))
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P)
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        (bernsteinSecondMomentComparisonFamily P
+          (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+          (sampleCovarianceTailTheta (m := m) R t sigmaSq)
+          (sampleCovarianceCenteredRankOneRadius R))
+        (matrixVarianceProxy P
+          (centeredSampleCovarianceRowRankOneFamily (P := P) A))
+        (sampleCovarianceTailTheta (m := m) R t sigmaSq)
+        (sampleCovarianceCenteredRankOneRadius R))
+    (hCenteredNeg :
+      CenteredSelfAdjointRandomMatrixFamily P
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A))
+    (hIndepSANeg :
+      IndependentSelfAdjointRandomMatrices P
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A))
+    (hIntXNeg :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) k))
+    (hIntSqNeg :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare
+            ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) k)))
+    (hExpIntNeg :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily
+            (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+            (sampleCovarianceTailTheta (m := m) Rneg t sigmaSqNeg)
+            k))
+    (hTraceIntNeg :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand
+          (centeredSampleCovarianceRowRankOneSumNeg (P := P) A)
+          (sampleCovarianceTailTheta (m := m) Rneg t sigmaSqNeg)))
+    (hBoundNeg :
+      PointwiseOperatorNormBound
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+        (sampleCovarianceCenteredRankOneRadius Rneg))
+    (hSigmaNeg : 0 < sigmaSqNeg)
+    (hRNeg : 0 <= Rneg)
+    (hNormNeg :
+      MatrixVarianceProxyNormBound P
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+        sigmaSqNeg)
+    (hCFCNeg :
+      forall k : Fin m, forall omega,
+        bernsteinMatrixExp_le_quadratic_statement
+          ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+            k omega)
+          (sampleCovarianceTailTheta (m := m) Rneg t sigmaSqNeg)
+          (sampleCovarianceCenteredRankOneRadius Rneg))
+    (hTroppNeg :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P)
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+        (bernsteinSecondMomentComparisonFamily P
+          (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+          (sampleCovarianceTailTheta (m := m) Rneg t sigmaSqNeg)
+          (sampleCovarianceCenteredRankOneRadius Rneg))
+        (matrixVarianceProxy P
+          (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A))
+        (sampleCovarianceTailTheta (m := m) Rneg t sigmaSqNeg)
+        (sampleCovarianceCenteredRankOneRadius Rneg)) :
+    P (SelfAdjointOperatorNormTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t) <=
+      sampleCovarianceQuadraticFormTailRHS (m := m) (n := n) R t sigmaSq +
+        sampleCovarianceQuadraticFormTailRHS (m := m) (n := n) Rneg t sigmaSqNeg := by
+  have hmReal : 0 < (m : Real) := by
+    exact_mod_cast hm
+  have hRowsRandom :
+      forall k : Fin m, IsRandomVector P (rowVector A k) := by
+    intro k
+    exact isRandomVector_rowVector hMeas k
+  have hRowsLp :
+      forall k : Fin m, forall j : Fin (n + 1),
+        MemLpRealRandomVariable P (coord (rowVector A k) j) 2 := by
+    intro k j
+    change MemLpRealRandomVariable P (matrixEntry A k j) 2
+    exact hLp k j
+  have hRowsRankOneInt :
+      forall k : Fin m,
+        IntegrableRandomMatrix P (rankOneRandomMatrix (rowVector A k)) := by
+    intro k
+    exact integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
+      (P := P) (X := rowVector A k) (hRowsLp k)
+  have hCentered :
+      CenteredSelfAdjointRandomMatrixFamily P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A) :=
+    centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two
+      (P := P) (X := rowVector A) hRowsRandom hRowsLp
+  have hIndepSA :
+      IndependentSelfAdjointRandomMatrices P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A) := by
+    exact ⟨hCentered.1, hIndep⟩
+  have hIntX :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k) := by
+    intro k
+    change IntegrableRandomMatrix P
+      (centeredRankOneRandomMatrix P (rowVector A k))
+    exact centeredRankOneRandomMatrix_integrable_of_memLp_two
+      (P := P) (X := rowVector A k) (hRowsLp k)
+  have hBound :
+      PointwiseOperatorNormBound
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        (sampleCovarianceCenteredRankOneRadius R) :=
+    PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound
+      (P := P) (X := rowVector A) hRowsRandom hRowsLp hSq hR
+  have hRadius : 0 <= sampleCovarianceCenteredRankOneRadius R := by
+    simpa [sampleCovarianceCenteredRankOneRadius] using show 0 <= 2 * R by
+      nlinarith
+  have hRadiusNeg : 0 <= sampleCovarianceCenteredRankOneRadius Rneg := by
+    simpa [sampleCovarianceCenteredRankOneRadius] using show 0 <= 2 * Rneg by
+      nlinarith
+  have hmt : 0 < (m : Real) * t := by
+    exact mul_pos hmReal ht
+  have hSubset :
+      SelfAdjointOperatorNormTailEvent
+          (centeredRandomMatrix P (sampleCovariance A)) t <=
+        SelfAdjointOperatorNormTailEvent
+          (centeredSampleCovarianceRowRankOneSum (P := P) A)
+          ((m : Real) * t) :=
+    sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum
+      (P := P) A t hm hRowsRankOneInt
+  have hMB :
+      P (SelfAdjointOperatorNormTailEvent
+          (centeredSampleCovarianceRowRankOneSum (P := P) A)
+          ((m : Real) * t)) <=
+        sampleCovarianceQuadraticFormTailRHS (m := m) (n := n) R t sigmaSq +
+          sampleCovarianceQuadraticFormTailRHS
+            (m := m) (n := n) Rneg t sigmaSqNeg := by
+    simpa [sampleCovarianceQuadraticFormTailRHS,
+      sampleCovarianceTailTheta, sampleCovarianceCenteredRankOneRadius] using
+      matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives
+        (P := P)
+        (A := centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        (R := sampleCovarianceCenteredRankOneRadius R)
+        (Rneg := sampleCovarianceCenteredRankOneRadius Rneg)
+        (t := (m : Real) * t) (sigmaSq := sigmaSq)
+        (sigmaSqNeg := sigmaSqNeg)
+        hCentered hIndepSA hIntX hIntSq hExpInt
+        (by
+          change IntegrableRealRandomVariable P
+            (traceExpIntegrand
+              (centeredSampleCovarianceRowRankOneSum (P := P) A)
+              (sampleCovarianceTailTheta (m := m) R t sigmaSq))
+          exact hTraceInt)
+        hBound hSigma hRadius hmt
+        hNorm hCFC hTropp hCenteredNeg hIndepSANeg hIntXNeg hIntSqNeg
+        hExpIntNeg hTraceIntNeg hBoundNeg hSigmaNeg hRadiusNeg hNormNeg
+        hCFCNeg hTroppNeg
+  exact (measure_mono hSubset).trans hMB
 
 abbrev matrixBernsteinTraceMGFToLaplaceContract_statement {Omega : Type*}
     [MeasurableSpace Omega] {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)

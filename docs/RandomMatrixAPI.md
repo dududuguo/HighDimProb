@@ -61,6 +61,14 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`.
 - Its RHS is:
   `ENNReal.ofReal ((n + 1 : Real) * Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))))`.
+- Proved self-adjoint operator-norm wrapper for nonempty square dimensions
+  under explicit primitives:
+  `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives`.
+  This reuses the bridge-explicit operator-norm wrapper and discharges only the
+  spectral bridge via
+  `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`; Tropp, CFC,
+  variance-proxy, independence, and integrability assumptions remain explicit
+  for both signs.
 - Proved sample-covariance quadratic-form tail wrapper under explicit
   variance-proxy and Matrix Bernstein primitive assumptions:
   `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`.
@@ -83,7 +91,15 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `MatrixVarianceProxyNormBound P (centeredSampleCovarianceRowRankOneFamily (P := P) A) sigmaSq`
   explicitly until future moment/operator-norm/order infrastructure can derive
   it.
-- Lambda-max/operator-norm Matrix Bernstein tail theorem remains unproved.
+- Proved sample-covariance self-adjoint operator-norm wrapper for nonempty
+  covariance dimensions under explicit variance-proxy and Matrix Bernstein
+  primitive assumptions:
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy`.
+  It reuses the sample-covariance operator-norm event bridge and the RM-ON-S4
+  nonempty operator-norm Matrix Bernstein wrapper, so the theorem has no
+  explicit spectral-bridge assumption.
+- Arbitrary-dimensional lambda-max/operator-norm Matrix Bernstein and full
+  Matrix Bernstein tail theorems remain unproved.
 - Proved rank-one operator-norm prerequisite bridge:
   `rankOneOperatorNorm_le_vectorSqNorm`,
   `BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound`, and
@@ -155,11 +171,23 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - Proved sample-covariance quadratic-form tail wrapper under explicit
   variance-proxy and Matrix Bernstein primitive assumptions:
   `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`.
-- No unconditional variance-proxy control, lambda-max/operator-norm Matrix
-  Bernstein tail theorem, full Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or
-  Golden-Thompson theorem was proved by the sample-covariance tail wrapper
-  stage.
-- Next safe task: `RM-S7-next-random-matrix-leaf-selection`.
+- Proved sample-covariance operator-norm event bridge, retained conditional
+  operator-norm tail wrapper, and nonempty operator-norm tail wrapper under
+  explicit variance-proxy and both-sign primitive assumptions:
+  `sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum`
+  and
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`,
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy`.
+- The example surface now includes `sampleCovariance_operatorNorm_tail_usage`
+  alongside `sampleCovariance_quadraticForm_tail_usage`.
+- No unconditional variance-proxy control, arbitrary-dimensional
+  lambda-max/operator-norm Matrix Bernstein tail theorem, full Matrix
+  Bernstein, Tropp/Lieb, Bernstein CFC, Golden-Thompson theorem, or
+  unconditional sample-covariance concentration theorem was added by the
+  sample-covariance operator-norm stage.
+- RM-ON-S8 documentation synchronization records the S6 example update and S7
+  test/judge update without changing the API surface.
+- Next safe task: `RM-ON-human-integration-review`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
@@ -259,6 +287,8 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `quadraticFormUpperTailEvent_subset_matrixUpperBoundTailEvent_of_spectralUpperBound`:
   theorem.
 - `selfAdjointOperatorNormTailViaQuadraticFormStatement`: typed statement.
+- `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`: theorem
+  proving the typed bridge for nonempty square dimensions.
 - `lambdaMax_le_iff_quadraticForm_le_statement`: typed statement.
 - `operatorNorm_eq_max_abs_lambda_statement`: typed statement.
 - `posSemidef_of_isPSDMatrix`: theorem, converts HighDimProb explicit PSD to Mathlib `Matrix.PosSemidef`.
@@ -282,7 +312,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
   same scoped L2 convention.
 - `deterministicOperatorNorm_apply`: theorem, definitional bridge.
 - `deterministicOperatorNorm_sub_le_add`: theorem, deterministic triangle bound.
-- `rankOneOperatorNorm_le_vectorSqNorm`: theorem, `||v vᵀ||op <= ||v||₂²`.
+- `rankOneOperatorNorm_le_vectorSqNorm`: theorem, `||v v?||op <= ||v||?^2.
 - `matVecSqNorm`: def.
 - `randomMatVecSqNorm`: def.
 - `OperatorNormBoundSq`: def.
@@ -594,7 +624,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
   theorem proving the explicit-theta one-sided quadratic-form upper-tail
   bound under the same explicit Tropp/Lieb and Bernstein CFC primitive
   assumptions, with trace-exponential RHS
-  `exp(-theta*t) * tr exp(bernsteinMGFCoeff theta R • matrixVarianceProxy P A)`.
+  `exp(-theta*t) * tr exp(bernsteinMGFCoeff theta R 鈥omegamatrixVarianceProxy P A)`.
 - `traceMatrixExp_bernsteinMGFCoeff_matrixVarianceProxy_le_card_exp`: theorem
   specializing the trace-exp dimension bound to `bernsteinMGFCoeff theta R`
   and `matrixVarianceProxy P A` under `MatrixVarianceProxyNormBound`.
@@ -608,15 +638,34 @@ mainline. It is documentation only; theorem status is not upgraded here.
   the Bernstein denominator exponent
   `-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))`; still one-sided,
   quadratic-form, and under explicit primitives.
+- `negRandomMatrixFamily`: abbrev naming the pointwise negative of a
+  random-matrix family, used by two-sided Matrix Bernstein wrappers instead of
+  exposing anonymous negative-family lambdas in public signatures.
 - `sampleCovarianceCenteredRankOneRadius`: abbrev naming the `2 * R` centered
   rank-one radius produced by a row squared-norm bound.
 - `sampleCovarianceTailTheta`: abbrev naming the optimized Bernstein theta for
   the sample-covariance wrapper at threshold `(m : Real) * t`.
 - `sampleCovarianceQuadraticFormTailRHS`: abbrev naming the scalar RHS of the
   sample-covariance quadratic-form tail wrapper.
+- `centeredSampleCovarianceRowRankOneFamilyNeg`: abbrev naming the negative
+  centered row-rank-one family for sample-covariance operator-norm wrappers.
+- `centeredSampleCovarianceRowRankOneSumNeg`: abbrev naming the sum of the
+  negative centered row-rank-one family.
 - `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`:
   theorem proving the conditional sample-covariance quadratic-form tail wrapper
   under explicit variance-proxy, integrability, Tropp, and CFC assumptions.
+- `sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum`:
+  theorem bridging the centered sample-covariance operator-norm event to the
+  unnormalized centered row-rank-one sum at threshold `(m : Real) * t`.
+- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`:
+  theorem proving the conditional sample-covariance self-adjoint
+  operator-norm tail wrapper under explicit variance-proxy, both-sign
+  integrability/independence, Tropp, CFC, and spectral-bridge assumptions.
+- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy`:
+  theorem proving the nonempty sample-covariance self-adjoint operator-norm
+  tail wrapper under explicit variance-proxy, both-sign
+  integrability/independence, Tropp, and CFC assumptions, with the spectral
+  bridge supplied internally by the RM-ON-S4 Matrix Bernstein wrapper.
 - `matrixBernsteinTraceMGFToLaplaceContract_statement`: retained typed
   compatibility contract for the bounded-Bernstein lintegral Laplace route
   specialized to `randomMatrixSum A` and `matrixVarianceProxy P A`.
@@ -626,8 +675,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Current Blockers
 
-- Full lambda-max/operator-norm Matrix Bernstein tail connection beyond the
-  proved one-sided quadratic-form explicit-theta scalar-RHS wrapper.
+- Unconditional lambda-max/operator-norm Matrix Bernstein tail connection
+  beyond the proved quadratic-form, bridge-explicit operator-norm, and
+  nonempty operator-norm wrappers.
 - Unconditional trace-MGF provider theorem without explicit finite-family
   Tropp assumptions. The bounded theorem under primitives is proved for
   `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`; the finite-family
@@ -659,11 +709,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-RM-S7-next-random-matrix-leaf-selection: choose the next RandomMatrix leaf after the completed
-sample-covariance explicit-variance-proxy wrapper, sample-covariance example
-surface, and rank-one nullspace example cleanup.
-RM-S5F keeps sample-covariance variance-proxy control explicit until future
-moment/operator-norm/order infrastructure is available.
+RM-ON-human-integration-review: review the RM-ON branch for open-source
+readability, abstraction boundaries, and maintainer-facing PR structure before
+choosing the next mathematical leaf. Sample-covariance variance-proxy control
+remains explicit until future moment/operator-norm/order infrastructure is
+available.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -693,10 +743,27 @@ moment/operator-norm/order infrastructure is available.
 - RM-S5E adds `SampleCovarianceTailUsage.lean`, which demonstrates the S5D
   wrapper through `sampleCovariance_quadraticForm_tail_usage` while preserving
   all variance proxy and primitive assumptions explicitly.
+- RM-S7E/RM-S7F add the sample-covariance operator-norm event bridge and
+  conditional operator-norm tail wrapper:
+  `sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum`
+  and
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`.
+  The example file now also checks `sampleCovariance_operatorNorm_tail_usage`.
 - RM-S5F confirms that variance-proxy control remains an explicit assumption
   rather than a directly supported theorem.
 - RM-S6 adds the deterministic rank-one kernel/nullspace bridge in
   `Spectral.lean`.
 - The rank-one nullspace examples now use the S6 core bridge where it removes
   local action/sum algebra.
-- Next safe task: RM-S7-next-random-matrix-leaf-selection.
+- RM-ON-S4 adds
+  `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives`,
+  which reuses the bridge-explicit operator-norm wrapper and supplies
+  `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty` internally.
+- RM-ON-S5 adds
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy`,
+  which reuses the RM-S7E event bridge and the RM-ON-S4 nonempty operator-norm
+  Matrix Bernstein wrapper so the sample-covariance theorem no longer carries
+  an explicit spectral-bridge assumption.
+- RM-ON-S6 validates `sampleCovariance_operatorNorm_tail_usage`, RM-ON-S7
+  validates focused test/judge coverage, and RM-ON-S8 synchronizes the docs.
+- Next safe task: RM-ON-human-integration-review.

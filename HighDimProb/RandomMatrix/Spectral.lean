@@ -601,6 +601,71 @@ private theorem exists_unitVector_matrixQuadraticForm_eq_lambdaMaxOrdered
       simp [lambdaMaxOrdered, Matrix.IsHermitian.eigenvalues, idx, e]
     exact hquad.trans hidx
 
+/-- A real self-adjoint nonempty matrix has a unit vector whose absolute
+quadratic form attains the deterministic L2 operator norm. -/
+theorem exists_unitVector_abs_matrixQuadraticForm_eq_deterministicOperatorNorm
+    {n : Nat} {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hA : IsSelfAdjointMatrix A) :
+    exists x : Fin (n + 1) -> Real,
+      IsUnitVector x /\
+        abs (matrixQuadraticForm A x) = deterministicOperatorNorm A := by
+  classical
+  have hconj_norm
+      (U : Matrix.unitaryGroup (Fin (n + 1)) Real)
+      (B : Matrix (Fin (n + 1)) (Fin (n + 1)) Real) :
+      norm (Unitary.conjStarAlgAut Real _ U B) = norm B := by
+    rw [Unitary.conjStarAlgAut_apply]
+    calc
+      norm ((U : Matrix (Fin (n + 1)) (Fin (n + 1)) Real) * B *
+          star (U : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)) =
+          norm ((U : Matrix (Fin (n + 1)) (Fin (n + 1)) Real) * B) := by
+        exact CStarRing.norm_mul_coe_unitary
+          ((U : Matrix (Fin (n + 1)) (Fin (n + 1)) Real) * B) (star U)
+      _ = norm B := by
+        exact CStarRing.norm_coe_unitary_mul U B
+  have hnormA : norm A = norm (hA.eigenvalues : Fin (n + 1) -> Real) := by
+    calc
+      norm A =
+          norm (Unitary.conjStarAlgAut Real _ hA.eigenvectorUnitary
+            (Matrix.diagonal (RCLike.ofReal ∘ hA.eigenvalues))) := by
+        exact congrArg norm hA.spectral_theorem
+      _ = norm (Matrix.diagonal (RCLike.ofReal ∘ hA.eigenvalues) :
+            Matrix (Fin (n + 1)) (Fin (n + 1)) Real) := hconj_norm _ _
+      _ = norm (Matrix.diagonal hA.eigenvalues :
+            Matrix (Fin (n + 1)) (Fin (n + 1)) Real) := by
+          simp
+      _ = norm (hA.eigenvalues : Fin (n + 1) -> Real) := by
+          exact
+            Matrix.l2_opNorm_diagonal
+              (n := Fin (n + 1)) (𝕜 := Real) hA.eigenvalues
+  obtain ⟨idx, _, hidx_max⟩ :=
+    Finset.exists_max_image
+      (Finset.univ : Finset (Fin (n + 1)))
+      (fun i => norm (hA.eigenvalues i))
+      Finset.univ_nonempty
+  have hidx_norm :
+      norm (hA.eigenvalues idx) =
+        norm (hA.eigenvalues : Fin (n + 1) -> Real) := by
+    refine le_antisymm (norm_le_pi_norm _ idx) ?_
+    exact (pi_norm_le_iff_of_nonneg (norm_nonneg (hA.eigenvalues idx))).2
+      (fun i => hidx_max i (Finset.mem_univ i))
+  let x : Fin (n + 1) -> Real := fun i => hA.eigenvectorBasis idx i
+  refine ⟨x, ?_, ?_⟩
+  · apply isUnitVector_of_norm_toLp_eq_one
+    simp [x, hA.eigenvectorBasis.norm_eq_one idx]
+  · have hquad :
+        matrixQuadraticForm A x = hA.eigenvalues idx := by
+      simpa [x, matrixQuadraticForm, dotProduct, Matrix.mulVec,
+        Finset.mul_sum, Finset.sum_mul, mul_assoc] using
+        (hA.eigenvalues_eq idx).symm
+    calc
+      abs (matrixQuadraticForm A x) =
+          norm (hA.eigenvalues idx) := by
+        rw [hquad, Real.norm_eq_abs]
+      _ = norm (hA.eigenvalues : Fin (n + 1) -> Real) := hidx_norm
+      _ = deterministicOperatorNorm A := by
+        simpa [deterministicOperatorNorm] using hnormA.symm
+
 /-- Conditional Rayleigh conversion from a Mathlib Loewner-style premise.
 
 The hard spectral fact is the premise
@@ -879,6 +944,42 @@ abbrev selfAdjointOperatorNormTailViaQuadraticFormStatement
   (forall omega, IsSelfAdjointMatrix (A omega)) ->
     0 <= t ->
       SelfAdjointOperatorNormTailEvent A t ⊆ twoSidedQuadraticFormTailEvent A t
+
+/-- Nonempty self-adjoint operator-norm tail events reduce to the explicit
+two-sided quadratic-form tail event.
+
+The proof uses the deterministic nonempty witness lemma: at every sample, a
+unit vector attains the L2 operator norm as the absolute value of the
+quadratic form. Splitting on the sign of that quadratic form puts the sample
+in the upper or lower quadratic-form tail. -/
+theorem selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty
+    {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
+    (A : RandomMatrix Omega (n + 1) (n + 1)) (t : Real) :
+    selfAdjointOperatorNormTailViaQuadraticFormStatement A t := by
+  intro hA _ht omega hTail
+  rcases exists_unitVector_abs_matrixQuadraticForm_eq_deterministicOperatorNorm
+      (hA omega) with ⟨x, hx, hnorm⟩
+  have htNorm : t <= deterministicOperatorNorm (A omega) := by
+    simpa [SelfAdjointOperatorNormTailEvent, operatorNorm,
+      deterministicOperatorNorm] using hTail
+  by_cases hq_nonneg : 0 <= matrixQuadraticForm (A omega) x
+  · exact Or.inl ⟨x, hx, by
+      calc
+        t <= deterministicOperatorNorm (A omega) := htNorm
+        _ = abs (matrixQuadraticForm (A omega) x) := hnorm.symm
+        _ = matrixQuadraticForm (A omega) x := abs_of_nonneg hq_nonneg⟩
+  · have hq_nonpos : matrixQuadraticForm (A omega) x <= 0 :=
+      le_of_not_ge hq_nonneg
+    exact Or.inr ⟨x, hx, by
+      have ht_abs :
+          t <= abs (matrixQuadraticForm (A omega) x) := by
+        exact htNorm.trans_eq hnorm.symm
+      have ht_neg :
+          t <= -matrixQuadraticForm (A omega) x := by
+        calc
+          t <= abs (matrixQuadraticForm (A omega) x) := ht_abs
+          _ = -matrixQuadraticForm (A omega) x := abs_of_nonpos hq_nonpos
+      linarith⟩
 
 /-- Typed target for the future Rayleigh quotient bridge between Mathlib
 Hermitian eigenvalues and HighDimProb's explicit unit-sphere quadratic form. -/

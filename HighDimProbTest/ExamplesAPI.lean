@@ -62,6 +62,10 @@ variable (kernelHExplicitPSD : IsPSDMatrix kernelA)
 #check sampleCovarianceQuadraticFormTailRHS
 #check SampleCovarianceTailAssumptions
 #check sampleCovariance_quadraticForm_tail_usage
+#check centeredSampleCovarianceRowRankOneFamilyNeg
+#check centeredSampleCovarianceRowRankOneSumNeg
+#check SampleCovarianceOperatorNormTailAssumptions
+#check sampleCovariance_operatorNorm_tail_usage
 
 example :
     matrixAction kernelA kernelX = Matrix.mulVec kernelA kernelX := by

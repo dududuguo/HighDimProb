@@ -43,6 +43,19 @@ explicit for sample-covariance usage files.
 RM-S5F audits variance-proxy control and keeps
 `MatrixVarianceProxyNormBound` explicit for the sample-covariance tail wrapper
 until future moment/operator-norm/order infrastructure exists.
+RM-S7E/RM-S7F prove the sample-covariance operator-norm event bridge
+`sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum`
+and the conditional operator-norm tail wrapper
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`.
+These keep the general self-adjoint operator-norm spectral bridge assumption
+and all analytic primitive assumptions explicit.
+RM-ON-S4/RM-ON-S5 prove the matching nonempty Matrix Bernstein and
+sample-covariance operator-norm wrappers for `Fin (n + 1)` square dimensions,
+supplying `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`
+internally while keeping variance proxy, Tropp/CFC, independence, and
+integrability assumptions explicit. RM-ON-S6/RM-ON-S7 validate the example,
+test, and judge surfaces. RM-ON-S8 synchronizes this documentation and adds no
+new theorem claim.
 
 RM-S6 adds the deterministic rank-one kernel/nullspace API
 `rankOneMatrixSum`, `rankOneMatrix_quadraticForm_eq_inner_sq`,
@@ -53,7 +66,7 @@ random-feature, and covariance examples without adding a general nullspace
 theory.
 
 Next safe task:
-`RM-S7-next-random-matrix-leaf-selection`.
+`RM-ON-human-integration-review`.
 
 ## Milestone 3 scalar implication closeout
 
@@ -198,7 +211,7 @@ future directions.
 - Priority: H4 closeout
 
 ## tail-event measurability statement
-- Book heading: `尾分布`
+- Book heading: tail-event measurability statement
 - Informal statement: measurable real random variables have measurable upper, lower, and absolute tail events.
 - Target Lean statement: `tailEventMeasurabilityStatement`
 - Required objects: `IsRealRandomVariable`, `upperTailEvent`, `lowerTailEvent`, `absTailEvent`.
@@ -234,7 +247,7 @@ future directions.
 - Priority: v0.1
 
 ## tail probability wrapper statement
-- Book heading: `尾分布`
+- Book heading: tail probability wrapper statement
 - Informal statement: tail probability wrappers are direct measure applications to tail events.
 - Target Lean statement: `tailProbabilityWrapperStatement`
 - Required objects: `upperTailProb`, `lowerTailProb`, `absTailProb`.
@@ -294,7 +307,7 @@ future directions.
 - Priority: v0.1 proof pilot
 
 ## tail integral identity for expectation
-- Book heading: `尾分布`, expectation/tail vocabulary
+- Book heading: tail integral identity for expectation
 - Informal statement: nonnegative expectations or moments can be represented by integrating tail probabilities.
 - Target Lean statement: blocked until a precise nonnegative/integrable formulation is chosen.
 - Required objects: `Measure`, `IsProbabilityMeasure`, `RealRandomVariable`, `expect`, tail probabilities.
@@ -306,7 +319,7 @@ future directions.
 - Priority: v0.2
 
 ## Markov inequality
-- Book heading: `集中不等式`, classical probability inequalities
+- Book heading: Markov inequality
 - Informal statement: for a nonnegative random variable, the probability of exceeding a threshold is bounded by expectation divided by the threshold.
 - Target Lean statement: `markov_inequality_nonneg`; user-facing alias `markov_inequality`
 - Required objects: `Measure`, `RealRandomVariable`, `expect`, `upperTailProb`, `IntegrableRealRandomVariable`.
@@ -319,7 +332,7 @@ future directions.
 - Priority: scalar concentration proof spine
 
 ## Chebyshev inequality
-- Book heading: `集中不等式`, classical probability inequalities
+- Book heading: Chebyshev inequality
 - Informal statement: deviations from the mean are controlled by variance.
 - Target Lean statement: `chebyshev_inequality`; probability-facing wrapper `chebyshev_inequality_prob`
 - Required objects: `absTailProb`, `centered`, `variance`, `MemLpRealRandomVariable`.
@@ -356,7 +369,7 @@ future directions.
 - Priority: LLN scaffold
 
 ## psi2 Orlicz bound implies subGaussian tail
-- Book heading: `次高斯性质`, `次高斯范数`, Orlicz characterization
+- Book heading: psi2 Orlicz bound implies subGaussian tail
 - Informal statement: if the exponential-square Orlicz bound holds at scale `K`, then the absolute tail has Gaussian decay with the same scale and constant `2`.
 - Target Lean statement: `subGaussianTail_of_psi2Bound`
 - Required objects: `Psi2Bound`, `SubGaussianTail`, `absTailProb`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
@@ -368,7 +381,7 @@ future directions.
 - Priority: scalar concentration proof spine
 
 ## psi1 Orlicz bound implies subExponential tail
-- Book heading: `次指数性质`, `次指数范数`, Orlicz characterization
+- Book heading: psi1 Orlicz bound implies subExponential tail
 - Informal statement: if the exponential-linear Orlicz bound holds at scale `K`, then the absolute tail has exponential decay with the same scale and constant `2`.
 - Target Lean statement: `subExponentialTail_of_psi1Bound`
 - Required objects: `Psi1Bound`, `SubExponentialTail`, `absTailProb`, `IsRealRandomVariable`, `IsProbabilityMeasure`.
@@ -429,7 +442,7 @@ future directions.
 - Priority: Stage G2B
 
 ## absolute natural moment to Lp bridge
-- Book heading: `Lp范数`, subGaussian moment characterization
+- Book heading: absolute natural moment to Lp bridge
 - Informal statement: for a nonzero natural exponent `q`, finiteness or a bound on `E |X|^q` yields the corresponding Mathlib `L^q` membership and extended `L^q` seminorm bound.
 - Target Lean statement: `memLp_of_finiteAbsMomentNat`; quantitative wrappers `realLpNorm_nat_le_of_absMomentNat_le_ennreal` and `realLpNorm_nat_le_of_absMomentNat_le`; linear-growth wrappers `realLpNorm_nat_le_linear_of_psi2Bound` and `realLpNorm_nat_le_linear_of_subGaussianTail`; sqrt-growth wrappers `realLpNorm_nat_le_sqrt_of_psi2Bound`, `realLpNorm_nat_le_sqrt_of_subGaussianTail`, `realLpNorm_le_sqrt_of_psi2Bound`, and `realLpNorm_le_sqrt_of_subGaussianTail`; natural predicate wrappers `SubGaussianMomentNat`, `SubGaussianMomentNatSqrt`, `subGaussianMomentNat_of_psi2Bound`, `subGaussianMomentNat_of_subGaussianTail`, `subGaussianMomentNatSqrt_of_psi2Bound`, `subGaussianMomentNatSqrt_of_subGaussianTail`, `subGaussianMoment_of_psi2Bound`, and `subGaussianMoment_of_subGaussianTail`.
 - Required objects: `absMomentNat`, `finiteAbsMomentNat`, `MemLpRealRandomVariable`, `realLpNorm`, `IsRealRandomVariable`, `Psi2Bound`, `SubGaussianTail`.
@@ -468,7 +481,7 @@ future directions.
 - Priority: Stage G2E-fix
 
 ## Jensen inequality
-- Book heading: `经典不等式`
+- Book heading: Jensen inequality
 - Informal statement: convex functions move outside expectations in the standard direction.
 - Target Lean statement: HighDimProb usage examples around Mathlib Jensen inequalities.
 - Required objects: `expect`, convex functions, integrability.
@@ -480,7 +493,7 @@ future directions.
 - Priority: v0.2
 
 ## Holder inequality
-- Book heading: `经典不等式`
+- Book heading: Holder inequality
 - Informal statement: products are bounded by conjugate `L^p` norms.
 - Target Lean statement: wrapper or examples around Mathlib Holder/mean inequality APIs.
 - Required objects: `MemLp`, `eLpNorm`, real random variables.
@@ -492,7 +505,7 @@ future directions.
 - Priority: v0.2
 
 ## Minkowski inequality
-- Book heading: `经典不等式`
+- Book heading: Minkowski inequality
 - Informal statement: `L^p` seminorms satisfy a triangle inequality.
 - Target Lean statement: wrapper or examples around Mathlib Minkowski/eLpNorm APIs.
 - Required objects: `MemLp`, `eLpNorm`, addition of random variables.
@@ -504,7 +517,7 @@ future directions.
 - Priority: v0.2
 
 ## subGaussian definition equivalences
-- Book heading: `次高斯性质`, `次高斯随机变量`, `次高斯范数`
+- Book heading: subGaussian definition equivalences
 - Informal statement: tail, moment, MGF, and Orlicz characterizations of subGaussian variables are equivalent up to constants.
 - Target Lean statement: blocked until a precise equivalence statement and constants are selected.
 - Required objects: real random variables, tail probabilities, moments, Mathlib MGF predicate, psi2 Orlicz control.
@@ -516,7 +529,7 @@ future directions.
 - Priority: v0.3
 
 ## subExponential definition equivalences
-- Book heading: `次指数性质`, `次指数随机变量`, `次指数范数`
+- Book heading: subExponential definition equivalences
 - Informal statement: tail, moment, MGF, and Orlicz characterizations of subExponential variables are equivalent up to constants.
 - Target Lean statement: blocked until a precise equivalence statement and constants are selected.
 - Required objects: real random variables, tail probabilities, moments, exponential moments, psi1 Orlicz control.
@@ -528,7 +541,7 @@ future directions.
 - Priority: v0.3
 
 ## bounded random variable is subGaussian
-- Book heading: `次高斯分布的例子`
+- Book heading: bounded random variable is subGaussian
 - Informal statement: bounded real-valued random variables are subGaussian with scale controlled by the bound.
 - Target Lean statement: blocked until the target formulation is selected.
 - Required objects: boundedness, real random variables, subGaussian predicate forms.
@@ -540,7 +553,7 @@ future directions.
 - Priority: v0.3
 
 ## centered subGaussian mgf characterization
-- Book heading: `中心化`, `次高斯性质`
+- Book heading: centered subGaussian mgf characterization
 - Informal statement: a centered subGaussian variable has Gaussian-type MGF bounds, and conversely under suitable constants.
 - Target Lean statement: forward implication theorem family is proved for the existing MGF predicate; reverse/centering equivalence remains blocked.
 - Required objects: `Centered`, `expect`, exponential function, `CenteredSubGaussianMGF`.
@@ -558,7 +571,7 @@ future directions.
 - Priority: v0.3
 
 ## centered subExponential mgf characterization
-- Book heading: `次指数性质`, `中心化`
+- Book heading: centered subExponential mgf characterization
 - Informal statement: a centered subExponential variable admits local quadratic MGF control, composes under independent finite sums, and conversely under suitable constants.
 - Target Lean statement: Stage B1 adds `CenteredSubExponentialMGFLIntegral`, the conservative finite-sum MGF theorem family `centeredSubExponentialMGF_sum_mgf_bound_of_iIndepFun` / `centeredSubExponentialMGF_sum_of_iIndepFun_of_pos`, and Stage B1-fix proves the normalized raw and lintegral finite-sum bounds `centeredSubExponentialMGF_sum_mgf_bound_of_iIndepFun_maxScale` and `centeredSubExponentialMGFLIntegral_sum_mgf_bound_of_iIndepFun_maxScale`.
 - Required objects: `Centered`, `expect`, exponential function, `CenteredSubExponentialMGF`.
@@ -571,7 +584,7 @@ future directions.
 - Priority: v0.3
 
 ## subGaussian square is subExponential
-- Book heading: `次指数分布与次高斯分布的关系`
+- Book heading: subGaussian square is subExponential
 - Informal statement: the square of a subGaussian random variable is subExponential.
 - Target Lean statement: blocked until the target formulations and square/product random-variable API are selected.
 - Required objects: subGaussian variables, subExponential variables, square random variable.
@@ -583,7 +596,7 @@ future directions.
 - Priority: v0.3
 
 ## product of subGaussian variables is subExponential
-- Book heading: `次指数分布与次高斯分布的关系`
+- Book heading: product of subGaussian variables is subExponential
 - Informal statement: the product of two subGaussian random variables is subExponential.
 - Target Lean statement: blocked until both predicate layers and multiplication API are stable.
 - Required objects: subGaussian variables, subExponential variables, product random variable.
@@ -595,7 +608,7 @@ future directions.
 - Priority: v0.3
 
 ## Bernstein inequality
-- Book heading: `伯恩斯坦不等式`
+- Book heading: Bernstein inequality
 - Informal statement: sums of independent centered subExponential variables satisfy Bernstein-type tail bounds.
 - Target Lean statement: Stage B2 proves the finite-sum lintegral-predicate theorem `bernstein_sum_subExponential`. Stage B3 proves the deterministic weighted theorem `bernstein_weighted_sum_subExponential`. Raw-predicate statement targets remain `bernstein_subExponential_sum_statement` and `bernstein_subExponential_weighted_sum_statement`.
 - Required objects: finite families of random variables, independence, centeredness, subExponential predicate.
@@ -624,7 +637,7 @@ future directions.
 - Priority: Stage SC-final-update complete.
 
 ## Hoeffding inequality
-- Book heading: `霍夫丁不等式`, `广义霍夫丁不等式一`, `广义霍夫丁不等式二`
+- Book heading: Hoeffding inequality
 - Informal statement: sums of independent bounded variables have Gaussian-type tails around their expectation. The finite weighted Rademacher specialization, the finite unweighted bounded centered theorem, the finite unweighted non-centered Wikipedia-form theorem, and deterministic weighted bounded centered/non-centered theorems are now proven separately.
 - Target Lean statement: `hoeffding_sum_bounded`; weighted API uses `hoeffding_weighted_sum_bounded`; sharp centered APIs are `hoeffding_sum_bounded_centered_sharp` and `hoeffding_weighted_sum_bounded_centered_sharp`; conservative centered API remains `hoeffding_sum_bounded_centered`; weighted Rademacher specialization uses `hoeffding_rademacher_sum`.
 - Required objects: finite families, independence, interval boundedness, centeredness/centering, integrability for finite expectation linearity, subGaussian MGF and tail predicate forms.
@@ -636,7 +649,7 @@ future directions.
 - Priority: Stage H8 complete; Stage H9 should close out the Hoeffding branch.
 
 ## Weighted bounded Hoeffding theorem
-- Book heading: `广义霍夫丁不等式`
+- Book heading: Weighted bounded Hoeffding theorem
 - Informal statement: deterministic weighted sums of independent bounded variables satisfy the classical bounded Hoeffding denominator `sum_i c_i^2 * (b_i-a_i)^2`.
 - Target Lean statements: `hoeffding_weighted_sum_bounded_centered_sharp`, `hoeffding_weighted_sum_bounded`.
 - Required objects: Stage H5 weighted finite-sum MGF closure, Stage H6 bounded centered MGF source wrapper, Stage H6-sharp eighth-MGF Chernoff helpers, and Stage H7 centering infrastructure for the non-centered form.
@@ -647,7 +660,7 @@ future directions.
 - Priority: Stage H8 complete.
 
 ## high-dimensional subGaussian vector characterizations
-- Book heading: `高维次高斯分布`, `次高斯范数`
+- Book heading: high-dimensional subGaussian vector characterizations
 - Informal statement: a random vector is subGaussian when all one-dimensional marginals are subGaussian; the usual norm is a supremum over unit directions.
 - Target Lean statement: blocked until scalar equivalence theorems, psi2 gauges/norms, and unit-sphere vocabulary are available.
 - Required objects: `RandomVector`, `marginal`, `directionNorm`, scalar subGaussian predicate forms.
@@ -659,7 +672,7 @@ future directions.
 - Priority: v0.2
 
 ## centered vector iff coordinatewise centered
-- Book heading: `高维空间的协方差矩阵`, `各向同性`
+- Book heading: centered vector iff coordinatewise centered
 - Informal statement: vector centeredness is exactly coordinatewise scalar centeredness.
 - Target Lean statement: `centeredVector_iff_forall_centered_coord`
 - Required objects: `RandomVector`, `coord`, `Centered`, `CenteredVector`.
@@ -670,7 +683,7 @@ future directions.
 - Priority: v0.2 proof pilot
 
 ## centered random variable has mean zero
-- Book heading: `高维空间的协方差矩阵`, `中心化`
+- Book heading: centered random variable has mean zero
 - Informal statement: if a real random variable is integrable, then subtracting its mean produces a centered random variable.
 - Target Lean statement: `centered_centered`
 - Required objects: `expect`, `mean`, `centered`, `Centered`, `IntegrableRealRandomVariable`, probability measure convention.
@@ -681,8 +694,8 @@ future directions.
 - Priority: v0.2 proof pilot
 
 ## isotropic second-moment matrix iff entrywise formulation
-- Book heading: `各向同性`
-- Informal statement: the matrix identity `E[XXᵀ] = I` is equivalent to the coordinate identities `E[X_i X_j] = δᵢⱼ`.
+- Book heading: isotropic second-moment matrix iff entrywise formulation
+- Informal statement: the matrix identity `E[XX?] = I` is equivalent to the coordinate identities `E[X_i X_j] = delta_ij`.
 - Target Lean statement: `isotropicSecondMomentMatrix_iff_isotropicSecondMoment`
 - Required objects: `RandomVector`, `secondMomentMatrixEntry`, `secondMomentMatrix`, `IsotropicSecondMoment`, `IsotropicSecondMomentMatrix`.
 - Required bridge lemmas: Mathlib `Matrix.ext` and `Matrix.one_apply`.
@@ -692,7 +705,7 @@ future directions.
 - Priority: v0.2 proof pilot
 
 ## random vector isotropic characterizations
-- Book heading: `各向同性`
+- Book heading: random vector isotropic characterizations
 - Informal statement: isotropicity is characterized by identity covariance and by second moments of one-dimensional marginals.
 - Target Lean statement: blocked until integrability assumptions and exact equivalence directions are selected.
 - Required objects: `RandomVector`, `coord`, `linearForm`, `CenteredVector`, `covarianceMatrix`, `secondMomentMatrix`, expectation.
@@ -704,7 +717,7 @@ future directions.
 - Priority: v0.2
 
 ## covariance identity
-- Book heading: `高维空间的协方差矩阵`, `随机过程的协方差`
+- Book heading: covariance identity
 - Informal statement: covariance can be expressed as a centered second moment and has standard bilinear identities.
 - Target Lean statement: blocked until integrability assumptions and exact theorem shape are selected.
 - Required objects: `RandomVector`, `coord`, `mean`, `secondMoment`, `covariance`, `secondMomentMatrix`, `covarianceMatrix`.
@@ -716,7 +729,7 @@ future directions.
 - Priority: v0.2
 
 ## maximal separated set is an epsilon-net
-- Book heading: `分离集与网`
+- Book heading: maximal separated set is an epsilon-net
 - Informal statement: a maximal epsilon-separated subset of `K` is an epsilon-net for `K`.
 - Target Lean statement: `isInternalEpsilonNet_of_maximalEpsilonSeparatedIn`
 - Required objects: `MaximalEpsilonSeparatedIn`, `IsEpsilonSeparated`, `IsEpsilonNet`, `IsInternalEpsilonNet`, `Set.Subset`.
@@ -728,7 +741,7 @@ future directions.
 - Priority: v0.2
 
 ## covering number upper bound from an epsilon-net
-- Book heading: `覆盖数`
+- Book heading: covering number upper bound from an epsilon-net
 - Informal statement: any internal epsilon-net bounds the covering number by its cardinality.
 - Target Lean statement: `epsilonNetCoveringNumberStatement`
 - Required objects: `IsEpsilonNet`, `coveringNumber`, `Set.encard`.
@@ -740,7 +753,7 @@ future directions.
 - Priority: v0.2
 
 ## covering-packing inequalities
-- Book heading: `覆盖数与填充数`
+- Book heading: covering-packing inequalities
 - Informal statement: packing and covering numbers bound each other at related radii: `P(K, 2 eps) <= N(K, eps) <= P(K, eps)`.
 - Target Lean statement: `packingCoveringInequalityStatement`
 - Required objects: `IsEpsilonNet`, `IsEpsilonSeparated`, `coveringNumber`, `externalCoveringNumber`, `packingNumber`.
@@ -752,7 +765,7 @@ future directions.
 - Priority: v0.2
 
 ## Euclidean ball covering number bounds
-- Book heading: `欧几里得球的覆盖数`
+- Book heading: Euclidean ball covering number bounds
 - Informal statement: covering numbers of Euclidean balls are bounded above and below by standard volume-scale estimates.
 - Target Lean statement: blocked until Euclidean ball, finite-dimensional volume, and finite/infinite cardinal conventions are selected.
 - Required objects: Euclidean balls, `coveringNumber`, volume or cardinal estimates.
@@ -764,7 +777,7 @@ future directions.
 - Priority: v0.3
 
 ## Hamming cube covering and packing bounds
-- Book heading: `汉明立方体的覆盖数和填充数`
+- Book heading: Hamming cube covering and packing bounds
 - Informal statement: covering and packing estimates for the Hamming cube depend on a chosen finite cube representation and Hamming metric.
 - Target Lean statement: blocked until the Hamming cube and Hamming metric object layer is selected.
 - Required objects: finite binary cube, Hamming distance, covering and packing numbers.
@@ -776,7 +789,7 @@ future directions.
 - Priority: v0.3
 
 ## epsilon-net and operator norm bound
-- Book heading: `$\\varepsilon$-网与算子范数`
+- Book heading: epsilon-net and operator norm bound
 - Informal statement: operator norm over a sphere can be controlled using an epsilon-net.
 - Target Lean statement: `epsilonNetOperatorNormStatement`.
 - Required objects: epsilon nets, matrices, operator norm, unit sphere.
@@ -812,23 +825,23 @@ future directions.
 - Priority: Stage MC1
 
 ## metric entropy as log covering number
-- Book heading: `度量熵`
+- Book heading: metric entropy as log covering number
 - Informal statement: metric entropy is represented as the logarithm of the covering number.
 - Target Lean statement: blocked; `metricEntropyLogCoveringStatement` is not added.
 - Required objects: `coveringNumber`, real logarithm, finite-cover or infinity convention.
 - Required definitions: real-valued metric entropy wrapper.
-- Required bridge lemmas: conversion from Mathlib `ℕ∞` covering numbers to a finite real count before applying `Real.log`.
+- Required bridge lemmas: conversion from Mathlib `ENNReal` covering numbers to a finite real count before applying `Real.log`.
 - Status: blocked
-- Blocker: no convention yet for `Real.log` of `ℕ∞` values or infinite covering numbers.
+- Blocker: no convention yet for `Real.log` of `ENNReal` values or infinite covering numbers.
 - Target module: `HighDimProb/MetricEntropy.lean`
 - Priority: v0.2
 
 ## metric entropy coding interpretation
-- Book heading: `度量熵`
+- Book heading: metric entropy coding interpretation
 - Informal statement: logarithms of covering numbers quantify coding complexity up to radius changes.
 - Target Lean statement: blocked until a real-valued metric entropy convention and coding vocabulary are selected.
 - Required objects: `coveringNumber`, possible finite-cover hypothesis, real logarithm, coding/bit-count vocabulary.
-- Required definitions: Stage 5A exposes Mathlib `ℕ∞` covering numbers; `metricEntropy` real-log wrapper is deferred.
+- Required definitions: Stage 5A exposes Mathlib `ENNReal` covering numbers; `metricEntropy` real-log wrapper is deferred.
 - Required bridge lemmas: finite/infinite count handling, base-change for logarithms, and coding interpretation lemmas.
 - Status: blocked
 - Blocker: no real-log covering-number convention and no coding vocabulary exist yet.
@@ -836,7 +849,7 @@ future directions.
 - Priority: v0.3
 
 ## Dudley integral dependency on covering numbers
-- Book heading: `Dudley积分不等式`
+- Book heading: Dudley integral dependency on covering numbers
 - Informal statement: Dudley-type bounds depend on integrals of square roots of logarithmic covering numbers.
 - Target Lean statement: blocked until random-process, entropy-integral, and real-valued metric entropy vocabulary are active.
 - Required objects: random processes, subGaussian increments, `coveringNumber`, entropy integral, real logarithm.
@@ -848,7 +861,7 @@ future directions.
 - Priority: v1.0
 
 ## subGaussian random matrix norm bound
-- Book heading: `带有次高斯元素矩阵的范数`, `次高斯矩阵的双侧界`
+- Book heading: subGaussian random matrix norm bound
 - Informal statement: random matrices with independent subGaussian entries or rows have high-probability operator norm/singular value bounds.
 - Target Lean statement: blocked until independent-entry/independent-row vocabulary and operator-norm theorem bridges exist.
 - Required objects: `RandomMatrix`, `matrixEntry`, `rowVector`, `matVec`, `operatorNorm`, independence, subGaussian predicates.
@@ -860,7 +873,7 @@ future directions.
 - Priority: v0.3
 
 ## sample covariance concentration
-- Book heading: `协方差估计`, `一般协方差估计`
+- Book heading: sample covariance concentration
 - Informal statement: the empirical or sample covariance matrix of independent subGaussian samples concentrates around the population covariance.
 - Target Lean statements: `covarianceEstimationStatement`, `sampleCovarianceOperatorNormStatement`.
 - Required objects: `RandomMatrix`, row samples, `sampleCovariance`, covariance matrix, `operatorNorm`, row subGaussian/isotropic assumptions.
@@ -872,7 +885,7 @@ future directions.
 - Priority: v0.3
 
 ## Hanson-Wright inequality
-- Book heading: `Hanson-Wright不等式`
+- Book heading: Hanson-Wright inequality
 - Informal statement: quadratic forms of independent centered subGaussian vectors concentrate around their mean.
 - Target Lean statement: blocked until independence-coordinate and centered-vector assumption vocabulary is available.
 - Required objects: `RandomVector`, deterministic or random matrices, `quadraticForm`, subGaussian coordinates, Frobenius/operator norms.
@@ -884,7 +897,7 @@ future directions.
 - Priority: v0.3
 
 ## Johnson-Lindenstrauss lemma
-- Book heading: `Johnson-Lindenstrauss引理`, `Johnson-Lindenstrauss嵌入`
+- Book heading: Johnson-Lindenstrauss lemma
 - Informal statement: suitable random projections preserve pairwise distances with high probability.
 - Target Lean statement: blocked until random projection and metric embedding vocabulary exists.
 - Required objects: `RandomMatrix`, `matVec`, `operatorNorm`, finite sets, Euclidean distances, probability events.
@@ -896,7 +909,7 @@ future directions.
 - Priority: v0.3
 
 ## covariance estimation
-- Book heading: `协方差估计`, `一般协方差估计`, `低维分布的协方差估计`
+- Book heading: covariance estimation
 - Informal statement: empirical covariance of subGaussian samples approximates the population covariance with high probability.
 - Target Lean statement: `covarianceEstimationStatement`.
 - Required objects: `RandomVector`, `RandomMatrix`, samples, covariance matrices, `sampleCovariance`, matrix norms.
@@ -908,7 +921,7 @@ future directions.
 - Priority: v0.3
 
 ## matrix Bernstein inequality
-- Book heading: `矩阵伯恩斯坦不等式`, `矩阵不等式`
+- Book heading: matrix Bernstein inequality
 - Informal statement: sums of independent centered random matrices with bounded operator norm satisfy Bernstein-type spectral tail bounds.
 - Target Lean statement: `matrixBernsteinStatement`.
 - Required objects: random matrices, self-adjoint matrix predicates, centered matrix variables, `operatorNorm`, finite random-matrix sums, matrix square/second moments, variance proxy, independence.
@@ -920,7 +933,7 @@ future directions.
 - Priority: v0.4
 
 ## matrix deviation inequality
-- Book heading: `一般协方差估计`, random matrix deviation estimates
+- Book heading: matrix deviation inequality
 - Informal statement: empirical matrix deviations such as `sampleCovariance A - Sigma` are controlled in operator norm under sampling and moment assumptions.
 - Target Lean statement: `sampleCovarianceOperatorNormStatement` is available as a generic typed target; `sampleCovarianceOperatorNormViaUnitSphereStatement` records the unit-vector reduction route as a typed target; sharper deviation statements remain future work.
 - Required objects: `sampleCovariance`, `operatorNorm`, covariance matrices, random matrix rows, row assumptions.
@@ -932,7 +945,7 @@ future directions.
 - Priority: v0.4
 
 ## generic chaining / Dudley inequality
-- Book heading: `Dudley积分不等式`, `通用链界`
+- Book heading: generic chaining / Dudley inequality
 - Informal statement: expected suprema of subGaussian processes are controlled by entropy integrals or chaining functionals.
 - Target Lean statement: blocked until random-process, metric entropy, and Gaussian-width vocabulary are stable.
 - Required objects: random processes, subGaussian increments, covering numbers, gamma2 functional.
@@ -944,7 +957,7 @@ future directions.
 - Priority: v1.0
 
 ## empirical process bounds
-- Book heading: `经验过程`, `经验过程与VC维数`, `一致大数定律`
+- Book heading: empirical process bounds
 - Informal statement: uniform deviations of empirical averages are controlled by VC dimension, entropy, or chaining bounds.
 - Target Lean statement: blocked until empirical measure/process objects and complexity notions exist.
 - Required objects: samples, empirical measures, function classes, supremum deviations.
@@ -956,7 +969,7 @@ future directions.
 - Priority: v1.0
 
 ## signal recovery via M* bound
-- Book heading: `M*界`, `基于M*界的信号恢复`, `逃逸定理`
+- Book heading: signal recovery via M* bound
 - Informal statement: random measurements recover structured signals with error controlled by geometric width terms.
 - Target Lean statement: blocked until random matrices, convex geometry, Gaussian width, and optimization vocabulary exist.
 - Required objects: random matrices, kernels, Gaussian width, convex sets, recovery maps.
@@ -1123,7 +1136,8 @@ future directions.
 - Status: proven conditional wrapper
 - Blocker: none for the wrapper with explicit assumptions. Unconditional
   variance-proxy control, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and
-  lambda-max/operator-norm Matrix Bernstein tails remain unproved.
+  unconditional lambda-max/operator-norm Matrix Bernstein tails remain
+  unproved.
 - Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - Priority: RM-S5D
 
@@ -1142,10 +1156,65 @@ future directions.
 - Required bridge lemmas: none beyond S5D; this is an example-layer wrapper.
 - Status: example API
 - Blocker: variance-proxy control, Tropp/Lieb, Bernstein CFC,
-  Golden-Thompson, and lambda-max/operator-norm Matrix Bernstein tails remain
-  explicit or unproved.
+  Golden-Thompson, and unconditional lambda-max/operator-norm Matrix
+  Bernstein tails remain explicit or unproved.
 - Target module: `HighDimProb/Examples/RandomMatrix/SampleCovarianceTailUsage.lean`
 - Status note: RM-S5E complete.
+
+## nonempty self-adjoint operator-norm Matrix Bernstein wrapper
+- Book heading: Matrix Bernstein inequality / operator-norm tail route
+- Informal statement: for nonempty square dimensions, the self-adjoint
+  operator-norm Matrix Bernstein wrapper no longer requires users to pass
+  `selfAdjointOperatorNormTailViaQuadraticFormStatement (randomMatrixSum A) t`
+  explicitly; the theorem supplies the S3 nonempty bridge internally.
+- Target Lean statement:
+  `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives`
+- Required objects: `randomMatrixSum`, `SelfAdjointOperatorNormTailEvent`,
+  `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`,
+  and `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`.
+- Required bridge lemmas:
+  `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`.
+- Status: proven nonempty wrapper under explicit primitive assumptions
+- Blocker: arbitrary-dimensional operator-norm reduction, variance-proxy
+  control, Tropp/Lieb, Bernstein CFC, Golden-Thompson, full Matrix Bernstein,
+  and sample-covariance concentration remain unproved.
+- Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
+- Test modules: `HighDimProbTest/RandomMatrixConcentrationAPI.lean`
+- Judge modules: `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean` and
+  `HighDimProbJudge/RandomMatrix/StatementUse.lean`
+- Status note: RM-ON-S4 complete.
+
+## sample covariance operator-norm Matrix Bernstein tail wrapper
+- Book heading: sample covariance and Matrix Bernstein prerequisites
+- Informal statement: under explicit row measurability, coordinate `MemLp 2`,
+  row squared-norm, row independence, centered square/exponential/trace
+  integrability, both-sign scalar variance-proxy bounds, Tropp, and CFC, the
+  centered sample covariance satisfies the nonempty two-sided operator-norm
+  tail bound without an explicit spectral-bridge assumption.
+- Target Lean statements:
+  `sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum`
+  and
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`,
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy`
+- Required objects: `SelfAdjointOperatorNormTailEvent`,
+  `centeredRandomMatrix`, `sampleCovariance`,
+  `centeredSampleCovarianceRowRankOneSum`,
+  `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`,
+  `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives`,
+  `selfAdjointOperatorNormTailViaQuadraticFormStatement`, and
+  `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`.
+- Required bridge lemmas: sample covariance centered-sum equality and the
+  proved S7E operator-norm event bridge.
+- Status: proven retained conditional wrapper and proven nonempty wrapper.
+- Blocker: variance-proxy control, Tropp/Lieb, Bernstein CFC,
+  Golden-Thompson, arbitrary-dimensional operator-norm reduction, full Matrix
+  Bernstein, and unconditional sample-covariance concentration remain
+  unproved.
+- Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
+- Test modules: `HighDimProbTest/RandomMatrixConcentrationAPI.lean` and
+  `HighDimProbTest/ExamplesAPI.lean`
+- Judge module: `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`
+- Priority: RM-ON-human-integration-review.
 
 ## sample covariance variance-proxy control contract
 - Book heading: sample covariance and Matrix Bernstein prerequisites
@@ -1172,7 +1241,7 @@ future directions.
 - Target module: validation artifact only.
 - Status note: RM-S5F complete.
 - Current next safe task:
-  RM-S7-next-random-matrix-leaf-selection.
+  RM-ON-human-integration-review.
 
 ## sample covariance PSD bridge
 - Book heading: sample covariance and PSD prerequisites
@@ -1190,7 +1259,7 @@ future directions.
 
 - Book heading: Matrix Bernstein inequality (Tropp 5.4)
 - Informal statement: for independent centered self-adjoint random matrices with
-  uniform norm bound `R` and variance proxy `σ²`, the operator norm of the sum
+  uniform norm bound `R` and variance proxy `sigma^2`, the operator norm of the sum
   satisfies a subGaussian+subExponential tail bound with dimension factor `2n`.
 - Target Lean statement: `matrixBernsteinStatement` (min-form) and
   `matrixBernsteinSelfAdjointStatement` (additive-form)
@@ -1221,7 +1290,7 @@ future directions.
 - Required objects: `deterministicOperatorNorm`, `spectralRadius`,
   `Matrix.IsHermitian.eigenvalues`
 - Status: typed-prop (MC4-cleanup), unproved
-- Blocker: `spectralRadius` returns `ℝ≥0∞`, not `ℝ`; needs coercion and norm equality proof
+- Blocker: `spectralRadius` returns `NNReal?, not `Real; needs coercion and norm equality proof
 - Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - Priority: Stage MC5
 
@@ -1243,10 +1312,10 @@ future directions.
   `lambdaMaxOrdered_is_greatest_eigenvalue`,
   `operatorNorm_eq_max_abs_lambda_statement`.
 - Required objects: `IsSelfAdjointMatrix`, `Matrix.IsHermitian.eigenvalues`,
-  `Matrix.IsHermitian.eigenvalues₀`, `IsUnitVector`, `matrixQuadraticForm`,
+  `Matrix.IsHermitian.eigenvalues?`, `IsUnitVector`, `matrixQuadraticForm`,
   `operatorNorm`.
 - Status: implemented vocabulary and typed targets; MB-S7A-index adds
-  `lambdaMaxOrdered` as the canonical ordered `eigenvalues₀ 0` endpoint and
+  `lambdaMaxOrdered` as the canonical ordered `eigenvalues? 0` endpoint and
   proves the ordered endpoint greatest theorem. MB-S7A-provider proves that
   `lambdaMaxOrdered` supplies `SpectralUpperBound` and the direct ordered
   Rayleigh wrapper.
@@ -1348,6 +1417,7 @@ future directions.
   `lambdaMax_is_greatest_eigenvalue_statement`,
   `lambdaMin_is_least_eigenvalue_statement`,
   `selfAdjointOperatorNormTailViaQuadraticFormStatement`,
+  `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`,
   `traceExpMomentLIntegral`,
   `traceMatrixExp_nonneg_of_selfAdjoint_statement`,
   `traceExpMoment_nonneg_statement`,
@@ -1382,7 +1452,7 @@ future directions.
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Priority: Stage MB-S2 through MB-S9-foundation complete; current next task is
-  RM-S7-next-random-matrix-leaf-selection.
+  RM-ON-human-integration-review.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1781,12 +1851,12 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
+- Priority: next safe task is RM-ON-human-integration-review.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
 - Book heading: structural PSD facts for matrix Bernstein
-- Informal statement: if A is self-adjoint then A² is PSD; if A is self-adjoint
+- Informal statement: if A is self-adjoint then A^2 is PSD; if A is self-adjoint
   random then E[A^2] is PSD; the variance proxy sum_i E[A_i^2] is PSD
 - Target Lean statements: `isPSD_matrixSquare_of_selfAdjoint`,
   `isPSD_matrixSecondMoment_of_selfAdjoint`,
@@ -1850,7 +1920,7 @@ future directions.
 - Dimension route: unchanged `Fin (n + 1)` lambda route; no coercion between
   `Fin n` and `Fin (n + 1)` was introduced.
 - Blocker: MB-S7A-order found that Mathlib's ordered endpoint theorem applies
-  to `Matrix.IsHermitian.eigenvalues₀`, while current `lambdaMax` uses the
+  to `Matrix.IsHermitian.eigenvalues?`, while current `lambdaMax` uses the
   reindexed `Matrix.IsHermitian.eigenvalues`. MB-S7A-index preserves current
   `lambdaMax` and introduces `lambdaMaxOrdered`; the remaining endpoint task is
   the ordered PSD/Rayleigh theorem. Trace-exp spectral dominance, full matrix
@@ -1867,9 +1937,9 @@ future directions.
 - Book heading: matrix Laplace transform prerequisites / Rayleigh reduction.
 - Informal statement: preserve the legacy `lambdaMax` wrapper while exposing a
   canonical ordered largest-eigenvalue endpoint based directly on
-  `Matrix.IsHermitian.eigenvalues₀ 0`.
+  `Matrix.IsHermitian.eigenvalues? 0`.
 - Target Lean declarations: `lambdaMaxOrdered`,
-  `lambdaMaxOrdered_eq_eigenvalues₀_zero`,
+  `lambdaMaxOrdered_eq_eigenvalues?_zero`,
   `lambdaMax_eq_lambdaMaxOrdered_statement`,
   `lambdaMaxOrdered_is_greatest_eigenvalue_statement`,
   `lambdaMaxOrdered_is_greatest_eigenvalue`,
@@ -1878,7 +1948,7 @@ future directions.
   `matrixQuadraticForm_le_lambdaMaxOrdered_of_lambdaMaxOrderedPSDUpperBound`,
   `lambdaMaxOrderedUpperTailEvent`, and
   `quadraticFormUpperTailEvent_subset_lambdaMaxOrderedUpperTailEvent_of_matrixQuadraticForm_le_lambdaMaxOrdered`.
-- Required objects: Mathlib `Matrix.IsHermitian.eigenvalues₀_antitone`,
+- Required objects: Mathlib `Matrix.IsHermitian.eigenvalues?_antitone`,
   HighDimProb `matrixQuadraticForm`, `IsUnitVector`, and existing PSD
   conversion helpers.
 - Status: ordered endpoint wrapper and ordered greatest theorem proved;
@@ -1957,7 +2027,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
+- Priority: next safe task is RM-ON-human-integration-review.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -2084,7 +2154,7 @@ future directions.
 - Blocker: the finite-family Tropp primitive itself remains typed only; the
   Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and the
   Matrix Bernstein tail theorem remain unproved.
-- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
+- Priority: next safe task is RM-ON-human-integration-review.
 
 
 
@@ -2102,7 +2172,7 @@ future directions.
 - Blocker: the result is still one-sided and quadratic-form under explicit
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
-- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
+- Priority: next safe task is RM-ON-human-integration-review.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -2122,7 +2192,7 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
+- Priority: next safe task is RM-ON-human-integration-review.
 
 ## RM Centered Structural API
 
@@ -2146,7 +2216,7 @@ future directions.
   operator-norm layer now supplies the Bochner bridge and expectation
   contraction.
 - Blocker: none for structural centeredness.
-- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
+- Priority: next safe task is RM-ON-human-integration-review.
 
 ## RM Centered Operator-Norm Bound
 
@@ -2168,7 +2238,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
+- Priority: next safe task is RM-ON-human-integration-review.
 
 
 ## RM Centered Rank-One Structural Adapter
@@ -2186,7 +2256,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
+- Priority: next safe task is RM-ON-human-integration-review.
 
 
 ## RM Centered Rank-One Operator-Norm Adapter
@@ -2201,12 +2271,12 @@ future directions.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters, lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb,
   Bernstein CFC, or Golden-Thompson.
-- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
+- Priority: next safe task is RM-ON-human-integration-review.
 
 
 ## RM Vector-to-Rank-One Matrix Measurability / Integrability
 
-- Informal statement: a finite random vector `X : Ω -> Fin n -> ℝ` defines a
+- Informal statement: a finite random vector `X : Omega -> Fin n -> Real defines a
   rank-one random matrix with entries `X_i * X_j`; coordinate measurability
   gives entrywise matrix measurability, and entrywise product integrability or
   coordinate second-moment assumptions give entrywise matrix integrability.
@@ -2218,13 +2288,13 @@ future directions.
 - Blocker: this does not prove integrability from measurability alone,
   sample-covariance Matrix Bernstein assumption adapters, or Matrix Bernstein
   tails.
-- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
+- Priority: next safe task is RM-ON-human-integration-review.
 
 
 ## RM PSD Nullspace Converse
 
 - Informal statement: for a real positive semidefinite matrix `A`, the zero
-  quadratic-form condition `xᵀ A x = 0` is equivalent to the kernel condition
+  quadratic-form condition `x? A x = 0` is equivalent to the kernel condition
   `A x = 0`; HighDimProb exposes this in both Mathlib `Matrix.PosSemidef` and
   explicit `IsPSDMatrix` vocabulary.
 - Target Lean declarations:
@@ -2237,4 +2307,4 @@ future directions.
 - Blocker: this is only a deterministic PSD kernel bridge. It does not prove
   covariance expectation identities, sample-covariance Matrix Bernstein
   assumption adapters, or Matrix Bernstein tails.
-- Priority: next safe task is RM-S7-next-random-matrix-leaf-selection.
+- Priority: next safe task is RM-ON-human-integration-review.

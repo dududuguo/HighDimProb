@@ -56,6 +56,40 @@
 - Lean/mathlib obstruction: theorem statements often require substantial prerequisite vocabulary just to state correctly.
 - Future upgrade path: promote theorem TODOs only after the required object layer and bridge lemmas compile.
 
+## Nonempty operator-norm Matrix Bernstein wrapper
+
+- Concrete version chosen: RM-ON-S4 adds a nonempty `Fin (n + 1)` wrapper that
+  reuses the conditional self-adjoint operator-norm Matrix Bernstein theorem
+  and supplies `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`.
+- Possible general version: replace the conditional theorem with a single
+  arbitrary-dimensional unconditional theorem.
+- Reason for not generalizing yet: the S3 bridge is intentionally nonempty;
+  the zero-dimensional endpoint is not covered.
+- Lean/mathlib obstruction: arbitrary-dimensional operator-norm reduction
+  needs a separate statement/proof shape and cannot be obtained from the
+  nonempty witness lemma.
+- Future upgrade path: keep the conditional theorem for arbitrary bridge
+  assumptions, and add specialized wrappers only when a proved bridge matches
+  the target API.
+
+## Nonempty sample-covariance operator-norm wrapper
+
+- Concrete version chosen: RM-ON-S5 adds a nonempty sample-covariance
+  operator-norm wrapper that reuses the existing sample-covariance
+  normalization event bridge and the RM-ON-S4 nonempty Matrix Bernstein
+  wrapper.
+- Possible general version: replace all sample-covariance operator-norm APIs
+  with one arbitrary-dimensional theorem.
+- Reason for not generalizing yet: the proved spectral bridge is only the
+  nonempty `Fin (n + 1)` bridge, while the conditional theorem remains useful
+  whenever another bridge is supplied explicitly.
+- Lean/mathlib obstruction: variance-proxy control, Tropp/Lieb, Bernstein CFC,
+  and arbitrary-dimensional operator-norm reduction are separate theorem
+  obligations, not consequences of the nonempty wrapper.
+- Future upgrade path: keep variance-proxy and primitive assumptions explicit,
+  and add broader sample-covariance theorem surfaces only after the required
+  analytic or arbitrary-dimensional bridges are proved.
+
 ## Public API boundary
 
 - Concrete version chosen: `import HighDimProb` exposes only reviewed stable modules.

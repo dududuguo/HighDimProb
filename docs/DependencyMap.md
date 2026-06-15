@@ -12,7 +12,7 @@ HighDimProb is an ergonomic wrapper layer over Mathlib. Before adding a declarat
 
 ## Packages and tools
 
-| Package/tool | Source URL or Reservoir name | Why it may help HighDimProb | Classification | Modules/concepts it may support | Currently imported? | Risks |
+| Package/tool | Source URL or Reservoir name | Why it may help HighDimProb | Classification | Modules/concepts it may support | Currently importedomega | Risks |
 |---|---|---|---|---|---|---|
 | Mathlib | `https://github.com/leanprover-community/mathlib4` | Core formal mathematics library. | core dependency | Probability, measure theory, integrals, `MemLp`, `eLpNorm`, independence, conditional probability, Euclidean spaces, matrices, metric spaces, covering numbers, convexity, linear algebra, operator/matrix norms. | Yes, direct Lake dependency. Core files currently import `Mathlib` through `HighDimProb.Basic`. | Heavy import if left global; APIs can require careful typeclass management. |
 | Aesop | `https://github.com/leanprover-community/aesop` | Rule-based automation for future package tactics. | optional future automation dependency | Future `highdim_prob` tactic, routine set/measurability goals. | Inherited by Mathlib in the manifest; not imported by HighDimProb modules. | Can hide proof complexity; not needed for object-language layer. |
