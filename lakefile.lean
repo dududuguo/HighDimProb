@@ -10,6 +10,7 @@ require "leanprover-community" / "mathlib" @ git "v4.29.1"
 
 @[default_target]
 lean_lib «HighDimProb» where
+  roots := #[`HighDimProb, `HighDimProb.Experimental]
 
 lean_lib «HighDimProbTest» where
   globs := #[`HighDimProbTest.*]

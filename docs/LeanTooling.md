@@ -30,6 +30,14 @@ The expected output root is:
 docbuild\.lake\build\doc\index.html
 ```
 
+The `HighDimProb` Lake library has two documentation roots:
+
+- `HighDimProb` for the stable import surface.
+- `HighDimProb.Experimental` for the explicitly experimental API surface.
+
+This is a documentation visibility choice only. It does not make
+`import HighDimProb` import experimental declarations.
+
 On this Windows setup, `doc-gen4` successfully builds the documentation
 database and many module pages, but currently crashes in the final
 `doc-gen4.exe fromDb` phase with exit code `3221225477` (Windows access

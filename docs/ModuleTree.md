@@ -16,6 +16,16 @@
 
 The stable root is intentionally narrow. It should expose the v0.1 scalar probability object layer and reviewed statement specifications only.
 
+The documentation build is broader than the stable import root. The
+`HighDimProb` Lake library uses these doc roots:
+
+- `HighDimProb`
+- `HighDimProb.Experimental`
+
+This makes the generated Library show both the stable API and the explicitly
+experimental API directory, without making `import HighDimProb` import
+experimental declarations.
+
 ## Experimental API
 
 `import HighDimProb.Experimental` imports:
@@ -30,6 +40,11 @@ The stable root is intentionally narrow. It should expose the v0.1 scalar probab
 - `HighDimProb.Tactic`
 
 These modules remain experimental until they pass the promotion checklist: tests, docs, `docs/Status.md` update, and stable-root import audit.
+
+Declarations that still expose proof-route assumptions belong here until their
+mathematical boundary is settled. Examples include wrappers under explicit
+primitive assumptions, trace-MGF provider assumptions, CFC/Tropp assumptions,
+variance-proxy bounds, and operator-norm bridge assumptions.
 
 ## Branch Modules
 
