@@ -222,16 +222,22 @@ positive-threshold operator-norm wrappers, plus bounded-row wrappers that
 derive the positive-side crude variance proxy internally. The newest bounded-row
 operator-norm wrapper also derives negative-family centered/self-adjoint
 structure, entrywise integrability, independence, pointwise operator-norm
-bounds, and negative-side square-integrability via named adapters. It still
-keeps negative exponential/trace integrability, Tropp, and CFC primitive
-assumptions explicit.
+bounds, and negative-side square-integrability via named adapters. The
+negative exp/trace primitive audit adds sign-normalization adapters for
+`matrixExpScaledFamily`, `randomMatrixSum`, `traceExpIntegrand`,
+`bernsteinMGFCoeff`, and the Bernstein CFC statement: these reuse original
+family assumptions at `-theta` for the pointwise-negated family at `theta`.
+They do not derive negative assumptions from the existing positive-side
+positive-theta hypotheses, so negative exponential/trace integrability,
+Tropp, and CFC primitive assumptions remain explicit in the current sample
+covariance wrappers.
 The previous optimized one-sided quadratic-form theorem remains
 `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-negative-exp-trace-primitive-audit`
+- `RM-negative-tropp-primitive-boundary-audit`
 
 ## Public Milestone Summary
 

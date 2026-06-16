@@ -72,7 +72,22 @@ lighter sample-covariance operator-norm wrapper.
 Completed: `RM-negative-square-integrability-adapters`.
 
 Next safe task:
-`RM-negative-exp-trace-primitive-audit`.
+`RM-negative-tropp-primitive-boundary-audit`.
+
+
+Completed: `RM-negative-exp-trace-primitive-audit`.
+
+Added sign-normalization adapters:
+`bernsteinMGFCoeff_neg`,
+`bernsteinMatrixExp_le_quadratic_neg_of_neg_theta`,
+`matrixExpScaledFamily_negRandomMatrixFamily`,
+`integrableRandomMatrix_matrixExpScaledFamily_negRandomMatrixFamily`,
+`randomMatrixSum_negRandomMatrixFamily`,
+`traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily`, and
+`integrableRealRandomVariable_traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily`.
+These expose only the `theta`/`-theta` algebraic boundary and keep Tropp/Lieb,
+Bernstein CFC, Golden-Thompson, full Matrix Bernstein, and current positive-theta
+to negative-side assumption transfer unproved.
 
 ## Milestone 3 scalar implication closeout
 
@@ -1230,7 +1245,7 @@ future directions.
 - Test modules: `HighDimProbTest/RandomMatrixConcentrationAPI.lean` and
   `HighDimProbTest/ExamplesAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`
-- Priority: RM-negative-exp-trace-primitive-audit.
+- Priority: RM-negative-tropp-primitive-boundary-audit.
 
 ## sample covariance variance-proxy control
 - Book heading: sample covariance and Matrix Bernstein prerequisites
@@ -1267,7 +1282,7 @@ future directions.
   `HighDimProb/RandomMatrix/ConcentrationStatements.lean`.
 - Status note: RM-VP complete.
 - Current next safe task:
-  RM-negative-exp-trace-primitive-audit.
+  RM-negative-tropp-primitive-boundary-audit.
 
 ## sample covariance PSD bridge
 - Book heading: sample covariance and PSD prerequisites
@@ -1479,7 +1494,7 @@ future directions.
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Priority: Stage MB-S2 through MB-S9-foundation complete; negative-family
   adapters complete; current next task is
-  RM-negative-exp-trace-primitive-audit.
+  RM-negative-tropp-primitive-boundary-audit.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1878,7 +1893,7 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is RM-negative-exp-trace-primitive-audit.
+- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -2054,7 +2069,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Priority: next safe task is RM-negative-exp-trace-primitive-audit.
+- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -2181,7 +2196,7 @@ future directions.
 - Blocker: the finite-family Tropp primitive itself remains typed only; the
   Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and the
   Matrix Bernstein tail theorem remain unproved.
-- Priority: next safe task is RM-negative-exp-trace-primitive-audit.
+- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
 
 
 
@@ -2199,7 +2214,7 @@ future directions.
 - Blocker: the result is still one-sided and quadratic-form under explicit
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
-- Priority: next safe task is RM-negative-exp-trace-primitive-audit.
+- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -2219,7 +2234,7 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Priority: next safe task is RM-negative-exp-trace-primitive-audit.
+- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
 
 ## RM Centered Structural API
 
@@ -2243,7 +2258,7 @@ future directions.
   operator-norm layer now supplies the Bochner bridge and expectation
   contraction.
 - Blocker: none for structural centeredness.
-- Priority: next safe task is RM-negative-exp-trace-primitive-audit.
+- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
 
 ## RM Centered Operator-Norm Bound
 
@@ -2265,7 +2280,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Priority: next safe task is RM-negative-exp-trace-primitive-audit.
+- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
 
 
 ## RM Centered Rank-One Structural Adapter
@@ -2283,7 +2298,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Priority: next safe task is RM-negative-exp-trace-primitive-audit.
+- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
 
 
 ## RM Centered Rank-One Operator-Norm Adapter
@@ -2298,7 +2313,7 @@ future directions.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters, lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb,
   Bernstein CFC, or Golden-Thompson.
-- Priority: next safe task is RM-negative-exp-trace-primitive-audit.
+- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
 
 
 ## RM Vector-to-Rank-One Matrix Measurability / Integrability
@@ -2315,7 +2330,7 @@ future directions.
 - Blocker: this does not prove integrability from measurability alone,
   sample-covariance Matrix Bernstein assumption adapters, or Matrix Bernstein
   tails.
-- Priority: next safe task is RM-negative-exp-trace-primitive-audit.
+- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
 
 
 ## RM PSD Nullspace Converse
@@ -2334,4 +2349,4 @@ future directions.
 - Blocker: this is only a deterministic PSD kernel bridge. It does not prove
   covariance expectation identities, sample-covariance Matrix Bernstein
   assumption adapters, or Matrix Bernstein tails.
-- Priority: next safe task is RM-negative-exp-trace-primitive-audit.
+- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.

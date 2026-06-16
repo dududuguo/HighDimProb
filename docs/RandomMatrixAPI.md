@@ -241,10 +241,12 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `negativeSide`, those bundles are the actual tail-proof obligations. The
   bounded-row sample-covariance wrappers route through the core bounded-row
   theorems; the operator-norm example uses the adapter-based theorem so
-  negative centeredness, independence, entrywise integrability, and pointwise
-  operator-norm bounds are derived from the named negative-family adapters.
-  The remaining square/exponential/trace integrability, Tropp, and CFC
-  assumptions stay explicit.
+  negative centeredness, independence, entrywise integrability, pointwise
+  operator-norm bounds, and square-integrability are derived from named
+  negative-family adapters. The sign-normalization API can rewrite negative
+  exp/trace/CFC obligations to original-family negative-theta obligations when
+  those are supplied, but current wrappers still keep negative exponential/trace
+  integrability, Tropp, and CFC assumptions explicit.
 - The current surface still does not include sharp moment-optimal variance
   control, arbitrary-dimensional lambda-max Matrix Bernstein tails, the
   zero-dimensional `t = 0` operator-norm endpoint, full Matrix Bernstein,
@@ -252,7 +254,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
   sample-covariance concentration.
 - RM-ON-S8 documentation synchronization records the S6 example update and S7
   test/judge update without changing the API surface.
-- Next safe task: `RM-negative-exp-trace-primitive-audit`.
+- Next safe task: `RM-negative-tropp-primitive-boundary-audit`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
@@ -857,12 +859,31 @@ preferred bounded-row operator-norm wrapper no longer asks for negative
 square-integrability separately; it derives it from the positive family by
 `(-X)^2 = X^2`.
 
+## Completed Negative Exp/Trace Primitive Audit
+
+RM-negative-exp-trace-primitive-audit adds thin sign-normalization adapters:
+
+- `bernsteinMGFCoeff_neg`;
+- `bernsteinMatrixExp_le_quadratic_neg_of_neg_theta`;
+- `matrixExpScaledFamily_negRandomMatrixFamily`;
+- `integrableRandomMatrix_matrixExpScaledFamily_negRandomMatrixFamily`;
+- `randomMatrixSum_negRandomMatrixFamily`;
+- `traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily`;
+- `integrableRealRandomVariable_traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily`.
+
+These adapters say that negative-family exp/trace/CFC obligations at `theta`
+can be discharged from original-family obligations at `-theta` when those
+negative-theta obligations are available. They do not prove matrix-exponential
+integrability, trace-integrability, CFC, or Tropp from the current positive-side
+positive-theta assumptions.
+
 ## Next Safe Task
 
-RM-negative-exp-trace-primitive-audit: audit whether any remaining negative-side
-matrix-exponential integrability, trace-integrability, CFC, or Tropp primitive
-assumptions can be reduced without pretending they are square-negation rewrites.
-Golden-Thompson, Lieb, and full Matrix Bernstein remain explicit blockers.
+RM-negative-tropp-primitive-boundary-audit: audit the finite-family Tropp primitive boundary for the negative
+family.  This should determine which variance-proxy/K-family equalities,
+trace-MGF sign rewrites, and MGF-comparison hypotheses would be required before
+any honest Tropp transfer can be exposed. Golden-Thompson, Lieb, Bernstein CFC,
+and full Matrix Bernstein remain explicit blockers.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -920,4 +941,4 @@ Golden-Thompson, Lieb, and full Matrix Bernstein remain explicit blockers.
 - The arbitrary-dimension bridge leaf adds the corrected positive-threshold
   arbitrary spectral bridge and arbitrary operator-norm Matrix
   Bernstein/sample-covariance wrappers under explicit primitive assumptions.
-- Next safe task: RM-negative-exp-trace-primitive-audit.
+- Next safe task: RM-negative-tropp-primitive-boundary-audit.

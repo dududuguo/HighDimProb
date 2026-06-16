@@ -1006,7 +1006,7 @@ from pointwise operator-norm bounds. The rank-one nullspace examples now reuse
 the S6 core bridges. RM-S7E/RM-S7F add the conditional sample-covariance
 operator-norm event bridge and tail wrapper. RM-ON-S5 adds the nonempty wrapper
 without an explicit spectral-bridge assumption. Current next safe task:
-RM-negative-exp-trace-primitive-audit.
+RM-negative-tropp-primitive-boundary-audit.
 
 ## RM centered operator-norm prerequisite progress
 
@@ -1032,7 +1032,7 @@ conditional sample-covariance quadratic-form tail wrapper is proved. RM-S5E
 adds the example-layer usage wrapper. RM-VP now proves crude variance-proxy
 control from pointwise operator-norm bounds. The rank-one nullspace examples
 now reuse the S6 core bridges. Current next safe task:
-RM-negative-exp-trace-primitive-audit.
+RM-negative-tropp-primitive-boundary-audit.
 
 
 ## RM vector-to-rank-one matrix measurability / integrability prerequisite progress
@@ -1059,7 +1059,7 @@ core sample-covariance tail helper names instead of defining local
 radius/theta/RHS copies. RM-VP now proves crude variance-proxy control. The
 rank-one nullspace examples now reuse the S6 core bridges. Current next safe
 task:
-RM-negative-exp-trace-primitive-audit.
+RM-negative-tropp-primitive-boundary-audit.
 
 
 ## RM centered rank-one structural adapter progress
@@ -1099,7 +1099,7 @@ assumptions.
 RM-VP variance-proxy control is complete. It proves the crude pointwise
 operator-norm route and the centered rank-one / sample-covariance row
 rank-one specializations. The rank-one nullspace example cleanup is complete.
-RM-negative-square-integrability-adapters is complete. Current next safe task: RM-negative-exp-trace-primitive-audit.
+RM-negative-square-integrability-adapters is complete. Current next safe task: RM-negative-tropp-primitive-boundary-audit.
 
 
 ## RM PSD nullspace converse prerequisite progress
@@ -1122,7 +1122,7 @@ expectation-identity theorem for covariance objects and not a Matrix
 Bernstein tail theorem.
 
 RM-VP variance-proxy control is complete. The rank-one nullspace example
-cleanup is complete. RM-negative-square-integrability-adapters is complete. Current next safe task: RM-negative-exp-trace-primitive-audit.
+cleanup is complete. RM-negative-square-integrability-adapters is complete. Current next safe task: RM-negative-tropp-primitive-boundary-audit.
 
 
 ## RM rank-one kernel nullspace API progress
@@ -1150,4 +1150,4 @@ The rank-one nullspace examples now reuse the S6 core bridges where they remove
 local action/sum algebra.
 
 Current next safe task:
-RM-negative-exp-trace-primitive-audit.
+RM-negative-tropp-primitive-boundary-audit.

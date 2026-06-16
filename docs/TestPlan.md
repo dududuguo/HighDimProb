@@ -684,6 +684,16 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   adapters, and
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`, plus the square-negation declarations and
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`.
+- RM-negative-exp-trace-primitive-audit adds focused `#check` coverage in
+  `HighDimProbTest/RandomMatrixTraceExpAPI.lean`,
+  `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
+  `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`, and
+  `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean` for the thin
+  sign-normalization adapters around `bernsteinMGFCoeff`,
+  `bernsteinMatrixExp_le_quadratic_statement`, `matrixExpScaledFamily`,
+  `randomMatrixSum`, and `traceExpIntegrand` on `negRandomMatrixFamily`.
+  These checks intentionally expose the negative-theta input obligations rather
+  than claiming same-theta positive-to-negative transfer.
 - RM-ON-S6 focused validation runs
   `lake build HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage` to
   check the example surface against the latest nonempty sample-covariance

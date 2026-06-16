@@ -72,7 +72,8 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
   operator-norm Matrix Bernstein/sample-covariance wrappers while keeping
   Tropp, CFC, independence, and integrability assumptions explicit. The
   current arbitrary-dimensional route is positive-threshold only; the negative
-  family adapter branch is complete, and the next RandomMatrix branch is
-  `RM-negative-exp-trace-primitive-audit`.
+  family adapter branch and negative exp/trace sign-normalization audit are
+  complete, and the next RandomMatrix branch is
+  `RM-negative-tropp-primitive-boundary-audit`.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.

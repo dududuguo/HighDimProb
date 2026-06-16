@@ -67,7 +67,13 @@ RM-S6 adds deterministic rank-one kernel/nullspace bridges:
 The rank-one nullspace examples now reuse these core bridges where they remove
 local action/sum algebra.
 
-Next safe task: `RM-negative-exp-trace-primitive-audit`.
+Next safe task: `RM-negative-tropp-primitive-boundary-audit`.
+
+RM-negative-exp-trace-primitive-audit complete: sign-normalization adapters now
+rewrite negative-family matrix-exp, trace-exp, and CFC obligations at `theta` to
+original-family obligations at `-theta` when those negative-theta hypotheses are
+available. This does not prove Tropp/Lieb, Bernstein CFC, Golden-Thompson, full
+Matrix Bernstein, or same-theta positive-to-negative transfer.
 
 RM prerequisite update: the centered structural API, expectation
 operator-norm contraction, centered `2 * R` operator-norm wrappers, and named

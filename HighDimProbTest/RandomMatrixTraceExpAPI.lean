@@ -66,10 +66,12 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check bernsteinThetaChoice_range
 #check bernsteinThetaChoice_exponent_eq
 #check bernsteinCoefficient_nonneg
+#check bernsteinMGFCoeff_neg
 #check bernsteinMGFCoeff_nonneg
 #check TraceMGFBernsteinVarianceProxyBound
 #check TraceMGFBernsteinVarianceProxyBoundLIntegral
 #check bernsteinMatrixExp_le_quadratic_statement
+#check bernsteinMatrixExp_le_quadratic_neg_of_neg_theta
 #check singleSummandMatrixMGFVarianceProxy_statement
 #check singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic
 #check traceMatrixExp_nonneg_of_selfAdjoint_statement
@@ -145,11 +147,16 @@ variable (hBernsteinRange : abs theta * R < 3)
   Prop)
 #check (bernsteinCoefficient_nonneg hBernsteinRange :
   0 <= (theta ^ 2 / 2) / (1 - abs theta * R / 3))
+#check (bernsteinMGFCoeff_neg theta R :
+  bernsteinMGFCoeff (-theta) R = bernsteinMGFCoeff theta R)
 #check (bernsteinMGFCoeff_nonneg hBernsteinRange :
   0 <= bernsteinMGFCoeff theta R)
 #check (TraceMGFBernsteinVarianceProxyBound P Y V theta R : Prop)
 #check (TraceMGFBernsteinVarianceProxyBoundLIntegral P Y V theta R : Prop)
 #check (bernsteinMatrixExp_le_quadratic_statement A theta R : Prop)
+#check (bernsteinMatrixExp_le_quadratic_neg_of_neg_theta A theta R :
+  bernsteinMatrixExp_le_quadratic_statement A (-theta) R ->
+    bernsteinMatrixExp_le_quadratic_statement (-A) theta R)
 #check (singleSummandMatrixMGFVarianceProxy_statement (P := P) Y V theta R :
   Prop)
 #check (hTropp hA hY hTroppTraceInt hExpInt hExpMeanSA hExpMeanPos :
