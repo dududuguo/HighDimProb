@@ -39,8 +39,8 @@
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
   - Current repository next task:
-    RM-negative-tropp-primitive-boundary-audit; matrix Bernstein, Hanson-Wright, and
-    WLLN/SLLN remain separate future directions
+    RM-negative-trace-mgf-provider-wrapper-audit; matrix Bernstein,
+    Hanson-Wright, and WLLN/SLLN remain separate future directions
 - OrliczToTail
 - TailToOrlicz
 - MomentImplications
