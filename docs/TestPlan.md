@@ -688,5 +688,5 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   bridge is supplied internally by the corrected arbitrary Matrix Bernstein
   theorem, and the crude bounded-row variance-proxy wrappers. It does not prove
   sharp variance control, Tropp/Lieb, Bernstein CFC, Golden-Thompson, full
-  Matrix Bernstein, the false nonnegative-threshold zero-dimensional endpoint,
-  or an unconditional sample-covariance concentration theorem.
+  Matrix Bernstein, a packaged zero-dimensional `t = 0` endpoint, or an
+  unconditional sample-covariance concentration theorem.

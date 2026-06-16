@@ -1178,8 +1178,7 @@ future directions.
 - Blocker: sharp variance control, Tropp/Lieb, Bernstein CFC,
   Golden-Thompson, full Matrix Bernstein, and sample-covariance concentration
   remain unproved. The arbitrary positive-threshold operator-norm route is
-  proved separately; the original arbitrary `0 <= t` statement is false at
-  `Fin 0`, `t = 0`.
+  proved separately and is the supported arbitrary-dimensional route.
 - Target module: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - Test modules: `HighDimProbTest/RandomMatrixConcentrationAPI.lean`
 - Judge modules: `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean` and

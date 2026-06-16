@@ -64,9 +64,9 @@
 - General version now available: RM-ON arbitrary-dimension cleanup adds the
   positive-threshold arbitrary wrapper by splitting off the zero-dimensional
   empty-tail endpoint and reusing the nonempty bridge in successor dimensions.
-- Endpoint boundary: the original arbitrary `0 <= t` bridge is false at
-  `Fin 0`, `t = 0`, so the bridge-explicit theorem remains useful while the
-  corrected arbitrary wrapper requires `0 < t`.
+- Endpoint boundary: the current arbitrary-dimensional route uses `0 < t`, so
+  the bridge-explicit theorem remains useful when a caller wants to manage the
+  spectral bridge assumption directly.
 - Remaining obstruction: variance-proxy control, Tropp/Lieb, Bernstein CFC,
   Golden-Thompson, and full Matrix Bernstein remain separate theorem
   obligations.

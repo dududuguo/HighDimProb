@@ -8,6 +8,9 @@ random-matrix formalization easier to build on.
 
 The scalar concentration side is the most stable part right now. Random vectors,
 random matrices, and Matrix Bernstein material are under active development.
+The experimental RandomMatrix layer currently includes under-primitives
+quadratic-form, self-adjoint operator-norm, and sample-covariance Matrix
+Bernstein wrappers.
 
 ## Quick Start
 

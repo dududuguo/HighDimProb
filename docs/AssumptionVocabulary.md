@@ -71,7 +71,7 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
   bridge leaf adds the corrected `0 < t` spectral bridge and arbitrary
   operator-norm Matrix Bernstein/sample-covariance wrappers while keeping
   Tropp, CFC, independence, and integrability assumptions explicit. The
-  original arbitrary `0 <= t` bridge remains false at `Fin 0`, `t = 0`. The
-  next RandomMatrix branch is `RM-negative-family-adapters`.
+  current arbitrary-dimensional route is positive-threshold only; the next
+  RandomMatrix branch is `RM-negative-family-adapters`.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.

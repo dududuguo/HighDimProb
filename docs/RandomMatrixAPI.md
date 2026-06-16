@@ -69,12 +69,12 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`; Tropp, CFC,
   variance-proxy, independence, and integrability assumptions remain explicit
   for both signs.
-- Proved corrected arbitrary-dimensional self-adjoint operator-norm spectral
-  bridge under the necessary positive-threshold assumption:
+- Proved the supported arbitrary-dimensional self-adjoint operator-norm
+  spectral bridge on the positive-threshold route:
   `selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos` and
-  `selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos`. The original
-  arbitrary-dimensional typed statement with only `0 <= t` is false at
-  `Fin 0`, `t = 0`.
+  `selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos`. The current
+  arbitrary-dimensional API uses `0 < t`; it does not package the
+  zero-dimensional `t = 0` endpoint.
 - Proved arbitrary-dimensional self-adjoint operator-norm Matrix Bernstein
   wrapper under explicit primitives and `0 < t`:
   `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives`.
@@ -122,9 +122,10 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`.
   It reuses the generalized sample-covariance event bridge and the arbitrary
   positive-threshold self-adjoint operator-norm Matrix Bernstein wrapper.
-- Arbitrary-dimensional lambda-max Matrix Bernstein, the nonnegative-threshold
-  zero-dimensional operator-norm endpoint, and the full Matrix Bernstein tail
-  theorem remain unproved.
+- The current operator-norm API covers positive-threshold wrappers under
+  explicit primitives. It still does not include an arbitrary-dimensional
+  lambda-max Matrix Bernstein tail, the zero-dimensional `t = 0` endpoint, or a
+  full CFC/Tropp-free Matrix Bernstein theorem.
 - Proved rank-one operator-norm prerequisite bridge:
   `rankOneOperatorNorm_le_vectorSqNorm`,
   `BoundedOperatorNorm_rankOneRandomMatrix_of_sqNorm_bound`, and
@@ -207,11 +208,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`.
 - The example surface now includes `sampleCovariance_operatorNorm_tail_usage`
   alongside `sampleCovariance_quadraticForm_tail_usage`.
-- No sharp moment-optimal variance proxy, arbitrary-dimensional lambda-max
-  Matrix Bernstein tail theorem, nonnegative-threshold zero-dimensional
-  operator-norm endpoint, full Matrix Bernstein, Tropp/Lieb, Bernstein CFC,
-  Golden-Thompson theorem, or unconditional sample-covariance concentration
-  theorem was added by the operator-norm or variance-proxy stages.
+- The current surface still does not include sharp moment-optimal variance
+  control, arbitrary-dimensional lambda-max Matrix Bernstein tails, the
+  zero-dimensional `t = 0` operator-norm endpoint, full Matrix Bernstein,
+  Tropp/Lieb, Bernstein CFC, Golden-Thompson, or unconditional
+  sample-covariance concentration.
 - RM-ON-S8 documentation synchronization records the S6 example update and S7
   test/judge update without changing the API surface.
 - Next safe task: `RM-negative-family-adapters`.
@@ -713,8 +714,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
   assumptions, with the corrected spectral bridge supplied internally.
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`:
   theorem proving the arbitrary positive-threshold sample-covariance
-  operator-norm tail wrapper with the positive and negative crude variance
-  proxies supplied internally from pointwise bounds.
+  operator-norm tail wrapper with the positive-side crude variance proxy
+  supplied from the bounded-row assumption. The negative side still uses the
+  explicit negative-family pointwise-bound and primitive assumptions.
 - `matrixBernsteinTraceMGFToLaplaceContract_statement`: retained typed
   compatibility contract for the bounded-Bernstein lintegral Laplace route
   specialized to `randomMatrixSum A` and `matrixVarianceProxy P A`.
@@ -724,9 +726,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Current Blockers
 
-- Unconditional lambda-max/operator-norm Matrix Bernstein tail connection
-  beyond the proved quadratic-form, bridge-explicit operator-norm, and
-  nonempty operator-norm wrappers.
+- The current supported operator-norm route is the explicit-primitive,
+  positive-threshold API listed above. What is still not automatic:
+  arbitrary-dimensional lambda-max tails, the zero-dimensional `t = 0`
+  endpoint, CFC/Tropp-free Matrix Bernstein, and the negative-family adapters
+  needed to make sample-covariance operator-norm wrappers lighter to use.
 - Unconditional trace-MGF provider theorem without explicit finite-family
   Tropp assumptions. The bounded theorem under primitives is proved for
   `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`; the finite-family
@@ -752,9 +756,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
   theorem in `ConcentrationStatements.lean`, thin high-level wrapper from the
   finite-family Tropp typed primitive to
   `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`.
-- The finite-family Tropp primitive remains typed only. The Bernstein CFC
-  primitive remains typed only. No Lieb theorem, Golden-Thompson theorem, or
-  Matrix Bernstein tail theorem was proved.
+- The finite-family Tropp primitive and Bernstein CFC primitive remain explicit
+  inputs. Lieb, Golden-Thompson, and full Matrix Bernstein are still outside
+  the proved API.
 
 ## Next Safe Task
 

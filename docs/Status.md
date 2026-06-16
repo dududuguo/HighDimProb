@@ -59,15 +59,16 @@ only by the missing normalization event bridge from
 `centeredRandomMatrix P (sampleCovariance A)` to the unnormalized centered
 row-rank-one sum at threshold `(m : Real) * t`; no core Lean source theorem is
 added in RM-S7D.
-The RM-ON arbitrary-dimension spectral bridge leaf proves that the original
-arbitrary-dimensional bridge with only `0 <= t` is false at the zero-dimensional
-endpoint `Fin 0` when `t = 0`, and adds the corrected positive-threshold route:
+The RM-ON arbitrary-dimension spectral bridge leaf adds the current
+positive-threshold route:
 `selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos` and
 `selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos`. It also adds the
 positive-threshold arbitrary self-adjoint operator-norm Matrix Bernstein
 wrapper and the positive-threshold arbitrary sample-covariance operator-norm
-wrapper under the existing explicit primitive assumptions. The bridge-explicit
-conditional wrappers and nonempty wrappers remain available.
+wrapper under the existing explicit primitive assumptions. This route uses
+`0 < t`; the zero-dimensional `t = 0` endpoint is intentionally outside the
+current arbitrary-dimensional API. The bridge-explicit conditional wrappers and
+nonempty wrappers remain available.
 
 The latest proved public declarations fall into three routes:
 
@@ -175,15 +176,15 @@ and finite rank-one sum kernel membership from per-feature orthogonality. It doe
 not prove integrability from measurability alone, effective dimension,
 restricted Matrix Bernstein, lambda-max Matrix Bernstein tails,
 Tropp/Lieb, the Bernstein CFC primitive, Golden-Thompson, the `t = 0` endpoint
-for the optimized wrapper, or the final full Matrix Bernstein tail theorem. No
-unconditional sample covariance concentration theorem, sharp moment-optimal
-variance proxy, full Matrix Bernstein, Tropp/Lieb, Bernstein CFC, or
-Golden-Thompson theorem was proved by the RM-S5/RM-S7/RM-ON/RM-VP leaves.
+for the optimized wrapper, or the final full Matrix Bernstein tail theorem.
+The current surface still does not include unconditional sample covariance
+concentration, sharp moment-optimal variance control, full Matrix Bernstein,
+Tropp/Lieb, Bernstein CFC, or Golden-Thompson.
 The self-adjoint operator-norm reduction to the two-sided quadratic-form event
-is proved for nonempty dimensions and for arbitrary dimensions under the
-necessary `0 < t` assumption. The original typed statement
-`selfAdjointOperatorNormTailViaQuadraticFormStatement` keeps only `0 <= t` and
-is false at `Fin 0`, `t = 0`; it remains a typed contract, not a theorem.
+is proved for nonempty dimensions and for arbitrary dimensions on the
+positive-threshold `0 < t` route. The broader typed contract
+`selfAdjointOperatorNormTailViaQuadraticFormStatement` is still just a target;
+the current arbitrary-dimensional theorem is the positive-threshold version.
 Sample covariance now has retained bridge-explicit, nonempty, and arbitrary
 positive-threshold operator-norm wrappers, plus bounded-row wrappers that
 derive the positive-side crude variance proxy internally. The operator-norm

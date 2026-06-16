@@ -51,10 +51,10 @@ ENNReal.ofReal
 ```
 
 The theorem assumes the finite-family Tropp/Lieb typed primitive and the
-pointwise Bernstein CFC typed primitive explicitly. It does not prove
-Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, the `t = 0` endpoint
-for the optimized wrapper, unconditional lambda-max Matrix Bernstein tails, or
-the full Matrix Bernstein tail theorem.
+pointwise Bernstein CFC typed primitive explicitly. The current public API does
+not include Tropp/Lieb, Golden-Thompson, the Bernstein CFC primitive, a packaged
+`t = 0` operator-norm endpoint, unconditional lambda-max Matrix Bernstein
+tails, or the full Matrix Bernstein tail theorem.
 
 The retained sample-covariance wrapper
 `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
@@ -94,11 +94,11 @@ variance-proxy control, Tropp/Lieb, the Bernstein CFC primitive,
 Golden-Thompson, or full Matrix Bernstein.
 
 The arbitrary-dimensional self-adjoint operator-norm route is now proved on the
-corrected positive-threshold contract. The zero-dimensional endpoint
+positive-threshold contract. The zero-dimensional positive-threshold endpoint
 `selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos` and the arbitrary
 bridge `selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos` show that
-`0 < t` is sufficient; the original typed statement with only `0 <= t` is false
-at `Fin 0`, `t = 0`. The corresponding Matrix Bernstein wrapper
+`0 < t` is the supported arbitrary-dimensional route. The corresponding Matrix
+Bernstein wrapper
 `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives`
 and sample-covariance wrapper
 `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`
@@ -265,7 +265,7 @@ targets only.
 | Self-adjoint norm/eigenvalue endpoint bridge | `operatorNorm_eq_max_abs_lambda_statement` | typed `Prop`, unproved |
 | Lambda-max endpoint ordering bridge | `lambdaMax_is_greatest_eigenvalue_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue_statement`, `lambdaMaxOrdered_is_greatest_eigenvalue` | legacy statement typed/unproved; ordered endpoint theorem proved for `eigenvalues?` |
 | Lambda-min endpoint ordering bridge | `lambdaMin_is_least_eigenvalue_statement` | typed `Prop`, unproved |
-| Self-adjoint operator-norm tail via quadratic forms | `selfAdjointOperatorNormTailViaQuadraticFormStatement`, `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`, `selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos`, `selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos` | arbitrary-`n` typed `Prop`; nonempty `Fin (n + 1)` theorem and arbitrary positive-threshold theorem proved; original `0 <= t` arbitrary statement is false at `Fin 0`, `t = 0` |
+| Self-adjoint operator-norm tail via quadratic forms | `selfAdjointOperatorNormTailViaQuadraticFormStatement`, `selfAdjointOperatorNormTailViaQuadraticFormStatement_nonempty`, `selfAdjointOperatorNormTailEvent_empty_of_zero_dim_of_pos`, `selfAdjointOperatorNormTailViaQuadraticFormStatement_of_pos` | arbitrary-`n` typed `Prop`; nonempty `Fin (n + 1)` theorem and arbitrary positive-threshold theorem proved; the supported arbitrary-dimensional theorem uses `0 < t` |
 | Trace-exponential moment bound | `traceExpMomentBoundStatement` | typed `Prop`, unproved |
 | Variance-proxy trace-exponential bound | `traceExpVarianceProxyBoundStatement` | typed `Prop`, unproved |
 | Semantic trace-mgf bound provider | `traceMGFBound_statement`, `traceMGFBoundLIntegral_statement` | typed `Prop`, unproved |
