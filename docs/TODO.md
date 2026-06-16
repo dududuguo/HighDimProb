@@ -84,9 +84,12 @@
   sample-covariance operator-norm wrapper while keeping variance proxy,
   Tropp/CFC primitives, independence, integrability, row `MemLp 2`, row
   squared-norm, and positivity assumptions explicit.
-- Done: RM-ON-S6 updated the sample-covariance example surface so
-  `sampleCovariance_operatorNorm_tail_usage` calls the nonempty wrapper without
-  an example-local spectral-bridge assumption.
+- Done: RM-ON-S6 first updated the sample-covariance example surface to remove
+  the example-local spectral-bridge assumption. The current example surface now
+  routes `sampleCovariance_operatorNorm_tail_usage` through
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`,
+  so negative centeredness, independence, entrywise integrability, and
+  pointwise operator-norm bounds are derived by adapters.
 - Done: RM-ON-S7 added focused test and judge coverage for the RM-ON-S2
   through RM-ON-S5 public declarations and downstream-style applications of
   the nonempty Matrix Bernstein and sample-covariance wrappers.

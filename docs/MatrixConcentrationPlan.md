@@ -105,8 +105,13 @@ and
 `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`.
 The positive-threshold arbitrary wrapper is retained via
 `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`,
-and the bounded-row version is proved via
+the lower-level bounded-row version is proved via
 `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`.
+The adapter-based bounded-row version
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`
+derives negative-family centeredness, independence, entrywise integrability,
+and pointwise operator-norm bounds from named adapters while leaving negative
+square/exponential/trace integrability, Tropp, and CFC assumptions explicit.
 It does not prove sharp variance control, unconditional sample covariance
 concentration, a packaged zero-dimensional `t = 0` spectral endpoint, or
 integrability from measurability alone.

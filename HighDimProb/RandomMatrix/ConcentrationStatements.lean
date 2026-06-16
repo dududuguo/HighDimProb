@@ -2976,8 +2976,11 @@ theorem sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos
   have hCenteredNeg :
       CenteredSelfAdjointRandomMatrixFamily P
         (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) :=
-    centeredSampleCovarianceRowRankOneFamilyNeg_centeredSelfAdjoint_of_memLp_two
-      (P := P) (A := A) hMeas hLp
+    by
+      simpa [centeredSampleCovarianceRowRankOneFamilyNeg] using
+        centeredSelfAdjointRandomMatrixFamily_negRandomMatrixFamily
+          (P := P) (A := centeredSampleCovarianceRowRankOneFamily (P := P) A)
+          hCentered
   have hIndepSANeg :
       IndependentSelfAdjointRandomMatrices P
         (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) := by

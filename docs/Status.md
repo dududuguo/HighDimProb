@@ -89,8 +89,9 @@ The latest proved public declarations fall into four groups:
    `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`,
    `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy`,
    `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`,
+   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`,
    and
-   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`.
+   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`.
 3. Crude variance-proxy control route:
    `pointwiseOperatorNormVarianceProxyNormRHS`,
    `deterministicOperatorNorm_matrixSquare_le_sq`,
@@ -132,6 +133,11 @@ These examples are available through `import HighDimProb.Examples`; the stable
 core import remains `import HighDimProb`. The ML-facing example fields record
 the domain model, while the Matrix Bernstein `positiveSide` and `negativeSide`
 bundles remain the actual proof obligations.
+The sample-covariance operator-norm examples use the adapter-based bounded-row
+wrapper, so they no longer ask users to provide negative centeredness,
+independence, entrywise integrability, or pointwise operator-norm bounds
+directly; negative square/exponential/trace integrability, Tropp, and CFC
+assumptions remain explicit.
 
 The latest deterministic rank-one nullspace API is:
 

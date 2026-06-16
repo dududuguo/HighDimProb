@@ -112,11 +112,12 @@ theorem sampleCovariance_quadraticForm_tail_usage
 operator-norm tail wrapper.
 
 The positive-sign sample-covariance assumptions reuse
-`SampleCovarianceTailAssumptions`. The negative-sign Matrix Bernstein
-assumptions remain explicit except for the variance-proxy norm bound, which is
-derived from the negative-family operator-norm bound. The arbitrary core wrapper
-supplies the self-adjoint operator-norm spectral bridge internally under the
-explicit positive-threshold assumption. -/
+`SampleCovarianceTailAssumptions`. For the negative sign, this example follows
+the adapter-based core wrapper: the row squared-norm bound is explicit, while
+centeredness, independence, entrywise integrability, and pointwise
+operator-norm control are derived by named negative-family adapters. The
+remaining square/exponential/trace integrability, Tropp, and Bernstein CFC
+primitives stay explicit. -/
 structure SampleCovarianceOperatorNormTailAssumptions {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
     {m n : Nat}
@@ -124,16 +125,9 @@ structure SampleCovarianceOperatorNormTailAssumptions {Omega : Type*}
     (R Rneg t : Real) : Prop where
   positive :
     SampleCovarianceTailAssumptions (P := P) A R t
-  centeredNeg :
-    CenteredSelfAdjointRandomMatrixFamily P
-      (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
-  independentSelfAdjointNeg :
-    IndependentSelfAdjointRandomMatrices P
-      (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
-  integrableNeg :
-    forall k : Fin m,
-      IntegrableRandomMatrix P
-        ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) k)
+  rowSqNormBoundNeg :
+    forall k : Fin m, forall omega,
+      vectorSqNorm (rowVector A k omega) <= Rneg
   squareIntegrableNeg :
     forall k : Fin m,
       IntegrableRandomMatrix P
@@ -153,10 +147,6 @@ structure SampleCovarianceOperatorNormTailAssumptions {Omega : Type*}
         (centeredSampleCovarianceRowRankOneSumNeg (P := P) A)
         (sampleCovarianceTailTheta (m := m) Rneg t
           (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg)))
-  operatorNormBoundNeg :
-    PointwiseOperatorNormBound
-      (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
-      (sampleCovarianceCenteredRankOneRadius Rneg)
   radiusPositiveNeg : 0 < Rneg
   cfcPrimitiveNeg :
     forall k : Fin m, forall omega,
@@ -183,9 +173,8 @@ structure SampleCovarianceOperatorNormTailAssumptions {Omega : Type*}
 /-- Preferred example-level sample-covariance operator-norm tail wrapper.
 
 This is only a readability layer over
-`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`;
-all analytic assumptions remain visible in
-`SampleCovarianceOperatorNormTailAssumptions`. -/
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`;
+the example leaves only the analytic Matrix Bernstein primitives explicit. -/
 theorem sampleCovariance_operatorNorm_tail_usage
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {m n : Nat}
@@ -202,12 +191,13 @@ theorem sampleCovariance_operatorNorm_tail_usage
           (m := m) (n := n + 1) Rneg t
           (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg) := by
   exact
-    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound
+    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters
       (P := P) A R Rneg t
       h.positive.sampleCountPositive
       h.positive.randomMatrix
       h.positive.coordinateMemLpTwo
       h.positive.rowSqNormBound
+      h.rowSqNormBoundNeg
       h.positive.independentRows
       h.positive.squareIntegrable
       h.positive.expIntegrable
@@ -216,13 +206,9 @@ theorem sampleCovariance_operatorNorm_tail_usage
       h.positive.deviationPositive
       h.positive.cfcPrimitive
       h.positive.troppPrimitive
-      h.centeredNeg
-      h.independentSelfAdjointNeg
-      h.integrableNeg
       h.squareIntegrableNeg
       h.expIntegrableNeg
       h.traceExpIntegrableNeg
-      h.operatorNormBoundNeg
       h.radiusPositiveNeg
       h.cfcPrimitiveNeg
       h.troppPrimitiveNeg

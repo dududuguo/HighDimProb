@@ -1202,7 +1202,8 @@ future directions.
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`,
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy`,
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`,
-  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`,
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`
 - Required objects: `SelfAdjointOperatorNormTailEvent`,
   `centeredRandomMatrix`, `sampleCovariance`,
   `centeredSampleCovarianceRowRankOneSum`,
@@ -1216,7 +1217,9 @@ future directions.
   proved S7E operator-norm event bridge.
 - Status: proven retained conditional wrapper, proven nonempty wrapper,
   proven arbitrary positive-threshold wrapper, and proven bounded-row crude
-  variance-proxy wrapper.
+  variance-proxy wrappers, including the adapter-based version that derives
+  negative centeredness, independence, entrywise integrability, and pointwise
+  operator-norm bounds.
 - Blocker: sharp variance control, Tropp/Lieb, Bernstein CFC,
   Golden-Thompson, full Matrix Bernstein, and unconditional sample-covariance
   concentration remain unproved. The original arbitrary `0 <= t` spectral
@@ -1238,7 +1241,9 @@ future directions.
   `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound`,
   `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound`,
   and
-  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`.
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`,
+  plus the adapter-based
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`.
 - Required objects: `MatrixVarianceProxyNormBound`,
   `MatrixVarianceProxyUpperBound`, `matrixVarianceProxy`,
   `matrixVarianceProxyNorm`,

@@ -39,6 +39,7 @@ MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNo
 sampleCovarianceCenteredRankOneVarianceProxyBound
 sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound
 sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound
+sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters
 ```
 
 The optimized wrapper chooses `theta = t / (sigmaSq + R * t / 3)` and proves

@@ -87,22 +87,16 @@ Negative-side assumptions that remain explicit for the same wrapper.
 
 The negative family itself is the existing centered rank-one negation API. These
 fields are deliberately narrow: they expose the assumptions still needed for the
-lower-tail half without asking the user to provide the final theorem.
+lower-tail half after the core negative-family adapters derive centeredness,
+independence, entrywise integrability, and pointwise operator-norm bounds.
 -/
 structure NegativeBoundedRowSampleCovarianceAssumptions
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {m n : Nat}
     (A : RandomMatrix Omega m (n + 1)) (Rneg t : Real) : Prop where
-  centeredSelfAdjointNeg :
-    CenteredSelfAdjointRandomMatrixFamily P
-      (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
-  independentSelfAdjointNeg :
-    IndependentSelfAdjointRandomMatrices P
-      (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
-  integrableNeg :
-    forall k : Fin m,
-      IntegrableRandomMatrix P
-        ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) k)
+  rowSqNormBoundNeg :
+    forall k : Fin m, forall omega,
+      vectorSqNorm (rowVector A k omega) <= Rneg
   squareIntegrableNeg :
     forall k : Fin m,
       IntegrableRandomMatrix P
@@ -122,10 +116,6 @@ structure NegativeBoundedRowSampleCovarianceAssumptions
         (centeredSampleCovarianceRowRankOneSumNeg (P := P) A)
         (sampleCovarianceTailTheta (m := m) Rneg t
           (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg)))
-  operatorNormBoundNeg :
-    PointwiseOperatorNormBound
-      (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
-      (sampleCovarianceCenteredRankOneRadius Rneg)
   rowBoundPositiveNeg : 0 < Rneg
   cfcPrimitiveNeg :
     forall k : Fin m, forall omega,
@@ -153,8 +143,10 @@ structure NegativeBoundedRowSampleCovarianceAssumptions
 Usage of the bounded-row sample covariance operator-norm tail wrapper.
 
 The positive side is driven by `rowSqNormBound`; the wrapper calls the existing
-bounded-row variance-proxy control internally. The negative side and the
-analytic CFC/Tropp primitives remain explicit.
+bounded-row variance-proxy control internally. The negative side uses the core
+negative-family adapters to derive structural obligations from
+`rowSqNormBoundNeg`; square/exponential/trace integrability and CFC/Tropp
+primitives remain explicit.
 -/
 theorem boundedRowSampleCovariance_operatorNorm_tail_usage
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -171,12 +163,13 @@ theorem boundedRowSampleCovariance_operatorNorm_tail_usage
           (m := m) (n := n + 1) Rneg t
           (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg) := by
   exact
-    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound
+    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters
       (P := P) A R Rneg t
       hPos.sampleCountPositive
       hPos.randomMatrix
       hPos.coordinateMemLpTwo
       hPos.rowSqNormBound
+      hNeg.rowSqNormBoundNeg
       hPos.independentCenteredRows
       hPos.squareIntegrable
       hPos.expIntegrable
@@ -185,13 +178,9 @@ theorem boundedRowSampleCovariance_operatorNorm_tail_usage
       hPos.deviationPositive
       hPos.cfcPrimitive
       hPos.troppPrimitive
-      hNeg.centeredSelfAdjointNeg
-      hNeg.independentSelfAdjointNeg
-      hNeg.integrableNeg
       hNeg.squareIntegrableNeg
       hNeg.expIntegrableNeg
       hNeg.traceExpIntegrableNeg
-      hNeg.operatorNormBoundNeg
       hNeg.rowBoundPositiveNeg
       hNeg.cfcPrimitiveNeg
       hNeg.troppPrimitiveNeg

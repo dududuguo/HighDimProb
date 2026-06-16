@@ -670,6 +670,11 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   row-rank-one names are core
   `HighDimProb.RandomMatrix.ConcentrationStatements` abbreviations reused by
   the example surface.
+- `sampleCovariance_operatorNorm_tail_usage` and
+  `boundedRowSampleCovariance_operatorNorm_tail_usage` call the adapter-based
+  bounded-row theorem, so the examples no longer ask users to provide negative
+  centeredness, independence, entrywise integrability, or pointwise
+  operator-norm assumptions directly.
 - RM-negative-family-adapters adds focused `#check` coverage in
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean` and
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean` for the generic
@@ -701,6 +706,7 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound`,
   `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound`,
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`,
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`,
   and the bounded-row example wrappers.
 - Matrix Bernstein assumption-bundle smoke coverage checks
   `MatrixBernsteinPositiveSideAssumptions`,

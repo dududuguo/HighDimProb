@@ -105,6 +105,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
   proxy internally:
   `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound` and
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`.
+- Proved adapter-based bounded-row sample-covariance operator-norm wrapper:
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`.
+  This derives negative centeredness, independence, entrywise integrability,
+  and pointwise operator-norm bounds from named adapters while leaving negative
+  square/exponential/trace integrability, Tropp, and CFC assumptions explicit.
 - Core sample-covariance tail helpers:
   `sampleCovarianceCenteredRankOneRadius`,
   `sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows`,
@@ -234,9 +239,12 @@ mainline. It is documentation only; theorem status is not upgraded here.
   visible as domain documentation; those fields do not derive Matrix
   Bernstein primitive bundles. For wrappers that expose `positiveSide` and
   `negativeSide`, those bundles are the actual tail-proof obligations. The
-  bounded-row sample-covariance wrappers instead route through the core
-  sample-covariance bounded-row theorems and keep the remaining analytic
-  assumptions explicit.
+  bounded-row sample-covariance wrappers route through the core bounded-row
+  theorems; the operator-norm example uses the adapter-based theorem so
+  negative centeredness, independence, entrywise integrability, and pointwise
+  operator-norm bounds are derived from the named negative-family adapters.
+  The remaining square/exponential/trace integrability, Tropp, and CFC
+  assumptions stay explicit.
 - The current surface still does not include sharp moment-optimal variance
   control, arbitrary-dimensional lambda-max Matrix Bernstein tails, the
   zero-dimensional `t = 0` operator-norm endpoint, full Matrix Bernstein,
@@ -795,8 +803,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - The current supported operator-norm route is the explicit-primitive,
   positive-threshold API listed above. What is still not automatic:
   arbitrary-dimensional lambda-max tails, the zero-dimensional `t = 0`
-  endpoint, CFC/Tropp-free Matrix Bernstein, and the negative-family adapters
-  needed to make sample-covariance operator-norm wrappers lighter to use.
+  endpoint, CFC/Tropp-free Matrix Bernstein, and the remaining
+  negative-square-integrability adapter needed to make sample-covariance
+  operator-norm wrappers lighter to use.
 - Unconditional trace-MGF provider theorem without explicit finite-family
   Tropp assumptions. The bounded theorem under primitives is proved for
   `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`; the finite-family
