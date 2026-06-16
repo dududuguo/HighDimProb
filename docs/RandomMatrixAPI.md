@@ -252,7 +252,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
   sample-covariance concentration.
 - RM-ON-S8 documentation synchronization records the S6 example update and S7
   test/judge update without changing the API surface.
-- Next safe task: `RM-negative-square-integrability-adapters`.
+- Next safe task: `RM-negative-exp-trace-primitive-audit`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
@@ -787,10 +787,24 @@ mainline. It is documentation only; theorem status is not upgraded here.
   sample-covariance adapters deriving the negative centered row-rank-one
   family assumptions from row measurability, `MemLp 2`, and row squared-norm
   bounds.
+- `matrixSquare_neg`, `randomMatrixSquare_neg`: deterministic and pointwise
+  random-matrix square identities for `(-X)^2 = X^2`.
+- `randomMatrixSquare_negRandomMatrixFamily`,
+  `integrableRandomMatrix_randomMatrixSquare_negRandomMatrixFamily`:
+  generic negative-family square and square-integrability adapters.
+- `centeredSampleCovarianceRowRankOneFamilyNeg_squareIntegrable_of_squareIntegrable`:
+  derives negative centered sample-covariance row-rank-one square-integrability
+  from the positive family by the square-negation identity.
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`:
   lighter arbitrary positive-threshold bounded-row operator-norm wrapper that
-  consumes the new adapters. It still keeps negative square/exponential/trace
-  integrability, Tropp, and CFC primitive assumptions explicit.
+  consumes the first negative-family adapters. It keeps negative
+  square/exponential/trace integrability, Tropp, and CFC primitive assumptions
+  explicit.
+- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`:
+  lighter bounded-row operator-norm wrapper that additionally derives the
+  negative square-integrability assumption from the positive family. It still
+  keeps negative exponential/trace integrability, Tropp, and CFC primitive
+  assumptions explicit.
 - `matrixBernsteinTraceMGFToLaplaceContract_statement`: retained typed
   compatibility contract for the bounded-Bernstein lintegral Laplace route
   specialized to `randomMatrixSum A` and `matrixVarianceProxy P A`.
@@ -835,13 +849,20 @@ mainline. It is documentation only; theorem status is not upgraded here.
   inputs. Lieb, Golden-Thompson, and full Matrix Bernstein are still outside
   the proved API.
 
+## Completed Square-Negation Adapter Slice
+
+RM-negative-square-integrability-adapters proves the thin `randomMatrixSquare`
+/ square-integrability transfer for named negative row-rank-one families. The
+preferred bounded-row operator-norm wrapper no longer asks for negative
+square-integrability separately; it derives it from the positive family by
+`(-X)^2 = X^2`.
+
 ## Next Safe Task
 
-RM-negative-square-integrability-adapters: prove the thin `randomMatrixSquare`
-/ square-integrability transfer for named negative row-rank-one families so the
-new adapter-based bounded-row operator-norm wrapper can stop asking for
-negative square-integrability separately. Keep exponential/trace integrability,
-Tropp, CFC, Golden-Thompson, Lieb, and full Matrix Bernstein explicit.
+RM-negative-exp-trace-primitive-audit: audit whether any remaining negative-side
+matrix-exponential integrability, trace-integrability, CFC, or Tropp primitive
+assumptions can be reduced without pretending they are square-negation rewrites.
+Golden-Thompson, Lieb, and full Matrix Bernstein remain explicit blockers.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -899,4 +920,4 @@ Tropp, CFC, Golden-Thompson, Lieb, and full Matrix Bernstein explicit.
 - The arbitrary-dimension bridge leaf adds the corrected positive-threshold
   arbitrary spectral bridge and arbitrary operator-norm Matrix
   Bernstein/sample-covariance wrappers under explicit primitive assumptions.
-- Next safe task: RM-negative-square-integrability-adapters.
+- Next safe task: RM-negative-exp-trace-primitive-audit.

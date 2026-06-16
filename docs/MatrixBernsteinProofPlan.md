@@ -82,9 +82,11 @@ uses the crude variance-proxy theorem for the positive family and the general
 pointwise-bound theorem for the negative family. The newer
 `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`
 derives negative centered/self-adjoint structure, entrywise integrability,
-independence, and pointwise operator-norm bounds from named adapters. It keeps
-negative square/exponential/trace integrability, Tropp, and CFC primitives
-explicit, and does not prove sharp variance control or full Matrix Bernstein.
+independence, and pointwise operator-norm bounds from named adapters. The newer
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`
+also derives negative square-integrability by `(-X)^2 = X^2`. It keeps negative
+exponential/trace integrability, Tropp, and CFC primitives explicit, and does
+not prove sharp variance control or full Matrix Bernstein.
 
 The nonempty self-adjoint operator-norm Matrix Bernstein wrapper
 `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives`
@@ -133,7 +135,7 @@ sums, and the PSD-nullspace bridge without adding a general nullspace theory.
 The rank-one nullspace examples now reuse these core bridges where they remove
 local action/sum algebra.
 
-Next safe task: `RM-negative-square-integrability-adapters`.
+Next safe task: `RM-negative-exp-trace-primitive-audit`.
 
 RM-ON-S4 update: the nonempty self-adjoint operator-norm Matrix Bernstein
 wrapper

@@ -1,7 +1,9 @@
 import HighDimProb.RandomMatrix
 
 #check HighDimProb.matrixSquare
+#check HighDimProb.matrixSquare_neg
 #check HighDimProb.randomMatrixSquare
+#check HighDimProb.randomMatrixSquare_neg
 #check HighDimProb.isRandomMatrix_matrixSquare
 #check HighDimProb.matrixSecondMoment
 #check HighDimProb.matrixVarianceProxy

@@ -1371,9 +1371,11 @@
   adapters now remove duplicated negative-family structural, entrywise
   integrability, independence, and pointwise-bound assumptions from the lighter
   bounded-row operator-norm wrapper.
-- Follow-up path: `RM-negative-square-integrability-adapters` should remove the
+- Follow-up result: `RM-negative-square-integrability-adapters` removes the
   remaining negative square-integrability assumption when `randomMatrixSquare`
-  under pointwise negation is a thin transfer.
+  under pointwise negation is a thin transfer. The next boundary is an audit of
+  negative matrix-exponential/trace/CFC/Tropp primitives, which are not square
+  rewrites.
 
 ## RM Matrix Bernstein assumption bundles
 

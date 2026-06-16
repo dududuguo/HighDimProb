@@ -327,7 +327,8 @@ python scripts/judge_policy_check.py
   operator-norm bounds.
 - The same judge file checks the sample-covariance negative row-rank-one
   adapters and
-  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`.
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`, the square-negation adapter declarations, and
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`.
 - The checks are import-boundary/API checks only; they do not prove
   exponential/trace integrability, Tropp/Lieb, Bernstein CFC, Golden-Thompson,
   full Matrix Bernstein, or unconditional sample-covariance concentration.

@@ -73,6 +73,6 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
   Tropp, CFC, independence, and integrability assumptions explicit. The
   current arbitrary-dimensional route is positive-threshold only; the negative
   family adapter branch is complete, and the next RandomMatrix branch is
-  `RM-negative-square-integrability-adapters`.
+  `RM-negative-exp-trace-primitive-audit`.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.
