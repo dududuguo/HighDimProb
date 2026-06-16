@@ -81,6 +81,14 @@ mainline. It is documentation only; theorem status is not upgraded here.
   This removes the explicit spectral-bridge assumption only on the corrected
   positive-threshold route; Tropp, CFC, variance-proxy, independence, and
   integrability assumptions remain explicit for both signs.
+- Added packaged Matrix Bernstein assumption-bundle entry points:
+  `MatrixBernsteinPositiveSideAssumptions`,
+  `MatrixBernsteinNegativeSideAssumptions`,
+  `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`,
+  and
+  `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions`.
+  These remove repeated public theorem arguments; they do not prove
+  positive-to-negative transfer, Tropp/Lieb, or Bernstein CFC.
 - Retained sample-covariance quadratic-form tail wrapper under explicit
   variance-proxy and Matrix Bernstein primitive assumptions:
   `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`.
@@ -91,15 +99,19 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - Proved crude sample-covariance variance-proxy control from a bounded-row
   squared-norm assumption:
   `sampleCovarianceCenteredRankOneVarianceProxyBound`,
+  `sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows`,
   `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound`.
 - Proved bounded-row sample-covariance tail wrappers that use the crude variance
   proxy internally:
   `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound` and
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`.
 - Core sample-covariance tail helpers:
-  `sampleCovarianceCenteredRankOneRadius`, `sampleCovarianceTailTheta`, and
-  `sampleCovarianceQuadraticFormTailRHS`. The RHS helper uses the actual
-  column dimension parameter; nonempty examples pass `n + 1` explicitly.
+  `sampleCovarianceCenteredRankOneRadius`,
+  `sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows`,
+  `sampleCovarianceTailTheta`, `sampleCovarianceTailThetaOfRows`, and
+  `sampleCovarianceQuadraticFormTailRHS`. The explicit `OfRows` aliases make
+  the row count visible at call sites; the RHS helper uses the actual column
+  dimension parameter, so nonempty examples pass `n + 1` explicitly.
 - Example-layer sample-covariance tail usage wrapper:
   `sampleCovariance_quadraticForm_tail_usage`, with assumptions bundled in
   `SampleCovarianceTailAssumptions` and RHS supplied by the core
@@ -206,8 +218,25 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`,
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_explicit_variance_proxy`,
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`.
-- The example surface now includes `sampleCovariance_operatorNorm_tail_usage`
-  alongside `sampleCovariance_quadraticForm_tail_usage`.
+- The example surface now includes sample covariance, negative-family,
+  bounded-row, attention-feature Gram, empirical Fisher, and LoRA
+  adapter-subspace usage wrappers:
+  `sampleCovariance_quadraticForm_tail_usage`,
+  `sampleCovariance_operatorNorm_tail_usage`,
+  `negativeFamily_twoSided_quadraticForm_tail_usage`,
+  `negativeFamily_selfAdjoint_operatorNorm_tail_usage`,
+  `boundedRowSampleCovariance_operatorNorm_tail_usage`,
+  `attentionFeatureGram_quadraticForm_tail_usage`,
+  `attentionFeatureGram_operatorNorm_tail_usage`,
+  `empiricalFisher_operatorNorm_tail_usage`, and
+  `loraAdapterSubspaceCovariance_operatorNorm_tail_usage`.
+  The ML-facing wrappers keep feature, gradient, and adapter assumptions
+  visible as domain documentation; those fields do not derive Matrix
+  Bernstein primitive bundles. For wrappers that expose `positiveSide` and
+  `negativeSide`, those bundles are the actual tail-proof obligations. The
+  bounded-row sample-covariance wrappers instead route through the core
+  sample-covariance bounded-row theorems and keep the remaining analytic
+  assumptions explicit.
 - The current surface still does not include sharp moment-optimal variance
   control, arbitrary-dimensional lambda-max Matrix Bernstein tails, the
   zero-dimensional `t = 0` operator-norm endpoint, full Matrix Bernstein,
@@ -215,7 +244,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
   sample-covariance concentration.
 - RM-ON-S8 documentation synchronization records the S6 example update and S7
   test/judge update without changing the API surface.
-- Next safe task: `RM-negative-family-adapters`.
+- Follow-up cleanup direction: simplify negative-side adapters where existing
+  structural APIs support it, especially for sample covariance and
+  example-facing operator-norm routes.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
@@ -675,6 +706,16 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives`:
   arbitrary-dimensional self-adjoint operator-norm wrapper on the corrected
   positive-threshold route.
+- `MatrixBernsteinPositiveSideAssumptions`: structure packaging the positive
+  optimized Matrix Bernstein hypotheses for a family `A`.
+- `MatrixBernsteinNegativeSideAssumptions`: structure packaging the
+  negative-side optimized hypotheses for `negRandomMatrixFamily A`.
+- `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`:
+  assumption-bundle wrapper for the two-sided quadratic-form Matrix Bernstein
+  route.
+- `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions`:
+  assumption-bundle wrapper for the arbitrary-dimensional positive-threshold
+  self-adjoint operator-norm route.
 - `negRandomMatrixFamily`: abbrev naming the pointwise negative of a
   random-matrix family, used by two-sided Matrix Bernstein wrappers instead of
   exposing anonymous negative-family lambdas in public signatures.
@@ -682,8 +723,14 @@ mainline. It is documentation only; theorem status is not upgraded here.
   rank-one radius produced by a row squared-norm bound.
 - `sampleCovarianceCenteredRankOneVarianceProxyBound`: abbrev naming the crude
   variance-proxy RHS `(m : Real) * sampleCovarianceCenteredRankOneRadius R ^ 2`.
+- `sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows`: explicit-row-count
+  alias for `sampleCovarianceCenteredRankOneVarianceProxyBound`.
+- `sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows_pos`: positivity
+  theorem for the explicit-row-count alias.
 - `sampleCovarianceTailTheta`: abbrev naming the optimized Bernstein theta for
   the sample-covariance wrapper at threshold `(m : Real) * t`.
+- `sampleCovarianceTailThetaOfRows`: explicit-row-count alias for
+  `sampleCovarianceTailTheta`.
 - `sampleCovarianceQuadraticFormTailRHS`: abbrev naming the scalar RHS of the
   sample-covariance quadratic-form tail wrapper.
 - `centeredSampleCovarianceRowRankOneFamilyNeg`: abbrev naming the negative
@@ -762,11 +809,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-RM-negative-family-adapters: prove reusable negative centered sample-covariance
-row-rank-one structural, integrability, independence, and operator-norm
-adapters so the bounded-row operator-norm wrapper exposes fewer negative-side
-assumptions, without proving Tropp/Lieb, Bernstein CFC, Golden-Thompson, or
-full Matrix Bernstein.
+RM-negative-family-adapters: simplify negative-side adapters where existing
+structural APIs support it, especially for sample-covariance and example-facing
+operator-norm routes. The target is to expose fewer negative-side assumptions
+without proving Tropp/Lieb, Bernstein CFC, Golden-Thompson, or full Matrix
+Bernstein.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 

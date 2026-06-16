@@ -118,12 +118,19 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
 #check matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives
 #check matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives
+#check MatrixBernsteinPositiveSideAssumptions
+#check MatrixBernsteinNegativeSideAssumptions
+#check matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
+#check matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions
 #check sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum
 #check sampleCovarianceCenteredRankOneRadius
 #check sampleCovarianceCenteredRankOneVarianceProxyBound
 #check sampleCovarianceCenteredRankOneVarianceProxyBound_pos
+#check sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows
+#check sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows_pos
 #check MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound
 #check sampleCovarianceTailTheta
+#check sampleCovarianceTailThetaOfRows
 #check sampleCovarianceQuadraticFormTailRHS
 #check sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy
 #check sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound
@@ -229,7 +236,9 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
   I -> Matrix (Fin n) (Fin n) Real)
 #check (sampleCovarianceCenteredRankOneRadius R : Real)
 #check (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R : Real)
+#check (sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows m R : Real)
 #check (sampleCovarianceTailTheta (m := m) R t sigma2 : Real)
+#check (sampleCovarianceTailThetaOfRows m R t sigma2 : Real)
 #check (sampleCovarianceQuadraticFormTailRHS (m := m) (n := n) R t sigma2 :
   ENNReal)
 #check (operatorNorm_eq_spectralRadius_of_selfAdjointStatement M : Prop)

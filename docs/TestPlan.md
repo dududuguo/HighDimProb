@@ -50,7 +50,7 @@ GitHub Actions mirrors these checks in `.github/workflows/ci.yml`.
 - Stage MC2-fix strengthens random-matrix operator-norm tests for the explicit finite-sum L2 norm bridges, both `OperatorNormBoundSq` / `deterministicOperatorNorm` comparison directions, and `isRealRandomVariable_operatorNorm`.
 - Stage MC3 adds `HighDimProbTest/RandomMatrixVarianceProxyAPI.lean` and strengthens branch, experimental, and concentration API checks for finite random-matrix sums, independent/centered self-adjoint family vocabulary, pointwise/a.e. operator-norm bounds, matrix square/second moment, variance-proxy matrix/norm declarations, compatibility aliases, and the updated `matrixBernsteinStatement`.
 - MB-S1 extends the same API and judge surfaces with checks for `matrixQuadraticForm_matrixSquare_eq_matVecSqNorm_of_selfAdjoint`, `isPSD_matrixSquare_of_selfAdjoint`, `matrixQuadraticForm_matrixExpect`, `isPSD_matrixSecondMoment_of_selfAdjoint`, `matrixQuadraticForm_sum`, `isPSDMatrix_sum`, and `isPSD_matrixVarianceProxy_of_selfAdjoint`.
-- Stage MC4-cleanup updates random-matrix concentration and variance-proxy API checks for `IntegrableRandomMatrix` and the refined `matrixBernsteinSelfAdjointStatement`, and removes checks for deleted `matrixLaplaceTransformStatement` / `traceExpMomentBoundStatement` placeholders.
+- Stage MC4-cleanup updates random-matrix concentration and variance-proxy API checks for `IntegrableRandomMatrix` and the refined `matrixBernsteinSelfAdjointStatement`, and removes checks for retired `matrixLaplaceTransformStatement` / `traceExpMomentBoundStatement` scaffold declarations.
 - Stage MC5.1 adds `HighDimProbTest/RandomMatrixSpectralAPI.lean` for lambda-max wrappers, quadratic-form bound predicates, spectral tail events, and typed spectral bridge targets.
 - Stage MC5.2 adds `HighDimProbTest/RandomMatrixTraceExpAPI.lean` for matrix exponential, trace, trace-exponential moments, self-adjointness preservation under matrix exponential, and typed trace-exponential bound targets.
 - Stage MC5.3 adds `HighDimProbTest/RandomMatrixLaplaceAPI.lean` for matrix Laplace RHS vocabulary and typed matrix Laplace / trace-exp Chernoff / self-adjoint operator-norm Laplace targets, and strengthens `RandomMatrixConcentrationAPI` with the new statement names.
@@ -628,7 +628,7 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   Tropp/Lieb, the Bernstein CFC primitive, or the Matrix Bernstein tail
   theorem.
 
-## RM-S7D/RM-S7E/RM-S7F, RM-ON-S5, and RM-ON-S6 Sample Covariance Operator-Norm Tail Coverage
+## RM-S7D/RM-S7E/RM-S7F, RM-ON-S5/RM-ON-S6, and Example Surface Coverage
 
 - The tracked coverage for this route lives in `HighDimProbTest` and
   `HighDimProbJudge`; local validation probes are not part of the open-source
@@ -651,13 +651,25 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   variance, Tropp/CFC, independence, integrability, row `MemLp 2`, row
   squared-norm, and positivity assumptions, with no spectral-bridge hypothesis
   in the application.
-- `HighDimProbTest/ExamplesAPI.lean` checks
+- `HighDimProbTest/ExamplesAPI.lean` imports `HighDimProb.Examples` and checks
   `centeredSampleCovarianceRowRankOneFamilyNeg`,
   `centeredSampleCovarianceRowRankOneSumNeg`,
   `SampleCovarianceOperatorNormTailAssumptions`, and
-  `sampleCovariance_operatorNorm_tail_usage`. The negative row-rank-one names
-  are core `HighDimProb.RandomMatrix.ConcentrationStatements` abbreviations
-  reused by the example surface.
+  `sampleCovariance_operatorNorm_tail_usage`. It also checks the newer
+  example-facing wrappers
+  `negativeFamily_twoSided_quadraticForm_tail_usage`,
+  `negativeFamily_selfAdjoint_operatorNorm_tail_usage`,
+  `boundedRowSampleCovariance_operatorNorm_tail_usage`,
+  `AttentionFeatureGramTailAssumptions`,
+  `attentionFeatureGram_quadraticForm_tail_usage`,
+  `attentionFeatureGram_operatorNorm_tail_usage`,
+  `EmpiricalFisherTailAssumptions`,
+  `empiricalFisher_operatorNorm_tail_usage`,
+  `LoRAAdapterSubspaceCovarianceAssumptions`, and
+  `loraAdapterSubspaceCovariance_operatorNorm_tail_usage`. The negative
+  row-rank-one names are core
+  `HighDimProb.RandomMatrix.ConcentrationStatements` abbreviations reused by
+  the example surface.
 - RM-ON-S6 focused validation runs
   `lake build HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage` to
   check the example surface against the latest nonempty sample-covariance
@@ -678,10 +690,22 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbTest/ExamplesAPI.lean` for
   `sampleCovarianceCenteredRankOneVarianceProxyBound`,
+  `sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows`,
+  `sampleCovarianceTailThetaOfRows`,
   `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound`,
   `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound`,
   `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`,
   and the bounded-row example wrappers.
+- Matrix Bernstein assumption-bundle smoke coverage checks
+  `MatrixBernsteinPositiveSideAssumptions`,
+  `MatrixBernsteinNegativeSideAssumptions`,
+  `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`,
+  and
+  `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions`
+  in both core API and example API entry points. The ML-facing examples reuse
+  these bundles directly instead of defining local operator-norm route
+  assumption structures; their feature, gradient, and adapter fields are
+  documentation of the domain model, not derived Bernstein hypotheses.
 - Coverage proves the event bridge, the retained conditional wrapper, the
   nonempty sample-covariance operator-norm wrapper, the arbitrary
   positive-threshold sample-covariance operator-norm wrapper whose spectral

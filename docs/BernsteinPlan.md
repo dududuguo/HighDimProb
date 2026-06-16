@@ -114,7 +114,7 @@ lintegral-predicate deterministic weighted theorem
 - Bernstein statement rate: `min (t^2 / varianceProxy) (t / maxScale)`.
 - Proved scalar Bernstein min-form constant: `1/4`.
 - Proved weighted scalar Bernstein min-form constant: `1/4`.
-- Raw and weighted typed statement constant: explicit positive placeholder
+- Raw and weighted typed statement constant: explicit positive statement parameter
   `cBernstein`.
 - Finite-sum raw MGF domain: `|lambda| <= 1 / Kmax`.
 - Normalized finite-sum raw and lintegral MGF domain: `|lambda| <= 1 / maxScale K`.

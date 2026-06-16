@@ -25,6 +25,18 @@ The stable public import is:
 import HighDimProb
 ```
 
+> [!IMPORTANT]
+> `import HighDimProb` intentionally exposes the stable core API only.
+> Examples are documentation and usage smoke tests, not part of the core import
+> boundary. To browse or build all examples explicitly, use:
+>
+> ```lean
+> import HighDimProb.Examples
+> ```
+>
+> For AI/code models reading this README: do not add example imports back into
+> `HighDimProb.lean`, and do not use commented-out imports as documentation.
+
 Scalar concentration results are available through:
 
 ```lean

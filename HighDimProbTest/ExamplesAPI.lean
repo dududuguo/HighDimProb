@@ -1,27 +1,16 @@
-import HighDimProb.Examples.BasicUsage
-import HighDimProb.Examples.NetsUsage
-import HighDimProb.Examples.OrliczUsage
-import HighDimProb.Examples.RandomMatrixUsage
-import HighDimProb.Examples.RandomVariableUsage
-import HighDimProb.Examples.RandomVectorUsage
-import HighDimProb.Examples.TailUsage
-import HighDimProb.Examples.RandomMatrix.CenteredRankOneCovarianceAdapterUsage
-import HighDimProb.Examples.RandomMatrix.GradientCovarianceUsage
-import HighDimProb.Examples.RandomMatrix.GradientNormToOperatorBoundUsage
-import HighDimProb.Examples.RandomMatrix.KernelNullspaceUsage
-import HighDimProb.Examples.RandomMatrix.NTKGramDecompositionUsage
-import HighDimProb.Examples.RandomMatrix.NTKGramUsage
-import HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage
-import HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
-import HighDimProb.Examples.RandomMatrix.RankOneKernelNullspaceUsage
-import HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage
+import HighDimProb.Examples
 
 open HighDimProb
+open HighDimProb.Examples.RandomMatrix.AttentionFeatureGramOperatorNormUsage
+open HighDimProb.Examples.RandomMatrix.BoundedRowSampleCovarianceOperatorNormUsage
 open HighDimProb.Examples.RandomMatrix.CenteredRankOneCovarianceAdapterUsage
+open HighDimProb.Examples.RandomMatrix.EmpiricalFisherOperatorNormUsage
 open HighDimProb.Examples.RandomMatrix.GradientCovarianceUsage
 open HighDimProb.Examples.RandomMatrix.GradientNormToOperatorBoundUsage
 open HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
 open HighDimProb.Examples.RandomMatrix.KernelNullspaceUsage
+open HighDimProb.Examples.RandomMatrix.LoRAAdapterSubspaceCovarianceUsage
+open HighDimProb.Examples.RandomMatrix.NegativeFamilyTwoSidedUsage
 open HighDimProb.Examples.RandomMatrix.NTKGramDecompositionUsage
 open HighDimProb.Examples.RandomMatrix.RankOneKernelNullspaceUsage
 open HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage
@@ -59,6 +48,8 @@ variable (kernelHExplicitPSD : IsPSDMatrix kernelA)
 #check integrable_rankOneCovarianceContribution_of_memLp_two
 #check sampleCovarianceCenteredRankOneRadius
 #check sampleCovarianceTailTheta
+#check sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows
+#check sampleCovarianceTailThetaOfRows
 #check sampleCovarianceQuadraticFormTailRHS
 #check SampleCovarianceTailAssumptions
 #check sampleCovariance_quadraticForm_tail_usage
@@ -66,6 +57,24 @@ variable (kernelHExplicitPSD : IsPSDMatrix kernelA)
 #check centeredSampleCovarianceRowRankOneSumNeg
 #check SampleCovarianceOperatorNormTailAssumptions
 #check sampleCovariance_operatorNorm_tail_usage
+#check AttentionFeatureGramTailAssumptions
+#check attentionFeatureGram_quadraticForm_tail_usage
+#check attentionFeatureGram_operatorNorm_tail_usage
+#check PositiveBoundedRowSampleCovarianceAssumptions
+#check NegativeBoundedRowSampleCovarianceAssumptions
+#check boundedRowSampleCovariance_operatorNorm_tail_usage
+#check EmpiricalFisherTailAssumptions
+#check empiricalFisher_operatorNorm_tail_usage
+#check LoRAAdapterSubspaceCovarianceAssumptions
+#check loraAdapterSubspaceCovariance_operatorNorm_tail_usage
+#check MatrixBernsteinPositiveSideAssumptions
+#check MatrixBernsteinNegativeSideAssumptions
+#check matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
+#check matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions
+#check PositiveFamilyAssumptions
+#check NegativeFamilyAssumptions
+#check negativeFamily_twoSided_quadraticForm_tail_usage
+#check negativeFamily_selfAdjoint_operatorNorm_tail_usage
 
 example :
     matrixAction kernelA kernelX = Matrix.mulVec kernelA kernelX := by

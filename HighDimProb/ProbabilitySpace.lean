@@ -48,11 +48,15 @@ theorem measure_biUnion_le {Ω ι : Type*} [MeasurableSpace Ω]
     P (⋃ i ∈ s, A i) ≤ ∑ i ∈ s, P (A i) :=
   MeasureTheory.measure_biUnion_finset_le s A
 
-example {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} [IsProbabilityMeasure P] :
+/-- Recover the Mathlib probability-measure instance from the local context. -/
+theorem isProbabilityMeasure_of_instance {Ω : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω} [IsProbabilityMeasure P] :
     IsProbabilityMeasure P :=
   inferInstance
 
-example {Ω : Type*} [MeasurableSpace Ω] {P : ProbabilityMeasure Ω} [IsProbabilityMeasure P] :
+/-- Recover the HighDimProb probability alias from the local context. -/
+theorem isProbability_of_instance {Ω : Type*} [MeasurableSpace Ω]
+    {P : ProbabilityMeasure Ω} [IsProbabilityMeasure P] :
     IsProbability P :=
   inferInstance
 

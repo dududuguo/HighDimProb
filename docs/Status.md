@@ -70,7 +70,7 @@ wrapper under the existing explicit primitive assumptions. This route uses
 current arbitrary-dimensional API. The bridge-explicit conditional wrappers and
 nonempty wrappers remain available.
 
-The latest proved public declarations fall into three routes:
+The latest proved public declarations fall into four groups:
 
 1. RandomMatrix optimized quadratic-form / operator-norm tail route:
    `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`,
@@ -102,12 +102,36 @@ The latest proved public declarations fall into three routes:
    `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound`,
    `sampleCovarianceCenteredRankOneVarianceProxyBound`,
    `sampleCovarianceCenteredRankOneVarianceProxyBound_pos`, and
+   explicit-row-count aliases
+   `sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows`,
+   `sampleCovarianceTailThetaOfRows`, and
    `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound`.
 
-The latest public example-layer wrapper is:
+4. Matrix Bernstein assumption-bundle cleanup:
+   `MatrixBernsteinPositiveSideAssumptions`,
+   `MatrixBernsteinNegativeSideAssumptions`,
+   `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`,
+   and
+   `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions`.
+   These shorten public theorem signatures and examples without proving
+   Tropp/Lieb, Bernstein CFC, or positive-to-negative transfer.
+
+The latest public example-layer wrappers are:
 
 - `sampleCovariance_quadraticForm_tail_usage`
 - `sampleCovariance_operatorNorm_tail_usage`
+- `negativeFamily_twoSided_quadraticForm_tail_usage`
+- `negativeFamily_selfAdjoint_operatorNorm_tail_usage`
+- `boundedRowSampleCovariance_operatorNorm_tail_usage`
+- `attentionFeatureGram_quadraticForm_tail_usage`
+- `attentionFeatureGram_operatorNorm_tail_usage`
+- `empiricalFisher_operatorNorm_tail_usage`
+- `loraAdapterSubspaceCovariance_operatorNorm_tail_usage`
+
+These examples are available through `import HighDimProb.Examples`; the stable
+core import remains `import HighDimProb`. The ML-facing example fields record
+the domain model, while the Matrix Bernstein `positiveSide` and `negativeSide`
+bundles remain the actual proof obligations.
 
 The latest deterministic rank-one nullspace API is:
 
@@ -927,7 +951,7 @@ Stage MC4-cleanup implemented:
   infrastructure, typed statements, and documentation-only matrix Laplace /
   trace exponential TODOs.
 - updated random-matrix concentration and variance-proxy API tests and removed
-  checks for the deleted temporary declarations.
+  checks for the retired scaffold declarations.
 - did not prove matrix Bernstein, matrix Laplace, trace exponential bounds,
   Hanson-Wright, covariance estimation, or any matrix concentration theorem.
 

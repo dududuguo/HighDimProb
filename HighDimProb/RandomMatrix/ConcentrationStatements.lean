@@ -144,7 +144,7 @@ def matrixExpScaledFamily {Omega : Type*} [MeasurableSpace Omega]
 /-- Pointwise negation of a random-matrix family.
 
 This names the negative-sign family used by two-sided Bernstein wrappers so
-public theorem signatures do not expose anonymous lambda expressions. -/
+public theorem signatures avoid anonymous lambda expressions. -/
 abbrev negRandomMatrixFamily {Omega : Type*} [MeasurableSpace Omega]
     {I : Type*} {m n : Nat}
     (A : I -> RandomMatrix Omega m n) :
@@ -185,6 +185,94 @@ theorem bernsteinSecondMomentComparisonFamily_apply {Omega : Type*}
       SMul.smul (bernsteinMGFCoeff theta R)
         (matrixSecondMoment P (A i)) :=
   rfl
+
+/-- Positive-side assumptions shared by optimized Matrix Bernstein tail wrappers.
+
+This structure packages the long proof-facing hypothesis list for one
+self-adjoint random-matrix family. It is intentionally semantic: it does not
+derive integrability, boundedness, variance-proxy control, CFC primitives, or
+Tropp/Lieb inputs. -/
+structure MatrixBernsteinPositiveSideAssumptions {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (R t sigmaSq : Real) : Prop where
+  centered : CenteredSelfAdjointRandomMatrixFamily P A
+  independentSelfAdjoint : IndependentSelfAdjointRandomMatrices P A
+  integrable : forall i, IntegrableRandomMatrix P (A i)
+  squareIntegrable :
+    forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i))
+  expIntegrable :
+    forall i,
+      IntegrableRandomMatrix P
+        (matrixExpScaledFamily A (bernsteinThetaChoice t sigmaSq R) i)
+  traceExpIntegrable :
+    IntegrableRealRandomVariable P
+      (traceExpIntegrand (randomMatrixSum A)
+        (bernsteinThetaChoice t sigmaSq R))
+  operatorNormBound : PointwiseOperatorNormBound A R
+  sigmaPositive : 0 < sigmaSq
+  radiusNonneg : 0 <= R
+  deviationPositive : 0 < t
+  varianceProxyNormBound : MatrixVarianceProxyNormBound P A sigmaSq
+  cfcPrimitive :
+    forall i omega,
+      bernsteinMatrixExp_le_quadratic_statement (A i omega)
+        (bernsteinThetaChoice t sigmaSq R) R
+  troppPrimitive :
+    troppMasterTraceMGFFiniteFamily_statement
+      (P := P) A
+      (bernsteinSecondMomentComparisonFamily P A
+        (bernsteinThetaChoice t sigmaSq R) R)
+      (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R
+
+/-- Negative-side assumptions for optimized two-sided Matrix Bernstein wrappers.
+
+The family is fixed to `negRandomMatrixFamily A`, so public users do not need to
+repeat the anonymous negation family in theorem signatures. This is only an
+assumption bundle; it does not prove any positive-to-negative transfer. The
+shared threshold condition `0 < t` is carried by the paired positive-side bundle
+in the current two-sided wrappers, so the same scalar proof is not duplicated
+here. -/
+structure MatrixBernsteinNegativeSideAssumptions {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (Rneg t sigmaSqNeg : Real) : Prop where
+  centered : CenteredSelfAdjointRandomMatrixFamily P (negRandomMatrixFamily A)
+  independentSelfAdjoint :
+    IndependentSelfAdjointRandomMatrices P (negRandomMatrixFamily A)
+  integrable :
+    forall i, IntegrableRandomMatrix P ((negRandomMatrixFamily A) i)
+  squareIntegrable :
+    forall i,
+      IntegrableRandomMatrix P
+        (randomMatrixSquare ((negRandomMatrixFamily A) i))
+  expIntegrable :
+    forall i,
+      IntegrableRandomMatrix P
+        (matrixExpScaledFamily (negRandomMatrixFamily A)
+          (bernsteinThetaChoice t sigmaSqNeg Rneg) i)
+  traceExpIntegrable :
+    IntegrableRealRandomVariable P
+      (traceExpIntegrand (randomMatrixSum (negRandomMatrixFamily A))
+        (bernsteinThetaChoice t sigmaSqNeg Rneg))
+  operatorNormBound :
+    PointwiseOperatorNormBound (negRandomMatrixFamily A) Rneg
+  sigmaPositive : 0 < sigmaSqNeg
+  radiusNonneg : 0 <= Rneg
+  varianceProxyNormBound :
+    MatrixVarianceProxyNormBound P (negRandomMatrixFamily A) sigmaSqNeg
+  cfcPrimitive :
+    forall i omega,
+      bernsteinMatrixExp_le_quadratic_statement
+        ((negRandomMatrixFamily A) i omega)
+        (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg
+  troppPrimitive :
+    troppMasterTraceMGFFiniteFamily_statement
+      (P := P) (negRandomMatrixFamily A)
+      (bernsteinSecondMomentComparisonFamily P (negRandomMatrixFamily A)
+        (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
+      (matrixVarianceProxy P (negRandomMatrixFamily A))
+      (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg
 
 /-- Thin high-level bounded Matrix Bernstein trace-mgf wrapper from the
 finite-family Tropp typed primitive.
@@ -837,6 +925,58 @@ theorem matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinC
             Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
             exact add_le_add hUpper hLower
 
+/-- Two-sided quadratic-form Matrix Bernstein wrapper using packaged
+positive- and negative-side assumptions.
+
+This is the public convenience wrapper for the optimized primitive theorem.
+It keeps the same mathematical content, but makes examples and downstream code
+reuse one pair of named assumption bundles instead of repeating the full
+positive and `negRandomMatrixFamily` hypothesis lists. -/
+theorem matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (R Rneg t sigmaSq sigmaSqNeg : Real)
+    (hPos : MatrixBernsteinPositiveSideAssumptions (P := P) A R t sigmaSq)
+    (hNeg :
+      MatrixBernsteinNegativeSideAssumptions (P := P) A Rneg t sigmaSqNeg) :
+    P (twoSidedQuadraticFormTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        ((n + 1 : Real) *
+          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
+        ENNReal.ofReal
+          ((n + 1 : Real) *
+            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
+  exact
+    matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+      (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
+      (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
+      hPos.centered
+      hPos.independentSelfAdjoint
+      hPos.integrable
+      hPos.squareIntegrable
+      hPos.expIntegrable
+      hPos.traceExpIntegrable
+      hPos.operatorNormBound
+      hPos.sigmaPositive
+      hPos.radiusNonneg
+      hPos.deviationPositive
+      hPos.varianceProxyNormBound
+      hPos.cfcPrimitive
+      hPos.troppPrimitive
+      hNeg.centered
+      hNeg.independentSelfAdjoint
+      hNeg.integrable
+      hNeg.squareIntegrable
+      hNeg.expIntegrable
+      hNeg.traceExpIntegrable
+      hNeg.operatorNormBound
+      hNeg.sigmaPositive
+      hNeg.radiusNonneg
+      hNeg.varianceProxyNormBound
+      hNeg.cfcPrimitive
+      hNeg.troppPrimitive
+
 /-- Self-adjoint operator-norm Matrix Bernstein wrapper under the explicit
 operator-norm-to-two-sided-quadratic-form bridge.
 
@@ -1178,6 +1318,58 @@ theorem matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernstei
           hExpIntNeg hTraceIntNeg hBoundNeg hSigmaNeg hRNeg hNormNeg
           hCFCNeg hTroppNeg)
 
+/-- Arbitrary-dimensional self-adjoint operator-norm Matrix Bernstein wrapper
+using packaged positive- and negative-side assumptions.
+
+This is the assumption-bundle variant of
+`matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives`.
+It is intended as the stable high-level entry point once both sign-specific
+Matrix Bernstein primitive packages have already been supplied. -/
+theorem matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n)
+    (R Rneg t sigmaSq sigmaSqNeg : Real)
+    (hPos : MatrixBernsteinPositiveSideAssumptions (P := P) A R t sigmaSq)
+    (hNeg :
+      MatrixBernsteinNegativeSideAssumptions (P := P) A Rneg t sigmaSqNeg) :
+    P (SelfAdjointOperatorNormTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        ((n : Real) *
+          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
+        ENNReal.ofReal
+          ((n : Real) *
+            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
+  exact
+    matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives
+      (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
+      (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
+      hPos.centered
+      hPos.independentSelfAdjoint
+      hPos.integrable
+      hPos.squareIntegrable
+      hPos.expIntegrable
+      hPos.traceExpIntegrable
+      hPos.operatorNormBound
+      hPos.sigmaPositive
+      hPos.radiusNonneg
+      hPos.deviationPositive
+      hPos.varianceProxyNormBound
+      hPos.cfcPrimitive
+      hPos.troppPrimitive
+      hNeg.centered
+      hNeg.independentSelfAdjoint
+      hNeg.integrable
+      hNeg.squareIntegrable
+      hNeg.expIntegrable
+      hNeg.traceExpIntegrable
+      hNeg.operatorNormBound
+      hNeg.sigmaPositive
+      hNeg.radiusNonneg
+      hNeg.varianceProxyNormBound
+      hNeg.cfcPrimitive
+      hNeg.troppPrimitive
+
 /-- Sample-covariance operator-norm event bridge to the unnormalized centered
 row rank-one sum.
 
@@ -1257,6 +1449,12 @@ abbrev sampleCovarianceCenteredRankOneVarianceProxyBound {m : Nat}
     (R : Real) : Real :=
   (m : Real) * sampleCovarianceCenteredRankOneRadius R ^ 2
 
+/-- Explicit-row-count alias for the crude centered row-rank-one variance
+proxy bound. -/
+abbrev sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows
+    (m : Nat) (R : Real) : Real :=
+  sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R
+
 /-- Positivity of the crude sample-covariance variance-proxy norm bound. -/
 theorem sampleCovarianceCenteredRankOneVarianceProxyBound_pos {m : Nat}
     {R : Real} (hm : 0 < m) (hR : 0 < R) :
@@ -1264,14 +1462,30 @@ theorem sampleCovarianceCenteredRankOneVarianceProxyBound_pos {m : Nat}
   have hmReal : 0 < (m : Real) := by
     exact_mod_cast hm
   have hRadius : 0 < sampleCovarianceCenteredRankOneRadius R := by
-    simpa [sampleCovarianceCenteredRankOneRadius] using show 0 < 2 * R by
+    have hTwo : 0 < (2 : Real) * R := by
       nlinarith
-  exact mul_pos hmReal (sq_pos_of_pos hRadius)
+    simpa [sampleCovarianceCenteredRankOneRadius] using hTwo
+  simpa [sampleCovarianceCenteredRankOneVarianceProxyBound] using
+    mul_pos hmReal (sq_pos_of_pos hRadius)
+
+/-- Positivity of the explicit-row-count sample-covariance variance proxy
+bound. -/
+theorem sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows_pos
+    {m : Nat} {R : Real} (hm : 0 < m) (hR : 0 < R) :
+    0 < sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows m R := by
+  simpa [sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows] using
+    (sampleCovarianceCenteredRankOneVarianceProxyBound_pos (m := m) hm hR)
 
 /-- Optimized Bernstein parameter for the sample-covariance tail wrapper. -/
 abbrev sampleCovarianceTailTheta {m : Nat} (R t sigmaSq : Real) : Real :=
   bernsteinThetaChoice ((m : Real) * t) sigmaSq
     (sampleCovarianceCenteredRankOneRadius R)
+
+/-- Explicit-row-count alias for the optimized sample-covariance Bernstein
+parameter. -/
+abbrev sampleCovarianceTailThetaOfRows
+    (m : Nat) (R t sigmaSq : Real) : Real :=
+  sampleCovarianceTailTheta (m := m) R t sigmaSq
 
 /-- Named scalar RHS for sample-covariance Bernstein tail wrappers.
 

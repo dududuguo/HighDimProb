@@ -222,7 +222,7 @@ It is a planning document, not a request to physically move existing files.
   `isPSD_matrixSquare_of_selfAdjoint_statement`,
   `isPSD_matrixSecondMoment_of_selfAdjoint_statement`,
   `isPSD_matrixVarianceProxy_of_selfAdjoint_statement`
-- Removed placeholders: `matrixLaplaceTransformStatement` and
+- Retired scaffold declarations: `matrixLaplaceTransformStatement` and
   `traceExpMomentBoundStatement`; matrix Laplace and trace exponential work is
   documentation-only until honest typed objects exist.
 - Proven: self-adjointness of `matrixSecondMoment` and `matrixVarianceProxy`

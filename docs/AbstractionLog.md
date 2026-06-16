@@ -100,7 +100,7 @@
 - Concrete version chosen: `import HighDimProb` exposes only reviewed stable modules.
 - Possible general version: root import exposes every compiling module, including future scaffolds.
 - Reason for not generalizing yet: scaffold declarations should compile but should not look like stable v0.1 API.
-- Lean/mathlib obstruction: downstream imports and theorem work can accidentally depend on unstable placeholder vocabulary.
+- Lean/mathlib obstruction: downstream imports and theorem work can accidentally depend on unstable scaffold vocabulary.
 - Future upgrade path: future modules live under `HighDimProb.Experimental` until their stage is active, reviewed, documented, and intentionally promoted to the stable root import.
 
 ## Experimental scaffolds
@@ -1002,7 +1002,7 @@
 - Possible general version: prove the full scalar Bernstein min-form tail bound for independent centered subExponential variables in one step.
 - Reason for not generalizing yet: the existing `CenteredSubExponentialMGF` is an expectation-level predicate, so it composes over independent sums through Mathlib `iIndepFun.mgf_sum`, but it does not bundle the lintegral/integrability data needed for ENNReal tail proofs.
 - Domain decision: the raw finite-sum theorem exposes an explicit `Kmax` domain `|lambda| <= 1 / Kmax`; the packaged predicate theorem uses conservative scale `sqrt (sum_i K_i^2)` and therefore the smaller domain `1 / sqrt (sum_i K_i^2)`.
-- Constant decision: local Chernoff uses `exp (-(t^2 / (4*K^2)))` under `0 <= t` and `t <= K`; full Bernstein statements use an explicit positive placeholder `cBernstein`.
+- Constant decision: local Chernoff uses `exp (-(t^2 / (4*K^2)))` under `0 <= t` and `t <= K`; full Bernstein statements use an explicit positive statement parameter `cBernstein`.
 - Future upgrade path: Stage B1-fix resolves the lintegral finite-sum product theorem and reusable max-scale vocabulary; Stage B2 proves the full scalar min-form under the lintegral predicate.
 
 ## Stage B1-fix subExponential max-scale infrastructure
@@ -1075,7 +1075,7 @@
 
 ## Stage MC4-cleanup matrix concentration statement honesty
 
-- Concrete version chosen: remove the theorem-like Lean placeholders
+- Concrete version chosen: remove the theorem-like Lean scaffold declarations
   `matrixLaplaceTransformStatement` and `traceExpMomentBoundStatement` because
   they had body `True`, and keep matrix Laplace / trace exponential work as
   documentation-only TODOs in `docs/MatrixBernsteinProofPlan.md`.
@@ -1370,3 +1370,43 @@
 - Follow-up path: `RM-negative-family-adapters` should remove duplicated
   negative-family structural and pointwise-bound assumptions from the
   bounded-row operator-norm wrapper where existing APIs support it.
+
+## RM Matrix Bernstein assumption bundles
+
+- Concrete version chosen: add `MatrixBernsteinPositiveSideAssumptions` and
+  `MatrixBernsteinNegativeSideAssumptions` in the core concentration layer, then
+  provide assumption-bundle wrappers for the two-sided quadratic-form and
+  arbitrary positive-threshold self-adjoint operator-norm Matrix Bernstein
+  routes.
+- Example-layer decision: `NegativeFamilyTwoSidedUsage.lean` now uses local
+  aliases to the core bundles instead of duplicating the long positive and
+  negative assumption structures.
+- Call-site decision: add explicit-row-count helper aliases
+  `sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows` and
+  `sampleCovarianceTailThetaOfRows` so examples can make the row count visible
+  without relying on implicit argument inference.
+- Boundary decision: this is an API ergonomics cleanup only. It does not prove
+  positive-to-negative transfer, Tropp/Lieb, Bernstein CFC, Golden-Thompson, or
+  full Matrix Bernstein.
+
+## RM example surface cleanup after assumption bundles
+
+- Concrete version chosen: remove local negative-family and operator-norm route
+  assumption structures from the attention-feature Gram, empirical Fisher, and
+  LoRA adapter-subspace examples, and reuse the core
+  `MatrixBernsteinPositiveSideAssumptions` and
+  `MatrixBernsteinNegativeSideAssumptions` bundles instead.
+- API decision: keep ML-facing fields such as feature, gradient, adapter,
+  softmax, and squared-norm controls in the example assumption structures so
+  readers can see the intended domain model, but do not pretend these fields
+  derive the Bernstein primitive bundles.
+- Proof-obligation decision: `positiveSide` and `negativeSide` remain the
+  actual proof obligations consumed by the tail wrappers. The examples are
+  usage/documentation surfaces, not new Tropp, CFC, variance-proxy, or
+  independence providers.
+- Documentation decision: update the API index, status, term map, and test plan
+  to list the current `HighDimProb.Examples` surface and to state the
+  domain-field versus proof-obligation boundary explicitly.
+- Boundary decision: this cleanup changes abstraction and documentation only.
+  It does not prove positive-to-negative transfer, Tropp/Lieb, Bernstein CFC,
+  Golden-Thompson, full Matrix Bernstein, or unconditional ML concentration.

@@ -29,9 +29,9 @@ Formula reference: this records the Chebyshev-style finite-sample bound
 `P(|sampleMean - mu| >= eps) <= sigmaSq / (n * eps^2)`; see
 https://en.wikipedia.org/wiki/Chebyshev%27s_inequality
 
-The hypotheses are intentionally explicit placeholders: future stages should
-prove the displayed bound from finite variance plus independence/covariance
-assumptions, rather than fake iid infrastructure here.
+The hypotheses are intentionally explicit proof obligations: future stages
+should prove the displayed bound from finite variance plus independence and
+covariance assumptions, rather than fake iid infrastructure here.
 -/
 abbrev weakLawChebyshevBoundStatement {Omega : Type*} [MeasurableSpace Omega]
     (P : Measure Omega) [IsProbabilityMeasure P] {n : Nat}

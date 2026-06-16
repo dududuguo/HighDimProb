@@ -136,7 +136,7 @@ Stage H8 proves deterministic weighted bounded Hoeffding.
 | local lintegral MGF bound with `V,B` | Bernstein min-form one-/two-sided tails | `exp (-(1/4 * min(t^2/V, t/B)))` | proven | `upperTailProb_le_exp_neg_quarter_bernsteinRate_of_mgf_bound`, `absTailProb_le_two_mul_exp_neg_quarter_bernsteinRate_of_mgf_bound` |
 | independent finite `CenteredSubExponentialMGFLIntegral` | full scalar Bernstein min-form tail | `2*exp (-(1/4 * min(t^2/V, t/B)))`, `V=varianceProxy K`, `B=maxScale K` | proven | `bernstein_sum_subExponential` |
 | deterministic weighted independent finite `CenteredSubExponentialMGFLIntegral` | full scalar Bernstein min-form tail for `sum_i c_i X_i` | `2*exp (-(1/4 * min(t^2/V_c, t/B_c)))`, `V_c=weightedVarianceProxy c K`, `B_c=weightedMaxScale c K` | proven | `bernstein_weighted_sum_subExponential` |
-| raw centered subExponential variables | Bernstein min-form variants | explicit `cBernstein` placeholder | typed-prop | `bernstein_subExponential_sum_statement`, `bernstein_subExponential_weighted_sum_statement` |
+| raw centered subExponential variables | Bernstein min-form variants | explicit positive statement parameter `cBernstein` | typed-prop | `bernstein_subExponential_sum_statement`, `bernstein_subExponential_weighted_sum_statement` |
 | tail / Orlicz | full natural-moment and real-`Lp` growth | `16*K` / `48*K` full moment scales | proven | `subExponentialMoment_of_psi1Bound`, `subExponentialMoment_of_subExponentialTail` |
 | local MGF | global subExponential tail / `Psi1Bound` | TBD | partial | local Chernoff proven only for `CenteredSubExponentialMGFLIntegral`; global tail remains future |
 | formulation-specific predicates | canonical `SubExponential` predicate | TBD | blocked | canonical equivalence package |
