@@ -215,7 +215,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
   sample-covariance concentration.
 - RM-ON-S8 documentation synchronization records the S6 example update and S7
   test/judge update without changing the API surface.
-- Next safe task: `RM-negative-family-adapters`.
+- Next safe task: `RM-negative-square-integrability-adapters`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
@@ -715,8 +715,29 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`:
   theorem proving the arbitrary positive-threshold sample-covariance
   operator-norm tail wrapper with the positive-side crude variance proxy
-  supplied from the bounded-row assumption. The negative side still uses the
-  explicit negative-family pointwise-bound and primitive assumptions.
+  supplied from the bounded-row assumption. This retained wrapper still exposes
+  negative-family structure and pointwise-bound assumptions explicitly.
+- `isRandomMatrix_negRandomMatrixFamily`,
+  `integrableRandomMatrix_negRandomMatrixFamily`,
+  `selfAdjointRandomMatrixFamily_negRandomMatrixFamily`,
+  `centeredSelfAdjointRandomMatrixFamily_negRandomMatrixFamily`,
+  `independentRandomMatrices_negRandomMatrixFamily`,
+  `independentSelfAdjointRandomMatrices_negRandomMatrixFamily`, and
+  `PointwiseOperatorNormBound_negRandomMatrixFamily`: thin generic adapters
+  transferring measurability, entrywise integrability, centered/self-adjoint
+  structure, independence, and pointwise operator-norm bounds through the named
+  negative-family alias.
+- `centeredSampleCovarianceRowRankOneFamilyNeg_integrable_of_memLp_two`,
+  `centeredSampleCovarianceRowRankOneFamilyNeg_centeredSelfAdjoint_of_memLp_two`,
+  and
+  `PointwiseOperatorNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_of_rowSqNorm_bound`:
+  sample-covariance adapters deriving the negative centered row-rank-one
+  family assumptions from row measurability, `MemLp 2`, and row squared-norm
+  bounds.
+- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`:
+  lighter arbitrary positive-threshold bounded-row operator-norm wrapper that
+  consumes the new adapters. It still keeps negative square/exponential/trace
+  integrability, Tropp, and CFC primitive assumptions explicit.
 - `matrixBernsteinTraceMGFToLaplaceContract_statement`: retained typed
   compatibility contract for the bounded-Bernstein lintegral Laplace route
   specialized to `randomMatrixSum A` and `matrixVarianceProxy P A`.
@@ -762,11 +783,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-RM-negative-family-adapters: prove reusable negative centered sample-covariance
-row-rank-one structural, integrability, independence, and operator-norm
-adapters so the bounded-row operator-norm wrapper exposes fewer negative-side
-assumptions, without proving Tropp/Lieb, Bernstein CFC, Golden-Thompson, or
-full Matrix Bernstein.
+RM-negative-square-integrability-adapters: prove the thin `randomMatrixSquare`
+/ square-integrability transfer for named negative row-rank-one families so the
+new adapter-based bounded-row operator-norm wrapper can stop asking for
+negative square-integrability separately. Keep exponential/trace integrability,
+Tropp, CFC, Golden-Thompson, Lieb, and full Matrix Bernstein explicit.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -824,4 +845,4 @@ full Matrix Bernstein.
 - The arbitrary-dimension bridge leaf adds the corrected positive-threshold
   arbitrary spectral bridge and arbitrary operator-norm Matrix
   Bernstein/sample-covariance wrappers under explicit primitive assumptions.
-- Next safe task: RM-negative-family-adapters.
+- Next safe task: RM-negative-square-integrability-adapters.

@@ -318,3 +318,16 @@ python scripts/judge_policy_check.py
 - The judge check confirms the bounded trace-MGF under-primitives theorem is
   public. The finite-family Tropp primitive and Bernstein CFC primitive remain
   typed only.
+
+## RM Negative Family Adapter Judge Coverage
+
+- `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean` checks the generic
+  negative-family adapters for measurability, entrywise integrability,
+  self-adjoint/centered-self-adjoint structure, independence, and pointwise
+  operator-norm bounds.
+- The same judge file checks the sample-covariance negative row-rank-one
+  adapters and
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`.
+- The checks are import-boundary/API checks only; they do not prove
+  exponential/trace integrability, Tropp/Lieb, Bernstein CFC, Golden-Thompson,
+  full Matrix Bernstein, or unconditional sample-covariance concentration.

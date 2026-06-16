@@ -39,7 +39,7 @@
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
   - Current repository next task:
-    RM-negative-family-adapters; matrix Bernstein, Hanson-Wright, and
+    RM-negative-square-integrability-adapters; matrix Bernstein, Hanson-Wright, and
     WLLN/SLLN remain separate future directions
 - OrliczToTail
 - TailToOrlicz
