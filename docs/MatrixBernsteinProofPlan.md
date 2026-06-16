@@ -78,10 +78,12 @@ is now proved as a thin specialization of the conditional self-adjoint
 operator-norm Matrix Bernstein wrapper. The bounded-row wrapper
 `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`
 uses the crude variance-proxy theorem for the positive family and the general
-pointwise-bound theorem for the negative family. It keeps Tropp/CFC primitives,
-integrability, independence, negative-family pointwise bounds, and
-`selfAdjointOperatorNormTailViaQuadraticFormStatement` explicit. It does not
-prove sharp variance control or discharge all negative-family assumptions.
+pointwise-bound theorem for the negative family. The newer
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`
+derives negative centered/self-adjoint structure, entrywise integrability,
+independence, and pointwise operator-norm bounds from named adapters. It keeps
+negative square/exponential/trace integrability, Tropp, and CFC primitives
+explicit, and does not prove sharp variance control or full Matrix Bernstein.
 
 The nonempty self-adjoint operator-norm Matrix Bernstein wrapper
 `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives`
@@ -130,7 +132,7 @@ sums, and the PSD-nullspace bridge without adding a general nullspace theory.
 The rank-one nullspace examples now reuse these core bridges where they remove
 local action/sum algebra.
 
-Next safe task: `RM-negative-family-adapters`.
+Next safe task: `RM-negative-square-integrability-adapters`.
 
 RM-ON-S4 update: the nonempty self-adjoint operator-norm Matrix Bernstein
 wrapper

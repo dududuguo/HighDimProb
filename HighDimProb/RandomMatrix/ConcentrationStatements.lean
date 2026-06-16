@@ -158,6 +158,98 @@ theorem negRandomMatrixFamily_apply {Omega : Type*} [MeasurableSpace Omega]
     negRandomMatrixFamily A i omega = -(A i omega) :=
   rfl
 
+/-- Pointwise negation preserves entrywise random-matrix measurability. -/
+theorem isRandomMatrix_negRandomMatrixFamily {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {I : Type*} {m n : Nat}
+    {A : I -> RandomMatrix Omega m n}
+    (hA : forall i, IsRandomMatrix P (A i)) :
+    forall i, IsRandomMatrix P ((negRandomMatrixFamily A) i) := by
+  intro i r c
+  change Measurable (fun omega => -(A i omega r c))
+  exact (hA i r c).neg
+
+/-- Pointwise negation preserves entrywise random-matrix integrability. -/
+theorem integrableRandomMatrix_negRandomMatrixFamily {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {I : Type*} {m n : Nat}
+    {A : I -> RandomMatrix Omega m n}
+    (hA : forall i, IntegrableRandomMatrix P (A i)) :
+    forall i, IntegrableRandomMatrix P ((negRandomMatrixFamily A) i) := by
+  intro i r c
+  change Integrable (fun omega => -(A i omega r c)) P
+  exact (hA i r c).neg
+
+/-- Pointwise negation preserves self-adjoint random-matrix families. -/
+theorem selfAdjointRandomMatrixFamily_negRandomMatrixFamily {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {I : Type*} {n : Nat}
+    {A : I -> RandomMatrix Omega n n}
+    (hA : SelfAdjointRandomMatrixFamily P A) :
+    SelfAdjointRandomMatrixFamily P (negRandomMatrixFamily A) := by
+  refine ⟨?_, ?_⟩
+  · exact isRandomMatrix_negRandomMatrixFamily (P := P) (A := A) hA.1
+  · intro i
+    simpa [negRandomMatrixFamily] using
+      randomSelfAdjointMatrix_neg (P := P) (A := A i) (hA.2 i)
+
+/-- Pointwise negation preserves centered self-adjoint random-matrix families. -/
+theorem centeredSelfAdjointRandomMatrixFamily_negRandomMatrixFamily
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {I : Type*} {n : Nat} {A : I -> RandomMatrix Omega n n}
+    (hA : CenteredSelfAdjointRandomMatrixFamily P A) :
+    CenteredSelfAdjointRandomMatrixFamily P (negRandomMatrixFamily A) := by
+  refine ⟨selfAdjointRandomMatrixFamily_negRandomMatrixFamily
+    (P := P) (A := A) hA.1, ?_⟩
+  intro i
+  have hNeg :
+      matrixExpect P ((negRandomMatrixFamily A) i) =
+        (-1 : Real) • matrixExpect P (A i) := by
+    simpa [negRandomMatrixFamily] using
+      matrixExpect_smul (P := P) (A := A i) (-1)
+  rw [hNeg, hA.2 i]
+  simp
+
+/-- Pointwise negation preserves matrix-valued independence. -/
+theorem independentRandomMatrices_negRandomMatrixFamily {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {I : Type*} {m n : Nat}
+    {A : I -> RandomMatrix Omega m n}
+    (hA : IndependentRandomMatrices P A) :
+    IndependentRandomMatrices P (negRandomMatrixFamily A) := by
+  have hNeg :
+      Measurable (fun M : Matrix (Fin m) (Fin n) Real => -M) := by
+    change Measurable
+      (fun M : Matrix (Fin m) (Fin n) Real =>
+        fun r : Fin m => fun c : Fin n => -M r c)
+    exact measurable_pi_lambda
+      (fun M : Matrix (Fin m) (Fin n) Real =>
+        fun r : Fin m => fun c : Fin n => -M r c)
+      (fun r =>
+        measurable_pi_lambda
+          (fun M : Matrix (Fin m) (Fin n) Real => fun c : Fin n => -M r c)
+          (fun c => by
+            have hCoord :
+                Measurable (fun M : Matrix (Fin m) (Fin n) Real => M r c) :=
+              (measurable_pi_apply c).comp (measurable_pi_apply r)
+            simpa using hCoord.neg))
+  simpa [IndependentRandomMatrices, negRandomMatrixFamily, Function.comp_def] using
+    hA.comp (fun _i => Neg.neg) (fun _i => hNeg)
+
+/-- Pointwise negation preserves independent self-adjoint random-matrix families. -/
+theorem independentSelfAdjointRandomMatrices_negRandomMatrixFamily
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {I : Type*} {n : Nat} {A : I -> RandomMatrix Omega n n}
+    (hA : IndependentSelfAdjointRandomMatrices P A) :
+    IndependentSelfAdjointRandomMatrices P (negRandomMatrixFamily A) := by
+  exact ⟨selfAdjointRandomMatrixFamily_negRandomMatrixFamily (P := P) (A := A) hA.1,
+    independentRandomMatrices_negRandomMatrixFamily (P := P) (A := A) hA.2⟩
+
+/-- Pointwise negation preserves a uniform operator-norm bound. -/
+theorem PointwiseOperatorNormBound_negRandomMatrixFamily {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} {m n : Nat}
+    {A : I -> RandomMatrix Omega m n} {R : Real}
+    (hA : PointwiseOperatorNormBound A R) :
+    PointwiseOperatorNormBound (negRandomMatrixFamily A) R := by
+  intro i omega
+  simpa [BoundedOperatorNorm, operatorNorm, negRandomMatrixFamily] using hA i omega
+
 @[simp]
 theorem matrixExpScaledFamily_apply {Omega : Type*} [MeasurableSpace Omega]
     {I : Type*} {n : Nat} (A : I -> RandomMatrix Omega n n)
@@ -1517,6 +1609,124 @@ abbrev centeredSampleCovarianceRowRankOneSumNeg
   randomMatrixSum
     (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
 
+/--
+Coordinate second-moment assumptions make the named negative centered
+sample-covariance row-rank-one family entrywise integrable.
+
+This is a thin negation adapter around the positive centered rank-one
+integrability wrapper; it does not infer higher square/exponential
+integrability.
+-/
+theorem centeredSampleCovarianceRowRankOneFamilyNeg_integrable_of_memLp_two
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsFiniteMeasure P] {m n : Nat} {A : RandomMatrix Omega m n}
+    (hLp :
+      forall k : Fin m, forall j : Fin n,
+        MemLpRealRandomVariable P (matrixEntry A k j) 2) :
+    forall k : Fin m,
+      IntegrableRandomMatrix P
+        ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) k) := by
+  have hPos :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k) := by
+    intro k
+    change IntegrableRandomMatrix P
+      (centeredRankOneRandomMatrix P (rowVector A k))
+    exact centeredRankOneRandomMatrix_integrable_of_memLp_two
+      (P := P) (X := rowVector A k) (by
+        intro j
+        change MemLpRealRandomVariable P (matrixEntry A k j) 2
+        exact hLp k j)
+  simpa [centeredSampleCovarianceRowRankOneFamilyNeg] using
+    integrableRandomMatrix_negRandomMatrixFamily
+      (P := P) (A := centeredSampleCovarianceRowRankOneFamily (P := P) A)
+      hPos
+
+/--
+Coordinate measurability and second moments make the named negative centered
+sample-covariance row-rank-one family centered and self-adjoint.
+
+This transfers the already-proved positive centered rank-one structure through
+the named negative-family adapter.
+-/
+theorem centeredSampleCovarianceRowRankOneFamilyNeg_centeredSelfAdjoint_of_memLp_two
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat} {A : RandomMatrix Omega m n}
+    (hMeas : IsRandomMatrix P A)
+    (hLp :
+      forall k : Fin m, forall j : Fin n,
+        MemLpRealRandomVariable P (matrixEntry A k j) 2) :
+    CenteredSelfAdjointRandomMatrixFamily P
+      (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) := by
+  have hRowsRandom :
+      forall k : Fin m, IsRandomVector P (rowVector A k) := by
+    intro k
+    exact isRandomVector_rowVector hMeas k
+  have hRowsLp :
+      forall k : Fin m, forall j : Fin n,
+        MemLpRealRandomVariable P (coord (rowVector A k) j) 2 := by
+    intro k j
+    change MemLpRealRandomVariable P (matrixEntry A k j) 2
+    exact hLp k j
+  have hPos :
+      CenteredSelfAdjointRandomMatrixFamily P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A) := by
+    simpa [centeredSampleCovarianceRowRankOneFamily] using
+      centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two
+        (P := P) (X := rowVector A) hRowsRandom hRowsLp
+  simpa [centeredSampleCovarianceRowRankOneFamilyNeg] using
+    centeredSelfAdjointRandomMatrixFamily_negRandomMatrixFamily
+      (P := P) (A := centeredSampleCovarianceRowRankOneFamily (P := P) A)
+      hPos
+
+/--
+A row squared-norm bound gives the pointwise operator-norm bound for the named
+negative centered sample-covariance row-rank-one family.
+
+The proof only uses `||-M|| = ||M||` through the generic negative-family
+adapter; it does not discharge square/exponential integrability or Matrix
+Bernstein primitives.
+-/
+theorem PointwiseOperatorNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_of_rowSqNorm_bound
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m n) {R : Real}
+    (hMeas : IsRandomMatrix P A)
+    (hLp :
+      forall k : Fin m, forall j : Fin n,
+        MemLpRealRandomVariable P (matrixEntry A k j) 2)
+    (hSq :
+      forall k : Fin m, forall omega,
+        vectorSqNorm (rowVector A k omega) <= R)
+    (hR : 0 <= R) :
+    PointwiseOperatorNormBound
+      (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+      (sampleCovarianceCenteredRankOneRadius R) := by
+  have hRowsRandom :
+      forall k : Fin m, IsRandomVector P (rowVector A k) := by
+    intro k
+    exact isRandomVector_rowVector hMeas k
+  have hRowsLp :
+      forall k : Fin m, forall j : Fin n,
+        MemLpRealRandomVariable P (coord (rowVector A k) j) 2 := by
+    intro k j
+    change MemLpRealRandomVariable P (matrixEntry A k j) 2
+    exact hLp k j
+  have hPos :
+      PointwiseOperatorNormBound
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        (sampleCovarianceCenteredRankOneRadius R) := by
+    simpa [centeredSampleCovarianceRowRankOneFamily,
+      sampleCovarianceCenteredRankOneRadius] using
+      PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound
+        (P := P) (X := rowVector A) (R := R)
+        hRowsRandom hRowsLp hSq hR
+  simpa [centeredSampleCovarianceRowRankOneFamilyNeg] using
+    PointwiseOperatorNormBound_negRandomMatrixFamily
+      (A := centeredSampleCovarianceRowRankOneFamily (P := P) A)
+      hPos
+
 /-- Sample-covariance row-rank-one variance-proxy norm bound from a row
 squared-norm bound and explicit square-integrability of the centered
 summands. -/
@@ -2621,6 +2831,178 @@ theorem sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos
       hNorm hCFC hTropp hCenteredNeg hIndepSANeg hIntXNeg hIntSqNeg
       hExpIntNeg hTraceIntNeg hBoundNeg hSigmaNeg hRNeg.le hNormNeg
       hCFCNeg hTroppNeg
+
+/-- Bounded-row sample-covariance operator-norm wrapper using the negative-family adapters.
+
+Compared with
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`,
+this version derives the negative centered/self-adjoint structure, negative
+independence, negative summand integrability, and negative pointwise
+operator-norm bound from named adapters.  It still keeps the negative-side
+square/exponential/trace integrability, CFC, and Tropp primitive assumptions
+explicit.
+-/
+theorem sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m n)
+    (R Rneg t : Real)
+    (hm : 0 < m)
+    (hMeas : IsRandomMatrix P A)
+    (hLp :
+      forall k : Fin m, forall j : Fin n,
+        MemLpRealRandomVariable P (matrixEntry A k j) 2)
+    (hSq :
+      forall k : Fin m, forall omega,
+        vectorSqNorm (rowVector A k omega) <= R)
+    (hSqNeg :
+      forall k : Fin m, forall omega,
+        vectorSqNorm (rowVector A k omega) <= Rneg)
+    (hIndep :
+      IndependentRandomMatrices P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A))
+    (hIntSq :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare
+            ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k)))
+    (hExpInt :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily
+            (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+            (sampleCovarianceTailTheta (m := m) R t
+              (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R))
+            k))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand
+          (centeredSampleCovarianceRowRankOneSum (P := P) A)
+          (sampleCovarianceTailTheta (m := m) R t
+            (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R))))
+    (hR : 0 < R)
+    (ht : 0 < t)
+    (hCFC :
+      forall k : Fin m, forall omega,
+        bernsteinMatrixExp_le_quadratic_statement
+          ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k omega)
+          (sampleCovarianceTailTheta (m := m) R t
+            (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R))
+          (sampleCovarianceCenteredRankOneRadius R))
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P)
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        (bernsteinSecondMomentComparisonFamily P
+          (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+          (sampleCovarianceTailTheta (m := m) R t
+            (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R))
+          (sampleCovarianceCenteredRankOneRadius R))
+        (matrixVarianceProxy P
+          (centeredSampleCovarianceRowRankOneFamily (P := P) A))
+        (sampleCovarianceTailTheta (m := m) R t
+          (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R))
+        (sampleCovarianceCenteredRankOneRadius R))
+    (hIntSqNeg :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare
+            ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) k)))
+    (hExpIntNeg :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily
+            (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+            (sampleCovarianceTailTheta (m := m) Rneg t
+              (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg))
+            k))
+    (hTraceIntNeg :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand
+          (centeredSampleCovarianceRowRankOneSumNeg (P := P) A)
+          (sampleCovarianceTailTheta (m := m) Rneg t
+            (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg))))
+    (hRNeg : 0 < Rneg)
+    (hCFCNeg :
+      forall k : Fin m, forall omega,
+        bernsteinMatrixExp_le_quadratic_statement
+          ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+            k omega)
+          (sampleCovarianceTailTheta (m := m) Rneg t
+            (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg))
+          (sampleCovarianceCenteredRankOneRadius Rneg))
+    (hTroppNeg :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P)
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+        (bernsteinSecondMomentComparisonFamily P
+          (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+          (sampleCovarianceTailTheta (m := m) Rneg t
+            (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg))
+          (sampleCovarianceCenteredRankOneRadius Rneg))
+        (matrixVarianceProxy P
+          (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A))
+        (sampleCovarianceTailTheta (m := m) Rneg t
+          (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg))
+        (sampleCovarianceCenteredRankOneRadius Rneg)) :
+    P (SelfAdjointOperatorNormTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t) <=
+      sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n) R t
+          (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R) +
+        sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n) Rneg t
+          (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg) := by
+  have hCentered :
+      CenteredSelfAdjointRandomMatrixFamily P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A) := by
+    have hRowsRandom :
+        forall k : Fin m, IsRandomVector P (rowVector A k) := by
+      intro k
+      exact isRandomVector_rowVector hMeas k
+    have hRowsLp :
+        forall k : Fin m, forall j : Fin n,
+          MemLpRealRandomVariable P (coord (rowVector A k) j) 2 := by
+      intro k j
+      change MemLpRealRandomVariable P (matrixEntry A k j) 2
+      exact hLp k j
+    simpa [centeredSampleCovarianceRowRankOneFamily] using
+      centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two
+        (P := P) (X := rowVector A) hRowsRandom hRowsLp
+  have hIndepSA :
+      IndependentSelfAdjointRandomMatrices P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A) :=
+    ⟨hCentered.1, hIndep⟩
+  have hCenteredNeg :
+      CenteredSelfAdjointRandomMatrixFamily P
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) :=
+    centeredSampleCovarianceRowRankOneFamilyNeg_centeredSelfAdjoint_of_memLp_two
+      (P := P) (A := A) hMeas hLp
+  have hIndepSANeg :
+      IndependentSelfAdjointRandomMatrices P
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) := by
+    simpa [centeredSampleCovarianceRowRankOneFamilyNeg] using
+      independentSelfAdjointRandomMatrices_negRandomMatrixFamily
+        (P := P) (A := centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        hIndepSA
+  have hIntXNeg :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) k) :=
+    centeredSampleCovarianceRowRankOneFamilyNeg_integrable_of_memLp_two
+      (P := P) (A := A) hLp
+  have hBoundNeg :
+      PointwiseOperatorNormBound
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+        (sampleCovarianceCenteredRankOneRadius Rneg) :=
+    PointwiseOperatorNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_of_rowSqNorm_bound
+      (P := P) A hMeas hLp hSqNeg hRNeg.le
+  exact
+    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound
+      (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
+      hm hMeas hLp hSq hIndep hIntSq hExpInt hTraceInt hR ht hCFC
+      hTropp hCenteredNeg hIndepSANeg hIntXNeg hIntSqNeg hExpIntNeg
+      hTraceIntNeg hBoundNeg hRNeg hCFCNeg hTroppNeg
 
 abbrev matrixBernsteinTraceMGFToLaplaceContract_statement {Omega : Type*}
     [MeasurableSpace Omega] {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)

@@ -211,17 +211,18 @@ positive-threshold `0 < t` route. The broader typed contract
 the current arbitrary-dimensional theorem is the positive-threshold version.
 Sample covariance now has retained bridge-explicit, nonempty, and arbitrary
 positive-threshold operator-norm wrappers, plus bounded-row wrappers that
-derive the positive-side crude variance proxy internally. The operator-norm
-bounded-row wrapper still exposes the negative-family structure, pointwise
-bound, square/exponential/trace integrability, independence, Tropp, and CFC
-primitive assumptions explicitly.
+derive the positive-side crude variance proxy internally. The newest bounded-row
+operator-norm wrapper also derives negative-family centered/self-adjoint
+structure, entrywise integrability, independence, and pointwise operator-norm
+bounds via named adapters. It still keeps negative square/exponential/trace
+integrability, Tropp, and CFC primitive assumptions explicit.
 The previous optimized one-sided quadratic-form theorem remains
 `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-negative-family-adapters`
+- `RM-negative-square-integrability-adapters`
 
 ## Public Milestone Summary
 
