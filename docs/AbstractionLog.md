@@ -1372,8 +1372,9 @@
   integrability, independence, and pointwise-bound assumptions from the lighter
   bounded-row operator-norm wrapper.
 - Follow-up path: the negative-family adapter cleanup is complete. The current
-  abstraction pressure is the S5 conditional-step/state package; it should be
-  bundled before any downstream Matrix Bernstein conditional-step wrapper is
+  abstraction pressure is the S5 conditional-step/state package. The next pass
+  should add named history/state constructors and reindex adapters before any
+  downstream Matrix Bernstein conditional-step wrapper or assumption bundle is
   exposed.
 
 ## RM Matrix Bernstein assumption bundles

@@ -67,7 +67,7 @@ RM-S6 adds deterministic rank-one kernel/nullspace bridges:
 The rank-one nullspace examples now reuse these core bridges where they remove
 local action/sum algebra.
 
-Next safe task: `RM-TROPP-S11-conditional-step-assumption-bundle-contract`.
+Next safe task: `RM-TROPP-S11-history-state-adapters`.
 
 RM prerequisite update: the centered structural API, expectation
 operator-norm contraction, centered `2 * R` operator-norm wrappers, and named

@@ -437,9 +437,9 @@ Note: some declarations exist as scaffolds, but the corresponding concept is not
 - RM-TROPP-S5-finite-family-provider proves
   `troppMasterTraceMGFFiniteFamily_of_conditionalSteps`, a narrow `Fin m`
   provider for the existing finite-family primitive from the S4 skeleton. It
-  still requires explicit scaled-increment identification `Z_i = theta • X_i`,
-  per-step histories, conditional-step assumptions, state equalities, and
-  integrability data.
+  now names the scaled-increment family as `scaledRandomMatrixFamily theta X`
+  and still requires explicit per-step histories, conditional-step assumptions,
+  state equalities, and integrability data.
 - RM-TROPP-S6-provider-upgrade proves
   `traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps`, a thin
   trace-MGF wrapper that derives the finite-family primitive from the shared

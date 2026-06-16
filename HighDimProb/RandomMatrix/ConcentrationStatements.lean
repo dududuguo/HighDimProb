@@ -139,7 +139,7 @@ def matrixExpScaledFamily {Omega : Type*} [MeasurableSpace Omega]
     {I : Type*} {n : Nat} (A : I -> RandomMatrix Omega n n)
     (theta : Real) :
     I -> RandomMatrix Omega n n :=
-  fun i omega => matrixExp (SMul.smul theta (A i omega))
+  fun i omega => matrixExp ((scaledRandomMatrixFamily theta A i) omega)
 
 /-- Pointwise negation of a random-matrix family.
 

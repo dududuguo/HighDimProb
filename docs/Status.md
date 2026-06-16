@@ -228,7 +228,7 @@ under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-TROPP-S11-conditional-step-assumption-bundle-contract`
+- `RM-TROPP-S11-history-state-adapters`
 
 ## Public Milestone Summary
 

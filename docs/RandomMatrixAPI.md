@@ -43,8 +43,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps`.
 - Proved narrow `Fin m` finite-family provider:
   `troppMasterTraceMGFFiniteFamily_of_conditionalSteps`, under explicit
-  scaled-increment, history, state-identification, conditional-step, and
-  integrability assumptions.
+  named scaled-family equality `Z = scaledRandomMatrixFamily theta X`,
+  history, state-identification, conditional-step, and integrability
+  assumptions.
 - Added thin trace-MGF provider wrapper:
   `traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps`, deriving the
   finite-family Tropp primitive from the shared conditional-step finite-chain
@@ -54,10 +55,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
   wrapper: replacing the finite-family primitive with positive/negative
   conditional-step state packages would make public call-sites larger.
 - The arbitrary-index finite-family Tropp/Lieb proof, natural history/state
-  construction, independence conditioning, integrability propagation,
+  constructors, independence conditioning, integrability propagation,
   finite-index reindexing, Bernstein CFC primitive, Golden-Thompson, and the
-  full Matrix Bernstein tail theorem remain unproved in their general
-  source-backed forms.
+  full Matrix Bernstein tail theorem remain outside the current API.
 - Proved real-to-lintegral bridge:
   `traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound`.
 - Proved explicit-theta quadratic-form upper-tail wrapper under primitives:
@@ -277,13 +277,22 @@ mainline. It is documentation only; theorem status is not upgraded here.
   documented in the trace-exp section below.
 - RM-ON-S8 documentation synchronization records the S6 example update and S7
   test/judge update without changing the API surface.
-- Next safe task: `RM-TROPP-S11-conditional-step-assumption-bundle-contract`.
+- Next safe task: `RM-TROPP-S11-history-state-adapters`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
 - `RandomMatrix`: abbrev, finite-dimensional real random matrix.
 - `matrixEntry`: def, entry random variable.
 - `IsRandomMatrix`: abbrev, entrywise measurability predicate.
+- `scaledRandomMatrix`: def, named pointwise scalar multiple of a random
+  matrix.
+- `scaledRandomMatrixFamily`: def, named family-level scalar-multiple adapter.
+- `scaledRandomMatrix_apply`: theorem.
+- `scaledRandomMatrixFamily_apply`: theorem.
+- `scaledRandomMatrixFamily_apply_apply`: theorem.
+- `isRandomMatrix_scaledRandomMatrix`: theorem, scalar multiplication
+  preserves entrywise random-matrix measurability.
+- `isRandomMatrix_scaledRandomMatrixFamily`: theorem, family-level version.
 - `rankOneMatrix`: def, deterministic rank-one self outer-product matrix.
 - `rankOneRandomMatrix`: def, vector-to-rank-one random matrix with entries
   `X_i * X_j`.
@@ -339,6 +348,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `isSelfAdjointMatrix_smul`: theorem.
 - `isSelfAdjointMatrix_neg`: theorem.
 - `randomSelfAdjointMatrix_smul`: theorem.
+- `randomSelfAdjointMatrix_scaledRandomMatrix`: theorem.
 - `randomSelfAdjointMatrix_neg`: theorem.
 
 ## `HighDimProb/RandomMatrix/Spectral.lean`
@@ -609,8 +619,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `troppMasterTraceMGFFiniteFamily_of_conditionalSteps`: theorem deriving the
   existing `troppMasterTraceMGFFiniteFamily_statement` for `Fin m` from the S4
   finite-chain skeleton, under explicit conditional-step primitives,
-  `Z_i = theta • X_i`, state endpoint/adjacent equalities, history
-  measurability, sigma-finiteness, and step-level integrability assumptions.
+  `Z = scaledRandomMatrixFamily theta X`, state endpoint/adjacent equalities,
+  history measurability, sigma-finiteness, and step-level integrability
+  assumptions.
   It does not derive those histories or state equalities from `iIndepFun`.
 - `troppMasterTraceMGFFiniteFamily_statement`: typed finite-family
   Tropp/Lieb iteration primitive consuming per-summand matrix-MGF `MatrixLE`
@@ -910,10 +921,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-RM-TROPP-S11-conditional-step-assumption-bundle-contract: design the smallest
-honest bundle for the S5 conditional-step/state data before attempting any
-public downstream Matrix Bernstein conditional-step wrapper. Do not prove
-Lieb, Golden-Thompson, Bernstein CFC, or full Matrix Bernstein.
+RM-TROPP-S11-history-state-adapters: add named history/state and reindex
+adapters for the `Fin m` conditional-step route before exposing any assumption
+bundle. A useful abstraction should construct or normalize part of the route;
+it should not merely store raw proof plumbing such as arbitrary state functions,
+history sigma-algebras, and adjacent endpoint equalities.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -974,4 +986,4 @@ Lieb, Golden-Thompson, Bernstein CFC, or full Matrix Bernstein.
 - The arbitrary-dimension bridge leaf adds the corrected positive-threshold
   arbitrary spectral bridge and arbitrary operator-norm Matrix
   Bernstein/sample-covariance wrappers under explicit primitive assumptions.
-- Next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+- Next safe task: RM-TROPP-S11-history-state-adapters.

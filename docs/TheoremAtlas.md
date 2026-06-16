@@ -73,7 +73,7 @@ Done: `RM-negative-family-adapters` adds named negative-family adapters and a
 lighter sample-covariance operator-norm wrapper.
 
 Next safe task:
-`RM-TROPP-S11-conditional-step-assumption-bundle-contract`.
+`RM-TROPP-S11-history-state-adapters`.
 
 ## Milestone 3 scalar implication closeout
 
@@ -1231,7 +1231,7 @@ future directions.
 - Test modules: `HighDimProbTest/RandomMatrixConcentrationAPI.lean` and
   `HighDimProbTest/ExamplesAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`
-- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+- Repository next safe task: RM-TROPP-S11-history-state-adapters.
 
 ## sample covariance variance-proxy control
 - Book heading: sample covariance and Matrix Bernstein prerequisites
@@ -1268,7 +1268,7 @@ future directions.
   `HighDimProb/RandomMatrix/ConcentrationStatements.lean`.
 - Status note: RM-VP complete.
 - Repository next safe task:
-  RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+  RM-TROPP-S11-history-state-adapters.
 
 ## sample covariance PSD bridge
 - Book heading: sample covariance and PSD prerequisites
@@ -1480,7 +1480,7 @@ future directions.
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Repository next safe task after MB-S2 through MB-S9-foundation and
   negative-family adapter cleanup:
-  RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+  RM-TROPP-S11-history-state-adapters.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1879,7 +1879,7 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+- Repository next safe task: RM-TROPP-S11-history-state-adapters.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -2055,7 +2055,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+- Repository next safe task: RM-TROPP-S11-history-state-adapters.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -2196,7 +2196,7 @@ future directions.
   would make public signatures worse than the finite-family primitive route.
   The Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and
   the Matrix Bernstein tail theorem remain unproved.
-- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+- Repository next safe task: RM-TROPP-S11-history-state-adapters.
 
 
 
@@ -2214,7 +2214,7 @@ future directions.
 - Blocker: the result is still one-sided and quadratic-form under explicit
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
-- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+- Repository next safe task: RM-TROPP-S11-history-state-adapters.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -2234,7 +2234,7 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+- Repository next safe task: RM-TROPP-S11-history-state-adapters.
 
 ## RM Centered Structural API
 
@@ -2258,7 +2258,7 @@ future directions.
   operator-norm layer now supplies the Bochner bridge and expectation
   contraction.
 - Blocker: none for structural centeredness.
-- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+- Repository next safe task: RM-TROPP-S11-history-state-adapters.
 
 ## RM Centered Operator-Norm Bound
 
@@ -2280,7 +2280,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+- Repository next safe task: RM-TROPP-S11-history-state-adapters.
 
 
 ## RM Centered Rank-One Structural Adapter
@@ -2298,7 +2298,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+- Repository next safe task: RM-TROPP-S11-history-state-adapters.
 
 
 ## RM Centered Rank-One Operator-Norm Adapter
@@ -2313,7 +2313,7 @@ future directions.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters, lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb,
   Bernstein CFC, or Golden-Thompson.
-- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+- Repository next safe task: RM-TROPP-S11-history-state-adapters.
 
 
 ## RM Vector-to-Rank-One Matrix Measurability / Integrability
@@ -2330,7 +2330,7 @@ future directions.
 - Blocker: this does not prove integrability from measurability alone,
   sample-covariance Matrix Bernstein assumption adapters, or Matrix Bernstein
   tails.
-- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+- Repository next safe task: RM-TROPP-S11-history-state-adapters.
 
 
 ## RM PSD Nullspace Converse
@@ -2349,4 +2349,4 @@ future directions.
 - Blocker: this is only a deterministic PSD kernel bridge. It does not prove
   covariance expectation identities, sample-covariance Matrix Bernstein
   assumption adapters, or Matrix Bernstein tails.
-- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
+- Repository next safe task: RM-TROPP-S11-history-state-adapters.

@@ -48,6 +48,7 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check isSelfAdjointMatrix_smul
 #check isSelfAdjointMatrix_neg
 #check randomSelfAdjointMatrix_smul
+#check randomSelfAdjointMatrix_scaledRandomMatrix
 #check randomSelfAdjointMatrix_neg
 #check isSelfAdjointMatrix_matrixExp
 #check matrixTrace_nonneg_of_posSemidef
@@ -71,6 +72,7 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps
 #check troppMasterTraceMGFFiniteFamily_statement
 #check troppMasterTraceMGFFiniteFamily_of_conditionalSteps
+#check scaledRandomMatrixFamily
 #check bernsteinMGFCoeff
 #check bernsteinThetaChoice
 #check bernsteinThetaChoice_den_pos
@@ -115,6 +117,8 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check (isSelfAdjointMatrix_neg hA : IsSelfAdjointMatrix (-A))
 #check (randomSelfAdjointMatrix_smul theta hY :
   RandomSelfAdjointMatrix P (fun omega => theta • Y omega))
+#check (randomSelfAdjointMatrix_scaledRandomMatrix theta hY :
+  RandomSelfAdjointMatrix P (scaledRandomMatrix theta Y))
 #check (randomSelfAdjointMatrix_neg hY :
   RandomSelfAdjointMatrix P (fun omega => -Y omega))
 #check (isSelfAdjointMatrix_matrixExp hA : IsSelfAdjointMatrix (matrixExp A))
@@ -158,6 +162,8 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check (troppLogExpComparisonToK_statement A V K : Prop)
 #check (troppMasterTraceMGFFiniteFamily_statement (P := P) Xfam Kfam V theta R :
   Prop)
+#check (scaledRandomMatrixFamily theta Xfam :
+  I -> RandomMatrix Omega n n)
 #check (bernsteinCoefficient_nonneg hBernsteinRange :
   0 <= (theta ^ 2 / 2) / (1 - abs theta * R / 3))
 #check (bernsteinMGFCoeff_nonneg hBernsteinRange :

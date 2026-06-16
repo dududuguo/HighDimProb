@@ -797,8 +797,7 @@ private theorem traceMGFBernsteinVarianceProxyBound_of_conditionalSteps_core
           (fun omega => H i omega r c))
     (hHistSA : forall i omega, IsSelfAdjointMatrix (H i omega))
     (hZSA : forall i, @RandomSelfAdjointMatrix Omega mOmega n P (Z i))
-    (hZScaled :
-      forall i, Z i = fun omega => SMul.smul theta (X i omega))
+    (hZScaled : Z = scaledRandomMatrixFamily theta X)
     (hStepIndep :
       forall i,
         @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _ (H i) (Z i) P)
@@ -831,8 +830,7 @@ private theorem traceMGFBernsteinVarianceProxyBound_of_conditionalSteps_core
         fun omega =>
           traceMatrixExp
             (randomMatrixSum
-              (fun i : Fin m => fun omega => SMul.smul theta (X i omega))
-              omega))
+              (scaledRandomMatrixFamily theta X) omega))
     (hStateLast :
       state ⟨m, Nat.lt_succ_self m⟩ =
         fun _omega =>
@@ -860,8 +858,7 @@ private theorem traceMGFBernsteinVarianceProxyBound_of_conditionalSteps_core
           (fun omega =>
             traceMatrixExp
               (randomMatrixSum
-                (fun i : Fin m => fun omega => SMul.smul theta (X i omega))
-                omega)) <=
+                (scaledRandomMatrixFamily theta X) omega)) <=
         traceMatrixExp (Finset.univ.sum fun i : Fin m => K i) :=
     have hStepMGFToK :
         forall i,
@@ -870,10 +867,11 @@ private theorem traceMGFBernsteinVarianceProxyBound_of_conditionalSteps_core
               (fun omega => matrixExp (Z i omega)))
             (matrixExp (K i)) := by
       intro i
-      simpa [hZScaled i] using hMGF i
+      simpa [hZScaled, scaledRandomMatrixFamily, scaledRandomMatrix] using
+        hMGF i
     troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps
       (P := P)
-      (fun i : Fin m => fun omega => SMul.smul theta (X i omega)) K
+      (scaledRandomMatrixFamily theta X) K
       state mHist H Z hCond hHistSub hHistRand hZRand hHistMeas hHistSA
       hZSA hStepIndep hCondTraceInt hExpIntStep hExpMeanSA hExpMeanPos hKSA
       hStepMGFToK hSigma hRhsInt hStateZero hStateLast hStateLeft hStateRight
@@ -881,11 +879,11 @@ private theorem traceMGFBernsteinVarianceProxyBound_of_conditionalSteps_core
       (fun omega =>
         traceMatrixExp
           (randomMatrixSum
-            (fun i : Fin m => fun omega => SMul.smul theta (X i omega))
-            omega)) =
+            (scaledRandomMatrixFamily theta X) omega)) =
         traceExpIntegrand (randomMatrixSum X) theta := by
     funext omega
-    unfold traceExpIntegrand randomMatrixSum
+    unfold traceExpIntegrand randomMatrixSum scaledRandomMatrixFamily
+      scaledRandomMatrix
     congr 1
     ext r c
     rw [Matrix.sum_apply]
@@ -906,8 +904,7 @@ private theorem traceMGFBernsteinVarianceProxyBound_of_conditionalSteps_core
             (fun omega =>
               traceMatrixExp
                 (randomMatrixSum
-                  (fun i : Fin m => fun omega => SMul.smul theta (X i omega))
-                  omega)) := by
+                  (scaledRandomMatrixFamily theta X) omega)) := by
           rw [hScaledIntegrand]
     _ <= traceMatrixExp (Finset.univ.sum fun i : Fin m => K i) := hSkel
     _ = traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V) := by
@@ -917,7 +914,8 @@ private theorem traceMGFBernsteinVarianceProxyBound_of_conditionalSteps_core
 
 This theorem is deliberately narrower than the typed finite-family primitive:
 it specializes the existing finite-family interface to `Fin m` and uses the S4
-finite-chain skeleton for the scaled family `theta • X_i`. The history
+finite-chain skeleton for the named scaled family
+`scaledRandomMatrixFamily theta X`. The history
 sigma-algebras, adjacent state identifications, conditional step assumptions,
 and right-hand integrability hypotheses are still explicit; the theorem does
 not derive them from `iIndepFun`. -/
@@ -943,8 +941,7 @@ theorem troppMasterTraceMGFFiniteFamily_of_conditionalSteps
           (fun omega => H i omega r c))
     (hHistSA : forall i omega, IsSelfAdjointMatrix (H i omega))
     (hZSA : forall i, @RandomSelfAdjointMatrix Omega mOmega n P (Z i))
-    (hZScaled :
-      forall i, Z i = fun omega => SMul.smul theta (X i omega))
+    (hZScaled : Z = scaledRandomMatrixFamily theta X)
     (hStepIndep :
       forall i,
         @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _ (H i) (Z i) P)
@@ -976,8 +973,7 @@ theorem troppMasterTraceMGFFiniteFamily_of_conditionalSteps
         fun omega =>
           traceMatrixExp
             (randomMatrixSum
-              (fun i : Fin m => fun omega => SMul.smul theta (X i omega))
-              omega))
+              (scaledRandomMatrixFamily theta X) omega))
     (hStateLast :
       state ⟨m, Nat.lt_succ_self m⟩ =
         fun _omega =>
@@ -1067,8 +1063,7 @@ theorem traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps
           (fun omega => H i omega r c))
     (hHistSA : forall i omega, IsSelfAdjointMatrix (H i omega))
     (hZSA : forall i, @RandomSelfAdjointMatrix Omega mOmega n P (Z i))
-    (hZScaled :
-      forall i, Z i = fun omega => SMul.smul theta (X i omega))
+    (hZScaled : Z = scaledRandomMatrixFamily theta X)
     (hStepIndep :
       forall i,
         @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _ (H i) (Z i) P)
@@ -1100,8 +1095,7 @@ theorem traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps
         fun omega =>
           traceMatrixExp
             (randomMatrixSum
-              (fun i : Fin m => fun omega => SMul.smul theta (X i omega))
-              omega))
+              (scaledRandomMatrixFamily theta X) omega))
     (hStateLast :
       state ⟨m, Nat.lt_succ_self m⟩ =
         fun _omega =>

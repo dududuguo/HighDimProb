@@ -133,7 +133,7 @@ sums, and the PSD-nullspace bridge without adding a general nullspace theory.
 The rank-one nullspace examples now reuse these core bridges where they remove
 local action/sum algebra.
 
-Next safe task: `RM-TROPP-S11-conditional-step-assumption-bundle-contract`.
+Next safe task: `RM-TROPP-S11-history-state-adapters`.
 
 RM-ON-S4 update: the nonempty self-adjoint operator-norm Matrix Bernstein
 wrapper

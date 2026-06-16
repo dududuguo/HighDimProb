@@ -148,6 +148,14 @@ theorem randomSelfAdjointMatrix_smul {Omega : Type*} [MeasurableSpace Omega]
   intro omega
   exact isSelfAdjointMatrix_smul c (hA omega)
 
+/-- Pointwise scalar multiplication preserves self-adjoint random matrices
+through the named `scaledRandomMatrix` adapter. -/
+theorem randomSelfAdjointMatrix_scaledRandomMatrix {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {n : Nat} (c : Real)
+    {A : RandomMatrix Omega n n} (hA : RandomSelfAdjointMatrix P A) :
+    RandomSelfAdjointMatrix P (scaledRandomMatrix c A) := by
+  simpa [scaledRandomMatrix] using randomSelfAdjointMatrix_smul (P := P) c hA
+
 /--
 Formula reference: pointwise negation preserves the self-adjoint random-matrix
 predicate; see https://en.wikipedia.org/wiki/Self-adjoint_operator

@@ -10,6 +10,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.isSelfAdjointMatrix_smul
 #check HighDimProb.isSelfAdjointMatrix_neg
 #check HighDimProb.randomSelfAdjointMatrix_smul
+#check HighDimProb.randomSelfAdjointMatrix_scaledRandomMatrix
 #check HighDimProb.randomSelfAdjointMatrix_neg
 #check HighDimProb.isSelfAdjointMatrix_matrixExp
 #check HighDimProb.matrixTrace_nonneg_of_posSemidef
@@ -33,6 +34,8 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps
 #check HighDimProb.troppMasterTraceMGFFiniteFamily_statement
 #check HighDimProb.troppMasterTraceMGFFiniteFamily_of_conditionalSteps
+#check HighDimProb.scaledRandomMatrix
+#check HighDimProb.scaledRandomMatrixFamily
 #check HighDimProb.bernsteinMGFCoeff
 #check HighDimProb.bernsteinThetaChoice
 #check HighDimProb.bernsteinThetaChoice_den_pos

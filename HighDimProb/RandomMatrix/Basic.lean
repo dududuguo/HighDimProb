@@ -65,6 +65,71 @@ theorem matrixEntry_apply {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
   rfl
 
 /--
+Pointwise scalar multiple of a random matrix.
+
+This names the object-level adapter so theorem statements can refer to a
+scaled random matrix without exposing an anonymous lambda.
+-/
+def scaledRandomMatrix {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (theta : Real) (A : RandomMatrix Omega m n) : RandomMatrix Omega m n :=
+  fun omega => SMul.smul theta (A omega)
+
+/--
+Indexed family of pointwise scalar multiples of random matrices.
+
+This is the family-level adapter used by trace-MGF and Matrix Bernstein routes
+when a finite family is rescaled by a scalar parameter.
+-/
+def scaledRandomMatrixFamily {Omega : Type*} [MeasurableSpace Omega]
+    {I : Type*} {m n : Nat} (theta : Real)
+    (A : I -> RandomMatrix Omega m n) :
+    I -> RandomMatrix Omega m n :=
+  fun i => scaledRandomMatrix theta (A i)
+
+@[simp]
+theorem scaledRandomMatrix_apply {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (theta : Real) (A : RandomMatrix Omega m n)
+    (omega : Omega) :
+    scaledRandomMatrix theta A omega = SMul.smul theta (A omega) :=
+  rfl
+
+@[simp]
+theorem scaledRandomMatrixFamily_apply {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} {m n : Nat} (theta : Real)
+    (A : I -> RandomMatrix Omega m n) (i : I) :
+    scaledRandomMatrixFamily theta A i = scaledRandomMatrix theta (A i) :=
+  rfl
+
+@[simp]
+theorem scaledRandomMatrixFamily_apply_apply {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} {m n : Nat} (theta : Real)
+    (A : I -> RandomMatrix Omega m n) (i : I) (omega : Omega) :
+    scaledRandomMatrixFamily theta A i omega = SMul.smul theta (A i omega) :=
+  rfl
+
+/-- Pointwise scalar multiplication preserves entrywise random-matrix
+measurability. -/
+theorem isRandomMatrix_scaledRandomMatrix {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {m n : Nat}
+    {A : RandomMatrix Omega m n} (theta : Real)
+    (hA : IsRandomMatrix P A) :
+    IsRandomMatrix P (scaledRandomMatrix theta A) := by
+  intro i j
+  change Measurable (fun omega => theta * A omega i j)
+  exact (hA i j).const_mul theta
+
+/-- Pointwise scalar multiplication preserves entrywise random-matrix
+measurability for indexed families. -/
+theorem isRandomMatrix_scaledRandomMatrixFamily {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {I : Type*} {m n : Nat}
+    {A : I -> RandomMatrix Omega m n} (theta : Real)
+    (hA : forall i, IsRandomMatrix P (A i)) :
+    forall i, IsRandomMatrix P (scaledRandomMatrixFamily theta A i) := by
+  intro i
+  simpa [scaledRandomMatrixFamily] using
+    isRandomMatrix_scaledRandomMatrix (P := P) (A := A i) theta (hA i)
+
+/--
 Deterministic rank-one self outer-product matrix associated to a vector.
 
 Formula reference: the outer product has entries `x_i * x_j`; see
