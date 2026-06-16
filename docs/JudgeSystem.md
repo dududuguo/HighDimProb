@@ -308,7 +308,9 @@ python scripts/judge_policy_check.py
 - `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean` and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean` check
   `matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily`.
-- The finite-family Tropp primitive remains typed only; the judge checks only
+- The general arbitrary-index finite-family Tropp interface remains an explicit
+  primitive assumption, while the narrow `Fin m` conditional-step provider and
+  its trace-MGF wrapper are checked in `TraceExpUse.lean`. The judge checks
   public API availability and import boundaries.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives Judge Coverage
@@ -316,8 +318,9 @@ python scripts/judge_policy_check.py
 - `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean` checks
   `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
 - The judge check confirms the bounded trace-MGF under-primitives theorem is
-  public. The finite-family Tropp primitive and Bernstein CFC primitive remain
-  typed only.
+  public. The arbitrary-index finite-family Tropp provider and Bernstein CFC
+  primitive remain open; the narrow `Fin m` conditional-step Tropp provider is
+  checked separately in the trace-exp judge file.
 
 ## RM Negative Family Adapter Judge Coverage
 

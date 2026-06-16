@@ -39,8 +39,8 @@
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
   - Current repository next task:
-    RM-negative-square-integrability-adapters; matrix Bernstein, Hanson-Wright, and
-    WLLN/SLLN remain separate future directions
+    RM-TROPP-S11-conditional-step-assumption-bundle-contract; matrix
+    Bernstein, Hanson-Wright, and WLLN/SLLN remain separate future directions
 - OrliczToTail
 - TailToOrlicz
 - MomentImplications
@@ -191,13 +191,18 @@
   `matrixBernsteinTraceMGF_statement` use `theta ^ 2 / 2` and are not the
   bounded Bernstein denominator target.
 - Trace-mgf provider, Tropp/Lieb, Bernstein CFC, full CFC-free
-  single-summand provider, and Matrix Bernstein remain unproved.
+  single-summand provider, and Matrix Bernstein remained open at this leaf.
+  Later RM-TROPP work proves only the narrow `Fin m` conditional-step provider
+  and conditional-step trace-MGF wrapper; the arbitrary finite-index provider
+  remains open.
 - MB-S9-tropp-shape-refactor adds
   `troppMasterTraceMGFFiniteFamily_statement`, a typed-only finite-family
   Tropp/Lieb iteration interface consuming per-summand matrix-MGF comparisons
   and bounded-RHS normalization. The one-step Tropp primitive remains
-  available, and no Lieb, Golden-Thompson, trace-mgf provider, or Matrix
-  Bernstein theorem was proved.
+  available. Later RM-TROPP work proves only the narrow `Fin m`
+  conditional-step provider and conditional-step trace-MGF wrapper; no Lieb,
+  Golden-Thompson, arbitrary finite-index provider, or Matrix Bernstein theorem
+  is proved.
 - Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract.
 ## MB-S9 Trace-MGF Thin Wrapper Leaf
 

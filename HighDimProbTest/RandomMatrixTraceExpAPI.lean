@@ -7,7 +7,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 variable {Omega : Type*} [MeasurableSpace Omega]
 variable {P : Measure Omega}
 variable {n : Nat}
-variable (A V : Matrix (Fin n) (Fin n) Real)
+variable (A V K : Matrix (Fin n) (Fin n) Real)
 variable (B : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
 variable (Y : RandomMatrix Omega n n)
 variable {I : Type*} [Fintype I]
@@ -16,6 +16,7 @@ variable (Kfam : I -> Matrix (Fin n) (Fin n) Real)
 variable (theta rhs R t sigmaSq : Real)
 variable (rhsL : ENNReal)
 variable (hA : IsSelfAdjointMatrix A)
+variable (hK : IsSelfAdjointMatrix K)
 variable (hB : IsSelfAdjointMatrix B)
 variable (hY : RandomSelfAdjointMatrix P Y)
 variable (hPSD : Matrix.PosSemidef A)
@@ -29,6 +30,12 @@ variable (hExpMeanSA :
 variable (hExpMeanPos :
   IsStrictlyPositive (matrixExpect P (fun omega => matrixExp (Y omega))))
 variable (hTropp : troppMasterTraceMGFStep_statement (P := P) A Y)
+variable (hTroppLogBridge :
+  troppLogExpComparisonToK_statement A
+    (matrixExpect P (fun omega => matrixExp (Y omega))) K)
+variable (hTroppMGFToK :
+  MatrixLE (matrixExpect P (fun omega => matrixExp (Y omega)))
+    (matrixExp K))
 variable (hNonneg : forall omega, 0 <= traceExpIntegrand Y theta omega)
 variable (hBernsteinRange : abs theta * R < 3)
 
@@ -57,7 +64,13 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check TraceMGFVarianceProxyBound
 #check TraceMGFVarianceProxyBoundLIntegral
 #check troppMasterTraceMGFStep_statement
+#check troppLogExpComparisonToK_statement
+#check troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK
+#check troppMasterTraceMGFConditionalStep_statement
+#check troppMasterTraceMGFConditionalStep_expect_bound
+#check troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps
 #check troppMasterTraceMGFFiniteFamily_statement
+#check troppMasterTraceMGFFiniteFamily_of_conditionalSteps
 #check bernsteinMGFCoeff
 #check bernsteinThetaChoice
 #check bernsteinThetaChoice_den_pos
@@ -91,6 +104,7 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check traceMGFBernsteinVarianceProxyBound_statement
 #check traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement
 #check traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
+#check traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps
 #check traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound
 
 #check (matrixExp A : Matrix (Fin n) (Fin n) Real)
@@ -141,6 +155,7 @@ variable (hBernsteinRange : abs theta * R < 3)
         bernsteinMGFCoeff (bernsteinThetaChoice t sigmaSq R) R * sigmaSq =
       -(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))
 #check (troppMasterTraceMGFStep_statement (P := P) A Y : Prop)
+#check (troppLogExpComparisonToK_statement A V K : Prop)
 #check (troppMasterTraceMGFFiniteFamily_statement (P := P) Xfam Kfam V theta R :
   Prop)
 #check (bernsteinCoefficient_nonneg hBernsteinRange :
@@ -156,6 +171,11 @@ variable (hBernsteinRange : abs theta * R < 3)
   expect P (fun omega => traceMatrixExp (A + Y omega)) <=
     traceMatrixExp
       (A + CFC.log (matrixExpect P (fun omega => matrixExp (Y omega)))))
+#check (troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK
+  A K Y hTropp hTroppLogBridge hA hY hTroppTraceInt hExpInt hExpMeanSA
+    hExpMeanPos hK hTroppMGFToK :
+  expect P (fun omega => traceMatrixExp (A + Y omega)) <=
+    traceMatrixExp (A + K))
 #check (traceMatrixExp_nonneg_of_selfAdjoint_statement A : Prop)
 #check (traceMatrixExp_nonneg_of_selfAdjoint hA :
   0 <= traceMatrixExp A)
@@ -305,3 +325,78 @@ example : 0 <= traceExpMoment P Y theta := by
 example : traceExpMomentLIntegral P Y theta =
     ENNReal.ofReal (traceExpMoment P Y theta) := by
   exact traceExpMomentLIntegral_eq_ofReal_traceExpMoment Y theta hInt hNonneg
+
+section TroppConditionalStep
+
+variable {OmegaC : Type*} [mOmegaC : MeasurableSpace OmegaC]
+variable {P : Measure OmegaC}
+variable {n : Nat}
+variable (mHist : MeasurableSpace OmegaC)
+variable (H Z : RandomMatrix OmegaC n n)
+variable (K : Matrix (Fin n) (Fin n) Real)
+variable (hCond :
+  @troppMasterTraceMGFConditionalStep_statement
+    OmegaC mOmegaC P n mHist H Z K)
+variable (hHistSub : mHist ≤ mOmegaC)
+variable (hHistRand : @IsRandomMatrix OmegaC mOmegaC n n P H)
+variable (hZRand : @IsRandomMatrix OmegaC mOmegaC n n P Z)
+variable (hHistMeas :
+  forall i j,
+    @Measurable OmegaC Real mHist inferInstance
+      (fun omega => H omega i j))
+variable (hHistSA : forall omega, IsSelfAdjointMatrix (H omega))
+variable (hZSA : @RandomSelfAdjointMatrix OmegaC mOmegaC n P Z)
+variable (hIndep :
+  @ProbabilityTheory.IndepFun OmegaC _ _ mOmegaC _ _ H Z P)
+variable (hCondTraceInt :
+  @IntegrableRealRandomVariable OmegaC mOmegaC P
+    (fun omega => traceMatrixExp (H omega + Z omega)))
+variable (hExpInt :
+  @IntegrableRandomMatrix OmegaC mOmegaC n n P
+    (fun omega => matrixExp (Z omega)))
+variable (hExpMeanSA :
+  IsSelfAdjointMatrix
+    (@matrixExpect OmegaC mOmegaC n n P
+      (fun omega => matrixExp (Z omega))))
+variable (hExpMeanPos :
+  IsStrictlyPositive
+    (@matrixExpect OmegaC mOmegaC n n P
+      (fun omega => matrixExp (Z omega))))
+variable (hKSA : IsSelfAdjointMatrix K)
+variable (hMGFToK :
+  MatrixLE
+    (@matrixExpect OmegaC mOmegaC n n P
+      (fun omega => matrixExp (Z omega)))
+    (matrixExp K))
+variable (hSigma : SigmaFinite (P.trim hHistSub))
+variable (hRhsInt :
+  @IntegrableRealRandomVariable OmegaC mOmegaC P
+    (fun omega => traceMatrixExp (H omega + K)))
+
+#check (@troppMasterTraceMGFConditionalStep_statement
+  OmegaC mOmegaC P n mHist H Z K : Prop)
+#check (@troppMasterTraceMGFConditionalStep_expect_bound
+  OmegaC mOmegaC P n mHist H Z K hCond hHistSub hHistRand hZRand
+    hHistMeas hHistSA hZSA hIndep hCondTraceInt hExpInt hExpMeanSA
+    hExpMeanPos hKSA hMGFToK hSigma hRhsInt)
+#check (@troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps)
+
+example :
+    ∀ᵐ omega ∂P,
+      MeasureTheory.condExp (m := mHist) P
+          (fun omega' => traceMatrixExp (H omega' + Z omega')) omega <=
+        traceMatrixExp (H omega + K) := by
+  exact hCond hHistSub hHistRand hZRand hHistMeas hHistSA hZSA hIndep
+    hCondTraceInt hExpInt hExpMeanSA hExpMeanPos hKSA hMGFToK
+
+example :
+    @expect OmegaC mOmegaC P
+        (fun omega => traceMatrixExp (H omega + Z omega)) <=
+      @expect OmegaC mOmegaC P
+        (fun omega => traceMatrixExp (H omega + K)) := by
+  exact @troppMasterTraceMGFConditionalStep_expect_bound
+    OmegaC mOmegaC P n mHist H Z K hCond hHistSub hHistRand hZRand
+    hHistMeas hHistSA hZSA hIndep hCondTraceInt hExpInt hExpMeanSA
+    hExpMeanPos hKSA hMGFToK hSigma hRhsInt
+
+end TroppConditionalStep

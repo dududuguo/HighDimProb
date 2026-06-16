@@ -10,7 +10,9 @@ The scalar concentration side is the most stable part right now. Random vectors,
 random matrices, and Matrix Bernstein material are under active development.
 The experimental RandomMatrix layer currently includes under-primitives
 quadratic-form, self-adjoint operator-norm, and sample-covariance Matrix
-Bernstein wrappers.
+Bernstein wrappers. Its trace-MGF surface includes a narrow `Fin m`
+conditional-step provider, while arbitrary-index Tropp/Lieb, Bernstein CFC,
+Golden-Thompson, and full Matrix Bernstein remain open.
 
 ## Quick Start
 

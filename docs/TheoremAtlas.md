@@ -19,11 +19,14 @@ primitive assumptions:
 matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
 ```
 
-This is a proved theorem, not a proof of the underlying typed primitives. The
-finite-family Tropp/Lieb primitive `troppMasterTraceMGFFiniteFamily_statement`
-and the Bernstein CFC primitive `bernsteinMatrixExp_le_quadratic_statement`
-remain typed-only. Golden-Thompson and the full Matrix Bernstein tail theorem
-also remain unproved.
+This is a proved theorem, not a proof of all underlying typed primitives. The
+finite-family Tropp/Lieb interface
+`troppMasterTraceMGFFiniteFamily_statement` now has a narrow `Fin m` provider,
+`troppMasterTraceMGFFiniteFamily_of_conditionalSteps`, from explicit
+conditional-step/state data. The arbitrary finite-index provider and the
+Bernstein CFC primitive `bernsteinMatrixExp_le_quadratic_statement` remain
+open. Golden-Thompson and the full Matrix Bernstein tail theorem also remain
+unproved.
 
 MB-S9 trace-MGF-to-Laplace/tail contract now adds conditional theorem and
 statement APIs connecting bounded Bernstein lintegral trace-MGF bounds to the
@@ -70,7 +73,7 @@ Done: `RM-negative-family-adapters` adds named negative-family adapters and a
 lighter sample-covariance operator-norm wrapper.
 
 Next safe task:
-`RM-negative-square-integrability-adapters`.
+`RM-TROPP-S11-conditional-step-assumption-bundle-contract`.
 
 ## Milestone 3 scalar implication closeout
 
@@ -1228,7 +1231,7 @@ future directions.
 - Test modules: `HighDimProbTest/RandomMatrixConcentrationAPI.lean` and
   `HighDimProbTest/ExamplesAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`
-- Priority: RM-negative-square-integrability-adapters.
+- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 ## sample covariance variance-proxy control
 - Book heading: sample covariance and Matrix Bernstein prerequisites
@@ -1264,8 +1267,8 @@ future directions.
   `HighDimProb/RandomMatrix/Assumptions.lean`, and
   `HighDimProb/RandomMatrix/ConcentrationStatements.lean`.
 - Status note: RM-VP complete.
-- Current next safe task:
-  RM-negative-square-integrability-adapters.
+- Repository next safe task:
+  RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 ## sample covariance PSD bridge
 - Book heading: sample covariance and PSD prerequisites
@@ -1475,9 +1478,9 @@ future directions.
   `HighDimProbTest/RandomMatrixTraceExpAPI.lean`,
   `HighDimProbTest/RandomMatrixLaplaceAPI.lean`, and
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
-- Priority: Stage MB-S2 through MB-S9-foundation complete; negative-family
-  adapters complete; current next task is
-  RM-negative-square-integrability-adapters.
+- Repository next safe task after MB-S2 through MB-S9-foundation and
+  negative-family adapter cleanup:
+  RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1876,7 +1879,7 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is RM-negative-square-integrability-adapters.
+- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -2052,7 +2055,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Priority: next safe task is RM-negative-square-integrability-adapters.
+- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -2140,11 +2143,20 @@ future directions.
   integrability, and bounded-Bernstein RHS normalization, and returns
   `TraceMGFBernsteinVarianceProxyBound` for `randomMatrixSum`.
 - Target Lean declaration: `troppMasterTraceMGFFiniteFamily_statement`.
-- Status: typed statement only, API-tested, and judge-tested.
+- Status: general typed statement is API-tested and judge-tested. A narrow
+  `Fin m` provider,
+  `troppMasterTraceMGFFiniteFamily_of_conditionalSteps`, is proved from
+  explicit conditional-step/state data; the arbitrary finite-index provider
+  remains open.
 - Compatibility: `troppMasterTraceMGFStep_statement` remains available as the
-  one-step log-form primitive.
-- Blocker: Lieb/Tropp proof, Bernstein CFC proof, trace-mgf provider,
-  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+  one-step log-form primitive. The current step hierarchy also includes
+  `troppLogExpComparisonToK_statement`,
+  `troppMasterTraceMGFConditionalStep_statement`,
+  `troppMasterTraceMGFConditionalStep_expect_bound`, and
+  `troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps`.
+- Blocker: natural history/state construction, independence conditioning,
+  integrability propagation, arbitrary finite-index reindexing, Bernstein CFC
+  proof, Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`.
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`.
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`.
@@ -2162,8 +2174,10 @@ future directions.
   and
   `matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily`.
 - Status: proved, API-tested, and judge-tested.
-- Blocker: the finite-family Tropp primitive itself remains typed only; the
-  Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and
+- Blocker: the arbitrary finite-index finite-family Tropp provider remains
+  open, though the narrow `Fin m` conditional-step provider and
+  `traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps` are proved.
+  The Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and
   Matrix Bernstein remain unproved.
 - Priority: next safe task is
   MB-S9-trace-mgf-to-laplace-tail-contract.
@@ -2176,10 +2190,13 @@ future directions.
 - Target Lean declaration:
   `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
 - Status: proved, API-tested, and judge-tested.
-- Blocker: the finite-family Tropp primitive itself remains typed only; the
-  Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and the
-  Matrix Bernstein tail theorem remain unproved.
-- Priority: next safe task is RM-negative-square-integrability-adapters.
+- Blocker: the arbitrary finite-index finite-family Tropp provider remains
+  open. S7 adds no downstream Matrix Bernstein conditional-step wrapper
+  because exposing positive and negative S5 conditional-step/state packages
+  would make public signatures worse than the finite-family primitive route.
+  The Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and
+  the Matrix Bernstein tail theorem remain unproved.
+- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 
 
@@ -2197,7 +2214,7 @@ future directions.
 - Blocker: the result is still one-sided and quadratic-form under explicit
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
-- Priority: next safe task is RM-negative-square-integrability-adapters.
+- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -2217,7 +2234,7 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Priority: next safe task is RM-negative-square-integrability-adapters.
+- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 ## RM Centered Structural API
 
@@ -2241,7 +2258,7 @@ future directions.
   operator-norm layer now supplies the Bochner bridge and expectation
   contraction.
 - Blocker: none for structural centeredness.
-- Priority: next safe task is RM-negative-square-integrability-adapters.
+- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 ## RM Centered Operator-Norm Bound
 
@@ -2263,7 +2280,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Priority: next safe task is RM-negative-square-integrability-adapters.
+- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 
 ## RM Centered Rank-One Structural Adapter
@@ -2281,7 +2298,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Priority: next safe task is RM-negative-square-integrability-adapters.
+- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 
 ## RM Centered Rank-One Operator-Norm Adapter
@@ -2296,7 +2313,7 @@ future directions.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters, lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb,
   Bernstein CFC, or Golden-Thompson.
-- Priority: next safe task is RM-negative-square-integrability-adapters.
+- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 
 ## RM Vector-to-Rank-One Matrix Measurability / Integrability
@@ -2313,7 +2330,7 @@ future directions.
 - Blocker: this does not prove integrability from measurability alone,
   sample-covariance Matrix Bernstein assumption adapters, or Matrix Bernstein
   tails.
-- Priority: next safe task is RM-negative-square-integrability-adapters.
+- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 
 ## RM PSD Nullspace Converse
@@ -2332,4 +2349,4 @@ future directions.
 - Blocker: this is only a deterministic PSD kernel bridge. It does not prove
   covariance expectation identities, sample-covariance Matrix Bernstein
   assumption adapters, or Matrix Bernstein tails.
-- Priority: next safe task is RM-negative-square-integrability-adapters.
+- Repository next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.

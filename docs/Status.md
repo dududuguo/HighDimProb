@@ -228,7 +228,7 @@ under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-negative-square-integrability-adapters`
+- `RM-TROPP-S11-conditional-step-assumption-bundle-contract`
 
 ## Public Milestone Summary
 
@@ -2119,9 +2119,12 @@ statement layer now exposes
 `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`. The retained
 `TraceMGFVarianceProxyBound` and `matrixBernsteinTraceMGF_statement` use the
 old `theta ^ 2 / 2` coefficient and are not the bounded Matrix Bernstein
-denominator target. The trace-mgf provider, Tropp/Lieb primitive proof,
-Bernstein CFC primitive proof, and Matrix Bernstein remain unproved. Follow-up
-at the time: MB-S9-trace-mgf-to-laplace-tail-contract.
+denominator target. At that stage the trace-mgf provider, Tropp/Lieb primitive
+proof, Bernstein CFC primitive proof, and Matrix Bernstein remained unproved.
+Later stages prove direct finite-family and narrow conditional-step trace-MGF
+wrappers, while the arbitrary finite-index Tropp provider, Bernstein CFC,
+Lieb, Golden-Thompson, and full Matrix Bernstein remain open. Follow-up at the
+time: MB-S9-trace-mgf-to-laplace-tail-contract.
 
 Stage MB-S9-tropp-shape-refactor has no build blocker. The TraceExp layer now
 exposes `troppMasterTraceMGFFiniteFamily_statement`, a typed-only
@@ -2144,15 +2147,38 @@ primitive remains typed only. No Lieb theorem, Golden-Thompson theorem, or
 Matrix Bernstein tail theorem was proved. Follow-up at the time:
 MB-S9-trace-mgf-to-laplace-tail-contract.
 
+Stages RM-TROPP-S2 through RM-TROPP-S7 have no build blocker. They refine the
+finite-family Tropp surface without proving Lieb, Golden-Thompson, Bernstein
+CFC, or full Matrix Bernstein. S2 adds the typed
+`troppLogExpComparisonToK_statement` bridge and the thin one-step wrapper
+`troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK`; S3 adds the
+typed conditional/history primitive `troppMasterTraceMGFConditionalStep_statement`;
+S4 proves `troppMasterTraceMGFConditionalStep_expect_bound` and
+`troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps`; S5 proves
+the narrow `Fin m` provider
+`troppMasterTraceMGFFiniteFamily_of_conditionalSteps`; S6 proves the thin
+trace-MGF wrapper
+`traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps`, which derives
+the finite-family primitive from the same finite-chain core and then applies
+the ordinary finite-family trace-MGF wrapper while preserving that public
+signature shape; and S7 records
+the decision not to add a downstream Matrix Bernstein conditional-step wrapper
+yet, because replacing one finite-family Tropp primitive by positive and
+negative conditional-step/state packages would make public call-sites larger.
+The arbitrary finite-index finite-family provider, natural history/state
+construction, independence conditioning, integrability propagation, and
+finite-index reindexing remain open.
+
 Stage MB-S9-matrix-bernstein-trace-mgf-under-primitives-proof has no build
 blocker. The concentration statement layer now exposes
 `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`, proving the
 bounded Matrix Bernstein trace-MGF statement under explicit finite-family
-Tropp and pointwise Bernstein CFC primitive assumptions. The finite-family
-Tropp primitive itself remains typed only. The Bernstein CFC primitive remains
-typed only. No Lieb theorem, Golden-Thompson theorem, or Matrix Bernstein tail
-theorem was proved. Follow-up at the time:
-MB-S9-trace-mgf-lintegral-bridge-proof.
+Tropp and pointwise Bernstein CFC primitive assumptions. The general
+arbitrary-index finite-family Tropp proof remains open, but the narrow `Fin m`
+provider from explicit conditional-step/state data is now proved. The
+Bernstein CFC primitive remains typed only. No Lieb theorem,
+Golden-Thompson theorem, or Matrix Bernstein tail theorem was proved.
+Follow-up at the time: MB-S9-trace-mgf-lintegral-bridge-proof.
 
 Stage MB-S9-trace-mgf-lintegral-bridge-proof has no build blocker. The
 TraceExp layer now exposes

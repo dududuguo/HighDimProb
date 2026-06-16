@@ -67,7 +67,7 @@ RM-S6 adds deterministic rank-one kernel/nullspace bridges:
 The rank-one nullspace examples now reuse these core bridges where they remove
 local action/sum algebra.
 
-Next safe task: `RM-negative-square-integrability-adapters`.
+Next safe task: `RM-TROPP-S11-conditional-step-assumption-bundle-contract`.
 
 RM prerequisite update: the centered structural API, expectation
 operator-norm contraction, centered `2 * R` operator-norm wrappers, and named
@@ -994,8 +994,10 @@ comparisons, `iIndepFun` independence, trace-exp integrability, and
 `sum_i K_i = bernsteinMGFCoeff theta R smul V` normalization to
 `TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum X) V theta R`.
 
-The one-step `troppMasterTraceMGFStep_statement` remains available. No Lieb,
-Golden-Thompson, trace-mgf provider, or Matrix Bernstein theorem was proved.
+The one-step `troppMasterTraceMGFStep_statement` remains available. Later
+RM-TROPP cleanup proves only the narrow `Fin m` conditional-step provider and
+conditional-step trace-MGF wrapper; the arbitrary finite-index provider,
+Lieb, Golden-Thompson, and Matrix Bernstein theorem remain open.
 The next safe task is
 MB-S9-trace-mgf-to-laplace-tail-contract.
 
@@ -1009,10 +1011,11 @@ traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
 matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily
 ```
 
-These wrappers only apply explicit finite-family primitive assumptions. The
-finite-family Tropp primitive remains typed only, the Bernstein CFC primitive
-remains typed only, and no Lieb, Golden-Thompson, or Matrix Bernstein tail
-theorem was proved.
+These wrappers only apply explicit finite-family primitive assumptions. Later
+RM-TROPP cleanup proves only the narrow `Fin m` conditional-step provider and
+conditional-step trace-MGF wrapper. The arbitrary finite-index Tropp provider
+and Bernstein CFC primitive remain open, and no Lieb, Golden-Thompson, or
+Matrix Bernstein tail theorem was proved.
 
 Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract.
 
@@ -1027,7 +1030,9 @@ matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
 
 The theorem keeps both analytic primitives explicit:
 `troppMasterTraceMGFFiniteFamily_statement` and pointwise
-`bernsteinMatrixExp_le_quadratic_statement`. It does not prove Tropp/Lieb,
+`bernsteinMatrixExp_le_quadratic_statement`. Later RM-TROPP cleanup proves a
+narrow `Fin m` provider from conditional-step/state data, but the arbitrary
+finite-index provider remains open. It does not prove Tropp/Lieb,
 the Bernstein CFC primitive, Golden-Thompson, or the Matrix Bernstein tail
 theorem.
 

@@ -33,8 +33,31 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - This theorem is conditional on explicit typed primitives:
   `troppMasterTraceMGFFiniteFamily_statement` and
   `bernsteinMatrixExp_le_quadratic_statement`.
-- The finite-family Tropp/Lieb primitive, Bernstein CFC primitive,
-  Golden-Thompson, and the full Matrix Bernstein tail theorem remain unproved.
+- Added typed log/order-to-`K` bridge primitive:
+  `troppLogExpComparisonToK_statement`, plus the thin one-step wrapper
+  `troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK`.
+- Added typed conditional/history one-step Tropp primitive:
+  `troppMasterTraceMGFConditionalStep_statement`.
+- Proved conditional-step integration and finite-chain skeleton theorems:
+  `troppMasterTraceMGFConditionalStep_expect_bound` and
+  `troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps`.
+- Proved narrow `Fin m` finite-family provider:
+  `troppMasterTraceMGFFiniteFamily_of_conditionalSteps`, under explicit
+  scaled-increment, history, state-identification, conditional-step, and
+  integrability assumptions.
+- Added thin trace-MGF provider wrapper:
+  `traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps`, deriving the
+  finite-family Tropp primitive from the shared conditional-step finite-chain
+  core and then applying the existing finite-family trace-MGF wrapper. Its
+  public signature intentionally mirrors the ordinary finite-family wrapper.
+- S7 downstream-wrapper audit added no Matrix Bernstein conditional-step
+  wrapper: replacing the finite-family primitive with positive/negative
+  conditional-step state packages would make public call-sites larger.
+- The arbitrary-index finite-family Tropp/Lieb proof, natural history/state
+  construction, independence conditioning, integrability propagation,
+  finite-index reindexing, Bernstein CFC primitive, Golden-Thompson, and the
+  full Matrix Bernstein tail theorem remain unproved in their general
+  source-backed forms.
 - Proved real-to-lintegral bridge:
   `traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound`.
 - Proved explicit-theta quadratic-form upper-tail wrapper under primitives:
@@ -248,11 +271,13 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - The current surface still does not include sharp moment-optimal variance
   control, arbitrary-dimensional lambda-max Matrix Bernstein tails, the
   zero-dimensional `t = 0` operator-norm endpoint, full Matrix Bernstein,
-  Tropp/Lieb, Bernstein CFC, Golden-Thompson, or unconditional
-  sample-covariance concentration.
+  the arbitrary finite-index Tropp/Lieb provider, Bernstein CFC,
+  Golden-Thompson, or unconditional sample-covariance concentration. The
+  narrow `Fin m` Tropp provider from explicit conditional-step/state data is
+  documented in the trace-exp section below.
 - RM-ON-S8 documentation synchronization records the S6 example update and S7
   test/judge update without changing the API surface.
-- Next safe task: `RM-negative-square-integrability-adapters`.
+- Next safe task: `RM-TROPP-S11-conditional-step-assumption-bundle-contract`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
@@ -555,6 +580,38 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `E tr exp(H + Z) <= tr exp(H + log E exp Z)`, with explicit
   self-adjointness, integrability, entrywise matrix-exponential expectation,
   and strict-positivity assumptions.
+- `troppLogExpComparisonToK_statement`: typed deterministic bridge from
+  `M <= exp(K)` to
+  `traceMatrixExp (H + CFC.log M) <= traceMatrixExp (H + K)`, with explicit
+  self-adjointness and strict-positivity assumptions. This remains a typed
+  primitive; it does not prove matrix-log operator monotonicity or trace-exp
+  monotonicity.
+- `troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK`: theorem
+  applying `troppMasterTraceMGFStep_statement` and
+  `troppLogExpComparisonToK_statement` to obtain the one-step trace bound with
+  deterministic `K`.
+- `troppMasterTraceMGFConditionalStep_statement`: typed conditional/history
+  one-step primitive for the finite-family iteration route. It exposes the
+  history sigma-algebra, random-history measurability, integrability,
+  self-adjointness, independence, and deterministic `K` comparison assumptions
+  explicitly, and concludes only the one-step conditional trace-exponential
+  bound.
+- `troppMasterTraceMGFConditionalStep_expect_bound`: theorem integrating one
+  typed conditional/history step to an unconditional expected
+  trace-exponential comparison under explicit history sigma-finiteness and
+  RHS integrability.
+- `troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps`: theorem
+  proving the finite induction chain once each adjacent state has been
+  identified with a conditional/history Tropp step. It uses `randomMatrixSum`
+  for the left endpoint and `Finset.univ.sum` for the deterministic `K`
+  endpoint, while leaving history construction, state-identification algebra,
+  and independence conditioning explicit.
+- `troppMasterTraceMGFFiniteFamily_of_conditionalSteps`: theorem deriving the
+  existing `troppMasterTraceMGFFiniteFamily_statement` for `Fin m` from the S4
+  finite-chain skeleton, under explicit conditional-step primitives,
+  `Z_i = theta • X_i`, state endpoint/adjacent equalities, history
+  measurability, sigma-finiteness, and step-level integrability assumptions.
+  It does not derive those histories or state equalities from `iIndepFun`.
 - `troppMasterTraceMGFFiniteFamily_statement`: typed finite-family
   Tropp/Lieb iteration primitive consuming per-summand matrix-MGF `MatrixLE`
   comparisons, independence, trace-exp integrability, comparison
@@ -808,8 +865,10 @@ mainline. It is documentation only; theorem status is not upgraded here.
   operator-norm wrappers lighter to use.
 - Unconditional trace-MGF provider theorem without explicit finite-family
   Tropp assumptions. The bounded theorem under primitives is proved for
-  `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`; the finite-family
-  Tropp primitive itself remains typed only.
+  `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`; the narrow `Fin m`
+  finite-family provider from explicit conditional-step/state data is proved,
+  but the arbitrary finite-index provider and automatic history/state
+  construction remain open.
 - The older `matrixBernsteinTraceMGF_statement` is retained for the
   `theta ^ 2 / 2` compatibility target and is not the bounded Matrix
   Bernstein RHS.
@@ -827,21 +886,34 @@ mainline. It is documentation only; theorem status is not upgraded here.
   theorem in `TraceExp.lean`, thin wrapper applying the finite-family Tropp
   typed primitive to conclude
   `TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum X) V theta R`.
+- `traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps`: theorem in
+  `TraceExp.lean`, thin wrapper from the S5 conditional-step finite chain to
+  `TraceMGFBernsteinVarianceProxyBound`. It is a `Fin m` API and keeps the S5
+  history/state/integrability data explicit, while also keeping the ordinary
+  finite-family assumptions in the public signature for consistency with
+  `traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily`.
+  The shared private core removes duplicated finite-chain proof work without
+  narrowing the exported wrapper shape.
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily`:
   theorem in `ConcentrationStatements.lean`, thin high-level wrapper from the
   finite-family Tropp typed primitive to
   `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`.
-- The finite-family Tropp primitive and Bernstein CFC primitive remain explicit
-  inputs. Lieb, Golden-Thompson, and full Matrix Bernstein are still outside
-  the proved API.
+- S7 intentionally does not add a Matrix Bernstein conditional-step wrapper:
+  the resulting signature would include all S5 history/state data plus the
+  existing Matrix Bernstein primitive inputs, making call-sites worse than
+  passing the finite-family primitive directly.
+- The finite-family Tropp primitive remains an explicit input for downstream
+  Matrix Bernstein wrappers. A narrow `Fin m` provider exists only when callers
+  already have the S5 conditional-step/state package. The Bernstein CFC
+  primitive remains explicit; Lieb, Golden-Thompson, and full Matrix
+  Bernstein are still outside the proved API.
 
 ## Next Safe Task
 
-RM-negative-square-integrability-adapters: prove the thin `randomMatrixSquare`
-/ square-integrability transfer for named negative row-rank-one families so the
-new adapter-based bounded-row operator-norm wrapper can stop asking for
-negative square-integrability separately. Keep exponential/trace integrability,
-Tropp, CFC, Golden-Thompson, Lieb, and full Matrix Bernstein explicit.
+RM-TROPP-S11-conditional-step-assumption-bundle-contract: design the smallest
+honest bundle for the S5 conditional-step/state data before attempting any
+public downstream Matrix Bernstein conditional-step wrapper. Do not prove
+Lieb, Golden-Thompson, Bernstein CFC, or full Matrix Bernstein.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -851,9 +923,12 @@ Tropp, CFC, Golden-Thompson, Lieb, and full Matrix Bernstein explicit.
   ordinary finite-family assumptions, an explicit
   `troppMasterTraceMGFFiniteFamily_statement` assumption, and explicit
   pointwise `bernsteinMatrixExp_le_quadratic_statement` assumptions.
-- The finite-family Tropp primitive remains typed only. The Bernstein CFC
-  primitive remains typed only. No Lieb theorem, Golden-Thompson theorem, or
-  Matrix Bernstein tail theorem was proved.
+- The arbitrary-index finite-family Tropp provider remains open. The narrow
+  `Fin m` provider from explicit conditional-step/state data is proved, but
+  downstream Matrix Bernstein wrappers still take the finite-family primitive
+  directly until the conditional-step/state package is made ergonomic. The
+  Bernstein CFC primitive remains typed only. No Lieb theorem,
+  Golden-Thompson theorem, or Matrix Bernstein tail theorem was proved.
 - The generic bounded-Bernstein real-to-lintegral semantic bridge is now
   proved in `TraceExp.lean`.
 - The explicit-theta one-sided quadratic-form upper-tail wrapper under
@@ -899,4 +974,4 @@ Tropp, CFC, Golden-Thompson, Lieb, and full Matrix Bernstein explicit.
 - The arbitrary-dimension bridge leaf adds the corrected positive-threshold
   arbitrary spectral bridge and arbitrary operator-norm Matrix
   Bernstein/sample-covariance wrappers under explicit primitive assumptions.
-- Next safe task: RM-negative-square-integrability-adapters.
+- Next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.

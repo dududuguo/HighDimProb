@@ -961,7 +961,9 @@ matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily
 ```
 
 This is not a proof of Lieb concavity, Golden-Thompson, the Bernstein CFC
-primitive, or Matrix Bernstein. Follow-up at the time:
+primitive, or Matrix Bernstein. Later RM-TROPP work proves only the narrow
+`Fin m` conditional-step provider and conditional-step trace-MGF wrapper; the
+arbitrary finite-index provider remains open. Follow-up at the time:
 MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives Progress
@@ -975,8 +977,10 @@ matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
 
 The theorem packages the existing single-summand provider under CFC and the
 finite-family Tropp typed primitive into the high-level bounded trace-MGF
-statement. The finite-family Tropp primitive, Bernstein CFC primitive, Lieb,
-Golden-Thompson, and Matrix Bernstein tail theorem remain unproved.
+statement. Later RM-TROPP work proves only a narrow `Fin m` provider from
+explicit conditional-step/state data; the arbitrary finite-index provider,
+Bernstein CFC primitive, Lieb, Golden-Thompson, and Matrix Bernstein tail
+theorem remain unproved.
 Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## RM rank-one operator-norm prerequisite progress
@@ -1006,7 +1010,7 @@ from pointwise operator-norm bounds. The rank-one nullspace examples now reuse
 the S6 core bridges. RM-S7E/RM-S7F add the conditional sample-covariance
 operator-norm event bridge and tail wrapper. RM-ON-S5 adds the nonempty wrapper
 without an explicit spectral-bridge assumption. Current next safe task:
-RM-negative-square-integrability-adapters.
+RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 ## RM centered operator-norm prerequisite progress
 
@@ -1032,7 +1036,7 @@ conditional sample-covariance quadratic-form tail wrapper is proved. RM-S5E
 adds the example-layer usage wrapper. RM-VP now proves crude variance-proxy
 control from pointwise operator-norm bounds. The rank-one nullspace examples
 now reuse the S6 core bridges. Current next safe task:
-RM-negative-square-integrability-adapters.
+RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 
 ## RM vector-to-rank-one matrix measurability / integrability prerequisite progress
@@ -1059,7 +1063,7 @@ core sample-covariance tail helper names instead of defining local
 radius/theta/RHS copies. RM-VP now proves crude variance-proxy control. The
 rank-one nullspace examples now reuse the S6 core bridges. Current next safe
 task:
-RM-negative-square-integrability-adapters.
+RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 
 ## RM centered rank-one structural adapter progress
@@ -1099,7 +1103,7 @@ assumptions.
 RM-VP variance-proxy control is complete. It proves the crude pointwise
 operator-norm route and the centered rank-one / sample-covariance row
 rank-one specializations. The rank-one nullspace example cleanup is complete.
-Current next safe task: RM-negative-square-integrability-adapters.
+Current next safe task: RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 
 ## RM PSD nullspace converse prerequisite progress
@@ -1122,7 +1126,8 @@ expectation-identity theorem for covariance objects and not a Matrix
 Bernstein tail theorem.
 
 RM-VP variance-proxy control is complete. The rank-one nullspace example
-cleanup is complete. Current next safe task: RM-negative-square-integrability-adapters.
+cleanup is complete. Current next safe task:
+RM-TROPP-S11-conditional-step-assumption-bundle-contract.
 
 
 ## RM rank-one kernel nullspace API progress
@@ -1150,4 +1155,4 @@ The rank-one nullspace examples now reuse the S6 core bridges where they remove
 local action/sum algebra.
 
 Current next safe task:
-RM-negative-square-integrability-adapters.
+RM-TROPP-S11-conditional-step-assumption-bundle-contract.

@@ -3,6 +3,7 @@ import Mathlib.Analysis.Matrix.Order
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Basic
 import Mathlib.Data.Real.StarOrdered
 import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
 import Mathlib.Probability.Independence.Basic
 import HighDimProb.RandomMatrix.Spectral
 import HighDimProb.RandomMatrix.VarianceProxy
@@ -304,6 +305,304 @@ abbrev troppMasterTraceMGFStep_statement {Omega : Type*}
                   (H + CFC.log
                     (matrixExpect P (fun omega => matrixExp (Z omega))))
 
+/-- Typed log/order-to-`K` bridge for the Tropp one-step RHS.
+
+This is the deterministic bridge needed after a one-summand matrix-MGF
+comparison has produced `M <= exp K`. It records the combined analytic
+consequence that the logarithmic RHS from the Tropp step can be replaced by the
+deterministic comparison matrix `K` inside the trace exponential.
+
+The statement is intentionally a typed primitive. It does not prove operator
+monotonicity of matrix logarithm or monotonicity of the trace exponential. -/
+abbrev troppLogExpComparisonToK_statement {n : Nat}
+    (H M K : Matrix (Fin n) (Fin n) Real) : Prop :=
+  IsSelfAdjointMatrix H ->
+    IsSelfAdjointMatrix M ->
+      IsStrictlyPositive M ->
+        IsSelfAdjointMatrix K ->
+          MatrixLE M (matrixExp K) ->
+            traceMatrixExp (H + CFC.log M) <= traceMatrixExp (H + K)
+
+/-- Apply the typed log/order-to-`K` bridge to the Tropp one-step statement. -/
+theorem troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    (H K : Matrix (Fin n) (Fin n) Real)
+    (Z : RandomMatrix Omega n n)
+    (hStep : troppMasterTraceMGFStep_statement (P := P) H Z)
+    (hBridge :
+      troppLogExpComparisonToK_statement H
+        (matrixExpect P (fun omega => matrixExp (Z omega))) K)
+    (hH : IsSelfAdjointMatrix H)
+    (hZ : RandomSelfAdjointMatrix P Z)
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (fun omega => traceMatrixExp (H + Z omega)))
+    (hExpInt : IntegrableRandomMatrix P (fun omega => matrixExp (Z omega)))
+    (hExpMeanSA :
+      IsSelfAdjointMatrix
+        (matrixExpect P (fun omega => matrixExp (Z omega))))
+    (hExpMeanPos :
+      IsStrictlyPositive
+        (matrixExpect P (fun omega => matrixExp (Z omega))))
+    (hKSA : IsSelfAdjointMatrix K)
+    (hMGF :
+      MatrixLE
+        (matrixExpect P (fun omega => matrixExp (Z omega)))
+        (matrixExp K)) :
+    expect P (fun omega => traceMatrixExp (H + Z omega)) <=
+      traceMatrixExp (H + K) :=
+  (hStep hH hZ hTraceInt hExpInt hExpMeanSA hExpMeanPos).trans
+    (hBridge hH hExpMeanSA hExpMeanPos hKSA hMGF)
+
+/-- Typed conditional/history one-step primitive for the Tropp trace-MGF
+iteration.
+
+This is intentionally weaker than the finite-family theorem: it handles one
+random history matrix `H`, one increment `Z`, and one deterministic comparison
+matrix `K`. The conclusion is a conditional trace-exponential bound relative
+to a history sigma-algebra, so later finite-family work can iterate it without
+using the deterministic-`H` one-step primitive for a random history. -/
+abbrev troppMasterTraceMGFConditionalStep_statement {Omega : Type*}
+    [mOmega : MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    (mHist : MeasurableSpace Omega)
+    (H Z : RandomMatrix Omega n n)
+    (K : Matrix (Fin n) (Fin n) Real) : Prop :=
+  mHist ≤ mOmega ->
+    @IsRandomMatrix Omega mOmega n n P H ->
+      @IsRandomMatrix Omega mOmega n n P Z ->
+        (forall i j,
+          @Measurable Omega Real mHist inferInstance
+            (fun omega => H omega i j)) ->
+          (forall omega, IsSelfAdjointMatrix (H omega)) ->
+            @RandomSelfAdjointMatrix Omega mOmega n P Z ->
+              @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _ H Z P ->
+                @IntegrableRealRandomVariable Omega mOmega P
+                  (fun omega => traceMatrixExp (H omega + Z omega)) ->
+                  @IntegrableRandomMatrix Omega mOmega n n P
+                    (fun omega => matrixExp (Z omega)) ->
+                    IsSelfAdjointMatrix
+                      (@matrixExpect Omega mOmega n n P
+                        (fun omega => matrixExp (Z omega))) ->
+                      IsStrictlyPositive
+                        (@matrixExpect Omega mOmega n n P
+                          (fun omega => matrixExp (Z omega))) ->
+                        IsSelfAdjointMatrix K ->
+                          MatrixLE
+                            (@matrixExpect Omega mOmega n n P
+                              (fun omega => matrixExp (Z omega)))
+                            (matrixExp K) ->
+                            ∀ᵐ omega ∂P,
+                              MeasureTheory.condExp (m := mHist) P
+                                  (fun omega' =>
+                                    traceMatrixExp (H omega' + Z omega')) omega <=
+                                traceMatrixExp (H omega + K)
+
+/-- Integrate one typed conditional/history Tropp step.
+
+This theorem only turns the conditional one-step primitive into an
+unconditional expected trace-exponential comparison. It keeps the
+sigma-finiteness and right-hand integrability assumptions explicit. -/
+theorem troppMasterTraceMGFConditionalStep_expect_bound {Omega : Type*}
+    [mOmega : MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    (mHist : MeasurableSpace Omega)
+    (H Z : RandomMatrix Omega n n)
+    (K : Matrix (Fin n) (Fin n) Real)
+    (hCond :
+      @troppMasterTraceMGFConditionalStep_statement
+        Omega mOmega P n mHist H Z K)
+    (hHistSub : mHist ≤ mOmega)
+    (hHistRand : @IsRandomMatrix Omega mOmega n n P H)
+    (hZRand : @IsRandomMatrix Omega mOmega n n P Z)
+    (hHistMeas :
+      forall i j,
+        @Measurable Omega Real mHist inferInstance
+          (fun omega => H omega i j))
+    (hHistSA : forall omega, IsSelfAdjointMatrix (H omega))
+    (hZSA : @RandomSelfAdjointMatrix Omega mOmega n P Z)
+    (hIndep :
+      @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _ H Z P)
+    (hCondTraceInt :
+      @IntegrableRealRandomVariable Omega mOmega P
+        (fun omega => traceMatrixExp (H omega + Z omega)))
+    (hExpInt :
+      @IntegrableRandomMatrix Omega mOmega n n P
+        (fun omega => matrixExp (Z omega)))
+    (hExpMeanSA :
+      IsSelfAdjointMatrix
+        (@matrixExpect Omega mOmega n n P
+          (fun omega => matrixExp (Z omega))))
+    (hExpMeanPos :
+      IsStrictlyPositive
+        (@matrixExpect Omega mOmega n n P
+          (fun omega => matrixExp (Z omega))))
+    (hKSA : IsSelfAdjointMatrix K)
+    (hMGFToK :
+      MatrixLE
+        (@matrixExpect Omega mOmega n n P
+          (fun omega => matrixExp (Z omega)))
+        (matrixExp K))
+    (hSigma : SigmaFinite (P.trim hHistSub))
+    (hRhsInt :
+      @IntegrableRealRandomVariable Omega mOmega P
+        (fun omega => traceMatrixExp (H omega + K))) :
+    @expect Omega mOmega P
+        (fun omega => traceMatrixExp (H omega + Z omega)) <=
+      @expect Omega mOmega P
+        (fun omega => traceMatrixExp (H omega + K)) := by
+  letI := hSigma
+  have hCondAE :
+      (fun omega =>
+        MeasureTheory.condExp (m := mHist) P
+          (fun omega' => traceMatrixExp (H omega' + Z omega')) omega) ≤ᵐ[P]
+        (fun omega => traceMatrixExp (H omega + K)) :=
+    hCond hHistSub hHistRand hZRand hHistMeas hHistSA hZSA hIndep
+      hCondTraceInt hExpInt hExpMeanSA hExpMeanPos hKSA hMGFToK
+  have hCondInt :
+      Integrable
+        (MeasureTheory.condExp (m := mHist) P
+          (fun omega => traceMatrixExp (H omega + Z omega))) P :=
+    MeasureTheory.integrable_condExp (μ := P) (m := mHist)
+      (f := fun omega => traceMatrixExp (H omega + Z omega))
+  have hIntegralCond :
+      (∫ omega,
+        MeasureTheory.condExp (m := mHist) P
+          (fun omega' => traceMatrixExp (H omega' + Z omega')) omega ∂P) =
+        ∫ omega, traceMatrixExp (H omega + Z omega) ∂P :=
+    MeasureTheory.integral_condExp (μ := P) (m := mHist)
+      (f := fun omega => traceMatrixExp (H omega + Z omega)) hHistSub
+  calc
+    @expect Omega mOmega P
+        (fun omega => traceMatrixExp (H omega + Z omega))
+        = ∫ omega, traceMatrixExp (H omega + Z omega) ∂P := rfl
+    _ = ∫ omega,
+          MeasureTheory.condExp (m := mHist) P
+            (fun omega' => traceMatrixExp (H omega' + Z omega')) omega ∂P :=
+          hIntegralCond.symm
+    _ <= ∫ omega, traceMatrixExp (H omega + K) ∂P :=
+          integral_mono_ae hCondInt hRhsInt hCondAE
+    _ = @expect Omega mOmega P
+          (fun omega => traceMatrixExp (H omega + K)) := rfl
+
+private theorem fin_expect_chain_le {m : Nat} (a : Fin (m + 1) -> Real)
+    (hStep : forall i : Fin m, a i.castSucc <= a i.succ) :
+    a ⟨0, Nat.succ_pos m⟩ <= a ⟨m, Nat.lt_succ_self m⟩ := by
+  have hPrefix :
+      forall k, (hk : k <= m) ->
+        a ⟨0, Nat.succ_pos m⟩ <= a ⟨k, Nat.lt_succ_of_le hk⟩ := by
+    intro k
+    induction k with
+    | zero =>
+        intro _hk
+        rfl
+    | succ k ih =>
+        intro hk
+        have hkLe : k <= m := Nat.le_trans (Nat.le_succ k) hk
+        have hkLt : k < m := hk
+        exact (ih hkLe).trans (by
+          have h := hStep ⟨k, hkLt⟩
+          simpa [Fin.castSucc, Fin.succ] using h)
+  exact hPrefix m le_rfl
+
+/-- Finite induction skeleton from conditional/history Tropp steps.
+
+The theorem proves only the finite chain once every adjacent state has already
+been identified with a one-step conditional/history Tropp comparison. It does
+not derive the history sigma-algebras from `iIndepFun`, does not prove the
+state-identification algebra, and does not prove the full finite-family Tropp
+primitive. -/
+theorem troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (state : Fin (m + 1) -> RealRandomVariable Omega)
+    (mHist : Fin m -> MeasurableSpace Omega)
+    (H Z : Fin m -> RandomMatrix Omega n n)
+    (hCond :
+      forall i,
+        troppMasterTraceMGFConditionalStep_statement (P := P)
+          (mHist i) (H i) (Z i) (K i))
+    (hHistSub : forall i, mHist i ≤ mOmega)
+    (hHistRand : forall i, @IsRandomMatrix Omega mOmega n n P (H i))
+    (hZRand : forall i, @IsRandomMatrix Omega mOmega n n P (Z i))
+    (hHistMeas :
+      forall i r c,
+        @Measurable Omega Real (mHist i) inferInstance
+          (fun omega => H i omega r c))
+    (hHistSA : forall i omega, IsSelfAdjointMatrix (H i omega))
+    (hZSA : forall i, @RandomSelfAdjointMatrix Omega mOmega n P (Z i))
+    (hIndep :
+      forall i,
+        @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _ (H i) (Z i) P)
+    (hCondTraceInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega => traceMatrixExp (H i omega + Z i omega)))
+    (hExpInt :
+      forall i,
+        @IntegrableRandomMatrix Omega mOmega n n P
+          (fun omega => matrixExp (Z i omega)))
+    (hExpMeanSA :
+      forall i,
+        IsSelfAdjointMatrix
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (Z i omega))))
+    (hExpMeanPos :
+      forall i,
+        IsStrictlyPositive
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (Z i omega))))
+    (hKSA : forall i, IsSelfAdjointMatrix (K i))
+    (hMGFToK :
+      forall i,
+        MatrixLE
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (Z i omega)))
+          (matrixExp (K i)))
+    (hSigma : forall i, SigmaFinite (P.trim (hHistSub i)))
+    (hRhsInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega => traceMatrixExp (H i omega + K i)))
+    (hStateZero :
+      state ⟨0, Nat.succ_pos m⟩ =
+        fun omega => traceMatrixExp (randomMatrixSum X omega))
+    (hStateLast :
+      state ⟨m, Nat.lt_succ_self m⟩ =
+        fun _omega =>
+          traceMatrixExp (Finset.univ.sum fun i : Fin m => K i))
+    (hStateLeft :
+      forall i,
+        state i.castSucc =
+          fun omega => traceMatrixExp (H i omega + Z i omega))
+    (hStateRight :
+      forall i,
+        state i.succ =
+          fun omega => traceMatrixExp (H i omega + K i)) :
+    expect P (fun omega => traceMatrixExp (randomMatrixSum X omega)) <=
+      traceMatrixExp (Finset.univ.sum fun i : Fin m => K i) := by
+  have hStep :
+      forall i : Fin m, expect P (state i.castSucc) <= expect P (state i.succ) := by
+    intro i
+    have h :=
+      troppMasterTraceMGFConditionalStep_expect_bound
+        (P := P) (mHist i) (H i) (Z i) (K i) (hCond i)
+        (hHistSub i) (hHistRand i) (hZRand i) (hHistMeas i)
+        (hHistSA i) (hZSA i) (hIndep i) (hCondTraceInt i)
+        (hExpInt i) (hExpMeanSA i) (hExpMeanPos i) (hKSA i)
+        (hMGFToK i) (hSigma i) (hRhsInt i)
+    simpa [hStateLeft i, hStateRight i] using h
+  have hChain :=
+    fin_expect_chain_le (m := m) (fun i => expect P (state i)) hStep
+  calc
+    expect P (fun omega => traceMatrixExp (randomMatrixSum X omega))
+        = expect P (state ⟨0, Nat.succ_pos m⟩) := by
+          rw [hStateZero]
+    _ <= expect P (state ⟨m, Nat.lt_succ_self m⟩) := hChain
+    _ = traceMatrixExp (Finset.univ.sum fun i : Fin m => K i) := by
+          rw [hStateLast]
+          simp [expect, measureReal_def]
+
 end TroppMasterTraceMGFStep
 
 /-! ## Typed Bernstein functional-calculus primitive -/
@@ -476,6 +775,229 @@ abbrev troppMasterTraceMGFFiniteFamily_statement {Omega : Type*}
                         TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum X)
                           V theta R
 
+private theorem traceMGFBernsteinVarianceProxyBound_of_conditionalSteps_core
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (V : Matrix (Fin n) (Fin n) Real) (theta R : Real)
+    (state : Fin (m + 1) -> RealRandomVariable Omega)
+    (mHist : Fin m -> MeasurableSpace Omega)
+    (H Z : Fin m -> RandomMatrix Omega n n)
+    (hCond :
+      forall i,
+        troppMasterTraceMGFConditionalStep_statement (P := P)
+          (mHist i) (H i) (Z i) (K i))
+    (hHistSub : forall i, mHist i ≤ mOmega)
+    (hHistRand : forall i, @IsRandomMatrix Omega mOmega n n P (H i))
+    (hZRand : forall i, @IsRandomMatrix Omega mOmega n n P (Z i))
+    (hHistMeas :
+      forall i r c,
+        @Measurable Omega Real (mHist i) inferInstance
+          (fun omega => H i omega r c))
+    (hHistSA : forall i omega, IsSelfAdjointMatrix (H i omega))
+    (hZSA : forall i, @RandomSelfAdjointMatrix Omega mOmega n P (Z i))
+    (hZScaled :
+      forall i, Z i = fun omega => SMul.smul theta (X i omega))
+    (hStepIndep :
+      forall i,
+        @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _ (H i) (Z i) P)
+    (hCondTraceInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega => traceMatrixExp (H i omega + Z i omega)))
+    (hExpIntStep :
+      forall i,
+        @IntegrableRandomMatrix Omega mOmega n n P
+          (fun omega => matrixExp (Z i omega)))
+    (hExpMeanSA :
+      forall i,
+        IsSelfAdjointMatrix
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (Z i omega))))
+    (hExpMeanPos :
+      forall i,
+        IsStrictlyPositive
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (Z i omega))))
+    (hKSA : forall i, IsSelfAdjointMatrix (K i))
+    (hSigma : forall i, SigmaFinite (P.trim (hHistSub i)))
+    (hRhsInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega => traceMatrixExp (H i omega + K i)))
+    (hStateZero :
+      state ⟨0, Nat.succ_pos m⟩ =
+        fun omega =>
+          traceMatrixExp
+            (randomMatrixSum
+              (fun i : Fin m => fun omega => SMul.smul theta (X i omega))
+              omega))
+    (hStateLast :
+      state ⟨m, Nat.lt_succ_self m⟩ =
+        fun _omega =>
+          traceMatrixExp (Finset.univ.sum fun i : Fin m => K i))
+    (hStateLeft :
+      forall i,
+        state i.castSucc =
+          fun omega => traceMatrixExp (H i omega + Z i omega))
+    (hStateRight :
+      forall i,
+        state i.succ =
+          fun omega => traceMatrixExp (H i omega + K i))
+    (hMGF :
+      forall i,
+        MatrixLE
+          (matrixExpect P
+            (fun omega => matrixExp (SMul.smul theta (X i omega))))
+          (matrixExp (K i)))
+    (hNorm :
+      Finset.univ.sum (fun i : Fin m => K i) =
+        SMul.smul (bernsteinMGFCoeff theta R) V) :
+    TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum X) V theta R := by
+  have hSkel :
+      expect P
+          (fun omega =>
+            traceMatrixExp
+              (randomMatrixSum
+                (fun i : Fin m => fun omega => SMul.smul theta (X i omega))
+                omega)) <=
+        traceMatrixExp (Finset.univ.sum fun i : Fin m => K i) :=
+    have hStepMGFToK :
+        forall i,
+          MatrixLE
+            (@matrixExpect Omega mOmega n n P
+              (fun omega => matrixExp (Z i omega)))
+            (matrixExp (K i)) := by
+      intro i
+      simpa [hZScaled i] using hMGF i
+    troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps
+      (P := P)
+      (fun i : Fin m => fun omega => SMul.smul theta (X i omega)) K
+      state mHist H Z hCond hHistSub hHistRand hZRand hHistMeas hHistSA
+      hZSA hStepIndep hCondTraceInt hExpIntStep hExpMeanSA hExpMeanPos hKSA
+      hStepMGFToK hSigma hRhsInt hStateZero hStateLast hStateLeft hStateRight
+  have hScaledIntegrand :
+      (fun omega =>
+        traceMatrixExp
+          (randomMatrixSum
+            (fun i : Fin m => fun omega => SMul.smul theta (X i omega))
+            omega)) =
+        traceExpIntegrand (randomMatrixSum X) theta := by
+    funext omega
+    unfold traceExpIntegrand randomMatrixSum
+    congr 1
+    ext r c
+    rw [Matrix.sum_apply]
+    change
+      (Finset.univ.sum fun i : Fin m => (theta • X i omega) r c) =
+        (theta • (Finset.univ.sum fun i : Fin m => X i omega)) r c
+    rw [Matrix.smul_apply]
+    rw [Matrix.sum_apply]
+    simp_rw [Matrix.smul_apply]
+    simp only [smul_eq_mul]
+    change (Finset.univ.sum fun i : Fin m => theta * X i omega r c) =
+      theta * (Finset.univ.sum fun i : Fin m => X i omega r c)
+    rw [Finset.mul_sum]
+  unfold TraceMGFBernsteinVarianceProxyBound TraceMGFBound traceExpMoment
+  calc
+    expect P (traceExpIntegrand (randomMatrixSum X) theta)
+        = expect P
+            (fun omega =>
+              traceMatrixExp
+                (randomMatrixSum
+                  (fun i : Fin m => fun omega => SMul.smul theta (X i omega))
+                  omega)) := by
+          rw [hScaledIntegrand]
+    _ <= traceMatrixExp (Finset.univ.sum fun i : Fin m => K i) := hSkel
+    _ = traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V) := by
+          rw [hNorm]
+
+/-- Finite-family Tropp provider from explicit conditional-step state data.
+
+This theorem is deliberately narrower than the typed finite-family primitive:
+it specializes the existing finite-family interface to `Fin m` and uses the S4
+finite-chain skeleton for the scaled family `theta • X_i`. The history
+sigma-algebras, adjacent state identifications, conditional step assumptions,
+and right-hand integrability hypotheses are still explicit; the theorem does
+not derive them from `iIndepFun`. -/
+theorem troppMasterTraceMGFFiniteFamily_of_conditionalSteps
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (V : Matrix (Fin n) (Fin n) Real) (theta R : Real)
+    (state : Fin (m + 1) -> RealRandomVariable Omega)
+    (mHist : Fin m -> MeasurableSpace Omega)
+    (H Z : Fin m -> RandomMatrix Omega n n)
+    (hCond :
+      forall i,
+        troppMasterTraceMGFConditionalStep_statement (P := P)
+          (mHist i) (H i) (Z i) (K i))
+    (hHistSub : forall i, mHist i ≤ mOmega)
+    (hHistRand : forall i, @IsRandomMatrix Omega mOmega n n P (H i))
+    (hZRand : forall i, @IsRandomMatrix Omega mOmega n n P (Z i))
+    (hHistMeas :
+      forall i r c,
+        @Measurable Omega Real (mHist i) inferInstance
+          (fun omega => H i omega r c))
+    (hHistSA : forall i omega, IsSelfAdjointMatrix (H i omega))
+    (hZSA : forall i, @RandomSelfAdjointMatrix Omega mOmega n P (Z i))
+    (hZScaled :
+      forall i, Z i = fun omega => SMul.smul theta (X i omega))
+    (hStepIndep :
+      forall i,
+        @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _ (H i) (Z i) P)
+    (hCondTraceInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega => traceMatrixExp (H i omega + Z i omega)))
+    (hExpIntStep :
+      forall i,
+        @IntegrableRandomMatrix Omega mOmega n n P
+          (fun omega => matrixExp (Z i omega)))
+    (hExpMeanSA :
+      forall i,
+        IsSelfAdjointMatrix
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (Z i omega))))
+    (hExpMeanPos :
+      forall i,
+        IsStrictlyPositive
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (Z i omega))))
+    (hSigma : forall i, SigmaFinite (P.trim (hHistSub i)))
+    (hRhsInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega => traceMatrixExp (H i omega + K i)))
+    (hStateZero :
+      state ⟨0, Nat.succ_pos m⟩ =
+        fun omega =>
+          traceMatrixExp
+            (randomMatrixSum
+              (fun i : Fin m => fun omega => SMul.smul theta (X i omega))
+              omega))
+    (hStateLast :
+      state ⟨m, Nat.lt_succ_self m⟩ =
+        fun _omega =>
+          traceMatrixExp (Finset.univ.sum fun i : Fin m => K i))
+    (hStateLeft :
+      forall i,
+        state i.castSucc =
+          fun omega => traceMatrixExp (H i omega + Z i omega))
+    (hStateRight :
+      forall i,
+        state i.succ =
+          fun omega => traceMatrixExp (H i omega + K i)) :
+    troppMasterTraceMGFFiniteFamily_statement (P := P) X K V theta R := by
+  intro _hRand _hSA _hIndep _hExpInt _hTraceInt hKSA _hVSA _hR _hRange hMGF hNorm
+  exact traceMGFBernsteinVarianceProxyBound_of_conditionalSteps_core
+    X K V theta R state mHist H Z hCond hHistSub hHistRand hZRand hHistMeas
+    hHistSA hZSA hZScaled hStepIndep hCondTraceInt hExpIntStep hExpMeanSA
+    hExpMeanPos hKSA hSigma hRhsInt hStateZero hStateLast hStateLeft
+    hStateRight hMGF hNorm
+
 /-- Thin semantic trace-mgf provider from the finite-family Tropp typed
 primitive.
 
@@ -515,6 +1037,115 @@ theorem traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
         SMul.smul (bernsteinMGFCoeff theta R) V) :
     TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum X) V theta R :=
   hTropp hRand hSA hIndep hExpInt hTraceInt hKSA hVSA hR hRange hMGF hNorm
+
+/-- Thin trace-MGF provider from explicit conditional-step Tropp data.
+
+This wrapper keeps the public signature aligned with the ordinary
+finite-family trace-MGF wrapper. It first derives the finite-family Tropp
+primitive from the conditional-step/state package, then applies the existing
+trace-MGF wrapper. The shared private core avoids duplicating the finite-chain
+proof inside the finite-family provider. -/
+theorem traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (V : Matrix (Fin n) (Fin n) Real) (theta R : Real)
+    (state : Fin (m + 1) -> RealRandomVariable Omega)
+    (mHist : Fin m -> MeasurableSpace Omega)
+    (H Z : Fin m -> RandomMatrix Omega n n)
+    (hCond :
+      forall i,
+        troppMasterTraceMGFConditionalStep_statement (P := P)
+          (mHist i) (H i) (Z i) (K i))
+    (hHistSub : forall i, mHist i ≤ mOmega)
+    (hHistRand : forall i, @IsRandomMatrix Omega mOmega n n P (H i))
+    (hZRand : forall i, @IsRandomMatrix Omega mOmega n n P (Z i))
+    (hHistMeas :
+      forall i r c,
+        @Measurable Omega Real (mHist i) inferInstance
+          (fun omega => H i omega r c))
+    (hHistSA : forall i omega, IsSelfAdjointMatrix (H i omega))
+    (hZSA : forall i, @RandomSelfAdjointMatrix Omega mOmega n P (Z i))
+    (hZScaled :
+      forall i, Z i = fun omega => SMul.smul theta (X i omega))
+    (hStepIndep :
+      forall i,
+        @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _ (H i) (Z i) P)
+    (hCondTraceInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega => traceMatrixExp (H i omega + Z i omega)))
+    (hExpIntStep :
+      forall i,
+        @IntegrableRandomMatrix Omega mOmega n n P
+          (fun omega => matrixExp (Z i omega)))
+    (hExpMeanSA :
+      forall i,
+        IsSelfAdjointMatrix
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (Z i omega))))
+    (hExpMeanPos :
+      forall i,
+        IsStrictlyPositive
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (Z i omega))))
+    (hSigma : forall i, SigmaFinite (P.trim (hHistSub i)))
+    (hRhsInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega => traceMatrixExp (H i omega + K i)))
+    (hStateZero :
+      state ⟨0, Nat.succ_pos m⟩ =
+        fun omega =>
+          traceMatrixExp
+            (randomMatrixSum
+              (fun i : Fin m => fun omega => SMul.smul theta (X i omega))
+              omega))
+    (hStateLast :
+      state ⟨m, Nat.lt_succ_self m⟩ =
+        fun _omega =>
+          traceMatrixExp (Finset.univ.sum fun i : Fin m => K i))
+    (hStateLeft :
+      forall i,
+        state i.castSucc =
+          fun omega => traceMatrixExp (H i omega + Z i omega))
+    (hStateRight :
+      forall i,
+        state i.succ =
+          fun omega => traceMatrixExp (H i omega + K i))
+    (hRand : forall i, IsRandomMatrix P (X i))
+    (hSA : forall i, RandomSelfAdjointMatrix P (X i))
+    (hIndep : ProbabilityTheory.iIndepFun X P)
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (fun omega => matrixExp (SMul.smul theta (X i omega))))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum X) theta))
+    (hKSA : forall i, IsSelfAdjointMatrix (K i))
+    (hVSA : IsSelfAdjointMatrix V)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hMGF :
+      forall i,
+        MatrixLE
+          (matrixExpect P
+            (fun omega => matrixExp (SMul.smul theta (X i omega))))
+          (matrixExp (K i)))
+    (hNorm :
+      Finset.univ.sum (fun i : Fin m => K i) =
+        SMul.smul (bernsteinMGFCoeff theta R) V) :
+    TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum X) V theta R :=
+  traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
+    X K V theta R
+    (troppMasterTraceMGFFiniteFamily_of_conditionalSteps
+      X K V theta R state mHist H Z hCond hHistSub hHistRand hZRand
+      hHistMeas hHistSA hZSA hZScaled hStepIndep hCondTraceInt hExpIntStep
+      hExpMeanSA hExpMeanPos hSigma hRhsInt hStateZero hStateLast hStateLeft
+      hStateRight)
+    hRand hSA hIndep hExpInt hTraceInt hKSA hVSA hR hRange hMGF hNorm
 
 /-- Typed Bernstein-specific scalar-to-matrix functional-calculus primitive.
 

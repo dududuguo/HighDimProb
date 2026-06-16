@@ -26,7 +26,13 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.TraceMGFVarianceProxyBound
 #check HighDimProb.TraceMGFVarianceProxyBoundLIntegral
 #check HighDimProb.troppMasterTraceMGFStep_statement
+#check HighDimProb.troppLogExpComparisonToK_statement
+#check HighDimProb.troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK
+#check HighDimProb.troppMasterTraceMGFConditionalStep_statement
+#check HighDimProb.troppMasterTraceMGFConditionalStep_expect_bound
+#check HighDimProb.troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps
 #check HighDimProb.troppMasterTraceMGFFiniteFamily_statement
+#check HighDimProb.troppMasterTraceMGFFiniteFamily_of_conditionalSteps
 #check HighDimProb.bernsteinMGFCoeff
 #check HighDimProb.bernsteinThetaChoice
 #check HighDimProb.bernsteinThetaChoice_den_pos
@@ -59,6 +65,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.traceMGFVarianceProxyBound_statement
 #check HighDimProb.traceMGFBernsteinVarianceProxyBound_statement
 #check HighDimProb.traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
+#check HighDimProb.traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps
 #check HighDimProb.traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound
 
 example {n : Nat} (A : Matrix (Fin n) (Fin n) Real) :
@@ -142,6 +149,10 @@ example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (Z : HighDimProb.RandomMatrix Omega n n) : Prop :=
   HighDimProb.troppMasterTraceMGFStep_statement (P := P) H Z
 
+example {n : Nat}
+    (H M K : Matrix (Fin n) (Fin n) Real) : Prop :=
+  HighDimProb.troppLogExpComparisonToK_statement H M K
+
 example {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
     (theta R : Real) : Prop :=
   HighDimProb.bernsteinMatrixExp_le_quadratic_statement A theta R
@@ -200,6 +211,10 @@ example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (H : Matrix (Fin n) (Fin n) Real)
     (Z : HighDimProb.RandomMatrix Omega n n)
     (hStep : HighDimProb.troppMasterTraceMGFStep_statement (P := P) H Z)
+    (K : Matrix (Fin n) (Fin n) Real)
+    (hBridge : HighDimProb.troppLogExpComparisonToK_statement H
+      (HighDimProb.matrixExpect P
+        (fun omega => HighDimProb.matrixExp (Z omega))) K)
     (hH : HighDimProb.IsSelfAdjointMatrix H)
     (hZ : HighDimProb.RandomSelfAdjointMatrix P Z)
     (hTraceInt : HighDimProb.IntegrableRealRandomVariable P
@@ -211,14 +226,63 @@ example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
         (fun omega => HighDimProb.matrixExp (Z omega))))
     (hExpMeanPos : IsStrictlyPositive
       (HighDimProb.matrixExpect P
-        (fun omega => HighDimProb.matrixExp (Z omega)))) :
+        (fun omega => HighDimProb.matrixExp (Z omega))))
+    (hKSA : HighDimProb.IsSelfAdjointMatrix K)
+    (hMGFToK : HighDimProb.MatrixLE
+      (HighDimProb.matrixExpect P
+        (fun omega => HighDimProb.matrixExp (Z omega)))
+      (HighDimProb.matrixExp K)) :
     HighDimProb.expect P
         (fun omega => HighDimProb.traceMatrixExp (H + Z omega)) <=
-      HighDimProb.traceMatrixExp
-        (H + CFC.log
-          (HighDimProb.matrixExpect P
-            (fun omega => HighDimProb.matrixExp (Z omega)))) := by
-  exact hStep hH hZ hTraceInt hExpInt hExpMeanSA hExpMeanPos
+      HighDimProb.traceMatrixExp (H + K) := by
+  exact
+    HighDimProb.troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK
+      H K Z hStep hBridge hH hZ hTraceInt hExpInt hExpMeanSA hExpMeanPos
+      hKSA hMGFToK
+
+example {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} {n : Nat}
+    (mHist : MeasurableSpace Omega)
+    (H Z : HighDimProb.RandomMatrix Omega n n)
+    (K : Matrix (Fin n) (Fin n) Real)
+    (hCond :
+      @HighDimProb.troppMasterTraceMGFConditionalStep_statement
+        Omega mOmega P n mHist H Z K)
+    (hHistSub : mHist ≤ mOmega)
+    (hHistRand : @HighDimProb.IsRandomMatrix Omega mOmega n n P H)
+    (hZRand : @HighDimProb.IsRandomMatrix Omega mOmega n n P Z)
+    (hHistMeas :
+      forall i j,
+        @Measurable Omega Real mHist inferInstance
+          (fun omega => H omega i j))
+    (hHistSA : forall omega, HighDimProb.IsSelfAdjointMatrix (H omega))
+    (hZSA : @HighDimProb.RandomSelfAdjointMatrix Omega mOmega n P Z)
+    (hIndep :
+      @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _ H Z P)
+    (hCondTraceInt :
+      @HighDimProb.IntegrableRealRandomVariable Omega mOmega P
+        (fun omega => HighDimProb.traceMatrixExp (H omega + Z omega)))
+    (hExpInt :
+      @HighDimProb.IntegrableRandomMatrix Omega mOmega n n P
+        (fun omega => HighDimProb.matrixExp (Z omega)))
+    (hExpMeanSA : HighDimProb.IsSelfAdjointMatrix
+      (@HighDimProb.matrixExpect Omega mOmega n n P
+        (fun omega => HighDimProb.matrixExp (Z omega))))
+    (hExpMeanPos : IsStrictlyPositive
+      (@HighDimProb.matrixExpect Omega mOmega n n P
+        (fun omega => HighDimProb.matrixExp (Z omega))))
+    (hKSA : HighDimProb.IsSelfAdjointMatrix K)
+    (hMGFToK : HighDimProb.MatrixLE
+      (@HighDimProb.matrixExpect Omega mOmega n n P
+        (fun omega => HighDimProb.matrixExp (Z omega)))
+      (HighDimProb.matrixExp K)) :
+    ∀ᵐ omega ∂P,
+      MeasureTheory.condExp (m := mHist) P
+          (fun omega' => HighDimProb.traceMatrixExp (H omega' + Z omega'))
+            omega <=
+        HighDimProb.traceMatrixExp (H omega + K) := by
+  exact hCond hHistSub hHistRand hZRand hHistMeas hHistSA hZSA hIndep
+    hCondTraceInt hExpInt hExpMeanSA hExpMeanPos hKSA hMGFToK
 
 example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (P : MeasureTheory.Measure Omega)

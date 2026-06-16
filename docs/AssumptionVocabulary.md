@@ -72,7 +72,9 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
   operator-norm Matrix Bernstein/sample-covariance wrappers while keeping
   Tropp, CFC, independence, and integrability assumptions explicit. The
   current arbitrary-dimensional route is positive-threshold only; the negative
-  family adapter branch is complete, and the next RandomMatrix branch is
-  `RM-negative-square-integrability-adapters`.
+  family adapter branch is complete. The next RandomMatrix assumption cleanup
+  is `RM-TROPP-S11-conditional-step-assumption-bundle-contract`, which should
+  bundle the S5 conditional-step/state data before any downstream wrapper is
+  exposed.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.

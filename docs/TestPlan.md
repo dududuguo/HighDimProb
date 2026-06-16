@@ -599,8 +599,9 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`, and
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean` mirror the bounded
   Bernstein RHS target.
-- Coverage proves no trace-mgf provider, Bernstein CFC primitive,
-  Tropp/Lieb primitive, Golden-Thompson, Lieb, or Matrix Bernstein theorem.
+- Coverage proves no Bernstein CFC primitive, arbitrary finite-index
+  Tropp/Lieb provider, Golden-Thompson, Lieb, or Matrix Bernstein theorem.
+  Narrow conditional-step providers are covered separately below.
 
 ## MB-S9-tropp-shape-refactor Coverage
 
@@ -609,8 +610,17 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   `Prop` instantiation.
 - `HighDimProbJudge/RandomMatrix/TraceExpUse.lean` checks
   `HighDimProb.troppMasterTraceMGFFiniteFamily_statement`.
-- Coverage preserves `troppMasterTraceMGFStep_statement` and proves no Lieb,
-  Golden-Thompson, trace-mgf provider, or Matrix Bernstein theorem.
+- Coverage preserves `troppMasterTraceMGFStep_statement` and additionally
+  checks the RM-TROPP hierarchy:
+  `troppLogExpComparisonToK_statement`,
+  `troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK`,
+  `troppMasterTraceMGFConditionalStep_statement`,
+  `troppMasterTraceMGFConditionalStep_expect_bound`,
+  `troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps`,
+  `troppMasterTraceMGFFiniteFamily_of_conditionalSteps`, and
+  `traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps`.
+- Coverage proves no Lieb, Golden-Thompson, arbitrary finite-index
+  finite-family provider, Bernstein CFC primitive, or Matrix Bernstein theorem.
 ## MB-S9 Trace-MGF Thin Wrapper Coverage
 
 - `HighDimProbTest/RandomMatrixTraceExpAPI.lean` checks
@@ -619,6 +629,10 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   `matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily`.
 - These are API checks only; they do not prove Tropp/Lieb, the Bernstein CFC
   primitive, or Matrix Bernstein.
+- S7 intentionally adds no downstream Matrix Bernstein conditional-step
+  wrapper or coverage: without a compact S5 conditional-step/state bundle, the
+  public signatures would be larger than the existing finite-family primitive
+  route.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives Coverage
 
