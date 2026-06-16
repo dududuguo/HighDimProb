@@ -1367,6 +1367,10 @@
   sharp fourth-moment or moment-optimal bound. Square-integrability,
   independence, Tropp, CFC, and exponential/trace integrability assumptions
   remain explicit in the tail wrappers.
-- Follow-up path: `RM-negative-family-adapters` should remove duplicated
-  negative-family structural and pointwise-bound assumptions from the
-  bounded-row operator-norm wrapper where existing APIs support it.
+- RM-negative-family-adapters result: named generic and sample-covariance
+  adapters now remove duplicated negative-family structural, entrywise
+  integrability, independence, and pointwise-bound assumptions from the lighter
+  bounded-row operator-norm wrapper.
+- Follow-up path: `RM-negative-square-integrability-adapters` should remove the
+  remaining negative square-integrability assumption when `randomMatrixSquare`
+  under pointwise negation is a thin transfer.
