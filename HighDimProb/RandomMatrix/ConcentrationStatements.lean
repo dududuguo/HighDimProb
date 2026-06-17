@@ -2010,6 +2010,100 @@ theorem centeredSampleCovarianceRowRankOneFamilyNeg_squareIntegrable_of_squareIn
       (P := P) (A := centeredSampleCovarianceRowRankOneFamily (P := P) A)
       hSq
 
+/--
+Matrix-exponential integrability for the named negative sample-covariance
+row-rank-one family transfers from the original family at the opposite scalar
+parameter.
+
+This is a sample-covariance alias for
+`integrableRandomMatrix_matrixExpScaledFamily_negRandomMatrixFamily`; it does
+not prove exponential integrability from moment or row-norm assumptions.
+-/
+theorem centeredSampleCovarianceRowRankOneFamilyNeg_expIntegrable_of_expIntegrable_neg_theta
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {m n : Nat} {A : RandomMatrix Omega m n} {theta : Real}
+    (hExp :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily
+            (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+            (-theta) k)) :
+    forall k : Fin m,
+      IntegrableRandomMatrix P
+        (matrixExpScaledFamily
+          (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+          theta k) := by
+  change forall k : Fin m,
+    IntegrableRandomMatrix P
+      (matrixExpScaledFamily
+        (negRandomMatrixFamily
+          (centeredSampleCovarianceRowRankOneFamily (P := P) A))
+        theta k)
+  exact integrableRandomMatrix_matrixExpScaledFamily_negRandomMatrixFamily
+    (P := P) (A := centeredSampleCovarianceRowRankOneFamily (P := P) A)
+    (theta := theta) hExp
+
+/--
+Trace-exponential integrability for the named negative sample-covariance
+row-rank-one sum transfers from the original centered row-rank-one sum at the
+opposite scalar parameter.
+
+This is a sample-covariance alias for
+`integrableRealRandomVariable_traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily`;
+it keeps the opposite-theta provider assumption explicit.
+-/
+theorem centeredSampleCovarianceRowRankOneSumNeg_traceExpIntegrable_of_traceExpIntegrable_neg_theta
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {m n : Nat} {A : RandomMatrix Omega m n} {theta : Real}
+    (hTrace :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand
+          (centeredSampleCovarianceRowRankOneSum (P := P) A)
+          (-theta))) :
+    IntegrableRealRandomVariable P
+      (traceExpIntegrand
+        (centeredSampleCovarianceRowRankOneSumNeg (P := P) A)
+        theta) := by
+  change IntegrableRealRandomVariable P
+    (traceExpIntegrand
+      (randomMatrixSum
+        (negRandomMatrixFamily
+          (centeredSampleCovarianceRowRankOneFamily (P := P) A)))
+      theta)
+  exact integrableRealRandomVariable_traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily
+    (P := P) (A := centeredSampleCovarianceRowRankOneFamily (P := P) A)
+    (theta := theta) hTrace
+
+/--
+A supplied Bernstein functional-calculus primitive for the original centered
+sample-covariance row-rank-one family at `-theta` transfers to the named
+negative family at `theta`.
+
+This is only a sign-normalization wrapper around
+`bernsteinMatrixExp_le_quadratic_neg_of_neg_theta`; it does not prove the CFC
+primitive.
+-/
+theorem centeredSampleCovarianceRowRankOneFamilyNeg_cfcPrimitive_of_cfcPrimitive_neg_theta
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {m n : Nat} {A : RandomMatrix Omega m n} {theta R : Real}
+    (hCFC :
+      forall k : Fin m, forall omega,
+        bernsteinMatrixExp_le_quadratic_statement
+          ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k omega)
+          (-theta) R) :
+    forall k : Fin m, forall omega,
+      bernsteinMatrixExp_le_quadratic_statement
+        ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) k omega)
+        theta R := by
+  intro k omega
+  change bernsteinMatrixExp_le_quadratic_statement
+    (-
+      ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k omega))
+    theta R
+  exact bernsteinMatrixExp_le_quadratic_neg_of_neg_theta
+    ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k omega)
+    theta R (hCFC k omega)
+
 /-- Sample-covariance row-rank-one variance-proxy norm bound from a row
 squared-norm bound and explicit square-integrability of the centered
 summands. -/

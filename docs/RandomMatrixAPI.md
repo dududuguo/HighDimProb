@@ -45,6 +45,13 @@ CFC, Golden-Thompson, or a full unconditional Matrix Bernstein theorem.
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`
+- `centeredSampleCovarianceRowRankOneFamilyNeg_expIntegrable_of_expIntegrable_neg_theta`
+- `centeredSampleCovarianceRowRankOneSumNeg_traceExpIntegrable_of_traceExpIntegrable_neg_theta`
+- `centeredSampleCovarianceRowRankOneFamilyNeg_cfcPrimitive_of_cfcPrimitive_neg_theta`
+
+The last three names are sign-normalization adapters from explicit original-family
+opposite-parameter provider assumptions; they do not prove exponential
+integrability, trace-exponential integrability, or the Bernstein CFC primitive.
 
 ## Variance Proxy Surface
 
