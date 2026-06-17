@@ -104,6 +104,11 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check matrixBernsteinLaplacePrerequisitesStatement
 #check matrixExpScaledFamily
 #check matrixExpScaledFamily_apply
+#check matrixExpScaledFamily_negRandomMatrixFamily
+#check integrableRandomMatrix_matrixExpScaledFamily_negRandomMatrixFamily
+#check randomMatrixSum_negRandomMatrixFamily
+#check traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily
+#check integrableRealRandomVariable_traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily
 #check bernsteinSecondMomentComparisonFamily
 #check bernsteinSecondMomentComparisonFamily_apply
 #check matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
@@ -249,6 +254,28 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check (matrixBernsteinSelfAdjointStatement P B sigma2 R c1 c2 t : Prop)
 #check (matrixBernsteinLaplacePrerequisitesStatement P A c t : Prop)
 #check (matrixExpScaledFamily B theta : I -> RandomMatrix Omega n n)
+#check (matrixExpScaledFamily_negRandomMatrixFamily B theta :
+  forall i,
+    matrixExpScaledFamily (negRandomMatrixFamily B) theta i =
+      matrixExpScaledFamily B (-theta) i)
+#check (integrableRandomMatrix_matrixExpScaledFamily_negRandomMatrixFamily
+    (P := P) (A := B) (theta := theta) :
+  (forall i, IntegrableRandomMatrix P (matrixExpScaledFamily B (-theta) i)) ->
+    forall i,
+      IntegrableRandomMatrix P
+        (matrixExpScaledFamily (negRandomMatrixFamily B) theta i))
+#check (randomMatrixSum_negRandomMatrixFamily B :
+  randomMatrixSum (negRandomMatrixFamily B) =
+    negRandomMatrix (randomMatrixSum B))
+#check (traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily B theta :
+  traceExpIntegrand (randomMatrixSum (negRandomMatrixFamily B)) theta =
+    traceExpIntegrand (randomMatrixSum B) (-theta))
+#check (integrableRealRandomVariable_traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily
+    (P := P) (A := B) (theta := theta) :
+  IntegrableRealRandomVariable P
+      (traceExpIntegrand (randomMatrixSum B) (-theta)) ->
+    IntegrableRealRandomVariable P
+      (traceExpIntegrand (randomMatrixSum (negRandomMatrixFamily B)) theta))
 #check (bernsteinSecondMomentComparisonFamily P B theta R :
   I -> Matrix (Fin n) (Fin n) Real)
 #check (sampleCovarianceCenteredRankOneRadius R : Real)

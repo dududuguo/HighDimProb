@@ -660,11 +660,16 @@ end TroppMasterTraceMGFStep
 
 section BernsteinFunctionalCalculus
 
-open scoped MatrixOrder Matrix.Norms.Operator
+open scoped MatrixOrder Matrix.Norms.Operator Matrix.Norms.L2Operator
 
 /-- Canonical bounded-Bernstein matrix-MGF coefficient. -/
 def bernsteinMGFCoeff (theta R : Real) : Real :=
   (theta ^ 2 / 2) / (1 - abs theta * R / 3)
+
+@[simp]
+theorem bernsteinMGFCoeff_neg (theta R : Real) :
+    bernsteinMGFCoeff (-theta) R = bernsteinMGFCoeff theta R := by
+  simp [bernsteinMGFCoeff]
 
 /-- Canonical scalar Bernstein optimizing choice for the bounded-MGF
 coefficient.
@@ -1293,6 +1298,41 @@ abbrev bernsteinMatrixExp_le_quadratic_statement {n : Nat}
             ((1 : Matrix (Fin n) (Fin n) Real) +
               SMul.smul theta A +
                 SMul.smul (bernsteinMGFCoeff theta R) (matrixSquare A))
+
+/-- Sign-normalization for the Bernstein functional-calculus primitive.
+
+This theorem does not prove the CFC primitive. It only says that a supplied
+primitive for `A` at parameter `-theta` can be reused for `-A` at parameter
+`theta`, using coefficient parity and `(-A)^2 = A^2`. -/
+theorem bernsteinMatrixExp_le_quadratic_neg_of_neg_theta {n : Nat}
+    (A : Matrix (Fin n) (Fin n) Real) (theta R : Real)
+    (hA : bernsteinMatrixExp_le_quadratic_statement A (-theta) R) :
+    bernsteinMatrixExp_le_quadratic_statement (-A) theta R := by
+  intro hSA hBound hR hRange
+  have hSApos : IsSelfAdjointMatrix A := by
+    simpa using isSelfAdjointMatrix_neg hSA
+  have hBoundPos : deterministicOperatorNorm A <= R := by
+    have hnorm :
+        deterministicOperatorNorm A = deterministicOperatorNorm (-A) := by
+      unfold deterministicOperatorNorm
+      rw [Matrix.l2_opNorm_def, Matrix.l2_opNorm_def]
+      simp
+    exact hnorm.trans_le hBound
+  have hRangePos : abs (-theta) * R < 3 := by
+    simpa using hRange
+  have h := hA hSApos hBoundPos hR hRangePos
+  have harg : SMul.smul theta (-A) = SMul.smul (-theta) A := by
+    ext r c
+    simp [SMul.smul]
+  have hrhs :
+      (1 : Matrix (Fin n) (Fin n) Real) + SMul.smul theta (-A) +
+          SMul.smul (bernsteinMGFCoeff theta R) (matrixSquare (-A)) =
+        (1 : Matrix (Fin n) (Fin n) Real) + SMul.smul (-theta) A +
+          SMul.smul (bernsteinMGFCoeff (-theta) R) (matrixSquare A) := by
+    ext r c
+    simp [SMul.smul, matrixSquare_neg]
+  rw [← bernsteinMGFCoeff_neg theta R]
+  simpa [harg, hrhs] using h
 
 end BernsteinFunctionalCalculus
 

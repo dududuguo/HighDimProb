@@ -72,9 +72,10 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
   operator-norm Matrix Bernstein/sample-covariance wrappers while keeping
   Tropp, CFC, independence, and integrability assumptions explicit. The
   current arbitrary-dimensional route is positive-threshold only; the negative
-  family structural and square-integrability adapters are complete. Remaining
-  negative exp/trace/CFC/Tropp assumptions should be audited separately, while
-  the local finite history/state construction should stay named before any
-  larger downstream wrapper is exposed.
+  family structural adapters, square-integrability adapters, and negative
+  exp/trace sign-normalization audit are complete. Remaining negative Tropp
+  boundary/CFC assumptions should be audited separately, while the local
+  finite history/state construction should stay named before any larger
+  downstream wrapper is exposed.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.

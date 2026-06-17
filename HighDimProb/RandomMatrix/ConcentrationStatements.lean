@@ -281,6 +281,92 @@ theorem matrixExpScaledFamily_apply {Omega : Type*} [MeasurableSpace Omega]
       matrixExp (SMul.smul theta (A i omega)) :=
   rfl
 
+/-- Matrix-exponential sign normalization for a pointwise-negated family.
+
+This rewrites the negative family at `theta` to the original family at
+`-theta`. It does not turn positive-theta integrability into negative-side
+integrability. -/
+theorem matrixExpScaledFamily_negRandomMatrixFamily {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (theta : Real) :
+    forall i,
+      matrixExpScaledFamily (negRandomMatrixFamily A) theta i =
+        matrixExpScaledFamily A (-theta) i := by
+  intro i
+  funext omega
+  have harg :
+      SMul.smul theta (-(A i omega)) = SMul.smul (-theta) (A i omega) := by
+    ext r c
+    simp [SMul.smul]
+  simp [matrixExpScaledFamily, negRandomMatrixFamily, harg]
+
+/-- Matrix-exponential integrability transfers to a pointwise-negated family
+only from the original family at the opposite scalar parameter. -/
+theorem integrableRandomMatrix_matrixExpScaledFamily_negRandomMatrixFamily
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {I : Type*} {n : Nat} {A : I -> RandomMatrix Omega n n}
+    {theta : Real}
+    (hA :
+      forall i,
+        IntegrableRandomMatrix P (matrixExpScaledFamily A (-theta) i)) :
+    forall i,
+      IntegrableRandomMatrix P
+        (matrixExpScaledFamily (negRandomMatrixFamily A) theta i) := by
+  intro i
+  simpa [matrixExpScaledFamily_negRandomMatrixFamily (A := A) theta i] using hA i
+
+/-- Finite sums commute with the named pointwise negation family. -/
+theorem randomMatrixSum_negRandomMatrixFamily {Omega : Type*}
+    [MeasurableSpace Omega] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n) :
+    randomMatrixSum (negRandomMatrixFamily A) =
+      negRandomMatrix (randomMatrixSum A) := by
+  funext omega
+  ext r c
+  simp [randomMatrixSum, negRandomMatrixFamily, negRandomMatrix, Matrix.sum_apply,
+    Finset.sum_neg_distrib]
+
+/-- Trace-exponential sign normalization for the finite sum of a
+pointwise-negated family. -/
+theorem traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily
+    {Omega : Type*} [MeasurableSpace Omega]
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (theta : Real) :
+    traceExpIntegrand (randomMatrixSum (negRandomMatrixFamily A)) theta =
+      traceExpIntegrand (randomMatrixSum A) (-theta) := by
+  funext omega
+  have hsum :
+      randomMatrixSum (negRandomMatrixFamily A) omega =
+        -(randomMatrixSum A omega) := by
+    rw [randomMatrixSum_negRandomMatrixFamily]
+    rfl
+  have harg :
+      SMul.smul theta (randomMatrixSum (negRandomMatrixFamily A) omega) =
+        SMul.smul (-theta) (randomMatrixSum A omega) := by
+    rw [hsum]
+    ext r c
+    simp [SMul.smul]
+  change
+    traceMatrixExp
+        (SMul.smul theta (randomMatrixSum (negRandomMatrixFamily A) omega)) =
+      traceMatrixExp (SMul.smul (-theta) (randomMatrixSum A omega))
+  exact congrArg traceMatrixExp harg
+
+/-- Trace-exponential integrability transfers to the finite sum of a
+pointwise-negated family only from the original sum at the opposite scalar
+parameter. -/
+theorem integrableRealRandomVariable_traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {I : Type*} [Fintype I] {n : Nat} {A : I -> RandomMatrix Omega n n}
+    {theta : Real}
+    (hA :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A) (-theta))) :
+    IntegrableRealRandomVariable P
+      (traceExpIntegrand (randomMatrixSum (negRandomMatrixFamily A)) theta) := by
+  rw [traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily (A := A) theta]
+  exact hA
+
 /-- Bernstein coefficient times the per-summand matrix second moment. -/
 def bernsteinSecondMomentComparisonFamily {Omega : Type*}
     [MeasurableSpace Omega] {I : Type*} {n : Nat}

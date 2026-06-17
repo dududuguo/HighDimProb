@@ -64,10 +64,12 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.bernsteinThetaChoice_range
 #check HighDimProb.bernsteinThetaChoice_exponent_eq
 #check HighDimProb.bernsteinCoefficient_nonneg
+#check HighDimProb.bernsteinMGFCoeff_neg
 #check HighDimProb.bernsteinMGFCoeff_nonneg
 #check HighDimProb.TraceMGFBernsteinVarianceProxyBound
 #check HighDimProb.TraceMGFBernsteinVarianceProxyBoundLIntegral
 #check HighDimProb.bernsteinMatrixExp_le_quadratic_statement
+#check HighDimProb.bernsteinMatrixExp_le_quadratic_neg_of_neg_theta
 #check HighDimProb.singleSummandMatrixMGFVarianceProxy_statement
 #check HighDimProb.singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic
 #check HighDimProb.traceMatrixExp_nonneg_of_selfAdjoint_statement

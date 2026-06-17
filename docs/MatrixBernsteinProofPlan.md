@@ -135,9 +135,14 @@ sums, and the PSD-nullspace bridge without adding a general nullspace theory.
 The rank-one nullspace examples now reuse these core bridges where they remove
 local action/sum algebra.
 
-Next safe task: `RM-BR-natural-history-state-construction`. The negative
-square-integrability adapter is complete; negative exp/trace/CFC/Tropp
-assumptions remain a separate audit surface.
+Next safe task: `RM-negative-tropp-primitive-boundary-audit`. The BR natural
+history/state construction remains a separate local leaf.
+
+RM-negative-exp-trace-primitive-audit complete: sign-normalization adapters now
+rewrite negative-family matrix-exp, trace-exp, and CFC obligations at `theta` to
+original-family obligations at `-theta` when those negative-theta hypotheses are
+available. This does not prove Tropp/Lieb, Bernstein CFC, Golden-Thompson, full
+Matrix Bernstein, or same-theta positive-to-negative transfer.
 
 RM-ON-S4 update: the nonempty self-adjoint operator-norm Matrix Bernstein
 wrapper

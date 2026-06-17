@@ -272,10 +272,12 @@ mainline. It is documentation only; theorem status is not upgraded here.
   `negativeSide`, those bundles are the actual tail-proof obligations. The
   bounded-row sample-covariance wrappers route through the core bounded-row
   theorems; the operator-norm example uses the adapter-based theorem so
-  negative centeredness, independence, entrywise integrability, and pointwise
-  operator-norm bounds are derived from the named negative-family adapters.
-  The remaining square/exponential/trace integrability, Tropp, and CFC
-  assumptions stay explicit.
+  negative centeredness, independence, entrywise integrability, pointwise
+  operator-norm bounds, and square-integrability are derived from named
+  negative-family adapters. The sign-normalization API can rewrite negative
+  exp/trace/CFC obligations to original-family negative-theta obligations when
+  those are supplied, but current wrappers still keep negative exponential/trace
+  integrability, Tropp, and CFC assumptions explicit.
 - The current surface still does not include sharp moment-optimal variance
   control, arbitrary-dimensional lambda-max Matrix Bernstein tails, the
   zero-dimensional `t = 0` operator-norm endpoint, full Matrix Bernstein,
@@ -285,9 +287,8 @@ mainline. It is documentation only; theorem status is not upgraded here.
   documented in the trace-exp section below.
 - RM-ON-S8 documentation synchronization records the S6 example update and S7
   test/judge update without changing the API surface.
-- Next safe task: `RM-BR-natural-history-state-construction`.
-- Negative square-integrability adapters are complete; negative
-  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
+- Next safe task: `RM-negative-tropp-primitive-boundary-audit`.
+- Separate local leaf: `RM-BR-natural-history-state-construction`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
@@ -967,17 +968,37 @@ preferred bounded-row operator-norm wrapper no longer asks for negative
 square-integrability separately; it derives it from the positive family by
 `(-X)^2 = X^2`.
 
+## Completed Negative Exp/Trace Primitive Audit
+
+RM-negative-exp-trace-primitive-audit adds thin sign-normalization adapters:
+
+- `bernsteinMGFCoeff_neg`;
+- `bernsteinMatrixExp_le_quadratic_neg_of_neg_theta`;
+- `matrixExpScaledFamily_negRandomMatrixFamily`;
+- `integrableRandomMatrix_matrixExpScaledFamily_negRandomMatrixFamily`;
+- `randomMatrixSum_negRandomMatrixFamily`;
+- `traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily`;
+- `integrableRealRandomVariable_traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily`.
+
+These adapters say that negative-family exp/trace/CFC obligations at `theta`
+can be discharged from original-family obligations at `-theta` when those
+negative-theta obligations are available. They do not prove matrix-exponential
+integrability, trace-integrability, CFC, or Tropp from the current positive-side
+positive-theta assumptions.
+
 ## Next Safe Task
 
-RM-BR-natural-history-state-construction: use the new prefix/suffix
-bookkeeping API to construct the natural history/state route for the existing
-`Fin m` conditional-step provider. This should remain a state-construction
-leaf and should not prove Lieb, Bernstein CFC, Golden-Thompson, Matrix
-Bernstein, or a parallel arbitrary-index Tropp primitive.
+RM-negative-tropp-primitive-boundary-audit: audit the finite-family Tropp primitive boundary for the negative
+family.  This should determine which variance-proxy/K-family equalities,
+trace-MGF sign rewrites, and MGF-comparison hypotheses would be required before
+any honest Tropp transfer can be exposed. Golden-Thompson, Lieb, Bernstein CFC,
+and full Matrix Bernstein remain explicit blockers.
 
-Negative square-integrability adapters are complete. Negative exp/trace/CFC/Tropp
-assumptions remain a separate audit surface and should not be treated as
-square-negation rewrites.
+Separate local leaf: `RM-BR-natural-history-state-construction` should use the
+prefix/suffix bookkeeping API to construct the natural history/state route for
+the existing `Fin m` conditional-step provider. Keep this as state
+construction, not as Lieb, Bernstein CFC, Golden-Thompson, Matrix Bernstein, or
+a parallel arbitrary-index Tropp primitive.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -1042,6 +1063,5 @@ square-negation rewrites.
 - The RM-BR prefix/suffix API adds only finite-sum/state bookkeeping for the
   natural-state construction leaf; it does not prove Lieb, Bernstein CFC,
   Golden-Thompson, Matrix Bernstein, or arbitrary finite-index Tropp.
-- Next safe task: RM-BR-natural-history-state-construction.
-- Negative square-integrability adapters are complete; negative
-  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
+- Next safe task: RM-negative-tropp-primitive-boundary-audit.
+- Separate local leaf: RM-BR-natural-history-state-construction.

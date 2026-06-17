@@ -39,10 +39,9 @@
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
   - Current repository next task:
-    RM-BR-natural-history-state-construction; matrix
-    Bernstein, Hanson-Wright, and WLLN/SLLN remain separate future directions
-    Negative square-integrability adapters are complete; negative exp/trace/CFC/Tropp
-    assumptions remain a separate audit surface.
+    RM-negative-tropp-primitive-boundary-audit; the BR natural history/state
+    construction remains a separate local leaf. Matrix Bernstein,
+    Hanson-Wright, and WLLN/SLLN remain separate future directions.
 - OrliczToTail
 - TailToOrlicz
 - MomentImplications
