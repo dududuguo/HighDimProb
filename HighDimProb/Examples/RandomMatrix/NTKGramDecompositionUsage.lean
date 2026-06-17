@@ -264,9 +264,7 @@ theorem ntkJacobianGram_quadraticForm_tail_optimized_under_primitives
     (h : NTKJacobianGramOptimizedMatrixBernsteinAssumptions
       (P := P) J A R t sigmaSq) :
     P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
-      ENNReal.ofReal
-        ((n + 1 : Real) *
-          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) := by
+      matrixBernsteinOptimizedScalarTailRHS (n + 1) R t sigmaSq := by
   exact
     ntkGram_quadraticForm_tail_optimized_under_primitives
       (P := P) (randomJacobianFeatureVectorFamily J) A R t sigmaSq

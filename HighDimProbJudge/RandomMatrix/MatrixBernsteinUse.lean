@@ -205,20 +205,17 @@ variable
 
 example :
     P (SelfAdjointOperatorNormTailEvent (randomMatrixSum A) t) <=
-      ENNReal.ofReal
-        ((n + 1 : Real) *
-          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
-        ENNReal.ofReal
-          ((n + 1 : Real) *
-            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
-  exact
-    matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        (n + 1) R Rneg t sigmaSq sigmaSqNeg := by
+  simpa [matrixBernsteinTwoSidedOptimizedScalarTailRHS,
+    matrixBernsteinOptimizedScalarTailRHS, Nat.cast_add, Nat.cast_one] using
+    (matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives
       (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
       (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
       hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt hBound
       hSigma hR ht hNorm hCFC hTropp hCenteredNeg hIndepSANeg
       hIntXNeg hIntSqNeg hExpIntNeg hTraceIntNeg hBoundNeg hSigmaNeg
-      hRNeg hNormNeg hCFCNeg hTroppNeg
+      hRNeg hNormNeg hCFCNeg hTroppNeg)
 
 end NonemptyMatrixBernsteinOperatorNormUse
 

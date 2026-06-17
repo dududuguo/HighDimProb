@@ -125,6 +125,9 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check matrixBernsteinQuadraticFormUpperTailScalarRHSWithBernsteinCoeff_under_primitives
 #check matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives
 #check matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+#check matrixBernsteinOptimizedScalarTailRHS
+#check matrixBernsteinTwoSidedOptimizedScalarTailRHS
+#check matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
 #check matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
 #check matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
 #check matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives
@@ -416,20 +419,17 @@ variable
 
 example :
     P (SelfAdjointOperatorNormTailEvent (randomMatrixSum Ane) t) <=
-      ENNReal.ofReal
-        ((n + 1 : Real) *
-          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
-        ENNReal.ofReal
-          ((n + 1 : Real) *
-            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
-  exact
-    matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        (n + 1) R Rneg t sigmaSq sigmaSqNeg := by
+  simpa [matrixBernsteinTwoSidedOptimizedScalarTailRHS,
+    matrixBernsteinOptimizedScalarTailRHS, Nat.cast_add, Nat.cast_one] using
+    (matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_nonempty_under_primitives
       (P := P) (A := Ane) (R := R) (Rneg := Rneg) (t := t)
       (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
       hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt hBound
       hSigma hR ht hNorm hCFC hTropp hCenteredNeg hIndepSANeg
       hIntXNeg hIntSqNeg hExpIntNeg hTraceIntNeg hBoundNeg hSigmaNeg
-      hRNeg hNormNeg hCFCNeg hTroppNeg
+      hRNeg hNormNeg hCFCNeg hTroppNeg)
 
 end NonemptyMatrixBernsteinOperatorNormExample
 

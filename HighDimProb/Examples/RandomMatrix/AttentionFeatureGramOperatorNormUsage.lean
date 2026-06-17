@@ -127,26 +127,12 @@ theorem attentionFeatureGram_quadraticForm_tail_usage
     (h : AttentionFeatureGramTailAssumptions
       (P := P) Phi A R Rneg t sigmaSq sigmaSqNeg softmaxLip) :
     P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
-      ENNReal.ofReal
-        ((numTokens + 1 : Real) *
-          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) := by
+      matrixBernsteinOptimizedScalarTailRHS (numTokens + 1) R t sigmaSq := by
   exact
     randomFeatureKernel_quadraticForm_tail_optimized_under_primitives
       (P := P) Phi A R t sigmaSq
       { featureAdapter := h.randomFeatureAdapter
-        centered := h.positiveSide.centered
-        independentSelfAdjoint := h.positiveSide.independentSelfAdjoint
-        integrable := h.positiveSide.integrable
-        squareIntegrable := h.positiveSide.squareIntegrable
-        expIntegrable := h.positiveSide.expIntegrable
-        traceExpIntegrable := h.positiveSide.traceExpIntegrable
-        operatorNormBound := h.positiveSide.operatorNormBound
-        sigmaPositive := h.positiveSide.sigmaPositive
-        radiusNonneg := h.positiveSide.radiusNonneg
-        deviationPositive := h.positiveSide.deviationPositive
-        varianceProxyNormBound := h.positiveSide.varianceProxyNormBound
-        cfcPrimitive := h.positiveSide.cfcPrimitive
-        troppPrimitive := h.positiveSide.troppPrimitive }
+        matrixBernsteinSide := h.positiveSide }
 
 /-- Attention-feature Gram operator-norm tail usage under explicit assumptions. -/
 theorem attentionFeatureGram_operatorNorm_tail_usage
@@ -158,12 +144,8 @@ theorem attentionFeatureGram_operatorNorm_tail_usage
     (h : AttentionFeatureGramTailAssumptions
       (P := P) Phi A R Rneg t sigmaSq sigmaSqNeg softmaxLip) :
     P (SelfAdjointOperatorNormTailEvent (randomMatrixSum A) t) <=
-      ENNReal.ofReal
-        (((numTokens + 1 : Nat) : Real) *
-          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
-        ENNReal.ofReal
-          (((numTokens + 1 : Nat) : Real) *
-            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        (numTokens + 1) R Rneg t sigmaSq sigmaSqNeg := by
   exact
     matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions
       (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)

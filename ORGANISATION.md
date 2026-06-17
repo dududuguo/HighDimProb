@@ -26,7 +26,8 @@ Stable modules expose the Milestone 1 probability object layer. Experimental mod
 - `HighDimProb/Concentration.lean`: experimental scalar concentration proof spine.
 - `HighDimProb/Vector.lean`: finite-dimensional random-vector infrastructure.
 - `HighDimProb/Geometry.lean`: nets, metric entropy, covering/packing statements, and Gaussian-width vocabulary.
-- `HighDimProb/RandomMatrix.lean`: random-matrix aggregate over its subdirectory.
+- `HighDimProb/RandomMatrix.lean`: experimental random-matrix aggregate over
+  its subdirectory.
 - `HighDimProb/Process.lean`: random-process and empirical-process vocabulary.
 - `HighDimProb/Statements.lean`: typed theorem statement specifications and theorem-atlas bridge modules.
 - `HighDimProb/Tactic.lean`: lightweight project automation.
@@ -37,14 +38,22 @@ Logical branch aggregates are introduced before any physical file migration. Exi
 ## Experimental Random Matrix Structure
 
 - `HighDimProb/RandomMatrix.lean`: aggregate module.
-- `HighDimProb/RandomMatrix/Basic.lean`: random matrix representation and entries.
+- `HighDimProb/RandomMatrix/Basic.lean`: random matrix representation, entries,
+  scaling, negation, and rank-one objects.
 - `HighDimProb/RandomMatrix/RowsCols.lean`: row and column random-vector views.
 - `HighDimProb/RandomMatrix/Action.lean`: deterministic matrix-vector actions.
 - `HighDimProb/RandomMatrix/Norms.lean`: Frobenius and entrywise norm vocabulary.
-- `HighDimProb/RandomMatrix/Assumptions.lean`: entrywise and rowwise assumption predicates.
+- `HighDimProb/RandomMatrix/Assumptions.lean`: theorem-interface predicates
+  and thin adapters.
 - `HighDimProb/RandomMatrix/SampleCovariance.lean`: Gram and sample covariance vocabulary.
 - `HighDimProb/RandomMatrix/QuadraticForm.lean`: quadratic and bilinear forms.
-- `HighDimProb/RandomMatrix/OperatorNorm.lean`: experimental L2 operator-norm wrapper.
+- `HighDimProb/RandomMatrix/OperatorNorm.lean`: L2 operator-norm wrapper.
+- `HighDimProb/RandomMatrix/Spectral.lean`, `TraceExp.lean`, and
+  `Laplace.lean`: spectral, trace-exponential, and Laplace vocabulary.
+- `HighDimProb/RandomMatrix/VarianceProxy.lean`: variance-proxy matrices and
+  norm bounds.
+- `HighDimProb/RandomMatrix/ConcentrationStatements.lean`: Matrix Bernstein,
+  operator-norm, and sample-covariance statement/wrapper layer.
 
 ## Tests
 
@@ -56,18 +65,21 @@ Tests live under `HighDimProbTest/`.
 
 ## Documentation
 
-- `docs/Status.md`: current stage and next safe task.
+- `docs/Status.md`: current status and active API pointers.
 - `docs/Workflow.md`: mandatory contribution workflow.
 - `docs/StageChecklist.md`: per-stage checklist.
-- `docs/TermMap.md`: concept-to-Lean map.
-- `docs/TheoremAtlas.md`: theorem/status registry.
+- `docs/TermMap.md`: compact concept-to-source map.
+- `docs/TheoremAtlas.md`: compact theorem-family registry.
+- `docs/RandomMatrixAPI.md`: current RandomMatrix / Matrix Bernstein API index.
 - `docs/TestPlan.md`: import and API regression policy.
 - `docs/Automation.md`: automation and simp policy.
 - `docs/Roadmap.md`: staged project roadmap.
 - `docs/ModuleTree.md`: root-to-branch module layout and migration policy.
-- `docs/BranchRegistry.md`: branch ownership, dependencies, forbidden scope, and promotion criteria.
+- `docs/BranchRegistry.md`: current branch map and promotion criteria.
 - `docs/LeafPlan.md`: planned leaf modules for each branch.
 - `docs/PhysicalMigrationPlan.md`: future physical migration order and rules.
+- `docs/archive.md`: short archive index only; use git history for exact old
+  stage logs.
 
 ## Promotion Policy
 

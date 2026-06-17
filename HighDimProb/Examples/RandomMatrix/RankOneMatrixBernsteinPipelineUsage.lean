@@ -135,11 +135,9 @@ theorem rankOnePipeline_quadraticForm_tail_optimized_under_primitives
       (P := P) X R t sigmaSq) :
     P (quadraticFormUpperTailEvent
         (randomMatrixSum (centeredRankOnePipelineSummands (P := P) X)) t) <=
-      ENNReal.ofReal
-        ((n + 1 : Real) *
-          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) := by
-  exact
-    matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+      matrixBernsteinOptimizedScalarTailRHS (n + 1) R t sigmaSq := by
+  simpa [matrixBernsteinOptimizedScalarTailRHS, Nat.cast_add, Nat.cast_one] using
+    (matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
       (centeredRankOnePipelineSummands (P := P) X) R t sigmaSq
       (centeredRankOnePipeline_centeredSelfAdjoint
         (P := P) X h.randomVector h.coordinateMemLpTwo)
@@ -149,7 +147,7 @@ theorem rankOnePipeline_quadraticForm_tail_optimized_under_primitives
       h.squareIntegrable h.expIntegrable h.traceExpIntegrable
       h.operatorNormBound h.sigmaPositive h.radiusNonneg
       h.deviationPositive h.varianceProxyNormBound h.cfcPrimitive
-      h.troppPrimitive
+      h.troppPrimitive)
 
 end
 

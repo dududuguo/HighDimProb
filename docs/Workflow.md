@@ -24,14 +24,15 @@ Step 6. Implement only the current allowed object-level task.
 Step 7. Add tiny examples.
 
 Step 8. Update docs:
-- `TermMap.md`
-- `BookProgress.md`
-- `AbstractionLog.md`
-- `TODO.md`
-- `Status.md`
+- update only the focused current docs touched by the change;
+- keep stable background short and point to source/tests;
+- do not expand `archive.md` into another status log.
 
 Step 9. Run:
+- `python .github/scripts/check_text_quality.py`
+- `python scripts/judge_policy_check.py`
 - `lake build`
+- `lake build HighDimProbJudge`
 - `lake test`
 
 Step 10. Report:
@@ -93,7 +94,7 @@ preparation work.
 
 5. Update all progress documents, not just `Status.md`:
    - update the API index, term map, theorem atlas, TODO/proof-plan docs, and
-     progress log touched by the change;
+     progress log only when the change affects them;
    - search old next-task names and old "future support" language after each
      stage update;
    - say clearly what was proved and what remains unproved.

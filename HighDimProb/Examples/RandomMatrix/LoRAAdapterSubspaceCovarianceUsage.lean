@@ -126,12 +126,8 @@ theorem loraAdapterSubspaceCovariance_operatorNorm_tail_usage
     (h : LoRAAdapterSubspaceCovarianceAssumptions
       (P := P) adapterFeature fullGradients A R Rneg t sigmaSq sigmaSqNeg) :
     P (SelfAdjointOperatorNormTailEvent (randomMatrixSum A) t) <=
-      ENNReal.ofReal
-        (((r + 1 : Nat) : Real) *
-          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
-        ENNReal.ofReal
-          (((r + 1 : Nat) : Real) *
-            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        (r + 1) R Rneg t sigmaSq sigmaSqNeg := by
   exact
     matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions
       (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)

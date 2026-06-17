@@ -123,7 +123,7 @@ structure SampleCovarianceOperatorNormTailAssumptions {Omega : Type*}
     {m n : Nat}
     (A : RandomMatrix Omega m (n + 1))
     (R Rneg t : Real) : Prop where
-  positive :
+  positiveSide :
     SampleCovarianceTailAssumptions (P := P) A R t
   rowSqNormBoundNeg :
     forall k : Fin m, forall omega,
@@ -142,7 +142,7 @@ structure SampleCovarianceOperatorNormTailAssumptions {Omega : Type*}
         (centeredSampleCovarianceRowRankOneSumNeg (P := P) A)
         (sampleCovarianceTailTheta (m := m) Rneg t
           (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg)))
-  radiusPositiveNeg : 0 < Rneg
+  negativeRadiusPositive : 0 < Rneg
   cfcPrimitiveNeg :
     forall k : Fin m, forall omega,
       bernsteinMatrixExp_le_quadratic_statement
@@ -189,22 +189,22 @@ theorem sampleCovariance_operatorNorm_tail_usage
   exact
     sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters
       (P := P) A R Rneg t
-      h.positive.sampleCountPositive
-      h.positive.randomMatrix
-      h.positive.coordinateMemLpTwo
-      h.positive.rowSqNormBound
+      h.positiveSide.sampleCountPositive
+      h.positiveSide.randomMatrix
+      h.positiveSide.coordinateMemLpTwo
+      h.positiveSide.rowSqNormBound
       h.rowSqNormBoundNeg
-      h.positive.independentRows
-      h.positive.squareIntegrable
-      h.positive.expIntegrable
-      h.positive.traceExpIntegrable
-      h.positive.radiusPositive
-      h.positive.deviationPositive
-      h.positive.cfcPrimitive
-      h.positive.troppPrimitive
+      h.positiveSide.independentRows
+      h.positiveSide.squareIntegrable
+      h.positiveSide.expIntegrable
+      h.positiveSide.traceExpIntegrable
+      h.positiveSide.radiusPositive
+      h.positiveSide.deviationPositive
+      h.positiveSide.cfcPrimitive
+      h.positiveSide.troppPrimitive
       h.expIntegrableNeg
       h.traceExpIntegrableNeg
-      h.radiusPositiveNeg
+      h.negativeRadiusPositive
       h.cfcPrimitiveNeg
       h.troppPrimitiveNeg
 

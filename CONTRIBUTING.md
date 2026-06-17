@@ -13,16 +13,14 @@ HighDimProb is currently Milestone 1 / v0.1-alpha.
   still conditional on explicit primitive assumptions. See
   `docs/Status.md` and `docs/RandomMatrixAPI.md` before contributing there.
 
-## Build
+## Verification
 
 ```bash
 lake build
-```
-
-## Test
-
-```bash
+lake build HighDimProbJudge
 lake test
+python .github/scripts/check_text_quality.py
+python scripts/judge_policy_check.py
 ```
 
 ## Contribution Workflow
@@ -33,8 +31,8 @@ lake test
 4. Search Mathlib first.
 5. Implement only object-level definitions or wrappers unless the task explicitly says theorem proof.
 6. Add tests.
-7. Update docs.
-8. Run `lake build` and `lake test`.
+7. Update the focused current docs touched by the change.
+8. Run the verification commands above.
 
 For model-assisted contributions, read `docs/Workflow.md` first.
 
@@ -55,7 +53,7 @@ Examples:
 - `feat(random-matrix): add sample covariance vocabulary`
 - `proof(tail): prove tail monotonicity`
 - `doc(atlas): add Hanson-Wright dependencies`
-- `test(orlicz): add ψ₂ API tests`
+- `test(orlicz): add psi2 API tests`
 
 ## Coordination Policy
 
@@ -105,6 +103,10 @@ No module is promoted from experimental to stable without tests, docs, a
 - No theorem PR that skips the required object layer or Mathlib search.
 - Every public declaration needs a test.
 - Docs must be updated together with code.
+- Public RandomMatrix/example signatures should use named family adapters
+  instead of anonymous negated-family lambdas.
+- Active docs should stay short; use source, generated docs, and git history
+  instead of keeping long stage logs current.
 
 ## Theorem Policy
 

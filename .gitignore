@@ -30,3 +30,4 @@ docbuild/.lake/
 
 # Validation scratch runs are local by default. Existing tracked reports remain tracked.
 external/validation/*/
+external/validation/agent-evidence-*.md

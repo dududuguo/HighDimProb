@@ -69,13 +69,19 @@ import HighDimProb.RandomMatrix
 
 Good starting points:
 
+- `docs/Status.md` for the shortest current project state.
 - `docs/RandomMatrixAPI.md` for the current RandomMatrix / Matrix Bernstein API.
-- `docs/Status.md` for the current proved, conditional, and blocked theorem
-  status.
+- `docs/TermMap.md` for a compact concept-to-source map.
+- `docs/TestPlan.md` for the checks expected before a PR.
 - `HighDimProb/Examples/` for small API usage examples.
 - `docs/JudgeSystem.md` for the judge suite.
 - `docs/Workflow.md` for the project workflow.
 - `docs/References.md` for the external references behind the MVP areas.
+
+If you are new to the repository, read `docs/Status.md` first, then follow the
+source links from `docs/TermMap.md` or `docs/RandomMatrixAPI.md`. Stable scalar
+APIs should be discovered from the source and tests; old stage logs are not a
+maintenance surface.
 
 ## Judge Checks
 
@@ -133,6 +139,14 @@ focused tests for public names, and run the build before opening a PR.
 
 Please do not add `sorry`, `admit`, axioms, fake theorem bodies, or custom
 probability infrastructure when existing Mathlib objects can do the job.
+
+For API or docs changes, also run the repository policy checks:
+
+```bash
+python .github/scripts/check_text_quality.py
+python scripts/judge_policy_check.py
+lake build HighDimProbJudge
+```
 
 See `CONTRIBUTING.md` for the fuller checklist.
 

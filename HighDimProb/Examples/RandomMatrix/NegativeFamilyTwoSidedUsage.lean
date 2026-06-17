@@ -50,12 +50,8 @@ theorem negativeFamily_twoSided_quadraticForm_tail_usage
     (hPos : PositiveFamilyAssumptions (P := P) A R t sigmaSq)
     (hNeg : NegativeFamilyAssumptions (P := P) A Rneg t sigmaSqNeg) :
     P (twoSidedQuadraticFormTailEvent (randomMatrixSum A) t) <=
-      ENNReal.ofReal
-        ((n + 1 : Real) *
-          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
-        ENNReal.ofReal
-          ((n + 1 : Real) *
-            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        (n + 1) R Rneg t sigmaSq sigmaSqNeg := by
   exact
     matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
       (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
@@ -74,12 +70,8 @@ theorem negativeFamily_selfAdjoint_operatorNorm_tail_usage
     (hPos : PositiveFamilyAssumptions (P := P) A R t sigmaSq)
     (hNeg : NegativeFamilyAssumptions (P := P) A Rneg t sigmaSqNeg) :
     P (SelfAdjointOperatorNormTailEvent (randomMatrixSum A) t) <=
-      ENNReal.ofReal
-        ((n + 1 : Real) *
-          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
-        ENNReal.ofReal
-          ((n + 1 : Real) *
-            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        (n + 1) R Rneg t sigmaSq sigmaSqNeg := by
   simpa using
     (matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions
       (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)

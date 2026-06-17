@@ -587,6 +587,23 @@ structure MatrixBernsteinNegativeSideAssumptions {Omega : Type*}
       (matrixVarianceProxy P (negRandomMatrixFamily A))
       (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg
 
+/-- Named scalar RHS for optimized one-sided Matrix Bernstein wrappers.
+
+The dimension parameter is the actual matrix dimension. Nonempty wrappers for
+`RandomMatrix Omega (n + 1) (n + 1)` therefore pass `n + 1`; arbitrary
+operator-norm wrappers pass their actual dimension `n`. -/
+abbrev matrixBernsteinOptimizedScalarTailRHS
+    (dim : Nat) (R t sigmaSq : Real) : ENNReal :=
+  ENNReal.ofReal
+    ((dim : Real) *
+      Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))))
+
+/-- Named scalar RHS for optimized two-sided Matrix Bernstein wrappers. -/
+abbrev matrixBernsteinTwoSidedOptimizedScalarTailRHS
+    (dim : Nat) (R Rneg t sigmaSq sigmaSqNeg : Real) : ENNReal :=
+  matrixBernsteinOptimizedScalarTailRHS dim R t sigmaSq +
+    matrixBernsteinOptimizedScalarTailRHS dim Rneg t sigmaSqNeg
+
 /-- Thin high-level bounded Matrix Bernstein trace-mgf wrapper from the
 finite-family Tropp typed primitive.
 
@@ -1019,6 +1036,33 @@ theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoef
       hTraceIntTheta hBound hR hRange hTheta hNorm hCFCTheta hTroppTheta
   simpa [theta, bernsteinThetaChoice_exponent_eq hSigma hR ht.le] using hTail
 
+/-- Optimized one-sided quadratic-form Matrix Bernstein wrapper using the
+packaged positive-side assumptions. -/
+theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (R t sigmaSq : Real)
+    (h : MatrixBernsteinPositiveSideAssumptions (P := P) A R t sigmaSq) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      matrixBernsteinOptimizedScalarTailRHS (n + 1) R t sigmaSq := by
+  simpa [matrixBernsteinOptimizedScalarTailRHS, Nat.cast_add, Nat.cast_one] using
+    (matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+      A R t sigmaSq
+      h.centered
+      h.independentSelfAdjoint
+      h.integrable
+      h.squareIntegrable
+      h.expIntegrable
+      h.traceExpIntegrable
+      h.operatorNormBound
+      h.sigmaPositive
+      h.radiusNonneg
+      h.deviationPositive
+      h.varianceProxyNormBound
+      h.cfcPrimitive
+      h.troppPrimitive)
+
 /-- Two-sided quadratic-form Matrix Bernstein wrapper under explicit primitive
 assumptions for both `A` and the pointwise negated summand family.
 
@@ -1254,14 +1298,11 @@ theorem matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinC
     (hNeg :
       MatrixBernsteinNegativeSideAssumptions (P := P) A Rneg t sigmaSqNeg) :
     P (twoSidedQuadraticFormTailEvent (randomMatrixSum A) t) <=
-      ENNReal.ofReal
-        ((n + 1 : Real) *
-          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
-        ENNReal.ofReal
-          ((n + 1 : Real) *
-            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
-  exact
-    matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        (n + 1) R Rneg t sigmaSq sigmaSqNeg := by
+  simpa [matrixBernsteinTwoSidedOptimizedScalarTailRHS,
+    matrixBernsteinOptimizedScalarTailRHS, Nat.cast_add, Nat.cast_one] using
+    (matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
       (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
       (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
       hPos.centered
@@ -1288,7 +1329,7 @@ theorem matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinC
       hNeg.radiusNonneg
       hNeg.varianceProxyNormBound
       hNeg.cfcPrimitive
-      hNeg.troppPrimitive
+      hNeg.troppPrimitive)
 
 /-- Self-adjoint operator-norm Matrix Bernstein wrapper under the explicit
 operator-norm-to-two-sided-quadratic-form bridge.
@@ -1647,14 +1688,11 @@ theorem matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernstei
     (hNeg :
       MatrixBernsteinNegativeSideAssumptions (P := P) A Rneg t sigmaSqNeg) :
     P (SelfAdjointOperatorNormTailEvent (randomMatrixSum A) t) <=
-      ENNReal.ofReal
-        ((n : Real) *
-          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) +
-        ENNReal.ofReal
-          ((n : Real) *
-            Real.exp (-(t ^ 2 / (2 * sigmaSqNeg + (2 / 3) * Rneg * t)))) := by
-  exact
-    matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        n R Rneg t sigmaSq sigmaSqNeg := by
+  simpa [matrixBernsteinTwoSidedOptimizedScalarTailRHS,
+    matrixBernsteinOptimizedScalarTailRHS] using
+    (matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives
       (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
       (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
       hPos.centered
@@ -1681,7 +1719,7 @@ theorem matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernstei
       hNeg.radiusNonneg
       hNeg.varianceProxyNormBound
       hNeg.cfcPrimitive
-      hNeg.troppPrimitive
+      hNeg.troppPrimitive)
 
 /-- Sample-covariance operator-norm event bridge to the unnormalized centered
 row rank-one sum.

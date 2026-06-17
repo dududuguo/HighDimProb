@@ -294,33 +294,8 @@ structure GradientCovarianceOptimizedMatrixBernsteinAssumptions {Omega : Type*}
     (A : Fin batch -> RandomMatrix Omega (n + 1) (n + 1))
     (R t sigmaSq : Real) : Prop where
   gradientAdapter : IsCenteredGradientCovarianceSummandFamily (P := P) G A
-  centered : CenteredSelfAdjointRandomMatrixFamily P A
-  independentSelfAdjoint : IndependentSelfAdjointRandomMatrices P A
-  integrable : forall b, IntegrableRandomMatrix P (A b)
-  squareIntegrable : forall b, IntegrableRandomMatrix P (randomMatrixSquare (A b))
-  expIntegrable :
-    forall b,
-      IntegrableRandomMatrix P
-        (matrixExpScaledFamily A (bernsteinThetaChoice t sigmaSq R) b)
-  traceExpIntegrable :
-    IntegrableRealRandomVariable P
-      (traceExpIntegrand (randomMatrixSum A)
-        (bernsteinThetaChoice t sigmaSq R))
-  operatorNormBound : PointwiseOperatorNormBound A R
-  sigmaPositive : 0 < sigmaSq
-  radiusNonneg : 0 <= R
-  deviationPositive : 0 < t
-  varianceProxyNormBound : MatrixVarianceProxyNormBound P A sigmaSq
-  cfcPrimitive :
-    forall b omega,
-      bernsteinMatrixExp_le_quadratic_statement (A b omega)
-        (bernsteinThetaChoice t sigmaSq R) R
-  troppPrimitive :
-    troppMasterTraceMGFFiniteFamily_statement
-      (P := P) A
-      (bernsteinSecondMomentComparisonFamily P A
-        (bernsteinThetaChoice t sigmaSq R) R)
-      (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R
+  matrixBernsteinSide :
+    MatrixBernsteinPositiveSideAssumptions (P := P) A R t sigmaSq
 
 /-- Gradient covariance quadratic-form upper-tail bound with the optimized
 scalar Matrix Bernstein RHS.
@@ -336,15 +311,10 @@ theorem gradientCovariance_quadraticForm_tail_optimized_under_primitives
     (h : GradientCovarianceOptimizedMatrixBernsteinAssumptions
       (P := P) G A R t sigmaSq) :
     P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
-      ENNReal.ofReal
-        ((n + 1 : Real) *
-          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) := by
+      matrixBernsteinOptimizedScalarTailRHS (n + 1) R t sigmaSq := by
   exact
-    matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
-      A R t sigmaSq h.centered h.independentSelfAdjoint h.integrable
-      h.squareIntegrable h.expIntegrable h.traceExpIntegrable
-      h.operatorNormBound h.sigmaPositive h.radiusNonneg h.deviationPositive
-      h.varianceProxyNormBound h.cfcPrimitive h.troppPrimitive
+    matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
+      (P := P) A R t sigmaSq h.matrixBernsteinSide
 
 end
 
