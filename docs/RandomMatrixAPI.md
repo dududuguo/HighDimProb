@@ -39,12 +39,27 @@ CFC, Golden-Thompson, or a full unconditional Matrix Bernstein theorem.
 
 - `traceMatrixExp_randomMatrixPrefixSum_last`
 - `traceMatrixExp_comparisonMatrixPrefixSum_last`
+- `troppTraceState`
+- `troppStateHistory`
+- `troppNaturalState_zero`
+- `troppNaturalState_last`
+- `troppNaturalState_left`
+- `troppNaturalState_right`
+- `troppTraceExpFiniteFamilyIterationSkeleton_of_naturalStateConditionalSteps`
+- `troppMasterTraceMGFFiniteFamily_of_naturalStateConditionalSteps`
+- `traceMGFBernsteinVarianceProxyBound_of_naturalStateConditionalSteps`
 - `troppMasterTraceMGFFiniteFamily_statement_of_reindexedFin`
 
 The two trace-exp wrappers convert final prefix endpoints into the state
 equation shapes used by the conditional-step route. The reindex bridge
 transports an existing `Fin (Fintype.card I)` Tropp finite-family statement to
 an arbitrary finite index type; it does not prove that primitive.
+
+The natural-state route fixes the `Fin m` state, history, and current-step
+objects to the prefix/suffix construction and discharges the raw endpoint
+equalities. It remains a TraceExp-level bridge: conditional-step analytic,
+history measurability, independence, trace-exp integrability, log/K, CFC, and
+variance-proxy assumptions remain explicit.
 
 Use the core wrappers from:
 
@@ -59,6 +74,7 @@ Use the examples from:
 ```lean
 import HighDimProb.Examples.RandomMatrix.PrefixStateTroppUsage
 import HighDimProb.Examples.RandomMatrix.ConditionalStateEndpointUsage
+import HighDimProb.Examples.RandomMatrix.NaturalTroppPipelineUsage
 import HighDimProb.Examples.RandomMatrix.ReindexedTroppBridgeUsage
 ```
 
@@ -89,6 +105,7 @@ import HighDimProb.Examples.RandomMatrix.ReindexedTroppBridgeUsage
 - Put domain vocabulary in examples as thin wrappers over the core RandomMatrix
   API, not as separate theorem machinery.
 - Use `PrefixStateTroppUsage`, `ConditionalStateEndpointUsage`, and
-  `ReindexedTroppBridgeUsage` for examples of prefix/state endpoint and
+  `NaturalTroppPipelineUsage` for examples of prefix/state endpoint and
+  natural-state TraceExp bookkeeping. Use `ReindexedTroppBridgeUsage` for
   reindex transport bookkeeping. `ConditionalStateEndpointData` is example
   local, not core API.

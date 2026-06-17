@@ -63,7 +63,8 @@ theorems or typed statements without relying on local test internals.
   semantic trace-mgf predicates, trace-exp nonnegativity bridges under
   explicit hypotheses, self-adjoint matrix-exponential PSD and trace
   nonnegativity bridges, random self-adjoint trace-exp moment nonnegativity,
-  real/lintegral bridge theorem, and remaining typed statement APIs.
+  real/lintegral bridge theorem, natural-state Tropp/trace-MGF route checks,
+  and remaining typed statement APIs.
 - `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`: matrix Laplace RHS and
   lintegral RHS vocabulary, trace-exp threshold events, MB-S5 conditional
   Markov/Laplace bridge APIs, MB-S6 explicit-dominance conditional wrappers,

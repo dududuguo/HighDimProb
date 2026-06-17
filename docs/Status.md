@@ -36,6 +36,15 @@ Core Matrix Bernstein helpers:
 
 TraceExp / Tropp bookkeeping helpers:
 
+- `troppTraceState`
+- `troppStateHistory`
+- `troppNaturalState_zero`
+- `troppNaturalState_last`
+- `troppNaturalState_left`
+- `troppNaturalState_right`
+- `troppTraceExpFiniteFamilyIterationSkeleton_of_naturalStateConditionalSteps`
+- `troppMasterTraceMGFFiniteFamily_of_naturalStateConditionalSteps`
+- `traceMGFBernsteinVarianceProxyBound_of_naturalStateConditionalSteps`
 - `traceMatrixExp_randomMatrixPrefixSum_last`
 - `traceMatrixExp_comparisonMatrixPrefixSum_last`
 
@@ -64,16 +73,22 @@ Example modules:
 
 - `PrefixStateTroppUsage`
 - `ConditionalStateEndpointUsage`
+- `NaturalTroppPipelineUsage`
 - `ReindexedTroppBridgeUsage`
 
 ## Current Caveats
 
 - RandomMatrix / Matrix Bernstein remains experimental.
 - Tropp/Lieb, Golden-Thompson, Bernstein CFC, and full Matrix Bernstein are not claimed as complete unless a referenced theorem says so directly.
-- Prefix/suffix/state bookkeeping is covered only as bookkeeping. The conditional-state bundle is example-local, and the reindexed example is transport-only.
+- Prefix/suffix/state bookkeeping now includes a natural `Fin m` trace-state
+  route through the finite-family Tropp and trace-MGF provider surfaces. This
+  does not discharge the analytic conditional-step, history measurability,
+  independence, trace-exp integrability, log/K, CFC, or variance-proxy
+  hypotheses.
+- The conditional-state bundle is example-local, and the reindexed example is transport-only.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
 - Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems.
-- Next safe RandomMatrix task: `RM-BR-natural-history-state-construction-contract`.
+- Next safe RandomMatrix task: `RM-MAIN-natural-state-assumption-bundle-contract`.
 
 ## Verification
 

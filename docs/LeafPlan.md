@@ -130,7 +130,15 @@
 - Boundary preserved: `ConditionalStateEndpointData` is example-local; no
   Lieb, Golden-Thompson, Bernstein CFC, conditional-expectation independence,
   full Matrix Bernstein, or arbitrary finite-index primitive was proved.
-- Next safe leaf: `RM-BR-natural-history-state-construction-contract`.
+- Follow-up completed leaf:
+  `RM-MAIN-natural-tropp-matrix-bernstein-pipeline`, adding the natural
+  `Fin m` trace state, endpoint theorems, finite-family Tropp provider, and
+  trace-MGF provider wrapper.
+- Boundary preserved: this remains a TraceExp-level route. It does not prove
+  Lieb, Golden-Thompson, Bernstein CFC, independence conditioning,
+  trace-exp integrability propagation, full Matrix Bernstein, or a
+  public-friendly sample covariance natural-state wrapper.
+- Next safe leaf: `RM-MAIN-natural-state-assumption-bundle-contract`.
 
 ## Process
 

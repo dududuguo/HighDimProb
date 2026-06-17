@@ -25,7 +25,9 @@ proved useful wrappers under explicit primitive assumptions, including
 trace-MGF, quadratic-form, optimized scalar RHS, positive-threshold
 operator-norm, sample-covariance, crude variance-proxy routes, and
 prefix/state endpoint bookkeeping wrappers for the Tropp conditional-step
-route.
+route. The TraceExp layer also has a natural `Fin m` trace-state route that
+derives the finite-family Tropp provider and trace-MGF provider from explicit
+natural conditional-step data.
 
 Important current names are listed in [`RandomMatrixAPI.md`](RandomMatrixAPI.md).
 
@@ -36,7 +38,10 @@ Important current names are listed in [`RandomMatrixAPI.md`](RandomMatrixAPI.md)
 - Golden-Thompson route.
 - Full unconditional Matrix Bernstein theorem.
 - Tropp/CFC-free sample-covariance operator-norm concentration.
-- Natural history/state construction for the conditional-step Tropp route.
+- Natural history measurability, independence conditioning, and trace-exp
+  integrability propagation for the conditional-step Tropp route.
+- A public-friendly Matrix Bernstein wrapper directly over the natural-state
+  route.
 
 ## Maintenance Rule
 

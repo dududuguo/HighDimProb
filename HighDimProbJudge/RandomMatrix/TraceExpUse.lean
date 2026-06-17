@@ -34,9 +34,23 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.troppMasterTraceMGFConditionalStep_apply_of_histEntryMeasurable
 #check HighDimProb.troppMasterTraceMGFConditionalStep_expect_bound
 #check HighDimProb.troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps
+#check HighDimProb.troppTraceExpFiniteFamilyIterationSkeleton_of_naturalStateConditionalSteps
 #check HighDimProb.troppMasterTraceMGFFiniteFamily_statement
 #check HighDimProb.troppMasterTraceMGFFiniteFamily_statement_of_reindexedFin
 #check HighDimProb.troppMasterTraceMGFFiniteFamily_of_conditionalSteps
+#check HighDimProb.troppMasterTraceMGFFiniteFamily_of_naturalStateConditionalSteps
+#check HighDimProb.troppRandomHistory
+#check HighDimProb.troppComparisonHistory
+#check HighDimProb.troppCurrentRandomStep
+#check HighDimProb.troppCurrentComparisonStep
+#check HighDimProb.troppStateHistory
+#check HighDimProb.troppTraceState
+#check HighDimProb.troppStateLeft
+#check HighDimProb.troppStateRight
+#check HighDimProb.troppNaturalState_zero
+#check HighDimProb.troppNaturalState_last
+#check HighDimProb.troppNaturalState_left
+#check HighDimProb.troppNaturalState_right
 #check HighDimProb.comparisonMatrixPrefixSum
 #check HighDimProb.comparisonMatrixSuffixSum
 #check HighDimProb.randomMatrixPrefixSum
@@ -93,6 +107,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.traceMGFBernsteinVarianceProxyBound_statement
 #check HighDimProb.traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
 #check HighDimProb.traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps
+#check HighDimProb.traceMGFBernsteinVarianceProxyBound_of_naturalStateConditionalSteps
 #check HighDimProb.traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound
 
 example {n : Nat} (A : Matrix (Fin n) (Fin n) Real) :
@@ -218,6 +233,44 @@ example {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
     HighDimProb.randomMatrixSum X =
       HighDimProb.randomMatrixPrefixSum X (Fin.last m) :=
   HighDimProb.randomMatrixSum_eq_prefixSum_last X
+
+example {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (theta : Real)
+    (X : Fin m -> HighDimProb.RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) :
+    HighDimProb.troppTraceState theta X K 0 =
+      fun omega => HighDimProb.traceMatrixExp
+        (HighDimProb.randomMatrixSum
+          (HighDimProb.scaledRandomMatrixFamily theta X) omega) := by
+  exact HighDimProb.troppNaturalState_zero theta X K
+
+example {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (theta : Real)
+    (X : Fin m -> HighDimProb.RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) :
+    HighDimProb.troppTraceState theta X K (Fin.last m) =
+      fun _omega => HighDimProb.traceMatrixExp (Finset.univ.sum K) := by
+  exact HighDimProb.troppNaturalState_last theta X K
+
+example {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (theta : Real)
+    (X : Fin m -> HighDimProb.RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) (i : Fin m) :
+    HighDimProb.troppStateLeft theta X K i =
+      fun omega => HighDimProb.traceMatrixExp
+        (HighDimProb.troppStateHistory theta X K i omega +
+          HighDimProb.troppCurrentRandomStep theta X i omega) := by
+  exact HighDimProb.troppNaturalState_left theta X K i
+
+example {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (theta : Real)
+    (X : Fin m -> HighDimProb.RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) (i : Fin m) :
+    HighDimProb.troppStateRight theta X K i =
+      fun omega => HighDimProb.traceMatrixExp
+        (HighDimProb.troppStateHistory theta X K i omega +
+          HighDimProb.troppCurrentComparisonStep K i) := by
+  exact HighDimProb.troppNaturalState_right theta X K i
 
 example {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
     (X : Fin m -> HighDimProb.RandomMatrix Omega n n) :

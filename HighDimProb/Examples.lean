@@ -27,6 +27,7 @@ import HighDimProb.Examples.RandomMatrix.LoRAAdapterSubspaceCovarianceUsage
 import HighDimProb.Examples.RandomMatrix.NegativeFamilyTwoSidedUsage
 import HighDimProb.Examples.RandomMatrix.NTKGramDecompositionUsage
 import HighDimProb.Examples.RandomMatrix.NTKGramUsage
+import HighDimProb.Examples.RandomMatrix.NaturalTroppPipelineUsage
 import HighDimProb.Examples.RandomMatrix.PrefixStateTroppUsage
 import HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage
 import HighDimProb.Examples.RandomMatrix.RankOneKernelNullspaceUsage

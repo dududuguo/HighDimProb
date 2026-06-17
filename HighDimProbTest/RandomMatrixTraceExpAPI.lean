@@ -72,9 +72,11 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check troppMasterTraceMGFConditionalStep_apply_of_histEntryMeasurable
 #check troppMasterTraceMGFConditionalStep_expect_bound
 #check troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps
+#check troppTraceExpFiniteFamilyIterationSkeleton_of_naturalStateConditionalSteps
 #check troppMasterTraceMGFFiniteFamily_statement
 #check troppMasterTraceMGFFiniteFamily_statement_of_reindexedFin
 #check troppMasterTraceMGFFiniteFamily_of_conditionalSteps
+#check troppMasterTraceMGFFiniteFamily_of_naturalStateConditionalSteps
 #check comparisonMatrixPrefixSum
 #check comparisonMatrixSuffixSum
 #check randomMatrixPrefixSum
@@ -94,6 +96,18 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check randomMatrixSum_eq_prefixSum_last
 #check traceMatrixExp_randomMatrixPrefixSum_last
 #check traceMatrixExp_comparisonMatrixPrefixSum_last
+#check troppRandomHistory
+#check troppComparisonHistory
+#check troppCurrentRandomStep
+#check troppCurrentComparisonStep
+#check troppStateHistory
+#check troppTraceState
+#check troppStateLeft
+#check troppStateRight
+#check troppNaturalState_zero
+#check troppNaturalState_last
+#check troppNaturalState_left
+#check troppNaturalState_right
 #check scaledRandomMatrixFamily
 #check bernsteinMGFCoeff
 #check bernsteinThetaChoice
@@ -131,6 +145,7 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check traceMGFBernsteinVarianceProxyBoundLIntegral_of_real_statement
 #check traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
 #check traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps
+#check traceMGFBernsteinVarianceProxyBound_of_naturalStateConditionalSteps
 #check traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound
 
 #check (matrixExp A : Matrix (Fin n) (Fin n) Real)
@@ -203,6 +218,22 @@ variable (Kfin : Fin m -> Matrix (Fin n) (Fin n) Real)
   Fin (m + 1) -> RandomMatrix Omega n n)
 #check (randomMatrixSuffixSum Xfin :
   Fin (m + 1) -> RandomMatrix Omega n n)
+#check (troppRandomHistory theta Xfin :
+  Fin m -> RandomMatrix Omega n n)
+#check (troppComparisonHistory Kfin :
+  Fin m -> Matrix (Fin n) (Fin n) Real)
+#check (troppCurrentRandomStep theta Xfin :
+  Fin m -> RandomMatrix Omega n n)
+#check (troppCurrentComparisonStep Kfin :
+  Fin m -> Matrix (Fin n) (Fin n) Real)
+#check (troppStateHistory theta Xfin Kfin :
+  Fin m -> RandomMatrix Omega n n)
+#check (troppTraceState theta Xfin Kfin :
+  Fin (m + 1) -> RealRandomVariable Omega)
+#check (troppStateLeft theta Xfin Kfin :
+  Fin m -> RealRandomVariable Omega)
+#check (troppStateRight theta Xfin Kfin :
+  Fin m -> RealRandomVariable Omega)
 
 example (i : Fin m) :
     comparisonMatrixPrefixSum Kfin i.succ =
@@ -230,6 +261,35 @@ example :
       fun _omega : Omega =>
         traceMatrixExp (Finset.univ.sum fun i : Fin m => Kfin i) := by
   exact traceMatrixExp_comparisonMatrixPrefixSum_last Kfin
+
+example :
+    troppTraceState theta Xfin Kfin 0 =
+      fun omega =>
+        traceMatrixExp
+          (randomMatrixSum (scaledRandomMatrixFamily theta Xfin) omega) := by
+  exact troppNaturalState_zero theta Xfin Kfin
+
+example :
+    troppTraceState theta Xfin Kfin (Fin.last m) =
+      fun _omega : Omega =>
+        traceMatrixExp (Finset.univ.sum fun i : Fin m => Kfin i) := by
+  exact troppNaturalState_last theta Xfin Kfin
+
+example (i : Fin m) :
+    troppStateLeft theta Xfin Kfin i =
+      fun omega =>
+        traceMatrixExp
+          (troppStateHistory theta Xfin Kfin i omega +
+            troppCurrentRandomStep theta Xfin i omega) := by
+  exact troppNaturalState_left theta Xfin Kfin i
+
+example (i : Fin m) :
+    troppStateRight theta Xfin Kfin i =
+      fun omega =>
+        traceMatrixExp
+          (troppStateHistory theta Xfin Kfin i omega +
+            troppCurrentComparisonStep Kfin i) := by
+  exact troppNaturalState_right theta Xfin Kfin i
 
 end PrefixSuffixBookkeeping
 

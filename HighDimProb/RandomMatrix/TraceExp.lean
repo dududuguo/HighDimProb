@@ -678,6 +678,220 @@ theorem traceMatrixExp_comparisonMatrixPrefixSum_last {Omega : Type*}
         traceMatrixExp (Finset.univ.sum fun i : Fin m => K i) := by
   rw [comparisonMatrixPrefixSum_last K]
 
+/-- Natural random-history suffix for the `Fin m` conditional Tropp route.
+
+At step `i`, this is the scaled random suffix after the current summand. -/
+def troppRandomHistory {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n) (i : Fin m) :
+    RandomMatrix Omega n n :=
+  randomMatrixSuffixSum (scaledRandomMatrixFamily theta X) i.succ
+
+/-- Natural deterministic comparison-history prefix before step `i`. -/
+def troppComparisonHistory {m n : Nat}
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) (i : Fin m) :
+    Matrix (Fin n) (Fin n) Real :=
+  comparisonMatrixPrefixSum K i.castSucc
+
+/-- Natural current scaled random step for the `Fin m` Tropp route. -/
+def troppCurrentRandomStep {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n) (i : Fin m) :
+    RandomMatrix Omega n n :=
+  scaledRandomMatrixFamily theta X i
+
+/-- Natural current deterministic comparison step for the `Fin m` Tropp route. -/
+abbrev troppCurrentComparisonStep {m n : Nat}
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) (i : Fin m) :
+    Matrix (Fin n) (Fin n) Real :=
+  K i
+
+/-- Natural matrix history at step `i`: comparison prefix plus random suffix. -/
+def troppStateHistory {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) (i : Fin m) :
+    RandomMatrix Omega n n :=
+  fun omega => troppComparisonHistory K i + troppRandomHistory theta X i omega
+
+/-- Natural trace-exponential state for the `Fin m` Tropp route. -/
+def troppTraceState {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (k : Fin (m + 1)) : RealRandomVariable Omega :=
+  fun omega =>
+    traceMatrixExp
+      (comparisonMatrixPrefixSum K k +
+        randomMatrixSuffixSum (scaledRandomMatrixFamily theta X) k omega)
+
+/-- Natural left state before replacing the current random step. -/
+def troppStateLeft {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) (i : Fin m) :
+    RealRandomVariable Omega :=
+  troppTraceState theta X K i.castSucc
+
+/-- Natural right state after replacing the current random step by `K i`. -/
+def troppStateRight {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) (i : Fin m) :
+    RealRandomVariable Omega :=
+  troppTraceState theta X K i.succ
+
+/-- Zero endpoint for the natural Tropp trace state. -/
+theorem troppNaturalState_zero {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) :
+    troppTraceState theta X K 0 =
+      fun omega =>
+        traceMatrixExp
+          (randomMatrixSum (scaledRandomMatrixFamily theta X) omega) := by
+  funext omega
+  simp [troppTraceState]
+
+/-- Last endpoint for the natural Tropp trace state. -/
+theorem troppNaturalState_last {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) :
+    troppTraceState theta X K (Fin.last m) =
+      fun _omega : Omega =>
+        traceMatrixExp (Finset.univ.sum fun i : Fin m => K i) := by
+  funext omega
+  simp [troppTraceState]
+
+/-- Left adjacent-state identity for the natural Tropp trace state. -/
+theorem troppNaturalState_left {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) (i : Fin m) :
+    troppStateLeft theta X K i =
+      fun omega =>
+        traceMatrixExp
+          (troppStateHistory theta X K i omega +
+            troppCurrentRandomStep theta X i omega) := by
+  funext omega
+  simp only [troppStateLeft, troppTraceState, troppStateHistory,
+    troppComparisonHistory, troppRandomHistory, troppCurrentRandomStep,
+    randomMatrixSuffixSum_apply]
+  rw [comparisonMatrixSuffixSum_succ]
+  ac_rfl
+
+/-- Right adjacent-state identity for the natural Tropp trace state. -/
+theorem troppNaturalState_right {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) (i : Fin m) :
+    troppStateRight theta X K i =
+      fun omega =>
+        traceMatrixExp
+          (troppStateHistory theta X K i omega +
+            troppCurrentComparisonStep K i) := by
+  funext omega
+  simp only [troppStateRight, troppTraceState, troppStateHistory,
+    troppComparisonHistory, troppRandomHistory, troppCurrentComparisonStep,
+    randomMatrixSuffixSum_apply]
+  rw [comparisonMatrixPrefixSum_succ]
+  ac_rfl
+
+/-- Conditional-step finite iteration with the canonical natural trace state.
+
+Compared with `troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps`,
+this wrapper fixes `state`, `H`, and `Z` to the Fin-prefix/suffix natural
+construction and discharges the four raw endpoint assumptions by bookkeeping.
+The analytic, measurability, independence, and integrability hypotheses remain
+explicit. -/
+theorem troppTraceExpFiniteFamilyIterationSkeleton_of_naturalStateConditionalSteps
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real) (theta : Real)
+    (mHist : Fin m -> MeasurableSpace Omega)
+    (hCond :
+      forall i,
+        @troppMasterTraceMGFConditionalStep_statement Omega mOmega P n
+          (mHist i) (@troppStateHistory Omega mOmega m n theta X K i)
+          (@troppCurrentRandomStep Omega mOmega m n theta X i) (K i))
+    (hHistSub : forall i, mHist i ≤ mOmega)
+    (hHistRand :
+      forall i,
+        @IsRandomMatrix Omega mOmega n n P
+          (troppStateHistory theta X K i))
+    (hZRand :
+      forall i,
+        @IsRandomMatrix Omega mOmega n n P
+          (troppCurrentRandomStep theta X i))
+    (hHistMeas :
+      forall i r c,
+        @Measurable Omega Real (mHist i) inferInstance
+          (fun omega => troppStateHistory theta X K i omega r c))
+    (hHistSA :
+      forall i omega, IsSelfAdjointMatrix (troppStateHistory theta X K i omega))
+    (hZSA :
+      forall i,
+        @RandomSelfAdjointMatrix Omega mOmega n P
+          (troppCurrentRandomStep theta X i))
+    (hIndep :
+      forall i,
+        @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _
+          (troppStateHistory theta X K i)
+          (troppCurrentRandomStep theta X i) P)
+    (hCondTraceInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega =>
+            traceMatrixExp
+              (troppStateHistory theta X K i omega +
+                troppCurrentRandomStep theta X i omega)))
+    (hExpInt :
+      forall i,
+        @IntegrableRandomMatrix Omega mOmega n n P
+          (fun omega => matrixExp (troppCurrentRandomStep theta X i omega)))
+    (hExpMeanSA :
+      forall i,
+        IsSelfAdjointMatrix
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))))
+    (hExpMeanPos :
+      forall i,
+        IsStrictlyPositive
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))))
+    (hKSA : forall i, IsSelfAdjointMatrix (K i))
+    (hMGFToK :
+      forall i,
+        MatrixLE
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (troppCurrentRandomStep theta X i omega)))
+          (matrixExp (K i)))
+    (hSigma : forall i, SigmaFinite (P.trim (hHistSub i)))
+    (hRhsInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega =>
+            traceMatrixExp (troppStateHistory theta X K i omega + K i))) :
+    expect P
+        (fun omega =>
+          traceMatrixExp
+            (randomMatrixSum (scaledRandomMatrixFamily theta X) omega)) <=
+      traceMatrixExp (Finset.univ.sum fun i : Fin m => K i) :=
+  troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps
+    (P := P)
+    (scaledRandomMatrixFamily theta X) K
+    (troppTraceState theta X K) mHist
+    (troppStateHistory theta X K) (troppCurrentRandomStep theta X)
+    hCond hHistSub hHistRand hZRand hHistMeas hHistSA hZSA hIndep
+    hCondTraceInt hExpInt hExpMeanSA hExpMeanPos hKSA hMGFToK hSigma
+    hRhsInt
+    (troppNaturalState_zero theta X K)
+    (troppNaturalState_last theta X K)
+    (troppNaturalState_left theta X K)
+    (troppNaturalState_right theta X K)
+
 end TroppMasterTraceMGFStep
 
 /-! ## Typed Bernstein functional-calculus primitive -/
@@ -1155,6 +1369,94 @@ theorem troppMasterTraceMGFFiniteFamily_of_conditionalSteps
     hExpMeanPos hKSA hSigma hRhsInt hStateZero hStateLast hStateLeft
     hStateRight hMGF hNorm
 
+/-- Finite-family Tropp provider from natural-state conditional-step data.
+
+This is the natural-state version of
+`troppMasterTraceMGFFiniteFamily_of_conditionalSteps`: it fixes the state,
+history matrix, and current random step to the canonical Fin-prefix/suffix
+construction and discharges the raw endpoint equalities. The conditional-step
+analytic hypotheses remain explicit. -/
+theorem troppMasterTraceMGFFiniteFamily_of_naturalStateConditionalSteps
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (V : Matrix (Fin n) (Fin n) Real) (theta R : Real)
+    (mHist : Fin m -> MeasurableSpace Omega)
+    (hCond :
+      forall i,
+        @troppMasterTraceMGFConditionalStep_statement Omega mOmega P n
+          (mHist i) (@troppStateHistory Omega mOmega m n theta X K i)
+          (@troppCurrentRandomStep Omega mOmega m n theta X i) (K i))
+    (hHistSub : forall i, mHist i ≤ mOmega)
+    (hHistRand :
+      forall i,
+        @IsRandomMatrix Omega mOmega n n P
+          (troppStateHistory theta X K i))
+    (hZRand :
+      forall i,
+        @IsRandomMatrix Omega mOmega n n P
+          (troppCurrentRandomStep theta X i))
+    (hHistMeas :
+      forall i r c,
+        @Measurable Omega Real (mHist i) inferInstance
+          (fun omega => troppStateHistory theta X K i omega r c))
+    (hHistSA :
+      forall i omega, IsSelfAdjointMatrix (troppStateHistory theta X K i omega))
+    (hZSA :
+      forall i,
+        @RandomSelfAdjointMatrix Omega mOmega n P
+          (troppCurrentRandomStep theta X i))
+    (hStepIndep :
+      forall i,
+        @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _
+          (troppStateHistory theta X K i)
+          (troppCurrentRandomStep theta X i) P)
+    (hCondTraceInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega =>
+            traceMatrixExp
+              (troppStateHistory theta X K i omega +
+                troppCurrentRandomStep theta X i omega)))
+    (hExpIntStep :
+      forall i,
+        @IntegrableRandomMatrix Omega mOmega n n P
+          (fun omega => matrixExp (troppCurrentRandomStep theta X i omega)))
+    (hExpMeanSA :
+      forall i,
+        IsSelfAdjointMatrix
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))))
+    (hExpMeanPos :
+      forall i,
+        IsStrictlyPositive
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))))
+    (hSigma : forall i, SigmaFinite (P.trim (hHistSub i)))
+    (hRhsInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega =>
+            traceMatrixExp (troppStateHistory theta X K i omega + K i))) :
+    troppMasterTraceMGFFiniteFamily_statement (P := P) X K V theta R := by
+  have hZScaled :
+      troppCurrentRandomStep theta X = scaledRandomMatrixFamily theta X := by
+    funext i
+    rfl
+  exact
+    troppMasterTraceMGFFiniteFamily_of_conditionalSteps
+      X K V theta R
+      (troppTraceState theta X K) mHist
+      (troppStateHistory theta X K) (troppCurrentRandomStep theta X)
+      hCond hHistSub hHistRand hZRand hHistMeas hHistSA hZSA hZScaled
+      hStepIndep hCondTraceInt hExpIntStep hExpMeanSA hExpMeanPos hSigma
+      hRhsInt
+      (troppNaturalState_zero theta X K)
+      (troppNaturalState_last theta X K)
+      (troppNaturalState_left theta X K)
+      (troppNaturalState_right theta X K)
+
 /-- Thin semantic trace-mgf provider from the finite-family Tropp typed
 primitive.
 
@@ -1300,6 +1602,107 @@ theorem traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps
       hHistMeas hHistSA hZSA hZScaled hStepIndep hCondTraceInt hExpIntStep
       hExpMeanSA hExpMeanPos hSigma hRhsInt hStateZero hStateLast hStateLeft
       hStateRight)
+    hRand hSA hIndep hExpInt hTraceInt hKSA hVSA hR hRange hMGF hNorm
+
+/-- Trace-MGF provider from natural-state conditional-step data.
+
+This wrapper composes the natural-state finite-family Tropp provider with the
+existing semantic trace-MGF provider. It removes the raw state, `H`, `Z`,
+scaled-step equality, and endpoint assumptions from the public conditional-step
+route while keeping all analytic assumptions explicit. -/
+theorem traceMGFBernsteinVarianceProxyBound_of_naturalStateConditionalSteps
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (V : Matrix (Fin n) (Fin n) Real) (theta R : Real)
+    (mHist : Fin m -> MeasurableSpace Omega)
+    (hCond :
+      forall i,
+        @troppMasterTraceMGFConditionalStep_statement Omega mOmega P n
+          (mHist i) (@troppStateHistory Omega mOmega m n theta X K i)
+          (@troppCurrentRandomStep Omega mOmega m n theta X i) (K i))
+    (hHistSub : forall i, mHist i ≤ mOmega)
+    (hHistRand :
+      forall i,
+        @IsRandomMatrix Omega mOmega n n P
+          (troppStateHistory theta X K i))
+    (hZRand :
+      forall i,
+        @IsRandomMatrix Omega mOmega n n P
+          (troppCurrentRandomStep theta X i))
+    (hHistMeas :
+      forall i r c,
+        @Measurable Omega Real (mHist i) inferInstance
+          (fun omega => troppStateHistory theta X K i omega r c))
+    (hHistSA :
+      forall i omega, IsSelfAdjointMatrix (troppStateHistory theta X K i omega))
+    (hZSA :
+      forall i,
+        @RandomSelfAdjointMatrix Omega mOmega n P
+          (troppCurrentRandomStep theta X i))
+    (hStepIndep :
+      forall i,
+        @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _
+          (troppStateHistory theta X K i)
+          (troppCurrentRandomStep theta X i) P)
+    (hCondTraceInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega =>
+            traceMatrixExp
+              (troppStateHistory theta X K i omega +
+                troppCurrentRandomStep theta X i omega)))
+    (hExpIntStep :
+      forall i,
+        @IntegrableRandomMatrix Omega mOmega n n P
+          (fun omega => matrixExp (troppCurrentRandomStep theta X i omega)))
+    (hExpMeanSA :
+      forall i,
+        IsSelfAdjointMatrix
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))))
+    (hExpMeanPos :
+      forall i,
+        IsStrictlyPositive
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))))
+    (hSigma : forall i, SigmaFinite (P.trim (hHistSub i)))
+    (hRhsInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega =>
+            traceMatrixExp (troppStateHistory theta X K i omega + K i)))
+    (hRand : forall i, IsRandomMatrix P (X i))
+    (hSA : forall i, RandomSelfAdjointMatrix P (X i))
+    (hIndep : ProbabilityTheory.iIndepFun X P)
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (fun omega => matrixExp (SMul.smul theta (X i omega))))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum X) theta))
+    (hKSA : forall i, IsSelfAdjointMatrix (K i))
+    (hVSA : IsSelfAdjointMatrix V)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hMGF :
+      forall i,
+        MatrixLE
+          (matrixExpect P
+            (fun omega => matrixExp (SMul.smul theta (X i omega))))
+          (matrixExp (K i)))
+    (hNorm :
+      Finset.univ.sum (fun i : Fin m => K i) =
+        SMul.smul (bernsteinMGFCoeff theta R) V) :
+    TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum X) V theta R :=
+  traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily
+    X K V theta R
+    (troppMasterTraceMGFFiniteFamily_of_naturalStateConditionalSteps
+      X K V theta R mHist hCond hHistSub hHistRand hZRand hHistMeas hHistSA
+      hZSA hStepIndep hCondTraceInt hExpIntStep hExpMeanSA hExpMeanPos
+      hSigma hRhsInt)
     hRand hSA hIndep hExpInt hTraceInt hKSA hVSA hR hRange hMGF hNorm
 
 /-- Typed Bernstein-specific scalar-to-matrix functional-calculus primitive.
