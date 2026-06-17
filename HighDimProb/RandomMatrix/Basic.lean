@@ -242,4 +242,19 @@ theorem measurable_randomMatrix_of_isRandomMatrix {Omega : Type*} [MeasurableSpa
   exact measurable_pi_lambda (fun omega i => fun j : Fin n => A omega i j) fun i =>
     measurable_pi_lambda (fun omega j => A omega i j) fun j => hA i j
 
+/-- Entrywise measurability in a smaller measurable space gives ambient
+random-matrix measurability when the smaller space is below the ambient one. -/
+theorem isRandomMatrix_of_sub_measurable_entries {Omega : Type*}
+    [mOmega : MeasurableSpace Omega] {P : Measure Omega} {m n : Nat}
+    {A : RandomMatrix Omega m n} (mSub : MeasurableSpace Omega)
+    (hSub : mSub <= mOmega)
+    (hA :
+      forall i j,
+        @Measurable Omega Real mSub inferInstance
+          (fun omega => A omega i j)) :
+    @IsRandomMatrix Omega mOmega m n P A := by
+  intro i j
+  change @Measurable Omega Real mOmega inferInstance (fun omega => A omega i j)
+  exact (hA i j).mono hSub le_rfl
+
 end HighDimProb

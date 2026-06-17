@@ -70,7 +70,7 @@ wrapper under the existing explicit primitive assumptions. This route uses
 current arbitrary-dimensional API. The bridge-explicit conditional wrappers and
 nonempty wrappers remain available.
 
-The latest proved public declarations fall into four groups:
+The latest proved public declarations fall into six groups:
 
 1. RandomMatrix optimized quadratic-form / operator-norm tail route:
    `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`,
@@ -116,6 +116,27 @@ The latest proved public declarations fall into four groups:
    `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions`.
    These shorten public theorem signatures and examples without proving
    Tropp/Lieb, Bernstein CFC, or positive-to-negative transfer.
+
+5. Tropp trace-MGF bookkeeping bridges:
+   `troppMasterTraceMGFFiniteFamily_statement_of_reindexedFin` transports the
+   finite-family Tropp primitive from the canonical `Fin (Fintype.card I)`
+   reindex back to an arbitrary finite index type, and
+   `troppMasterTraceMGFConditionalStep_apply_of_histEntryMeasurable` removes
+   the redundant ambient history-random-matrix proof at one conditional-step
+   call site via `isRandomMatrix_of_sub_measurable_entries`. These are
+   bookkeeping bridges only; they do not construct natural histories, prove
+   conditional-step independence, propagate trace-exp integrability, prove the
+   log/order-to-`K` bridge, or prove Lieb, Golden-Thompson, Bernstein CFC, full
+   arbitrary finite-index Tropp, or full Matrix Bernstein.
+6. Finite-sum/state bookkeeping for the Tropp route:
+   `comparisonMatrixPrefixSum`, `comparisonMatrixSuffixSum`,
+   `randomMatrixPrefixSum`, `randomMatrixSuffixSum`, their zero/last endpoint
+   lemmas, successor decomposition lemmas, and
+   `randomMatrixSum_eq_prefixSum_last`. This is a definition-level
+   prefix/suffix API in `Sums.lean` plus theorem-level wrappers for the
+   finite-state route. It does not prove Lieb, CFC, Golden-Thompson, Matrix
+   Bernstein, or arbitrary finite-index Tropp; it prepares the natural-state
+   construction leaf.
 
 The latest public example-layer wrappers are:
 
@@ -228,7 +249,7 @@ under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-TROPP-S11-history-state-adapters`
+- `RM-BR-natural-history-state-construction`
 
 ## Public Milestone Summary
 
@@ -2165,9 +2186,10 @@ signature shape; and S7 records
 the decision not to add a downstream Matrix Bernstein conditional-step wrapper
 yet, because replacing one finite-family Tropp primitive by positive and
 negative conditional-step/state packages would make public call-sites larger.
-The arbitrary finite-index finite-family provider, natural history/state
-construction, independence conditioning, integrability propagation, and
-finite-index reindexing remain open.
+The arbitrary finite-index finite-family provider remains open. The canonical
+finite-index reindex transport is proved, but natural history/state
+construction, independence conditioning, trace-exp integrability propagation,
+and the log/order-to-`K` bridge still remain open.
 
 Stage MB-S9-matrix-bernstein-trace-mgf-under-primitives-proof has no build
 blocker. The concentration statement layer now exposes

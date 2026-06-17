@@ -23,9 +23,14 @@ This is a proved theorem, not a proof of all underlying typed primitives. The
 finite-family Tropp/Lieb interface
 `troppMasterTraceMGFFiniteFamily_statement` now has a narrow `Fin m` provider,
 `troppMasterTraceMGFFiniteFamily_of_conditionalSteps`, from explicit
-conditional-step/state data. The arbitrary finite-index provider and the
-Bernstein CFC primitive `bernsteinMatrixExp_le_quadratic_statement` remain
-open. Golden-Thompson and the full Matrix Bernstein tail theorem also remain
+conditional-step/state data. It also has a proved canonical finite-index
+reindex transport,
+`troppMasterTraceMGFFiniteFamily_statement_of_reindexedFin`, but the full
+arbitrary finite-index provider remains open because natural state/history
+construction, step independence, trace-exp integrability propagation, and the
+log/order-to-`K` bridge are still explicit blockers. The Bernstein CFC
+primitive `bernsteinMatrixExp_le_quadratic_statement`, Lieb,
+Golden-Thompson, and the full Matrix Bernstein tail theorem also remain
 unproved.
 
 MB-S9 trace-MGF-to-Laplace/tail contract now adds conditional theorem and
@@ -72,8 +77,18 @@ theory.
 Done: `RM-negative-family-adapters` adds named negative-family adapters and a
 lighter sample-covariance operator-norm wrapper.
 
+Done: `RM-BR-state-prefix-suffix-partial-sum-api` adds finite-sum/state
+bookkeeping for natural Tropp states:
+`comparisonMatrixPrefixSum`, `comparisonMatrixSuffixSum`,
+`randomMatrixPrefixSum`, `randomMatrixSuffixSum`, endpoint/successor lemmas,
+and `randomMatrixSum_eq_prefixSum_last`. This is a definition-level
+prefix/suffix API with theorem-level wrappers. It prepares the natural-state
+construction leaf only; it does not prove Lieb, Bernstein CFC,
+Golden-Thompson, Matrix Bernstein, or an arbitrary finite-index Tropp
+provider.
+
 Next safe task:
-`RM-TROPP-S11-history-state-adapters`.
+`RM-BR-natural-history-state-construction`.
 
 ## Milestone 3 scalar implication closeout
 
@@ -1231,7 +1246,7 @@ future directions.
 - Test modules: `HighDimProbTest/RandomMatrixConcentrationAPI.lean` and
   `HighDimProbTest/ExamplesAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`
-- Repository next safe task: RM-TROPP-S11-history-state-adapters.
+- Repository next safe task: RM-BR-natural-history-state-construction.
 
 ## sample covariance variance-proxy control
 - Book heading: sample covariance and Matrix Bernstein prerequisites
@@ -1268,7 +1283,7 @@ future directions.
   `HighDimProb/RandomMatrix/ConcentrationStatements.lean`.
 - Status note: RM-VP complete.
 - Repository next safe task:
-  RM-TROPP-S11-history-state-adapters.
+  RM-BR-natural-history-state-construction.
 
 ## sample covariance PSD bridge
 - Book heading: sample covariance and PSD prerequisites
@@ -1480,7 +1495,7 @@ future directions.
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Repository next safe task after MB-S2 through MB-S9-foundation and
   negative-family adapter cleanup:
-  RM-TROPP-S11-history-state-adapters.
+  RM-BR-natural-history-state-construction.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1879,7 +1894,7 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Repository next safe task: RM-TROPP-S11-history-state-adapters.
+- Repository next safe task: RM-BR-natural-history-state-construction.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -2055,7 +2070,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Repository next safe task: RM-TROPP-S11-history-state-adapters.
+- Repository next safe task: RM-BR-natural-history-state-construction.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -2146,17 +2161,19 @@ future directions.
 - Status: general typed statement is API-tested and judge-tested. A narrow
   `Fin m` provider,
   `troppMasterTraceMGFFiniteFamily_of_conditionalSteps`, is proved from
-  explicit conditional-step/state data; the arbitrary finite-index provider
-  remains open.
+  explicit conditional-step/state data. The canonical finite-index reindex
+  transport `troppMasterTraceMGFFiniteFamily_statement_of_reindexedFin` is
+  proved; the full arbitrary finite-index provider remains open.
 - Compatibility: `troppMasterTraceMGFStep_statement` remains available as the
   one-step log-form primitive. The current step hierarchy also includes
   `troppLogExpComparisonToK_statement`,
   `troppMasterTraceMGFConditionalStep_statement`,
+  `troppMasterTraceMGFConditionalStep_apply_of_histEntryMeasurable`,
   `troppMasterTraceMGFConditionalStep_expect_bound`, and
   `troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps`.
 - Blocker: natural history/state construction, independence conditioning,
-  integrability propagation, arbitrary finite-index reindexing, Bernstein CFC
-  proof, Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
+  integrability propagation, the log/order-to-`K` proof, Bernstein CFC proof,
+  Golden-Thompson, Lieb, and Matrix Bernstein remain unproved.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`.
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`.
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`.
@@ -2196,7 +2213,7 @@ future directions.
   would make public signatures worse than the finite-family primitive route.
   The Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and
   the Matrix Bernstein tail theorem remain unproved.
-- Repository next safe task: RM-TROPP-S11-history-state-adapters.
+- Repository next safe task: RM-BR-natural-history-state-construction.
 
 
 
@@ -2214,7 +2231,7 @@ future directions.
 - Blocker: the result is still one-sided and quadratic-form under explicit
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
-- Repository next safe task: RM-TROPP-S11-history-state-adapters.
+- Repository next safe task: RM-BR-natural-history-state-construction.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -2234,7 +2251,7 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Repository next safe task: RM-TROPP-S11-history-state-adapters.
+- Repository next safe task: RM-BR-natural-history-state-construction.
 
 ## RM Centered Structural API
 
@@ -2258,7 +2275,7 @@ future directions.
   operator-norm layer now supplies the Bochner bridge and expectation
   contraction.
 - Blocker: none for structural centeredness.
-- Repository next safe task: RM-TROPP-S11-history-state-adapters.
+- Repository next safe task: RM-BR-natural-history-state-construction.
 
 ## RM Centered Operator-Norm Bound
 
@@ -2280,7 +2297,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Repository next safe task: RM-TROPP-S11-history-state-adapters.
+- Repository next safe task: RM-BR-natural-history-state-construction.
 
 
 ## RM Centered Rank-One Structural Adapter
@@ -2298,7 +2315,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Repository next safe task: RM-TROPP-S11-history-state-adapters.
+- Repository next safe task: RM-BR-natural-history-state-construction.
 
 
 ## RM Centered Rank-One Operator-Norm Adapter
@@ -2313,7 +2330,7 @@ future directions.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters, lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb,
   Bernstein CFC, or Golden-Thompson.
-- Repository next safe task: RM-TROPP-S11-history-state-adapters.
+- Repository next safe task: RM-BR-natural-history-state-construction.
 
 
 ## RM Vector-to-Rank-One Matrix Measurability / Integrability
@@ -2330,7 +2347,7 @@ future directions.
 - Blocker: this does not prove integrability from measurability alone,
   sample-covariance Matrix Bernstein assumption adapters, or Matrix Bernstein
   tails.
-- Repository next safe task: RM-TROPP-S11-history-state-adapters.
+- Repository next safe task: RM-BR-natural-history-state-construction.
 
 
 ## RM PSD Nullspace Converse
@@ -2349,4 +2366,4 @@ future directions.
 - Blocker: this is only a deterministic PSD kernel bridge. It does not prove
   covariance expectation identities, sample-covariance Matrix Bernstein
   assumption adapters, or Matrix Bernstein tails.
-- Repository next safe task: RM-TROPP-S11-history-state-adapters.
+- Repository next safe task: RM-BR-natural-history-state-construction.

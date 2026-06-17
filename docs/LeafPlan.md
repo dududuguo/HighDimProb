@@ -39,7 +39,7 @@
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
   - Current repository next task:
-    RM-TROPP-S11-history-state-adapters; matrix
+    RM-BR-natural-history-state-construction; matrix
     Bernstein, Hanson-Wright, and WLLN/SLLN remain separate future directions
 - OrliczToTail
 - TailToOrlicz
@@ -103,6 +103,25 @@
   Bernstein RHS coefficient is normalized, while the Bernstein CFC primitive
   itself remains typed only. Do not prove Golden-Thompson, Lieb, the full
   trace-mgf provider, or Matrix Bernstein in that contract stage.
+
+## Current RandomMatrix Leaf
+
+### Tropp bookkeeping reduction: prefix/suffix partial sums
+
+- Completed leaf ID: `RM-BR-state-prefix-suffix-partial-sum-api`.
+- Purpose: finite-sum/state bookkeeping for the existing `Fin m` Tropp
+  conditional-step route.
+- New API in `HighDimProb/RandomMatrix/Sums.lean`:
+  `comparisonMatrixPrefixSum`, `comparisonMatrixSuffixSum`,
+  `randomMatrixPrefixSum`, `randomMatrixSuffixSum`, endpoint/successor
+  lemmas, and `randomMatrixSum_eq_prefixSum_last`.
+- Abstraction boundary: deterministic comparison-matrix prefix/suffix sums
+  live below random-matrix prefix/suffix sums; both remain bookkeeping APIs
+  for state construction and do not replace `randomMatrixSum`.
+- Scope preserved: this does not prove Lieb, Bernstein CFC, Golden-Thompson,
+  Matrix Bernstein, arbitrary finite-index Tropp, or natural history/state
+  construction.
+- Next safe leaf: `RM-BR-natural-history-state-construction`.
 
 ## Process
 

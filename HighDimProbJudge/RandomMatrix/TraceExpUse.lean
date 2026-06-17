@@ -29,11 +29,31 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.troppMasterTraceMGFStep_statement
 #check HighDimProb.troppLogExpComparisonToK_statement
 #check HighDimProb.troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK
+#check HighDimProb.isRandomMatrix_of_sub_measurable_entries
 #check HighDimProb.troppMasterTraceMGFConditionalStep_statement
+#check HighDimProb.troppMasterTraceMGFConditionalStep_apply_of_histEntryMeasurable
 #check HighDimProb.troppMasterTraceMGFConditionalStep_expect_bound
 #check HighDimProb.troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps
 #check HighDimProb.troppMasterTraceMGFFiniteFamily_statement
+#check HighDimProb.troppMasterTraceMGFFiniteFamily_statement_of_reindexedFin
 #check HighDimProb.troppMasterTraceMGFFiniteFamily_of_conditionalSteps
+#check HighDimProb.comparisonMatrixPrefixSum
+#check HighDimProb.comparisonMatrixSuffixSum
+#check HighDimProb.randomMatrixPrefixSum
+#check HighDimProb.randomMatrixSuffixSum
+#check HighDimProb.comparisonMatrixPrefixSum_zero
+#check HighDimProb.comparisonMatrixPrefixSum_succ
+#check HighDimProb.comparisonMatrixPrefixSum_last
+#check HighDimProb.comparisonMatrixSuffixSum_zero
+#check HighDimProb.comparisonMatrixSuffixSum_succ
+#check HighDimProb.comparisonMatrixSuffixSum_last
+#check HighDimProb.randomMatrixPrefixSum_zero
+#check HighDimProb.randomMatrixPrefixSum_succ
+#check HighDimProb.randomMatrixPrefixSum_last
+#check HighDimProb.randomMatrixSuffixSum_zero
+#check HighDimProb.randomMatrixSuffixSum_succ
+#check HighDimProb.randomMatrixSuffixSum_last
+#check HighDimProb.randomMatrixSum_eq_prefixSum_last
 #check HighDimProb.scaledRandomMatrix
 #check HighDimProb.scaledRandomMatrixFamily
 #check HighDimProb.bernsteinMGFCoeff
@@ -174,6 +194,26 @@ example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (V : Matrix (Fin n) (Fin n) Real) (theta R : Real) : Prop :=
   HighDimProb.singleSummandMatrixMGFVarianceProxy_statement
     (P := P) X V theta R
+
+example {m n : Nat}
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (i : Fin m) :
+    HighDimProb.comparisonMatrixPrefixSum K i.succ =
+      HighDimProb.comparisonMatrixPrefixSum K i.castSucc + K i :=
+  HighDimProb.comparisonMatrixPrefixSum_succ K i
+
+example {m n : Nat}
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (i : Fin m) :
+    HighDimProb.comparisonMatrixSuffixSum K i.castSucc =
+      K i + HighDimProb.comparisonMatrixSuffixSum K i.succ :=
+  HighDimProb.comparisonMatrixSuffixSum_succ K i
+
+example {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (X : Fin m -> HighDimProb.RandomMatrix Omega n n) :
+    HighDimProb.randomMatrixSum X =
+      HighDimProb.randomMatrixPrefixSum X (Fin.last m) :=
+  HighDimProb.randomMatrixSum_eq_prefixSum_last X
 
 example {Omega : Type*} [MeasurableSpace Omega]
     {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]

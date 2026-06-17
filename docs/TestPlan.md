@@ -615,12 +615,34 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   `troppLogExpComparisonToK_statement`,
   `troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK`,
   `troppMasterTraceMGFConditionalStep_statement`,
+  `troppMasterTraceMGFConditionalStep_apply_of_histEntryMeasurable`,
   `troppMasterTraceMGFConditionalStep_expect_bound`,
   `troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps`,
+  `troppMasterTraceMGFFiniteFamily_statement_of_reindexedFin`,
   `troppMasterTraceMGFFiniteFamily_of_conditionalSteps`, and
   `traceMGFBernsteinVarianceProxyBound_of_troppConditionalSteps`.
-- Coverage proves no Lieb, Golden-Thompson, arbitrary finite-index
+- Coverage proves no Lieb, Golden-Thompson, full arbitrary finite-index
   finite-family provider, Bernstein CFC primitive, or Matrix Bernstein theorem.
+  The reindex transport is checked, but natural state/history construction,
+  integrability propagation, independence conditioning, and log/order-to-`K`
+  remain separate blockers.
+
+## RM-BR State Prefix/Suffix Partial-Sum API Coverage
+
+- `HighDimProbTest/RandomMatrixTraceExpAPI.lean` checks
+  `comparisonMatrixPrefixSum`, `comparisonMatrixSuffixSum`,
+  `randomMatrixPrefixSum`, `randomMatrixSuffixSum`, endpoint/successor
+  lemmas, and `randomMatrixSum_eq_prefixSum_last`.
+- `HighDimProbJudge/RandomMatrix/TraceExpUse.lean` mirrors the public checks
+  and includes small downstream-style endpoint and step examples.
+- The validation probe
+  `external/validation/rm-br-state-prefix-suffix-partial-sum-api/RM_BR_StateProbe.lean`
+  confirms that the API can express the existing conditional-step state
+  equalities. It is not part of the public test contract.
+- This coverage is finite-sum/state bookkeeping only. It proves no Lieb,
+  Bernstein CFC, Golden-Thompson, Matrix Bernstein, arbitrary finite-index
+  Tropp provider, or full natural-state construction.
+
 ## MB-S9 Trace-MGF Thin Wrapper Coverage
 
 - `HighDimProbTest/RandomMatrixTraceExpAPI.lean` checks

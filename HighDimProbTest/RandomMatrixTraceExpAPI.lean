@@ -67,11 +67,31 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check troppMasterTraceMGFStep_statement
 #check troppLogExpComparisonToK_statement
 #check troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK
+#check isRandomMatrix_of_sub_measurable_entries
 #check troppMasterTraceMGFConditionalStep_statement
+#check troppMasterTraceMGFConditionalStep_apply_of_histEntryMeasurable
 #check troppMasterTraceMGFConditionalStep_expect_bound
 #check troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps
 #check troppMasterTraceMGFFiniteFamily_statement
+#check troppMasterTraceMGFFiniteFamily_statement_of_reindexedFin
 #check troppMasterTraceMGFFiniteFamily_of_conditionalSteps
+#check comparisonMatrixPrefixSum
+#check comparisonMatrixSuffixSum
+#check randomMatrixPrefixSum
+#check randomMatrixSuffixSum
+#check comparisonMatrixPrefixSum_zero
+#check comparisonMatrixPrefixSum_succ
+#check comparisonMatrixPrefixSum_last
+#check comparisonMatrixSuffixSum_zero
+#check comparisonMatrixSuffixSum_succ
+#check comparisonMatrixSuffixSum_last
+#check randomMatrixPrefixSum_zero
+#check randomMatrixPrefixSum_succ
+#check randomMatrixPrefixSum_last
+#check randomMatrixSuffixSum_zero
+#check randomMatrixSuffixSum_succ
+#check randomMatrixSuffixSum_last
+#check randomMatrixSum_eq_prefixSum_last
 #check scaledRandomMatrixFamily
 #check bernsteinMGFCoeff
 #check bernsteinThetaChoice
@@ -164,6 +184,39 @@ variable (hBernsteinRange : abs theta * R < 3)
   Prop)
 #check (scaledRandomMatrixFamily theta Xfam :
   I -> RandomMatrix Omega n n)
+
+section PrefixSuffixBookkeeping
+
+variable {m : Nat}
+variable (Xfin : Fin m -> RandomMatrix Omega n n)
+variable (Kfin : Fin m -> Matrix (Fin n) (Fin n) Real)
+
+#check (comparisonMatrixPrefixSum Kfin :
+  Fin (m + 1) -> Matrix (Fin n) (Fin n) Real)
+#check (comparisonMatrixSuffixSum Kfin :
+  Fin (m + 1) -> Matrix (Fin n) (Fin n) Real)
+#check (randomMatrixPrefixSum Xfin :
+  Fin (m + 1) -> RandomMatrix Omega n n)
+#check (randomMatrixSuffixSum Xfin :
+  Fin (m + 1) -> RandomMatrix Omega n n)
+
+example (i : Fin m) :
+    comparisonMatrixPrefixSum Kfin i.succ =
+      comparisonMatrixPrefixSum Kfin i.castSucc + Kfin i := by
+  exact comparisonMatrixPrefixSum_succ Kfin i
+
+example (i : Fin m) :
+    comparisonMatrixSuffixSum Kfin i.castSucc =
+      Kfin i + comparisonMatrixSuffixSum Kfin i.succ := by
+  exact comparisonMatrixSuffixSum_succ Kfin i
+
+example :
+    randomMatrixSum Xfin =
+      randomMatrixPrefixSum Xfin (Fin.last m) := by
+  exact randomMatrixSum_eq_prefixSum_last Xfin
+
+end PrefixSuffixBookkeeping
+
 #check (bernsteinCoefficient_nonneg hBernsteinRange :
   0 <= (theta ^ 2 / 2) / (1 - abs theta * R / 3))
 #check (bernsteinMGFCoeff_nonneg hBernsteinRange :
@@ -385,6 +438,10 @@ variable (hRhsInt :
   OmegaC mOmegaC P n mHist H Z K hCond hHistSub hHistRand hZRand
     hHistMeas hHistSA hZSA hIndep hCondTraceInt hExpInt hExpMeanSA
     hExpMeanPos hKSA hMGFToK hSigma hRhsInt)
+#check (@troppMasterTraceMGFConditionalStep_apply_of_histEntryMeasurable
+  OmegaC mOmegaC P n mHist H Z K hCond hHistSub hZRand hHistMeas
+    hHistSA hZSA hIndep hCondTraceInt hExpInt hExpMeanSA hExpMeanPos
+    hKSA hMGFToK)
 #check (@troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps)
 
 example :
@@ -404,5 +461,16 @@ example :
     OmegaC mOmegaC P n mHist H Z K hCond hHistSub hHistRand hZRand
     hHistMeas hHistSA hZSA hIndep hCondTraceInt hExpInt hExpMeanSA
     hExpMeanPos hKSA hMGFToK hSigma hRhsInt
+
+example :
+    Filter.EventuallyLE (MeasureTheory.ae P)
+      (fun omega =>
+        MeasureTheory.condExp (m := mHist) P
+          (fun omega' => traceMatrixExp (H omega' + Z omega')) omega)
+      (fun omega => traceMatrixExp (H omega + K)) := by
+  exact @troppMasterTraceMGFConditionalStep_apply_of_histEntryMeasurable
+    OmegaC mOmegaC P n mHist H Z K hCond hHistSub hZRand hHistMeas
+    hHistSA hZSA hIndep hCondTraceInt hExpInt hExpMeanSA hExpMeanPos
+    hKSA hMGFToK
 
 end TroppConditionalStep

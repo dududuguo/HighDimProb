@@ -54,10 +54,18 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - S7 downstream-wrapper audit added no Matrix Bernstein conditional-step
   wrapper: replacing the finite-family primitive with positive/negative
   conditional-step state packages would make public call-sites larger.
+- Added finite-sum/state bookkeeping in `Sums.lean`:
+  `comparisonMatrixPrefixSum`, `comparisonMatrixSuffixSum`,
+  `randomMatrixPrefixSum`, `randomMatrixSuffixSum`, endpoint and successor
+  lemmas, and `randomMatrixSum_eq_prefixSum_last`. This is a definition-level
+  prefix/suffix API with theorem-level wrappers for endpoint, step, and
+  full-sum identities. It prepares the natural-state construction leaf only;
+  it does not prove Lieb, Bernstein CFC, Golden-Thompson, Matrix Bernstein, or
+  an arbitrary finite-index Tropp provider.
 - The arbitrary-index finite-family Tropp/Lieb proof, natural history/state
   constructors, independence conditioning, integrability propagation,
-  finite-index reindexing, Bernstein CFC primitive, Golden-Thompson, and the
-  full Matrix Bernstein tail theorem remain outside the current API.
+  Bernstein CFC primitive, Golden-Thompson, and the full Matrix Bernstein tail
+  theorem remain outside the current API.
 - Proved real-to-lintegral bridge:
   `traceMGFBernsteinVarianceProxyBoundLIntegral_of_traceMGFBernsteinVarianceProxyBound`.
 - Proved explicit-theta quadratic-form upper-tail wrapper under primitives:
@@ -277,7 +285,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
   documented in the trace-exp section below.
 - RM-ON-S8 documentation synchronization records the S6 example update and S7
   test/judge update without changing the API surface.
-- Next safe task: `RM-TROPP-S11-history-state-adapters`.
+- Next safe task: `RM-BR-natural-history-state-construction`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
@@ -305,6 +313,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `isRandomMatrix_rankOneRandomMatrix`: theorem, entrywise measurability from
   `IsRandomVector`.
 - `measurable_randomMatrix_of_isRandomMatrix`: theorem.
+- `isRandomMatrix_of_sub_measurable_entries`: theorem, entrywise
+  measurability in a smaller measurable space gives ambient random-matrix
+  measurability when the smaller measurable space is below the ambient one.
 
 ## `HighDimProb/RandomMatrix/Expectation.lean`
 
@@ -606,6 +617,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
   self-adjointness, independence, and deterministic `K` comparison assumptions
   explicitly, and concludes only the one-step conditional trace-exponential
   bound.
+- `troppMasterTraceMGFConditionalStep_apply_of_histEntryMeasurable`: theorem
+  applying the conditional-step primitive while deriving ambient measurability
+  of `H` from history-entry measurability and `mHist <= mOmega`.
 - `troppMasterTraceMGFConditionalStep_expect_bound`: theorem integrating one
   typed conditional/history step to an unconditional expected
   trace-exponential comparison under explicit history sigma-finiteness and
@@ -628,6 +642,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
   comparisons, independence, trace-exp integrability, comparison
   self-adjointness, and bounded-Bernstein RHS normalization to produce
   `TraceMGFBernsteinVarianceProxyBound` for `randomMatrixSum`.
+- `troppMasterTraceMGFFiniteFamily_statement_of_reindexedFin`: theorem
+  transporting a provider for the canonical `Fin (Fintype.card I)` reindex to
+  the original arbitrary finite index type. It is a reindexing bridge only and
+  does not prove the Tropp/Lieb primitive or construct conditional-step state
+  data.
 - `bernsteinMGFCoeff`: def, canonical bounded Matrix Bernstein trace-mgf
   coefficient `(theta ^ 2 / 2) / (1 - abs theta * R / 3)`.
 - `bernsteinThetaChoice`: def, canonical scalar theta choice
@@ -878,8 +897,9 @@ mainline. It is documentation only; theorem status is not upgraded here.
   Tropp assumptions. The bounded theorem under primitives is proved for
   `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`; the narrow `Fin m`
   finite-family provider from explicit conditional-step/state data is proved,
-  but the arbitrary finite-index provider and automatic history/state
-  construction remain open.
+  and canonical finite-index reindex transport is available, but the full
+  arbitrary finite-index provider from natural conditional-step data and
+  automatic history/state construction remain open.
 - The older `matrixBernsteinTraceMGF_statement` is retained for the
   `theta ^ 2 / 2` compatibility target and is not the bounded Matrix
   Bernstein RHS.
@@ -921,11 +941,11 @@ mainline. It is documentation only; theorem status is not upgraded here.
 
 ## Next Safe Task
 
-RM-TROPP-S11-history-state-adapters: add named history/state and reindex
-adapters for the `Fin m` conditional-step route before exposing any assumption
-bundle. A useful abstraction should construct or normalize part of the route;
-it should not merely store raw proof plumbing such as arbitrary state functions,
-history sigma-algebras, and adjacent endpoint equalities.
+RM-BR-natural-history-state-construction: use the new prefix/suffix
+bookkeeping API to construct the natural history/state route for the existing
+`Fin m` conditional-step provider. This should remain a state-construction
+leaf and should not prove Lieb, Bernstein CFC, Golden-Thompson, Matrix
+Bernstein, or a parallel arbitrary-index Tropp primitive.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -936,10 +956,11 @@ history sigma-algebras, and adjacent endpoint equalities.
   `troppMasterTraceMGFFiniteFamily_statement` assumption, and explicit
   pointwise `bernsteinMatrixExp_le_quadratic_statement` assumptions.
 - The arbitrary-index finite-family Tropp provider remains open. The narrow
-  `Fin m` provider from explicit conditional-step/state data is proved, but
-  downstream Matrix Bernstein wrappers still take the finite-family primitive
-  directly until the conditional-step/state package is made ergonomic. The
-  Bernstein CFC primitive remains typed only. No Lieb theorem,
+  `Fin m` provider from explicit conditional-step/state data is proved, and
+  the canonical finite-index reindex transport is proved, but downstream
+  Matrix Bernstein wrappers still take the finite-family primitive directly
+  until the conditional-step/state package is made ergonomic. The Bernstein
+  CFC primitive remains typed only. No Lieb theorem,
   Golden-Thompson theorem, or Matrix Bernstein tail theorem was proved.
 - The generic bounded-Bernstein real-to-lintegral semantic bridge is now
   proved in `TraceExp.lean`.
@@ -986,4 +1007,7 @@ history sigma-algebras, and adjacent endpoint equalities.
 - The arbitrary-dimension bridge leaf adds the corrected positive-threshold
   arbitrary spectral bridge and arbitrary operator-norm Matrix
   Bernstein/sample-covariance wrappers under explicit primitive assumptions.
-- Next safe task: RM-TROPP-S11-history-state-adapters.
+- The RM-BR prefix/suffix API adds only finite-sum/state bookkeeping for the
+  natural-state construction leaf; it does not prove Lieb, Bernstein CFC,
+  Golden-Thompson, Matrix Bernstein, or arbitrary finite-index Tropp.
+- Next safe task: RM-BR-natural-history-state-construction.
