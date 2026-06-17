@@ -9,6 +9,7 @@ policy violations, and text encoding damage.
 python .github/scripts/check_text_quality.py
 python scripts/judge_policy_check.py
 lake build
+lake build HighDimProb.Examples
 lake build HighDimProbJudge
 lake test
 ```
@@ -26,6 +27,10 @@ git diff --check
 - Root import smoke tests: `HighDimProbTest/Smoke.lean`, `PublicImports.lean`, `BranchImports.lean`, `ExperimentalImports.lean`.
 - Scalar API tests: probability, tail, Lp/moment, Orlicz, subGaussian, subExponential, and scalar concentration files under `HighDimProbTest`.
 - RandomMatrix API tests: variance proxy, spectral, trace-exp, Laplace, concentration, and example API checks.
+- RandomMatrix bookkeeping checks: trace-exp endpoint wrappers are covered in
+  `HighDimProbTest/RandomMatrixTraceExpAPI.lean` and
+  `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`; example modules are covered
+  through `lake build HighDimProb.Examples`.
 - Judge tests: `HighDimProbJudge` plus `scripts/judge_policy_check.py`.
 
 ## Policy Checks

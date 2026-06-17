@@ -23,7 +23,9 @@ for the denser scalar index.
 The RandomMatrix layer is experimental. The current Matrix Bernstein route has
 proved useful wrappers under explicit primitive assumptions, including
 trace-MGF, quadratic-form, optimized scalar RHS, positive-threshold
-operator-norm, sample-covariance, and crude variance-proxy routes.
+operator-norm, sample-covariance, crude variance-proxy routes, and
+prefix/state endpoint bookkeeping wrappers for the Tropp conditional-step
+route.
 
 Important current names are listed in [`RandomMatrixAPI.md`](RandomMatrixAPI.md).
 
@@ -34,6 +36,7 @@ Important current names are listed in [`RandomMatrixAPI.md`](RandomMatrixAPI.md)
 - Golden-Thompson route.
 - Full unconditional Matrix Bernstein theorem.
 - Tropp/CFC-free sample-covariance operator-norm concentration.
+- Natural history/state construction for the conditional-step Tropp route.
 
 ## Maintenance Rule
 

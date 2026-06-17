@@ -122,7 +122,15 @@
 - Scope preserved: this does not prove Lieb, Bernstein CFC, Golden-Thompson,
   Matrix Bernstein, arbitrary finite-index Tropp, or natural history/state
   construction.
-- Next safe leaf: `RM-BR-natural-history-state-construction`.
+- Follow-up completed leaf:
+  `RM-lightweight-bookkeeping-bridges`, adding the trace-exp endpoint wrappers
+  `traceMatrixExp_randomMatrixPrefixSum_last` and
+  `traceMatrixExp_comparisonMatrixPrefixSum_last`, plus example-only
+  prefix/state and reindex transport usage modules.
+- Boundary preserved: `ConditionalStateEndpointData` is example-local; no
+  Lieb, Golden-Thompson, Bernstein CFC, conditional-expectation independence,
+  full Matrix Bernstein, or arbitrary finite-index primitive was proved.
+- Next safe leaf: `RM-BR-natural-history-state-construction-contract`.
 
 ## Process
 

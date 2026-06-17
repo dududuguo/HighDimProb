@@ -92,6 +92,8 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check randomMatrixSuffixSum_succ
 #check randomMatrixSuffixSum_last
 #check randomMatrixSum_eq_prefixSum_last
+#check traceMatrixExp_randomMatrixPrefixSum_last
+#check traceMatrixExp_comparisonMatrixPrefixSum_last
 #check scaledRandomMatrixFamily
 #check bernsteinMGFCoeff
 #check bernsteinThetaChoice
@@ -216,6 +218,18 @@ example :
     randomMatrixSum Xfin =
       randomMatrixPrefixSum Xfin (Fin.last m) := by
   exact randomMatrixSum_eq_prefixSum_last Xfin
+
+example :
+    (fun omega => traceMatrixExp (randomMatrixPrefixSum Xfin (Fin.last m) omega)) =
+      fun omega => traceMatrixExp (randomMatrixSum Xfin omega) := by
+  exact traceMatrixExp_randomMatrixPrefixSum_last Xfin
+
+example :
+    (fun _omega : Omega =>
+      traceMatrixExp (comparisonMatrixPrefixSum Kfin (Fin.last m))) =
+      fun _omega : Omega =>
+        traceMatrixExp (Finset.univ.sum fun i : Fin m => Kfin i) := by
+  exact traceMatrixExp_comparisonMatrixPrefixSum_last Kfin
 
 end PrefixSuffixBookkeeping
 

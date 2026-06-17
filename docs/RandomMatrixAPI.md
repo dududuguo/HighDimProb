@@ -35,6 +35,33 @@ Use these helpers in examples and tests instead of copying RHS formulas.
 These are under explicit primitive assumptions. They do not prove Tropp/Lieb,
 CFC, Golden-Thompson, or a full unconditional Matrix Bernstein theorem.
 
+## TraceExp / Tropp Bookkeeping Surface
+
+- `traceMatrixExp_randomMatrixPrefixSum_last`
+- `traceMatrixExp_comparisonMatrixPrefixSum_last`
+- `troppMasterTraceMGFFiniteFamily_statement_of_reindexedFin`
+
+The two trace-exp wrappers convert final prefix endpoints into the state
+equation shapes used by the conditional-step route. The reindex bridge
+transports an existing `Fin (Fintype.card I)` Tropp finite-family statement to
+an arbitrary finite index type; it does not prove that primitive.
+
+Use the core wrappers from:
+
+```lean
+import HighDimProb.RandomMatrix
+-- or, for the narrower module:
+import HighDimProb.RandomMatrix.TraceExp
+```
+
+Use the examples from:
+
+```lean
+import HighDimProb.Examples.RandomMatrix.PrefixStateTroppUsage
+import HighDimProb.Examples.RandomMatrix.ConditionalStateEndpointUsage
+import HighDimProb.Examples.RandomMatrix.ReindexedTroppBridgeUsage
+```
+
 ## Sample Covariance Surface
 
 - `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
@@ -61,3 +88,7 @@ CFC, Golden-Thompson, or a full unconditional Matrix Bernstein theorem.
   theorem still needs both sides.
 - Put domain vocabulary in examples as thin wrappers over the core RandomMatrix
   API, not as separate theorem machinery.
+- Use `PrefixStateTroppUsage`, `ConditionalStateEndpointUsage`, and
+  `ReindexedTroppBridgeUsage` for examples of prefix/state endpoint and
+  reindex transport bookkeeping. `ConditionalStateEndpointData` is example
+  local, not core API.

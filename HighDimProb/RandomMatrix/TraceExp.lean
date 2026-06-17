@@ -654,6 +654,30 @@ theorem troppTraceExpFiniteFamilyIterationSkeleton_of_conditionalSteps
           rw [hStateLast]
           simp [expect, measureReal_def]
 
+/-- Trace-exponential endpoint for a state written with the final random prefix.
+
+This is a bookkeeping wrapper over `randomMatrixPrefixSum_last`, matching the
+function-equality shape used by Tropp finite-state endpoint hypotheses. -/
+theorem traceMatrixExp_randomMatrixPrefixSum_last {Omega : Type*}
+    [MeasurableSpace Omega] {m n : Nat}
+    (A : Fin m -> RandomMatrix Omega n n) :
+    (fun omega => traceMatrixExp (randomMatrixPrefixSum A (Fin.last m) omega)) =
+      fun omega => traceMatrixExp (randomMatrixSum A omega) := by
+  rw [randomMatrixPrefixSum_last A]
+
+/-- Trace-exponential endpoint for a constant state written with the final
+comparison-matrix prefix.
+
+This is a bookkeeping wrapper over `comparisonMatrixPrefixSum_last`, matching
+the constant-function shape used by Tropp finite-state endpoint hypotheses. -/
+theorem traceMatrixExp_comparisonMatrixPrefixSum_last {Omega : Type*}
+    {m n : Nat} (K : Fin m -> Matrix (Fin n) (Fin n) Real) :
+    (fun _omega : Omega =>
+      traceMatrixExp (comparisonMatrixPrefixSum K (Fin.last m))) =
+      fun _omega : Omega =>
+        traceMatrixExp (Finset.univ.sum fun i : Fin m => K i) := by
+  rw [comparisonMatrixPrefixSum_last K]
+
 end TroppMasterTraceMGFStep
 
 /-! ## Typed Bernstein functional-calculus primitive -/

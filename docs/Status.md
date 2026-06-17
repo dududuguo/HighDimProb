@@ -34,6 +34,11 @@ Core Matrix Bernstein helpers:
 - `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`
 - `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions`
 
+TraceExp / Tropp bookkeeping helpers:
+
+- `traceMatrixExp_randomMatrixPrefixSum_last`
+- `traceMatrixExp_comparisonMatrixPrefixSum_last`
+
 Sample covariance wrappers:
 
 - `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound`
@@ -55,12 +60,20 @@ Example-layer wrappers:
 - `empiricalFisher_operatorNorm_tail_usage`
 - `loraAdapterSubspaceCovariance_operatorNorm_tail_usage`
 
+Example modules:
+
+- `PrefixStateTroppUsage`
+- `ConditionalStateEndpointUsage`
+- `ReindexedTroppBridgeUsage`
+
 ## Current Caveats
 
 - RandomMatrix / Matrix Bernstein remains experimental.
 - Tropp/Lieb, Golden-Thompson, Bernstein CFC, and full Matrix Bernstein are not claimed as complete unless a referenced theorem says so directly.
+- Prefix/suffix/state bookkeeping is covered only as bookkeeping. The conditional-state bundle is example-local, and the reindexed example is transport-only.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
 - Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems.
+- Next safe RandomMatrix task: `RM-BR-natural-history-state-construction-contract`.
 
 ## Verification
 
@@ -69,11 +82,13 @@ Run before pushing API or docs changes:
 ```bash
 python .github/scripts/check_text_quality.py
 python scripts/judge_policy_check.py
+lake build
+lake build HighDimProb.Examples
 lake test
 lake build HighDimProbJudge
 ```
 
-Last verified locally on 2026-06-17 with the commands above.
+Last verified locally on 2026-06-18 with the commands above.
 
 ## Archive
 

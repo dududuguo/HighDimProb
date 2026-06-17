@@ -54,6 +54,8 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.randomMatrixSuffixSum_succ
 #check HighDimProb.randomMatrixSuffixSum_last
 #check HighDimProb.randomMatrixSum_eq_prefixSum_last
+#check HighDimProb.traceMatrixExp_randomMatrixPrefixSum_last
+#check HighDimProb.traceMatrixExp_comparisonMatrixPrefixSum_last
 #check HighDimProb.scaledRandomMatrix
 #check HighDimProb.scaledRandomMatrixFamily
 #check HighDimProb.bernsteinMGFCoeff
@@ -216,6 +218,14 @@ example {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
     HighDimProb.randomMatrixSum X =
       HighDimProb.randomMatrixPrefixSum X (Fin.last m) :=
   HighDimProb.randomMatrixSum_eq_prefixSum_last X
+
+example {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (X : Fin m -> HighDimProb.RandomMatrix Omega n n) :
+    (fun omega => HighDimProb.traceMatrixExp
+      (HighDimProb.randomMatrixPrefixSum X (Fin.last m) omega)) =
+      fun omega => HighDimProb.traceMatrixExp
+        (HighDimProb.randomMatrixSum X omega) :=
+  HighDimProb.traceMatrixExp_randomMatrixPrefixSum_last X
 
 example {Omega : Type*} [MeasurableSpace Omega]
     {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
