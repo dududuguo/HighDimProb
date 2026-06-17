@@ -251,14 +251,18 @@ family assumptions at `-theta` for the pointwise-negated family at `theta`.
 They do not derive negative assumptions from the existing positive-side
 positive-theta hypotheses, so negative exponential/trace integrability,
 Tropp, and CFC primitive assumptions remain explicit in the current sample
-covariance wrappers.
+covariance wrappers. The negative Tropp primitive boundary audit adds thin
+adapters for second moments, variance proxies, Bernstein K-families,
+per-summand MGF-comparison inputs, and post-provider trace-MGF statements under
+`negRandomMatrixFamily`; these expose original-family negative-theta obligations
+without proving or hiding Tropp/Lieb.
 The previous optimized one-sided quadratic-form theorem remains
 `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 under explicit primitive assumptions.
 
 ## Next Safe Task
 
-- `RM-negative-tropp-primitive-boundary-audit`
+- `RM-negative-trace-mgf-provider-wrapper-audit`
 - Separate local leaf: `RM-BR-natural-history-state-construction`
 
 ## Public Milestone Summary

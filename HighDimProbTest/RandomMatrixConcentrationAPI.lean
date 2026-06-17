@@ -109,8 +109,14 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check randomMatrixSum_negRandomMatrixFamily
 #check traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily
 #check integrableRealRandomVariable_traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily
+#check matrixSecondMoment_negRandomMatrixFamily
+#check matrixVarianceProxy_negRandomMatrixFamily
 #check bernsteinSecondMomentComparisonFamily
 #check bernsteinSecondMomentComparisonFamily_apply
+#check bernsteinSecondMomentComparisonFamily_negRandomMatrixFamily
+#check bernsteinMGFComparison_negRandomMatrixFamily
+#check traceMGFBernsteinVarianceProxyBound_negRandomMatrixFamily
+#check matrixBernsteinTraceMGFWithBernsteinCoeff_negRandomMatrixFamily
 #check matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
 #check matrixBernsteinTraceMGFToLaplaceContract_statement
 #check matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement
@@ -276,8 +282,41 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
       (traceExpIntegrand (randomMatrixSum B) (-theta)) ->
     IntegrableRealRandomVariable P
       (traceExpIntegrand (randomMatrixSum (negRandomMatrixFamily B)) theta))
+#check (matrixSecondMoment_negRandomMatrixFamily (P := P) B :
+  forall i,
+    matrixSecondMoment P (negRandomMatrixFamily B i) =
+      matrixSecondMoment P (B i))
+#check (matrixVarianceProxy_negRandomMatrixFamily (P := P) B :
+  matrixVarianceProxy P (negRandomMatrixFamily B) =
+    matrixVarianceProxy P B)
 #check (bernsteinSecondMomentComparisonFamily P B theta R :
   I -> Matrix (Fin n) (Fin n) Real)
+#check (bernsteinSecondMomentComparisonFamily_negRandomMatrixFamily
+    (P := P) B theta R :
+  forall i,
+    bernsteinSecondMomentComparisonFamily P (negRandomMatrixFamily B) theta R i =
+      bernsteinSecondMomentComparisonFamily P B (-theta) R i)
+#check (bernsteinMGFComparison_negRandomMatrixFamily
+    (P := P) B theta R :
+  (forall i,
+    MatrixLE
+      (matrixExpect P (matrixExpScaledFamily B (-theta) i))
+      (matrixExp (bernsteinSecondMomentComparisonFamily P B (-theta) R i))) ->
+    forall i,
+      MatrixLE
+        (matrixExpect P (matrixExpScaledFamily (negRandomMatrixFamily B) theta i))
+        (matrixExp
+          (bernsteinSecondMomentComparisonFamily P (negRandomMatrixFamily B) theta R i)))
+#check (traceMGFBernsteinVarianceProxyBound_negRandomMatrixFamily
+    (P := P) B M theta R :
+  TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum B) M (-theta) R ->
+    TraceMGFBernsteinVarianceProxyBound P
+      (randomMatrixSum (negRandomMatrixFamily B)) M theta R)
+#check (matrixBernsteinTraceMGFWithBernsteinCoeff_negRandomMatrixFamily
+    (P := P) B theta R :
+  matrixBernsteinTraceMGFWithBernsteinCoeff_statement P B (-theta) R ->
+    matrixBernsteinTraceMGFWithBernsteinCoeff_statement P
+      (negRandomMatrixFamily B) theta R)
 #check (sampleCovarianceCenteredRankOneRadius R : Real)
 #check (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R : Real)
 #check (sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows m R : Real)

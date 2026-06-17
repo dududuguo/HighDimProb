@@ -995,7 +995,7 @@ PointwiseOperatorNormBound_rankOneRandomMatrix_of_sqNorm_bound
 ```
 
 The deterministic lemma proves the finite-dimensional bound
-`||v v?||op <= ||v||?^2 using the existing `deterministicOperatorNorm` /
+`||v v^T||_op <= ||v||_2^2` using the existing `deterministicOperatorNorm` /
 Mathlib L2 operator-norm convention. The wrappers turn pointwise vector
 squared-norm bounds into `BoundedOperatorNorm` and
 `PointwiseOperatorNormBound` for rank-one random matrices.
@@ -1009,9 +1009,18 @@ the example-layer usage wrapper. RM-VP now proves crude variance-proxy control
 from pointwise operator-norm bounds. The rank-one nullspace examples now reuse
 the S6 core bridges. RM-S7E/RM-S7F add the conditional sample-covariance
 operator-norm event bridge and tail wrapper. RM-ON-S5 adds the nonempty wrapper
-without an explicit spectral-bridge assumption. Current next safe task:
-RM-negative-tropp-primitive-boundary-audit. The BR natural history/state
-construction remains a separate local leaf.
+without an explicit spectral-bridge assumption.
+
+RM-negative-tropp-primitive-boundary-audit is complete. The public API now
+includes second-moment, variance-proxy, Bernstein K-family, per-summand
+MGF-comparison, and post-provider bounded trace-MGF sign-normalization adapters
+for `negRandomMatrixFamily`. These expose original-family `-theta` provider
+obligations and do not prove Tropp/Lieb, Golden-Thompson, Bernstein CFC, full
+Matrix Bernstein, or same-theta positive-to-negative transfer.
+
+Current next safe task:
+RM-negative-trace-mgf-provider-wrapper-audit.
+The BR natural history/state construction remains a separate local leaf.
 
 ## RM centered operator-norm prerequisite progress
 
@@ -1037,8 +1046,8 @@ conditional sample-covariance quadratic-form tail wrapper is proved. RM-S5E
 adds the example-layer usage wrapper. RM-VP now proves crude variance-proxy
 control from pointwise operator-norm bounds. The rank-one nullspace examples
 now reuse the S6 core bridges. Current next safe task:
-RM-negative-tropp-primitive-boundary-audit. The BR natural history/state
-construction remains a separate local leaf.
+RM-negative-trace-mgf-provider-wrapper-audit.
+The BR natural history/state construction remains a separate local leaf.
 
 
 ## RM vector-to-rank-one matrix measurability / integrability prerequisite progress
@@ -1065,8 +1074,8 @@ core sample-covariance tail helper names instead of defining local
 radius/theta/RHS copies. RM-VP now proves crude variance-proxy control. The
 rank-one nullspace examples now reuse the S6 core bridges. Current next safe
 task:
-RM-negative-tropp-primitive-boundary-audit. The BR natural history/state
-construction remains a separate local leaf.
+RM-negative-trace-mgf-provider-wrapper-audit.
+The BR natural history/state construction remains a separate local leaf.
 
 
 ## RM centered rank-one structural adapter progress
@@ -1107,8 +1116,8 @@ RM-VP variance-proxy control is complete. It proves the crude pointwise
 operator-norm route and the centered rank-one / sample-covariance row
 rank-one specializations. The rank-one nullspace example cleanup is complete.
 RM-negative-square-integrability-adapters is complete. Current next safe task:
-RM-negative-tropp-primitive-boundary-audit. The BR natural history/state
-construction remains a separate local leaf.
+RM-negative-trace-mgf-provider-wrapper-audit.
+The BR natural history/state construction remains a separate local leaf.
 
 
 ## RM PSD nullspace converse prerequisite progress
@@ -1132,8 +1141,8 @@ Bernstein tail theorem.
 
 RM-VP variance-proxy control is complete. The rank-one nullspace example
 cleanup is complete. RM-negative-square-integrability-adapters is complete.
-Current next safe task: RM-negative-tropp-primitive-boundary-audit. The BR
-natural history/state construction remains a separate local leaf.
+Current next safe task: RM-negative-trace-mgf-provider-wrapper-audit.
+The BR natural history/state construction remains a separate local leaf.
 
 
 ## RM rank-one kernel nullspace API progress
@@ -1161,5 +1170,5 @@ The rank-one nullspace examples now reuse the S6 core bridges where they remove
 local action/sum algebra.
 
 Current next safe task:
-RM-negative-tropp-primitive-boundary-audit. The BR natural history/state
-construction remains a separate local leaf.
+RM-negative-trace-mgf-provider-wrapper-audit.
+The BR natural history/state construction remains a separate local leaf.

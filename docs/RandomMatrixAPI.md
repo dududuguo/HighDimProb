@@ -287,7 +287,7 @@ mainline. It is documentation only; theorem status is not upgraded here.
   documented in the trace-exp section below.
 - RM-ON-S8 documentation synchronization records the S6 example update and S7
   test/judge update without changing the API surface.
-- Next safe task: `RM-negative-tropp-primitive-boundary-audit`.
+- Next safe task: `RM-negative-trace-mgf-provider-wrapper-audit`.
 - Separate local leaf: `RM-BR-natural-history-state-construction`.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
@@ -986,13 +986,32 @@ negative-theta obligations are available. They do not prove matrix-exponential
 integrability, trace-integrability, CFC, or Tropp from the current positive-side
 positive-theta assumptions.
 
+## Completed Negative Tropp Primitive Boundary Audit
+
+RM-negative-tropp-primitive-boundary-audit adds thin sign-normalization adapters
+for the negative-family finite-family Tropp boundary:
+
+- `matrixSecondMoment_negRandomMatrixFamily`;
+- `matrixVarianceProxy_negRandomMatrixFamily`;
+- `bernsteinSecondMomentComparisonFamily_negRandomMatrixFamily`;
+- `bernsteinMGFComparison_negRandomMatrixFamily`;
+- `traceMGFBernsteinVarianceProxyBound_negRandomMatrixFamily`;
+- `matrixBernsteinTraceMGFWithBernsteinCoeff_negRandomMatrixFamily`.
+
+These adapters prove only algebraic normalization of second moments, variance
+proxies, canonical Bernstein K-families, per-summand MGF-comparison inputs, and
+post-provider bounded trace-MGF statements for `negRandomMatrixFamily`. They
+expose the required original-family `-theta` obligations without proving the
+finite-family Tropp/Lieb primitive, Golden-Thompson, Bernstein CFC, full Matrix
+Bernstein, or any same-theta positive-to-negative transfer.
+
 ## Next Safe Task
 
-RM-negative-tropp-primitive-boundary-audit: audit the finite-family Tropp primitive boundary for the negative
-family.  This should determine which variance-proxy/K-family equalities,
-trace-MGF sign rewrites, and MGF-comparison hypotheses would be required before
-any honest Tropp transfer can be exposed. Golden-Thompson, Lieb, Bernstein CFC,
-and full Matrix Bernstein remain explicit blockers.
+RM-negative-trace-mgf-provider-wrapper-audit: audit whether negative-side tail
+wrappers should accept explicit original-family negative-theta trace-MGF
+providers and route them through the new sign-normalization API, without
+claiming Tropp/Lieb, Golden-Thompson, Bernstein CFC, full Matrix Bernstein, or
+same-theta positive-to-negative transfer.
 
 Separate local leaf: `RM-BR-natural-history-state-construction` should use the
 prefix/suffix bookkeeping API to construct the natural history/state route for
@@ -1063,5 +1082,5 @@ a parallel arbitrary-index Tropp primitive.
 - The RM-BR prefix/suffix API adds only finite-sum/state bookkeeping for the
   natural-state construction leaf; it does not prove Lieb, Bernstein CFC,
   Golden-Thompson, Matrix Bernstein, or arbitrary finite-index Tropp.
-- Next safe task: RM-negative-tropp-primitive-boundary-audit.
+- Next safe task: RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.

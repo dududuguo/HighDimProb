@@ -1380,6 +1380,13 @@
   conditional-step/state package. Keep the history/state construction work
   named and local before exposing any downstream Matrix Bernstein wrapper or
   larger assumption bundle.
+- Follow-up result: `RM-negative-tropp-primitive-boundary-audit` exposes only
+  the algebraic negative-family boundary around finite-family Tropp inputs:
+  second moments, variance proxies, Bernstein K-families, per-summand MGF
+  comparison inputs, and post-provider bounded trace-MGF statements normalize
+  from `negRandomMatrixFamily A` at `theta` to original-family obligations at
+  `-theta`. This does not prove Tropp/Lieb, Golden-Thompson, Bernstein CFC,
+  full Matrix Bernstein, or same-theta positive-to-negative transfer.
 
 ## RM Matrix Bernstein assumption bundles
 

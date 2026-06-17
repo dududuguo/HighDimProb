@@ -730,6 +730,14 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   `randomMatrixSum`, and `traceExpIntegrand` on `negRandomMatrixFamily`.
   These checks intentionally expose the negative-theta input obligations rather
   than claiming same-theta positive-to-negative transfer.
+- RM-negative-tropp-primitive-boundary-audit adds focused `#check` coverage in
+  `HighDimProbTest/RandomMatrixConcentrationAPI.lean` and
+  `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean` for second-moment,
+  variance-proxy, Bernstein K-family, per-summand MGF-comparison, and
+  post-provider bounded trace-MGF sign-normalization APIs. These checks expose
+  original-family `-theta` provider obligations and do not claim Tropp/Lieb,
+  Golden-Thompson, Bernstein CFC, full Matrix Bernstein, or same-theta
+  positive-to-negative transfer.
 - RM-ON-S6 focused validation runs
   `lake build HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage` to
   check the example surface against the latest nonempty sample-covariance

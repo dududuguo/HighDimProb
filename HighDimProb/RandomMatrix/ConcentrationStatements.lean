@@ -273,6 +273,35 @@ theorem integrableRandomMatrix_randomMatrixSquare_negRandomMatrixFamily
   intro i
   simpa [randomMatrixSquare_negRandomMatrixFamily (A := A) i] using hA i
 
+/-- The second-moment matrix is unchanged by pointwise family negation.
+
+This is a variance-proxy boundary adapter for the negative-family Matrix
+Bernstein route. It is only the algebraic square fact `(-A)^2 = A^2`; it does
+not prove any Tropp/Lieb or integrability input. -/
+theorem matrixSecondMoment_negRandomMatrixFamily {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {I : Type*} {n : Nat}
+    (A : I -> RandomMatrix Omega n n) :
+    forall i,
+      matrixSecondMoment P ((negRandomMatrixFamily A) i) =
+        matrixSecondMoment P (A i) := by
+  intro i
+  unfold matrixSecondMoment
+  rw [randomMatrixSquare_negRandomMatrixFamily]
+
+/-- The matrix variance proxy is unchanged by pointwise family negation.
+
+This names the variance-proxy equality needed before any honest negative-family
+Tropp boundary transfer can be stated. -/
+theorem matrixVarianceProxy_negRandomMatrixFamily {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega}
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n) :
+    matrixVarianceProxy P (negRandomMatrixFamily A) = matrixVarianceProxy P A := by
+  unfold matrixVarianceProxy
+  apply Finset.sum_congr rfl
+  intro i _hi
+  exact matrixSecondMoment_negRandomMatrixFamily (P := P) (A := A) i
+
 @[simp]
 theorem matrixExpScaledFamily_apply {Omega : Type*} [MeasurableSpace Omega]
     {I : Type*} {n : Nat} (A : I -> RandomMatrix Omega n n)
@@ -386,6 +415,89 @@ theorem bernsteinSecondMomentComparisonFamily_apply {Omega : Type*}
       SMul.smul (bernsteinMGFCoeff theta R)
         (matrixSecondMoment P (A i)) :=
   rfl
+
+/-- The canonical Bernstein second-moment comparison family is sign-normalized
+by passing from `theta` on the pointwise-negated family to `-theta` on the
+original family.
+
+This is only the K-family equality used by the finite-family Tropp boundary. It
+does not prove the Tropp/Lieb primitive or the per-summand MGF comparison. -/
+theorem bernsteinSecondMomentComparisonFamily_negRandomMatrixFamily
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {I : Type*} {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (theta R : Real) :
+    forall i,
+      bernsteinSecondMomentComparisonFamily P (negRandomMatrixFamily A) theta R i =
+        bernsteinSecondMomentComparisonFamily P A (-theta) R i := by
+  intro i
+  rw [bernsteinSecondMomentComparisonFamily_apply,
+    bernsteinSecondMomentComparisonFamily_apply]
+  rw [matrixSecondMoment_negRandomMatrixFamily (P := P) (A := A) i]
+  rw [bernsteinMGFCoeff_neg]
+
+/-- Transfer the canonical per-summand Matrix-MGF comparison input from the
+original family at `-theta` to the pointwise-negated family at `theta`.
+
+This is a Tropp-input adapter only. It assumes the original-family MGF
+comparison at the opposite parameter and does not prove the finite-family
+Tropp/Lieb primitive. -/
+theorem bernsteinMGFComparison_negRandomMatrixFamily {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {I : Type*} {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (theta R : Real)
+    (hA :
+      forall i,
+        MatrixLE
+          (matrixExpect P (matrixExpScaledFamily A (-theta) i))
+          (matrixExp (bernsteinSecondMomentComparisonFamily P A (-theta) R i))) :
+    forall i,
+      MatrixLE
+        (matrixExpect P (matrixExpScaledFamily (negRandomMatrixFamily A) theta i))
+        (matrixExp
+          (bernsteinSecondMomentComparisonFamily P (negRandomMatrixFamily A) theta R i)) := by
+  intro i
+  rw [matrixExpScaledFamily_negRandomMatrixFamily (A := A) theta i]
+  rw [bernsteinSecondMomentComparisonFamily_negRandomMatrixFamily
+    (P := P) (A := A) theta R i]
+  exact hA i
+
+/-- Semantic bounded trace-MGF transfer from an original family at `-theta` to
+the pointwise-negated family at `theta`.
+
+This is a post-provider sign-normalization theorem. It transfers an already
+supplied bounded trace-MGF statement; it does not prove Tropp/Lieb,
+Golden-Thompson, or any trace-MGF provider. -/
+theorem traceMGFBernsteinVarianceProxyBound_negRandomMatrixFamily
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (V : Matrix (Fin n) (Fin n) Real)
+    (theta R : Real)
+    (hA :
+      TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum A) V (-theta) R) :
+    TraceMGFBernsteinVarianceProxyBound P
+      (randomMatrixSum (negRandomMatrixFamily A)) V theta R := by
+  unfold TraceMGFBernsteinVarianceProxyBound TraceMGFBound traceExpMoment at *
+  rw [traceExpIntegrand_randomMatrixSum_negRandomMatrixFamily (A := A) theta]
+  rw [bernsteinMGFCoeff_neg] at hA
+  exact hA
+
+/-- The bounded Matrix Bernstein trace-MGF statement sign-normalizes from the
+original family at `-theta` to the pointwise-negated family at `theta`.
+
+This theorem is downstream of a trace-MGF provider. It does not prove the
+finite-family Tropp primitive; it only rewrites the already supplied semantic
+trace-MGF statement through the negative-family variance-proxy and trace-exp
+equalities. -/
+theorem matrixBernsteinTraceMGFWithBernsteinCoeff_negRandomMatrixFamily
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (theta R : Real)
+    (hA : matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A (-theta) R) :
+    matrixBernsteinTraceMGFWithBernsteinCoeff_statement P
+      (negRandomMatrixFamily A) theta R := by
+  unfold matrixBernsteinTraceMGFWithBernsteinCoeff_statement at *
+  rw [matrixVarianceProxy_negRandomMatrixFamily (P := P) (A := A)]
+  exact traceMGFBernsteinVarianceProxyBound_negRandomMatrixFamily A
+    (matrixVarianceProxy P A) theta R hA
 
 /-- Positive-side assumptions shared by optimized Matrix Bernstein tail wrappers.
 

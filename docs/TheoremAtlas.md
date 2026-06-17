@@ -91,11 +91,6 @@ Done: `RM-negative-square-integrability-adapters` removes the explicit
 negative square-integrability assumption from the preferred bounded-row
 sample-covariance operator-norm wrapper.
 
-Next safe task:
-`RM-negative-tropp-primitive-boundary-audit`.
-
-Separate local leaf: `RM-BR-natural-history-state-construction`.
-
 Completed: `RM-negative-exp-trace-primitive-audit`.
 
 Added sign-normalization adapters:
@@ -109,6 +104,23 @@ Added sign-normalization adapters:
 These expose only the `theta`/`-theta` algebraic boundary and keep Tropp/Lieb,
 Bernstein CFC, Golden-Thompson, full Matrix Bernstein, and current positive-theta
 to negative-side assumption transfer unproved.
+
+Completed: `RM-negative-tropp-primitive-boundary-audit`.
+
+Added boundary adapters:
+`matrixSecondMoment_negRandomMatrixFamily`,
+`matrixVarianceProxy_negRandomMatrixFamily`,
+`bernsteinSecondMomentComparisonFamily_negRandomMatrixFamily`,
+`bernsteinMGFComparison_negRandomMatrixFamily`,
+`traceMGFBernsteinVarianceProxyBound_negRandomMatrixFamily`, and
+`matrixBernsteinTraceMGFWithBernsteinCoeff_negRandomMatrixFamily`.
+These expose second-moment, variance-proxy, K-family, per-summand
+MGF-comparison, and post-provider trace-MGF sign normalization without proving
+Tropp/Lieb, Golden-Thompson, Bernstein CFC, full Matrix Bernstein, or
+same-theta positive-to-negative transfer.
+
+Next safe task:
+`RM-negative-trace-mgf-provider-wrapper-audit`.
 
 ## Milestone 3 scalar implication closeout
 
@@ -1266,7 +1278,7 @@ future directions.
 - Test modules: `HighDimProbTest/RandomMatrixConcentrationAPI.lean` and
   `HighDimProbTest/ExamplesAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`
-- Priority: RM-negative-tropp-primitive-boundary-audit.
+- Priority: RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
 
 ## sample covariance variance-proxy control
@@ -1304,7 +1316,7 @@ future directions.
   `HighDimProb/RandomMatrix/ConcentrationStatements.lean`.
 - Status note: RM-VP complete.
 - Current next safe task:
-  RM-negative-tropp-primitive-boundary-audit.
+  RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
 
 ## sample covariance PSD bridge
@@ -1517,7 +1529,7 @@ future directions.
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`.
 - Priority: Stage MB-S2 through MB-S9-foundation complete; negative-family
   adapters complete; current next task is
-  RM-negative-tropp-primitive-boundary-audit.
+  RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
@@ -1917,7 +1929,7 @@ future directions.
   `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`,
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
-- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
+- Priority: next safe task is RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
@@ -2094,7 +2106,7 @@ future directions.
 - Target module: `HighDimProb/RandomMatrix/TraceExp.lean`
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
-- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
+- Priority: next safe task is RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
@@ -2238,7 +2250,7 @@ future directions.
   would make public signatures worse than the finite-family primitive route.
   The Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and
   the Matrix Bernstein tail theorem remain unproved.
-- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
+- Priority: next safe task is RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
 
 
@@ -2257,7 +2269,7 @@ future directions.
 - Blocker: the result is still one-sided and quadratic-form under explicit
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
-- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
+- Priority: next safe task is RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
@@ -2278,7 +2290,7 @@ future directions.
 - Blocker: prove or sharpen the real trace-MGF to lintegral bridge; keep the
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
-- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
+- Priority: next safe task is RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
 
 ## RM Centered Structural API
@@ -2303,7 +2315,7 @@ future directions.
   operator-norm layer now supplies the Bochner bridge and expectation
   contraction.
 - Blocker: none for structural centeredness.
-- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
+- Priority: next safe task is RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
 
 ## RM Centered Operator-Norm Bound
@@ -2326,7 +2338,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
+- Priority: next safe task is RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
 
 
@@ -2345,7 +2357,7 @@ future directions.
 - Status: proven, API-tested, and judge-tested.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
-- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
+- Priority: next safe task is RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
 
 
@@ -2361,7 +2373,7 @@ future directions.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters, lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb,
   Bernstein CFC, or Golden-Thompson.
-- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
+- Priority: next safe task is RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
 
 
@@ -2379,7 +2391,7 @@ future directions.
 - Blocker: this does not prove integrability from measurability alone,
   sample-covariance Matrix Bernstein assumption adapters, or Matrix Bernstein
   tails.
-- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
+- Priority: next safe task is RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
 
 
@@ -2399,5 +2411,5 @@ future directions.
 - Blocker: this is only a deterministic PSD kernel bridge. It does not prove
   covariance expectation identities, sample-covariance Matrix Bernstein
   assumption adapters, or Matrix Bernstein tails.
-- Priority: next safe task is RM-negative-tropp-primitive-boundary-audit.
+- Priority: next safe task is RM-negative-trace-mgf-provider-wrapper-audit.
 - Separate local leaf: RM-BR-natural-history-state-construction.
