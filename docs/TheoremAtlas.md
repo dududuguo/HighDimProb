@@ -87,6 +87,10 @@ construction leaf only; it does not prove Lieb, Bernstein CFC,
 Golden-Thompson, Matrix Bernstein, or an arbitrary finite-index Tropp
 provider.
 
+Done: `RM-negative-square-integrability-adapters` removes the explicit
+negative square-integrability assumption from the preferred bounded-row
+sample-covariance operator-norm wrapper.
+
 Next safe task:
 `RM-BR-natural-history-state-construction`.
 
@@ -1247,6 +1251,8 @@ future directions.
   `HighDimProbTest/ExamplesAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`
 - Repository next safe task: RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 ## sample covariance variance-proxy control
 - Book heading: sample covariance and Matrix Bernstein prerequisites
@@ -1284,6 +1290,8 @@ future directions.
 - Status note: RM-VP complete.
 - Repository next safe task:
   RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 ## sample covariance PSD bridge
 - Book heading: sample covariance and PSD prerequisites
@@ -1496,6 +1504,8 @@ future directions.
 - Repository next safe task after MB-S2 through MB-S9-foundation and
   negative-family adapter cleanup:
   RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 ## Trace-Exponential Positivity Bridge (MB-S3/MB-S4)
 
@@ -1895,6 +1905,8 @@ future directions.
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`, and
   `HighDimProbJudge/RandomMatrix/StatementUse.lean`.
 - Repository next safe task: RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 ## PSD of Matrix Square / Second Moment / Variance Proxy (MB-S1)
 
@@ -2071,6 +2083,8 @@ future directions.
 - Test module: `HighDimProbTest/RandomMatrixTraceExpAPI.lean`
 - Judge module: `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`
 - Repository next safe task: RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 ## Matrix Exponential Lower Bound (MB-S9-exp-lower-bound-proof)
 
@@ -2214,6 +2228,8 @@ future directions.
   The Bernstein CFC primitive remains typed only; Lieb, Golden-Thompson, and
   the Matrix Bernstein tail theorem remain unproved.
 - Repository next safe task: RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 
 
@@ -2232,6 +2248,8 @@ future directions.
   Tropp/Lieb and Bernstein CFC primitives; lambda-max/operator-norm tail
   bridges and the full Matrix Bernstein theorem remain unproved.
 - Repository next safe task: RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 ## Matrix Bernstein Trace-MGF to Laplace/Tail Contract (MB-S9)
 
@@ -2252,6 +2270,8 @@ future directions.
   event-subset, Tropp/Lieb, Bernstein CFC, Golden-Thompson, and Matrix
   Bernstein tail theorem gaps explicit.
 - Repository next safe task: RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 ## RM Centered Structural API
 
@@ -2276,6 +2296,8 @@ future directions.
   contraction.
 - Blocker: none for structural centeredness.
 - Repository next safe task: RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 ## RM Centered Operator-Norm Bound
 
@@ -2298,6 +2320,8 @@ future directions.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
 - Repository next safe task: RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 
 ## RM Centered Rank-One Structural Adapter
@@ -2316,6 +2340,8 @@ future directions.
 - Blocker: this does not prove sample-covariance Matrix Bernstein assumption
   adapters or Matrix Bernstein tails.
 - Repository next safe task: RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 
 ## RM Centered Rank-One Operator-Norm Adapter
@@ -2331,6 +2357,8 @@ future directions.
   adapters, lambda-max/operator-norm Matrix Bernstein tails, Tropp/Lieb,
   Bernstein CFC, or Golden-Thompson.
 - Repository next safe task: RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 
 ## RM Vector-to-Rank-One Matrix Measurability / Integrability
@@ -2348,6 +2376,8 @@ future directions.
   sample-covariance Matrix Bernstein assumption adapters, or Matrix Bernstein
   tails.
 - Repository next safe task: RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 
 ## RM PSD Nullspace Converse
@@ -2367,3 +2397,5 @@ future directions.
   covariance expectation identities, sample-covariance Matrix Bernstein
   assumption adapters, or Matrix Bernstein tails.
 - Repository next safe task: RM-BR-natural-history-state-construction.
+  Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.

@@ -1010,7 +1010,9 @@ from pointwise operator-norm bounds. The rank-one nullspace examples now reuse
 the S6 core bridges. RM-S7E/RM-S7F add the conditional sample-covariance
 operator-norm event bridge and tail wrapper. RM-ON-S5 adds the nonempty wrapper
 without an explicit spectral-bridge assumption. Current next safe task:
-RM-BR-natural-history-state-construction.
+RM-BR-natural-history-state-construction. The negative square-integrability
+adapter is complete; negative exp/trace/CFC/Tropp assumptions remain a
+separate audit surface.
 
 ## RM centered operator-norm prerequisite progress
 
@@ -1036,7 +1038,9 @@ conditional sample-covariance quadratic-form tail wrapper is proved. RM-S5E
 adds the example-layer usage wrapper. RM-VP now proves crude variance-proxy
 control from pointwise operator-norm bounds. The rank-one nullspace examples
 now reuse the S6 core bridges. Current next safe task:
-RM-BR-natural-history-state-construction.
+RM-BR-natural-history-state-construction. The negative square-integrability
+adapter is complete; negative exp/trace/CFC/Tropp assumptions remain a
+separate audit surface.
 
 
 ## RM vector-to-rank-one matrix measurability / integrability prerequisite progress
@@ -1063,7 +1067,9 @@ core sample-covariance tail helper names instead of defining local
 radius/theta/RHS copies. RM-VP now proves crude variance-proxy control. The
 rank-one nullspace examples now reuse the S6 core bridges. Current next safe
 task:
-RM-BR-natural-history-state-construction.
+RM-BR-natural-history-state-construction. The negative square-integrability
+adapter is complete; negative exp/trace/CFC/Tropp assumptions remain a
+separate audit surface.
 
 
 ## RM centered rank-one structural adapter progress
@@ -1104,6 +1110,8 @@ RM-VP variance-proxy control is complete. It proves the crude pointwise
 operator-norm route and the centered rank-one / sample-covariance row
 rank-one specializations. The rank-one nullspace example cleanup is complete.
 Current next safe task: RM-BR-natural-history-state-construction.
+The negative square-integrability adapter is complete; negative
+exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 
 ## RM PSD nullspace converse prerequisite progress
@@ -1127,7 +1135,9 @@ Bernstein tail theorem.
 
 RM-VP variance-proxy control is complete. The rank-one nullspace example
 cleanup is complete. Current next safe task:
-RM-BR-natural-history-state-construction.
+RM-BR-natural-history-state-construction. The negative square-integrability
+adapter is complete; negative exp/trace/CFC/Tropp assumptions remain a
+separate audit surface.
 
 
 ## RM rank-one kernel nullspace API progress
@@ -1155,4 +1165,6 @@ The rank-one nullspace examples now reuse the S6 core bridges where they remove
 local action/sum algebra.
 
 Current next safe task:
-RM-BR-natural-history-state-construction.
+RM-BR-natural-history-state-construction. The negative square-integrability
+adapter is complete; negative exp/trace/CFC/Tropp assumptions remain a
+separate audit surface.

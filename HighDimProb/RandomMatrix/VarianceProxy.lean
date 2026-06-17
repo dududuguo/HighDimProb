@@ -38,6 +38,13 @@ theorem matrixSquare_apply {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
     matrixSquare A i j = Finset.univ.sum fun k : Fin n => A i k * A k j := by
   simp [matrixSquare, Matrix.mul_apply]
 
+/-- Matrix squaring is invariant under pointwise negation. -/
+@[simp]
+theorem matrixSquare_neg {n : Nat} (A : Matrix (Fin n) (Fin n) Real) :
+    matrixSquare (-A) = matrixSquare A := by
+  ext i j
+  simp [matrixSquare, Matrix.mul_apply]
+
 /-- Pointwise square of a square random matrix. -/
 def randomMatrixSquare {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (A : RandomMatrix Omega n n) : RandomMatrix Omega n n :=
@@ -48,6 +55,14 @@ theorem randomMatrixSquare_apply {Omega : Type*} [MeasurableSpace Omega]
     {n : Nat} (A : RandomMatrix Omega n n) (omega : Omega) :
     randomMatrixSquare A omega = matrixSquare (A omega) :=
   rfl
+
+/-- Pointwise random-matrix squaring is invariant under pointwise negation. -/
+@[simp]
+theorem randomMatrixSquare_neg {Omega : Type*} [MeasurableSpace Omega]
+    {n : Nat} (A : RandomMatrix Omega n n) :
+    randomMatrixSquare (negRandomMatrix A) = randomMatrixSquare A := by
+  funext omega
+  simp [randomMatrixSquare, negRandomMatrix]
 
 /-- Entrywise measurability of the pointwise matrix square. -/
 theorem isRandomMatrix_matrixSquare {Omega : Type*} [MeasurableSpace Omega]

@@ -86,6 +86,16 @@ def scaledRandomMatrixFamily {Omega : Type*} [MeasurableSpace Omega]
     I -> RandomMatrix Omega m n :=
   fun i => scaledRandomMatrix theta (A i)
 
+/--
+Pointwise negation of a random matrix.
+
+This names the object-level negative adapter so public theorem statements can
+refer to a negated random matrix without exposing an anonymous lambda.
+-/
+def negRandomMatrix {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (A : RandomMatrix Omega m n) : RandomMatrix Omega m n :=
+  fun omega => -(A omega)
+
 @[simp]
 theorem scaledRandomMatrix_apply {Omega : Type*} [MeasurableSpace Omega]
     {m n : Nat} (theta : Real) (A : RandomMatrix Omega m n)
@@ -105,6 +115,12 @@ theorem scaledRandomMatrixFamily_apply_apply {Omega : Type*}
     [MeasurableSpace Omega] {I : Type*} {m n : Nat} (theta : Real)
     (A : I -> RandomMatrix Omega m n) (i : I) (omega : Omega) :
     scaledRandomMatrixFamily theta A i omega = SMul.smul theta (A i omega) :=
+  rfl
+
+@[simp]
+theorem negRandomMatrix_apply {Omega : Type*} [MeasurableSpace Omega]
+    {m n : Nat} (A : RandomMatrix Omega m n) (omega : Omega) :
+    negRandomMatrix A omega = -(A omega) :=
   rfl
 
 /-- Pointwise scalar multiplication preserves entrywise random-matrix
@@ -128,6 +144,16 @@ theorem isRandomMatrix_scaledRandomMatrixFamily {Omega : Type*}
   intro i
   simpa [scaledRandomMatrixFamily] using
     isRandomMatrix_scaledRandomMatrix (P := P) (A := A i) theta (hA i)
+
+/-- Pointwise negation preserves entrywise random-matrix measurability. -/
+theorem isRandomMatrix_negRandomMatrix {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {m n : Nat}
+    {A : RandomMatrix Omega m n}
+    (hA : IsRandomMatrix P A) :
+    IsRandomMatrix P (negRandomMatrix A) := by
+  intro i j
+  change Measurable (fun omega => -(A omega i j))
+  exact (hA i j).neg
 
 /--
 Deterministic rank-one self outer-product matrix associated to a vector.

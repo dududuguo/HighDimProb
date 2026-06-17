@@ -72,9 +72,9 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
   operator-norm Matrix Bernstein/sample-covariance wrappers while keeping
   Tropp, CFC, independence, and integrability assumptions explicit. The
   current arbitrary-dimensional route is positive-threshold only; the negative
-  family adapter branch is complete. The next RandomMatrix assumption cleanup
-  is `RM-TROPP-S11-history-state-adapters`, which should
-  add named history/state constructors and reindex adapters before any
-  downstream wrapper or assumption bundle is exposed.
+  family structural and square-integrability adapters are complete. Remaining
+  negative exp/trace/CFC/Tropp assumptions should be audited separately, while
+  the local finite history/state construction should stay named before any
+  larger downstream wrapper is exposed.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.

@@ -112,12 +112,12 @@ theorem sampleCovariance_quadraticForm_tail_usage
 operator-norm tail wrapper.
 
 The positive-sign sample-covariance assumptions reuse
-`SampleCovarianceTailAssumptions`. For the negative sign, this example follows
-the adapter-based core wrapper: the row squared-norm bound is explicit, while
-centeredness, independence, entrywise integrability, and pointwise
-operator-norm control are derived by named negative-family adapters. The
-remaining square/exponential/trace integrability, Tropp, and Bernstein CFC
-primitives stay explicit. -/
+`SampleCovarianceTailAssumptions`. Negative-sign structure, entrywise
+integrability, independence, square-integrability, and pointwise operator-norm
+bounds are supplied by named row/negation adapters from the row `MemLp 2`,
+positive square-integrability, and row squared-norm assumptions. Negative
+matrix-exponential integrability, trace-integrability, CFC, and Tropp
+primitives remain explicit. -/
 structure SampleCovarianceOperatorNormTailAssumptions {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
     {m n : Nat}
@@ -128,11 +128,6 @@ structure SampleCovarianceOperatorNormTailAssumptions {Omega : Type*}
   rowSqNormBoundNeg :
     forall k : Fin m, forall omega,
       vectorSqNorm (rowVector A k omega) <= Rneg
-  squareIntegrableNeg :
-    forall k : Fin m,
-      IntegrableRandomMatrix P
-        (randomMatrixSquare
-          ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) k))
   expIntegrableNeg :
     forall k : Fin m,
       IntegrableRandomMatrix P
@@ -173,8 +168,9 @@ structure SampleCovarianceOperatorNormTailAssumptions {Omega : Type*}
 /-- Preferred example-level sample-covariance operator-norm tail wrapper.
 
 This is only a readability layer over
-`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`;
-the example leaves only the analytic Matrix Bernstein primitives explicit. -/
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`;
+all analytic assumptions that are not discharged by named row/negation adapters
+remain visible in `SampleCovarianceOperatorNormTailAssumptions`. -/
 theorem sampleCovariance_operatorNorm_tail_usage
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {m n : Nat}
@@ -191,7 +187,7 @@ theorem sampleCovariance_operatorNorm_tail_usage
           (m := m) (n := n + 1) Rneg t
           (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg) := by
   exact
-    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters
+    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters
       (P := P) A R Rneg t
       h.positive.sampleCountPositive
       h.positive.randomMatrix
@@ -206,7 +202,6 @@ theorem sampleCovariance_operatorNorm_tail_usage
       h.positive.deviationPositive
       h.positive.cfcPrimitive
       h.positive.troppPrimitive
-      h.squareIntegrableNeg
       h.expIntegrableNeg
       h.traceExpIntegrableNeg
       h.radiusPositiveNeg

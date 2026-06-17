@@ -60,8 +60,6 @@ variable (kernelHExplicitPSD : IsPSDMatrix kernelA)
 #check AttentionFeatureGramTailAssumptions
 #check attentionFeatureGram_quadraticForm_tail_usage
 #check attentionFeatureGram_operatorNorm_tail_usage
-#check PositiveBoundedRowSampleCovarianceAssumptions
-#check NegativeBoundedRowSampleCovarianceAssumptions
 #check boundedRowSampleCovariance_operatorNorm_tail_usage
 #check EmpiricalFisherTailAssumptions
 #check empiricalFisher_operatorNorm_tail_usage

@@ -41,6 +41,8 @@
   - Current repository next task:
     RM-BR-natural-history-state-construction; matrix
     Bernstein, Hanson-Wright, and WLLN/SLLN remain separate future directions
+    Negative square-integrability adapters are complete; negative exp/trace/CFC/Tropp
+    assumptions remain a separate audit surface.
 - OrliczToTail
 - TailToOrlicz
 - MomentImplications

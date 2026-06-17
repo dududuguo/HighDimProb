@@ -710,13 +710,16 @@ TODO: enable `lake lint` and import-minimization checks later with the Batteries
   `boundedRowSampleCovariance_operatorNorm_tail_usage` call the adapter-based
   bounded-row theorem, so the examples no longer ask users to provide negative
   centeredness, independence, entrywise integrability, or pointwise
-  operator-norm assumptions directly.
+  operator-norm assumptions directly. The bounded-row example reuses
+  `SampleCovarianceOperatorNormTailAssumptions` rather than checking separate
+  positive/negative local assumption bundles.
 - RM-negative-family-adapters adds focused `#check` coverage in
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean` and
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean` for the generic
   negative-family adapters, the sample-covariance negative row-rank-one
   adapters, and
-  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`.
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`, plus the square-negation declarations and
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`.
 - RM-ON-S6 focused validation runs
   `lake build HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage` to
   check the example surface against the latest nonempty sample-covariance

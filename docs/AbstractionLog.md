@@ -1371,11 +1371,15 @@
   adapters now remove duplicated negative-family structural, entrywise
   integrability, independence, and pointwise-bound assumptions from the lighter
   bounded-row operator-norm wrapper.
-- Follow-up path: the negative-family adapter cleanup is complete. The current
-  abstraction pressure is the S5 conditional-step/state package. The next pass
-  should add named history/state constructors and reindex adapters before any
-  downstream Matrix Bernstein conditional-step wrapper or assumption bundle is
-  exposed.
+- Follow-up result: `RM-negative-square-integrability-adapters` removes the
+  remaining negative square-integrability assumption when `randomMatrixSquare`
+  under pointwise negation is a thin transfer. The next boundary is an audit of
+  negative matrix-exponential/trace/CFC/Tropp primitives, which are not square
+  rewrites.
+- Follow-up path: the remaining abstraction pressure is the finite
+  conditional-step/state package. Keep the history/state construction work
+  named and local before exposing any downstream Matrix Bernstein wrapper or
+  larger assumption bundle.
 
 ## RM Matrix Bernstein assumption bundles
 

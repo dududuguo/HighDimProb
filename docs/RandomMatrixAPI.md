@@ -286,6 +286,8 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - RM-ON-S8 documentation synchronization records the S6 example update and S7
   test/judge update without changing the API surface.
 - Next safe task: `RM-BR-natural-history-state-construction`.
+- Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 ## `HighDimProb/RandomMatrix/Basic.lean`
 
@@ -295,12 +297,16 @@ mainline. It is documentation only; theorem status is not upgraded here.
 - `scaledRandomMatrix`: def, named pointwise scalar multiple of a random
   matrix.
 - `scaledRandomMatrixFamily`: def, named family-level scalar-multiple adapter.
+- `negRandomMatrix`: def, named pointwise negation adapter for a random matrix.
 - `scaledRandomMatrix_apply`: theorem.
 - `scaledRandomMatrixFamily_apply`: theorem.
 - `scaledRandomMatrixFamily_apply_apply`: theorem.
+- `negRandomMatrix_apply`: theorem.
 - `isRandomMatrix_scaledRandomMatrix`: theorem, scalar multiplication
   preserves entrywise random-matrix measurability.
 - `isRandomMatrix_scaledRandomMatrixFamily`: theorem, family-level version.
+- `isRandomMatrix_negRandomMatrix`: theorem, pointwise negation preserves
+  entrywise random-matrix measurability.
 - `rankOneMatrix`: def, deterministic rank-one self outer-product matrix.
 - `rankOneRandomMatrix`: def, vector-to-rank-one random matrix with entries
   `X_i * X_j`.
@@ -874,10 +880,24 @@ mainline. It is documentation only; theorem status is not upgraded here.
   sample-covariance adapters deriving the negative centered row-rank-one
   family assumptions from row measurability, `MemLp 2`, and row squared-norm
   bounds.
+- `matrixSquare_neg`, `randomMatrixSquare_neg`: deterministic and named
+  `negRandomMatrix` pointwise square identities for `(-X)^2 = X^2`.
+- `randomMatrixSquare_negRandomMatrixFamily`,
+  `integrableRandomMatrix_randomMatrixSquare_negRandomMatrixFamily`:
+  generic negative-family square and square-integrability adapters.
+- `centeredSampleCovarianceRowRankOneFamilyNeg_squareIntegrable_of_squareIntegrable`:
+  derives negative centered sample-covariance row-rank-one square-integrability
+  from the positive family by the square-negation identity.
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`:
   lighter arbitrary positive-threshold bounded-row operator-norm wrapper that
-  consumes the new adapters. It still keeps negative square/exponential/trace
-  integrability, Tropp, and CFC primitive assumptions explicit.
+  consumes the first negative-family adapters. It keeps negative
+  square/exponential/trace integrability, Tropp, and CFC primitive assumptions
+  explicit.
+- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`:
+  lighter bounded-row operator-norm wrapper that additionally derives the
+  negative square-integrability assumption from the positive family. It still
+  keeps negative exponential/trace integrability, Tropp, and CFC primitive
+  assumptions explicit.
 - `matrixBernsteinTraceMGFToLaplaceContract_statement`: retained typed
   compatibility contract for the bounded-Bernstein lintegral Laplace route
   specialized to `randomMatrixSum A` and `matrixVarianceProxy P A`.
@@ -939,6 +959,14 @@ mainline. It is documentation only; theorem status is not upgraded here.
   primitive remains explicit; Lieb, Golden-Thompson, and full Matrix
   Bernstein are still outside the proved API.
 
+## Completed Square-Negation Adapter Slice
+
+RM-negative-square-integrability-adapters proves the thin `randomMatrixSquare`
+/ square-integrability transfer for named negative row-rank-one families. The
+preferred bounded-row operator-norm wrapper no longer asks for negative
+square-integrability separately; it derives it from the positive family by
+`(-X)^2 = X^2`.
+
 ## Next Safe Task
 
 RM-BR-natural-history-state-construction: use the new prefix/suffix
@@ -946,6 +974,10 @@ bookkeeping API to construct the natural history/state route for the existing
 `Fin m` conditional-step provider. This should remain a state-construction
 leaf and should not prove Lieb, Bernstein CFC, Golden-Thompson, Matrix
 Bernstein, or a parallel arbitrary-index Tropp primitive.
+
+Negative square-integrability adapters are complete. Negative exp/trace/CFC/Tropp
+assumptions remain a separate audit surface and should not be treated as
+square-negation rewrites.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives API
 
@@ -1011,3 +1043,5 @@ Bernstein, or a parallel arbitrary-index Tropp primitive.
   natural-state construction leaf; it does not prove Lieb, Bernstein CFC,
   Golden-Thompson, Matrix Bernstein, or arbitrary finite-index Tropp.
 - Next safe task: RM-BR-natural-history-state-construction.
+- Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.

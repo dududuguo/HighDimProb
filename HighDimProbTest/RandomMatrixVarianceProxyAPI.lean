@@ -47,8 +47,12 @@ variable (hRnonneg : 0 <= R)
 #check PointwiseOperatorNormBound
 #check UniformOperatorNormBound
 #check AeOperatorNormBound
+#check negRandomMatrix
+#check negRandomMatrix_apply
+#check isRandomMatrix_negRandomMatrix
 #check matrixSquare
 #check matrixSquare_apply
+#check matrixSquare_neg
 #check matrixQuadraticForm_sum
 #check matrixQuadraticForm_add
 #check matrixQuadraticForm_smul
@@ -65,6 +69,7 @@ variable (hRnonneg : 0 <= R)
 #check matrixLE_smul_of_nonneg
 #check randomMatrixSquare
 #check randomMatrixSquare_apply
+#check randomMatrixSquare_neg
 #check isRandomMatrix_matrixSquare
 #check matrixQuadraticForm_matrixExpect
 #check integrableRandomMatrix_sub
@@ -142,7 +147,10 @@ variable (hRnonneg : 0 <= R)
 #check (UniformOperatorNormBound A R : Prop)
 #check (AeOperatorNormBound P A R : Prop)
 #check (matrixSquare M : Matrix (Fin n) (Fin n) Real)
+#check (matrixSquare_neg M : matrixSquare (-M) = matrixSquare M)
 #check (randomMatrixSquare X : RandomMatrix Omega n n)
+#check (randomMatrixSquare_neg X :
+  randomMatrixSquare (negRandomMatrix X) = randomMatrixSquare X)
 #check (isRandomMatrix_matrixSquare hX :
   IsRandomMatrix P (randomMatrixSquare X))
 #check (matrixSecondMoment P X : Matrix (Fin n) (Fin n) Real)

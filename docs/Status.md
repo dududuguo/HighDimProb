@@ -158,7 +158,9 @@ The sample-covariance operator-norm examples use the adapter-based bounded-row
 wrapper, so they no longer ask users to provide negative centeredness,
 independence, entrywise integrability, or pointwise operator-norm bounds
 directly; negative square/exponential/trace integrability, Tropp, and CFC
-assumptions remain explicit.
+assumptions remain explicit.  The bounded-row example now delegates to the
+canonical `SampleCovarianceOperatorNormTailAssumptions` bundle instead of
+maintaining parallel positive/negative example-local bundles.
 
 The latest deterministic rank-one nullspace API is:
 
@@ -240,9 +242,10 @@ Sample covariance now has retained bridge-explicit, nonempty, and arbitrary
 positive-threshold operator-norm wrappers, plus bounded-row wrappers that
 derive the positive-side crude variance proxy internally. The newest bounded-row
 operator-norm wrapper also derives negative-family centered/self-adjoint
-structure, entrywise integrability, independence, and pointwise operator-norm
-bounds via named adapters. It still keeps negative square/exponential/trace
-integrability, Tropp, and CFC primitive assumptions explicit.
+structure, entrywise integrability, independence, pointwise operator-norm
+bounds, and negative-side square-integrability via named adapters. It still
+keeps negative exponential/trace integrability, Tropp, and CFC primitive
+assumptions explicit.
 The previous optimized one-sided quadratic-form theorem remains
 `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 under explicit primitive assumptions.
@@ -250,6 +253,8 @@ under explicit primitive assumptions.
 ## Next Safe Task
 
 - `RM-BR-natural-history-state-construction`
+- Negative square-integrability adapters are complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 ## Public Milestone Summary
 

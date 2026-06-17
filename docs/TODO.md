@@ -106,6 +106,10 @@
   Bernstein CFC, Golden-Thompson, Matrix Bernstein, or arbitrary finite-index
   Tropp.
 - Next safe task: RM-BR-natural-history-state-construction.
+- Done: RM-negative-square-integrability-adapters removes the explicit
+  negative square-integrability assumption from the preferred bounded-row
+  sample-covariance operator-norm wrapper. Negative exp/trace/CFC/Tropp
+  assumptions remain a separate audit surface.
 
 ## Stage M3 Scalar Closeout TODO Audit
 
@@ -282,7 +286,7 @@ Stage H0 Rademacher/Hoeffding branch update:
 | Conditional matrix Laplace assembly | Use concrete random self-adjoint dominance with the existing conditional Laplace wrappers to prove the matrix Laplace upper-tail theorem. | `traceExpDominatesQuadraticFormUpperTail_of_randomSelfAdjoint`, `matrixLaplaceTransformLIntegral_of_traceExpDominatesQuadraticFormUpperTail`, explicit measurability/integrability hypotheses | done | Implemented in MB-S8-laplace-assembly as `matrixLaplaceTransformLIntegralDiv_of_randomSelfAdjoint` and `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`. This did not prove the real RHS bridge, trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein. |
 | Matrix Laplace real RHS bridge | Connect the lintegral matrix Laplace theorem to the existing real trace-exp moment/RHS vocabulary. | `matrixLaplaceTransformLIntegral_of_randomSelfAdjoint`, `traceExpMomentLIntegral_eq_ofReal_traceExpMoment`, explicit integrability and nonnegativity hypotheses | hard | Future task after the current trace-mgf provider contract decision; do not prove trace-mgf, Golden-Thompson, Lieb, or Matrix Bernstein in that bridge stage. |
 | Matrix trace-mgf foundation/provider contract | Audit the route for proving the semantic bounded Matrix Bernstein trace-mgf target. | `TraceMGFBound`, `TraceMGFBernsteinVarianceProxyBound`, `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`, matrix-valued independence, variance proxy, Golden-Thompson/Lieb or equivalent matrix-mgf machinery | hard | MB-S9-foundation added semantic predicates and typed targets; follow-up stages resolved expectation, MatrixLE algebra, coefficient, lower-bound, provider-under-CFC, RHS-normalization, and direct finite-family trace-MGF wrapper blockers. RM-TROPP-S2 through S6 add the log/order bridge, conditional/history step primitive, finite-chain skeleton, narrow `Fin m` finite-family provider, and thin conditional-step trace-MGF wrapper. RM-TROPP-S7 adds no downstream Matrix Bernstein wrapper because the conditional-step/state data would make public signatures larger. The RM-BR prefix/suffix API adds only finite-sum/state bookkeeping. `matrixBernsteinTraceMGF_statement` remains a `theta ^ 2 / 2` compatibility target. Arbitrary finite-index history/state construction, independence conditioning, integrability propagation, Bernstein CFC, Lieb, Golden-Thompson, and full Matrix Bernstein remain open. Current next safe task: RM-BR-natural-history-state-construction. |
-| Matrix exponential lower bound for Bernstein coefficient | Audit/prove the deterministic bridge `MatrixLE (1 + c smul V) (matrixExp (c smul V))` after `bernsteinCoefficient_nonneg`. | `bernsteinCoefficient_nonneg`, `MatrixLE`, `matrixExp`, PSD/self-adjoint variance proxy hypotheses, CFC or spectral exponential lower APIs | done | MB-S9-exp-lower-bound-proof implements this deterministic lower-bound family as `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint` and `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`. MB-S9-single-summand-provider-under-cfc then uses it in `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`. MB-S9-rhs-normalization-proof names the denominator coefficient as `bernsteinMGFCoeff` and adds bounded trace-mgf targets. The Bernstein CFC proof, arbitrary finite-index Tropp provider, Golden-Thompson, Lieb, and full Matrix Bernstein remain unproved. RM-TROPP-S6 proves only the thin conditional-step trace-MGF wrapper; S7 intentionally adds no downstream Matrix Bernstein wrapper. Current next safe task: RM-BR-natural-history-state-construction. |
+| Matrix exponential lower bound for Bernstein coefficient | Audit/prove the deterministic bridge `MatrixLE (1 + c smul V) (matrixExp (c smul V))` after `bernsteinCoefficient_nonneg`. | `bernsteinCoefficient_nonneg`, `MatrixLE`, `matrixExp`, PSD/self-adjoint variance proxy hypotheses, CFC or spectral exponential lower APIs | done | MB-S9-exp-lower-bound-proof implements this deterministic lower-bound family as `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint` and `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`. MB-S9-single-summand-provider-under-cfc then uses it in `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`. MB-S9-rhs-normalization-proof names the denominator coefficient as `bernsteinMGFCoeff` and adds bounded trace-mgf targets. The Bernstein CFC proof, arbitrary finite-index Tropp provider, Golden-Thompson, Lieb, and full Matrix Bernstein remain unproved. RM-TROPP-S6 proves only the thin conditional-step trace-MGF wrapper; S7 intentionally adds no downstream Matrix Bernstein wrapper. RM-negative-square-integrability-adapters is complete. Current next safe task: RM-BR-natural-history-state-construction. |
 ## MB-S9 Tropp Shape Refactor Follow-Up
 
 The trace-exp layer now exposes `troppMasterTraceMGFFiniteFamily_statement`,
@@ -327,6 +331,8 @@ RM-BR-natural-history-state-construction.
 - RM-BR state prefix/suffix partial-sum API is complete and provides only
   finite-sum/state bookkeeping for the next natural-state construction leaf.
 - Next safe task: RM-BR-natural-history-state-construction.
+- RM-negative-square-integrability-adapters is complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
 
 ## MB-S9 Matrix Bernstein Trace-MGF Under Primitives Follow-Up
 
@@ -350,3 +356,5 @@ RM-BR-natural-history-state-construction.
 - RM-BR state prefix/suffix partial-sum API is complete and provides only
   finite-sum/state bookkeeping for the next natural-state construction leaf.
 - Next safe task: RM-BR-natural-history-state-construction.
+- RM-negative-square-integrability-adapters is complete; negative
+  exp/trace/CFC/Tropp assumptions remain a separate audit surface.
