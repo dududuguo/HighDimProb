@@ -12,14 +12,22 @@ Random variables are functions with separate measurability, integrability, and d
 
 ## Active stage
 
-Stage M1 is active. This stage closes Milestone 1 and audits whether the package is ready for the next phase:
+The current active line is v0.1-alpha cleanup plus the experimental
+RandomMatrix / Matrix Bernstein proof surface:
 
-- the stable v0.1 probability object layer is complete enough for future theorem work,
-- experimental v0.2 high-dimensional vocabulary is available through `HighDimProb.Experimental`,
-- tests and documentation are aligned,
-- theorem-layer results remain recorded as TODO or theorem-atlas entries.
+- the stable probability, scalar concentration, Orlicz, moment, and tail
+  layers are exposed through `HighDimProb`;
+- experimental high-dimensional and RandomMatrix APIs remain behind
+  `HighDimProb.Experimental`, `HighDimProb.RandomMatrix`, and
+  `HighDimProb.Examples`;
+- RandomMatrix has prefix/suffix bookkeeping, a natural `Fin m` Tropp
+  trace-state route, sample-covariance wrappers under explicit primitives,
+  and named negative-side provider-transfer adapters;
+- Tropp/Lieb, Golden-Thompson, Bernstein CFC, full Matrix Bernstein, and
+  unconditional sample-covariance concentration are not claimed.
 
-It does not implement new mathematical content, start Stage 5B, start random matrices, or prove theorem statements.
+Use `docs/Status.md` for the current branch status and
+`docs/RandomMatrixAPI.md` for the public RandomMatrix names.
 
 ## Dependency policy
 
@@ -44,6 +52,8 @@ Mathlib is the only core dependency. See `docs/DependencyMap.md` before adding d
 - `HighDimProb.SubGaussianVector`: separate directional subGaussian random-vector predicate forms, currently imported through `HighDimProb.Experimental`.
 - `HighDimProb.Nets`: Mathlib-backed ε-net and separated-set wrappers, currently imported through `HighDimProb.Experimental`.
 - `HighDimProb.MetricEntropy`: Mathlib-backed covering and packing number wrappers, currently imported through `HighDimProb.Experimental`.
+- `HighDimProb.RandomMatrix`: experimental random-matrix object, order,
+  spectral, trace-exp, variance-proxy, and concentration statement layers.
 - `HighDimProb.BookStatements`: typechecked `Prop` specifications for reviewed object-level APIs.
 - `HighDimProb.Experimental`: aggregate import for scaffold modules not yet in the stable v0.1 API.
 
@@ -67,7 +77,7 @@ Experimental aggregate:
 RandomVector -> Covariance -> Isotropic
 RandomVector, SubGaussian -> SubGaussianVector
 Nets -> MetricEntropy
-RandomMatrix
+RandomMatrix -> MatrixOrder, Sums, OperatorNorm, Spectral, TraceExp, VarianceProxy
 RandomProcess -> GaussianWidth, EmpiricalProcess
 SignalRecovery
 Tactic
@@ -131,7 +141,12 @@ Reviewed experimental declarations:
 - Canonical high-dimensional subGaussian vector predicate and ψ₂ vector norm/gauge.
 - Finite-second-moment predicates and covariance identity bridge lemmas.
 - Distribution classes for Gaussian and Bernoulli random vectors.
-- Matrix norms and random matrix operator-norm predicates.
+- Full Tropp/Lieb, Golden-Thompson, and Bernstein CFC proofs.
+- Full unconditional Matrix Bernstein theorem.
+- Tropp/CFC-free sample-covariance operator-norm concentration.
+- Public-friendly natural-state Matrix Bernstein assumption bundle.
+- Natural history measurability, independence conditioning, and trace-exp
+  integrability propagation for the conditional-step Tropp route.
 - Empirical measures and empirical process suprema.
 - Gaussian width as an expectation over a Gaussian process.
 - Real-valued metric entropy/log covering number wrapper.
@@ -145,5 +160,6 @@ Reviewed experimental declarations:
 
 ## Next safe tasks
 
-1. Stage 5B — covering/packing theorem statement layer.
-2. Stage 6A — random matrix object layer.
+1. `RM-MAIN-natural-state-assumption-bundle-contract`.
+2. Negative trace-MGF provider-wrapper cleanup as a side leaf, reusing the
+   named opposite-parameter sample-covariance provider-transfer adapters.

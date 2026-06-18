@@ -39,9 +39,11 @@
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
   - Current repository next task:
-    RM-negative-trace-mgf-provider-wrapper-audit; the BR natural history/state
-    construction remains a separate local leaf. Matrix Bernstein,
-    Hanson-Wright, and WLLN/SLLN remain separate future directions
+    RM-MAIN-natural-state-assumption-bundle-contract. Negative trace-MGF
+    provider-wrapper audit remains a separate side leaf now that named
+    opposite-parameter sample-covariance provider-transfer adapters exist.
+    Matrix Bernstein, Hanson-Wright, and WLLN/SLLN remain separate future
+    directions
 - OrliczToTail
 - TailToOrlicz
 - MomentImplications

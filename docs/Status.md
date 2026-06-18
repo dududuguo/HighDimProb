@@ -57,6 +57,12 @@ Sample covariance wrappers:
 - `SampleCovarianceTailUsage.SampleCovarianceTailAssumptions`
 - `SampleCovarianceTailUsage.SampleCovarianceOperatorNormTailAssumptions`
 
+Sample covariance negative-side provider-transfer adapters:
+
+- `centeredSampleCovarianceRowRankOneFamilyNeg_expIntegrable_of_expIntegrable_neg_theta`
+- `centeredSampleCovarianceRowRankOneSumNeg_traceExpIntegrable_of_traceExpIntegrable_neg_theta`
+- `centeredSampleCovarianceRowRankOneFamilyNeg_cfcPrimitive_of_cfcPrimitive_neg_theta`
+
 Example-layer wrappers:
 
 - `sampleCovariance_quadraticForm_tail_usage`
@@ -88,6 +94,9 @@ Example modules:
 - The conditional-state bundle is example-local, and the reindexed example is transport-only.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
 - Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems.
+- Negative-side provider-transfer adapters only move explicit opposite-parameter
+  assumptions onto the named negative sample-covariance family; they do not
+  prove exponential integrability, trace-exponential integrability, or CFC.
 - Next safe RandomMatrix task: `RM-MAIN-natural-state-assumption-bundle-contract`.
 
 ## Verification

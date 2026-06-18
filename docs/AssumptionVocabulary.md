@@ -73,10 +73,11 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
   Tropp, CFC, independence, and integrability assumptions explicit. The
   current arbitrary-dimensional route is positive-threshold only; the negative
   family adapter branch, negative square-integrability adapter, negative
-  exp/trace sign-normalization audit, and negative Tropp primitive boundary
-  audit are complete. The next RandomMatrix branch is
-  `RM-negative-trace-mgf-provider-wrapper-audit`; the local finite
-  history/state construction should stay named before any larger downstream
-  wrapper is exposed.
+  exp/trace sign-normalization audit, negative Tropp primitive boundary audit,
+  and named sample-covariance opposite-parameter exp/trace/CFC
+  provider-transfer adapters are complete. The next RandomMatrix branch is
+  `RM-MAIN-natural-state-assumption-bundle-contract`; negative trace-MGF
+  provider-wrapper cleanup remains a side leaf and should reuse the named
+  provider-transfer adapters before adding new assumptions.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.

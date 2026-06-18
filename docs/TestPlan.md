@@ -32,6 +32,9 @@ git diff --check
   `HighDimProbTest/RandomMatrixTraceExpAPI.lean` and
   `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`; example modules are covered
   through `lake build HighDimProb.Examples`.
+- RandomMatrix sample-covariance negative-side provider-transfer adapters are
+  covered in `HighDimProbTest/RandomMatrixConcentrationAPI.lean` and
+  `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`.
 - Judge tests: `HighDimProbJudge` plus `scripts/judge_policy_check.py`.
 
 ## Policy Checks

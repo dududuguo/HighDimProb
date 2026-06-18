@@ -27,7 +27,9 @@ operator-norm, sample-covariance, crude variance-proxy routes, and
 prefix/state endpoint bookkeeping wrappers for the Tropp conditional-step
 route. The TraceExp layer also has a natural `Fin m` trace-state route that
 derives the finite-family Tropp provider and trace-MGF provider from explicit
-natural conditional-step data.
+natural conditional-step data. The sample-covariance surface includes named
+negative-side provider-transfer adapters for opposite-parameter exp/trace/CFC
+assumptions; these are adapter lemmas, not unconditional provider proofs.
 
 Important current names are listed in [`RandomMatrixAPI.md`](RandomMatrixAPI.md).
 

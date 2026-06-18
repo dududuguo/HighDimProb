@@ -89,6 +89,17 @@ import HighDimProb.Examples.RandomMatrix.ReindexedTroppBridgeUsage
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`
 
+### Sample covariance negative-side provider adapters
+
+- `centeredSampleCovarianceRowRankOneFamilyNeg_expIntegrable_of_expIntegrable_neg_theta`
+- `centeredSampleCovarianceRowRankOneSumNeg_traceExpIntegrable_of_traceExpIntegrable_neg_theta`
+- `centeredSampleCovarianceRowRankOneFamilyNeg_cfcPrimitive_of_cfcPrimitive_neg_theta`
+
+These are sign-normalization adapters from explicit original-family
+opposite-parameter provider assumptions. They do not prove exponential
+integrability, trace-exponential integrability, or the Bernstein CFC primitive,
+and they are not tail wrappers by themselves.
+
 ## Variance Proxy Surface
 
 - `MatrixVarianceProxyNormBound_of_pointwiseOperatorNormBound`
