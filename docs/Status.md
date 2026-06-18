@@ -33,9 +33,15 @@ Core Matrix Bernstein helpers:
 - `matrixBernsteinTwoSidedOptimizedScalarTailRHS`
 - `MatrixBernsteinPositiveSideAssumptions`
 - `MatrixBernsteinNegativeSideAssumptions`
+- `MatrixBernsteinPositiveSideTroppAssumptions`
+- `MatrixBernsteinNegativeSideTroppAssumptions`
+- `matrixBernsteinTraceMGFWithBernsteinCoeff_under_troppPrimitive`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`
+- `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions`
 - `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`
+- `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions`
 - `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions`
+- `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions`
 
 TraceExp / Tropp bookkeeping helpers:
 
@@ -66,6 +72,15 @@ Sample covariance negative-side provider-transfer adapters:
 - `centeredSampleCovarianceRowRankOneSumNeg_traceExpIntegrable_of_traceExpIntegrable_neg_theta`
 - `centeredSampleCovarianceRowRankOneFamilyNeg_cfcPrimitive_of_cfcPrimitive_neg_theta`
 
+Hardbone Bernstein CFC leaf:
+
+- `scalarBernsteinExpQuadraticInequality`
+- `selfAdjointSpectrumBoundedByOperatorNorm`
+- `bernsteinCFCExpressionNormalization`
+- `cfcScalarInequalityToMatrixLE_bernsteinExpQuadratic`
+- `bernsteinMatrixExp_le_quadratic_of_cfcLeaves`
+- `bernsteinMatrixExp_le_quadratic`
+
 Example-layer wrappers:
 
 - `sampleCovariance_quadraticForm_tail_usage`
@@ -89,10 +104,19 @@ Example modules:
 ## Current Caveats
 
 - RandomMatrix / Matrix Bernstein remains experimental.
-- The hardbone statement atlas now names CFC, log/order, Tropp/Lieb,
+- The hardbone statement atlas names CFC, log/order, Tropp/Lieb,
   conditioning, integrability, variance-proxy, and dimension/rank blockers as
-  typed statement targets, with selected thin consumers only.
-- Tropp/Lieb, Golden-Thompson, Bernstein CFC, and full Matrix Bernstein are not claimed as complete unless a referenced theorem says so directly.
+  typed statement targets. The Bernstein CFC route is now proved through
+  `bernsteinMatrixExp_le_quadratic`, reusing scalar Bernstein, spectrum
+  localization, Bernstein-specific CFC order transfer, and CFC expression
+  normalization. The preferred optimized Matrix Bernstein assumption bundles
+  are now `MatrixBernsteinPositiveSideTroppAssumptions` and
+  `MatrixBernsteinNegativeSideTroppAssumptions`, which expose Tropp/Lieb
+  primitives but not pointwise CFC fields. The older explicit-CFC bundles and
+  `_under_primitives` wrappers remain compatibility surfaces.
+- Tropp/Lieb, Golden-Thompson, trace-exp integrability, variance-proxy control,
+  and full Matrix Bernstein are not claimed as complete unless a referenced
+  theorem says so directly.
 - Prefix/suffix/state bookkeeping now includes a natural `Fin m` trace-state
   route through the finite-family Tropp and trace-MGF provider surfaces. This
   does not discharge the analytic conditional-step, history measurability,
@@ -104,7 +128,7 @@ Example modules:
 - Negative-side provider-transfer adapters only move explicit opposite-parameter
   assumptions onto the named negative sample-covariance family; they do not
   prove exponential integrability, trace-exponential integrability, or CFC.
-- Next safe hardbone task: `RM-HB11-select-first-hardbone-proof-leaf`.
+- Next safe hardbone task: `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
 
 ## Verification
 
@@ -119,7 +143,7 @@ lake test
 lake build HighDimProbJudge
 ```
 
-Last verified locally on 2026-06-18 with the commands above.
+Last verified locally on 2026-06-19 with the commands above.
 
 ## Archive
 

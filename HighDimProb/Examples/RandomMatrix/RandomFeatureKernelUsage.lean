@@ -267,10 +267,10 @@ theorem randomFeatureKernel_quadraticForm_tail_traceExp_under_primitives
 /-- Optimized-theta assumptions needed to use Matrix Bernstein for a
 random-feature kernel.
 
-The analytic assumptions involving exponentials, CFC, and Tropp are specialized
-at the canonical Bernstein choice `bernsteinThetaChoice t sigmaSq R`. This keeps
-the optimized usage theorem free of an explicit `theta`, `thetaRange`, or
-`thetaPositive` assumption. -/
+The analytic assumptions involving exponentials and Tropp are specialized at
+the canonical Bernstein choice `bernsteinThetaChoice t sigmaSq R`. The
+pointwise Bernstein CFC primitive is supplied by the core hardbone theorem, so
+this optimized usage surface no longer exposes a CFC field. -/
 structure RandomFeatureKernelOptimizedMatrixBernsteinAssumptions {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
     {numFeatures n : Nat}
@@ -279,7 +279,7 @@ structure RandomFeatureKernelOptimizedMatrixBernsteinAssumptions {Omega : Type*}
     (R t sigmaSq : Real) : Prop where
   featureAdapter : IsCenteredRandomFeatureKernelSummandFamily (P := P) Phi A
   matrixBernsteinSide :
-    MatrixBernsteinPositiveSideAssumptions (P := P) A R t sigmaSq
+    MatrixBernsteinPositiveSideTroppAssumptions (P := P) A R t sigmaSq
 
 /-- Random-feature kernel quadratic-form upper-tail bound with the optimized
 scalar Matrix Bernstein RHS.
@@ -297,7 +297,7 @@ theorem randomFeatureKernel_quadraticForm_tail_optimized_under_primitives
     P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
       matrixBernsteinOptimizedScalarTailRHS (n + 1) R t sigmaSq := by
   exact
-    matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
+    matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions
       (P := P) A R t sigmaSq h.matrixBernsteinSide
 
 end

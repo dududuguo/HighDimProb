@@ -1,4 +1,7 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Analysis.SpecialFunctions.Exponential
+import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Analysis.SpecificLimits.Normed
 import Mathlib.Tactic
 
 /-!
@@ -156,5 +159,121 @@ theorem pow_le_four_sqrt_mul_exp_sq {x : ℝ} (hx : 0 ≤ x)
     exact pow_le_pow_left₀ (by positivity) hbase q
   exact h.trans
     (mul_le_mul_of_nonneg_right hpow (Real.exp_pos (x ^ 2 / 4)).le)
+
+/-! ## Bounded scalar Bernstein exponential inequality
+
+The deterministic scalar inequality behind the matrix Bernstein
+functional-calculus step.  It is purely real analysis and carries no
+probability or matrix content. -/
+
+open scoped Nat
+
+/-- Elementary factorial lower bound `2 * 3 ^ n ≤ (n + 2)!`.
+
+This is the comparison that turns the exponential tail series into a geometric
+series with ratio `|u| / 3`. -/
+private lemma two_mul_three_pow_le_factorial_add_two (n : ℕ) :
+    2 * 3 ^ n ≤ (n + 2)! := by
+  induction n with
+  | zero => decide
+  | succ k ih =>
+    have hfac : (k + 1 + 2)! = (k + 3) * (k + 2)! := by
+      have hidx : k + 1 + 2 = (k + 2) + 1 := by ring
+      rw [hidx, Nat.factorial_succ]
+    calc
+      2 * 3 ^ (k + 1) = 3 * (2 * 3 ^ k) := by ring
+      _ ≤ 3 * (k + 2)! := Nat.mul_le_mul (le_refl 3) ih
+      _ ≤ (k + 3) * (k + 2)! := Nat.mul_le_mul (by omega) (le_refl _)
+      _ = (k + 1 + 2)! := hfac.symm
+
+/-- Bounded scalar Bernstein exponential inequality.
+
+For a real number `u` with `|u| ≤ b` and `b < 3`,
+`exp u ≤ 1 + u + (u ^ 2 / 2) / (1 - b / 3)`.
+
+The constant `(1 / 2) / (1 - b / 3)` is the canonical bounded-Bernstein
+moment-generating-function coefficient. -/
+theorem exp_le_one_add_add_half_sq_div_one_sub_third {u b : ℝ}
+    (hub : |u| ≤ b) (hb : b < 3) :
+    Real.exp u ≤ 1 + u + (u ^ 2 / 2) / (1 - b / 3) := by
+  have hu3 : |u| < 3 := lt_of_le_of_lt hub hb
+  set r : ℝ := |u| / 3 with hr
+  have hr0 : 0 ≤ r := by rw [hr]; positivity
+  have hr1 : r < 1 := by
+    rw [hr, div_lt_one (by norm_num)]; exact hu3
+  have hden_b : 0 < 1 - b / 3 := by linarith
+  have hden_u : 0 < 1 - r := by linarith
+  -- exponential series
+  have hsum : Summable (fun n : ℕ => u ^ n / (n ! : ℝ)) :=
+    Real.summable_pow_div_factorial u
+  have hexp : Real.exp u = ∑' n : ℕ, u ^ n / (n ! : ℝ) := by
+    rw [Real.exp_eq_exp_ℝ]
+    exact congrFun NormedSpace.exp_eq_tsum_div u
+  -- split off the first two terms
+  have hsplit :
+      (∑ i ∈ Finset.range 2, u ^ i / (i ! : ℝ)) +
+          ∑' i : ℕ, u ^ (i + 2) / ((i + 2)! : ℝ) =
+        ∑' i : ℕ, u ^ i / (i ! : ℝ) :=
+    hsum.sum_add_tsum_nat_add 2
+  have hprefix :
+      (∑ i ∈ Finset.range 2, u ^ i / (i ! : ℝ)) = 1 + u := by
+    simp [Finset.sum_range_succ, Nat.factorial]
+  -- summabilities
+  have htail_sum : Summable (fun i : ℕ => u ^ (i + 2) / ((i + 2)! : ℝ)) :=
+    (summable_nat_add_iff 2).2 hsum
+  have hg_sum : Summable (fun n : ℕ => (u ^ 2 / 2) * r ^ n) :=
+    (summable_geometric_of_lt_one hr0 hr1).mul_left _
+  -- termwise geometric domination
+  have hterm : ∀ i : ℕ,
+      u ^ (i + 2) / ((i + 2)! : ℝ) ≤ (u ^ 2 / 2) * r ^ i := by
+    intro i
+    have hfac_pos : (0 : ℝ) < ((i + 2)! : ℝ) := by
+      exact_mod_cast (i + 2).factorial_pos
+    have h2pos : (0 : ℝ) < 2 * 3 ^ i := by positivity
+    have hfac_ge : (2 : ℝ) * 3 ^ i ≤ ((i + 2)! : ℝ) := by
+      exact_mod_cast two_mul_three_pow_le_factorial_add_two i
+    have hpow_le : u ^ (i + 2) ≤ |u| ^ (i + 2) := by
+      calc
+        u ^ (i + 2) ≤ |u ^ (i + 2)| := le_abs_self _
+        _ = |u| ^ (i + 2) := abs_pow u (i + 2)
+    have heq : |u| ^ (i + 2) / ((2 : ℝ) * 3 ^ i) = (u ^ 2 / 2) * r ^ i := by
+      rw [hr, div_pow, ← sq_abs u, pow_add]
+      ring
+    have step1 :
+        u ^ (i + 2) / ((i + 2)! : ℝ) ≤ |u| ^ (i + 2) / ((i + 2)! : ℝ) :=
+      (div_le_div_iff_of_pos_right hfac_pos).mpr hpow_le
+    have step2 :
+        |u| ^ (i + 2) / ((i + 2)! : ℝ) ≤ |u| ^ (i + 2) / ((2 : ℝ) * 3 ^ i) := by
+      rw [div_eq_mul_inv, div_eq_mul_inv]
+      exact mul_le_mul_of_nonneg_left
+        ((inv_le_inv₀ hfac_pos h2pos).mpr hfac_ge)
+        (pow_nonneg (abs_nonneg u) _)
+    calc
+      u ^ (i + 2) / ((i + 2)! : ℝ)
+          ≤ |u| ^ (i + 2) / ((i + 2)! : ℝ) := step1
+      _ ≤ |u| ^ (i + 2) / ((2 : ℝ) * 3 ^ i) := step2
+      _ = (u ^ 2 / 2) * r ^ i := heq
+  -- bound the tail by the geometric sum
+  have htail_le :
+      (∑' i : ℕ, u ^ (i + 2) / ((i + 2)! : ℝ)) ≤
+        ∑' n : ℕ, (u ^ 2 / 2) * r ^ n :=
+    htail_sum.tsum_le_tsum hterm hg_sum
+  have hgeom : (∑' n : ℕ, (u ^ 2 / 2) * r ^ n) = (u ^ 2 / 2) * (1 - r)⁻¹ := by
+    rw [tsum_mul_left, tsum_geometric_of_lt_one hr0 hr1]
+  have hrb : 1 - b / 3 ≤ 1 - r := by rw [hr]; linarith
+  have hfrac : (u ^ 2 / 2) * (1 - r)⁻¹ ≤ (u ^ 2 / 2) / (1 - b / 3) := by
+    rw [div_eq_mul_inv]
+    exact mul_le_mul_of_nonneg_left
+      ((inv_le_inv₀ hden_u hden_b).mpr hrb) (by positivity)
+  have htail_bound :
+      (∑' i : ℕ, u ^ (i + 2) / ((i + 2)! : ℝ)) ≤ (u ^ 2 / 2) / (1 - b / 3) :=
+    htail_le.trans (by rw [hgeom]; exact hfrac)
+  calc
+    Real.exp u
+        = (∑ i ∈ Finset.range 2, u ^ i / (i ! : ℝ)) +
+            ∑' i : ℕ, u ^ (i + 2) / ((i + 2)! : ℝ) := by
+          rw [hexp]; exact hsplit.symm
+    _ = 1 + u + ∑' i : ℕ, u ^ (i + 2) / ((i + 2)! : ℝ) := by rw [hprefix]
+    _ ≤ 1 + u + (u ^ 2 / 2) / (1 - b / 3) := by linarith [htail_bound]
 
 end HighDimProb

@@ -277,10 +277,12 @@ Golden-Thompson, Lieb, or Matrix Bernstein.
 
 MB-S9-single-summand-provider-under-cfc adds TraceExp judge coverage for
 `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`.
-The example passes the pointwise typed Bernstein CFC primitive as an explicit
-assumption, along with the typed single-summand assumptions. It does not prove
-the Bernstein CFC primitive, Tropp/Lieb primitive, trace-mgf provider,
-Golden-Thompson, Lieb, or Matrix Bernstein.
+The original example passed the pointwise Bernstein CFC primitive as an
+explicit assumption, along with the typed single-summand assumptions. The
+hardbone leaf later proves that pointwise CFC primitive as
+`bernsteinMatrixExp_le_quadratic`, but this stage still does not prove the
+Tropp/Lieb primitive, trace-mgf provider, Golden-Thompson, Lieb, or Matrix
+Bernstein.
 
 MB-S9-rhs-normalization-proof adds TraceExp and concentration statement judge
 coverage for `bernsteinMGFCoeff`, `bernsteinMGFCoeff_nonneg`,
@@ -291,8 +293,7 @@ coverage for `bernsteinMGFCoeff`, `bernsteinMGFCoeff_nonneg`,
 uses the denominator coefficient `bernsteinMGFCoeff theta R`; the retained
 `matrixBernsteinTraceMGF_statement` remains the old `theta ^ 2 / 2`
 compatibility target. The examples do not prove the trace-mgf provider,
-Bernstein CFC primitive, Tropp/Lieb primitive, Golden-Thompson, Lieb, or
-Matrix Bernstein.
+Tropp/Lieb primitive, Golden-Thompson, Lieb, or Matrix Bernstein.
 
 For a full stage verification run:
 
@@ -319,9 +320,10 @@ python scripts/judge_policy_check.py
 - `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean` checks
   `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
 - The judge check confirms the bounded trace-MGF under-primitives theorem is
-  public. The arbitrary-index finite-family Tropp provider and Bernstein CFC
-  primitive remain open; the narrow `Fin m` conditional-step Tropp provider is
-  checked separately in the trace-exp judge file.
+  public. The pointwise Bernstein CFC primitive is now proved and covered
+  separately; the arbitrary-index finite-family Tropp provider remains open.
+  The narrow `Fin m` conditional-step Tropp provider is checked separately in
+  the trace-exp judge file.
 
 ## RM Negative Family Adapter Judge Coverage
 

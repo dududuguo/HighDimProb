@@ -49,6 +49,13 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check traceMatrixExp_le_supportDim_exp_lambdaMax_statement
 #check traceMatrixExp_effectiveRank_bound_statement
 #check bernsteinMatrixExp_le_quadratic_of_cfcChain
+#check selfAdjointSpectrumBoundedByOperatorNorm
+#check bernsteinCFCExpressionNormalization
+#check cfcScalarInequalityToMatrixLE_bernsteinExpQuadratic
+#check bernsteinMatrixExp_le_quadratic_of_cfcLeaves
+#check bernsteinMatrixExp_le_quadratic
+#check bernsteinMatrixExp_le_quadratic_of_spectrum_cfcOrder
+#check bernsteinMatrixExp_le_quadratic_of_cfcChain_spectrum
 #check troppLogExpComparisonToK_of_logMonotone_traceExpMono
 #check troppMasterTraceMGFStep_of_liebJensen
 #check troppMasterTraceMGFConditionalStep_of_conditioningBridge
@@ -80,3 +87,30 @@ example : Prop :=
 
 example : Prop :=
   traceMatrixExp_effectiveRank_bound_statement B theta sigmaSq effectiveRank
+
+-- Proved scalar Bernstein leaf: the typed statement is now a proved theorem.
+#check @scalarBernsteinExpQuadraticInequality
+
+example :
+    scalarBernsteinExpQuadraticInequality_statement theta R :=
+  scalarBernsteinExpQuadraticInequality theta R
+
+example :
+    bernsteinCFCExpressionNormalization_statement A theta R :=
+  bernsteinCFCExpressionNormalization A theta R
+
+example :
+    cfcScalarInequalityToMatrixLE_statement
+      (fun x : Real => Real.exp (theta * x))
+      (fun x : Real =>
+        1 + theta * x + bernsteinMGFCoeff theta R * x ^ 2)
+      A :=
+  cfcScalarInequalityToMatrixLE_bernsteinExpQuadratic A theta R
+
+example :
+    selfAdjointSpectrumBoundedByOperatorNorm_statement A R :=
+  selfAdjointSpectrumBoundedByOperatorNorm A R
+
+example :
+    bernsteinMatrixExp_le_quadratic_statement A theta R :=
+  bernsteinMatrixExp_le_quadratic A theta R

@@ -116,6 +116,13 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.traceMatrixExp_le_supportDim_exp_lambdaMax_statement
 #check HighDimProb.traceMatrixExp_effectiveRank_bound_statement
 #check HighDimProb.bernsteinMatrixExp_le_quadratic_of_cfcChain
+#check HighDimProb.selfAdjointSpectrumBoundedByOperatorNorm
+#check HighDimProb.bernsteinCFCExpressionNormalization
+#check HighDimProb.cfcScalarInequalityToMatrixLE_bernsteinExpQuadratic
+#check HighDimProb.bernsteinMatrixExp_le_quadratic_of_cfcLeaves
+#check HighDimProb.bernsteinMatrixExp_le_quadratic
+#check HighDimProb.bernsteinMatrixExp_le_quadratic_of_spectrum_cfcOrder
+#check HighDimProb.bernsteinMatrixExp_le_quadratic_of_cfcChain_spectrum
 #check HighDimProb.troppLogExpComparisonToK_of_logMonotone_traceExpMono
 #check HighDimProb.troppMasterTraceMGFStep_of_liebJensen
 #check HighDimProb.troppMasterTraceMGFConditionalStep_of_conditioningBridge
@@ -240,6 +247,13 @@ example {theta R : Real} (hRange : abs theta * R < 3) :
 example {theta R : Real} (hRange : abs theta * R < 3) :
     0 <= HighDimProb.bernsteinMGFCoeff theta R := by
   exact HighDimProb.bernsteinMGFCoeff_nonneg hRange
+
+-- Proved scalar Bernstein leaf consumed as a theorem (no longer typed-only).
+example (theta R x : Real) (hx : abs x <= R) (hR : 0 <= R)
+    (hRange : abs theta * R < 3) :
+    Real.exp (theta * x) <=
+      1 + theta * x + HighDimProb.bernsteinMGFCoeff theta R * x ^ 2 :=
+  HighDimProb.scalarBernsteinExpQuadraticInequality theta R x hx hR hRange
 
 example {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (P : MeasureTheory.Measure Omega)

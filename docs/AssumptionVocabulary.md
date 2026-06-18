@@ -60,26 +60,29 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
   proved. The bounded-row sample-covariance quadratic-form wrapper derives the
   positive-side variance proxy using
   `sampleCovarianceCenteredRankOneVarianceProxyBound`; independence,
-  square/exponential/trace integrability, Tropp, and CFC assumptions remain
+  square/exponential/trace integrability and Tropp assumptions remain
   explicit. RM-S6 adds deterministic rank-one kernel/nullspace
   bridges in `Spectral.lean`, RM-S7E/RM-S7F add the conditional
   sample-covariance operator-norm event bridge and tail wrapper, and RM-ON-S4
   adds the nonempty operator-norm Matrix Bernstein wrapper while keeping
-  variance proxy, Tropp, CFC, independence, and integrability assumptions
+  variance proxy, Tropp, independence, and integrability assumptions
   explicit. RM-ON-S5 adds the nonempty sample-covariance operator-norm wrapper
   without an explicit spectral-bridge assumption. The arbitrary-dimensional
   bridge leaf adds the corrected `0 < t` spectral bridge and arbitrary
   operator-norm Matrix Bernstein/sample-covariance wrappers while keeping
-  Tropp, CFC, independence, and integrability assumptions explicit. The
+  Tropp, independence, and integrability assumptions explicit. The
   current arbitrary-dimensional route is positive-threshold only; the negative
   family adapter branch, negative square-integrability adapter, negative
   exp/trace sign-normalization audit, negative Tropp primitive boundary audit,
   and named sample-covariance opposite-parameter exp/trace/CFC
-  provider-transfer adapters are complete. The hardbone statement atlas now
-  names the CFC, log/order, Tropp/Lieb, conditioning, integrability,
-  variance-proxy, and dimension/rank blockers as typed statement targets. The
+  provider-transfer adapters are complete. The hardbone statement atlas names
+  CFC, log/order, Tropp/Lieb, conditioning, integrability, variance-proxy,
+  and dimension/rank targets; the Bernstein CFC primitive is now proved as
+  `bernsteinMatrixExp_le_quadratic`.
+  The generic optimized Matrix Bernstein surface now has Tropp-only
+  positive/negative bundles that no longer expose pointwise CFC fields. The
   next RandomMatrix hardbone branch is
-  `RM-HB11-select-first-hardbone-proof-leaf`; natural-state assumption
+  `RM-HB-sample-covariance-cfc-free-wrapper-contract`; natural-state assumption
   bundling and negative trace-MGF provider-wrapper cleanup remain future side
   leaves.
 - Scalar concentration can continue toward moment/MGF links without depending

@@ -37,19 +37,29 @@ The hardbone statement atlas in
 names CFC, log/order, Tropp/Lieb, conditioning, integrability,
 variance-proxy, and dimension/rank blockers as `typed-prop` targets. Selected
 consumer wrappers are proven thin applications of those targets; they do not
-close the hard theorem families.
+close the hard theorem families. The Bernstein CFC route is now proved as
+`bernsteinMatrixExp_le_quadratic`, via scalar Bernstein, spectrum localization,
+Bernstein-specific CFC order transfer, and expression normalization. The
+trace-MGF provider surface includes
+`matrixBernsteinTraceMGFWithBernsteinCoeff_under_troppPrimitive`, which reuses
+that CFC proof while keeping Tropp/Lieb and integrability assumptions explicit.
+The preferred optimized Matrix Bernstein wrappers use
+`MatrixBernsteinPositiveSideTroppAssumptions` and
+`MatrixBernsteinNegativeSideTroppAssumptions` to avoid exposing pointwise CFC
+fields in generic call sites.
 
 ## Not Yet Proved
 
 - Full Tropp/Lieb machinery.
-- Full Bernstein CFC primitive.
 - Golden-Thompson route.
 - Full unconditional Matrix Bernstein theorem.
-- Tropp/CFC-free sample-covariance operator-norm concentration.
+- Tropp-only sample-covariance wrappers without explicit sample-covariance CFC
+  fields.
 - Natural history measurability, independence conditioning, and trace-exp
   integrability propagation for the conditional-step Tropp route.
-- Proofs of the hardbone statement targets for CFC, Tropp/Lieb, conditioning,
-  integrability, variance-proxy sharpening, and dimension/rank refinements.
+- Proofs of the remaining hardbone statement targets for log/order,
+  Tropp/Lieb, conditioning, integrability, variance-proxy sharpening, and
+  dimension/rank refinements.
 - A public-friendly Matrix Bernstein wrapper directly over the natural-state
   route.
 

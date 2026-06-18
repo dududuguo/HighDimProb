@@ -89,9 +89,9 @@ Assumptions for transformer-style attention feature Gram concentration.
 
 The feature-level fields keep measurability, integrability, boundedness, and
 softmax/Lipschitz-style controls explicit. The Matrix Bernstein fields are the
-core positive- and negative-side bundles for centered rank-one token Gram
-summands. The feature fields document the domain model; they do not derive the
-Matrix Bernstein bundles, which remain the actual tail-proof obligations.
+CFC-free core positive- and negative-side bundles for centered rank-one token
+Gram summands. The feature fields document the domain model; they do not derive
+the Matrix Bernstein bundles, which remain the actual tail-proof obligations.
 -/
 structure AttentionFeatureGramTailAssumptions {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
@@ -113,9 +113,9 @@ structure AttentionFeatureGramTailAssumptions {Omega : Type*}
     forall h : Fin numHeads, forall omega,
       vectorSqNorm (Phi omega h) <= softmaxLip
   positiveSide :
-    MatrixBernsteinPositiveSideAssumptions (P := P) A R t sigmaSq
+    MatrixBernsteinPositiveSideTroppAssumptions (P := P) A R t sigmaSq
   negativeSide :
-    MatrixBernsteinNegativeSideAssumptions (P := P) A Rneg t sigmaSqNeg
+    MatrixBernsteinNegativeSideTroppAssumptions (P := P) A Rneg t sigmaSqNeg
 
 /-- Quadratic-form attention Gram tail via the existing random-feature wrapper. -/
 theorem attentionFeatureGram_quadraticForm_tail_usage
@@ -147,7 +147,7 @@ theorem attentionFeatureGram_operatorNorm_tail_usage
       matrixBernsteinTwoSidedOptimizedScalarTailRHS
         (numTokens + 1) R Rneg t sigmaSq sigmaSqNeg := by
   exact
-    matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions
+    matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions
       (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
       (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
       h.positiveSide h.negativeSide

@@ -19,6 +19,8 @@ This is the current compact API index. Old historical notes were collapsed into
 
 - `matrixBernsteinOptimizedScalarTailRHS`
 - `matrixBernsteinTwoSidedOptimizedScalarTailRHS`
+- `MatrixBernsteinPositiveSideTroppAssumptions`
+- `MatrixBernsteinNegativeSideTroppAssumptions`
 - `sampleCovarianceCenteredRankOneRadius`
 - `sampleCovarianceTailTheta`
 - `sampleCovarianceQuadraticFormTailRHS`
@@ -28,23 +30,43 @@ Use these helpers in examples and tests instead of copying RHS formulas.
 ## Matrix Bernstein Surface
 
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
+- `matrixBernsteinTraceMGFWithBernsteinCoeff_under_troppPrimitive`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`
+- `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions`
 - `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
+- `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions`
 - `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives`
+- `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions`
 
-These are under explicit primitive assumptions. They do not prove Tropp/Lieb,
-CFC, Golden-Thompson, or a full unconditional Matrix Bernstein theorem.
+These are under explicit primitive assumptions. The pointwise Bernstein CFC
+primitive is now proved by `bernsteinMatrixExp_le_quadratic`; the
+`under_troppPrimitive` trace-MGF wrapper uses that proof so callers no longer
+pass pointwise CFC at the trace-MGF provider layer. The preferred optimized
+public surface is the `*_of_troppAssumptions` family, which uses
+`MatrixBernsteinPositiveSideTroppAssumptions` and
+`MatrixBernsteinNegativeSideTroppAssumptions` to expose Tropp/Lieb and
+bookkeeping assumptions without a user-supplied CFC field. The older
+`*_of_assumptions` and `_under_primitives` names remain compatibility surfaces.
+The route still does not prove Tropp/Lieb, Golden-Thompson, trace-exp
+integrability, variance-proxy control, or a full unconditional Matrix
+Bernstein theorem.
 
 ## Hardbone Statement Targets
 
 Bernstein CFC chain:
 
 - `scalarBernsteinExpQuadraticInequality_statement`
+- `scalarBernsteinExpQuadraticInequality`
 - `selfAdjointSpectrumBoundedByOperatorNorm_statement`
+- `selfAdjointSpectrumBoundedByOperatorNorm`
 - `cfcScalarInequalityToMatrixLE_statement`
+- `cfcScalarInequalityToMatrixLE_bernsteinExpQuadratic`
 - `bernsteinCFCExpressionNormalization_statement`
+- `bernsteinCFCExpressionNormalization`
 - `bernsteinMatrixExp_le_quadratic_of_cfcChain_statement`
+- `bernsteinMatrixExp_le_quadratic_of_cfcLeaves`
+- `bernsteinMatrixExp_le_quadratic`
 
 Log/order-to-`K` chain:
 
@@ -92,6 +114,8 @@ Dimension / rank / effective-rank chain:
 Thin hardbone consumers:
 
 - `bernsteinMatrixExp_le_quadratic_of_cfcChain`
+- `bernsteinMatrixExp_le_quadratic_of_cfcLeaves`
+- `bernsteinMatrixExp_le_quadratic`
 - `troppLogExpComparisonToK_of_logMonotone_traceExpMono`
 - `troppMasterTraceMGFStep_of_liebJensen`
 - `troppMasterTraceMGFConditionalStep_of_conditioningBridge`
@@ -100,7 +124,8 @@ Hardbone status table:
 
 | Statement family | Lean declaration | Status | Consumer | Remaining blocker |
 |---|---|---|---|---|
-| Bernstein CFC | `bernsteinMatrixExp_le_quadratic_of_cfcChain_statement` | typed-prop | `bernsteinMatrixExp_le_quadratic_of_cfcChain` | scalar Bernstein, spectral localization, CFC order transfer, expression normalization |
+| Scalar Bernstein hardbone leaf | `scalarBernsteinExpQuadraticInequality_statement` | proven by `scalarBernsteinExpQuadraticInequality` | CFC-chain assumptions can reuse the proved scalar theorem | none for this scalar leaf |
+| Bernstein CFC | `bernsteinMatrixExp_le_quadratic_statement` | proven by `bernsteinMatrixExp_le_quadratic` | `bernsteinMatrixExp_le_quadratic_of_cfcLeaves` documents the reusable composition | preferred `*_of_troppAssumptions` wrappers bypass pointwise CFC fields; explicit-CFC wrappers remain for compatibility |
 | Log/order-to-`K` | `troppLogExpComparisonToK_of_logOrderKChain_statement` | typed-prop | `troppLogExpComparisonToK_of_logMonotone_traceExpMono` | operator-log monotonicity, log domain for `matrixExp`, trace-exp monotonicity |
 | Tropp/Lieb/GT one-step | `troppMasterTraceMGFStep_of_liebJensen_statement` | typed-prop | `troppMasterTraceMGFStep_of_liebJensen` | Lieb concavity, probability-measure Jensen, log-exp normalization; Golden-Thompson is separate |
 | Conditioning / independence | `troppConditionalStep_of_iIndepFun_statement` | typed-prop | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | generated histories, history-step independence, conditional expectation reduction |
@@ -109,14 +134,16 @@ Hardbone status table:
 | Dimension / support / effective rank | `traceMatrixExp_effectiveRank_bound_statement` | typed-prop | none yet | rank/support/effective-rank core theory |
 | Thin consumers | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | proven | public API/test/judge/example checks | thin wrapper only; no hard fact is discharged |
 
-These declarations are typed `Prop` contracts, not hard theorem proofs. They
-split the current large CFC, log/order, Tropp/Lieb, conditioning,
-integrability, variance-proxy, and dimension/rank blockers into named leaves.
-The rank and effective-rank trace-exp targets keep support or ambient-identity
-terms explicit, so zero directions are not accidentally treated as free. The
-thin consumers only apply explicit statement-chain assumptions; they do not
-prove CFC, Lieb/Jensen, conditioning, finite-family Tropp, or any Matrix
-Bernstein tail theorem.
+Most hardbone declarations are typed `Prop` contracts, not hard theorem proofs.
+The Bernstein CFC chain is now proved by `bernsteinMatrixExp_le_quadratic`
+after splitting out scalar Bernstein, spectrum localization, CFC order
+transfer, and expression normalization. The remaining log/order, Tropp/Lieb,
+conditioning, integrability, variance-proxy, and dimension/rank blockers stay
+split into named leaves. The rank and effective-rank trace-exp
+targets keep support or ambient-identity terms explicit, so zero directions are
+not accidentally treated as free. The thin consumers only apply explicit
+statement-chain assumptions; they do not prove Lieb/Jensen, conditioning,
+finite-family Tropp, or any Matrix Bernstein tail theorem.
 
 ## TraceExp / Tropp Bookkeeping Surface
 

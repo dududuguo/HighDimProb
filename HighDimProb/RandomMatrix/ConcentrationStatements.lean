@@ -5,6 +5,7 @@ import HighDimProb.RandomMatrix.OperatorNorm
 import HighDimProb.RandomMatrix.Sums
 import HighDimProb.RandomMatrix.VarianceProxy
 import HighDimProb.RandomMatrix.Laplace
+import HighDimProb.RandomMatrix.HardboneStatements
 import HighDimProb.Tail
 import Mathlib.Analysis.Normed.Algebra.Spectrum
 
@@ -503,8 +504,9 @@ theorem matrixBernsteinTraceMGFWithBernsteinCoeff_negRandomMatrixFamily
 
 This structure packages the long proof-facing hypothesis list for one
 self-adjoint random-matrix family. It is intentionally semantic: it does not
-derive integrability, boundedness, variance-proxy control, CFC primitives, or
-Tropp/Lieb inputs. -/
+derive integrability, boundedness, variance-proxy control, or Tropp/Lieb
+inputs. The retained `cfcPrimitive` field is a compatibility surface; it can be
+filled by `bernsteinMatrixExp_le_quadratic`. -/
 structure MatrixBernsteinPositiveSideAssumptions {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
     {I : Type*} [Fintype I] {n : Nat}
@@ -587,6 +589,143 @@ structure MatrixBernsteinNegativeSideAssumptions {Omega : Type*}
       (matrixVarianceProxy P (negRandomMatrixFamily A))
       (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg
 
+/-- Preferred positive-side assumptions after the Bernstein CFC hardbone leaf.
+
+This bundle keeps the genuine remaining analytic primitive, the finite-family
+Tropp/Lieb trace-MGF statement, but no longer asks users to provide the
+pointwise Bernstein CFC inequality. The latter is supplied by
+`bernsteinMatrixExp_le_quadratic` when converting to the compatibility bundle
+`MatrixBernsteinPositiveSideAssumptions`. -/
+structure MatrixBernsteinPositiveSideTroppAssumptions {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (R t sigmaSq : Real) : Prop where
+  centered : CenteredSelfAdjointRandomMatrixFamily P A
+  independentSelfAdjoint : IndependentSelfAdjointRandomMatrices P A
+  integrable : forall i, IntegrableRandomMatrix P (A i)
+  squareIntegrable :
+    forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i))
+  expIntegrable :
+    forall i,
+      IntegrableRandomMatrix P
+        (matrixExpScaledFamily A (bernsteinThetaChoice t sigmaSq R) i)
+  traceExpIntegrable :
+    IntegrableRealRandomVariable P
+      (traceExpIntegrand (randomMatrixSum A)
+        (bernsteinThetaChoice t sigmaSq R))
+  operatorNormBound : PointwiseOperatorNormBound A R
+  sigmaPositive : 0 < sigmaSq
+  radiusNonneg : 0 <= R
+  deviationPositive : 0 < t
+  varianceProxyNormBound : MatrixVarianceProxyNormBound P A sigmaSq
+  troppPrimitive :
+    troppMasterTraceMGFFiniteFamily_statement
+      (P := P) A
+      (bernsteinSecondMomentComparisonFamily P A
+        (bernsteinThetaChoice t sigmaSq R) R)
+      (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R
+
+/-- Preferred negative-side assumptions after the Bernstein CFC hardbone leaf.
+
+This is the negative-family analogue of
+`MatrixBernsteinPositiveSideTroppAssumptions`. It keeps the named
+`negRandomMatrixFamily A` surface and only exposes the remaining Tropp/Lieb
+primitive, not the already proved pointwise Bernstein CFC primitive. -/
+structure MatrixBernsteinNegativeSideTroppAssumptions {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (Rneg t sigmaSqNeg : Real) : Prop where
+  centered : CenteredSelfAdjointRandomMatrixFamily P (negRandomMatrixFamily A)
+  independentSelfAdjoint :
+    IndependentSelfAdjointRandomMatrices P (negRandomMatrixFamily A)
+  integrable :
+    forall i, IntegrableRandomMatrix P ((negRandomMatrixFamily A) i)
+  squareIntegrable :
+    forall i,
+      IntegrableRandomMatrix P
+        (randomMatrixSquare ((negRandomMatrixFamily A) i))
+  expIntegrable :
+    forall i,
+      IntegrableRandomMatrix P
+        (matrixExpScaledFamily (negRandomMatrixFamily A)
+          (bernsteinThetaChoice t sigmaSqNeg Rneg) i)
+  traceExpIntegrable :
+    IntegrableRealRandomVariable P
+      (traceExpIntegrand (randomMatrixSum (negRandomMatrixFamily A))
+        (bernsteinThetaChoice t sigmaSqNeg Rneg))
+  operatorNormBound :
+    PointwiseOperatorNormBound (negRandomMatrixFamily A) Rneg
+  sigmaPositive : 0 < sigmaSqNeg
+  radiusNonneg : 0 <= Rneg
+  varianceProxyNormBound :
+    MatrixVarianceProxyNormBound P (negRandomMatrixFamily A) sigmaSqNeg
+  troppPrimitive :
+    troppMasterTraceMGFFiniteFamily_statement
+      (P := P) (negRandomMatrixFamily A)
+      (bernsteinSecondMomentComparisonFamily P (negRandomMatrixFamily A)
+        (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg)
+      (matrixVarianceProxy P (negRandomMatrixFamily A))
+      (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg
+
+namespace MatrixBernsteinPositiveSideTroppAssumptions
+
+/-- Convert the preferred CFC-free positive-side bundle into the older
+compatibility bundle by supplying the proved pointwise Bernstein CFC theorem. -/
+def toPositiveSideAssumptions {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    {A : I -> RandomMatrix Omega n n} {R t sigmaSq : Real}
+    (h : MatrixBernsteinPositiveSideTroppAssumptions (P := P) A R t sigmaSq) :
+    MatrixBernsteinPositiveSideAssumptions (P := P) A R t sigmaSq where
+  centered := h.centered
+  independentSelfAdjoint := h.independentSelfAdjoint
+  integrable := h.integrable
+  squareIntegrable := h.squareIntegrable
+  expIntegrable := h.expIntegrable
+  traceExpIntegrable := h.traceExpIntegrable
+  operatorNormBound := h.operatorNormBound
+  sigmaPositive := h.sigmaPositive
+  radiusNonneg := h.radiusNonneg
+  deviationPositive := h.deviationPositive
+  varianceProxyNormBound := h.varianceProxyNormBound
+  cfcPrimitive :=
+    fun i omega =>
+      bernsteinMatrixExp_le_quadratic (A i omega)
+        (bernsteinThetaChoice t sigmaSq R) R
+  troppPrimitive := h.troppPrimitive
+
+end MatrixBernsteinPositiveSideTroppAssumptions
+
+namespace MatrixBernsteinNegativeSideTroppAssumptions
+
+/-- Convert the preferred CFC-free negative-side bundle into the older
+compatibility bundle by supplying the proved pointwise Bernstein CFC theorem. -/
+def toNegativeSideAssumptions {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    {A : I -> RandomMatrix Omega n n} {Rneg t sigmaSqNeg : Real}
+    (h :
+      MatrixBernsteinNegativeSideTroppAssumptions
+        (P := P) A Rneg t sigmaSqNeg) :
+    MatrixBernsteinNegativeSideAssumptions (P := P) A Rneg t sigmaSqNeg where
+  centered := h.centered
+  independentSelfAdjoint := h.independentSelfAdjoint
+  integrable := h.integrable
+  squareIntegrable := h.squareIntegrable
+  expIntegrable := h.expIntegrable
+  traceExpIntegrable := h.traceExpIntegrable
+  operatorNormBound := h.operatorNormBound
+  sigmaPositive := h.sigmaPositive
+  radiusNonneg := h.radiusNonneg
+  varianceProxyNormBound := h.varianceProxyNormBound
+  cfcPrimitive :=
+    fun i omega =>
+      bernsteinMatrixExp_le_quadratic ((negRandomMatrixFamily A) i omega)
+        (bernsteinThetaChoice t sigmaSqNeg Rneg) Rneg
+  troppPrimitive := h.troppPrimitive
+
+end MatrixBernsteinNegativeSideTroppAssumptions
+
 /-- Named scalar RHS for optimized one-sided Matrix Bernstein wrappers.
 
 The dimension parameter is the actual matrix dimension. Nonempty wrappers for
@@ -662,9 +801,10 @@ theorem matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFa
 assumptions.
 
 This theorem packages the ordinary finite-family Matrix Bernstein assumptions
-with the two still-typed analytic primitives. It does not prove the
-finite-family Tropp/Lieb primitive or the pointwise Bernstein functional
-calculus primitive. -/
+with the explicit finite-family Tropp/Lieb primitive. The pointwise Bernstein
+functional-calculus primitive can now be supplied by
+`bernsteinMatrixExp_le_quadratic`, but this legacy wrapper keeps the explicit
+field for compatibility. -/
 theorem matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
@@ -735,6 +875,41 @@ theorem matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
       A (bernsteinSecondMomentComparisonFamily P A theta R)
       theta R hTropp hRand hSA hIndep hExpInt hTraceInt hKSA hVSA hR hRange
       hMGF hNorm
+
+/-- Bounded Matrix Bernstein trace-mgf provider under the finite-family Tropp
+primitive, with the pointwise Bernstein CFC primitive supplied by
+`bernsteinMatrixExp_le_quadratic`.
+
+This is the preferred wrapper when the only remaining hard analytic input is
+the finite-family Tropp/Lieb primitive. It still does not prove Tropp/Lieb,
+trace-exp integrability, variance-proxy control, or a Matrix Bernstein tail
+bound. -/
+theorem matrixBernsteinTraceMGFWithBernsteinCoeff_under_troppPrimitive
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (theta R : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P (matrixExpScaledFamily A theta i))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A) theta))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
+        (matrixVarianceProxy P A) theta R) :
+    matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R :=
+  matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives
+    A theta R hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt hBound hR
+    hRange (fun i omega => bernsteinMatrixExp_le_quadratic (A i omega) theta R)
+    hTropp
 
 /-- Explicit-theta quadratic-form Matrix Bernstein upper-tail wrapper under
 explicit primitive assumptions.
@@ -1063,6 +1238,25 @@ theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoef
       h.cfcPrimitive
       h.troppPrimitive)
 
+/-- Preferred optimized one-sided quadratic-form Matrix Bernstein wrapper after
+the Bernstein CFC hardbone leaf.
+
+This consumes the CFC-free positive-side bundle and reuses the compatibility
+wrapper internally. The remaining hard primitive is the finite-family Tropp/Lieb
+trace-MGF statement carried by the bundle. -/
+theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (R t sigmaSq : Real)
+    (h :
+      MatrixBernsteinPositiveSideTroppAssumptions
+        (P := P) A R t sigmaSq) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      matrixBernsteinOptimizedScalarTailRHS (n + 1) R t sigmaSq :=
+  matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
+    (P := P) A R t sigmaSq h.toPositiveSideAssumptions
+
 /-- Two-sided quadratic-form Matrix Bernstein wrapper under explicit primitive
 assumptions for both `A` and the pointwise negated summand family.
 
@@ -1330,6 +1524,28 @@ theorem matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinC
       hNeg.varianceProxyNormBound
       hNeg.cfcPrimitive
       hNeg.troppPrimitive)
+
+/-- Preferred two-sided quadratic-form Matrix Bernstein wrapper after the
+Bernstein CFC hardbone leaf.
+
+This consumes CFC-free positive and negative Tropp bundles, converting them to
+the older compatibility bundles internally. -/
+theorem matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (R Rneg t sigmaSq sigmaSqNeg : Real)
+    (hPos :
+      MatrixBernsteinPositiveSideTroppAssumptions (P := P) A R t sigmaSq)
+    (hNeg :
+      MatrixBernsteinNegativeSideTroppAssumptions
+        (P := P) A Rneg t sigmaSqNeg) :
+    P (twoSidedQuadraticFormTailEvent (randomMatrixSum A) t) <=
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        (n + 1) R Rneg t sigmaSq sigmaSqNeg :=
+  matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
+    (P := P) A R Rneg t sigmaSq sigmaSqNeg
+    hPos.toPositiveSideAssumptions hNeg.toNegativeSideAssumptions
 
 /-- Self-adjoint operator-norm Matrix Bernstein wrapper under the explicit
 operator-norm-to-two-sided-quadratic-form bridge.
@@ -1720,6 +1936,29 @@ theorem matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernstei
       hNeg.varianceProxyNormBound
       hNeg.cfcPrimitive
       hNeg.troppPrimitive)
+
+/-- Preferred arbitrary-dimensional self-adjoint operator-norm Matrix
+Bernstein wrapper after the Bernstein CFC hardbone leaf.
+
+This is the high-level CFC-free assumption-bundle entry point. It still keeps
+the sign-specific finite-family Tropp/Lieb primitives, variance proxies,
+integrability, independence, and boundedness explicit through the two bundles. -/
+theorem matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n)
+    (R Rneg t sigmaSq sigmaSqNeg : Real)
+    (hPos :
+      MatrixBernsteinPositiveSideTroppAssumptions (P := P) A R t sigmaSq)
+    (hNeg :
+      MatrixBernsteinNegativeSideTroppAssumptions
+        (P := P) A Rneg t sigmaSqNeg) :
+    P (SelfAdjointOperatorNormTailEvent (randomMatrixSum A) t) <=
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        n R Rneg t sigmaSq sigmaSqNeg :=
+  matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions
+    (P := P) A R Rneg t sigmaSq sigmaSqNeg
+    hPos.toPositiveSideAssumptions hNeg.toNegativeSideAssumptions
 
 /-- Sample-covariance operator-norm event bridge to the unnormalized centered
 row rank-one sum.

@@ -39,7 +39,7 @@
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
   - Current repository next task:
-    RM-HB11-select-first-hardbone-proof-leaf. Natural-state assumption
+    RM-HB-sample-covariance-cfc-free-wrapper-contract. Natural-state assumption
     bundling, negative trace-MGF provider cleanup, Matrix Bernstein,
     Hanson-Wright, and WLLN/SLLN remain separate future directions.
 - OrliczToTail
@@ -101,9 +101,10 @@
 - Follow-up at the time: Stage MB-S9-trace-mgf-to-laplace-tail-contract. Audit
   the trace-mgf provider route now that the single-summand MGF provider is
   proved under explicit pointwise Bernstein CFC assumptions and the bounded
-  Bernstein RHS coefficient is normalized, while the Bernstein CFC primitive
-  itself remains typed only. Do not prove Golden-Thompson, Lieb, the full
-  trace-mgf provider, or Matrix Bernstein in that contract stage.
+  Bernstein RHS coefficient is normalized. At that time the Bernstein CFC
+  primitive itself was still typed only; the later hardbone leaf proves it as
+  `bernsteinMatrixExp_le_quadratic`. Do not prove Golden-Thompson, Lieb, the
+  full trace-mgf provider, or Matrix Bernstein in that contract stage.
 
 ## Current RandomMatrix Leaf
 
@@ -142,7 +143,25 @@
   `RM-HB-hardbone-statement-atlas`, naming CFC, log/order, Tropp/Lieb,
   conditioning, integrability, variance-proxy, and dimension/rank blockers as
   typed statement targets with selected thin consumers.
-- Next safe leaf: `RM-HB11-select-first-hardbone-proof-leaf`.
+- Follow-up completed leaf:
+  `RM-HB-scalar-Bernstein-exp-quadratic-proof`, proving the scalar real
+  inequality target `scalarBernsteinExpQuadraticInequality` while leaving
+  matrix CFC, spectrum/localization, expression normalization, Tropp/Lieb,
+  conditioning, integrability, variance-proxy, and dimension/rank hardbone
+  leaves open.
+- Follow-up completed leaf:
+  `RM-HB-cfc-expression-normalization-contract`, proving spectrum localization,
+  Bernstein-specific CFC order transfer, CFC expression normalization, and the
+  pointwise Bernstein CFC primitive `bernsteinMatrixExp_le_quadratic`.
+- Follow-up completed cleanup:
+  generic optimized Matrix Bernstein wrappers now have CFC-free
+  `*_of_troppAssumptions` entry points through
+  `MatrixBernsteinPositiveSideTroppAssumptions` and
+  `MatrixBernsteinNegativeSideTroppAssumptions`.
+- Boundary preserved: this does not prove Tropp/Lieb, Golden-Thompson,
+  trace-MGF iteration, variance-proxy sharpening, full Matrix Bernstein, or
+  sample-covariance CFC-free wrappers.
+- Next safe leaf: `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
 
 ## Process
 
@@ -197,9 +216,10 @@
   `MatrixLE (1 + A) (matrixExp A)` for self-adjoint real matrices.
 - It also contains `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`,
   the scalar-multiple wrapper for downstream single-summand provider work.
-- The Bernstein CFC primitive remains typed only, and trace-mgf provider,
-  Golden-Thompson, Lieb, full CFC-free single-summand provider, and Matrix
-  Bernstein remain unproved.
+- At this stage the Bernstein CFC primitive was still typed only; the later
+  hardbone leaf proves it as `bernsteinMatrixExp_le_quadratic`. Trace-MGF
+  provider, Golden-Thompson, Lieb, full CFC-free single-summand provider, and
+  Matrix Bernstein were still outside this leaf.
 - Next safe task was MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## MB-S9 Single-Summand Provider Under CFC Leaf Update
@@ -211,9 +231,10 @@
 - The theorem preserves the typed target's explicit centeredness,
   integrability, boundedness, theta-range, self-adjointness, and
   second-moment comparison assumptions.
-- The Bernstein CFC primitive itself remains typed only. Tropp/Lieb,
-  trace-mgf provider, full CFC-free single-summand provider, and Matrix
-  Bernstein remain unproved.
+- At this stage the Bernstein CFC primitive itself was still typed only; the
+  later hardbone leaf proves it as `bernsteinMatrixExp_le_quadratic`.
+  Tropp/Lieb, trace-mgf provider, full CFC-free single-summand provider, and
+  Matrix Bernstein were still outside this leaf.
 - Next safe task was MB-S9-trace-mgf-to-laplace-tail-contract.
 
 ## MB-S9 RHS Normalization Leaf Update

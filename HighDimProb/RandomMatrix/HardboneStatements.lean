@@ -1,4 +1,5 @@
 import HighDimProb.RandomMatrix.TraceExp
+import HighDimProb.Analysis.RealInequalities
 
 /-!
 # RandomMatrix hardbone statement targets
@@ -69,9 +70,11 @@ abbrev bernsteinCFCExpressionNormalization_statement {n : Nat}
 /-- Source-oriented statement chain for the Bernstein matrix-exponential CFC
 primitive.
 
-The target says the current high-level matrix Bernstein CFC primitive should
-eventually follow from scalar Bernstein, spectral localization, CFC order
-transfer, and expression normalization. It is a typed contract only. -/
+The target says the current high-level matrix Bernstein CFC primitive follows
+from the scalar Bernstein theorem plus spectral localization, CFC order
+transfer, and expression normalization.  The individual leaves and the composed
+primitive are proved below; the statement remains useful as an explicit
+source-oriented contract. -/
 abbrev bernsteinMatrixExp_le_quadratic_of_cfcChain_statement {n : Nat}
     (A : Matrix (Fin n) (Fin n) Real) (theta R : Real) : Prop :=
   scalarBernsteinExpQuadraticInequality_statement theta R ->
@@ -556,11 +559,218 @@ abbrev traceMatrixExp_effectiveRank_bound_statement {n : Nat}
 
 /-! ## Thin consumers of hardbone statement targets -/
 
+/-- Proved scalar Bernstein exponential/quadratic inequality.
+
+This discharges `scalarBernsteinExpQuadraticInequality_statement` directly: it is
+no longer a typed-only target but a proved theorem.  The proof is the bounded
+scalar Bernstein moment-generating-function bound from
+`exp_le_one_add_add_half_sq_div_one_sub_third`, specialized along `u = theta * x`
+and `b = |theta| * R`.  It removes the scalar leaf of the Bernstein CFC chain as
+a black box; the later theorems in this file discharge the spectrum,
+Bernstein-specific CFC order-transfer, expression-normalization, and composed
+pointwise CFC leaves. -/
+theorem scalarBernsteinExpQuadraticInequality (theta R : Real) :
+    scalarBernsteinExpQuadraticInequality_statement theta R := by
+  intro x hx _hR hRange
+  have hub : |theta * x| ≤ |theta| * R := by
+    rw [abs_mul]
+    exact mul_le_mul_of_nonneg_left hx (abs_nonneg theta)
+  have hmain :=
+    exp_le_one_add_add_half_sq_div_one_sub_third hub hRange
+  have hden : (0 : Real) < 1 - |theta| * R / 3 := by linarith
+  have hcoeff :
+      ((theta * x) ^ 2 / 2) / (1 - |theta| * R / 3) =
+        bernsteinMGFCoeff theta R * x ^ 2 := by
+    unfold bernsteinMGFCoeff
+    field_simp [hden.ne']
+  simpa [hcoeff] using hmain
+
+section SpectrumLocalization
+
+open scoped Matrix.Norms.L2Operator
+
+/-- Proved spectrum localization from the deterministic operator-norm bound.
+
+This discharges the spectral-localization leaf used by the Bernstein CFC
+hardbone chain.  The zero-dimensional endpoint is handled separately by the
+empty spectrum; the nonempty endpoint reuses Mathlib's spectrum norm bound and
+the existing `deterministicOperatorNorm` vocabulary. -/
+theorem selfAdjointSpectrumBoundedByOperatorNorm {n : Nat}
+    (A : Matrix (Fin n) (Fin n) Real) (R : Real) :
+    selfAdjointSpectrumBoundedByOperatorNorm_statement A R := by
+  cases n with
+  | zero =>
+      intro _hA _hBound x hx
+      have hEmpty : spectrum Real A = ∅ := spectrum.of_subsingleton A
+      rw [hEmpty] at hx
+      exact False.elim hx
+  | succ n =>
+      intro _hA hBound x hx
+      have hnorm : ‖x‖ ≤ ‖A‖ := spectrum.norm_le_norm_of_mem hx
+      have hdet : |x| ≤ deterministicOperatorNorm A := by
+        simpa [Real.norm_eq_abs, deterministicOperatorNorm] using hnorm
+      exact hdet.trans hBound
+
+end SpectrumLocalization
+
+/-- Proved Bernstein CFC expression normalization.
+
+This discharges the expression-rewrite leaf in
+`bernsteinCFCExpressionNormalization_statement`.  It reuses Mathlib's
+continuous functional calculus algebra rules and the existing HighDimProb
+`matrixExp`/`matrixSquare` vocabulary; it does not prove scalar-to-matrix order
+transfer or the final Bernstein CFC primitive. -/
+theorem bernsteinCFCExpressionNormalization {n : Nat}
+    (A : Matrix (Fin n) (Fin n) Real) (theta R : Real) :
+    bernsteinCFCExpressionNormalization_statement A theta R := by
+  intro hA
+  constructor
+  · calc
+      cfc (fun x : Real => Real.exp (theta * x)) A =
+          cfc (Real.exp <| theta * ·) A := rfl
+      _ = cfc Real.exp (theta • A) := by
+          exact cfc_comp_const_mul theta Real.exp A (ha := hA.isSelfAdjoint)
+      _ = matrixExp (theta • A) := by
+          simpa [matrixExp] using
+            (CFC.real_exp_eq_normedSpace_exp
+              (a := theta • A)
+              (isSelfAdjointMatrix_smul theta hA).isSelfAdjoint)
+  · let c : Real := bernsteinMGFCoeff theta R
+    have hlin :
+        cfc (fun x : Real => 1 + theta * x) A =
+          (1 : Matrix (Fin n) (Fin n) Real) + theta • A := by
+      calc
+        cfc (fun x : Real => 1 + theta * x) A =
+            cfc (fun x : Real => (1 : Real) + theta * x) A := rfl
+        _ = (1 : Matrix (Fin n) (Fin n) Real) +
+              cfc (fun x : Real => theta * x) A := by
+            simpa using
+              (cfc_const_add (A := Matrix (Fin n) (Fin n) Real)
+                (R := Real) (p := IsSelfAdjoint)
+                (a := A) (r := 1) (f := fun x : Real => theta * x)
+                (ha := hA.isSelfAdjoint))
+        _ = (1 : Matrix (Fin n) (Fin n) Real) + theta • A := by
+            rw [cfc_const_mul_id (R := Real) theta A hA.isSelfAdjoint]
+    have hsq :
+        cfc (fun x : Real => c * x ^ 2) A = c • matrixSquare A := by
+      calc
+        cfc (fun x : Real => c * x ^ 2) A =
+            c • cfc (fun x : Real => x ^ 2) A := by
+              simpa using
+                (cfc_const_mul (A := Matrix (Fin n) (Fin n) Real)
+                  (R := Real) (p := IsSelfAdjoint)
+                  (a := A) (r := c) (f := fun x : Real => x ^ 2))
+        _ = c • matrixSquare A := by
+            rw [cfc_pow_id (R := Real) A 2 hA.isSelfAdjoint]
+            simp [matrixSquare, pow_two]
+    change
+      cfc (fun x : Real => 1 + theta * x + c * x ^ 2) A =
+        (1 : Matrix (Fin n) (Fin n) Real) + theta • A +
+          c • matrixSquare A
+    calc
+      cfc (fun x : Real => 1 + theta * x + c * x ^ 2) A =
+          cfc (fun x : Real => (1 + theta * x) + c * x ^ 2) A := rfl
+      _ = cfc (fun x : Real => 1 + theta * x) A +
+            cfc (fun x : Real => c * x ^ 2) A := by
+          exact cfc_add A
+            (fun x : Real => 1 + theta * x)
+            (fun x : Real => c * x ^ 2)
+      _ = (1 : Matrix (Fin n) (Fin n) Real) + theta • A +
+            c • matrixSquare A := by
+          rw [hlin, hsq]
+
+/-- Bernstein-specific CFC order transfer.
+
+The generic `cfcScalarInequalityToMatrixLE_statement` deliberately remains a
+typed contract for arbitrary functions, since arbitrary `f` and `g` need
+continuity hypotheses before Mathlib's `cfc_mono` applies.  This theorem proves
+the concrete Bernstein exponential/quadratic instance, whose functions are
+continuous. -/
+theorem cfcScalarInequalityToMatrixLE_bernsteinExpQuadratic {n : Nat}
+    (A : Matrix (Fin n) (Fin n) Real) (theta R : Real) :
+    cfcScalarInequalityToMatrixLE_statement
+      (fun x : Real => Real.exp (theta * x))
+      (fun x : Real =>
+        1 + theta * x + bernsteinMGFCoeff theta R * x ^ 2)
+      A := by
+  intro _hA hfg
+  unfold MatrixLE
+  have hle :
+      cfc (fun x : Real => Real.exp (theta * x)) A <=
+        cfc
+          (fun x : Real =>
+            1 + theta * x + bernsteinMGFCoeff theta R * x ^ 2) A := by
+    exact cfc_mono (a := A) hfg
+  have hPSD :
+      (cfc
+          (fun x : Real =>
+            1 + theta * x + bernsteinMGFCoeff theta R * x ^ 2) A -
+        cfc (fun x : Real => Real.exp (theta * x)) A).PosSemidef :=
+    Matrix.le_iff.mp hle
+  constructor
+  · apply Matrix.IsSymm.ext
+    intro i j
+    have h := Matrix.IsHermitian.apply hPSD.isHermitian i j
+    simpa using h
+  · intro x
+    exact matrixQuadraticForm_nonneg_of_posSemidef hPSD x
+
+/-- Compose the four Bernstein CFC leaves into the pointwise matrix
+exponential/quadratic primitive.
+
+This theorem is the reusable proof skeleton behind the CFC hardbone route:
+localize the spectrum by the operator-norm bound, apply the scalar Bernstein
+inequality on that spectrum, transfer the scalar CFC order to matrix order, and
+rewrite the CFC expressions back to `matrixExp` and `matrixSquare`. -/
+theorem bernsteinMatrixExp_le_quadratic_of_cfcLeaves {n : Nat}
+    (A : Matrix (Fin n) (Fin n) Real) (theta R : Real)
+    (hScalar : scalarBernsteinExpQuadraticInequality_statement theta R)
+    (hSpectrum : selfAdjointSpectrumBoundedByOperatorNorm_statement A R)
+    (hCFC :
+      cfcScalarInequalityToMatrixLE_statement
+        (fun x : Real => Real.exp (theta * x))
+        (fun x : Real =>
+          1 + theta * x + bernsteinMGFCoeff theta R * x ^ 2)
+        A)
+    (hNormalize : bernsteinCFCExpressionNormalization_statement A theta R) :
+    bernsteinMatrixExp_le_quadratic_statement A theta R := by
+  intro hA hBound hR hRange
+  have hSpectrumBound :
+      forall x : Real, x ∈ spectrum Real A -> |x| <= R :=
+    hSpectrum hA hBound
+  have hScalarOnSpectrum :
+      forall x : Real, x ∈ spectrum Real A ->
+        Real.exp (theta * x) <=
+          1 + theta * x + bernsteinMGFCoeff theta R * x ^ 2 := by
+    intro x hx
+    exact hScalar x (hSpectrumBound x hx) hR hRange
+  have hOrder :=
+    hCFC hA hScalarOnSpectrum
+  rcases hNormalize hA with ⟨hExp, hQuad⟩
+  simpa [hExp, hQuad] using hOrder
+
+/-- Proved Bernstein-specific matrix exponential/quadratic CFC primitive.
+
+This discharges the local Bernstein CFC hardbone chain by reusing the proved
+scalar Bernstein inequality, spectrum localization, Bernstein-specific CFC
+order transfer, and CFC expression normalization. It does not prove Tropp/Lieb,
+Golden-Thompson, trace-MGF iteration, variance-proxy control, or any full
+Matrix Bernstein tail theorem. -/
+theorem bernsteinMatrixExp_le_quadratic {n : Nat}
+    (A : Matrix (Fin n) (Fin n) Real) (theta R : Real) :
+    bernsteinMatrixExp_le_quadratic_statement A theta R :=
+  bernsteinMatrixExp_le_quadratic_of_cfcLeaves A theta R
+    (scalarBernsteinExpQuadraticInequality theta R)
+    (selfAdjointSpectrumBoundedByOperatorNorm A R)
+    (cfcScalarInequalityToMatrixLE_bernsteinExpQuadratic A theta R)
+    (bernsteinCFCExpressionNormalization A theta R)
+
 /-- Thin consumer for the Bernstein CFC hardbone chain.
 
-This theorem does not prove scalar Bernstein, spectral localization, CFC order
-transfer, or expression normalization; it only applies the typed chain target
-to explicit assumptions. -/
+The scalar Bernstein leaf can now be supplied by
+`scalarBernsteinExpQuadraticInequality`. This consumer still keeps the
+remaining spectrum/localization, CFC order-transfer, and expression
+normalization assumptions explicit. -/
 theorem bernsteinMatrixExp_le_quadratic_of_cfcChain {n : Nat}
     (A : Matrix (Fin n) (Fin n) Real) (theta R : Real)
     (hChain : bernsteinMatrixExp_le_quadratic_of_cfcChain_statement A theta R)
@@ -575,6 +785,40 @@ theorem bernsteinMatrixExp_le_quadratic_of_cfcChain {n : Nat}
     (hNormalize : bernsteinCFCExpressionNormalization_statement A theta R) :
     bernsteinMatrixExp_le_quadratic_statement A theta R :=
   hChain hScalar hSpectrum hCFC hNormalize
+
+/-- Thin consumer for the Bernstein CFC hardbone chain with proved scalar and
+expression-normalization leaves supplied by core API.
+
+The remaining assumptions are exactly the current chain statement, spectral
+localization, and scalar-to-matrix CFC order transfer. -/
+theorem bernsteinMatrixExp_le_quadratic_of_spectrum_cfcOrder {n : Nat}
+    (A : Matrix (Fin n) (Fin n) Real) (theta R : Real)
+    (hChain : bernsteinMatrixExp_le_quadratic_of_cfcChain_statement A theta R)
+    (hSpectrum : selfAdjointSpectrumBoundedByOperatorNorm_statement A R)
+    (hCFC :
+      cfcScalarInequalityToMatrixLE_statement
+        (fun x : Real => Real.exp (theta * x))
+        (fun x : Real =>
+          1 + theta * x + bernsteinMGFCoeff theta R * x ^ 2)
+        A) :
+    bernsteinMatrixExp_le_quadratic_statement A theta R :=
+  hChain (scalarBernsteinExpQuadraticInequality theta R) hSpectrum hCFC
+    (bernsteinCFCExpressionNormalization A theta R)
+
+/-- Thin consumer for the Bernstein CFC hardbone chain with the proved scalar,
+Bernstein-specific CFC order-transfer, and expression-normalization leaves
+supplied by core API.
+
+The only remaining mathematical input to the chain is spectral localization
+from the operator-norm bound, plus the chain statement itself. -/
+theorem bernsteinMatrixExp_le_quadratic_of_cfcChain_spectrum {n : Nat}
+    (A : Matrix (Fin n) (Fin n) Real) (theta R : Real)
+    (hChain : bernsteinMatrixExp_le_quadratic_of_cfcChain_statement A theta R)
+    (hSpectrum : selfAdjointSpectrumBoundedByOperatorNorm_statement A R) :
+    bernsteinMatrixExp_le_quadratic_statement A theta R :=
+  hChain (scalarBernsteinExpQuadraticInequality theta R) hSpectrum
+    (cfcScalarInequalityToMatrixLE_bernsteinExpQuadratic A theta R)
+    (bernsteinCFCExpressionNormalization A theta R)
 
 /-- Thin consumer for the log/order-to-`K` hardbone chain.
 

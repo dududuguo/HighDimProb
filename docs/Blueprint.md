@@ -22,7 +22,8 @@ RandomMatrix / Matrix Bernstein proof surface:
   `HighDimProb.Examples`;
 - RandomMatrix has prefix/suffix bookkeeping, a natural `Fin m` Tropp
   trace-state route, sample-covariance wrappers under explicit primitives,
-  and named negative-side provider-transfer adapters;
+  named negative-side provider-transfer adapters, and a proved scalar
+  Bernstein hardbone leaf;
 - Tropp/Lieb, Golden-Thompson, Bernstein CFC, full Matrix Bernstein, and
   unconditional sample-covariance concentration are not claimed.
 
@@ -141,9 +142,10 @@ Reviewed experimental declarations:
 - Canonical high-dimensional subGaussian vector predicate and ψ₂ vector norm/gauge.
 - Finite-second-moment predicates and covariance identity bridge lemmas.
 - Distribution classes for Gaussian and Bernoulli random vectors.
-- Full Tropp/Lieb, Golden-Thompson, and Bernstein CFC proofs.
+- Full Tropp/Lieb and Golden-Thompson proofs.
 - Full unconditional Matrix Bernstein theorem.
-- Tropp/CFC-free sample-covariance operator-norm concentration.
+- Tropp-only sample-covariance wrappers without explicit sample-covariance CFC
+  fields.
 - Public-friendly natural-state Matrix Bernstein assumption bundle.
 - Natural history measurability, independence conditioning, and trace-exp
   integrability propagation for the conditional-step Tropp route.
@@ -160,4 +162,4 @@ Reviewed experimental declarations:
 
 ## Next safe tasks
 
-1. `RM-HB11-select-first-hardbone-proof-leaf`.
+1. `RM-HB-sample-covariance-cfc-free-wrapper-contract`.

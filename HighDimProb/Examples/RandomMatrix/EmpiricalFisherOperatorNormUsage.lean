@@ -7,7 +7,7 @@ This examples-only file packages the empirical Fisher / mini-batch gradient
 covariance use case for the current self-adjoint operator-norm Matrix Bernstein
 route. It reuses the gradient rank-one vocabulary from
 `GradientCovarianceUsage` and keeps neural-network, SGD, independence,
-boundedness, variance-proxy, CFC, and Tropp hypotheses explicit.
+boundedness, variance-proxy, and Tropp hypotheses explicit.
 -/
 
 namespace HighDimProb
@@ -57,9 +57,9 @@ structure EmpiricalFisherTailAssumptions {Omega : Type*}
     forall b : Fin batch, forall omega,
       vectorSqNorm (miniBatchGradientFamily G b omega) <= R
   positiveSide :
-    MatrixBernsteinPositiveSideAssumptions (P := P) A R t sigmaSq
+    MatrixBernsteinPositiveSideTroppAssumptions (P := P) A R t sigmaSq
   negativeSide :
-    MatrixBernsteinNegativeSideAssumptions (P := P) A Rneg t sigmaSqNeg
+    MatrixBernsteinNegativeSideTroppAssumptions (P := P) A Rneg t sigmaSqNeg
 
 /--
 Empirical Fisher / mini-batch gradient covariance operator-norm tail usage.
@@ -81,7 +81,7 @@ theorem empiricalFisher_operatorNorm_tail_usage
       matrixBernsteinTwoSidedOptimizedScalarTailRHS
         (n + 1) R Rneg t sigmaSq sigmaSqNeg := by
   exact
-    matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions
+    matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions
       (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
       (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
       h.positiveSide h.negativeSide

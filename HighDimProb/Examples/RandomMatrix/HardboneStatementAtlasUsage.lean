@@ -31,6 +31,11 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check traceMatrixExp_effectiveRank_bound_statement
 
 #check bernsteinMatrixExp_le_quadratic_of_cfcChain
+#check selfAdjointSpectrumBoundedByOperatorNorm
+#check bernsteinCFCExpressionNormalization
+#check cfcScalarInequalityToMatrixLE_bernsteinExpQuadratic
+#check bernsteinMatrixExp_le_quadratic_of_cfcLeaves
+#check bernsteinMatrixExp_le_quadratic
 #check troppLogExpComparisonToK_of_logMonotone_traceExpMono
 #check troppMasterTraceMGFStep_of_liebJensen
 #check troppMasterTraceMGFConditionalStep_of_conditioningBridge

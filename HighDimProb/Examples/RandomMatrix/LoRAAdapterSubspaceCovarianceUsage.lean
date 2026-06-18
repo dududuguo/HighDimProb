@@ -82,7 +82,7 @@ abbrev centeredLoRAAdapterCovarianceSummands {Omega : Type*}
 Usage assumptions for LoRA / adapter-subspace covariance concentration.
 
 The first fields state the ML-facing assumptions on adapter-coordinate
-gradients. The Matrix Bernstein fields reuse the core positive- and
+gradients. The Matrix Bernstein fields reuse the CFC-free core positive- and
 negative-side assumption bundles for the centered adapter covariance summands.
 The adapter fields document the domain model; they do not derive those bundles,
 which remain the actual tail-proof obligations.
@@ -105,9 +105,9 @@ structure LoRAAdapterSubspaceCovarianceAssumptions {Omega : Type*}
     A = centeredLoRAAdapterCovarianceSummands
       (P := P) adapterFeature fullGradients
   positiveSide :
-    MatrixBernsteinPositiveSideAssumptions (P := P) A R t sigmaSq
+    MatrixBernsteinPositiveSideTroppAssumptions (P := P) A R t sigmaSq
   negativeSide :
-    MatrixBernsteinNegativeSideAssumptions (P := P) A Rneg t sigmaSqNeg
+    MatrixBernsteinNegativeSideTroppAssumptions (P := P) A Rneg t sigmaSqNeg
 
 /--
 LoRA / adapter-subspace gradient covariance operator-norm tail usage.
@@ -129,7 +129,7 @@ theorem loraAdapterSubspaceCovariance_operatorNorm_tail_usage
       matrixBernsteinTwoSidedOptimizedScalarTailRHS
         (r + 1) R Rneg t sigmaSq sigmaSqNeg := by
   exact
-    matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions
+    matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions
       (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
       (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
       h.positiveSide h.negativeSide
