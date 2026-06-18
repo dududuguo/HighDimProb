@@ -6,10 +6,12 @@ open scoped MatrixOrder Matrix.Norms.Operator
 
 variable {Omega : Type*} [MeasurableSpace Omega]
 variable {P : Measure Omega}
+variable [MeasureTheory.IsProbabilityMeasure P]
 variable {m n : Nat}
 variable (A H M K : Matrix (Fin n) (Fin n) Real)
 variable (B S : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
 variable (Y : RandomMatrix Omega n n)
+variable (D : RealRandomVariable Omega)
 variable (theta R sigmaSq effectiveRank : Real)
 variable (rankBound supportDim : Nat)
 variable (X : Fin m -> RandomMatrix Omega n n)
@@ -38,7 +40,7 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check matrixExpScaledIntegrable_of_provider_statement
 #check traceExpIntegrable_troppStateHistory_add_step_statement
 #check traceExpIntegrable_troppStateHistory_add_K_statement
-#check traceExpIntegrable_randomMatrixSum_of_summandProviders_statement
+#check traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement
 #check matrixSquare_centeredRandomMatrix_expectation_expansion_statement
 #check centeredRankOneSquare_le_rankOneSecondMoment_statement
 #check sampleCovarianceVarianceProxy_sharp_statement
@@ -67,7 +69,11 @@ example : Prop :=
   troppConditionalStep_of_iIndepFun_statement (P := P) theta X Kfam mHist
 
 example : Prop :=
-  traceMatrixExp_le_rank_exp_lambdaMax_statement B rankBound
+  traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement
+    (P := P) theta X D
+
+example : Prop :=
+  traceMatrixExp_le_rank_exp_lambdaMax_statement B S rankBound
 
 example : Prop :=
   traceMatrixExp_le_supportDim_exp_lambdaMax_statement B S supportDim

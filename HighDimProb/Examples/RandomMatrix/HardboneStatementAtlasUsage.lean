@@ -26,6 +26,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check troppMasterTraceMGFStep_of_liebJensen_statement
 #check troppConditionalStep_of_iIndepFun_statement
 #check matrixExpScaledIntegrable_of_provider_statement
+#check traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement
 #check sampleCovarianceVarianceProxy_sharp_statement
 #check traceMatrixExp_effectiveRank_bound_statement
 
@@ -45,7 +46,7 @@ example {n : Nat} (H M K : Matrix (Fin n) (Fin n) Real) : Prop :=
   troppLogExpComparisonToK_of_logOrderKChain_statement H M K
 
 example {Omega : Type*} [MeasurableSpace Omega]
-    (P : Measure Omega) {n : Nat}
+    (P : Measure Omega) [IsProbabilityMeasure P] {n : Nat}
     (H : Matrix (Fin n) (Fin n) Real)
     (Z : RandomMatrix Omega n n) : Prop :=
   troppMasterTraceMGFStep_of_liebJensen_statement (P := P) H Z
@@ -65,14 +66,22 @@ example {Omega : Type*} [MeasurableSpace Omega]
   matrixExpScaledIntegrable_of_provider_statement (P := P) theta R X
 
 example {Omega : Type*} [MeasurableSpace Omega]
+    (P : Measure Omega) {m n : Nat}
+    (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (D : RealRandomVariable Omega) : Prop :=
+  traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement
+    (P := P) theta X D
+
+example {Omega : Type*} [MeasurableSpace Omega]
     (P : Measure Omega) [IsProbabilityMeasure P] {m n : Nat}
     (X : Fin m -> RandomVector Omega n)
     (V : Fin m -> Matrix (Fin n) (Fin n) Real)
     (sigma2 : Real) : Prop :=
   sampleCovarianceVarianceProxy_sharp_statement (P := P) X V sigma2
 
-example {n : Nat} (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+example {n : Nat} (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (rankBound : Nat) : Prop :=
-  traceMatrixExp_le_rank_exp_lambdaMax_statement A rankBound
+  traceMatrixExp_le_rank_exp_lambdaMax_statement A support rankBound
 
 end HighDimProb.Examples.RandomMatrix.HardboneStatementAtlasUsage

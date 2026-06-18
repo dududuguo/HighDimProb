@@ -74,7 +74,7 @@ Integrability provider chain:
 - `matrixExpScaledIntegrable_of_provider_statement`
 - `traceExpIntegrable_troppStateHistory_add_step_statement`
 - `traceExpIntegrable_troppStateHistory_add_K_statement`
-- `traceExpIntegrable_randomMatrixSum_of_summandProviders_statement`
+- `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement`
 
 Variance-proxy / centered-square chain:
 
@@ -102,9 +102,9 @@ Hardbone status table:
 |---|---|---|---|---|
 | Bernstein CFC | `bernsteinMatrixExp_le_quadratic_of_cfcChain_statement` | typed-prop | `bernsteinMatrixExp_le_quadratic_of_cfcChain` | scalar Bernstein, spectral localization, CFC order transfer, expression normalization |
 | Log/order-to-`K` | `troppLogExpComparisonToK_of_logOrderKChain_statement` | typed-prop | `troppLogExpComparisonToK_of_logMonotone_traceExpMono` | operator-log monotonicity, log domain for `matrixExp`, trace-exp monotonicity |
-| Tropp/Lieb/GT one-step | `troppMasterTraceMGFStep_of_liebJensen_statement` | typed-prop | `troppMasterTraceMGFStep_of_liebJensen` | Lieb concavity, Jensen, log-exp normalization; Golden-Thompson is separate |
+| Tropp/Lieb/GT one-step | `troppMasterTraceMGFStep_of_liebJensen_statement` | typed-prop | `troppMasterTraceMGFStep_of_liebJensen` | Lieb concavity, probability-measure Jensen, log-exp normalization; Golden-Thompson is separate |
 | Conditioning / independence | `troppConditionalStep_of_iIndepFun_statement` | typed-prop | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | generated histories, history-step independence, conditional expectation reduction |
-| Trace-exp integrability | `traceExpIntegrable_randomMatrixSum_of_summandProviders_statement` | typed-prop | none yet | matrix-exp and trace-exp integrability propagation |
+| Trace-exp integrability | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement` | typed-prop | none yet | absolute domination, Golden-Thompson/product, or boundedness provider |
 | Variance proxy / centered square | `varianceProxyNormBound_of_centeredSquareChain_statement` | typed-prop | none yet | centered-square expansion, rank-one comparison, order/norm bookkeeping |
 | Dimension / support / effective rank | `traceMatrixExp_effectiveRank_bound_statement` | typed-prop | none yet | rank/support/effective-rank core theory |
 | Thin consumers | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | proven | public API/test/judge/example checks | thin wrapper only; no hard fact is discharged |
@@ -112,8 +112,10 @@ Hardbone status table:
 These declarations are typed `Prop` contracts, not hard theorem proofs. They
 split the current large CFC, log/order, Tropp/Lieb, conditioning,
 integrability, variance-proxy, and dimension/rank blockers into named leaves.
-The thin consumers only apply explicit statement-chain assumptions; they do
-not prove CFC, Lieb/Jensen, conditioning, finite-family Tropp, or any Matrix
+The rank and effective-rank trace-exp targets keep support or ambient-identity
+terms explicit, so zero directions are not accidentally treated as free. The
+thin consumers only apply explicit statement-chain assumptions; they do not
+prove CFC, Lieb/Jensen, conditioning, finite-family Tropp, or any Matrix
 Bernstein tail theorem.
 
 ## TraceExp / Tropp Bookkeeping Surface

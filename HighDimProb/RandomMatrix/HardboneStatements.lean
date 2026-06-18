@@ -169,7 +169,8 @@ This is the source-oriented Jensen target used before specializing
 `Y omega = matrixExp (Z omega)`. It reuses the repository's entrywise
 `matrixExpect`, scalar `expect`, and existing integrability vocabulary. -/
 abbrev liebJensenTraceExp_statement {Omega : Type*} [MeasurableSpace Omega]
-    {P : MeasureTheory.Measure Omega} {n : Nat}
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {n : Nat}
     (H : Matrix (Fin n) (Fin n) Real)
     (Y : RandomMatrix Omega n n) : Prop :=
   liebTraceExpConcavity_statement H ->
@@ -210,7 +211,8 @@ Lieb/Jensen facts.
 The existing one-step primitive appears here only as the conclusion of the
 chain. The finite-family Tropp primitive is not part of this statement. -/
 abbrev troppMasterTraceMGFStep_of_liebJensen_statement {Omega : Type*}
-    [MeasurableSpace Omega] {P : MeasureTheory.Measure Omega} {n : Nat}
+    [MeasurableSpace Omega] {P : MeasureTheory.Measure Omega}
+    [MeasureTheory.IsProbabilityMeasure P] {n : Nat}
     (H : Matrix (Fin n) (Fin n) Real)
     (Z : RandomMatrix Omega n n) : Prop :=
   liebJensenTraceExp_statement (P := P) H (fun omega => matrixExp (Z omega)) ->
@@ -387,20 +389,25 @@ abbrev traceExpIntegrable_troppStateHistory_add_K_statement
               traceMatrixExp
                 (@troppStateHistory Omega mOmega m n theta X K i omega + K i))
 
-/-- Provider target for full-sum trace-exponential integrability from summand
-providers. -/
-abbrev traceExpIntegrable_randomMatrixSum_of_summandProviders_statement
+/-- Provider target for full-sum trace-exponential integrability from an
+explicit absolute-domination provider.
+
+Summand-wise matrix-exponential integrability is not by itself enough to
+control `trace exp` of a noncommutative sum. This target therefore keeps the
+needed absolute domination provider explicit until a later
+Golden-Thompson/product or boundedness API supplies it. -/
+abbrev traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement
     {Omega : Type*} [mOmega : MeasurableSpace Omega]
     {P : MeasureTheory.Measure Omega} {m n : Nat}
     (theta : Real)
-    (X : Fin m -> RandomMatrix Omega n n) : Prop :=
-  (forall i, @IsRandomMatrix Omega mOmega n n P (X i)) ->
-    (forall i, @RandomSelfAdjointMatrix Omega mOmega n P (X i)) ->
-      (forall i,
-        @IntegrableRandomMatrix Omega mOmega n n P
-          (fun omega => matrixExp (SMul.smul theta (X i omega)))) ->
-        @IntegrableRealRandomVariable Omega mOmega P
-          (traceExpIntegrand (randomMatrixSum X) theta)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (D : RealRandomVariable Omega) : Prop :=
+  @IntegrableRealRandomVariable Omega mOmega P D ->
+    (forall omega, 0 <= D omega) ->
+      (forall omega,
+        abs (traceExpIntegrand (randomMatrixSum X) theta omega) <= D omega) ->
+      @IntegrableRealRandomVariable Omega mOmega P
+        (traceExpIntegrand (randomMatrixSum X) theta)
 
 /-! ## Variance-proxy and centered-square hardbone statement chain -/
 
@@ -486,20 +493,27 @@ abbrev varianceProxyNormBound_of_centeredSquareChain_statement
 
 /-! ## Dimension, support, and effective-rank hardbone statement chain -/
 
-/-- Rank-refined trace-exponential dimension-factor target.
+/-- Rank-refined trace-exponential dimension-factor target with an explicit
+support certificate.
 
 The current proved ambient-dimension bound uses `(n + 1)` through
 `traceMatrixExp_smul_le_card_exp_of_lambdaMaxOrdered_le`. This target names the
-future replacement where a local rank certificate supplies `rankBound` instead.
+future replacement where a local rank/support certificate supplies `rankBound`
+instead. Without the support comparison, the statement is false for `A = 0`
+and `rankBound < n + 1`.
 -/
 abbrev traceMatrixExp_le_rank_exp_lambdaMax_statement {n : Nat}
-    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (rankBound : Nat) : Prop :=
   0 < rankBound ->
     rankBound <= n + 1 ->
-      forall hA : IsSelfAdjointMatrix A,
-        traceMatrixExp A <=
-          (rankBound : Real) * Real.exp (lambdaMaxOrdered A hA)
+      IsPSDMatrix support ->
+        matrixTrace support <= (rankBound : Real) ->
+          forall hA : IsSelfAdjointMatrix A,
+            MatrixLE (matrixExp A)
+              (Real.exp (lambdaMaxOrdered A hA) • support) ->
+              traceMatrixExp A <=
+                (rankBound : Real) * Real.exp (lambdaMaxOrdered A hA)
 
 /-- Support-dimension trace-exponential target with an explicit local support
 certificate.
@@ -524,7 +538,8 @@ abbrev traceMatrixExp_le_supportDim_exp_lambdaMax_statement {n : Nat}
 
 The local assumption `matrixTrace V <= effectiveRank * sigmaSq` records the
 usual intrinsic-dimension certificate without introducing a core
-effective-rank definition in this statement-atlas phase. -/
+effective-rank definition in this statement-atlas phase. The ambient identity
+term is explicit because zero eigenvalue directions contribute `exp 0 = 1`. -/
 abbrev traceMatrixExp_effectiveRank_bound_statement {n : Nat}
     (V : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (c sigmaSq effectiveRank : Real) : Prop :=
@@ -536,7 +551,8 @@ abbrev traceMatrixExp_effectiveRank_bound_statement {n : Nat}
             forall hV : IsSelfAdjointMatrix V,
               lambdaMaxOrdered V hV <= sigmaSq ->
                 traceMatrixExp (c • V) <=
-                  effectiveRank * Real.exp (c * sigmaSq)
+                  ((n + 1 : Nat) : Real) +
+                    effectiveRank * (Real.exp (c * sigmaSq) - 1)
 
 /-! ## Thin consumers of hardbone statement targets -/
 
@@ -577,7 +593,8 @@ theorem troppLogExpComparisonToK_of_logMonotone_traceExpMono {n : Nat}
 This theorem does not prove Lieb concavity, Jensen, or log-exp normalization;
 it only applies the typed Phase 3 chain target. -/
 theorem troppMasterTraceMGFStep_of_liebJensen {Omega : Type*}
-    [MeasurableSpace Omega] {P : MeasureTheory.Measure Omega} {n : Nat}
+    [MeasurableSpace Omega] {P : MeasureTheory.Measure Omega}
+    [MeasureTheory.IsProbabilityMeasure P] {n : Nat}
     (H : Matrix (Fin n) (Fin n) Real)
     (Z : RandomMatrix Omega n n)
     (hChain : troppMasterTraceMGFStep_of_liebJensen_statement (P := P) H Z)
