@@ -39,11 +39,9 @@
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
   - Current repository next task:
-    RM-MAIN-natural-state-assumption-bundle-contract. Negative trace-MGF
-    provider-wrapper audit remains a separate side leaf now that named
-    opposite-parameter sample-covariance provider-transfer adapters exist.
-    Matrix Bernstein, Hanson-Wright, and WLLN/SLLN remain separate future
-    directions
+    RM-HB11-select-first-hardbone-proof-leaf. Natural-state assumption
+    bundling, negative trace-MGF provider cleanup, Matrix Bernstein,
+    Hanson-Wright, and WLLN/SLLN remain separate future directions.
 - OrliczToTail
 - TailToOrlicz
 - MomentImplications
@@ -140,7 +138,11 @@
   Lieb, Golden-Thompson, Bernstein CFC, independence conditioning,
   trace-exp integrability propagation, full Matrix Bernstein, or a
   public-friendly sample covariance natural-state wrapper.
-- Next safe leaf: `RM-MAIN-natural-state-assumption-bundle-contract`.
+- Follow-up completed leaf:
+  `RM-HB-hardbone-statement-atlas`, naming CFC, log/order, Tropp/Lieb,
+  conditioning, integrability, variance-proxy, and dimension/rank blockers as
+  typed statement targets with selected thin consumers.
+- Next safe leaf: `RM-HB11-select-first-hardbone-proof-leaf`.
 
 ## Process
 

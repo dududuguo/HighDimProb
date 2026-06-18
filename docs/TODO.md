@@ -9,8 +9,8 @@ This is the active short list. Old completed task logs were collapsed into
 - Keep the Matrix Bernstein under-primitives API honest: wrappers may use Tropp/CFC/provider assumptions explicitly, but should not claim the missing primitive proofs.
 - Continue reducing repeated optimized-RHS formulas through shared helpers in `ConcentrationStatements.lean`.
 - Keep public examples readable: name families and adapters first, then call the shared RandomMatrix API.
-- Next RandomMatrix bookkeeping task:
-  `RM-MAIN-natural-state-assumption-bundle-contract`.
+- Next RandomMatrix hardbone task:
+  `RM-HB11-select-first-hardbone-proof-leaf`.
 
 ## Active Documentation Work
 

@@ -21,10 +21,11 @@ The documentation build is broader than the stable import root. The
 
 - `HighDimProb`
 - `HighDimProb.Experimental`
+- `HighDimProb.Examples`
 
-This makes the generated Library show both the stable API and the explicitly
-experimental API directory, without making `import HighDimProb` import
-experimental declarations.
+This makes the generated Library show the stable API, the explicitly
+experimental API directory, and public examples, without making
+`import HighDimProb` import experimental declarations.
 
 ## Experimental API
 

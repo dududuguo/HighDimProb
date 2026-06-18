@@ -32,6 +32,12 @@ negative-side provider-transfer adapters for opposite-parameter exp/trace/CFC
 assumptions; these are adapter lemmas, not unconditional provider proofs.
 
 Important current names are listed in [`RandomMatrixAPI.md`](RandomMatrixAPI.md).
+The hardbone statement atlas in
+[`HardboneStatements.lean`](../HighDimProb/RandomMatrix/HardboneStatements.lean)
+names CFC, log/order, Tropp/Lieb, conditioning, integrability,
+variance-proxy, and dimension/rank blockers as `typed-prop` targets. Selected
+consumer wrappers are proven thin applications of those targets; they do not
+close the hard theorem families.
 
 ## Not Yet Proved
 
@@ -42,6 +48,8 @@ Important current names are listed in [`RandomMatrixAPI.md`](RandomMatrixAPI.md)
 - Tropp/CFC-free sample-covariance operator-norm concentration.
 - Natural history measurability, independence conditioning, and trace-exp
   integrability propagation for the conditional-step Tropp route.
+- Proofs of the hardbone statement targets for CFC, Tropp/Lieb, conditioning,
+  integrability, variance-proxy sharpening, and dimension/rank refinements.
 - A public-friendly Matrix Bernstein wrapper directly over the natural-state
   route.
 

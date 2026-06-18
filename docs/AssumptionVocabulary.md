@@ -75,9 +75,12 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
   family adapter branch, negative square-integrability adapter, negative
   exp/trace sign-normalization audit, negative Tropp primitive boundary audit,
   and named sample-covariance opposite-parameter exp/trace/CFC
-  provider-transfer adapters are complete. The next RandomMatrix branch is
-  `RM-MAIN-natural-state-assumption-bundle-contract`; negative trace-MGF
-  provider-wrapper cleanup remains a side leaf and should reuse the named
-  provider-transfer adapters before adding new assumptions.
+  provider-transfer adapters are complete. The hardbone statement atlas now
+  names the CFC, log/order, Tropp/Lieb, conditioning, integrability,
+  variance-proxy, and dimension/rank blockers as typed statement targets. The
+  next RandomMatrix hardbone branch is
+  `RM-HB11-select-first-hardbone-proof-leaf`; natural-state assumption
+  bundling and negative trace-MGF provider-wrapper cleanup remain future side
+  leaves.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.

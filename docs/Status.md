@@ -11,7 +11,10 @@ surfaces are tracked in the focused reference docs linked below.
 - Active branch: RandomMatrix / Matrix Bernstein experimental API.
 - Stable import surface: [`HighDimProb`](../HighDimProb.lean).
 - Experimental import surface: [`HighDimProb.Experimental`](../HighDimProb/Experimental.lean) and [`HighDimProb.Examples`](../HighDimProb/Examples.lean).
-- Main active implementation file: [`HighDimProb/RandomMatrix/ConcentrationStatements.lean`](../HighDimProb/RandomMatrix/ConcentrationStatements.lean).
+- Main active RandomMatrix files:
+  [`TraceExp.lean`](../HighDimProb/RandomMatrix/TraceExp.lean),
+  [`HardboneStatements.lean`](../HighDimProb/RandomMatrix/HardboneStatements.lean), and
+  [`ConcentrationStatements.lean`](../HighDimProb/RandomMatrix/ConcentrationStatements.lean).
 
 ## Active API Pointers
 
@@ -81,10 +84,14 @@ Example modules:
 - `ConditionalStateEndpointUsage`
 - `NaturalTroppPipelineUsage`
 - `ReindexedTroppBridgeUsage`
+- `HardboneStatementAtlasUsage`
 
 ## Current Caveats
 
 - RandomMatrix / Matrix Bernstein remains experimental.
+- The hardbone statement atlas now names CFC, log/order, Tropp/Lieb,
+  conditioning, integrability, variance-proxy, and dimension/rank blockers as
+  typed statement targets, with selected thin consumers only.
 - Tropp/Lieb, Golden-Thompson, Bernstein CFC, and full Matrix Bernstein are not claimed as complete unless a referenced theorem says so directly.
 - Prefix/suffix/state bookkeeping now includes a natural `Fin m` trace-state
   route through the finite-family Tropp and trace-MGF provider surfaces. This
@@ -97,7 +104,7 @@ Example modules:
 - Negative-side provider-transfer adapters only move explicit opposite-parameter
   assumptions onto the named negative sample-covariance family; they do not
   prove exponential integrability, trace-exponential integrability, or CFC.
-- Next safe RandomMatrix task: `RM-MAIN-natural-state-assumption-bundle-contract`.
+- Next safe hardbone task: `RM-HB11-select-first-hardbone-proof-leaf`.
 
 ## Verification
 

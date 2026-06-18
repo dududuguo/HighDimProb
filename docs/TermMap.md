@@ -12,8 +12,8 @@ This is the active term index. The old detailed map was collapsed into
 | Random vectors | random-vector, covariance, isotropic, subGaussian-vector vocabulary | [`HighDimProb/Vector`](../HighDimProb/Vector) |
 | Geometry | nets, metric entropy, Gaussian width vocabulary | [`HighDimProb/Geometry`](../HighDimProb/Geometry) |
 | Random matrices | random matrix families, self-adjointness, sums, operator norm, spectral events | [`HighDimProb/RandomMatrix`](../HighDimProb/RandomMatrix) |
-| Matrix Bernstein | trace-MGF, CFC/Tropp primitives, prefix/state bookkeeping, natural-state TraceExp route, reindex transport, negative-side provider-transfer adapters, optimized scalar RHS, quadratic-form and operator-norm wrappers | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) |
-| Examples | sample covariance, random features, gradients, NTK, LoRA, attention, Fisher, prefix-state, conditional-state, natural-Tropp, and reindexed-Tropp routes | [`HighDimProb/Examples/RandomMatrix`](../HighDimProb/Examples/RandomMatrix) |
+| Matrix Bernstein | trace-MGF, explicit CFC/Tropp primitives, hardbone statement targets, prefix/state bookkeeping, reindex transport, negative-side adapters, optimized scalar RHS, quadratic-form and operator-norm wrappers | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) |
+| Examples | sample covariance, random features, gradients, NTK, LoRA, attention, Fisher, prefix-state, conditional-state, natural-Tropp, reindexed-Tropp, and hardbone statement-atlas routes | [`HighDimProb/Examples/RandomMatrix`](../HighDimProb/Examples/RandomMatrix) |
 
 ## Lookup Rule
 

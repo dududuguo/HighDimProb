@@ -26,12 +26,17 @@ git diff --check
 
 - Root import smoke tests: `HighDimProbTest/Smoke.lean`, `PublicImports.lean`, `BranchImports.lean`, `ExperimentalImports.lean`.
 - Scalar API tests: probability, tail, Lp/moment, Orlicz, subGaussian, subExponential, and scalar concentration files under `HighDimProbTest`.
-- RandomMatrix API tests: variance proxy, spectral, trace-exp, Laplace, concentration, and example API checks.
+- RandomMatrix API tests: variance proxy, spectral, trace-exp, hardbone
+  statement targets, Laplace, concentration, and example API checks.
 - RandomMatrix bookkeeping checks: trace-exp endpoint wrappers and the
   natural-state TraceExp route are covered in
   `HighDimProbTest/RandomMatrixTraceExpAPI.lean` and
   `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`; example modules are covered
   through `lake build HighDimProb.Examples`.
+- RandomMatrix hardbone statement-target checks are covered in
+  `HighDimProbTest/RandomMatrixHardboneStatementsAPI.lean`,
+  `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`, and the
+  `HardboneStatementAtlasUsage` example.
 - RandomMatrix sample-covariance negative-side provider-transfer adapters are
   covered in `HighDimProbTest/RandomMatrixConcentrationAPI.lean` and
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`.

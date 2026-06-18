@@ -160,6 +160,4 @@ Reviewed experimental declarations:
 
 ## Next safe tasks
 
-1. `RM-MAIN-natural-state-assumption-bundle-contract`.
-2. Negative trace-MGF provider-wrapper cleanup as a side leaf, reusing the
-   named opposite-parameter sample-covariance provider-transfer adapters.
+1. `RM-HB11-select-first-hardbone-proof-leaf`.
