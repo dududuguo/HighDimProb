@@ -59,10 +59,15 @@ TraceExp / Tropp bookkeeping helpers:
 
 Sample covariance wrappers:
 
+- `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
+- `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy_of_troppPrimitive`
 - `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound`
+- `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`
+- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters_of_troppPrimitives`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`
+- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives`
 - `SampleCovarianceTailUsage.SampleCovarianceTailAssumptions`
 - `SampleCovarianceTailUsage.SampleCovarianceOperatorNormTailAssumptions`
 
@@ -124,11 +129,12 @@ Example modules:
   hypotheses.
 - The conditional-state bundle is example-local, and the reindexed example is transport-only.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
-- Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems.
+- Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The preferred sample-covariance example route now uses Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
 - Negative-side provider-transfer adapters only move explicit opposite-parameter
   assumptions onto the named negative sample-covariance family; they do not
   prove exponential integrability, trace-exponential integrability, or CFC.
-- Next safe hardbone task: `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
+- Completed hardbone wrapper task: `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
+- Next safe hardbone task: `RM-HB12-select-next-hardbone-proof-leaf`.
 
 ## Verification
 

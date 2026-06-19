@@ -5,14 +5,15 @@ This is the active short list. Old completed task logs were collapsed into
 
 ## Active RandomMatrix Work
 
-- Audit remaining explicit CFC fields in the sample-covariance route. Reuse
-  `bernsteinMatrixExp_le_quadratic` and the new Tropp-only Matrix Bernstein
-  bundles before adding any new fields.
+- Select the next smallest theorem-backed hardbone proof leaf with a read-only
+  Mathlib/API audit before editing Lean.
 - Keep the Matrix Bernstein under-primitives API honest: wrappers may use Tropp/provider assumptions explicitly, but should not claim missing Tropp/Lieb, Golden-Thompson, trace-MGF, or full Matrix Bernstein proofs.
 - Continue reducing repeated optimized-RHS formulas through shared helpers in `ConcentrationStatements.lean`.
 - Keep public examples readable: name families and adapters first, then call the shared RandomMatrix API.
-- Next RandomMatrix hardbone task:
+- Completed RandomMatrix hardbone wrapper task:
   `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
+- Next RandomMatrix hardbone task:
+  `RM-HB12-select-next-hardbone-proof-leaf`.
 
 ## Active Documentation Work
 

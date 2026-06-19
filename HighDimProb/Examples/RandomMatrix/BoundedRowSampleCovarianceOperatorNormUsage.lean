@@ -26,7 +26,8 @@ The assumptions are exactly the canonical sample-covariance operator-norm usage
 assumptions. They keep the positive bounded-row route visible through
 `SampleCovarianceTailAssumptions`, derive negative structural and
 square-integrability obligations via named adapters, and leave negative
-exponential/trace integrability plus CFC/Tropp primitives explicit.
+exponential/trace integrability plus Tropp primitives explicit; the Bernstein
+CFC field is filled by the core wrapper.
 -/
 theorem boundedRowSampleCovariance_operatorNorm_tail_usage
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}

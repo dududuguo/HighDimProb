@@ -80,10 +80,10 @@ remain in the object modules such as `Basic`, `Expectation`, `SelfAdjoint`,
   and dimension/rank targets; the Bernstein CFC primitive is now proved as
   `bernsteinMatrixExp_le_quadratic`.
   The generic optimized Matrix Bernstein surface now has Tropp-only
-  positive/negative bundles that no longer expose pointwise CFC fields. The
-  next RandomMatrix hardbone branch is
-  `RM-HB-sample-covariance-cfc-free-wrapper-contract`; natural-state assumption
-  bundling and negative trace-MGF provider-wrapper cleanup remain future side
-  leaves.
+  positive/negative bundles, and the sample-covariance route has CFC-free
+  Tropp-only wrappers, so preferred call sites no longer expose pointwise CFC
+  fields. The next RandomMatrix hardbone branch is
+  `RM-HB12-select-next-hardbone-proof-leaf`; natural-state assumption bundling
+  and negative trace-MGF provider-wrapper cleanup remain future side leaves.
 - Scalar concentration can continue toward moment/MGF links without depending
   on the matrix assumption layer.

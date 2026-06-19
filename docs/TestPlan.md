@@ -38,8 +38,10 @@ git diff --check
   `HighDimProbTest/RandomMatrixHardboneStatementsAPI.lean`,
   `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`, and the
   `HardboneStatementAtlasUsage` example.
-- RandomMatrix sample-covariance negative-side provider-transfer adapters are
-  covered in `HighDimProbTest/RandomMatrixConcentrationAPI.lean` and
+- RandomMatrix sample-covariance negative-side provider-transfer adapters and
+  CFC-free sample-covariance wrappers are covered in
+  `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
+  `HighDimProbTest/ExamplesAPI.lean`, and
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`.
 - RandomMatrix CFC-free Matrix Bernstein assumption bundles and preferred
   `*_of_troppAssumptions` wrappers are covered in

@@ -5,7 +5,7 @@ import HighDimProb.RandomMatrix.ConcentrationStatements
 
 This examples-only file shows the preferred public API for the conditional
 sample-covariance quadratic-form and operator-norm tail bounds. It keeps the
-independence, integrability, Tropp, Bernstein CFC, and analytic primitive
+independence, integrability, Tropp, and analytic primitive
 assumptions explicit, while the crude bounded-row variance-proxy norm bound is
 supplied by the core wrappers. Radius, theta, variance-proxy RHS, and tail RHS
 helpers come from the core concentration API. The RHS helper takes the actual
@@ -23,7 +23,7 @@ noncomputable section
 The structural centered rank-one assumptions and the centered operator-norm
 bound are discharged by the core theorem from the row-level hypotheses. The
 crude variance-proxy norm bound is derived from the row squared-norm bound;
-the analytic Matrix Bernstein primitives remain explicit. -/
+the remaining Tropp/Lieb Matrix Bernstein primitive remains explicit. -/
 structure SampleCovarianceTailAssumptions {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
     {m n : Nat}
@@ -61,13 +61,6 @@ structure SampleCovarianceTailAssumptions {Omega : Type*}
           (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R)))
   radiusPositive : 0 < R
   deviationPositive : 0 < t
-  cfcPrimitive :
-    forall k : Fin m, forall omega,
-      bernsteinMatrixExp_le_quadratic_statement
-        ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k omega)
-        (sampleCovarianceTailTheta (m := m) R t
-          (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R))
-        (sampleCovarianceCenteredRankOneRadius R)
   troppPrimitive :
     troppMasterTraceMGFFiniteFamily_statement
       (P := P)
@@ -86,7 +79,7 @@ structure SampleCovarianceTailAssumptions {Omega : Type*}
 /-- Preferred example-level sample-covariance quadratic-form tail wrapper.
 
 This is only a readability layer over
-`sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound`;
+`sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive`;
 all analytic assumptions remain visible in
 `SampleCovarianceTailAssumptions`. -/
 theorem sampleCovariance_quadraticForm_tail_usage
@@ -101,12 +94,12 @@ theorem sampleCovariance_quadraticForm_tail_usage
         (m := m) (n := n + 1) R t
         (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R) := by
   exact
-    sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound
+    sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive
       (P := P) A R t
       h.sampleCountPositive h.randomMatrix h.coordinateMemLpTwo
       h.rowSqNormBound h.independentRows h.squareIntegrable h.expIntegrable
       h.traceExpIntegrable h.radiusPositive h.deviationPositive
-      h.cfcPrimitive h.troppPrimitive
+      h.troppPrimitive
 
 /-- Assumptions needed by the public conditional sample-covariance
 operator-norm tail wrapper.
@@ -116,7 +109,7 @@ The positive-sign sample-covariance assumptions reuse
 integrability, independence, square-integrability, and pointwise operator-norm
 bounds are supplied by named row/negation adapters from the row `MemLp 2`,
 positive square-integrability, and row squared-norm assumptions. Negative
-matrix-exponential integrability, trace-integrability, CFC, and Tropp
+matrix-exponential integrability, trace-integrability, and Tropp
 primitives remain explicit. -/
 structure SampleCovarianceOperatorNormTailAssumptions {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
@@ -143,13 +136,6 @@ structure SampleCovarianceOperatorNormTailAssumptions {Omega : Type*}
         (sampleCovarianceTailTheta (m := m) Rneg t
           (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg)))
   negativeRadiusPositive : 0 < Rneg
-  cfcPrimitiveNeg :
-    forall k : Fin m, forall omega,
-      bernsteinMatrixExp_le_quadratic_statement
-        ((centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A) k omega)
-        (sampleCovarianceTailTheta (m := m) Rneg t
-          (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg))
-        (sampleCovarianceCenteredRankOneRadius Rneg)
   troppPrimitiveNeg :
     troppMasterTraceMGFFiniteFamily_statement
       (P := P)
@@ -168,7 +154,7 @@ structure SampleCovarianceOperatorNormTailAssumptions {Omega : Type*}
 /-- Preferred example-level sample-covariance operator-norm tail wrapper.
 
 This is only a readability layer over
-`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`;
+`sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives`;
 all analytic assumptions that are not discharged by named row/negation adapters
 remain visible in `SampleCovarianceOperatorNormTailAssumptions`. -/
 theorem sampleCovariance_operatorNorm_tail_usage
@@ -187,7 +173,7 @@ theorem sampleCovariance_operatorNorm_tail_usage
           (m := m) (n := n + 1) Rneg t
           (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg) := by
   exact
-    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters
+    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives
       (P := P) A R Rneg t
       h.positiveSide.sampleCountPositive
       h.positiveSide.randomMatrix
@@ -200,12 +186,10 @@ theorem sampleCovariance_operatorNorm_tail_usage
       h.positiveSide.traceExpIntegrable
       h.positiveSide.radiusPositive
       h.positiveSide.deviationPositive
-      h.positiveSide.cfcPrimitive
       h.positiveSide.troppPrimitive
       h.expIntegrableNeg
       h.traceExpIntegrableNeg
       h.negativeRadiusPositive
-      h.cfcPrimitiveNeg
       h.troppPrimitiveNeg
 
 end

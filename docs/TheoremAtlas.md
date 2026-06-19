@@ -46,15 +46,16 @@ that CFC proof while keeping Tropp/Lieb and integrability assumptions explicit.
 The preferred optimized Matrix Bernstein wrappers use
 `MatrixBernsteinPositiveSideTroppAssumptions` and
 `MatrixBernsteinNegativeSideTroppAssumptions` to avoid exposing pointwise CFC
-fields in generic call sites.
+fields in generic call sites. The sample-covariance route now also has
+CFC-free `_of_troppPrimitive` / `_of_troppPrimitives` wrappers that reuse
+`bernsteinMatrixExp_le_quadratic` while keeping Tropp/Lieb and integrability
+assumptions explicit.
 
 ## Not Yet Proved
 
 - Full Tropp/Lieb machinery.
 - Golden-Thompson route.
 - Full unconditional Matrix Bernstein theorem.
-- Tropp-only sample-covariance wrappers without explicit sample-covariance CFC
-  fields.
 - Natural history measurability, independence conditioning, and trace-exp
   integrability propagation for the conditional-step Tropp route.
 - Proofs of the remaining hardbone statement targets for log/order,

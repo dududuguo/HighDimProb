@@ -191,6 +191,8 @@ import HighDimProb.Examples.RandomMatrix.HardboneStatementAtlasUsage
 
 ## Sample Covariance Surface
 
+Explicit-CFC compatibility wrappers:
+
 - `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
 - `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound`
 - `sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum`
@@ -199,6 +201,20 @@ import HighDimProb.Examples.RandomMatrix.HardboneStatementAtlasUsage
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`
+
+Preferred CFC-free wrappers after the Bernstein CFC hardbone leaf:
+
+- `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy_of_troppPrimitive`
+- `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive`
+- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters_of_troppPrimitives`
+- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives`
+
+These wrappers still require Tropp/Lieb trace-MGF primitives and analytic
+integrability assumptions. They only remove the user-supplied pointwise
+Bernstein CFC fields by applying `bernsteinMatrixExp_le_quadratic`; they do not
+prove Tropp/Lieb, Golden-Thompson, trace-exp integrability, variance-proxy
+control beyond existing named adapters, or unconditional sample-covariance
+concentration.
 
 ### Sample covariance negative-side provider adapters
 
@@ -222,6 +238,8 @@ and they are not tail wrappers by themselves.
 
 - Name matrix families before using them in public wrappers.
 - Prefer named adapters over anonymous lambdas.
+- Prefer the sample-covariance `_of_troppPrimitive` / `_of_troppPrimitives`
+  wrappers when pointwise Bernstein CFC is the only remaining explicit field.
 - Keep positive-side and negative-side assumptions visibly distinct when the
   theorem still needs both sides.
 - Put domain vocabulary in examples as thin wrappers over the core RandomMatrix
