@@ -12,6 +12,8 @@ This is the active short list. Old completed task logs were collapsed into
 - Keep public examples readable: name families and adapters first, then call the shared RandomMatrix API.
 - Completed RandomMatrix hardbone wrapper task:
   `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
+- Completed RandomMatrix hardbone proof leaf:
+  `RM-HB12-matrix-log-le-of-le-matrix-exp-bridge-leaf`.
 - Next RandomMatrix hardbone task:
   `RM-HB12-select-next-hardbone-proof-leaf`.
 

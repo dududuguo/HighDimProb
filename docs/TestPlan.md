@@ -34,7 +34,7 @@ git diff --check
   `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`; example modules are covered
   through `lake build HighDimProb.Examples`.
 - RandomMatrix hardbone statement-target checks, including the proved Bernstein
-  CFC hardbone leaf, are covered in
+  CFC hardbone leaf and the proved matrix log/order bridge leaf, are covered in
   `HighDimProbTest/RandomMatrixHardboneStatementsAPI.lean`,
   `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`, and the
   `HardboneStatementAtlasUsage` example.

@@ -50,6 +50,10 @@ fields in generic call sites. The sample-covariance route now also has
 CFC-free `_of_troppPrimitive` / `_of_troppPrimitives` wrappers that reuse
 `bernsteinMatrixExp_le_quadratic` while keeping Tropp/Lieb and integrability
 assumptions explicit.
+The log/order-to-`K` route now includes the proved thin bridge
+`matrixLog_le_of_le_matrixExp`, which composes explicit operator-log
+monotonicity and `matrixExp` log-domain premises. It does not prove those
+premises or the downstream trace-exponential monotonicity step.
 
 ## Not Yet Proved
 
@@ -58,7 +62,8 @@ assumptions explicit.
 - Full unconditional Matrix Bernstein theorem.
 - Natural history measurability, independence conditioning, and trace-exp
   integrability propagation for the conditional-step Tropp route.
-- Proofs of the remaining hardbone statement targets for log/order,
+- Proofs of the remaining hardbone statement targets for operator-log
+  monotonicity, `matrixExp` log-domain support, trace-exp monotonicity,
   Tropp/Lieb, conditioning, integrability, variance-proxy sharpening, and
   dimension/rank refinements.
 - A public-friendly Matrix Bernstein wrapper directly over the natural-state
