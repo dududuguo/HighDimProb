@@ -82,6 +82,7 @@ Tropp/Lieb/Golden-Thompson chain:
 - `liebJensenTraceExp_statement`
 - `goldenThompsonTraceExp_statement`
 - `matrixExpLogSelfAdjointNormalization_statement`
+- `matrixExpLogSelfAdjointNormalization`
 - `troppMasterTraceMGFStep_of_liebJensen_statement`
 
 Conditioning / independence chain:

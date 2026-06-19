@@ -59,6 +59,7 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check bernsteinMatrixExp_le_quadratic_of_spectrum_cfcOrder
 #check bernsteinMatrixExp_le_quadratic_of_cfcChain_spectrum
 #check troppLogExpComparisonToK_of_logMonotone_traceExpMono
+#check matrixExpLogSelfAdjointNormalization
 #check troppMasterTraceMGFStep_of_liebJensen
 #check troppMasterTraceMGFConditionalStep_of_conditioningBridge
 #check traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider
@@ -181,3 +182,7 @@ example :
 example :
     bernsteinMatrixExp_le_quadratic_statement A theta R :=
   bernsteinMatrixExp_le_quadratic A theta R
+
+example :
+    matrixExpLogSelfAdjointNormalization_statement A :=
+  matrixExpLogSelfAdjointNormalization A

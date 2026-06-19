@@ -967,6 +967,17 @@ theorem troppLogExpComparisonToK_of_logMonotone_traceExpMono {n : Nat}
     troppLogExpComparisonToK_statement H M K :=
   hChain hLog hTrace
 
+/-- Matrix-log normalization for self-adjoint exponentials.
+
+This is a local CFC normalization leaf.  It does not prove Lieb concavity,
+Jensen, Golden-Thompson, conditioning, integrability propagation, variance
+proxy control, or full Matrix Bernstein. -/
+theorem matrixExpLogSelfAdjointNormalization {n : Nat}
+    (A : Matrix (Fin n) (Fin n) Real) :
+    matrixExpLogSelfAdjointNormalization_statement A := by
+  intro hA
+  simpa [matrixExp] using (CFC.log_exp (a := A) hA.isSelfAdjoint)
+
 /-- Thin consumer for the Tropp/Lieb/Jensen one-step hardbone chain.
 
 This theorem does not prove Lieb concavity, Jensen, or log-exp normalization;

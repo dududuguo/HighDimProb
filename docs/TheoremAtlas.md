@@ -70,7 +70,9 @@ The preferred optimized Matrix Bernstein wrappers use
 fields in generic call sites. The sample-covariance route now also has
 CFC-free `_of_troppPrimitive` / `_of_troppPrimitives` wrappers that reuse
 `bernsteinMatrixExp_le_quadratic` while keeping Tropp/Lieb and integrability
-assumptions explicit.
+assumptions explicit. The local matrix-exp/log normalization leaf is proved as
+`matrixExpLogSelfAdjointNormalization`; it supplies only the pointwise CFC
+normalization needed by the Tropp/Lieb one-step chain.
 
 ## Not Yet Proved
 
