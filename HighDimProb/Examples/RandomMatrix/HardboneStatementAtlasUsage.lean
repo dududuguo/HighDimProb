@@ -67,7 +67,7 @@ example {n : Nat} (V : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (hTrace : matrixTrace V <= effectiveRank * sigmaSq)
     (hV : IsSelfAdjointMatrix V)
     (hSpec : lambdaMaxOrdered V hV <= sigmaSq) :
-    traceMatrixExp (c 鈥?V) <=
+    traceMatrixExp (c • V) <=
       ((n + 1 : Nat) : Real) +
         effectiveRank * (Real.exp (c * sigmaSq) - 1) := by
   have hStmt := traceMatrixExp_effectiveRank_bound V c sigmaSq effectiveRank
