@@ -21,6 +21,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check cfcScalarInequalityToMatrixLE_statement
 #check bernsteinMatrixExp_le_quadratic_of_cfcChain_statement
 #check operatorLogMonotoneOnPositiveMatrices_statement
+#check matrixLog_le_of_le_matrixExp_statement
 #check troppLogExpComparisonToK_of_logOrderKChain_statement
 #check liebTraceExpConcavity_statement
 #check matrixExpLogSelfAdjointNormalization_statement
@@ -42,6 +43,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check cfcScalarInequalityToMatrixLE_bernsteinExpQuadratic
 #check bernsteinMatrixExp_le_quadratic_of_cfcLeaves
 #check bernsteinMatrixExp_le_quadratic
+#check matrixLog_le_of_le_matrixExp
 #check troppLogExpComparisonToK_of_logMonotone_traceExpMono
 #check matrixExpLogSelfAdjointNormalization
 #check troppMasterTraceMGFStep_of_liebJensen
@@ -64,7 +66,7 @@ example {n : Nat} (V : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (hTrace : matrixTrace V <= effectiveRank * sigmaSq)
     (hV : IsSelfAdjointMatrix V)
     (hSpec : lambdaMaxOrdered V hV <= sigmaSq) :
-    traceMatrixExp (c • V) <=
+    traceMatrixExp (c 鈥?V) <=
       ((n + 1 : Nat) : Real) +
         effectiveRank * (Real.exp (c * sigmaSq) - 1) := by
   have hStmt := traceMatrixExp_effectiveRank_bound V c sigmaSq effectiveRank
@@ -83,6 +85,10 @@ example {n : Nat} (H M K : Matrix (Fin n) (Fin n) Real) : Prop :=
 example {n : Nat} (A : Matrix (Fin n) (Fin n) Real) :
     matrixExpLogSelfAdjointNormalization_statement A :=
   matrixExpLogSelfAdjointNormalization A
+
+example {n : Nat} (M K : Matrix (Fin n) (Fin n) Real) :
+    matrixLog_le_of_le_matrixExp_statement M K :=
+  matrixLog_le_of_le_matrixExp M K
 
 example {Omega : Type*} [MeasurableSpace Omega]
     (P : Measure Omega) [IsProbabilityMeasure P] {n : Nat}

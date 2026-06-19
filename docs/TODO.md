@@ -21,6 +21,8 @@ This is the active short list. Old completed task logs were collapsed into
   `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
 - Completed RandomMatrix hardbone proof leaf:
   `RM-HB12-matrix-exp-log-selfadjoint-normalization-leaf`.
+- Completed RandomMatrix hardbone proof leaf:
+  `RM-HB12-matrix-log-le-of-le-matrix-exp-bridge-leaf`.
 - Next RandomMatrix hardbone task:
   `CG-B17-star-projection-rank-support-consumer-contract`: audit how the
   explicit `IsStarProjection` trace/rank bridge should feed support/rank

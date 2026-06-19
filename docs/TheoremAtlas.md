@@ -72,7 +72,11 @@ CFC-free `_of_troppPrimitive` / `_of_troppPrimitives` wrappers that reuse
 `bernsteinMatrixExp_le_quadratic` while keeping Tropp/Lieb and integrability
 assumptions explicit. The local matrix-exp/log normalization leaf is proved as
 `matrixExpLogSelfAdjointNormalization`; it supplies only the pointwise CFC
-normalization needed by the Tropp/Lieb one-step chain.
+normalization needed by the Tropp/Lieb one-step chain. The log/order-to-`K`
+route now includes the proved thin bridge `matrixLog_le_of_le_matrixExp`, which
+composes explicit operator-log monotonicity and `matrixExp` log-domain premises.
+It does not prove those premises or the downstream trace-exponential
+monotonicity step.
 
 ## Not Yet Proved
 
@@ -81,7 +85,8 @@ normalization needed by the Tropp/Lieb one-step chain.
 - Full unconditional Matrix Bernstein theorem.
 - Natural history measurability, independence conditioning, and trace-exp
   integrability propagation for the conditional-step Tropp route.
-- Proofs of the remaining hardbone statement targets for log/order,
+- Proofs of the remaining hardbone statement targets for operator-log
+  monotonicity, `matrixExp` log-domain support, trace-exp monotonicity,
   Tropp/Lieb, conditioning, automatic trace-exp domination/integrability,
   automatic variance-proxy sharpening, support domination certificates,
   true effective-rank/support trace certificates, and dimension/rank refinements

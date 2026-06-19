@@ -73,6 +73,7 @@ Log/order-to-`K` chain:
 - `operatorLogMonotoneOnPositiveMatrices_statement`
 - `matrixExpLogDomainForSelfAdjoint_statement`
 - `matrixLog_le_of_le_matrixExp_statement`
+- `matrixLog_le_of_le_matrixExp`
 - `traceMatrixExp_mono_add_selfAdjoint_statement`
 - `troppLogExpComparisonToK_of_logOrderKChain_statement`
 
@@ -127,6 +128,7 @@ Thin hardbone consumers:
 - `bernsteinMatrixExp_le_quadratic_of_cfcChain`
 - `bernsteinMatrixExp_le_quadratic_of_cfcLeaves`
 - `bernsteinMatrixExp_le_quadratic`
+- `matrixLog_le_of_le_matrixExp`
 - `troppLogExpComparisonToK_of_logMonotone_traceExpMono`
 - `troppMasterTraceMGFStep_of_liebJensen`
 - `troppMasterTraceMGFConditionalStep_of_conditioningBridge`
@@ -143,7 +145,8 @@ Hardbone status table:
 |---|---|---|---|---|
 | Scalar Bernstein hardbone leaf | `scalarBernsteinExpQuadraticInequality_statement` | proven by `scalarBernsteinExpQuadraticInequality` | CFC-chain assumptions can reuse the proved scalar theorem | none for this scalar leaf |
 | Bernstein CFC | `bernsteinMatrixExp_le_quadratic_statement` | proven by `bernsteinMatrixExp_le_quadratic` | `bernsteinMatrixExp_le_quadratic_of_cfcLeaves` documents the reusable composition | preferred `*_of_troppAssumptions` wrappers bypass pointwise CFC fields; explicit-CFC wrappers remain for compatibility |
-| Log/order-to-`K` | `troppLogExpComparisonToK_of_logOrderKChain_statement` | typed-prop | `troppLogExpComparisonToK_of_logMonotone_traceExpMono` | operator-log monotonicity, log domain for `matrixExp`, trace-exp monotonicity |
+| Matrix log/order bridge | `matrixLog_le_of_le_matrixExp_statement` | proven by `matrixLog_le_of_le_matrixExp` | turns explicit log-monotonicity and `matrixExp` log-domain premises into `log M <= K` | operator-log monotonicity and the `matrixExp` log-domain premise remain external inputs |
+| Log/order-to-`K` | `troppLogExpComparisonToK_of_logOrderKChain_statement` | typed-prop | `troppLogExpComparisonToK_of_logMonotone_traceExpMono` | trace-exp monotonicity plus the explicit log/order bridge inputs |
 | Tropp/Lieb/GT one-step | `troppMasterTraceMGFStep_of_liebJensen_statement` | typed-prop | `troppMasterTraceMGFStep_of_liebJensen` | Lieb concavity, probability-measure Jensen, log-exp normalization; Golden-Thompson is separate |
 | Conditioning / independence | `troppConditionalStep_of_iIndepFun_statement` | typed-prop | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | generated histories, history-step independence, conditional expectation reduction |
 | Trace-exp integrability | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement` | typed-prop with proved thin consumer | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider` | automatic absolute domination, Golden-Thompson/product, or boundedness provider |
@@ -154,19 +157,21 @@ Hardbone status table:
 Most hardbone declarations are typed `Prop` contracts, not hard theorem proofs.
 The Bernstein CFC chain is now proved by `bernsteinMatrixExp_le_quadratic`
 after splitting out scalar Bernstein, spectrum localization, CFC order
-transfer, and expression normalization. The remaining log/order, Tropp/Lieb,
-conditioning, automatic integrability, variance-proxy, and dimension/rank
-blockers stay split into named leaves. The rank/support trace-bound bridge is
-proved under explicit support domination and support trace assumptions. The
-projection trace/rank certificate `matrixTrace_eq_rank_of_isStarProjection` is
-available when the caller already has an explicit `IsStarProjection support`.
-What remains open is constructing support domination and support matrices for
-specific applications, and proving true effective-rank trace certificates beyond
-the ambient cardinality fallback. The rank and effective-rank trace-exp targets
-keep support domination, PSD, lambda-max, or trace-certificate assumptions
-explicit; the ambient certificate only gives the `(n + 1 : Real)` effective-rank
-parameter, so zero directions are not accidentally treated as free. The thin
-consumers only apply explicit
+transfer, and expression normalization. The direct matrix log/order bridge is
+proved by `matrixLog_le_of_le_matrixExp`, but it only composes explicit
+operator-log monotonicity and `matrixExp` log-domain premises. The remaining
+trace-exp monotonicity, Tropp/Lieb, conditioning, automatic integrability,
+variance-proxy, and dimension/rank blockers stay split into named leaves. The
+rank/support trace-bound bridge is proved under explicit support domination and
+support trace assumptions. The projection trace/rank certificate
+`matrixTrace_eq_rank_of_isStarProjection` is available when the caller already
+has an explicit `IsStarProjection support`. What remains open is constructing
+support domination and support matrices for specific applications, and proving
+true effective-rank trace certificates beyond the ambient cardinality fallback.
+The rank and effective-rank trace-exp targets keep support domination, PSD,
+lambda-max, or trace-certificate assumptions explicit; the ambient certificate
+only gives the `(n + 1 : Real)` effective-rank parameter, so zero directions are
+not accidentally treated as free. The thin consumers only apply explicit
 statement-chain assumptions; they do not prove Lieb/Jensen, conditioning,
 automatic domination, variance-proxy control, finite-family Tropp, or any
 Matrix Bernstein tail theorem.

@@ -955,6 +955,24 @@ theorem bernsteinMatrixExp_le_quadratic_of_cfcChain_spectrum {n : Nat}
     (cfcScalarInequalityToMatrixLE_bernsteinExpQuadratic A theta R)
     (bernsteinCFCExpressionNormalization A theta R)
 
+/-- Thin bridge from a log-monotonicity premise and the matrix-exp log-domain
+premise to the direct `log M <= K` comparison.
+
+This theorem only composes explicit assumptions from the log/order-to-`K`
+chain. It does not prove operator-log monotonicity, strict positivity of
+`matrixExp K`, trace-exp monotonicity, Tropp/Lieb, Golden-Thompson,
+integrability propagation, variance-proxy control, or full Matrix
+Bernstein. -/
+theorem matrixLog_le_of_le_matrixExp {n : Nat}
+    (M K : Matrix (Fin n) (Fin n) Real) :
+    matrixLog_le_of_le_matrixExp_statement M K := by
+  intro hLog hDomain hM hMpos hK hMK
+  rcases hDomain hK with ⟨hExpSA, hExpPos, hLogExp⟩
+  have hLE : MatrixLE (CFC.log M) (CFC.log (matrixExp K)) :=
+    hLog hM hMpos hExpSA hExpPos hMK
+  rw [hLogExp] at hLE
+  exact hLE
+
 /-- Thin consumer for the log/order-to-`K` hardbone chain.
 
 This theorem only composes the Phase 2 log-order and trace-exp monotonicity

@@ -121,6 +121,10 @@ Hardbone matrix-exp/log normalization leaf:
 
 - `matrixExpLogSelfAdjointNormalization`
 
+Hardbone log/order bridge leaf:
+
+- `matrixLog_le_of_le_matrixExp`
+
 Example-layer wrappers:
 
 - `sampleCovariance_quadraticForm_tail_usage`
@@ -168,9 +172,11 @@ Example modules:
   localization, Bernstein-specific CFC order transfer, and CFC expression
   normalization. The local matrix-exp/log normalization leaf is now proved by
   `matrixExpLogSelfAdjointNormalization`; it is only the pointwise CFC
-  normalization consumed by the Tropp/Lieb one-step chain. The preferred
-  optimized Matrix Bernstein assumption bundles
-  are now `MatrixBernsteinPositiveSideTroppAssumptions` and
+  normalization consumed by the Tropp/Lieb one-step chain. The matrix log/order
+  bridge is now proved through `matrixLog_le_of_le_matrixExp`, but it only
+  composes explicit log-monotonicity and `matrixExp` log-domain premises. The
+  preferred optimized Matrix Bernstein assumption bundles are now
+  `MatrixBernsteinPositiveSideTroppAssumptions` and
   `MatrixBernsteinNegativeSideTroppAssumptions`, which expose Tropp/Lieb
   primitives but not pointwise CFC fields. The older explicit-CFC bundles and
   `_under_primitives` wrappers remain compatibility surfaces.
@@ -191,6 +197,8 @@ Example modules:
 - Completed hardbone wrapper task: `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
 - Completed hardbone proof leaf:
   `RM-HB12-matrix-exp-log-selfadjoint-normalization-leaf`.
+- Completed hardbone proof leaf:
+  `RM-HB12-matrix-log-le-of-le-matrix-exp-bridge-leaf`.
 - Next safe hardbone task: `CG-B17-star-projection-rank-support-consumer-contract`,
   focused on routing the explicit star-projection trace/rank bridge into
   support/rank consumers while keeping support domination and projection

@@ -26,6 +26,7 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check operatorLogMonotoneOnPositiveMatrices_statement
 #check matrixExpLogDomainForSelfAdjoint_statement
 #check matrixLog_le_of_le_matrixExp_statement
+#check matrixLog_le_of_le_matrixExp
 #check traceMatrixExp_mono_add_selfAdjoint_statement
 #check troppLogExpComparisonToK_of_logOrderKChain_statement
 #check liebTraceExpConcavity_statement
@@ -78,6 +79,10 @@ example : Prop :=
 
 example : Prop :=
   troppLogExpComparisonToK_of_logOrderKChain_statement H M K
+
+example :
+    matrixLog_le_of_le_matrixExp_statement M K :=
+  matrixLog_le_of_le_matrixExp M K
 
 example : Prop :=
   troppMasterTraceMGFStep_of_liebJensen_statement (P := P) H Y
