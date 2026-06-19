@@ -25,9 +25,11 @@ git diff --check
 ## Important Test Surfaces
 
 - Root import smoke tests: `HighDimProbTest/Smoke.lean`, `PublicImports.lean`, `BranchImports.lean`, `ExperimentalImports.lean`.
-- Scalar API tests: probability, tail, Lp/moment, Orlicz, subGaussian, subExponential, and scalar concentration files under `HighDimProbTest`.
+- Scalar API tests: probability, tail, Lp/moment, Orlicz, subGaussian, subExponential, real-inequality helpers, and scalar concentration files under `HighDimProbTest`.
+- Random-family and process API checks: `HighDimProbTest/RandomFamilyAPI.lean` plus `BranchImports.lean` and `ExperimentalImports.lean`.
 - RandomMatrix API tests: variance proxy, spectral, trace-exp, hardbone
-  statement targets, Laplace, concentration, and example API checks.
+  statement targets, thin consumers, rank/support trace bridge, trace-exp eigenvalue-sum bridge, effective-rank consumer, ambient trace certificate, ambient effective-rank wrapper, star-projection trace/rank certificate, Laplace, concentration, and example API
+  checks.
 - RandomMatrix bookkeeping checks: trace-exp endpoint wrappers and the
   natural-state TraceExp route are covered in
   `HighDimProbTest/RandomMatrixTraceExpAPI.lean` and

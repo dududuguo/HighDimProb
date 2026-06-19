@@ -1,5 +1,6 @@
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Exponential
+import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Analysis.SpecificLimits.Normed
 import Mathlib.Tactic
@@ -20,6 +21,39 @@ concentration moment layer.  It deliberately avoids probability assumptions.
 -/
 
 namespace HighDimProb
+
+/-- Scalar exponential chord bound on `[0, sigma]`.
+
+This is the one-dimensional convexity helper used before matrix/eigenvalue
+bookkeeping: it keeps the downstream `0 <= c` assumption in the signature even
+though convexity of `exp` proves the inequality for arbitrary `c`. -/
+theorem exp_mul_le_chord_exp_of_nonneg_of_le
+    {c x sigma : Real}
+    (_hc : 0 <= c) (hx0 : 0 <= x) (hxsigma : x <= sigma) (hsigma : 0 < sigma) :
+    Real.exp (c * x) <=
+      1 + (x / sigma) * (Real.exp (c * sigma) - 1) := by
+  let t : Real := x / sigma
+  have ht0 : 0 <= t := by
+    dsimp [t]
+    exact div_nonneg hx0 hsigma.le
+  have ht1 : t <= 1 := by
+    dsimp [t]
+    exact (div_le_one hsigma).mpr hxsigma
+  have hsum : 1 - t + t = 1 := by ring
+  have hconv :=
+    convexOn_exp.2 (Set.mem_univ (0 : Real)) (Set.mem_univ (c * sigma))
+      (sub_nonneg.mpr ht1) ht0 hsum
+  simp only [smul_eq_mul, Real.exp_zero] at hconv
+  have harg : (1 - t) * 0 + t * (c * sigma) = c * x := by
+    dsimp [t]
+    field_simp [hsigma.ne']
+    ring
+  have hrhs :
+      (1 - t) * 1 + t * Real.exp (c * sigma) =
+        1 + t * (Real.exp (c * sigma) - 1) := by
+    ring
+  rw [harg, hrhs] at hconv
+  exact hconv
 
 /-- A convenient elementary bound used to dominate powers by Gaussian tails. -/
 lemma log_le_sq_of_nonneg {y : ℝ} (hy : 0 ≤ y) :

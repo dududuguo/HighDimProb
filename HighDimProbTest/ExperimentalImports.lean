@@ -189,9 +189,17 @@ open HighDimProb
 #check epsilonNetCoveringNumberStatement
 #check packingCoveringInequalityStatement
 #check RandomProcess
+#check IsRandomProcess
 #check processAt
+#check RandomFamily
+#check RealRandomFamily
+#check IsRandomFamily
+#check IsRealRandomFamily
+#check familyAt
+#check mapRandomFamily
 #check GaussianWidthFunctional
 #check RandomSample
+#check IsRandomSample
 #check sampleEvaluation
 #check MeasurementMap
 #check ReconstructionMap

@@ -1,3 +1,8 @@
+import Mathlib.Algebra.Star.StarProjection
+import Mathlib.LinearAlgebra.Matrix.Rank
+import Mathlib.LinearAlgebra.Matrix.ToLin
+import Mathlib.LinearAlgebra.Projection
+import Mathlib.LinearAlgebra.Trace
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import Mathlib.Analysis.Matrix.Order
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Basic
@@ -7,6 +12,7 @@ import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
 import Mathlib.Probability.Independence.Basic
 import HighDimProb.RandomMatrix.Spectral
 import HighDimProb.RandomMatrix.VarianceProxy
+import HighDimProb.Analysis.RealInequalities
 
 /-!
 # Matrix exponential and trace-exponential vocabulary
@@ -55,6 +61,45 @@ theorem matrixTrace_apply {n : Nat} (A : Matrix (Fin n) (Fin n) Real) :
     matrixTrace A = Matrix.trace A :=
   rfl
 
+/-- Trace/rank certificate for star-projection matrices.
+
+This deterministic bridge only identifies the trace of an explicit star projection
+with its matrix rank. It does not construct support domination, support
+projections for another matrix, or a true effective-rank certificate. -/
+theorem matrixTrace_eq_rank_of_isStarProjection {n : Nat}
+    {support : Matrix (Fin n) (Fin n) Real}
+    (hSupport : IsStarProjection support) :
+    matrixTrace support = (Matrix.rank support : Real) := by
+  classical
+  let f : (Fin n → Real) →ₗ[Real] (Fin n → Real) := Matrix.toLin' support
+  have hIdemMatrix : support * support = support :=
+    hSupport.isIdempotentElem.eq
+  have hfIdem : IsIdempotentElem f := by
+    show f * f = f
+    dsimp [f]
+    rw [Module.End.mul_eq_comp]
+    rw [← Matrix.toLin'_mul]
+    simp [hIdemMatrix]
+  have hProj : LinearMap.IsProj (LinearMap.range f) f :=
+    (LinearMap.isProj_range_iff_isIdempotentElem f).2 hfIdem
+  have hTraceLin :
+      LinearMap.trace Real (Fin n → Real) f =
+        (Module.finrank Real (LinearMap.range f) : Real) :=
+    LinearMap.IsProj.trace hProj
+  have hTraceMatrix :
+      LinearMap.trace Real (Fin n → Real) f = Matrix.trace support := by
+    simp [f]
+  have hRank :
+      Matrix.rank support = Module.finrank Real (LinearMap.range f) := by
+    have hr := Matrix.rank_eq_finrank_range_toLin support
+      (Pi.basisFun Real (Fin n)) (Pi.basisFun Real (Fin n))
+    simpa [f, Matrix.toLin_eq_toLin'] using hr
+  calc
+    matrixTrace support = Matrix.trace support := rfl
+    _ = LinearMap.trace Real (Fin n → Real) f := hTraceMatrix.symm
+    _ = (Module.finrank Real (LinearMap.range f) : Real) := hTraceLin
+    _ = (Matrix.rank support : Real) := by rw [hRank]
+
 /-- Trace of the matrix exponential. -/
 def traceMatrixExp {n : Nat} (A : Matrix (Fin n) (Fin n) Real) : Real :=
   matrixTrace (matrixExp A)
@@ -75,6 +120,58 @@ theorem matrixTrace_nonneg_of_posSemidef {n : Nat}
     {A : Matrix (Fin n) (Fin n) Real} (hA : Matrix.PosSemidef A) :
     0 <= matrixTrace A := by
   simpa [matrixTrace] using hA.trace_nonneg
+
+/-- Trace commutes with scalar multiplication through the HighDimProb wrapper. -/
+theorem matrixTrace_smul {n : Nat} (c : Real)
+    (A : Matrix (Fin n) (Fin n) Real) :
+    matrixTrace (c • A) = c * matrixTrace A := by
+  simp [matrixTrace]
+
+/-- The explicit HighDimProb Loewner comparison is monotone for trace. -/
+theorem matrixTrace_le_of_matrixLE {n : Nat}
+    {A B : Matrix (Fin n) (Fin n) Real} (hAB : MatrixLE A B) :
+    matrixTrace A <= matrixTrace B := by
+  have hPSD : Matrix.PosSemidef (B - A) := posSemidef_of_isPSDMatrix hAB
+  have hnonneg : 0 <= matrixTrace (B - A) :=
+    matrixTrace_nonneg_of_posSemidef hPSD
+  rw [matrixTrace, Matrix.trace_sub] at hnonneg
+  exact sub_nonneg.mp hnonneg
+
+/-- Ambient trace certificate from PSD and an ordered lambda-max bound.
+
+This gives the trace certificate needed by effective-rank consumers only with
+the ambient dimension as the rank parameter. It does not define effective rank
+or prove a support/rank projection theorem. -/
+theorem matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le
+    {n : Nat} {V : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    {sigmaSq : Real}
+    (hPSD : IsPSDMatrix V)
+    (hV : IsSelfAdjointMatrix V)
+    (hSpec : lambdaMaxOrdered V hV <= sigmaSq) :
+    matrixTrace V <= ((n + 1 : Nat) : Real) * sigmaSq := by
+  classical
+  let e : Equiv (Fin (Fintype.card (Fin (n + 1)))) (Fin (n + 1)) :=
+    Fintype.equivOfCardEq (by simp)
+  have _hPSD' : Matrix.PosSemidef V := posSemidef_of_isPSDMatrix hPSD
+  have htrace :
+      matrixTrace V = Finset.univ.sum (fun i : Fin (n + 1) => hV.eigenvalues i) := by
+    simpa [matrixTrace] using hV.trace_eq_sum_eigenvalues
+  have hterm : forall i : Fin (n + 1), hV.eigenvalues i <= sigmaSq := by
+    intro i
+    have hgreat :=
+      lambdaMaxOrdered_is_greatest_eigenvalue V hV (e.symm i)
+    have hi : hV.eigenvalues i <= lambdaMaxOrdered V hV := by
+      simpa [lambdaMaxOrdered, Matrix.IsHermitian.eigenvalues, e] using hgreat
+    exact hi.trans hSpec
+  calc
+    matrixTrace V
+        = Finset.univ.sum (fun i : Fin (n + 1) => hV.eigenvalues i) := htrace
+    _ <= Finset.univ.sum (fun _i : Fin (n + 1) => sigmaSq) := by
+          exact Finset.sum_le_sum (by
+            intro i _hi
+            exact hterm i)
+    _ = ((n + 1 : Nat) : Real) * sigmaSq := by
+          simp [Finset.sum_const, nsmul_eq_mul]
 
 /-- If the matrix exponential is known to be Mathlib-positive-semidefinite,
 then its trace is nonnegative.  The remaining self-adjoint-to-PSD bridge is
@@ -407,7 +504,7 @@ theorem troppMasterTraceMGFConditionalStep_apply_of_histEntryMeasurable
     (hCond :
       @troppMasterTraceMGFConditionalStep_statement
         Omega mOmega P n mHist H Z K)
-    (hHistSub : mHist <= mOmega)
+    (hHistSub : mHist ≤ mOmega)
     (hZRand : @IsRandomMatrix Omega mOmega n n P Z)
     (hHistMeas :
       forall i j,
@@ -1971,6 +2068,25 @@ section LambdaMaxOrderedMatrixExp
 
 open scoped MatrixOrder Matrix.Norms.Operator
 
+/-- Trace-exp as the sum of exponentials of Hermitian eigenvalues.
+
+This is the eigenvalue-sum bridge for the repository's `traceMatrixExp`
+wrapper. It uses Mathlib's Hermitian continuous functional calculus
+diagonalization; it does not prove any trace-mgf or Bernstein inequality. -/
+theorem traceMatrixExp_eq_sum_exp_eigenvalues {n : Nat}
+    {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hA : IsSelfAdjointMatrix A) :
+    traceMatrixExp A =
+      Finset.univ.sum fun i => Real.exp (hA.eigenvalues i) := by
+  rw [traceMatrixExp, matrixTrace, matrixExp]
+  rw [show NormedSpace.exp A = cfc Real.exp A from
+    (CFC.real_exp_eq_normedSpace_exp (a := A)
+      (ha := hA.isSelfAdjoint)).symm]
+  rw [Matrix.IsHermitian.cfc_eq hA Real.exp]
+  simp only [Matrix.IsHermitian.cfc, Unitary.conjStarAlgAut_apply]
+  rw [Matrix.trace_mul_cycle]
+  simp
+
 /-- The real spectrum of the matrix exponential of a self-adjoint real matrix
 is the pointwise real exponential image of the original real spectrum. -/
 private theorem matrixExp_spectrum_real_eq_exp_image {n : Nat}
@@ -2074,6 +2190,20 @@ private theorem traceMatrixExp_le_card_mul_exp_lambdaMaxOrdered
     _ = (n + 1 : Real) * Real.exp (lambdaMaxOrdered A hA) := by
           rw [lambdaMaxOrdered_matrixExp hA]
 
+/-- Trace-exp bound from an explicit support domination certificate.
+
+This bridge only consumes a provided Loewner comparison against a support
+matrix. It does not construct support projections or prove any rank theorem. -/
+theorem traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
+    {n : Nat} {A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hA : IsSelfAdjointMatrix A)
+    (hDom : MatrixLE (matrixExp A)
+      (Real.exp (lambdaMaxOrdered A hA) • support)) :
+    traceMatrixExp A <=
+      matrixTrace support * Real.exp (lambdaMaxOrdered A hA) := by
+  have hTrace := matrixTrace_le_of_matrixLE hDom
+  simpa [traceMatrixExp, matrixTrace_smul, mul_comm] using hTrace
+
 /-- Deterministic trace-exponential dimension bound under a direct ordered
 lambda-max upper bound.
 
@@ -2108,6 +2238,111 @@ theorem traceMatrixExp_smul_le_card_exp_of_lambdaMaxOrdered_le
   have hCardNonneg : 0 <= (n + 1 : Real) := by
     positivity
   exact le_trans hTrace (mul_le_mul_of_nonneg_left hExp hCardNonneg)
+
+/-- PSD trace-exp minus-identity bridge under a lambda-max variance proxy bound.
+
+This deterministic spectral bridge is the intrinsic-dimension step before any
+effective-rank consumer. It uses the eigenvalue-sum formula for
+`traceMatrixExp`, the scalar exponential chord inequality, PSD eigenvalue
+nonnegativity, and trace/eigenvalue normalization. It does not prove a trace-MGF
+provider, variance-proxy control, or Matrix Bernstein. -/
+theorem traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le
+    {n : Nat} {V : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    {c sigmaSq : Real}
+    (hc : 0 <= c) (hsigma : 0 < sigmaSq)
+    (hPSD : IsPSDMatrix V)
+    (hV : IsSelfAdjointMatrix V)
+    (hSpec : lambdaMaxOrdered V hV <= sigmaSq) :
+    traceMatrixExp (c • V) <=
+      (n + 1 : Real) +
+        (matrixTrace V / sigmaSq) * (Real.exp (c * sigmaSq) - 1) := by
+  by_cases hc_zero : c = 0
+  case pos =>
+    subst c
+    have hBase :=
+      traceMatrixExp_smul_le_card_exp_of_lambdaMaxOrdered_le
+        (V := V) (c := 0) (sigmaSq := sigmaSq) (by norm_num) hV hSpec
+    have hRhs : (n + 1 : Real) * Real.exp (0 * sigmaSq) =
+        (n + 1 : Real) + (matrixTrace V / sigmaSq) * (Real.exp (0 * sigmaSq) - 1) := by
+      simp [Real.exp_zero]
+    exact hBase.trans_eq hRhs
+  case neg =>
+    have hc_pos : 0 < c := lt_of_le_of_ne hc (Ne.symm hc_zero)
+    let hCV : IsSelfAdjointMatrix (c • V) := isSelfAdjointMatrix_smul c hV
+    have hCVPSD_explicit : IsPSDMatrix (c • V) :=
+      isPSDMatrix_smul_of_nonneg hc hPSD
+    have hCVPSD : Matrix.PosSemidef (c • V) :=
+      posSemidef_of_isPSDMatrix hCVPSD_explicit
+    let e : Equiv (Fin (Fintype.card (Fin (n + 1)))) (Fin (n + 1)) :=
+      Fintype.equivOfCardEq (by simp)
+    have hLambda : lambdaMaxOrdered (c • V) hCV <= c * sigmaSq := by
+      change lambdaMaxOrdered (c • V) (isSelfAdjointMatrix_smul c hV) <=
+        c * sigmaSq
+      rw [lambdaMaxOrdered_smul_of_nonneg c hc hV]
+      exact mul_le_mul_of_nonneg_left hSpec hc
+    have hsigmaC : 0 < c * sigmaSq := mul_pos hc_pos hsigma
+    have hterm : forall i : Fin (n + 1),
+        Real.exp (hCV.eigenvalues i) <=
+          1 + (hCV.eigenvalues i / (c * sigmaSq)) *
+            (Real.exp (c * sigmaSq) - 1) := by
+      intro i
+      have hx0 : 0 <= hCV.eigenvalues i := hCVPSD.eigenvalues_nonneg i
+      have hx_le_lmax : hCV.eigenvalues i <= lambdaMaxOrdered (c • V) hCV := by
+        have hgreat :=
+          lambdaMaxOrdered_is_greatest_eigenvalue (c • V) hCV (e.symm i)
+        simpa [lambdaMaxOrdered, Matrix.IsHermitian.eigenvalues, e] using hgreat
+      have hxle : hCV.eigenvalues i <= c * sigmaSq := hx_le_lmax.trans hLambda
+      simpa [one_mul] using
+        exp_mul_le_chord_exp_of_nonneg_of_le
+          (c := (1 : Real)) (x := hCV.eigenvalues i) (sigma := c * sigmaSq)
+          (by norm_num) hx0 hxle hsigmaC
+    have hsum_le :
+        Finset.univ.sum (fun i : Fin (n + 1) => Real.exp (hCV.eigenvalues i)) <=
+          Finset.univ.sum (fun i : Fin (n + 1) =>
+            1 + (hCV.eigenvalues i / (c * sigmaSq)) *
+              (Real.exp (c * sigmaSq) - 1)) := by
+      exact Finset.sum_le_sum (by intro i _hi; exact hterm i)
+    have htrace_eigs :
+        matrixTrace (c • V) =
+          Finset.univ.sum fun i : Fin (n + 1) => hCV.eigenvalues i := by
+      simpa [matrixTrace] using hCV.trace_eq_sum_eigenvalues
+    have hsum_eigs :
+        Finset.univ.sum (fun i : Fin (n + 1) => hCV.eigenvalues i) =
+          c * matrixTrace V := by
+      rw [<- htrace_eigs, matrixTrace_smul]
+    have hsum_rhs :
+        Finset.univ.sum (fun i : Fin (n + 1) =>
+            1 + (hCV.eigenvalues i / (c * sigmaSq)) *
+              (Real.exp (c * sigmaSq) - 1)) =
+          (n + 1 : Real) +
+            (matrixTrace V / sigmaSq) * (Real.exp (c * sigmaSq) - 1) := by
+      rw [Finset.sum_add_distrib]
+      have hones : Finset.univ.sum (fun _i : Fin (n + 1) => (1 : Real)) =
+          (n + 1 : Real) := by
+        simp
+      rw [hones]
+      have hfactor :
+          Finset.univ.sum (fun i : Fin (n + 1) =>
+              (hCV.eigenvalues i / (c * sigmaSq)) *
+                (Real.exp (c * sigmaSq) - 1)) =
+            (matrixTrace V / sigmaSq) * (Real.exp (c * sigmaSq) - 1) := by
+        rw [<- Finset.sum_mul]
+        have hdivsum :
+            Finset.univ.sum (fun i : Fin (n + 1) =>
+              hCV.eigenvalues i / (c * sigmaSq)) = matrixTrace V / sigmaSq := by
+          rw [<- Finset.sum_div, hsum_eigs]
+          field_simp [hc_pos.ne', hsigma.ne']
+        rw [hdivsum]
+      rw [hfactor]
+    calc
+      traceMatrixExp (c • V)
+          = Finset.univ.sum (fun i : Fin (n + 1) => Real.exp (hCV.eigenvalues i)) := by
+              exact traceMatrixExp_eq_sum_exp_eigenvalues hCV
+      _ <= Finset.univ.sum (fun i : Fin (n + 1) =>
+            1 + (hCV.eigenvalues i / (c * sigmaSq)) *
+              (Real.exp (c * sigmaSq) - 1)) := hsum_le
+      _ = (n + 1 : Real) +
+            (matrixTrace V / sigmaSq) * (Real.exp (c * sigmaSq) - 1) := hsum_rhs
 
 end LambdaMaxOrderedMatrixExp
 

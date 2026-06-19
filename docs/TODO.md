@@ -3,6 +3,12 @@
 This is the active short list. Old completed task logs were collapsed into
 [`archive.md`](archive.md); use git history for exact old wording.
 
+## Active Random Object Work
+
+- Keep `RandomFamily` as a vocabulary layer only; defer filtrations,
+  adaptedness, martingales, and independence conditioning to later contracts.
+- Next random-object task: `RP-API-random-family-downstream-consumer-contract`
+
 ## Active RandomMatrix Work
 
 - Select the next smallest theorem-backed hardbone proof leaf with a read-only
@@ -10,10 +16,10 @@ This is the active short list. Old completed task logs were collapsed into
 - Keep the Matrix Bernstein under-primitives API honest: wrappers may use Tropp/provider assumptions explicitly, but should not claim missing Tropp/Lieb, Golden-Thompson, trace-MGF, or full Matrix Bernstein proofs.
 - Continue reducing repeated optimized-RHS formulas through shared helpers in `ConcentrationStatements.lean`.
 - Keep public examples readable: name families and adapters first, then call the shared RandomMatrix API.
-- Completed RandomMatrix hardbone wrapper task:
-  `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
 - Next RandomMatrix hardbone task:
-  `RM-HB12-select-next-hardbone-proof-leaf`.
+  `CG-B17-star-projection-rank-support-consumer-contract`: audit how the
+  explicit `IsStarProjection` trace/rank bridge should feed support/rank
+  consumers without constructing unsupported projection certificates.
 
 ## Active Documentation Work
 

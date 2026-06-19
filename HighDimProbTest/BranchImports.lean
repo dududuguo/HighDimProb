@@ -97,7 +97,17 @@ open HighDimProb
 #check maximalSeparatedNetStatement
 #check GaussianWidthFunctional
 #check RandomProcess
+#check IsRandomProcess
+#check processAt
+#check RandomFamily
+#check RealRandomFamily
+#check IsRandomFamily
+#check IsRealRandomFamily
+#check familyAt
+#check mapRandomFamily
 #check RandomSample
+#check IsRandomSample
+#check sampleEvaluation
 #check tailEventMeasurabilityStatement
 #check packingCoveringInequalityStatement
 #check RandomMatrix

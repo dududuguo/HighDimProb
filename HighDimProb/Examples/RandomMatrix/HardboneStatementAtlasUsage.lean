@@ -27,8 +27,13 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check troppConditionalStep_of_iIndepFun_statement
 #check matrixExpScaledIntegrable_of_provider_statement
 #check traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement
+#check varianceProxyNormBound_of_centeredSquareChain_statement
 #check sampleCovarianceVarianceProxy_sharp_statement
+#check traceMatrixExp_le_rank_exp_lambdaMax_statement
+#check traceMatrixExp_le_supportDim_exp_lambdaMax_statement
 #check traceMatrixExp_effectiveRank_bound_statement
+#check traceMatrixExp_effectiveRank_bound
+#check traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate
 
 #check bernsteinMatrixExp_le_quadratic_of_cfcChain
 #check selfAdjointSpectrumBoundedByOperatorNorm
@@ -39,6 +44,29 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check troppLogExpComparisonToK_of_logMonotone_traceExpMono
 #check troppMasterTraceMGFStep_of_liebJensen
 #check troppMasterTraceMGFConditionalStep_of_conditioningBridge
+#check traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider
+#check varianceProxyNormBound_of_centeredSquareChain
+#check matrixTrace_smul
+#check matrixTrace_le_of_matrixLE
+#check traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
+#check traceMatrixExp_le_rank_exp_lambdaMax
+#check traceMatrixExp_le_supportDim_exp_lambdaMax
+#check traceMatrixExp_eq_sum_exp_eigenvalues
+#check traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le
+
+example {n : Nat} (V : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (c sigmaSq effectiveRank : Real)
+    (hc : 0 <= c) (hsigma : 0 < sigmaSq)
+    (hEff : 0 <= effectiveRank)
+    (hPSD : IsPSDMatrix V)
+    (hTrace : matrixTrace V <= effectiveRank * sigmaSq)
+    (hV : IsSelfAdjointMatrix V)
+    (hSpec : lambdaMaxOrdered V hV <= sigmaSq) :
+    traceMatrixExp (c • V) <=
+      ((n + 1 : Nat) : Real) +
+        effectiveRank * (Real.exp (c * sigmaSq) - 1) := by
+  have hStmt := traceMatrixExp_effectiveRank_bound V c sigmaSq effectiveRank
+  exact hStmt hc hsigma hEff hPSD hTrace hV hSpec
 
 example (theta R : Real) : Prop :=
   scalarBernsteinExpQuadraticInequality_statement theta R

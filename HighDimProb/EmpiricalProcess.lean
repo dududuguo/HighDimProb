@@ -20,6 +20,11 @@ random variables; see https://en.wikipedia.org/wiki/Empirical_process
 abbrev RandomSample (Ω E : Type*) [MeasurableSpace Ω] (n : ℕ) :=
   Fin n → RandomVariable Ω E
 
+/-- Pointwise measurability predicate for finite random samples. -/
+abbrev IsRandomSample {Ω E : Type*} [MeasurableSpace Ω] [MeasurableSpace E]
+    (P : Measure Ω) {n : ℕ} (X : RandomSample Ω E n) : Prop :=
+  IsRandomFamily P X
+
 /--
 Evaluation of a test function over a finite random sample.
 

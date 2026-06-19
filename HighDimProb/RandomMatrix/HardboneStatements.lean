@@ -235,7 +235,7 @@ abbrev troppNaturalHistoryMeasurable_statement {Omega : Type*}
     (X : Fin m -> RandomMatrix Omega n n)
     (K : Fin m -> Matrix (Fin n) (Fin n) Real)
     (mHist : Fin m -> MeasurableSpace Omega) : Prop :=
-  (forall i, mHist i <= mOmega) ->
+  (forall i, mHist i ≤ mOmega) ->
     forall i r c,
       @Measurable Omega Real (mHist i) inferInstance
         (fun omega => troppStateHistory theta X K i omega r c)
@@ -268,7 +268,7 @@ abbrev condExp_traceExp_history_add_independent_step_statement
     (mHist : MeasurableSpace Omega)
     (H Z : RandomMatrix Omega n n)
     (K : Matrix (Fin n) (Fin n) Real) : Prop :=
-  mHist <= mOmega ->
+  mHist ≤ mOmega ->
     @IsRandomMatrix Omega mOmega n n P H ->
       @IsRandomMatrix Omega mOmega n n P Z ->
         (forall i j,
@@ -412,6 +412,28 @@ abbrev traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statemen
       @IntegrableRealRandomVariable Omega mOmega P
         (traceExpIntegrand (randomMatrixSum X) theta)
 
+/-- Thin consumer for the full-sum trace-exponential domination provider.
+
+This theorem only applies the explicit domination-provider statement. It does
+not prove Golden-Thompson/product domination or any automatic boundedness
+provider. -/
+theorem traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} {m n : Nat}
+    (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (D : RealRandomVariable Omega)
+    (hChain :
+      @traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement
+        Omega mOmega P m n theta X D)
+    (hD : @IntegrableRealRandomVariable Omega mOmega P D)
+    (hD_nonneg : forall omega, 0 <= D omega)
+    (hDom : forall omega,
+      abs (traceExpIntegrand (randomMatrixSum X) theta omega) <= D omega) :
+    @IntegrableRealRandomVariable Omega mOmega P
+      (traceExpIntegrand (randomMatrixSum X) theta) :=
+  hChain hD hD_nonneg hDom
+
 /-! ## Variance-proxy and centered-square hardbone statement chain -/
 
 /-- Centered-square expectation expansion target.
@@ -494,6 +516,31 @@ abbrev varianceProxyNormBound_of_centeredSquareChain_statement
         sigma2 ->
         MatrixVarianceProxyNormBound P (centeredRandomMatrixFamily P A) sigma2
 
+/-- Thin consumer for the centered-square variance-proxy provider chain.
+
+This theorem only applies the explicit provider-chain statement. It does not
+prove centered-square expansion, matrix order comparisons, or deterministic
+variance-proxy norm control. -/
+theorem varianceProxyNormBound_of_centeredSquareChain
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n)
+    (V : I -> Matrix (Fin n) (Fin n) Real)
+    (sigma2 : Real)
+    (hChain :
+      @varianceProxyNormBound_of_centeredSquareChain_statement
+        Omega mOmega P _ I _ n A V sigma2)
+    (hExpansion : forall i,
+      @matrixSquare_centeredRandomMatrix_expectation_expansion_statement
+        Omega mOmega P _ n (A i))
+    (hLE : forall i,
+      MatrixLE (matrixSecondMoment P (centeredRandomMatrix P (A i))) (V i))
+    (hNorm : deterministicMatrixVarianceProxyNorm (Finset.univ.sum fun i => V i) <=
+      sigma2) :
+    MatrixVarianceProxyNormBound P (centeredRandomMatrixFamily P A) sigma2 :=
+  hChain hExpansion hLE hNorm
+
 /-! ## Dimension, support, and effective-rank hardbone statement chain -/
 
 /-- Rank-refined trace-exponential dimension-factor target with an explicit
@@ -521,9 +568,9 @@ abbrev traceMatrixExp_le_rank_exp_lambdaMax_statement {n : Nat}
 /-- Support-dimension trace-exponential target with an explicit local support
 certificate.
 
-The support matrix is a local placeholder for future projection/support
-vocabulary. A later core API can replace the explicit `support` and
-`supportDim` assumptions with a named support-dimension theorem. -/
+The support matrix is an explicit certificate parameter for future
+projection/support vocabulary. A later core API can replace the explicit
+`support` and `supportDim` assumptions with a named support-dimension theorem. -/
 abbrev traceMatrixExp_le_supportDim_exp_lambdaMax_statement {n : Nat}
     (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (supportDim : Nat) : Prop :=
@@ -536,6 +583,41 @@ abbrev traceMatrixExp_le_supportDim_exp_lambdaMax_statement {n : Nat}
               (Real.exp (lambdaMaxOrdered A hA) • support) ->
               traceMatrixExp A <=
                 (supportDim : Real) * Real.exp (lambdaMaxOrdered A hA)
+
+/-- Rank-refined trace-exponential bound from an explicit support certificate.
+
+This consumer proves the typed hardbone target using only the support domination
+and trace bound assumptions already present in the statement. It does not
+construct the support certificate or prove any rank theorem. -/
+theorem traceMatrixExp_le_rank_exp_lambdaMax {n : Nat}
+    (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (rankBound : Nat) :
+    traceMatrixExp_le_rank_exp_lambdaMax_statement A support rankBound := by
+  intro _hRankPos _hRankLe _hSupportPSD hTrace hA hDom
+  have hBridge :=
+    traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
+      hA hDom
+  exact le_trans hBridge
+    (mul_le_mul_of_nonneg_right hTrace
+      (Real.exp_nonneg (lambdaMaxOrdered A hA)))
+
+/-- Support-dimension trace-exponential bound from an explicit support
+certificate.
+
+This consumer proves the typed hardbone target using only the support domination
+and trace bound assumptions already present in the statement. It does not
+construct a support projection or prove a support-dimension theorem. -/
+theorem traceMatrixExp_le_supportDim_exp_lambdaMax {n : Nat}
+    (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (supportDim : Nat) :
+    traceMatrixExp_le_supportDim_exp_lambdaMax_statement A support supportDim := by
+  intro _hSupportDimPos _hSupportDimLe _hSupportPSD hTrace hA hDom
+  have hBridge :=
+    traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
+      hA hDom
+  exact le_trans hBridge
+    (mul_le_mul_of_nonneg_right hTrace
+      (Real.exp_nonneg (lambdaMaxOrdered A hA)))
 
 /-- Effective-rank trace-exponential target for variance-proxy style matrices.
 
@@ -556,6 +638,59 @@ abbrev traceMatrixExp_effectiveRank_bound_statement {n : Nat}
                 traceMatrixExp (c • V) <=
                   ((n + 1 : Nat) : Real) +
                     effectiveRank * (Real.exp (c * sigmaSq) - 1)
+
+/-- Thin consumer for the effective-rank trace-exponential hardbone target.
+
+This only combines the PSD trace-exp minus-identity bridge with the explicit
+trace certificate `matrixTrace V <= effectiveRank * sigmaSq`. It does not define
+effective rank or prove the trace certificate. -/
+theorem traceMatrixExp_effectiveRank_bound {n : Nat}
+    (V : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (c sigmaSq effectiveRank : Real) :
+    traceMatrixExp_effectiveRank_bound_statement V c sigmaSq effectiveRank := by
+  intro hc hsigma _hEffectiveRankNonneg hPSD hTrace hV hSpec
+  have hBridge :=
+    traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le
+      hc hsigma hPSD hV hSpec
+  have hTraceDiv : matrixTrace V / sigmaSq <= effectiveRank := by
+    have hmul : (matrixTrace V / sigmaSq) * sigmaSq <= effectiveRank * sigmaSq := by
+      field_simp [ne_of_gt hsigma]
+      simpa [mul_comm] using hTrace
+    nlinarith [hmul, hsigma]
+  have hExpSubNonneg : 0 <= Real.exp (c * sigmaSq) - 1 := by
+    have harg : 0 <= c * sigmaSq := mul_nonneg hc (le_of_lt hsigma)
+    exact sub_nonneg.mpr (Real.one_le_exp_iff.mpr harg)
+  have hCoeff :
+      (matrixTrace V / sigmaSq) * (Real.exp (c * sigmaSq) - 1) <=
+        effectiveRank * (Real.exp (c * sigmaSq) - 1) :=
+    mul_le_mul_of_nonneg_right hTraceDiv hExpSubNonneg
+  exact hBridge.trans (by
+    simpa [Nat.cast_add, Nat.cast_one, add_comm, add_left_comm, add_assoc] using
+      add_le_add_left hCoeff ((n + 1 : Nat) : Real))
+
+/-- Ambient-cardinality fallback for the effective-rank trace-exponential bound.
+
+This wrapper composes the effective-rank hardbone consumer with the ambient trace
+certificate from `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le`. It fixes
+the effective-rank parameter to the ambient cardinality and does not prove a true
+effective-rank, support, or rank certificate. -/
+theorem traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate {n : Nat}
+    (V : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (c sigmaSq : Real)
+    (hc : 0 <= c) (hsigma : 0 < sigmaSq)
+    (hPSD : IsPSDMatrix V)
+    (hV : IsSelfAdjointMatrix V)
+    (hSpec : lambdaMaxOrdered V hV <= sigmaSq) :
+    traceMatrixExp (c • V) <=
+      ((n + 1 : Nat) : Real) +
+        ((n + 1 : Nat) : Real) * (Real.exp (c * sigmaSq) - 1) := by
+  have hTrace : matrixTrace V <= ((n + 1 : Nat) : Real) * sigmaSq :=
+    matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le hPSD hV hSpec
+  have hEff : 0 <= ((n + 1 : Nat) : Real) := by
+    positivity
+  exact
+    traceMatrixExp_effectiveRank_bound V c sigmaSq ((n + 1 : Nat) : Real)
+      hc hsigma hEff hPSD hTrace hV hSpec
 
 /-! ## Thin consumers of hardbone statement targets -/
 

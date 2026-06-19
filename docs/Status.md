@@ -9,6 +9,7 @@ surfaces are tracked in the focused reference docs linked below.
 ## Current Focus
 
 - Active branch: RandomMatrix / Matrix Bernstein experimental API.
+- Active process/random-object API leaf: small `RandomFamily` vocabulary for process and sample surfaces.
 - Stable import surface: [`HighDimProb`](../HighDimProb.lean).
 - Experimental import surface: [`HighDimProb.Experimental`](../HighDimProb/Experimental.lean) and [`HighDimProb.Examples`](../HighDimProb/Examples.lean).
 - Main active RandomMatrix files:
@@ -24,6 +25,23 @@ surfaces are tracked in the focused reference docs linked below.
 - Test plan: [`TestPlan.md`](TestPlan.md)
 - Judge system: [`JudgeSystem.md`](JudgeSystem.md)
 - Workflow: [`Workflow.md`](Workflow.md)
+
+## Current Process / Random Object Entry Names
+
+Random-family helpers:
+
+- `RandomFamily`
+- `RealRandomFamily`
+- `IsRandomFamily`
+- `IsRealRandomFamily`
+- `familyAt`
+- `mapRandomFamily`
+- `isRandomFamily_map`
+- `IsRandomProcess`
+- `processAt`
+- `isRandomVariable_processAt`
+- `IsRandomSample`
+- `sampleEvaluation`
 
 ## Current RandomMatrix Entry Names
 
@@ -77,7 +95,7 @@ Sample covariance negative-side provider-transfer adapters:
 - `centeredSampleCovarianceRowRankOneSumNeg_traceExpIntegrable_of_traceExpIntegrable_neg_theta`
 - `centeredSampleCovarianceRowRankOneFamilyNeg_cfcPrimitive_of_cfcPrimitive_neg_theta`
 
-Hardbone Bernstein CFC leaf:
+Hardbone proved leaves, deterministic bridges, and thin consumers:
 
 - `scalarBernsteinExpQuadraticInequality`
 - `selfAdjointSpectrumBoundedByOperatorNorm`
@@ -85,6 +103,19 @@ Hardbone Bernstein CFC leaf:
 - `cfcScalarInequalityToMatrixLE_bernsteinExpQuadratic`
 - `bernsteinMatrixExp_le_quadratic_of_cfcLeaves`
 - `bernsteinMatrixExp_le_quadratic`
+- `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider`
+- `varianceProxyNormBound_of_centeredSquareChain`
+- `matrixTrace_smul`
+- `matrixTrace_le_of_matrixLE`
+- `traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support`
+- `traceMatrixExp_le_rank_exp_lambdaMax`
+- `traceMatrixExp_le_supportDim_exp_lambdaMax`
+- `traceMatrixExp_eq_sum_exp_eigenvalues`
+- `traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le`
+- `traceMatrixExp_effectiveRank_bound`
+- `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le`
+- `traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate`
+- `matrixTrace_eq_rank_of_isStarProjection`
 
 Example-layer wrappers:
 
@@ -108,10 +139,27 @@ Example modules:
 
 ## Current Caveats
 
+- The random-family layer is vocabulary only: it adds indexed aliases, endpoint/map wrappers, and pointwise measurability lemmas, but no filtrations, adaptedness, martingales, or conditioning providers.
+
 - RandomMatrix / Matrix Bernstein remains experimental.
 - The hardbone statement atlas names CFC, log/order, Tropp/Lieb,
   conditioning, integrability, variance-proxy, and dimension/rank blockers as
-  typed statement targets. The Bernstein CFC route is now proved through
+  typed statement targets. The trace-exp domination-provider consumer is proved as
+  `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider`, but it only
+  consumes an explicit nonnegative integrable dominator and pointwise absolute
+  domination. The variance-proxy provider-chain consumer is proved as
+  `varianceProxyNormBound_of_centeredSquareChain`, but it still requires
+  explicit centered-square expansion, Loewner comparison, and deterministic
+  norm-control assumptions. The rank/support trace-bound bridge is now proved through
+  `traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support`
+  and the `traceMatrixExp_le_rank_exp_lambdaMax` /
+  `traceMatrixExp_le_supportDim_exp_lambdaMax` consumers. The deterministic
+  trace/rank bridge `matrixTrace_eq_rank_of_isStarProjection` is proved for
+  explicit `IsStarProjection` support matrices. This still does not construct
+  support domination, construct support matrices for applications, or provide a
+  true effective-rank certificate. The ambient route only supplies the
+  certificate with effective-rank parameter `(n + 1 : Real)`. The Bernstein
+  CFC route is now proved through
   `bernsteinMatrixExp_le_quadratic`, reusing scalar Bernstein, spectrum
   localization, Bernstein-specific CFC order transfer, and CFC expression
   normalization. The preferred optimized Matrix Bernstein assumption bundles
@@ -133,8 +181,10 @@ Example modules:
 - Negative-side provider-transfer adapters only move explicit opposite-parameter
   assumptions onto the named negative sample-covariance family; they do not
   prove exponential integrability, trace-exponential integrability, or CFC.
-- Completed hardbone wrapper task: `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
-- Next safe hardbone task: `RM-HB12-select-next-hardbone-proof-leaf`.
+- Next safe hardbone task: `CG-B17-star-projection-rank-support-consumer-contract`,
+  focused on routing the explicit star-projection trace/rank bridge into
+  support/rank consumers while keeping support domination and projection
+  construction separate.
 
 ## Verification
 

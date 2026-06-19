@@ -20,6 +20,7 @@ variable (hK : IsSelfAdjointMatrix K)
 variable (hB : IsSelfAdjointMatrix B)
 variable (hY : RandomSelfAdjointMatrix P Y)
 variable (hPSD : Matrix.PosSemidef A)
+variable (hSupportProj : IsStarProjection A)
 variable (hExpPSD : Matrix.PosSemidef (matrixExp A))
 variable (hInt : IntegrableRealRandomVariable P (traceExpIntegrand Y theta))
 variable (hTroppTraceInt :
@@ -43,6 +44,9 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check matrixExp_apply
 #check matrixTrace
 #check matrixTrace_apply
+#check matrixTrace_eq_rank_of_isStarProjection
+#check (matrixTrace_eq_rank_of_isStarProjection hSupportProj :
+  matrixTrace A = (Matrix.rank A : Real))
 #check traceMatrixExp
 #check traceMatrixExp_apply
 #check isSelfAdjointMatrix_smul
@@ -129,6 +133,11 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check traceMatrixExp_nonneg_of_selfAdjoint
 #check lambdaMaxOrdered_matrixExp
 #check traceMatrixExp_smul_le_card_exp_of_lambdaMaxOrdered_le
+#check traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le
+#check matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le
+#check traceMatrixExp_eq_sum_exp_eigenvalues
+#check (traceMatrixExp_eq_sum_exp_eigenvalues hB :
+  traceMatrixExp B = Finset.univ.sum fun i => Real.exp (hB.eigenvalues i))
 #check traceExpMoment_nonneg_statement
 #check traceExpMoment_nonneg_of_nonneg
 #check traceExpIntegrand_nonneg_of_randomSelfAdjoint
@@ -364,6 +373,10 @@ example :
     lambdaMaxOrdered (matrixExp B) (isSelfAdjointMatrix_matrixExp hB) =
       Real.exp (lambdaMaxOrdered B hB) := by
   exact lambdaMaxOrdered_matrixExp hB
+
+example :
+    traceMatrixExp B = Finset.univ.sum fun i => Real.exp (hB.eigenvalues i) := by
+  exact traceMatrixExp_eq_sum_exp_eigenvalues hB
 
 example : IsSelfAdjointMatrix (theta • A) := by
   exact isSelfAdjointMatrix_smul theta hA

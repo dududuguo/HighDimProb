@@ -1,9 +1,9 @@
+import HighDimProb.RandomFamily
 import HighDimProb.RandomProcess
 import HighDimProb.EmpiricalProcess
 
 /-!
 # Random process branch
 
-Aggregate module for random-process and empirical-process vocabulary.
+Aggregate module for random-family, random-process, and empirical-process vocabulary.
 -/
-

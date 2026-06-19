@@ -9,6 +9,7 @@ open HighDimProb
 #check pow_le_two_mul_scale_sqrt_mul_exp_sq_div
 #check two_mul_pow_le_two_mul_pow
 #check pow_le_four_sqrt_mul_exp_sq
+#check exp_mul_le_chord_exp_of_nonneg_of_le
 
 variable {x K : Real}
 variable {q : Nat}
@@ -19,3 +20,9 @@ variable {q : Nat}
 #check fun (hx : 0 <= x) (hK : 0 < K) (hq : 1 <= q) =>
   pow_le_two_mul_scale_sqrt_mul_exp_sq_div
     (x := x) (K := K) (q := q) hx hK hq
+
+variable {c sigma : Real}
+
+#check fun (hc : 0 <= c) (hx0 : 0 <= x) (hxsigma : x <= sigma) (hsigma : 0 < sigma) =>
+  exp_mul_le_chord_exp_of_nonneg_of_le
+    (c := c) (x := x) (sigma := sigma) hc hx0 hxsigma hsigma
