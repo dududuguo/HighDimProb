@@ -129,4 +129,18 @@ example {n : Nat} (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (rankBound : Nat) : Prop :=
   traceMatrixExp_le_rank_exp_lambdaMax_statement A support rankBound
 
+example {n : Nat} (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (supportDim : Nat) : Prop :=
+  traceMatrixExp_le_supportDim_exp_lambdaMax_statement A support supportDim
+
+example {n : Nat} (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (rankBound : Nat) :
+    traceMatrixExp_le_rank_exp_lambdaMax_statement A support rankBound :=
+  traceMatrixExp_le_rank_exp_lambdaMax A support rankBound
+
+example {n : Nat} (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (supportDim : Nat) :
+    traceMatrixExp_le_supportDim_exp_lambdaMax_statement A support supportDim :=
+  traceMatrixExp_le_supportDim_exp_lambdaMax A support supportDim
+
 end HighDimProb.Examples.RandomMatrix.HardboneStatementAtlasUsage

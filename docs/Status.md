@@ -199,6 +199,8 @@ Example modules:
   `RM-HB12-matrix-exp-log-selfadjoint-normalization-leaf`.
 - Completed hardbone proof leaf:
   `RM-HB12-matrix-log-le-of-le-matrix-exp-bridge-leaf`.
+- Completed hardbone proof leaf:
+  `RM-HB12-trace-exp-rank-support-bound-leaf`.
 - Next safe hardbone task: `CG-B17-star-projection-rank-support-consumer-contract`,
   focused on routing the explicit star-projection trace/rank bridge into
   support/rank consumers while keeping support domination and projection
