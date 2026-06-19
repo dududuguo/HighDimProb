@@ -45,8 +45,14 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check matrixTrace
 #check matrixTrace_apply
 #check matrixTrace_eq_rank_of_isStarProjection
+#check isPSDMatrix_of_isStarProjection
 #check (matrixTrace_eq_rank_of_isStarProjection hSupportProj :
   matrixTrace A = (Matrix.rank A : Real))
+#check (isPSDMatrix_of_isStarProjection hSupportProj :
+  IsPSDMatrix A)
+#check MatrixExpSupportDomination
+#check MatrixExpExcessSupportDomination
+#check traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination
 #check traceMatrixExp
 #check traceMatrixExp_apply
 #check isSelfAdjointMatrix_smul

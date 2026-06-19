@@ -33,6 +33,8 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check sampleCovarianceVarianceProxy_sharp_statement
 #check traceMatrixExp_le_rank_exp_lambdaMax_statement
 #check traceMatrixExp_le_supportDim_exp_lambdaMax_statement
+#check matrixExpSupportDomination_identity_statement
+#check traceMatrixExp_excess_supportDim_exp_lambdaMax_statement
 #check traceMatrixExp_effectiveRank_bound_statement
 #check traceMatrixExp_effectiveRank_bound
 #check traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate
@@ -53,7 +55,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check varianceProxyNormBound_of_centeredSquareChain
 #check matrixTrace_smul
 #check matrixTrace_le_of_matrixLE
-#check traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
+#check traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination
 #check traceMatrixExp_le_rank_exp_lambdaMax
 #check traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection
 #check traceMatrixExp_le_supportDim_exp_lambdaMax
@@ -144,6 +146,13 @@ example {n : Nat} (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (supportDim : Nat) : Prop :=
   traceMatrixExp_le_supportDim_exp_lambdaMax_statement A support supportDim
 
+example {n : Nat} (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real) : Prop :=
+  matrixExpSupportDomination_identity_statement A
+
+example {n : Nat} (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (supportDim : Nat) : Prop :=
+  traceMatrixExp_excess_supportDim_exp_lambdaMax_statement A support supportDim
+
 example {n : Nat} (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (rankBound : Nat) :
     traceMatrixExp_le_rank_exp_lambdaMax_statement A support rankBound :=
@@ -155,11 +164,9 @@ example {n : Nat} (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (hRank : Matrix.rank support <= rankBound) :
     0 < rankBound ->
       rankBound <= n + 1 ->
-        IsPSDMatrix support ->
-          forall hA : IsSelfAdjointMatrix A,
-            MatrixLE (matrixExp A)
-              (Real.exp (lambdaMaxOrdered A hA) • support) ->
-              traceMatrixExp A <=
+        forall hA : IsSelfAdjointMatrix A,
+          MatrixExpSupportDomination A support hA ->
+            traceMatrixExp A <=
                 (rankBound : Real) * Real.exp (lambdaMaxOrdered A hA) :=
   traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection
     A support rankBound hProj hRank

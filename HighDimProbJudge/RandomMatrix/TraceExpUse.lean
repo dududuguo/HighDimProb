@@ -7,6 +7,10 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.matrixExp
 #check HighDimProb.matrixTrace
 #check HighDimProb.matrixTrace_eq_rank_of_isStarProjection
+#check HighDimProb.isPSDMatrix_of_isStarProjection
+#check HighDimProb.MatrixExpSupportDomination
+#check HighDimProb.MatrixExpExcessSupportDomination
+#check HighDimProb.traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination
 #check HighDimProb.traceMatrixExp
 #check HighDimProb.isSelfAdjointMatrix_smul
 #check HighDimProb.isSelfAdjointMatrix_neg

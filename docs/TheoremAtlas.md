@@ -51,17 +51,20 @@ domination assumption. The variance-proxy centered-square-chain consumer
 `varianceProxyNormBound_of_centeredSquareChain` is proved under explicit
 centered-square expansion, Loewner comparison, and deterministic norm-control
 assumptions. The rank/support trace-bound bridge is proved by
-`traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support`,
+`traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination`,
 with rank/support consumers for the hardbone targets. Deterministic trace/rank
 certificates now include the ambient PSD lambda-max certificate
 `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le` and the explicit
 star-projection certificate `matrixTrace_eq_rank_of_isStarProjection`; the thin
 consumer `traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection` routes that
-certificate into the rank-bound theorem while keeping PSD and support
-domination explicit. The remaining support-side work is to construct support
-domination and support matrices for applications, and to audit whether current
-star-projection facts can discharge `IsPSDMatrix support`; true effective-rank
-trace certificates beyond the ambient fallback remain open. The Bernstein CFC route is now proved as
+certificate together with `isPSDMatrix_of_isStarProjection` into the rank-bound
+theorem while keeping the named `MatrixExpSupportDomination` certificate
+explicit. The remaining support-side work is split into the ambient
+identity-support provider target and the corrected excess-support target
+`MatrixExpExcessSupportDomination` /
+`traceMatrixExp_excess_supportDim_exp_lambdaMax_statement`; the excess route
+keeps the nonnegative excess coefficient explicit. Concrete support providers
+and true effective-rank trace certificates beyond the ambient fallback remain open. The Bernstein CFC route is now proved as
 `bernsteinMatrixExp_le_quadratic`, via scalar Bernstein, spectrum localization,
 Bernstein-specific CFC order transfer, and expression normalization. The
 trace-MGF provider surface includes
@@ -95,7 +98,7 @@ or conditional-expectation inputs themselves.
 - Proofs of the remaining hardbone statement targets for operator-log
   monotonicity, `matrixExp` log-domain support, trace-exp monotonicity,
   Tropp/Lieb, automatic trace-exp domination/integrability, automatic
-  variance-proxy sharpening, support domination certificates, true
+  variance-proxy sharpening, support-domination providers, true
   effective-rank/support trace certificates, and dimension/rank refinements
   beyond explicit star-projection rank consumers.
 - A public-friendly Matrix Bernstein wrapper directly over the natural-state

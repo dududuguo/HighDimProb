@@ -39,7 +39,7 @@
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
   - Current repository next task:
-    RM-HB-sample-covariance-cfc-free-wrapper-contract. Natural-state assumption
+    CG-B21-excess-support-trace-bridge-contract. Natural-state assumption
     bundling, negative trace-MGF provider cleanup, Matrix Bernstein,
     Hanson-Wright, and WLLN/SLLN remain separate future directions.
 - OrliczToTail
@@ -161,7 +161,24 @@
 - Boundary preserved: this does not prove Tropp/Lieb, Golden-Thompson,
   trace-MGF iteration, variance-proxy sharpening, full Matrix Bernstein, or
   sample-covariance CFC-free wrappers.
-- Next safe leaf: `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
+- Follow-up completed leaf:
+  `RM-HB-sample-covariance-cfc-free-wrapper-contract`, adding CFC-free
+  sample-covariance wrapper surfaces through the proved Bernstein CFC leaf.
+- Follow-up completed leaf:
+  `CG-B17-star-projection-rank-support-consumer-contract`, adding the
+  star-projection trace/rank certificate consumer for rank/support trace-exp
+  bounds.
+- Follow-up completed leaf:
+  `CG-B18-star-projection-psd-bridge-contract`, adding
+  `isPSDMatrix_of_isStarProjection` and removing the explicit PSD premise from
+  the star-projection rank/support consumer.
+- Follow-up completed abstraction leaf:
+  `CG-B19-support-domination-certificate-contract`, naming the explicit support
+  domination premise as `MatrixExpSupportDomination` without proving a provider.
+- Follow-up completed abstraction leaf:
+  `CG-B20-support-domination-provider-contract`, splitting the provider frontier
+  into ambient identity-support and corrected excess-support statement targets.
+- Next safe leaf: `CG-B21-excess-support-trace-bridge-contract`.
 
 ## Process
 

@@ -560,8 +560,7 @@ abbrev traceMatrixExp_le_rank_exp_lambdaMax_statement {n : Nat}
       IsPSDMatrix support ->
         matrixTrace support <= (rankBound : Real) ->
           forall hA : IsSelfAdjointMatrix A,
-            MatrixLE (matrixExp A)
-              (Real.exp (lambdaMaxOrdered A hA) • support) ->
+            MatrixExpSupportDomination A support hA ->
               traceMatrixExp A <=
                 (rankBound : Real) * Real.exp (lambdaMaxOrdered A hA)
 
@@ -579,10 +578,43 @@ abbrev traceMatrixExp_le_supportDim_exp_lambdaMax_statement {n : Nat}
       IsPSDMatrix support ->
         matrixTrace support <= (supportDim : Real) ->
           forall hA : IsSelfAdjointMatrix A,
-            MatrixLE (matrixExp A)
-              (Real.exp (lambdaMaxOrdered A hA) • support) ->
+            MatrixExpSupportDomination A support hA ->
               traceMatrixExp A <=
                 (supportDim : Real) * Real.exp (lambdaMaxOrdered A hA)
+
+/-- Ambient identity-support provider target for matrix-exponential domination.
+
+This names the first non-application-specific provider route: prove that the
+matrix exponential is Loewner-dominated by its largest exponential eigenvalue
+times the identity. It is kept as a statement target because this leaf only
+removes black-box naming, not the spectral proof. -/
+abbrev matrixExpSupportDomination_identity_statement {n : Nat}
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real) : Prop :=
+  forall hA : IsSelfAdjointMatrix A,
+    MatrixExpSupportDomination A 1 hA
+
+/-- Corrected excess-support trace-exponential target.
+
+Low-rank support generally cannot dominate `matrixExp A` itself because zero
+or inactive directions still contribute the identity term. This target instead
+names the route where a support certificate controls `matrixExp A - 1`, yielding
+an ambient identity contribution plus a support-dimension excess term. The
+nonnegative excess-coefficient premise is kept explicit because the final
+trace-support comparison multiplies by `Real.exp (lambdaMaxOrdered A hA) - 1`. -/
+abbrev traceMatrixExp_excess_supportDim_exp_lambdaMax_statement {n : Nat}
+    (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (supportDim : Nat) : Prop :=
+  0 < supportDim ->
+    supportDim <= n + 1 ->
+      IsPSDMatrix support ->
+        matrixTrace support <= (supportDim : Real) ->
+          forall hA : IsSelfAdjointMatrix A,
+            0 <= Real.exp (lambdaMaxOrdered A hA) - 1 ->
+              MatrixExpExcessSupportDomination A support hA ->
+                traceMatrixExp A <=
+                  ((n + 1 : Nat) : Real) +
+                    (supportDim : Real) *
+                      (Real.exp (lambdaMaxOrdered A hA) - 1)
 
 /-- Rank-refined trace-exponential bound from an explicit support certificate.
 
@@ -595,7 +627,7 @@ theorem traceMatrixExp_le_rank_exp_lambdaMax {n : Nat}
     traceMatrixExp_le_rank_exp_lambdaMax_statement A support rankBound := by
   intro _hRankPos _hRankLe _hSupportPSD hTrace hA hDom
   have hBridge :=
-    traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
+    traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination
       hA hDom
   exact le_trans hBridge
     (mul_le_mul_of_nonneg_right hTrace
@@ -605,8 +637,8 @@ theorem traceMatrixExp_le_rank_exp_lambdaMax {n : Nat}
 certificate.
 
 This is a thin wrapper over `traceMatrixExp_le_rank_exp_lambdaMax`: the
-star-projection bridge supplies the trace certificate from the matrix rank. It
-still keeps support PSD and support domination explicit. -/
+star-projection bridge supplies both the PSD support premise and the trace
+certificate from the matrix rank. It still keeps support domination explicit. -/
 theorem traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection {n : Nat}
     (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (rankBound : Nat)
@@ -614,13 +646,13 @@ theorem traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection {n : Nat}
     (hRank : Matrix.rank support <= rankBound) :
     0 < rankBound ->
       rankBound <= n + 1 ->
-        IsPSDMatrix support ->
-          forall hA : IsSelfAdjointMatrix A,
-            MatrixLE (matrixExp A)
-              (Real.exp (lambdaMaxOrdered A hA) • support) ->
-              traceMatrixExp A <=
-                (rankBound : Real) * Real.exp (lambdaMaxOrdered A hA) := by
-  intro hRankPos hRankLe hPSD hA hDom
+        forall hA : IsSelfAdjointMatrix A,
+          MatrixExpSupportDomination A support hA ->
+            traceMatrixExp A <=
+              (rankBound : Real) * Real.exp (lambdaMaxOrdered A hA) := by
+  intro hRankPos hRankLe hA hDom
+  have hPSD : IsPSDMatrix support :=
+    isPSDMatrix_of_isStarProjection hSupport
   have hTraceEq : matrixTrace support = (Matrix.rank support : Real) :=
     matrixTrace_eq_rank_of_isStarProjection hSupport
   have hTrace : matrixTrace support <= (rankBound : Real) := by
@@ -642,7 +674,7 @@ theorem traceMatrixExp_le_supportDim_exp_lambdaMax {n : Nat}
     traceMatrixExp_le_supportDim_exp_lambdaMax_statement A support supportDim := by
   intro _hSupportDimPos _hSupportDimLe _hSupportPSD hTrace hA hDom
   have hBridge :=
-    traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
+    traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination
       hA hDom
   exact le_trans hBridge
     (mul_le_mul_of_nonneg_right hTrace

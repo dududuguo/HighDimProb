@@ -95,7 +95,7 @@ Sample covariance negative-side provider-transfer adapters:
 - `centeredSampleCovarianceRowRankOneSumNeg_traceExpIntegrable_of_traceExpIntegrable_neg_theta`
 - `centeredSampleCovarianceRowRankOneFamilyNeg_cfcPrimitive_of_cfcPrimitive_neg_theta`
 
-Hardbone proved leaves, deterministic bridges, and thin consumers:
+Hardbone proved leaves, deterministic bridges, statement targets, and thin consumers:
 
 - `scalarBernsteinExpQuadraticInequality`
 - `selfAdjointSpectrumBoundedByOperatorNorm`
@@ -107,7 +107,7 @@ Hardbone proved leaves, deterministic bridges, and thin consumers:
 - `varianceProxyNormBound_of_centeredSquareChain`
 - `matrixTrace_smul`
 - `matrixTrace_le_of_matrixLE`
-- `traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support`
+- `traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination`
 - `traceMatrixExp_le_rank_exp_lambdaMax`
 - `traceMatrixExp_le_supportDim_exp_lambdaMax`
 - `traceMatrixExp_eq_sum_exp_eigenvalues`
@@ -116,6 +116,11 @@ Hardbone proved leaves, deterministic bridges, and thin consumers:
 - `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le`
 - `traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate`
 - `matrixTrace_eq_rank_of_isStarProjection`
+- `isPSDMatrix_of_isStarProjection`
+- `MatrixExpSupportDomination`
+- `MatrixExpExcessSupportDomination`
+- `matrixExpSupportDomination_identity_statement`
+- `traceMatrixExp_excess_supportDim_exp_lambdaMax_statement`
 
 Hardbone matrix-exp/log normalization leaf:
 
@@ -143,6 +148,7 @@ Example-layer wrappers:
 
 Example modules:
 
+- `StatementRoutes`
 - `PrefixStateTroppUsage`
 - `ConditionalStateEndpointUsage`
 - `NaturalTroppPipelineUsage`
@@ -163,14 +169,22 @@ Example modules:
   `varianceProxyNormBound_of_centeredSquareChain`, but it still requires
   explicit centered-square expansion, Loewner comparison, and deterministic
   norm-control assumptions. The rank/support trace-bound bridge is now proved through
-  `traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support`
+  `traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination`
   and the `traceMatrixExp_le_rank_exp_lambdaMax` /
   `traceMatrixExp_le_supportDim_exp_lambdaMax` consumers. Explicit
   star-projection rank certificates are now consumed by
   `traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection`, using
-  `matrixTrace_eq_rank_of_isStarProjection`. This still keeps `IsPSDMatrix
-  support`, support domination, and support construction for applications
-  separate, and it does not provide a true effective-rank certificate. The
+  `matrixTrace_eq_rank_of_isStarProjection` and
+  `isPSDMatrix_of_isStarProjection`. This discharges the PSD premise from an
+  explicit `IsStarProjection support`; the domination premise is now named
+  `MatrixExpSupportDomination`, but providers for that certificate and support
+  construction for applications remain separate. The ambient identity provider
+  target is named by `matrixExpSupportDomination_identity_statement`. The
+  corrected low-rank route is named separately by
+  `MatrixExpExcessSupportDomination` and
+  `traceMatrixExp_excess_supportDim_exp_lambdaMax_statement`; the latter keeps
+  the nonnegative excess-coefficient premise explicit. None of these provider
+  targets gives a true effective-rank certificate. The
   ambient route only supplies the
   certificate with effective-rank parameter `(n + 1 : Real)`. The Bernstein
   CFC route is now proved through
@@ -197,7 +211,7 @@ Example modules:
   does not discharge the analytic conditional-step, history measurability,
   independence, trace-exp integrability, log/K, CFC, or variance-proxy
   hypotheses.
-- The conditional-state bundle is example-local, and the reindexed example is transport-only.
+- `StatementRoutes` is an examples-only route index; it groups existing example-level statement families and hardbone frontier entry points without adding core API. The conditional-state bundle is example-local, and the reindexed example is transport-only.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
 - Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The preferred sample-covariance example route now uses Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
 - Negative-side provider-transfer adapters only move explicit opposite-parameter
@@ -214,10 +228,23 @@ Example modules:
   `RM-HB12-tropp-conditional-step-of-iindepfun-bridge-leaf`.
 - Completed hardbone proof leaf:
   `CG-B17-star-projection-rank-support-consumer-contract`.
-- Next safe hardbone task: `CG-B18-star-projection-psd-bridge-contract`,
-  focused on auditing whether existing star-projection facts can discharge the
-  explicit `IsPSDMatrix support` premise without constructing unsupported
-  support-domination or application-specific projection certificates.
+- Completed hardbone proof leaf:
+  `CG-B18-star-projection-psd-bridge-contract`, proving
+  `isPSDMatrix_of_isStarProjection` and removing the explicit PSD premise from
+  `traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection`.
+- Completed hardbone abstraction leaf:
+  `CG-B19-support-domination-certificate-contract`, naming the support
+  domination premise as `MatrixExpSupportDomination` without proving any
+  provider for it.
+- Completed hardbone abstraction leaf:
+  `CG-B20-support-domination-provider-contract`, splitting the provider
+  frontier into the ambient identity-support target
+  `matrixExpSupportDomination_identity_statement` and the corrected excess
+  support route `MatrixExpExcessSupportDomination` /
+  `traceMatrixExp_excess_supportDim_exp_lambdaMax_statement`.
+- Next safe hardbone task: `CG-B21-excess-support-trace-bridge-contract`,
+  focused on auditing the trace-linear algebra needed by the excess-support
+  route before proving any application-specific support certificate.
 
 ## Verification
 
@@ -232,7 +259,7 @@ lake test
 lake build HighDimProbJudge
 ```
 
-Last verified locally on 2026-06-19 with the commands above.
+Last verified locally on 2026-06-20 with the commands above.
 
 ## Archive
 

@@ -49,6 +49,8 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check varianceProxyNormBound_of_centeredSquareChain_statement
 #check traceMatrixExp_le_rank_exp_lambdaMax_statement
 #check traceMatrixExp_le_supportDim_exp_lambdaMax_statement
+#check matrixExpSupportDomination_identity_statement
+#check traceMatrixExp_excess_supportDim_exp_lambdaMax_statement
 #check traceMatrixExp_effectiveRank_bound_statement
 #check traceMatrixExp_effectiveRank_bound
 #check traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate
@@ -69,6 +71,7 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check matrixTrace_smul
 #check matrixTrace_le_of_matrixLE
 #check traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
+#check traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination
 #check traceMatrixExp_le_rank_exp_lambdaMax
 #check traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection
 #check traceMatrixExp_le_supportDim_exp_lambdaMax
@@ -168,11 +171,9 @@ example
     (hRank : Matrix.rank S <= rankBound) :
     0 < rankBound ->
       rankBound <= n + 1 ->
-        IsPSDMatrix S ->
-          forall hB : IsSelfAdjointMatrix B,
-            MatrixLE (matrixExp B)
-              (Real.exp (lambdaMaxOrdered B hB) • S) ->
-              traceMatrixExp B <=
+        forall hB : IsSelfAdjointMatrix B,
+          MatrixExpSupportDomination B S hB ->
+            traceMatrixExp B <=
                 (rankBound : Real) * Real.exp (lambdaMaxOrdered B hB) :=
   traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection
     B S rankBound hProj hRank

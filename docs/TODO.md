@@ -16,7 +16,7 @@ This is the active short list. Old completed task logs were collapsed into
   `matrixExpLogSelfAdjointNormalization` leaf is now done.
 - Keep the Matrix Bernstein under-primitives API honest: wrappers may use Tropp/provider assumptions explicitly, but should not claim missing Tropp/Lieb, Golden-Thompson, trace-MGF, or full Matrix Bernstein proofs.
 - Continue reducing repeated optimized-RHS formulas through shared helpers in `ConcentrationStatements.lean`.
-- Keep public examples readable: name families and adapters first, then call the shared RandomMatrix API.
+- Keep public examples statement-oriented: name families and adapters first, then call the shared RandomMatrix API. Keep `StatementRoutes` as the examples-only entry index for theorem-family routes.
 - Completed RandomMatrix hardbone wrapper task:
   `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
 - Completed RandomMatrix hardbone proof leaf:
@@ -29,11 +29,21 @@ This is the active short list. Old completed task logs were collapsed into
   `RM-HB12-tropp-conditional-step-of-iindepfun-bridge-leaf`.
 - Completed RandomMatrix hardbone proof leaf:
   `CG-B17-star-projection-rank-support-consumer-contract`.
+- Completed RandomMatrix hardbone proof leaf:
+  `CG-B18-star-projection-psd-bridge-contract`: prove
+  `isPSDMatrix_of_isStarProjection` and remove the explicit PSD premise from
+  the star-projection rank/support consumer.
+- Completed RandomMatrix hardbone abstraction leaf:
+  `CG-B19-support-domination-certificate-contract`: name the support-domination
+  premise as `MatrixExpSupportDomination` without proving a provider.
+- Completed RandomMatrix hardbone abstraction leaf:
+  `CG-B20-support-domination-provider-contract`: split the provider frontier
+  into the ambient identity-support target and the corrected excess-support
+  target, without proving either provider.
 - Next RandomMatrix hardbone task:
-  `CG-B18-star-projection-psd-bridge-contract`: audit whether existing
-  star-projection APIs can discharge the explicit `IsPSDMatrix support`
-  premise in the rank/support consumer, without constructing unsupported
-  support-domination or application-specific projection certificates.
+  `CG-B21-excess-support-trace-bridge-contract`: audit the trace-linear algebra
+  needed for the excess-support route, including the explicit nonnegative
+  excess-coefficient premise.
 
 ## Active Documentation Work
 

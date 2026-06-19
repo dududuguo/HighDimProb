@@ -100,6 +100,33 @@ theorem matrixTrace_eq_rank_of_isStarProjection {n : Nat}
     _ = (Module.finrank Real (LinearMap.range f) : Real) := hTraceLin
     _ = (Matrix.rank support : Real) := by rw [hRank]
 
+section StarProjectionPSD
+
+open scoped MatrixOrder
+
+/-- Star projections are PSD in HighDimProb's explicit quadratic-form order.
+
+This deterministic conversion bridge reuses Mathlib's ordered star-projection
+fact `IsStarProjection.nonneg` and the matrix-order equivalence
+`Matrix.nonneg_iff_posSemidef`. It does not construct a support projection or
+prove any support-domination certificate for another matrix. -/
+theorem isPSDMatrix_of_isStarProjection {n : Nat}
+    {support : Matrix (Fin n) (Fin n) Real}
+    (hSupport : IsStarProjection support) :
+    IsPSDMatrix support := by
+  have hNonneg : 0 <= support := hSupport.nonneg
+  have hPSD : Matrix.PosSemidef support :=
+    Matrix.nonneg_iff_posSemidef.mp hNonneg
+  constructor
+  · apply Matrix.IsSymm.ext
+    intro i j
+    have h := Matrix.IsHermitian.apply hPSD.isHermitian i j
+    simpa using h
+  · intro x
+    exact matrixQuadraticForm_nonneg_of_posSemidef hPSD x
+
+end StarProjectionPSD
+
 /-- Trace of the matrix exponential. -/
 def traceMatrixExp {n : Nat} (A : Matrix (Fin n) (Fin n) Real) : Real :=
   matrixTrace (matrixExp A)
@@ -2190,6 +2217,30 @@ private theorem traceMatrixExp_le_card_mul_exp_lambdaMaxOrdered
     _ = (n + 1 : Real) * Real.exp (lambdaMaxOrdered A hA) := by
           rw [lambdaMaxOrdered_matrixExp hA]
 
+/-- Explicit support-domination certificate for the matrix exponential.
+
+This names the deterministic certificate used by rank/support trace-exp
+consumers. It is only a vocabulary wrapper around the existing Loewner-order
+comparison; it does not construct a support matrix or prove the certificate for
+any application. -/
+abbrev MatrixExpSupportDomination {n : Nat}
+    (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : IsSelfAdjointMatrix A) : Prop :=
+  MatrixLE (matrixExp A) (Real.exp (lambdaMaxOrdered A hA) • support)
+
+/-- Explicit support-domination certificate for the excess matrix exponential.
+
+This is the corrected low-rank support shape for trace-exponential dimension
+work: zero directions of `A` contribute the identity term to `matrixExp A`, so a
+proper support certificate should often control `matrixExp A - 1`, not
+`matrixExp A` itself. This is only vocabulary; it does not construct the
+support or prove the certificate. -/
+abbrev MatrixExpExcessSupportDomination {n : Nat}
+    (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : IsSelfAdjointMatrix A) : Prop :=
+  MatrixLE (matrixExp A - 1)
+    ((Real.exp (lambdaMaxOrdered A hA) - 1) • support)
+
 /-- Trace-exp bound from an explicit support domination certificate.
 
 This bridge only consumes a provided Loewner comparison against a support
@@ -2197,12 +2248,27 @@ matrix. It does not construct support projections or prove any rank theorem. -/
 theorem traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
     {n : Nat} {A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
     (hA : IsSelfAdjointMatrix A)
-    (hDom : MatrixLE (matrixExp A)
-      (Real.exp (lambdaMaxOrdered A hA) • support)) :
+    (hDom : MatrixExpSupportDomination A support hA) :
     traceMatrixExp A <=
       matrixTrace support * Real.exp (lambdaMaxOrdered A hA) := by
   have hTrace := matrixTrace_le_of_matrixLE hDom
   simpa [traceMatrixExp, matrixTrace_smul, mul_comm] using hTrace
+
+/-- Trace-exp bound from the named matrix-exponential support-domination
+certificate.
+
+This is the preferred reader-facing spelling of
+`traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support`.
+The older name is kept as a compatibility alias for code that still talks
+directly about the underlying Loewner comparison. -/
+theorem traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination
+    {n : Nat} {A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hA : IsSelfAdjointMatrix A)
+    (hDom : MatrixExpSupportDomination A support hA) :
+    traceMatrixExp A <=
+      matrixTrace support * Real.exp (lambdaMaxOrdered A hA) :=
+  traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
+    hA hDom
 
 /-- Deterministic trace-exponential dimension bound under a direct ordered
 lambda-max upper bound.
