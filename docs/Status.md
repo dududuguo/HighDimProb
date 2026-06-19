@@ -125,6 +125,10 @@ Hardbone log/order bridge leaf:
 
 - `matrixLog_le_of_le_matrixExp`
 
+Hardbone conditioning bridge leaf:
+
+- `troppConditionalStep_of_iIndepFun`
+
 Example-layer wrappers:
 
 - `sampleCovariance_quadraticForm_tail_usage`
@@ -175,8 +179,11 @@ Example modules:
   normalization consumed by the Tropp/Lieb one-step chain. The matrix log/order
   bridge is now proved through `matrixLog_le_of_le_matrixExp`, but it only
   composes explicit log-monotonicity and `matrixExp` log-domain premises. The
-  preferred optimized Matrix Bernstein assumption bundles are now
-  `MatrixBernsteinPositiveSideTroppAssumptions` and
+  conditioning chain now has the thin theorem witness
+  `troppConditionalStep_of_iIndepFun`, which only forwards the explicit
+  per-index conditional-expectation provider and does not prove history
+  measurability or independence. The preferred optimized Matrix Bernstein
+  assumption bundles are now `MatrixBernsteinPositiveSideTroppAssumptions` and
   `MatrixBernsteinNegativeSideTroppAssumptions`, which expose Tropp/Lieb
   primitives but not pointwise CFC fields. The older explicit-CFC bundles and
   `_under_primitives` wrappers remain compatibility surfaces.
@@ -201,6 +208,8 @@ Example modules:
   `RM-HB12-matrix-log-le-of-le-matrix-exp-bridge-leaf`.
 - Completed hardbone proof leaf:
   `RM-HB12-trace-exp-rank-support-bound-leaf`.
+- Completed hardbone proof leaf:
+  `RM-HB12-tropp-conditional-step-of-iindepfun-bridge-leaf`.
 - Next safe hardbone task: `CG-B17-star-projection-rank-support-consumer-contract`,
   focused on routing the explicit star-projection trace/rank bridge into
   support/rank consumers while keeping support domination and projection

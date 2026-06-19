@@ -25,6 +25,8 @@ This is the active short list. Old completed task logs were collapsed into
   `RM-HB12-matrix-log-le-of-le-matrix-exp-bridge-leaf`.
 - Completed RandomMatrix hardbone proof leaf:
   `RM-HB12-trace-exp-rank-support-bound-leaf`.
+- Completed RandomMatrix hardbone proof leaf:
+  `RM-HB12-tropp-conditional-step-of-iindepfun-bridge-leaf`.
 - Next RandomMatrix hardbone task:
   `CG-B17-star-projection-rank-support-consumer-contract`: audit how the
   explicit `IsStarProjection` trace/rank bridge should feed support/rank

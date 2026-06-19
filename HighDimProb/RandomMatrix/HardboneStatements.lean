@@ -1014,6 +1014,24 @@ theorem troppMasterTraceMGFStep_of_liebJensen {Omega : Type*}
     troppMasterTraceMGFStep_statement (P := P) H Z :=
   hChain hJensen hNormalize
 
+/-- Thin witness for the finite-family conditioning hardbone chain.
+
+This theorem does not prove natural history measurability, history/current-step
+independence, finite-family independence, or the conditional-expectation
+reduction. It only forwards the explicit per-index conditional-expectation
+provider through the statement target. -/
+theorem troppConditionalStep_of_iIndepFun
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} {m n : Nat}
+    (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (mHist : Fin m -> MeasurableSpace Omega) :
+    @troppConditionalStep_of_iIndepFun_statement Omega mOmega P m n
+      theta X K mHist := by
+  intro _hHist _hHistIndep hCondExp _hIndep i
+  exact hCondExp i
+
 /-- Thin consumer for the Phase 4 conditioning bridge.
 
 The conclusion is one indexed conditional-step target. The proof only applies
