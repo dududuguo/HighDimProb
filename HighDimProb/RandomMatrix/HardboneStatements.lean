@@ -601,6 +601,35 @@ theorem traceMatrixExp_le_rank_exp_lambdaMax {n : Nat}
     (mul_le_mul_of_nonneg_right hTrace
       (Real.exp_nonneg (lambdaMaxOrdered A hA)))
 
+/-- Rank-refined trace-exponential bound from an explicit star-projection rank
+certificate.
+
+This is a thin wrapper over `traceMatrixExp_le_rank_exp_lambdaMax`: the
+star-projection bridge supplies the trace certificate from the matrix rank. It
+still keeps support PSD and support domination explicit. -/
+theorem traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection {n : Nat}
+    (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (rankBound : Nat)
+    (hSupport : IsStarProjection support)
+    (hRank : Matrix.rank support <= rankBound) :
+    0 < rankBound ->
+      rankBound <= n + 1 ->
+        IsPSDMatrix support ->
+          forall hA : IsSelfAdjointMatrix A,
+            MatrixLE (matrixExp A)
+              (Real.exp (lambdaMaxOrdered A hA) • support) ->
+              traceMatrixExp A <=
+                (rankBound : Real) * Real.exp (lambdaMaxOrdered A hA) := by
+  intro hRankPos hRankLe hPSD hA hDom
+  have hTraceEq : matrixTrace support = (Matrix.rank support : Real) :=
+    matrixTrace_eq_rank_of_isStarProjection hSupport
+  have hTrace : matrixTrace support <= (rankBound : Real) := by
+    rw [hTraceEq]
+    exact_mod_cast hRank
+  exact
+    traceMatrixExp_le_rank_exp_lambdaMax A support rankBound
+      hRankPos hRankLe hPSD hTrace hA hDom
+
 /-- Support-dimension trace-exponential bound from an explicit support
 certificate.
 

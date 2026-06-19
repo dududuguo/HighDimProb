@@ -55,10 +55,13 @@ assumptions. The rank/support trace-bound bridge is proved by
 with rank/support consumers for the hardbone targets. Deterministic trace/rank
 certificates now include the ambient PSD lambda-max certificate
 `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le` and the explicit
-star-projection certificate `matrixTrace_eq_rank_of_isStarProjection`. The
-remaining support-side work is to construct support domination and support
-matrices for applications; true effective-rank trace certificates beyond the
-ambient fallback remain open. The Bernstein CFC route is now proved as
+star-projection certificate `matrixTrace_eq_rank_of_isStarProjection`; the thin
+consumer `traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection` routes that
+certificate into the rank-bound theorem while keeping PSD and support
+domination explicit. The remaining support-side work is to construct support
+domination and support matrices for applications, and to audit whether current
+star-projection facts can discharge `IsPSDMatrix support`; true effective-rank
+trace certificates beyond the ambient fallback remain open. The Bernstein CFC route is now proved as
 `bernsteinMatrixExp_le_quadratic`, via scalar Bernstein, spectrum localization,
 Bernstein-specific CFC order transfer, and expression normalization. The
 trace-MGF provider surface includes
@@ -94,7 +97,7 @@ or conditional-expectation inputs themselves.
   Tropp/Lieb, automatic trace-exp domination/integrability, automatic
   variance-proxy sharpening, support domination certificates, true
   effective-rank/support trace certificates, and dimension/rank refinements
-  beyond explicit star-projection trace/rank certificates.
+  beyond explicit star-projection rank consumers.
 - A public-friendly Matrix Bernstein wrapper directly over the natural-state
   route.
 

@@ -137,6 +137,7 @@ Thin hardbone consumers:
 - `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider`
 - `varianceProxyNormBound_of_centeredSquareChain`
 - `traceMatrixExp_le_rank_exp_lambdaMax`
+- `traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection`
 - `traceMatrixExp_le_supportDim_exp_lambdaMax`
 - `traceMatrixExp_effectiveRank_bound`
 - `traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate`
@@ -153,7 +154,7 @@ Hardbone status table:
 | Conditioning / independence | `troppConditionalStep_of_iIndepFun_statement` | proven by `troppConditionalStep_of_iIndepFun` | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | thin forwarder only; generated histories, history/current-step independence, finite-family independence, and conditional expectation reduction remain explicit premises |
 | Trace-exp integrability | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement` | typed-prop with proved thin consumer | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider` | automatic absolute domination, Golden-Thompson/product, or boundedness provider |
 | Variance proxy / centered square | `varianceProxyNormBound_of_centeredSquareChain_statement` | typed-prop with proved thin consumer | `varianceProxyNormBound_of_centeredSquareChain` | centered-square expansion, Loewner comparisons, deterministic norm control, sample-covariance specialization |
-| Dimension / support / effective rank | `traceMatrixExp_le_rank_exp_lambdaMax_statement`, `traceMatrixExp_le_supportDim_exp_lambdaMax_statement`, `traceMatrixExp_effectiveRank_bound_statement` | rank/support targets and effective-rank consumer proved under explicit support, PSD, lambda-max, and trace-certificate assumptions; ambient trace certificate and star-projection trace/rank bridge proved | `traceMatrixExp_le_rank_exp_lambdaMax`, `traceMatrixExp_le_supportDim_exp_lambdaMax`, `traceMatrixExp_effectiveRank_bound`, `traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate`; deterministic helpers include `traceMatrixExp_eq_sum_exp_eigenvalues`, `traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le`, `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le`, `matrixTrace_eq_rank_of_isStarProjection` | support domination and support-construction certificates; true effective-rank trace certificate provider beyond ambient dimension |
+| Dimension / support / effective rank | `traceMatrixExp_le_rank_exp_lambdaMax_statement`, `traceMatrixExp_le_supportDim_exp_lambdaMax_statement`, `traceMatrixExp_effectiveRank_bound_statement` | rank/support targets and effective-rank consumer proved under explicit support, PSD, lambda-max, and trace-certificate assumptions; ambient trace certificate and star-projection rank consumer proved | `traceMatrixExp_le_rank_exp_lambdaMax`, `traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection`, `traceMatrixExp_le_supportDim_exp_lambdaMax`, `traceMatrixExp_effectiveRank_bound`, `traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate`; deterministic helpers include `traceMatrixExp_eq_sum_exp_eigenvalues`, `traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le`, `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le`, `matrixTrace_eq_rank_of_isStarProjection` | support domination and support-construction certificates; `IsStarProjection`-to-`IsPSDMatrix` bridge if available; true effective-rank trace certificate provider beyond ambient dimension |
 | Thin consumers | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | proven | public API/test/judge/example checks | thin wrapper only; no hard fact is discharged |
 
 Most hardbone declarations are typed `Prop` contracts, not hard theorem proofs.
@@ -170,9 +171,13 @@ dimension/rank blockers stay split into named leaves. The rank/support
 trace-bound bridge is proved under explicit support domination and support trace
 assumptions. The projection trace/rank certificate
 `matrixTrace_eq_rank_of_isStarProjection` is available when the caller already
-has an explicit `IsStarProjection support`. What remains open is constructing
-support domination and support matrices for specific applications, and proving
-true effective-rank trace certificates beyond the ambient cardinality fallback.
+has an explicit `IsStarProjection support`; the thin consumer
+`traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection` routes that
+certificate into the rank-bound theorem while still requiring explicit
+`IsPSDMatrix support` and support domination. What remains open is constructing
+support domination and support matrices for specific applications, proving or
+reusing an `IsStarProjection`-to-`IsPSDMatrix` bridge, and proving true
+effective-rank trace certificates beyond the ambient cardinality fallback.
 The rank and effective-rank trace-exp targets keep support domination, PSD,
 lambda-max, or trace-certificate assumptions explicit; the ambient certificate
 only gives the `(n + 1 : Real)` effective-rank parameter, so zero directions are

@@ -55,6 +55,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check matrixTrace_le_of_matrixLE
 #check traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
 #check traceMatrixExp_le_rank_exp_lambdaMax
+#check traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection
 #check traceMatrixExp_le_supportDim_exp_lambdaMax
 #check traceMatrixExp_eq_sum_exp_eigenvalues
 #check traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le
@@ -147,6 +148,21 @@ example {n : Nat} (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (rankBound : Nat) :
     traceMatrixExp_le_rank_exp_lambdaMax_statement A support rankBound :=
   traceMatrixExp_le_rank_exp_lambdaMax A support rankBound
+
+example {n : Nat} (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (rankBound : Nat)
+    (hProj : IsStarProjection support)
+    (hRank : Matrix.rank support <= rankBound) :
+    0 < rankBound ->
+      rankBound <= n + 1 ->
+        IsPSDMatrix support ->
+          forall hA : IsSelfAdjointMatrix A,
+            MatrixLE (matrixExp A)
+              (Real.exp (lambdaMaxOrdered A hA) • support) ->
+              traceMatrixExp A <=
+                (rankBound : Real) * Real.exp (lambdaMaxOrdered A hA) :=
+  traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection
+    A support rankBound hProj hRank
 
 example {n : Nat} (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (supportDim : Nat) :

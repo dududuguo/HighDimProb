@@ -27,10 +27,13 @@ This is the active short list. Old completed task logs were collapsed into
   `RM-HB12-trace-exp-rank-support-bound-leaf`.
 - Completed RandomMatrix hardbone proof leaf:
   `RM-HB12-tropp-conditional-step-of-iindepfun-bridge-leaf`.
+- Completed RandomMatrix hardbone proof leaf:
+  `CG-B17-star-projection-rank-support-consumer-contract`.
 - Next RandomMatrix hardbone task:
-  `CG-B17-star-projection-rank-support-consumer-contract`: audit how the
-  explicit `IsStarProjection` trace/rank bridge should feed support/rank
-  consumers without constructing unsupported projection certificates.
+  `CG-B18-star-projection-psd-bridge-contract`: audit whether existing
+  star-projection APIs can discharge the explicit `IsPSDMatrix support`
+  premise in the rank/support consumer, without constructing unsupported
+  support-domination or application-specific projection certificates.
 
 ## Active Documentation Work
 

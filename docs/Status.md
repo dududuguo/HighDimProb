@@ -165,11 +165,13 @@ Example modules:
   norm-control assumptions. The rank/support trace-bound bridge is now proved through
   `traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support`
   and the `traceMatrixExp_le_rank_exp_lambdaMax` /
-  `traceMatrixExp_le_supportDim_exp_lambdaMax` consumers. The deterministic
-  trace/rank bridge `matrixTrace_eq_rank_of_isStarProjection` is proved for
-  explicit `IsStarProjection` support matrices. This still does not construct
-  support domination, construct support matrices for applications, or provide a
-  true effective-rank certificate. The ambient route only supplies the
+  `traceMatrixExp_le_supportDim_exp_lambdaMax` consumers. Explicit
+  star-projection rank certificates are now consumed by
+  `traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection`, using
+  `matrixTrace_eq_rank_of_isStarProjection`. This still keeps `IsPSDMatrix
+  support`, support domination, and support construction for applications
+  separate, and it does not provide a true effective-rank certificate. The
+  ambient route only supplies the
   certificate with effective-rank parameter `(n + 1 : Real)`. The Bernstein
   CFC route is now proved through
   `bernsteinMatrixExp_le_quadratic`, reusing scalar Bernstein, spectrum
@@ -210,10 +212,12 @@ Example modules:
   `RM-HB12-trace-exp-rank-support-bound-leaf`.
 - Completed hardbone proof leaf:
   `RM-HB12-tropp-conditional-step-of-iindepfun-bridge-leaf`.
-- Next safe hardbone task: `CG-B17-star-projection-rank-support-consumer-contract`,
-  focused on routing the explicit star-projection trace/rank bridge into
-  support/rank consumers while keeping support domination and projection
-  construction separate.
+- Completed hardbone proof leaf:
+  `CG-B17-star-projection-rank-support-consumer-contract`.
+- Next safe hardbone task: `CG-B18-star-projection-psd-bridge-contract`,
+  focused on auditing whether existing star-projection facts can discharge the
+  explicit `IsPSDMatrix support` premise without constructing unsupported
+  support-domination or application-specific projection certificates.
 
 ## Verification
 

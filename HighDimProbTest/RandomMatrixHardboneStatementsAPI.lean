@@ -70,6 +70,7 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check matrixTrace_le_of_matrixLE
 #check traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
 #check traceMatrixExp_le_rank_exp_lambdaMax
+#check traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection
 #check traceMatrixExp_le_supportDim_exp_lambdaMax
 
 example : Prop :=
@@ -161,6 +162,20 @@ example
 example :
     traceMatrixExp_le_rank_exp_lambdaMax_statement B S rankBound :=
   traceMatrixExp_le_rank_exp_lambdaMax B S rankBound
+
+example
+    (hProj : IsStarProjection S)
+    (hRank : Matrix.rank S <= rankBound) :
+    0 < rankBound ->
+      rankBound <= n + 1 ->
+        IsPSDMatrix S ->
+          forall hB : IsSelfAdjointMatrix B,
+            MatrixLE (matrixExp B)
+              (Real.exp (lambdaMaxOrdered B hB) • S) ->
+              traceMatrixExp B <=
+                (rankBound : Real) * Real.exp (lambdaMaxOrdered B hB) :=
+  traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection
+    B S rankBound hProj hRank
 
 example :
     traceMatrixExp_le_supportDim_exp_lambdaMax_statement B S supportDim :=
