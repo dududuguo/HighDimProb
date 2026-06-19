@@ -23,6 +23,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check operatorLogMonotoneOnPositiveMatrices_statement
 #check troppLogExpComparisonToK_of_logOrderKChain_statement
 #check liebTraceExpConcavity_statement
+#check matrixExpLogSelfAdjointNormalization_statement
 #check troppMasterTraceMGFStep_of_liebJensen_statement
 #check troppConditionalStep_of_iIndepFun_statement
 #check matrixExpScaledIntegrable_of_provider_statement
@@ -37,6 +38,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check bernsteinMatrixExp_le_quadratic_of_cfcLeaves
 #check bernsteinMatrixExp_le_quadratic
 #check troppLogExpComparisonToK_of_logMonotone_traceExpMono
+#check matrixExpLogSelfAdjointNormalization
 #check troppMasterTraceMGFStep_of_liebJensen
 #check troppMasterTraceMGFConditionalStep_of_conditioningBridge
 
@@ -49,6 +51,10 @@ example {n : Nat} (A : Matrix (Fin n) (Fin n) Real) (theta R : Real) :
 
 example {n : Nat} (H M K : Matrix (Fin n) (Fin n) Real) : Prop :=
   troppLogExpComparisonToK_of_logOrderKChain_statement H M K
+
+example {n : Nat} (A : Matrix (Fin n) (Fin n) Real) :
+    matrixExpLogSelfAdjointNormalization_statement A :=
+  matrixExpLogSelfAdjointNormalization A
 
 example {Omega : Type*} [MeasurableSpace Omega]
     (P : Measure Omega) [IsProbabilityMeasure P] {n : Nat}

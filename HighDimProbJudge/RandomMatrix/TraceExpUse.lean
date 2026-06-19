@@ -99,6 +99,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.liebJensenTraceExp_statement
 #check HighDimProb.goldenThompsonTraceExp_statement
 #check HighDimProb.matrixExpLogSelfAdjointNormalization_statement
+#check HighDimProb.matrixExpLogSelfAdjointNormalization
 #check HighDimProb.troppMasterTraceMGFStep_of_liebJensen_statement
 #check HighDimProb.troppNaturalHistoryMeasurable_statement
 #check HighDimProb.troppHistoryStepIndependent_of_iIndepFun_statement

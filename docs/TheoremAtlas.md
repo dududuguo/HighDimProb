@@ -49,7 +49,9 @@ The preferred optimized Matrix Bernstein wrappers use
 fields in generic call sites. The sample-covariance route now also has
 CFC-free `_of_troppPrimitive` / `_of_troppPrimitives` wrappers that reuse
 `bernsteinMatrixExp_le_quadratic` while keeping Tropp/Lieb and integrability
-assumptions explicit.
+assumptions explicit. The local matrix-exp/log normalization leaf is proved as
+`matrixExpLogSelfAdjointNormalization`; it supplies only the pointwise CFC
+normalization needed by the Tropp/Lieb one-step chain.
 
 ## Not Yet Proved
 
@@ -59,8 +61,8 @@ assumptions explicit.
 - Natural history measurability, independence conditioning, and trace-exp
   integrability propagation for the conditional-step Tropp route.
 - Proofs of the remaining hardbone statement targets for log/order,
-  Tropp/Lieb, conditioning, integrability, variance-proxy sharpening, and
-  dimension/rank refinements.
+  Tropp/Lieb concavity/Jensen, conditioning, integrability, variance-proxy
+  sharpening, and dimension/rank refinements.
 - A public-friendly Matrix Bernstein wrapper directly over the natural-state
   route.
 

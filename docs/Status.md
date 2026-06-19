@@ -86,6 +86,10 @@ Hardbone Bernstein CFC leaf:
 - `bernsteinMatrixExp_le_quadratic_of_cfcLeaves`
 - `bernsteinMatrixExp_le_quadratic`
 
+Hardbone matrix-exp/log normalization leaf:
+
+- `matrixExpLogSelfAdjointNormalization`
+
 Example-layer wrappers:
 
 - `sampleCovariance_quadraticForm_tail_usage`
@@ -114,7 +118,10 @@ Example modules:
   typed statement targets. The Bernstein CFC route is now proved through
   `bernsteinMatrixExp_le_quadratic`, reusing scalar Bernstein, spectrum
   localization, Bernstein-specific CFC order transfer, and CFC expression
-  normalization. The preferred optimized Matrix Bernstein assumption bundles
+  normalization. The local matrix-exp/log normalization leaf is now proved by
+  `matrixExpLogSelfAdjointNormalization`; it is only the pointwise CFC
+  normalization consumed by the Tropp/Lieb one-step chain. The preferred
+  optimized Matrix Bernstein assumption bundles
   are now `MatrixBernsteinPositiveSideTroppAssumptions` and
   `MatrixBernsteinNegativeSideTroppAssumptions`, which expose Tropp/Lieb
   primitives but not pointwise CFC fields. The older explicit-CFC bundles and
@@ -134,7 +141,11 @@ Example modules:
   assumptions onto the named negative sample-covariance family; they do not
   prove exponential integrability, trace-exponential integrability, or CFC.
 - Completed hardbone wrapper task: `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
-- Next safe hardbone task: `RM-HB12-select-next-hardbone-proof-leaf`.
+- Completed hardbone proof leaf:
+  `RM-HB12-matrix-exp-log-selfadjoint-normalization-leaf`.
+- Next safe hardbone task: select another smallest theorem-backed proof leaf
+  among the remaining log/order, Tropp/Lieb, integrability, variance-proxy, or
+  dimension/rank blockers.
 
 ## Verification
 
