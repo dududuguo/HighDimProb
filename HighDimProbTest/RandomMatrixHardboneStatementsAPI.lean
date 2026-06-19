@@ -37,6 +37,7 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check troppHistoryStepIndependent_of_iIndepFun_statement
 #check condExp_traceExp_history_add_independent_step_statement
 #check troppConditionalStep_of_iIndepFun_statement
+#check @troppConditionalStep_of_iIndepFun
 #check matrixExpScaledIntegrable_of_provider_statement
 #check traceExpIntegrable_troppStateHistory_add_step_statement
 #check traceExpIntegrable_troppStateHistory_add_K_statement
@@ -74,6 +75,10 @@ example : Prop :=
 
 example : Prop :=
   troppConditionalStep_of_iIndepFun_statement (P := P) theta X Kfam mHist
+
+example :
+    troppConditionalStep_of_iIndepFun_statement (P := P) theta X Kfam mHist :=
+  troppConditionalStep_of_iIndepFun theta X Kfam mHist
 
 example : Prop :=
   traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement

@@ -38,6 +38,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check bernsteinMatrixExp_le_quadratic
 #check troppLogExpComparisonToK_of_logMonotone_traceExpMono
 #check troppMasterTraceMGFStep_of_liebJensen
+#check troppConditionalStep_of_iIndepFun
 #check troppMasterTraceMGFConditionalStep_of_conditioningBridge
 
 example (theta R : Real) : Prop :=
@@ -63,6 +64,15 @@ example {Omega : Type*} [MeasurableSpace Omega]
     (K : Fin m -> Matrix (Fin n) (Fin n) Real)
     (mHist : Fin m -> MeasurableSpace Omega) : Prop :=
   troppConditionalStep_of_iIndepFun_statement (P := P) theta X K mHist
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    (P : Measure Omega) {m n : Nat}
+    (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (mHist : Fin m -> MeasurableSpace Omega) :
+    troppConditionalStep_of_iIndepFun_statement (P := P) theta X K mHist :=
+  troppConditionalStep_of_iIndepFun theta X K mHist
 
 example {Omega : Type*} [MeasurableSpace Omega]
     (P : Measure Omega) {m n : Nat}

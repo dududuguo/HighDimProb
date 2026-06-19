@@ -50,16 +50,21 @@ fields in generic call sites. The sample-covariance route now also has
 CFC-free `_of_troppPrimitive` / `_of_troppPrimitives` wrappers that reuse
 `bernsteinMatrixExp_le_quadratic` while keeping Tropp/Lieb and integrability
 assumptions explicit.
+The finite-family conditioning chain now has the thin witness
+`troppConditionalStep_of_iIndepFun`; it forwards the explicit per-index
+conditional-expectation provider and does not prove the history, independence,
+or conditional-expectation inputs themselves.
 
 ## Not Yet Proved
 
 - Full Tropp/Lieb machinery.
 - Golden-Thompson route.
 - Full unconditional Matrix Bernstein theorem.
-- Natural history measurability, independence conditioning, and trace-exp
-  integrability propagation for the conditional-step Tropp route.
+- Natural history measurability, independence conditioning,
+  conditional-expectation reduction, and trace-exp integrability propagation for
+  the conditional-step Tropp route.
 - Proofs of the remaining hardbone statement targets for log/order,
-  Tropp/Lieb, conditioning, integrability, variance-proxy sharpening, and
+  Tropp/Lieb, integrability, variance-proxy sharpening, and
   dimension/rank refinements.
 - A public-friendly Matrix Bernstein wrapper directly over the natural-state
   route.

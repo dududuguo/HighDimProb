@@ -86,6 +86,10 @@ Hardbone Bernstein CFC leaf:
 - `bernsteinMatrixExp_le_quadratic_of_cfcLeaves`
 - `bernsteinMatrixExp_le_quadratic`
 
+Hardbone conditioning bridge leaf:
+
+- `troppConditionalStep_of_iIndepFun`
+
 Example-layer wrappers:
 
 - `sampleCovariance_quadraticForm_tail_usage`
@@ -114,7 +118,11 @@ Example modules:
   typed statement targets. The Bernstein CFC route is now proved through
   `bernsteinMatrixExp_le_quadratic`, reusing scalar Bernstein, spectrum
   localization, Bernstein-specific CFC order transfer, and CFC expression
-  normalization. The preferred optimized Matrix Bernstein assumption bundles
+  normalization. The conditioning chain now has the thin theorem witness
+  `troppConditionalStep_of_iIndepFun`, which only forwards the explicit
+  per-index conditional-expectation provider and does not prove history
+  measurability or independence. The preferred optimized Matrix Bernstein
+  assumption bundles
   are now `MatrixBernsteinPositiveSideTroppAssumptions` and
   `MatrixBernsteinNegativeSideTroppAssumptions`, which expose Tropp/Lieb
   primitives but not pointwise CFC fields. The older explicit-CFC bundles and
@@ -134,6 +142,8 @@ Example modules:
   assumptions onto the named negative sample-covariance family; they do not
   prove exponential integrability, trace-exponential integrability, or CFC.
 - Completed hardbone wrapper task: `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
+- Completed hardbone proof leaf:
+  `RM-HB12-tropp-conditional-step-of-iindepfun-bridge-leaf`.
 - Next safe hardbone task: `RM-HB12-select-next-hardbone-proof-leaf`.
 
 ## Verification
