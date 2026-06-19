@@ -48,6 +48,8 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check traceMatrixExp_le_rank_exp_lambdaMax_statement
 #check traceMatrixExp_le_supportDim_exp_lambdaMax_statement
 #check traceMatrixExp_effectiveRank_bound_statement
+#check traceMatrixExp_le_rank_exp_lambdaMax
+#check traceMatrixExp_le_supportDim_exp_lambdaMax
 #check bernsteinMatrixExp_le_quadratic_of_cfcChain
 #check selfAdjointSpectrumBoundedByOperatorNorm
 #check bernsteinCFCExpressionNormalization
@@ -114,3 +116,17 @@ example :
 example :
     bernsteinMatrixExp_le_quadratic_statement A theta R :=
   bernsteinMatrixExp_le_quadratic A theta R
+
+-- Proved rank/support trace-exp leaves: the statement targets now have
+-- theorem witnesses, but they do not discharge effective-rank or Tropp/Lieb
+-- matrix concentration claims.
+#check @traceMatrixExp_le_rank_exp_lambdaMax
+#check @traceMatrixExp_le_supportDim_exp_lambdaMax
+
+example :
+    traceMatrixExp_le_rank_exp_lambdaMax_statement B S rankBound :=
+  traceMatrixExp_le_rank_exp_lambdaMax B S rankBound
+
+example :
+    traceMatrixExp_le_supportDim_exp_lambdaMax_statement B S supportDim :=
+  traceMatrixExp_le_supportDim_exp_lambdaMax B S supportDim

@@ -86,6 +86,11 @@ Hardbone Bernstein CFC leaf:
 - `bernsteinMatrixExp_le_quadratic_of_cfcLeaves`
 - `bernsteinMatrixExp_le_quadratic`
 
+Hardbone rank/support trace-exp leaf:
+
+- `traceMatrixExp_le_rank_exp_lambdaMax`
+- `traceMatrixExp_le_supportDim_exp_lambdaMax`
+
 Example-layer wrappers:
 
 - `sampleCovariance_quadraticForm_tail_usage`
@@ -110,11 +115,15 @@ Example modules:
 
 - RandomMatrix / Matrix Bernstein remains experimental.
 - The hardbone statement atlas names CFC, log/order, Tropp/Lieb,
-  conditioning, integrability, variance-proxy, and dimension/rank blockers as
-  typed statement targets. The Bernstein CFC route is now proved through
-  `bernsteinMatrixExp_le_quadratic`, reusing scalar Bernstein, spectrum
-  localization, Bernstein-specific CFC order transfer, and CFC expression
-  normalization. The preferred optimized Matrix Bernstein assumption bundles
+  conditioning, integrability, variance-proxy, and dimension/rank blockers. The
+  Bernstein CFC route is now proved through `bernsteinMatrixExp_le_quadratic`,
+  reusing scalar Bernstein, spectrum localization, Bernstein-specific CFC order
+  transfer, and CFC expression normalization. The local rank/support trace-exp
+  dimension-factor route is proved through
+  `traceMatrixExp_le_rank_exp_lambdaMax` and
+  `traceMatrixExp_le_supportDim_exp_lambdaMax` from an explicit support
+  certificate; it does not construct support certificates or prove the
+  effective-rank target. The preferred optimized Matrix Bernstein assumption bundles
   are now `MatrixBernsteinPositiveSideTroppAssumptions` and
   `MatrixBernsteinNegativeSideTroppAssumptions`, which expose Tropp/Lieb
   primitives but not pointwise CFC fields. The older explicit-CFC bundles and

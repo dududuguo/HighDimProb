@@ -115,6 +115,8 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.traceMatrixExp_le_rank_exp_lambdaMax_statement
 #check HighDimProb.traceMatrixExp_le_supportDim_exp_lambdaMax_statement
 #check HighDimProb.traceMatrixExp_effectiveRank_bound_statement
+#check HighDimProb.traceMatrixExp_le_rank_exp_lambdaMax
+#check HighDimProb.traceMatrixExp_le_supportDim_exp_lambdaMax
 #check HighDimProb.bernsteinMatrixExp_le_quadratic_of_cfcChain
 #check HighDimProb.selfAdjointSpectrumBoundedByOperatorNorm
 #check HighDimProb.bernsteinCFCExpressionNormalization

@@ -537,6 +537,72 @@ abbrev traceMatrixExp_le_supportDim_exp_lambdaMax_statement {n : Nat}
               traceMatrixExp A <=
                 (supportDim : Real) * Real.exp (lambdaMaxOrdered A hA)
 
+/-- Proved rank-refined trace-exponential bound from an explicit support
+certificate.
+
+This is a local support-certificate leaf: it only converts the explicit
+Loewner support comparison into a trace bound.  It does not construct the
+support certificate or prove an effective-rank theorem. -/
+theorem traceMatrixExp_le_rank_exp_lambdaMax {n : Nat}
+    (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (rankBound : Nat) :
+    traceMatrixExp_le_rank_exp_lambdaMax_statement A support rankBound := by
+  intro _hRankPos _hRankLe _hSupportPSD hTraceSupport hA hSupport
+  unfold traceMatrixExp
+  unfold MatrixLE at hSupport
+  have hTraceDiffNonneg :
+      0 <= matrixTrace
+        ((Real.exp (lambdaMaxOrdered A hA) • support) - matrixExp A) := by
+    exact matrixTrace_nonneg_of_posSemidef
+      (posSemidef_of_isPSDMatrix hSupport)
+  unfold matrixTrace at hTraceDiffNonneg hTraceSupport ⊢
+  have hTraceLe :
+      Matrix.trace (matrixExp A) <=
+        Matrix.trace (Real.exp (lambdaMaxOrdered A hA) • support) := by
+    rw [Matrix.trace_sub] at hTraceDiffNonneg
+    linarith
+  calc
+    Matrix.trace (matrixExp A)
+        <= Matrix.trace (Real.exp (lambdaMaxOrdered A hA) • support) := hTraceLe
+    _ = Real.exp (lambdaMaxOrdered A hA) * Matrix.trace support := by
+      simp [Matrix.trace_smul]
+    _ <= Real.exp (lambdaMaxOrdered A hA) * (rankBound : Real) := by
+      exact mul_le_mul_of_nonneg_left hTraceSupport (Real.exp_nonneg _)
+    _ = (rankBound : Real) * Real.exp (lambdaMaxOrdered A hA) := by ring
+
+/-- Proved support-dimension trace-exponential bound from an explicit support
+certificate.
+
+This is the same support-certificate leaf as
+`traceMatrixExp_le_rank_exp_lambdaMax`, with the dimension parameter named for
+the support-dimension formulation. -/
+theorem traceMatrixExp_le_supportDim_exp_lambdaMax {n : Nat}
+    (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (supportDim : Nat) :
+    traceMatrixExp_le_supportDim_exp_lambdaMax_statement A support supportDim := by
+  intro _hDimPos _hDimLe _hSupportPSD hTraceSupport hA hSupport
+  unfold traceMatrixExp
+  unfold MatrixLE at hSupport
+  have hTraceDiffNonneg :
+      0 <= matrixTrace
+        ((Real.exp (lambdaMaxOrdered A hA) • support) - matrixExp A) := by
+    exact matrixTrace_nonneg_of_posSemidef
+      (posSemidef_of_isPSDMatrix hSupport)
+  unfold matrixTrace at hTraceDiffNonneg hTraceSupport ⊢
+  have hTraceLe :
+      Matrix.trace (matrixExp A) <=
+        Matrix.trace (Real.exp (lambdaMaxOrdered A hA) • support) := by
+    rw [Matrix.trace_sub] at hTraceDiffNonneg
+    linarith
+  calc
+    Matrix.trace (matrixExp A)
+        <= Matrix.trace (Real.exp (lambdaMaxOrdered A hA) • support) := hTraceLe
+    _ = Real.exp (lambdaMaxOrdered A hA) * Matrix.trace support := by
+      simp [Matrix.trace_smul]
+    _ <= Real.exp (lambdaMaxOrdered A hA) * (supportDim : Real) := by
+      exact mul_le_mul_of_nonneg_left hTraceSupport (Real.exp_nonneg _)
+    _ = (supportDim : Real) * Real.exp (lambdaMaxOrdered A hA) := by ring
+
 /-- Effective-rank trace-exponential target for variance-proxy style matrices.
 
 The local assumption `matrixTrace V <= effectiveRank * sigmaSq` records the

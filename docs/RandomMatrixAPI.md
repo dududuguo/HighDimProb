@@ -110,6 +110,8 @@ Dimension / rank / effective-rank chain:
 - `traceMatrixExp_le_rank_exp_lambdaMax_statement`
 - `traceMatrixExp_le_supportDim_exp_lambdaMax_statement`
 - `traceMatrixExp_effectiveRank_bound_statement`
+- `traceMatrixExp_le_rank_exp_lambdaMax`
+- `traceMatrixExp_le_supportDim_exp_lambdaMax`
 
 Thin hardbone consumers:
 
@@ -131,15 +133,19 @@ Hardbone status table:
 | Conditioning / independence | `troppConditionalStep_of_iIndepFun_statement` | typed-prop | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | generated histories, history-step independence, conditional expectation reduction |
 | Trace-exp integrability | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement` | typed-prop | none yet | absolute domination, Golden-Thompson/product, or boundedness provider |
 | Variance proxy / centered square | `varianceProxyNormBound_of_centeredSquareChain_statement` | typed-prop | none yet | centered-square expansion, rank-one comparison, order/norm bookkeeping |
-| Dimension / support / effective rank | `traceMatrixExp_effectiveRank_bound_statement` | typed-prop | none yet | rank/support/effective-rank core theory |
+| Rank/support trace-exp dimension factor | `traceMatrixExp_le_rank_exp_lambdaMax_statement`, `traceMatrixExp_le_supportDim_exp_lambdaMax_statement` | proven by `traceMatrixExp_le_rank_exp_lambdaMax`, `traceMatrixExp_le_supportDim_exp_lambdaMax` | public API/test/judge/example checks | support certificate remains explicit; no support construction or effective-rank theorem is claimed |
+| Effective-rank trace-exp refinement | `traceMatrixExp_effectiveRank_bound_statement` | typed-prop | none yet | effective-rank core theory and variance-proxy support bookkeeping |
 | Thin consumers | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | proven | public API/test/judge/example checks | thin wrapper only; no hard fact is discharged |
 
 Most hardbone declarations are typed `Prop` contracts, not hard theorem proofs.
 The Bernstein CFC chain is now proved by `bernsteinMatrixExp_le_quadratic`
 after splitting out scalar Bernstein, spectrum localization, CFC order
-transfer, and expression normalization. The remaining log/order, Tropp/Lieb,
-conditioning, integrability, variance-proxy, and dimension/rank blockers stay
-split into named leaves. The rank and effective-rank trace-exp
+transfer, and expression normalization. The local rank/support trace-exp
+dimension-factor leaf is proved from an explicit support certificate by
+`traceMatrixExp_le_rank_exp_lambdaMax` and
+`traceMatrixExp_le_supportDim_exp_lambdaMax`. The remaining log/order,
+Tropp/Lieb, conditioning, integrability, variance-proxy, and effective-rank
+blockers stay split into named leaves. The rank and effective-rank trace-exp
 targets keep support or ambient-identity terms explicit, so zero directions are
 not accidentally treated as free. The thin consumers only apply explicit
 statement-chain assumptions; they do not prove Lieb/Jensen, conditioning,

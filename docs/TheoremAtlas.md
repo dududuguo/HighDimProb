@@ -39,8 +39,12 @@ variance-proxy, and dimension/rank blockers as `typed-prop` targets. Selected
 consumer wrappers are proven thin applications of those targets; they do not
 close the hard theorem families. The Bernstein CFC route is now proved as
 `bernsteinMatrixExp_le_quadratic`, via scalar Bernstein, spectrum localization,
-Bernstein-specific CFC order transfer, and expression normalization. The
-trace-MGF provider surface includes
+Bernstein-specific CFC order transfer, and expression normalization. The local
+rank/support trace-exp dimension-factor route is now proved by
+`traceMatrixExp_le_rank_exp_lambdaMax` and
+`traceMatrixExp_le_supportDim_exp_lambdaMax` from an explicit support
+certificate; it does not construct that certificate or prove the effective-rank
+refinement. The trace-MGF provider surface includes
 `matrixBernsteinTraceMGFWithBernsteinCoeff_under_troppPrimitive`, which reuses
 that CFC proof while keeping Tropp/Lieb and integrability assumptions explicit.
 The preferred optimized Matrix Bernstein wrappers use
@@ -59,8 +63,8 @@ assumptions explicit.
 - Natural history measurability, independence conditioning, and trace-exp
   integrability propagation for the conditional-step Tropp route.
 - Proofs of the remaining hardbone statement targets for log/order,
-  Tropp/Lieb, conditioning, integrability, variance-proxy sharpening, and
-  dimension/rank refinements.
+  Tropp/Lieb, conditioning, integrability, variance-proxy sharpening,
+  support construction, and effective-rank refinements.
 - A public-friendly Matrix Bernstein wrapper directly over the natural-state
   route.
 
