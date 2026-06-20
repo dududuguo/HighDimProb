@@ -17,11 +17,12 @@ This is the active short list. Old completed task logs were collapsed into
   Matrix Bernstein proofs.
 - Prefer shared RandomMatrix APIs over unfolded formulas in examples, tests,
   judge files, and docs.
+- Keep new Matrix Bernstein/sample-covariance route variants behind named
+  target axes and assumption records when possible; do not add a new preferred
+  public theorem for every target/provider/adapter combination.
 - Next RandomMatrix hardbone task:
-  `RM-VP-negative-exact-row-variance-proxy-provider-contract`.
-- That next task should audit the negative-side exact-row variance-proxy route
-  needed before two-sided quadratic-form or operator-norm sample-covariance
-  wrappers can use row-specific exact-row variance proxies.
+  `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
+- That next task should audit positivity/order/log transport for the real-to-CStar route; the basic transport map, entrywise behavior, add/sub, and self-adjoint transport are probe-ready.
 
 ## Active Documentation Work
 

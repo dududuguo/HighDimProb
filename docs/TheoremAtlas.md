@@ -106,14 +106,19 @@ that CFC proof while keeping Tropp/Lieb and integrability assumptions explicit.
 The preferred optimized Matrix Bernstein wrappers use
 `MatrixBernsteinPositiveSideTroppAssumptions` and
 `MatrixBernsteinNegativeSideTroppAssumptions` to avoid exposing pointwise CFC
-fields in generic call sites. The sample-covariance route now also has
-CFC-free `_of_troppPrimitive` / `_of_troppPrimitives` wrappers that reuse
+fields in generic call sites. The sample-covariance route now has the compact
+bounded-row surface `SampleCovarianceTailTarget`,
+`SampleCovarianceBoundedRowTroppAssumptions`, and
+`sampleCovariance_tail_optimized_under_boundedRowTroppAssumptions`, which route
+quadratic-form and self-adjoint operator-norm targets through one target axis
+instead of one recommended public name per combination. Lower-level CFC-free
+`_of_troppPrimitive` / `_of_troppPrimitives` wrappers remain available and reuse
 `bernsteinMatrixExp_le_quadratic` while keeping Tropp/Lieb and integrability
 assumptions explicit. The positive-side quadratic-form wrapper
 `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive` uses the exact-row variance-proxy hardbone consumer and keeps
 the sharp-chain premise explicit. The local matrix-exp/log normalization leaf is proved as
-`matrixExpLogSelfAdjointNormalization`; it supplies only the pointwise CFC
-normalization needed by the Tropp/Lieb one-step chain. The log/order-to-`K`
+`matrixExpLogSelfAdjointNormalization`; the matrix-exp log-domain leaf is proved as
+`matrixExpLogDomainForSelfAdjoint`. Together they provide CFC normalization and log-domain facts needed by the Tropp/Lieb one-step chain. The log/order-to-`K`
 route now includes the proved thin bridge `matrixLog_le_of_le_matrixExp`, which
 composes explicit operator-log monotonicity and `matrixExp` log-domain premises.
 It does not prove those premises or the downstream trace-exponential
@@ -131,7 +136,7 @@ or conditional-expectation inputs themselves.
   conditional-expectation reduction, and trace-exp integrability propagation for
   the conditional-step Tropp route.
 - Proofs of the remaining hardbone statement targets for operator-log
-  monotonicity, `matrixExp` log-domain support, trace-exp monotonicity,
+  monotonicity, trace-exp monotonicity,
   Tropp/Lieb, automatic trace-exp domination/integrability, automatic
   variance-proxy sharpening beyond centered-square expectation expansion,
   support-domination providers, support-construction certificates, true

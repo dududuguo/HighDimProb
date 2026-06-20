@@ -399,6 +399,32 @@ theorem posSemidef_of_isPSDMatrix {n : Nat}
     simpa [matrixQuadraticForm, dotProduct, Matrix.mulVec,
       Finset.mul_sum, Finset.sum_mul, mul_assoc] using hx
 
+/-- Mathlib positive semidefiniteness gives HighDimProb's explicit PSD predicate.
+
+This is the converse representation bridge to `posSemidef_of_isPSDMatrix`.
+It does not install a global matrix order instance. -/
+theorem isPSDMatrix_of_posSemidef {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (hA : A.PosSemidef) :
+    IsPSDMatrix A := by
+  constructor
+  · apply Matrix.IsSymm.ext
+    intro i j
+    have h := Matrix.IsHermitian.apply hA.isHermitian i j
+    simpa using h
+  · intro x
+    exact matrixQuadraticForm_nonneg_of_posSemidef hA x
+
+/-- Convert Mathlib matrix order into HighDimProb's explicit `MatrixLE`. -/
+theorem matrixLE_of_mathlib_le {n : Nat}
+    {A B : Matrix (Fin n) (Fin n) Real} (hAB : A <= B) :
+    MatrixLE A B := by
+  exact isPSDMatrix_of_posSemidef (Matrix.le_iff.mp hAB)
+
+/-- Convert HighDimProb's explicit `MatrixLE` into Mathlib matrix order. -/
+theorem mathlib_le_of_matrixLE {n : Nat}
+    {A B : Matrix (Fin n) (Fin n) Real} (hAB : MatrixLE A B) :
+    A <= B :=
+  Matrix.le_iff.mpr (posSemidef_of_isPSDMatrix hAB)
 /-- PSD nullspace converse in HighDimProb's explicit quadratic-form vocabulary.
 
 Formula reference: for a positive semidefinite matrix, a zero quadratic form

@@ -79,18 +79,17 @@ TraceExp / Tropp bookkeeping helpers:
 
 Sample covariance wrappers:
 
-- `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
-- `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy_of_troppPrimitive`
-- `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound`
-- `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive`
-- `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive`
-- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`
-- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`
-- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters_of_troppPrimitives`
-- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`
-- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives`
-- `SampleCovarianceTailUsage.SampleCovarianceTailAssumptions`
-- `SampleCovarianceTailUsage.SampleCovarianceOperatorNormTailAssumptions`
+- `SampleCovarianceTailTarget`
+- `SampleCovarianceTailTarget.event`
+- `SampleCovarianceTailTarget.rhs`
+- `SampleCovarianceBoundedRowTroppAssumptions`
+- `sampleCovariance_tail_optimized_under_boundedRowTroppAssumptions`
+- lower-level positive-side wrappers, including
+  `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive`
+  and `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive`
+- lower-level compatibility operator-norm wrappers remain available for explicit
+  proof-boundary work, but the compact target/record route is the preferred
+  reader-facing bounded-row surface.
 
 Sample covariance negative-side provider-transfer adapters:
 
@@ -121,7 +120,11 @@ Hardbone proved leaves, deterministic bridges, statement targets, and thin consu
 - `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le`
 - `traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate`
 - `matrixTrace_eq_rank_of_isStarProjection`
+- `matrixExpLogDomainForSelfAdjoint`
 - `isPSDMatrix_of_isStarProjection`
+- `isPSDMatrix_of_posSemidef`
+- `matrixLE_of_mathlib_le`
+- `mathlib_le_of_matrixLE`
 - `MatrixExpSupportDomination`
 - `MatrixExpExcessSupportDomination`
 - `matrixExpSupportDomination_identity_statement`
@@ -336,10 +339,14 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   `RM-VP-sample-covariance-tail-wrapper-with-exact-row-vp-contract`, adding
   `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive` as a positive-side quadratic-form wrapper with row-specific
   exact-row variance-proxy RHS and explicit hardbone sharp-chain premise.
+- Completed hardbone proof leaf:
+  `RM-LIEB-S3-operator-log-monotonicity-representation-bridge-contract`, adding `isPSDMatrix_of_posSemidef`, `matrixLE_of_mathlib_le`, and `mathlib_le_of_matrixLE`; direct `CFC.log_le_log` use remains blocked for real matrices by the missing CStar route.
+- Completed hardbone contract leaf:
+  `RM-LIEB-S4-real-matrix-to-cstar-log-monotonicity-contract`, proving that Mathlib `CFC.log_le_log` is available on `CStarMatrix (Fin n) (Fin n) ℂ` while leaving real-matrix transport open.
+- Completed hardbone contract leaf:
+  `RM-LIEB-S5-real-to-cstar-transport-api-contract`, proving the basic real-to-`CStarMatrix` transport shape in a probe, including entrywise, add/sub, and self-adjoint transport; positivity/order/log transport remains open.
 - Next safe hardbone task:
-  `RM-VP-negative-exact-row-variance-proxy-provider-contract`, focused on the
-  negative-side exact-row variance-proxy route required before two-sided or
-  operator-norm sample-covariance wrappers can use the exact-row RHS.
+  `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`, focused on positivity/order/log transport for the real-to-CStar route.
 
 ## Verification
 

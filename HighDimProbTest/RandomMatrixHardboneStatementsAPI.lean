@@ -1,3 +1,4 @@
+import HighDimProb.RandomMatrix.CStarBridge
 import HighDimProb.RandomMatrix.HardboneStatements
 
 open MeasureTheory
@@ -27,6 +28,14 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check matrixExpLogDomainForSelfAdjoint_statement
 #check matrixLog_le_of_le_matrixExp_statement
 #check matrixLog_le_of_le_matrixExp
+#check realMatrixToCStarMatrix
+#check realMatrixToCStarMatrix_apply
+#check realMatrixToCStarMatrix_add
+#check realMatrixToCStarMatrix_sub
+#check isSelfAdjoint_realMatrixToCStarMatrix
+#check realMatrixToCStarStrictlyPositive_statement
+#check realMatrixToCStarMatrixLE_statement
+#check realMatrixToCStarLogBack_statement
 #check traceMatrixExp_mono_add_selfAdjoint_statement
 #check troppLogExpComparisonToK_of_logOrderKChain_statement
 #check liebTraceExpConcavity_statement
@@ -96,6 +105,15 @@ example : Prop :=
 example :
     matrixLog_le_of_le_matrixExp_statement M K :=
   matrixLog_le_of_le_matrixExp M K
+example (hA : IsSelfAdjointMatrix A) :
+    IsSelfAdjoint (realMatrixToCStarMatrix A) :=
+  isSelfAdjoint_realMatrixToCStarMatrix hA
+
+example : Prop :=
+  realMatrixToCStarMatrixLE_statement M K
+
+example : Prop :=
+  realMatrixToCStarLogBack_statement A
 
 example : Prop :=
   troppMasterTraceMGFStep_of_liebJensen_statement (P := P) H Y

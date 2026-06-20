@@ -54,6 +54,9 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound
 #check matrixQuadraticForm_nonneg_of_posSemidef
 #check posSemidef_of_isPSDMatrix
+#check isPSDMatrix_of_posSemidef
+#check matrixLE_of_mathlib_le
+#check mathlib_le_of_matrixLE
 #check matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_posSemidef
 #check matrix_mulVec_eq_zero_of_posSemidef_quadraticForm_eq_zero
 #check matrixQuadraticForm_eq_zero_iff_mulVec_eq_zero_of_isPSDMatrix

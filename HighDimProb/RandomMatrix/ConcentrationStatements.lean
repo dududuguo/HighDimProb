@@ -4245,6 +4245,176 @@ theorem sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos
           (sampleCovarianceCenteredRankOneRadius Rneg))
       hTroppNeg
 
+/-- Public target axis for the compact bounded-row sample-covariance tail route.
+
+This keeps the target choice explicit without encoding it into a separate
+top-level theorem name for each route. -/
+inductive SampleCovarianceTailTarget where
+  | quadraticFormUpper
+  | selfAdjointOperatorNorm
+deriving DecidableEq
+
+namespace SampleCovarianceTailTarget
+
+/-- Tail event selected by `SampleCovarianceTailTarget`. -/
+def event {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    {m n : Nat} (target : SampleCovarianceTailTarget)
+    (A : RandomMatrix Omega m n) (t : Real) : Set Omega :=
+  match target with
+  | quadraticFormUpper =>
+      quadraticFormUpperTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t
+  | selfAdjointOperatorNorm =>
+      SelfAdjointOperatorNormTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t
+
+/-- Scalar tail RHS selected by `SampleCovarianceTailTarget`. -/
+def rhs (target : SampleCovarianceTailTarget) (m n : Nat)
+    (R Rneg t : Real) : ENNReal :=
+  match target with
+  | quadraticFormUpper =>
+      sampleCovarianceQuadraticFormTailRHS
+        (m := m) (n := n) R t
+        (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R)
+  | selfAdjointOperatorNorm =>
+      sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n) R t
+          (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R) +
+        sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n) Rneg t
+          (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg)
+
+end SampleCovarianceTailTarget
+
+/-- Assumption record for the compact bounded-row sample-covariance Tropp route.
+
+This is the preferred public surface when users want a single readable package
+for the uniform bounded-row route. It exposes the common positive-side row
+assumptions and the remaining negative-side Tropp/integrability providers, but
+does not include any finite-family tail conclusion as a field. For a
+positive-side-only quadratic-form statement with fewer assumptions, keep using
+the lower-level quadratic-form wrapper directly. -/
+structure SampleCovarianceBoundedRowTroppAssumptions {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {m n : Nat}
+    (A : RandomMatrix Omega m (n + 1))
+    (R Rneg t : Real) : Prop where
+  sampleCountPositive : 0 < m
+  randomMatrix : IsRandomMatrix P A
+  coordinateMemLpTwo :
+    forall k : Fin m, forall j : Fin (n + 1),
+      MemLpRealRandomVariable P (matrixEntry A k j) 2
+  rowSqNormBound :
+    forall k : Fin m, forall omega,
+      vectorSqNorm (rowVector A k omega) <= R
+  rowSqNormBoundNeg :
+    forall k : Fin m, forall omega,
+      vectorSqNorm (rowVector A k omega) <= Rneg
+  independentRows :
+    IndependentRandomMatrices P
+      (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+  squareIntegrable :
+    forall k : Fin m,
+      IntegrableRandomMatrix P
+        (randomMatrixSquare
+          ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k))
+  expIntegrable :
+    forall k : Fin m,
+      IntegrableRandomMatrix P
+        (matrixExpScaledFamily
+          (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+          (sampleCovarianceTailTheta (m := m) R t
+            (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R))
+          k)
+  traceExpIntegrable :
+    IntegrableRealRandomVariable P
+      (traceExpIntegrand
+        (centeredSampleCovarianceRowRankOneSum (P := P) A)
+        (sampleCovarianceTailTheta (m := m) R t
+          (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R)))
+  radiusPositive : 0 < R
+  deviationPositive : 0 < t
+  troppPrimitive :
+    troppMasterTraceMGFFiniteFamily_statement
+      (P := P)
+      (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+      (bernsteinSecondMomentComparisonFamily P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        (sampleCovarianceTailTheta (m := m) R t
+          (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R))
+        (sampleCovarianceCenteredRankOneRadius R))
+      (matrixVarianceProxy P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A))
+      (sampleCovarianceTailTheta (m := m) R t
+        (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) R))
+      (sampleCovarianceCenteredRankOneRadius R)
+  expIntegrableNeg :
+    forall k : Fin m,
+      IntegrableRandomMatrix P
+        (matrixExpScaledFamily
+          (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+          (sampleCovarianceTailTheta (m := m) Rneg t
+            (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg))
+          k)
+  traceExpIntegrableNeg :
+    IntegrableRealRandomVariable P
+      (traceExpIntegrand
+        (centeredSampleCovarianceRowRankOneSumNeg (P := P) A)
+        (sampleCovarianceTailTheta (m := m) Rneg t
+          (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg)))
+  negativeRadiusPositive : 0 < Rneg
+  troppPrimitiveNeg :
+    troppMasterTraceMGFFiniteFamily_statement
+      (P := P)
+      (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+      (bernsteinSecondMomentComparisonFamily P
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+        (sampleCovarianceTailTheta (m := m) Rneg t
+          (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg))
+        (sampleCovarianceCenteredRankOneRadius Rneg))
+      (matrixVarianceProxy P
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A))
+      (sampleCovarianceTailTheta (m := m) Rneg t
+        (sampleCovarianceCenteredRankOneVarianceProxyBound (m := m) Rneg))
+      (sampleCovarianceCenteredRankOneRadius Rneg)
+
+/-- Compact bounded-row sample-covariance tail theorem.
+
+The target parameter selects either the quadratic-form upper tail or the
+self-adjoint operator-norm tail. This theorem is a consolidation layer over the
+existing proved wrappers; it avoids making every target/provider/adapter
+combination a separate recommended public theorem name. -/
+theorem sampleCovariance_tail_optimized_under_boundedRowTroppAssumptions
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m (n + 1))
+    (R Rneg t : Real)
+    (target : SampleCovarianceTailTarget)
+    (h : SampleCovarianceBoundedRowTroppAssumptions (P := P) A R Rneg t) :
+    P (SampleCovarianceTailTarget.event (P := P) target A t) <=
+      SampleCovarianceTailTarget.rhs target m (n + 1) R Rneg t := by
+  cases target with
+  | quadraticFormUpper =>
+      simpa [SampleCovarianceTailTarget.event,
+        SampleCovarianceTailTarget.rhs] using
+        sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive
+          (P := P) A R t
+          h.sampleCountPositive h.randomMatrix h.coordinateMemLpTwo
+          h.rowSqNormBound h.independentRows h.squareIntegrable
+          h.expIntegrable h.traceExpIntegrable h.radiusPositive
+          h.deviationPositive h.troppPrimitive
+  | selfAdjointOperatorNorm =>
+      simpa [SampleCovarianceTailTarget.event,
+        SampleCovarianceTailTarget.rhs] using
+        sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives
+          (P := P) A R Rneg t
+          h.sampleCountPositive h.randomMatrix h.coordinateMemLpTwo
+          h.rowSqNormBound h.rowSqNormBoundNeg h.independentRows
+          h.squareIntegrable h.expIntegrable h.traceExpIntegrable
+          h.radiusPositive h.deviationPositive h.troppPrimitive
+          h.expIntegrableNeg h.traceExpIntegrableNeg
+          h.negativeRadiusPositive h.troppPrimitiveNeg
+
 abbrev matrixBernsteinTraceMGFToLaplaceContract_statement {Omega : Type*}
     [MeasurableSpace Omega] {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)
     (A : I -> RandomMatrix Omega n n) (theta t R : Real) : Prop :=

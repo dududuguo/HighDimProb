@@ -236,7 +236,16 @@
 - Boundary preserved: this does not prove the hardbone sharp-chain provider,
   Tropp/Lieb, Golden-Thompson, Bernstein CFC, two-sided control, operator-norm
   control, or Matrix Bernstein.
-- Next safe leaf: `RM-VP-negative-exact-row-variance-proxy-provider-contract`.
+- Follow-up completed API-consolidation leaf:
+  `RM-API-matrix-bernstein-tail-assumption-bundle-consolidation`, adding
+  `SampleCovarianceTailTarget`, `SampleCovarianceBoundedRowTroppAssumptions`,
+  and `sampleCovariance_tail_optimized_under_boundedRowTroppAssumptions` as the
+  compact bounded-row sample-covariance route.
+- Boundary preserved: this does not prove new Tropp/Lieb, Golden-Thompson,
+  trace-exp integrability, variance-proxy sharpening, or full Matrix Bernstein;
+  it only consolidates already proved wrappers behind a target axis and one
+  record.
+- Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
 
 ## Process
 
@@ -272,3 +281,30 @@
 - FinsetSimp
 - MatrixEntry
 - Tail
+
+## RM-LIEB-S2 Log-Domain Core Proof And Operator-Log Representation Bridge
+
+- Status: partially proved.
+- Added: `matrixExpLogDomainForSelfAdjoint`, proving the `matrixExp` log-domain and normalization provider used by `matrixLog_le_of_le_matrixExp`.
+- Boundary preserved: this does not prove operator-log monotonicity, trace-exp monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, or full Matrix Bernstein.
+- Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
+## RM-LIEB-S3 Operator-Log Monotonicity Representation Bridge
+
+- Status: partially proved.
+- Added: `isPSDMatrix_of_posSemidef`, `matrixLE_of_mathlib_le`, and `mathlib_le_of_matrixLE` as reusable order-representation bridges.
+- Boundary preserved: this does not prove `operatorLogMonotoneOnPositiveMatrices_statement`; direct reuse of Mathlib `CFC.log_le_log` is blocked for the current real-matrix representation by the missing CStar route.
+- Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
+## RM-LIEB-S4 Real Matrix To CStar Log Monotonicity Contract
+
+- Status: blocked clean.
+- Result: Mathlib `CFC.log_le_log` is available on `CStarMatrix (Fin n) (Fin n) ℂ`.
+- Blocker: the current HighDimProb target is over `Matrix (Fin n) (Fin n) Real`; a real-to-CStar transport API is needed before the operator-log theorem can be proved from Mathlib.
+- Boundary preserved: this does not prove operator-log monotonicity for real matrices, trace-exp monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, or full Matrix Bernstein.
+- Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
+## RM-LIEB-S5 Real To CStar Transport API Contract
+
+- Status: partially proved by probe.
+- Result: the basic real-to-`CStarMatrix` transport map has clean entrywise, add/sub, and self-adjoint transport proofs.
+- Blocker: strict positivity, order, and `CFC.log` transport remain separate proof obligations before `operatorLogMonotoneOnPositiveMatrices_statement` can use Mathlib `CFC.log_le_log`.
+- Boundary preserved: this does not prove operator-log monotonicity, trace-exp monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, or full Matrix Bernstein.
+- Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.

@@ -12,6 +12,7 @@ This is the current compact API index. Old historical notes were collapsed into
 - [`Spectral.lean`](../HighDimProb/RandomMatrix/Spectral.lean)
 - [`TraceExp.lean`](../HighDimProb/RandomMatrix/TraceExp.lean)
 - [`HardboneStatements.lean`](../HighDimProb/RandomMatrix/HardboneStatements.lean)
+- [`CStarBridge.lean`](../HighDimProb/RandomMatrix/CStarBridge.lean)
 - [`VarianceProxy.lean`](../HighDimProb/RandomMatrix/VarianceProxy.lean)
 - [`ConcentrationStatements.lean`](../HighDimProb/RandomMatrix/ConcentrationStatements.lean)
 
@@ -27,6 +28,32 @@ This is the current compact API index. Old historical notes were collapsed into
 - `rowSqNormVarianceProxyNormRHS`
 
 Use these helpers in examples and tests instead of copying RHS formulas.
+
+Order / PSD representation bridges:
+
+- `isPSDMatrix_of_posSemidef`
+- `posSemidef_of_isPSDMatrix`
+- `matrixLE_of_mathlib_le`
+- `mathlib_le_of_matrixLE`
+
+These bridge HighDimProb's explicit quadratic-form PSD vocabulary and Mathlib's
+ordered-matrix API without installing a new matrix order abstraction.
+
+CStar representation bridge:
+
+- `realMatrixToCStarMatrix`
+- `realMatrixToCStarMatrix_apply`
+- `realMatrixToCStarMatrix_add`
+- `realMatrixToCStarMatrix_sub`
+- `isSelfAdjoint_realMatrixToCStarMatrix`
+- `realMatrixToCStarStrictlyPositive_statement`
+- `realMatrixToCStarMatrixLE_statement`
+- `realMatrixToCStarLogBack_statement`
+
+These expose the real-matrix to `CStarMatrix` representation layer needed to
+reuse Mathlib CStar functional-calculus order results. Strict positivity,
+Loewner-order, and `CFC.log` transport are still statement targets, not proved
+facts.
 
 ## Matrix Bernstein Surface
 
@@ -73,6 +100,7 @@ Log/order-to-`K` chain:
 
 - `operatorLogMonotoneOnPositiveMatrices_statement`
 - `matrixExpLogDomainForSelfAdjoint_statement`
+- `matrixExpLogDomainForSelfAdjoint`
 - `matrixLog_le_of_le_matrixExp_statement`
 - `matrixLog_le_of_le_matrixExp`
 - `traceMatrixExp_mono_add_selfAdjoint_statement`
@@ -157,7 +185,8 @@ Hardbone status table:
 |---|---|---|---|---|
 | Scalar Bernstein hardbone leaf | `scalarBernsteinExpQuadraticInequality_statement` | proven by `scalarBernsteinExpQuadraticInequality` | CFC-chain assumptions can reuse the proved scalar theorem | none for this scalar leaf |
 | Bernstein CFC | `bernsteinMatrixExp_le_quadratic_statement` | proven by `bernsteinMatrixExp_le_quadratic` | `bernsteinMatrixExp_le_quadratic_of_cfcLeaves` documents the reusable composition | preferred `*_of_troppAssumptions` wrappers bypass pointwise CFC fields; explicit-CFC wrappers remain for compatibility |
-| Matrix log/order bridge | `matrixLog_le_of_le_matrixExp_statement` | proven by `matrixLog_le_of_le_matrixExp` | turns explicit log-monotonicity and `matrixExp` log-domain premises into `log M <= K` | operator-log monotonicity and the `matrixExp` log-domain premise remain external inputs |
+| Matrix log/order bridge | `matrixLog_le_of_le_matrixExp_statement` | proven by `matrixLog_le_of_le_matrixExp` | turns explicit log-monotonicity and `matrixExp` log-domain premises into `log M <= K` | `matrixExp` log-domain is supplied by `matrixExpLogDomainForSelfAdjoint`; operator-log monotonicity remains the external input |
+| Real-to-CStar bridge | `realMatrixToCStarMatrix` and transport statement targets | basic representation map, add/sub, and self-adjoint transport proved | exposes the CStar representation route for future operator-log monotonicity proofs | strict positivity/order/log-back transport from real matrices to `CStarMatrix` remains open |
 | Log/order-to-`K` | `troppLogExpComparisonToK_of_logOrderKChain_statement` | typed-prop | `troppLogExpComparisonToK_of_logMonotone_traceExpMono` | trace-exp monotonicity plus the explicit log/order bridge inputs |
 | Tropp/Lieb/GT one-step | `troppMasterTraceMGFStep_of_liebJensen_statement` | typed-prop | `troppMasterTraceMGFStep_of_liebJensen` | Lieb concavity, probability-measure Jensen, log-exp normalization; Golden-Thompson is separate |
 | Conditioning / independence | `troppConditionalStep_of_iIndepFun_statement` | proven by `troppConditionalStep_of_iIndepFun` | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | thin forwarder only; generated histories, history/current-step independence, finite-family independence, and conditional expectation reduction remain explicit premises |
@@ -247,23 +276,34 @@ import HighDimProb.Examples.RandomMatrix.StatementRoutes
 
 ## Sample Covariance Surface
 
-Explicit-CFC compatibility wrappers:
+Preferred compact bounded-row route:
+
+- `SampleCovarianceTailTarget`
+- `SampleCovarianceTailTarget.event`
+- `SampleCovarianceTailTarget.rhs`
+- `SampleCovarianceBoundedRowTroppAssumptions`
+- `sampleCovariance_tail_optimized_under_boundedRowTroppAssumptions`
+
+Use the compact theorem with target
+`SampleCovarianceTailTarget.quadraticFormUpper` or
+`SampleCovarianceTailTarget.selfAdjointOperatorNorm`. This keeps the target axis
+explicit without publishing a separate recommended theorem name for every
+combination of target, sign, CFC route, negative adapter, and provider route.
+The compact record is the full bounded-row Tropp route: it exposes the common
+row assumptions and the remaining negative-side Tropp/integrability providers,
+but it does not include a finite-family tail conclusion as a field.
+
+Lower-level compatibility wrappers remain available when a proof needs fewer
+assumptions or a more explicit proof boundary:
 
 - `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy`
+- `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy_of_troppPrimitive`
 - `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound`
+- `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive`
+- `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive`
 - `sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`
-- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`
-- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`
-- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters`
-
-Preferred CFC-free wrappers after the Bernstein CFC hardbone leaf:
-
-- `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy_of_troppPrimitive`
-- `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive`
-- `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive`
-- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters_of_troppPrimitives`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives`
 
 These wrappers still require Tropp/Lieb trace-MGF primitives and analytic
@@ -273,10 +313,9 @@ The exact-row quadratic-form wrapper additionally removes the direct
 `MatrixVarianceProxyNormBound` premise on the positive-side route by using the
 hardbone exact-row consumer; it keeps the hardbone sharp-variance chain explicit
 and separates the uniform Bernstein radius from the row-specific variance-proxy
-radii. These wrappers do not
-prove Tropp/Lieb, Golden-Thompson, trace-exp integrability, variance-proxy
-control beyond existing named adapters, or unconditional sample-covariance
-concentration.
+radii. These wrappers do not prove Tropp/Lieb, Golden-Thompson, trace-exp
+integrability, variance-proxy control beyond existing named adapters, or
+unconditional sample-covariance concentration.
 
 ### Sample covariance negative-side provider adapters
 

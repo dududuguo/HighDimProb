@@ -154,6 +154,11 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check sampleCovarianceTailTheta
 #check sampleCovarianceTailThetaOfRows
 #check sampleCovarianceQuadraticFormTailRHS
+#check SampleCovarianceTailTarget
+#check SampleCovarianceTailTarget.event
+#check SampleCovarianceTailTarget.rhs
+#check SampleCovarianceBoundedRowTroppAssumptions
+#check sampleCovariance_tail_optimized_under_boundedRowTroppAssumptions
 #check sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy
 #check sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy_of_troppPrimitive
 #check sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound

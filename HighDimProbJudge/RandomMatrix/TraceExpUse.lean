@@ -97,6 +97,12 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.bernsteinCFCExpressionNormalization_statement
 #check HighDimProb.bernsteinMatrixExp_le_quadratic_of_cfcChain_statement
 #check HighDimProb.operatorLogMonotoneOnPositiveMatrices_statement
+#check HighDimProb.realMatrixToCStarMatrix
+#check HighDimProb.realMatrixToCStarMatrix_add
+#check HighDimProb.isSelfAdjoint_realMatrixToCStarMatrix
+#check HighDimProb.realMatrixToCStarStrictlyPositive_statement
+#check HighDimProb.realMatrixToCStarMatrixLE_statement
+#check HighDimProb.realMatrixToCStarLogBack_statement
 #check HighDimProb.matrixExpLogDomainForSelfAdjoint_statement
 #check HighDimProb.matrixLog_le_of_le_matrixExp_statement
 #check HighDimProb.matrixLog_le_of_le_matrixExp

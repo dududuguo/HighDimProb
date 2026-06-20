@@ -1,6 +1,7 @@
 import HighDimProb.RandomMatrix.TraceExp
 import HighDimProb.RandomMatrix.Assumptions
 import HighDimProb.Analysis.RealInequalities
+import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Order
 
 /-!
 # RandomMatrix hardbone statement targets
@@ -1182,6 +1183,25 @@ theorem bernsteinMatrixExp_le_quadratic_of_cfcChain_spectrum {n : Nat}
     (cfcScalarInequalityToMatrixLE_bernsteinExpQuadratic A theta R)
     (bernsteinCFCExpressionNormalization A theta R)
 
+/-- Matrix-exp log-domain and normalization for self-adjoint matrices.
+
+This packages the self-adjointness, strict positivity, and CFC normalization of
+`matrixExp K` needed by `matrixLog_le_of_le_matrixExp`. It is a local CFC
+domain leaf, not a Lieb/Tropp theorem. -/
+theorem matrixExpLogDomainForSelfAdjoint {n : Nat}
+    (K : Matrix (Fin n) (Fin n) Real) :
+    matrixExpLogDomainForSelfAdjoint_statement K := by
+  intro hK
+  refine And.intro ?hExpSA ?hRest
+  · exact isSelfAdjointMatrix_matrixExp hK
+  · refine And.intro ?hExpPos ?hLogExp
+    · have hNonneg : 0 <= matrixExp K := by
+        simpa [matrixExp] using
+          (IsSelfAdjoint.exp_nonneg hK.isSelfAdjoint)
+      have hUnit : IsUnit (matrixExp K) := by
+        simpa [matrixExp] using (Matrix.isUnit_exp K)
+      exact hUnit.isStrictlyPositive hNonneg
+    · simpa [matrixExp] using (CFC.log_exp (a := K) hK.isSelfAdjoint)
 /-- Thin bridge from a log-monotonicity premise and the matrix-exp log-domain
 premise to the direct `log M <= K` comparison.
 

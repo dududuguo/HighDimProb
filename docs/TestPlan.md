@@ -36,13 +36,16 @@ git diff --check
   `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`; example modules, including the `StatementRoutes` statement-route index, are covered
   through `lake build HighDimProb.Examples`.
 - RandomMatrix hardbone statement-target checks, including the proved Bernstein
-  CFC hardbone leaf, the proved matrix-exp/log normalization leaf, the proved
+  CFC hardbone leaf, the proved matrix-exp/log normalization and log-domain leaves, the proved
   matrix log/order bridge leaf, the proved excess-support trace bridge leaf,
   and the proved centered-square expectation bridge leaf are covered in
   `HighDimProbTest/RandomMatrixHardboneStatementsAPI.lean`,
   `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`.
-- RandomMatrix sample-covariance negative-side provider-transfer adapters and
-  CFC-free sample-covariance wrappers, including the positive-side exact-row variance-proxy quadratic-form wrapper, are covered in
+- RandomMatrix sample-covariance negative-side provider-transfer adapters, the
+  compact `SampleCovarianceTailTarget` /
+  `SampleCovarianceBoundedRowTroppAssumptions` route, and CFC-free
+  sample-covariance wrappers, including the positive-side exact-row
+  variance-proxy quadratic-form wrapper, are covered in
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
   `HighDimProbTest/ExamplesAPI.lean`, and
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`.
