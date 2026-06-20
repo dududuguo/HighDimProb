@@ -18,10 +18,12 @@ This is the active short list. Old completed task logs were collapsed into
 - Prefer shared RandomMatrix APIs over unfolded formulas in examples, tests,
   judge files, and docs.
 - Next RandomMatrix hardbone task:
-  `RM-VP-negative-exact-row-variance-proxy-provider-contract`.
-- That next task should audit the negative-side exact-row variance-proxy route
-  needed before two-sided quadratic-form or operator-norm sample-covariance
-  wrappers can use row-specific exact-row variance proxies.
+  `RM-VP-centered-square-chain-wrapper-integration-contract`.
+- The concrete exact-row row-moment bridge is available. The next task should
+  add thin sample-covariance wrapper variants that consume the generic
+  centered-square variance-proxy chain bridge instead of the sample-specific
+  sharp-chain premise, without claiming new Tropp/Lieb or full Matrix Bernstein
+  proofs.
 
 ## Active Documentation Work
 

@@ -52,9 +52,9 @@ theorems or typed statements without relying on local test internals.
   PSD and quadratic-form nonnegativity APIs.
 - `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`: matrix square, second
   moment, variance proxy, semantic variance-proxy bounds,
-  variance-proxy norm, self-adjointness lemmas, matrix expectation PSD/order
-  and add/smul/zero/constant normalization lemmas, PSD typed targets, and
-  matrix Bernstein statement surface.
+  variance-proxy norm, self-adjointness lemmas, exact-row generic-centered-square
+  chain bridge visibility, matrix expectation PSD/order and add/smul/zero/constant
+  normalization lemmas, PSD typed targets, and matrix Bernstein statement surface.
 - `HighDimProbJudge/RandomMatrix/SpectralUse.lean`: lambda-max wrappers,
   ordered endpoint wrappers, quadratic-form bound predicates, monotonicity
   lemmas, two-sided tail events, and spectral tail event APIs.
@@ -73,7 +73,8 @@ theorems or typed statements without relying on local test internals.
   Laplace/Chernoff/operator-norm Laplace statement APIs.
 - `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`: proof-ready matrix
   Bernstein statement surface, `matrixBernsteinLaplacePrerequisitesStatement`,
-  `matrixBernsteinTraceMGF_statement`, and its main structural/analytic
+  `matrixBernsteinTraceMGF_statement`, sample-covariance negative exact-row
+  variance-proxy provider visibility, and its main structural/analytic
   dependencies.
 
 ## How It Differs From Normal Tests

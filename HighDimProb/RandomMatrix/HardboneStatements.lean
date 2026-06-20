@@ -616,6 +616,7 @@ theorem sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two
         integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two
           (P := P) (X := X i) (R := R i) (hLp i) (hSq i))
       hSq hR)
+
 /-- Generic provider-chain target from centered-square comparisons to a
 variance-proxy norm bound.
 
@@ -686,6 +687,98 @@ theorem varianceProxyNormBound_of_centeredSquareChain_expansion
   hChain
     (fun i => matrixSquare_centeredRandomMatrix_expectation_expansion (P := P) (A i))
     hLE hNorm
+/-- Exact-row sample-covariance sharp-chain statement provider from the generic
+centered-square variance-proxy chain.
+
+This bridges the generic `varianceProxyNormBound_of_centeredSquareChain_statement`
+for the rank-one row family to the sample-covariance-specific
+`sampleCovarianceVarianceProxy_sharp_statement`. The concrete row assumptions
+only discharge the integrability premises needed by the centered rank-one
+second-moment comparison. The generic centered-square chain remains explicit;
+this theorem does not prove Matrix Bernstein, Tropp/Lieb, trace-MGF iteration,
+or an unconditional sample-covariance tail bound. -/
+theorem sampleCovarianceVarianceProxy_sharp_statement_of_centeredSquareChain_exactRowSqNorm_bound_memLp_two
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {m n : Nat}
+    (X : Fin m -> RandomVector Omega n)
+    (R : Fin m -> Real)
+    (hChain : @varianceProxyNormBound_of_centeredSquareChain_statement
+      Omega mOmega P _ (Fin m) _ n (rankOneRandomMatrixFamily X)
+      (fun i => matrixSecondMoment P (rankOneRandomMatrix (X i)))
+      (rowSqNormVarianceProxyNormRHS R))
+    (hMeas : forall i, IsRandomVector P (X i))
+    (hLp : forall i, forall j : Fin n,
+      MemLpRealRandomVariable P (coord (X i) j) 2)
+    (hSq : forall i omega, vectorSqNorm (X i omega) <= R i) :
+    @sampleCovarianceVarianceProxy_sharp_statement
+      Omega mOmega P _ m n X
+      (fun i => matrixSecondMoment P (rankOneRandomMatrix (X i)))
+      (rowSqNormVarianceProxyNormRHS R) := by
+  intro hCentered hSecond hNorm
+  have hResult : MatrixVarianceProxyNormBound P
+      (centeredRandomMatrixFamily P (rankOneRandomMatrixFamily X))
+      (rowSqNormVarianceProxyNormRHS R) := by
+    apply hChain
+    · intro i
+      exact matrixSquare_centeredRandomMatrix_expectation_expansion
+        (P := P) ((rankOneRandomMatrixFamily X) i)
+    · intro i
+      have hRankSq : IntegrableRandomMatrix P
+          (randomMatrixSquare (rankOneRandomMatrix (X i))) :=
+        integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two
+          (P := P) (X := X i) (R := R i) (hLp i) (hSq i)
+      have hRankInt : IntegrableRandomMatrix P (rankOneRandomMatrix (X i)) :=
+        integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
+          (P := P) (X := X i) (hLp i)
+      have hCenteredSq : IntegrableRandomMatrix P
+          (randomMatrixSquare (centeredRankOneRandomMatrix P (X i))) := by
+        simpa [centeredRankOneRandomMatrix] using
+          integrableRandomMatrix_randomMatrixSquare_centeredRandomMatrix
+            (P := P) (A := rankOneRandomMatrix (X i)) hRankInt hRankSq
+      have hCenteredLE : MatrixLE
+          (matrixSecondMoment P (centeredRankOneRandomMatrix P (X i)))
+          (matrixSecondMoment P (rankOneRandomMatrix (X i))) :=
+        hCentered i (hMeas i) (hLp i) hCenteredSq hRankSq
+      have hLE : MatrixLE
+          (matrixSecondMoment P (centeredRankOneRandomMatrix P (X i)))
+          (matrixSecondMoment P (rankOneRandomMatrix (X i))) := hCenteredLE
+      simpa [rankOneRandomMatrixFamily, centeredRankOneRandomMatrix] using
+        matrixLE_trans hLE (hSecond i)
+    · simpa [rankOneRandomMatrixFamily] using hNorm
+  simpa [centeredRankOneRandomMatrixFamily] using hResult
+
+/-- Exact-row sample-covariance variance-proxy consumer from the generic
+centered-square chain.
+
+Compared with `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two`,
+this theorem replaces the sample-specific sharp-chain premise by the generic
+centered-square chain plus concrete row measurability, `MemLp 2`, and exact row
+squared-norm witnesses. The row-specific deterministic norm control remains the
+existing `rowSqNormVarianceProxyNormRHS R` route. -/
+theorem sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two_of_centeredSquareChain
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {m n : Nat}
+    (X : Fin m -> RandomVector Omega n)
+    (R : Fin m -> Real)
+    (hChain : @varianceProxyNormBound_of_centeredSquareChain_statement
+      Omega mOmega P _ (Fin m) _ n (rankOneRandomMatrixFamily X)
+      (fun i => matrixSecondMoment P (rankOneRandomMatrix (X i)))
+      (rowSqNormVarianceProxyNormRHS R))
+    (hMeas : forall i, IsRandomVector P (X i))
+    (hLp : forall i, forall j : Fin n,
+      MemLpRealRandomVariable P (coord (X i) j) 2)
+    (hSq : forall i omega, vectorSqNorm (X i omega) <= R i)
+    (hR : forall i, 0 <= R i) :
+    MatrixVarianceProxyNormBound P
+      (centeredRankOneRandomMatrixFamily P X)
+      (rowSqNormVarianceProxyNormRHS R) :=
+  sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two
+    (P := P) X R
+    (sampleCovarianceVarianceProxy_sharp_statement_of_centeredSquareChain_exactRowSqNorm_bound_memLp_two
+      (P := P) X R hChain hMeas hLp hSq)
+    hLp hSq hR
 /-! ## Dimension, support, and effective-rank hardbone statement chain -/
 
 /-- Rank-refined trace-exponential dimension-factor target with an explicit

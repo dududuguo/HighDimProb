@@ -36,7 +36,7 @@
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
   - Current repository next task:
-    RM-VP-negative-exact-row-variance-proxy-provider-contract. Natural-state
+    RM-VP-centered-square-chain-wrapper-integration-contract. Natural-state
     assumption bundling, negative trace-MGF provider cleanup, Matrix Bernstein,
     Hanson-Wright, and WLLN/SLLN remain separate future directions.
 - OrliczToTail
@@ -236,7 +236,31 @@
 - Boundary preserved: this does not prove the hardbone sharp-chain provider,
   Tropp/Lieb, Golden-Thompson, Bernstein CFC, two-sided control, operator-norm
   control, or Matrix Bernstein.
-- Next safe leaf: `RM-VP-negative-exact-row-variance-proxy-provider-contract`.
+- Follow-up completed proof leaf:
+  `RM-VP-negative-exact-row-variance-proxy-provider-contract`, adding
+  `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_of_exactRowSqNorm_bound_memLp_two`
+  as the negative-side exact-row variance-proxy provider by transferring the
+  positive row-specific bound through `matrixVarianceProxy_negRandomMatrixFamily`.
+- Boundary preserved: this does not prove two-sided/operator-norm wrapper
+  integration, concrete row-moment evaluation, Tropp/Lieb, Golden-Thompson,
+  Bernstein CFC, or Matrix Bernstein.
+- Follow-up completed proof leaf:
+  `RM-VP-two-sided-operator-norm-exact-row-wrapper-integration-contract`, adding
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives` as the CFC-free operator-norm wrapper over positive and negative
+  row-specific exact-row variance-proxy RHS values.
+- Boundary preserved: this does not prove concrete row-moment evaluation, new
+  hardbone sharp-chain providers, Tropp/Lieb, Golden-Thompson, Bernstein CFC,
+  or Matrix Bernstein.
+- Follow-up completed proof leaf:
+  `RM-VP-concrete-row-moment-evaluation-contract`, adding
+  `sampleCovarianceVarianceProxy_sharp_statement_of_centeredSquareChain_exactRowSqNorm_bound_memLp_two`
+  and
+  `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two_of_centeredSquareChain`
+  as the exact-row bridge from the generic centered-square variance-proxy chain
+  to the sample-specific sharp-chain statement and consumer.
+- Boundary preserved: this does not prove the generic centered-square chain,
+  Tropp/Lieb, Golden-Thompson, Bernstein CFC, or Matrix Bernstein.
+- Next safe leaf: `RM-VP-centered-square-chain-wrapper-integration-contract`.
 
 ## Process
 

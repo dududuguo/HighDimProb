@@ -78,7 +78,7 @@ supplies it from coordinate `MemLp 4` assumptions via Mathlib Holder product
 APIs. The bounded-row provider
 `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two`
 supplies it from coordinate `MemLp 2` plus pointwise `vectorSqNorm <= R`.
-Centered rank-one square-integrability providers are proved for coordinate `MemLp 4` and bounded-row `MemLp 2` routes. The row-specific exact-row consumer `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two` now supplies a `rowSqNormVarianceProxyNormRHS R` variance-proxy bound from coordinate `MemLp 2`, pointwise `vectorSqNorm <= R_i`, nonnegative radii, and the explicit hardbone sharp-chain premise. Positive-side quadratic-form tail-wrapper integration is available through `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive`; concrete row-moment evaluation, negative-side exact-row transfer, two-sided control, and operator-norm exact-row integration remain open.
+Centered rank-one square-integrability providers are proved for coordinate `MemLp 4` and bounded-row `MemLp 2` routes. The row-specific exact-row consumer `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two` now supplies a `rowSqNormVarianceProxyNormRHS R` variance-proxy bound from coordinate `MemLp 2`, pointwise `vectorSqNorm <= R_i`, nonnegative radii, and the explicit hardbone sharp-chain premise. The concrete row-moment bridge `sampleCovarianceVarianceProxy_sharp_statement_of_centeredSquareChain_exactRowSqNorm_bound_memLp_two` turns the generic centered-square variance-proxy chain into the exact-row sample-specific sharp-chain statement, and `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two_of_centeredSquareChain` exposes the matching consumer. The generic centered-square chain remains explicit. The negative-side provider `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_of_exactRowSqNorm_bound_memLp_two` transfers that row-specific bound through `matrixVarianceProxy_negRandomMatrixFamily`. Positive-side quadratic-form tail-wrapper integration is available through `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive`, and the CFC-free two-sided/operator-norm integration is available through `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives`. Wrapper variants consuming the generic centered-square chain bridge remain open.
 The rank/support trace-bound bridge is proved by
 `traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination`,
 with rank/support consumers for the hardbone targets. Deterministic trace/rank
@@ -137,7 +137,7 @@ or conditional-expectation inputs themselves.
   support-domination providers, support-construction certificates, true
   effective-rank/support trace certificates, and dimension/rank refinements
   beyond explicit star-projection rank consumers.
-- A negative-side exact-row variance-proxy provider for two-sided/operator-norm sample-covariance wrappers.
+- Two-sided/operator-norm sample-covariance wrappers that consume exact-row variance proxies on both signs.
 - A public-friendly Matrix Bernstein wrapper directly over the natural-state
   route.
 

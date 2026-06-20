@@ -97,6 +97,8 @@ Sample covariance negative-side provider-transfer adapters:
 - `centeredSampleCovarianceRowRankOneFamilyNeg_expIntegrable_of_expIntegrable_neg_theta`
 - `centeredSampleCovarianceRowRankOneSumNeg_traceExpIntegrable_of_traceExpIntegrable_neg_theta`
 - `centeredSampleCovarianceRowRankOneFamilyNeg_cfcPrimitive_of_cfcPrimitive_neg_theta`
+- `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_of_exactRowSqNorm_bound_memLp_two`
+- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives`
 
 Hardbone proved leaves, deterministic bridges, statement targets, and thin consumers:
 
@@ -192,8 +194,18 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   The row-specific exact-row sample-covariance hardbone consumer
   `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two`
   now combines this bounded-row square-integrability route with exact-row
-  deterministic norm control to produce RHS `rowSqNormVarianceProxyNormRHS R`; it still keeps the
-  abstract sharp-variance chain explicit. These are square-integrability and
+  deterministic norm control to produce RHS `rowSqNormVarianceProxyNormRHS R`.
+  The concrete row-moment bridge
+  `sampleCovarianceVarianceProxy_sharp_statement_of_centeredSquareChain_exactRowSqNorm_bound_memLp_two`
+  turns the generic centered-square variance-proxy chain into the exact-row
+  sample-specific sharp-chain statement, and
+  `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two_of_centeredSquareChain`
+  exposes the corresponding exact-row consumer. The generic centered-square
+  chain remains explicit. The negative-side provider
+  `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_of_exactRowSqNorm_bound_memLp_two`
+  transfers that exact-row bound to the named negative sample-covariance family
+  by reusing `matrixVarianceProxy_negRandomMatrixFamily`. Both keep the abstract
+  sharp-variance chain explicit. These are square-integrability and
   hardbone-consumer providers only; they do not duplicate the crude
   variance-proxy norm theorem. The
   variance-proxy provider-chain consumer is
@@ -248,10 +260,12 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   hypotheses.
 - `StatementRoutes` is an examples-only route index; it groups representative example-level statement families without adding core API. Lower-level bridge and frontier checks belong in source, tests, and judge files rather than separate reader-facing examples.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
-- Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The positive-side quadratic-form route now has an exact-row variance-proxy wrapper, but two-sided and operator-norm exact-row wrappers still need a negative-side exact-row variance-proxy provider contract. The preferred sample-covariance example route now uses Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
+- Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The positive-side quadratic-form route and the two-sided/operator-norm route now have exact-row variance-proxy wrappers, and the named negative sample-covariance family has an exact-row variance-proxy provider. The preferred sample-covariance example route now uses Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
 - Negative-side provider-transfer adapters only move explicit opposite-parameter
   assumptions onto the named negative sample-covariance family; they do not
-  prove exponential integrability, trace-exponential integrability, or CFC.
+  prove exponential integrability, trace-exponential integrability, or CFC. The
+  exact-row variance-proxy provider only transfers an already explicit
+  sharp-chain bound through negation; it is not a tail wrapper.
 - Completed hardbone wrapper task: `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
 - Completed hardbone proof leaf:
   `RM-HB12-matrix-exp-log-selfadjoint-normalization-leaf`.
@@ -336,10 +350,25 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   `RM-VP-sample-covariance-tail-wrapper-with-exact-row-vp-contract`, adding
   `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive` as a positive-side quadratic-form wrapper with row-specific
   exact-row variance-proxy RHS and explicit hardbone sharp-chain premise.
+- Completed hardbone proof leaf:
+  `RM-VP-negative-exact-row-variance-proxy-provider-contract`, adding
+  `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_of_exactRowSqNorm_bound_memLp_two`
+  as the named negative-family exact-row variance-proxy provider under the
+  explicit hardbone sharp-chain, coordinate `MemLp 2`, pointwise row squared-norm,
+  and nonnegative row-radius assumptions.
+- Completed hardbone proof leaf:
+  `RM-VP-two-sided-operator-norm-exact-row-wrapper-integration-contract`, adding
+  `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives` as the CFC-free operator-norm wrapper that consumes positive and
+  negative row-specific exact-row variance-proxy RHS values.
+- Completed hardbone proof leaf:
+  `RM-VP-concrete-row-moment-evaluation-contract`, adding the exact-row
+  concrete row-moment bridge from the generic centered-square variance-proxy
+  chain to the sample-specific sharp-chain statement and consumer.
 - Next safe hardbone task:
-  `RM-VP-negative-exact-row-variance-proxy-provider-contract`, focused on the
-  negative-side exact-row variance-proxy route required before two-sided or
-  operator-norm sample-covariance wrappers can use the exact-row RHS.
+  `RM-VP-centered-square-chain-wrapper-integration-contract`, focused on adding
+  thin sample-covariance wrapper variants that consume the generic
+  centered-square chain bridge instead of the sample-specific sharp-chain
+  premise, without changing Tropp/Lieb or Matrix Bernstein boundaries.
 
 ## Verification
 
