@@ -17,9 +17,10 @@ This is the active short list. Old completed task logs were collapsed into
   Matrix Bernstein proofs.
 - Prefer shared RandomMatrix APIs over unfolded formulas in examples, tests,
   judge files, and docs.
-- Current RandomMatrix hardbone branch: centered-square provider contract
-  `RM-VP-centered-square-chain-provider-contract`, splitting finite-sum
-  Loewner bookkeeping from the remaining norm-monotonicity blocker.
+- Current RandomMatrix hardbone branch: PSD Loewner operator-norm monotonicity
+  `RM-VP-psd-loewner-operator-norm-monotonicity-contract`, discharging the
+  deterministic norm-monotonicity provider while leaving Tropp/Lieb, trace-MGF,
+  and centered-square comparison assumptions explicit.
 - The centered-square-chain wrapper variants are available for both the
   positive-side quadratic-form route and the two-sided/operator-norm route;
   natural assumption bundles now package those exact-row routes without

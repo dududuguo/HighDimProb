@@ -56,11 +56,11 @@ variance-proxy centered-square-chain consumers
 `varianceProxyNormBound_of_centeredSquareChain_of_normMono`, and
 `varianceProxyNormBound_of_centeredSquareChain_expansion` are proved. The
 `of_normMono` route proves the finite-sum Loewner bookkeeping via
-`matrixLE_sum`, but keeps Loewner-to-operator-norm monotonicity as the explicit
-`deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement` blocker; the
-expansion route removes the explicit expansion premise but still requires
-Loewner comparison and deterministic norm-control assumptions. The centered rank-one second-moment
-comparison is proved by `centeredRankOneSquare_le_rankOneSecondMoment`, using
+`matrixLE_sum`; the deterministic PSD Loewner-to-operator-norm bridge is proved
+as `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE`. The expansion route
+removes the explicit expansion premise but still requires Loewner comparison
+and deterministic norm-control assumptions at the wrapper boundary. The centered
+rank-one second-moment comparison is proved by `centeredRankOneSquare_le_rankOneSecondMoment`, using
 `matrixSecondMoment_centeredRandomMatrix_le_matrixSecondMoment` and
 `matrixLE_sub_right_of_isPSD`. The sample-covariance consumer
 `sampleCovarianceVarianceProxy_sharp_of_rankOneSecondMoment` supplies that

@@ -653,6 +653,44 @@ abbrev deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement {n : Nat}
     MatrixLE U V ->
       deterministicMatrixVarianceProxyNorm U <= deterministicMatrixVarianceProxyNorm V
 
+/-- Deterministic PSD Loewner monotonicity for the variance-proxy norm.
+
+This discharges the local HighDimProb-to-Mathlib order bridge only: `U` is
+assumed PSD in the explicit HighDimProb predicate, `U <= V` is assumed via the
+explicit `MatrixLE` predicate, and the conclusion is the corresponding
+operator-norm monotonicity for deterministic variance proxies. -/
+theorem deterministicMatrixVarianceProxyNorm_mono_of_matrixLE {n : Nat}
+    (U V : Matrix (Fin n) (Fin n) Real) :
+    deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement U V := by
+  intro hU hUV
+  cases n with
+  | zero =>
+      have hUzero : U = 0 := by
+        ext i
+        exact Fin.elim0 i
+      have hVzero : V = 0 := by
+        ext i
+        exact Fin.elim0 i
+      simp [hUzero, hVzero, deterministicMatrixVarianceProxyNorm,
+        deterministicOperatorNorm]
+  | succ n =>
+      have hUself : IsSelfAdjointMatrix U :=
+        (posSemidef_of_isPSDMatrix hU).1
+      rcases exists_unitVector_abs_matrixQuadraticForm_eq_deterministicOperatorNorm
+          hUself with ⟨x, hx, hnorm⟩
+      have hUquad_nonneg : 0 <= matrixQuadraticForm U x := hU.2 x
+      have hnormU_eq :
+          deterministicMatrixVarianceProxyNorm U = matrixQuadraticForm U x := by
+        rw [deterministicMatrixVarianceProxyNorm, ← hnorm,
+          abs_of_nonneg hUquad_nonneg]
+      calc
+        deterministicMatrixVarianceProxyNorm U
+            = matrixQuadraticForm U x := hnormU_eq
+        _ <= matrixQuadraticForm V x := quadraticForm_le_of_matrixLE hUV x
+        _ <= deterministicMatrixVarianceProxyNorm V := by
+          simpa [deterministicMatrixVarianceProxyNorm] using
+            matrixQuadraticForm_le_deterministicOperatorNorm V hx
+
 /-- Centered-square variance-proxy provider under an explicit norm-monotonicity
 contract.
 

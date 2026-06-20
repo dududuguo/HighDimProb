@@ -58,6 +58,9 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.matrixLE_add_left
 #check HighDimProb.matrixLE_add_right
 #check HighDimProb.matrixLE_smul_of_nonneg
+#check HighDimProb.posSemidef_of_isPSDMatrix
+#check HighDimProb.matrix_nonneg_of_isPSDMatrix
+#check HighDimProb.matrix_le_of_matrixLE
 #check HighDimProb.isSelfAdjointMatrix_matrixSquare_of_isSelfAdjointMatrix
 #check HighDimProb.matrixQuadraticForm_matrixSquare_eq_matVecSqNorm_of_selfAdjoint
 #check HighDimProb.isPSD_matrixSquare_of_selfAdjoint

@@ -56,6 +56,7 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check varianceProxyNormBound_of_centeredSquareChain_statement
 #check deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement
 #check varianceProxyNormBound_of_centeredSquareChain_of_normMono
+#check deterministicMatrixVarianceProxyNorm_mono_of_matrixLE
 #check traceMatrixExp_le_rank_exp_lambdaMax_statement
 #check traceMatrixExp_le_supportDim_exp_lambdaMax_statement
 #check matrixExpSupportDomination_identity_statement

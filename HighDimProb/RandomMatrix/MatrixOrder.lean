@@ -1,3 +1,4 @@
+import Mathlib.Analysis.Matrix.Order
 import HighDimProb.RandomMatrix.Algebra
 import HighDimProb.RandomMatrix.SelfAdjoint
 
@@ -19,7 +20,7 @@ form. `MatrixLE A B` is the corresponding Loewner-style predicate
 namespace HighDimProb
 
 open MeasureTheory
-open scoped BigOperators
+open scoped BigOperators MatrixOrder
 
 noncomputable section
 
@@ -41,6 +42,20 @@ theorem matrixQuadraticForm_apply {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
 symmetric plus nonnegative quadratic form. -/
 def IsPSDMatrix {n : Nat} (A : Matrix (Fin n) (Fin n) Real) : Prop :=
   IsSymmetricMatrix A /\ forall x : Fin n -> Real, 0 <= matrixQuadraticForm A x
+
+/-- HighDimProb's explicit real PSD predicate implies Mathlib's
+`Matrix.PosSemidef` predicate. -/
+theorem posSemidef_of_isPSDMatrix {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (hA : IsPSDMatrix A) :
+    A.PosSemidef := by
+  classical
+  refine ⟨?_, ?_⟩
+  · apply Matrix.IsHermitian.ext
+    intro i j
+    simpa using isSymmetricMatrix_apply hA.1 i j
+  · intro x
+    have hquad := hA.2 (fun i : Fin n => x i)
+    simpa [matrixQuadraticForm, Finsupp.sum_fintype] using hquad
 
 /-- Pointwise PSD random square matrix. -/
 def RandomPSDMatrix {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
@@ -86,6 +101,21 @@ theorem randomPSDMatrix_rankOneRandomMatrix {Omega : Type*}
 /-- Loewner-style comparison without declaring a global matrix order instance. -/
 def MatrixLE {n : Nat} (A B : Matrix (Fin n) (Fin n) Real) : Prop :=
   IsPSDMatrix (B - A)
+
+/-- HighDimProb's explicit PSD predicate gives nonnegativity in Mathlib's
+scoped matrix Loewner order. -/
+theorem matrix_nonneg_of_isPSDMatrix {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (hA : IsPSDMatrix A) :
+    (0 : Matrix (Fin n) (Fin n) Real) <= A :=
+  Matrix.PosSemidef.nonneg (posSemidef_of_isPSDMatrix hA)
+
+/-- HighDimProb's explicit `MatrixLE` predicate gives Mathlib's scoped matrix
+Loewner order. -/
+theorem matrix_le_of_matrixLE {n : Nat}
+    {A B : Matrix (Fin n) (Fin n) Real} (hAB : MatrixLE A B) :
+    A <= B := by
+  rw [Matrix.le_iff]
+  exact posSemidef_of_isPSDMatrix hAB
 
 theorem matrixQuadraticForm_sub {n : Nat}
     (B A : Matrix (Fin n) (Fin n) Real) (x : Fin n -> Real) :
