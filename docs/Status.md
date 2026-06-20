@@ -117,6 +117,9 @@ Hardbone proved leaves, deterministic bridges, statement targets, and thin consu
 - `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider`
 - `varianceProxyNormBound_of_centeredSquareChain`
 - `matrixSquare_centeredRandomMatrix_expectation_expansion`
+- `matrixLE_sum`
+- `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement`
+- `varianceProxyNormBound_of_centeredSquareChain_of_normMono`
 - `varianceProxyNormBound_of_centeredSquareChain_expansion`
 - `matrixTrace_smul`
 - `matrixTrace_le_of_matrixLE`
@@ -215,10 +218,14 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   hardbone-consumer providers only; they do not duplicate the crude
   variance-proxy norm theorem. The
   variance-proxy provider-chain consumer is
-  proved as `varianceProxyNormBound_of_centeredSquareChain`; the newer
-  `varianceProxyNormBound_of_centeredSquareChain_expansion` removes the explicit
-  centered-square expansion argument but still requires Loewner comparison and
-  deterministic norm-control assumptions. The rank/support trace-bound bridge is now proved through
+  proved as `varianceProxyNormBound_of_centeredSquareChain`. The provider route
+  `varianceProxyNormBound_of_centeredSquareChain_of_normMono` now proves the
+  finite-sum Loewner bookkeeping with `matrixLE_sum`, while keeping
+  Loewner-to-deterministic-operator-norm monotonicity as the explicit
+  `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement` blocker. The
+  newer `varianceProxyNormBound_of_centeredSquareChain_expansion` removes the
+  explicit centered-square expansion argument but still requires Loewner
+  comparison and deterministic norm-control assumptions. The rank/support trace-bound bridge is now proved through
   `traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination`
   and the `traceMatrixExp_le_rank_exp_lambdaMax` /
   `traceMatrixExp_le_supportDim_exp_lambdaMax` consumers. Explicit

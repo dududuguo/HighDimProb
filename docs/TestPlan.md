@@ -56,8 +56,9 @@ git diff --check
   consumer, deterministic variance-proxy norm subadditivity, exact rank-one
   second-moment norm providers, the rank-one square-integrability four-product,
   `MemLp 4`, bounded-row, centered-family providers, the row-specific exact-row
-  sample-covariance hardbone consumer, and the generic-centered-square-chain
-  exact-row bridge in
+  sample-covariance hardbone consumer, the finite-sum `matrixLE_sum` order
+  helper, the explicit norm-monotonicity blocker surface, and the
+  generic-centered-square-chain exact-row bridge in
   `RandomMatrixVarianceProxyAPI`,
   `RandomMatrixHardboneStatementsAPI`, and the corresponding judge/example
   surfaces.

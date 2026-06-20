@@ -65,6 +65,7 @@ variable (hRnonneg : 0 <= R)
 #check matrixLE_sub_right_of_isPSD
 #check matrixLE_trans
 #check matrixLE_add
+#check matrixLE_sum
 #check matrixLE_add_left
 #check matrixLE_add_right
 #check matrixLE_smul_of_nonneg

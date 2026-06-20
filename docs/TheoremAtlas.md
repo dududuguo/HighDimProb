@@ -52,10 +52,14 @@ domination assumption. The centered-square expectation expansion is proved by
 matrix expectation helpers `matrixExpect_const_mul` and `matrixExpect_mul_const`
 and the identity `matrixSecondMoment_centeredRandomMatrix`. The
 variance-proxy centered-square-chain consumers
-`varianceProxyNormBound_of_centeredSquareChain` and
-`varianceProxyNormBound_of_centeredSquareChain_expansion` are proved; the latter
-removes the explicit expansion premise but still requires Loewner comparison
-and deterministic norm-control assumptions. The centered rank-one second-moment
+`varianceProxyNormBound_of_centeredSquareChain`,
+`varianceProxyNormBound_of_centeredSquareChain_of_normMono`, and
+`varianceProxyNormBound_of_centeredSquareChain_expansion` are proved. The
+`of_normMono` route proves the finite-sum Loewner bookkeeping via
+`matrixLE_sum`, but keeps Loewner-to-operator-norm monotonicity as the explicit
+`deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement` blocker; the
+expansion route removes the explicit expansion premise but still requires
+Loewner comparison and deterministic norm-control assumptions. The centered rank-one second-moment
 comparison is proved by `centeredRankOneSquare_le_rankOneSecondMoment`, using
 `matrixSecondMoment_centeredRandomMatrix_le_matrixSecondMoment` and
 `matrixLE_sub_right_of_isPSD`. The sample-covariance consumer

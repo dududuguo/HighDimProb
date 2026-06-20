@@ -1,4 +1,5 @@
 import HighDimProb.RandomMatrix.TraceExp
+import HighDimProb.RandomMatrix.MatrixOrder
 import HighDimProb.RandomMatrix.Assumptions
 import HighDimProb.Analysis.RealInequalities
 
@@ -638,6 +639,61 @@ abbrev varianceProxyNormBound_of_centeredSquareChain_statement
       deterministicMatrixVarianceProxyNorm (Finset.univ.sum fun i => V i) <=
         sigma2 ->
         MatrixVarianceProxyNormBound P (centeredRandomMatrixFamily P A) sigma2
+
+/-- Typed blocker for Loewner-to-operator-norm monotonicity of deterministic
+variance proxies.
+
+The centered-square provider can prove the finite-sum Loewner comparison from
+per-summand comparisons. Turning that comparison into a scalar operator-norm
+bound still requires a PSD/order-to-norm monotonicity theorem, kept explicit by
+this contract. -/
+abbrev deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement {n : Nat}
+    (U V : Matrix (Fin n) (Fin n) Real) : Prop :=
+  IsPSDMatrix U ->
+    MatrixLE U V ->
+      deterministicMatrixVarianceProxyNorm U <= deterministicMatrixVarianceProxyNorm V
+
+/-- Centered-square variance-proxy provider under an explicit norm-monotonicity
+contract.
+
+This theorem proves the available bookkeeping part of the generic
+centered-square chain: per-summand Loewner comparisons sum to a variance-proxy
+Loewner comparison. The remaining conversion from Loewner order to deterministic
+operator norm is exactly the `hNormMono` premise. -/
+theorem varianceProxyNormBound_of_centeredSquareChain_of_normMono
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n)
+    (V : I -> Matrix (Fin n) (Fin n) Real)
+    (sigma2 : Real)
+    (hNormMono :
+      deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement
+        (Finset.univ.sum fun i : I =>
+          matrixSecondMoment P (centeredRandomMatrix P (A i)))
+        (Finset.univ.sum fun i : I => V i))
+    (hPSD : IsPSDMatrix
+      (Finset.univ.sum fun i : I =>
+        matrixSecondMoment P (centeredRandomMatrix P (A i))))
+    (hLE : forall i,
+      MatrixLE (matrixSecondMoment P (centeredRandomMatrix P (A i))) (V i))
+    (hNorm : deterministicMatrixVarianceProxyNorm (Finset.univ.sum fun i => V i) <=
+      sigma2) :
+    MatrixVarianceProxyNormBound P (centeredRandomMatrixFamily P A) sigma2 := by
+  have hSumLE : MatrixLE
+      (Finset.univ.sum fun i : I =>
+        matrixSecondMoment P (centeredRandomMatrix P (A i)))
+      (Finset.univ.sum fun i : I => V i) :=
+    matrixLE_sum hLE
+  have hNormLe :
+      deterministicMatrixVarianceProxyNorm
+          (Finset.univ.sum fun i : I =>
+            matrixSecondMoment P (centeredRandomMatrix P (A i))) <=
+        deterministicMatrixVarianceProxyNorm (Finset.univ.sum fun i : I => V i) :=
+    hNormMono hPSD hSumLE
+  simpa [MatrixVarianceProxyNormBound, matrixVarianceProxyNorm,
+    deterministicMatrixVarianceProxyNorm, matrixVarianceProxy, centeredRandomMatrixFamily]
+    using hNormLe.trans hNorm
 
 /-- Thin consumer for the centered-square variance-proxy provider chain.
 

@@ -65,7 +65,8 @@ theorems or typed statements without relying on local test internals.
   nonnegativity bridges, random self-adjoint trace-exp moment nonnegativity,
   real/lintegral bridge theorem, natural-state Tropp/trace-MGF route checks,
   the hardbone matrix-exp/log normalization theorem, the proved matrix log/order
-  bridge, and remaining typed statement APIs.
+  bridge, centered-square provider/norm-monotonicity contract APIs, and
+  remaining typed statement APIs.
 - `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`: matrix Laplace RHS and
   lintegral RHS vocabulary, trace-exp threshold events, MB-S5 conditional
   Markov/Laplace bridge APIs, MB-S6 explicit-dominance conditional wrappers,
@@ -256,7 +257,7 @@ MB-S9-matrixle-algebra-proof adds variance-proxy judge checks for
 `matrixQuadraticForm_add`, `matrixQuadraticForm_smul`,
 `isPSDMatrix_zero`, `isPSDMatrix_add`,
 `isPSDMatrix_smul_of_nonneg`, `matrixLE_refl`, `matrixLE_of_eq`,
-`matrixLE_trans`, `matrixLE_add`, `matrixLE_add_left`,
+`matrixLE_trans`, `matrixLE_add`, `matrixLE_sum`, `matrixLE_add_left`,
 `matrixLE_add_right`, and `matrixLE_smul_of_nonneg`. The examples use only
 explicit MatrixLE/PSD hypotheses and do not claim the single-summand MGF
 theorem, Bernstein CFC proof, trace-mgf provider, Golden-Thompson, Lieb, or

@@ -54,6 +54,7 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.matrixLE_sub_right_of_isPSD
 #check HighDimProb.matrixLE_trans
 #check HighDimProb.matrixLE_add
+#check HighDimProb.matrixLE_sum
 #check HighDimProb.matrixLE_add_left
 #check HighDimProb.matrixLE_add_right
 #check HighDimProb.matrixLE_smul_of_nonneg

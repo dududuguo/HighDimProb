@@ -289,6 +289,24 @@ theorem matrixLE_add {n : Nat}
   rw [hEq]
   exact hsum
 
+/-- Finite sums preserve the explicit Loewner-style matrix comparison. -/
+theorem matrixLE_sum {I : Type*} [Fintype I] {n : Nat}
+    {A B : I -> Matrix (Fin n) (Fin n) Real}
+    (hAB : forall i, MatrixLE (A i) (B i)) :
+    MatrixLE (Finset.univ.sum fun i : I => A i)
+      (Finset.univ.sum fun i : I => B i) := by
+  unfold MatrixLE at *
+  have hsum : IsPSDMatrix (Finset.univ.sum fun i : I => B i - A i) :=
+    isPSDMatrix_sum hAB
+  have hEq :
+      (Finset.univ.sum fun i : I => B i) -
+          (Finset.univ.sum fun i : I => A i) =
+        Finset.univ.sum fun i : I => B i - A i := by
+    ext r c
+    simp [Matrix.sub_apply, Matrix.sum_apply, Finset.sum_sub_distrib]
+  rw [hEq]
+  exact hsum
+
 /-- Adding the same matrix on the left preserves `MatrixLE`. -/
 theorem matrixLE_add_left {n : Nat}
     (C : Matrix (Fin n) (Fin n) Real)
