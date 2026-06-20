@@ -337,7 +337,8 @@ python scripts/judge_policy_check.py
   adapters, the explicit-CFC sample-covariance wrappers, the CFC-free
   `_of_troppPrimitive` / `_of_troppPrimitives` sample-covariance wrappers, and
   the opposite-parameter sample-covariance exp/trace/CFC provider-transfer
-  adapters.
+  adapters. Example API checks cover the exact-row centered-square bundle usage
+  wrappers through `StatementRoutes`.
 - The checks are import-boundary/API checks only; they do not prove
   exponential/trace integrability, Tropp/Lieb, Golden-Thompson, full Matrix
   Bernstein, or unconditional sample-covariance concentration. The CFC-free

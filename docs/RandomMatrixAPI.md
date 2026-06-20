@@ -289,6 +289,11 @@ The two-sided/operator-norm exact-row integration is exposed as
 `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives`,
 with centered-square-chain variant
 `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_centeredSquareChain_of_troppPrimitives`.
+The reader-facing example route also exposes
+`SampleCovarianceTailUsage.sampleCovariance_exactRow_centeredSquare_quadraticForm_tail_usage`
+and
+`SampleCovarianceTailUsage.sampleCovariance_exactRow_centeredSquare_operatorNorm_tail_usage`
+as thin demonstrations of the corresponding core assumption bundles.
 These wrappers do not prove Tropp/Lieb, Golden-Thompson, trace-exp
 integrability, variance-proxy control beyond existing named adapters, or
 unconditional sample-covariance concentration.
@@ -340,6 +345,9 @@ and they are not tail wrappers by themselves.
 - Prefer named adapters over anonymous lambdas.
 - Prefer the sample-covariance `_of_troppPrimitive` / `_of_troppPrimitives`
   wrappers when pointwise Bernstein CFC is the only remaining explicit field.
+- For exact-row centered-square routes, prefer the core `SampleCovarianceExactRowCenteredSquare*TroppAssumptions`
+  bundles and the corresponding `SampleCovarianceTailUsage` examples instead of
+  copying the full hypothesis list.
 - Keep positive-side and negative-side assumptions visibly distinct when the
   theorem still needs both sides.
 - Put domain vocabulary in examples as thin wrappers over the core RandomMatrix

@@ -93,6 +93,8 @@ Sample covariance wrappers:
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives`
 - `SampleCovarianceTailUsage.SampleCovarianceTailAssumptions`
 - `SampleCovarianceTailUsage.SampleCovarianceOperatorNormTailAssumptions`
+- `SampleCovarianceTailUsage.sampleCovariance_exactRow_centeredSquare_quadraticForm_tail_usage`
+- `SampleCovarianceTailUsage.sampleCovariance_exactRow_centeredSquare_operatorNorm_tail_usage`
 
 Sample covariance negative-side provider-transfer adapters:
 
@@ -264,7 +266,7 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   hypotheses.
 - `StatementRoutes` is an examples-only route index; it groups representative example-level statement families without adding core API. Lower-level bridge and frontier checks belong in source, tests, and judge files rather than separate reader-facing examples.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
-- Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The positive-side quadratic-form route and the two-sided/operator-norm route now have exact-row variance-proxy wrappers, plus centered-square-chain variants that replace sample-specific sharp-chain premises by generic centered-square-chain premises. The named negative sample-covariance family has an exact-row variance-proxy provider. The preferred sample-covariance example route now uses Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
+- Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The positive-side quadratic-form route and the two-sided/operator-norm route now have exact-row variance-proxy wrappers, plus centered-square-chain variants that replace sample-specific sharp-chain premises by generic centered-square-chain premises. The named negative sample-covariance family has an exact-row variance-proxy provider. The preferred sample-covariance example route now uses Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; it also includes exact-row centered-square bundle usage examples. Explicit-CFC wrappers remain compatibility surfaces.
 - Negative-side provider-transfer adapters only move explicit opposite-parameter
   assumptions onto the named negative sample-covariance family; they do not
   prove exponential integrability, trace-exponential integrability, or CFC. The

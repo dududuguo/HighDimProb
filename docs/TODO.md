@@ -17,8 +17,8 @@ This is the active short list. Old completed task logs were collapsed into
   Matrix Bernstein proofs.
 - Prefer shared RandomMatrix APIs over unfolded formulas in examples, tests,
   judge files, and docs.
-- Current RandomMatrix hardbone branch: assumption-bundle follow-up for
-  `RM-natural-state-centered-square-wrapper-assumption-bundling-contract`.
+- Current RandomMatrix hardbone branch: example-usage follow-up for
+  `RM-SC-centered-square-bundle-example-usage-contract`.
 - The centered-square-chain wrapper variants are available for both the
   positive-side quadratic-form route and the two-sided/operator-norm route;
   natural assumption bundles now package those exact-row routes without

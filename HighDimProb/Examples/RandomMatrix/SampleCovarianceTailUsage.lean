@@ -104,6 +104,31 @@ theorem sampleCovariance_quadraticForm_tail_usage
       h.traceExpIntegrable h.radiusPositive h.deviationPositive
       h.troppPrimitive
 
+
+/-- Example-level exact-row centered-square-chain quadratic-form tail usage.
+
+This demonstrates the core assumption bundle
+`SampleCovarianceExactRowCenteredSquareTroppAssumptions` directly, rather than
+copying its long field list into an example-local structure. The generic
+centered-square chain, Tropp primitive, and analytic assumptions remain fields
+of that core bundle. -/
+theorem sampleCovariance_exactRow_centeredSquare_quadraticForm_tail_usage
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m (n + 1))
+    (R t : Real)
+    (Rvar : Fin m -> Real)
+    (h : SampleCovarianceExactRowCenteredSquareTroppAssumptions
+      (P := P) A R t Rvar) :
+    P (quadraticFormUpperTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t) <=
+      sampleCovarianceQuadraticFormTailRHS
+        (m := m) (n := n + 1) R t
+        (rowSqNormVarianceProxyNormRHS Rvar) := by
+  exact
+    sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_centeredSquareChain_of_troppAssumptions
+      (P := P) A R t Rvar h
+
 /-- Assumptions needed by the public conditional sample-covariance
 operator-norm tail wrapper.
 
@@ -194,6 +219,32 @@ theorem sampleCovariance_operatorNorm_tail_usage
       h.traceExpIntegrableNeg
       h.negativeRadiusPositive
       h.troppPrimitiveNeg
+
+
+/-- Example-level exact-row centered-square-chain operator-norm tail usage.
+
+This demonstrates the two-sided core bundle
+`SampleCovarianceExactRowCenteredSquareTwoSidedTroppAssumptions`. It adds no
+new mathematics; it only routes the bundled assumptions to the public core
+wrapper. -/
+theorem sampleCovariance_exactRow_centeredSquare_operatorNorm_tail_usage
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m (n + 1))
+    (R Rneg t : Real)
+    (Rvar RvarNeg : Fin m -> Real)
+    (h : SampleCovarianceExactRowCenteredSquareTwoSidedTroppAssumptions
+      (P := P) A R Rneg t Rvar RvarNeg) :
+    P (SelfAdjointOperatorNormTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t) <=
+      sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n + 1) R t (rowSqNormVarianceProxyNormRHS Rvar) +
+        sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n + 1) Rneg t
+          (rowSqNormVarianceProxyNormRHS RvarNeg) := by
+  exact
+    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_centeredSquareChain_of_troppAssumptions
+      (P := P) A R Rneg t Rvar RvarNeg h
 
 end
 
