@@ -2270,6 +2270,36 @@ theorem traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination
   traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
     hA hDom
 
+/-- Trace-exp excess bound from an explicit excess support-domination
+certificate.
+
+This deterministic bridge consumes a certificate for `matrixExp A - 1`, so the
+ambient identity contribution remains visible as `(n + 1)`. It does not prove
+the excess support certificate or construct a support matrix. -/
+theorem traceMatrixExp_le_card_add_trace_support_mul_exp_sub_one_of_excessSupportDomination
+    {n : Nat} {A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hA : IsSelfAdjointMatrix A)
+    (hDom : MatrixExpExcessSupportDomination A support hA) :
+    traceMatrixExp A <=
+      ((n + 1 : Nat) : Real) +
+        matrixTrace support * (Real.exp (lambdaMaxOrdered A hA) - 1) := by
+  have hTrace := matrixTrace_le_of_matrixLE hDom
+  have hTrace' :
+      matrixTrace (matrixExp A - 1) <=
+        matrixTrace support * (Real.exp (lambdaMaxOrdered A hA) - 1) := by
+    simpa [matrixTrace_smul, mul_comm] using hTrace
+  have hSplit :
+      traceMatrixExp A =
+        ((n + 1 : Nat) : Real) + matrixTrace (matrixExp A - 1) := by
+    simp [traceMatrixExp, matrixTrace, Matrix.trace_sub]
+  calc
+    traceMatrixExp A =
+        ((n + 1 : Nat) : Real) + matrixTrace (matrixExp A - 1) := hSplit
+    _ <= ((n + 1 : Nat) : Real) +
+          matrixTrace support * (Real.exp (lambdaMaxOrdered A hA) - 1) := by
+        simpa [add_comm] using
+          add_le_add_left hTrace' ((n + 1 : Nat) : Real)
+
 /-- Deterministic trace-exponential dimension bound under a direct ordered
 lambda-max upper bound.
 

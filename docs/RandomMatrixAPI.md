@@ -24,6 +24,7 @@ This is the current compact API index. Old historical notes were collapsed into
 - `sampleCovarianceCenteredRankOneRadius`
 - `sampleCovarianceTailTheta`
 - `sampleCovarianceQuadraticFormTailRHS`
+- `rowSqNormVarianceProxyNormRHS`
 
 Use these helpers in examples and tests instead of copying RHS formulas.
 
@@ -104,9 +105,15 @@ Integrability provider chain:
 Variance-proxy / centered-square chain:
 
 - `matrixSquare_centeredRandomMatrix_expectation_expansion_statement`
+- `matrixSquare_centeredRandomMatrix_expectation_expansion`
 - `centeredRankOneSquare_le_rankOneSecondMoment_statement`
+- `centeredRankOneSquare_le_rankOneSecondMoment`
 - `sampleCovarianceVarianceProxy_sharp_statement`
+- `sampleCovarianceVarianceProxy_sharp_of_rankOneSecondMoment`
+- `sampleCovarianceVarianceProxy_sharp_of_exactRowSecondMoment`
+- `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two`
 - `varianceProxyNormBound_of_centeredSquareChain_statement`
+- `varianceProxyNormBound_of_centeredSquareChain_expansion`
 
 Dimension / rank / effective-rank chain:
 
@@ -119,6 +126,7 @@ Deterministic trace / rank bridges:
 - `matrixTrace_smul`
 - `matrixTrace_le_of_matrixLE`
 - `traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination` (preferred reader-facing name; the older `_of_matrixExp_le_smul_support` spelling remains as a compatibility alias)
+- `traceMatrixExp_le_card_add_trace_support_mul_exp_sub_one_of_excessSupportDomination`
 - `traceMatrixExp_eq_sum_exp_eigenvalues`
 - `traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le`
 - `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le`
@@ -139,6 +147,7 @@ Thin hardbone consumers:
 - `traceMatrixExp_le_rank_exp_lambdaMax`
 - `traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection`
 - `traceMatrixExp_le_supportDim_exp_lambdaMax`
+- `traceMatrixExp_excess_supportDim_exp_lambdaMax`
 - `traceMatrixExp_effectiveRank_bound`
 - `traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate`
 
@@ -153,8 +162,8 @@ Hardbone status table:
 | Tropp/Lieb/GT one-step | `troppMasterTraceMGFStep_of_liebJensen_statement` | typed-prop | `troppMasterTraceMGFStep_of_liebJensen` | Lieb concavity, probability-measure Jensen, log-exp normalization; Golden-Thompson is separate |
 | Conditioning / independence | `troppConditionalStep_of_iIndepFun_statement` | proven by `troppConditionalStep_of_iIndepFun` | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | thin forwarder only; generated histories, history/current-step independence, finite-family independence, and conditional expectation reduction remain explicit premises |
 | Trace-exp integrability | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement` | typed-prop with proved thin consumer | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider` | automatic absolute domination, Golden-Thompson/product, or boundedness provider |
-| Variance proxy / centered square | `varianceProxyNormBound_of_centeredSquareChain_statement` | typed-prop with proved thin consumer | `varianceProxyNormBound_of_centeredSquareChain` | centered-square expansion, Loewner comparisons, deterministic norm control, sample-covariance specialization |
-| Dimension / support / effective rank | `traceMatrixExp_le_rank_exp_lambdaMax_statement`, `traceMatrixExp_le_supportDim_exp_lambdaMax_statement`, `traceMatrixExp_effectiveRank_bound_statement`, `matrixExpSupportDomination_identity_statement`, `traceMatrixExp_excess_supportDim_exp_lambdaMax_statement` | rank/support targets and effective-rank consumer proved under explicit support, PSD, lambda-max, and trace-certificate assumptions; ambient trace certificate and star-projection rank/PSD consumer proved; identity/excess support provider targets named only | `traceMatrixExp_le_rank_exp_lambdaMax`, `traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection`, `traceMatrixExp_le_supportDim_exp_lambdaMax`, `traceMatrixExp_effectiveRank_bound`, `traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate`; deterministic helpers include `MatrixExpSupportDomination`, `MatrixExpExcessSupportDomination`, `traceMatrixExp_eq_sum_exp_eigenvalues`, `traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le`, `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le`, `matrixTrace_eq_rank_of_isStarProjection`, `isPSDMatrix_of_isStarProjection` | identity/excess support-domination providers and support-construction certificates; true effective-rank trace certificate provider beyond ambient dimension |
+| Variance proxy / centered square | `varianceProxyNormBound_of_centeredSquareChain_statement`, `matrixSquare_centeredRandomMatrix_expectation_expansion_statement`, `centeredRankOneSquare_le_rankOneSecondMoment_statement` | centered-square expectation expansion and centered rank-one second-moment comparison proved; typed-prop chain has proved thin consumers | `matrixSquare_centeredRandomMatrix_expectation_expansion`, `matrixSecondMoment_centeredRandomMatrix_le_matrixSecondMoment`, `centeredRankOneSquare_le_rankOneSecondMoment`, `varianceProxyNormBound_of_centeredSquareChain`, `varianceProxyNormBound_of_centeredSquareChain_expansion`, `sampleCovarianceVarianceProxy_sharp_of_rankOneSecondMoment`, `sampleCovarianceVarianceProxy_sharp_of_exactRowSecondMoment`, `deterministicMatrixVarianceProxyNorm_sum_le_sum`, `deterministicMatrixVarianceProxyNorm_matrixSecondMoment_rankOneRandomMatrix_le_sq_of_sqNorm_bound`, `deterministicMatrixVarianceProxyNorm_sum_matrixSecondMoment_rankOneRandomMatrix_le_sum_sq_of_sqNorm_bound`, `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two`, `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products`, `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_memLp_four`, `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two`, `integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_memLp_four`, `integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two`, `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two` | hardbone sharp-variance-chain provider, concrete row-moment evaluation, negative-side exact-row provider, and two-sided/operator-norm exact-row wrapper integration |
+| Dimension / support / effective rank | `traceMatrixExp_le_rank_exp_lambdaMax_statement`, `traceMatrixExp_le_supportDim_exp_lambdaMax_statement`, `traceMatrixExp_effectiveRank_bound_statement`, `matrixExpSupportDomination_identity_statement`, `traceMatrixExp_excess_supportDim_exp_lambdaMax_statement` | rank/support targets and effective-rank consumer proved under explicit support, PSD, lambda-max, and trace-certificate assumptions; ambient trace certificate and star-projection rank/PSD consumer proved; identity support provider target named only; excess trace bridge and supportDim consumer proved under explicit excess certificate | `traceMatrixExp_le_rank_exp_lambdaMax`, `traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection`, `traceMatrixExp_le_supportDim_exp_lambdaMax`, `traceMatrixExp_excess_supportDim_exp_lambdaMax`, `traceMatrixExp_effectiveRank_bound`, `traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate`; deterministic helpers include `MatrixExpSupportDomination`, `MatrixExpExcessSupportDomination`, `traceMatrixExp_le_card_add_trace_support_mul_exp_sub_one_of_excessSupportDomination`, `traceMatrixExp_eq_sum_exp_eigenvalues`, `traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le`, `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le`, `matrixTrace_eq_rank_of_isStarProjection`, `isPSDMatrix_of_isStarProjection` | identity/excess support-domination providers and support-construction certificates; true effective-rank trace certificate provider beyond ambient dimension |
 | Thin consumers | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | proven | public API/test/judge/example checks | thin wrapper only; no hard fact is discharged |
 
 Most hardbone declarations are typed `Prop` contracts, not hard theorem proofs.
@@ -180,8 +189,12 @@ theorem. What remains open is proving providers for
 applications, and proving true effective-rank trace certificates beyond the
 ambient cardinality fallback. The provider frontier is split between the ambient
 identity target `matrixExpSupportDomination_identity_statement` and the corrected
-excess-support target `traceMatrixExp_excess_supportDim_exp_lambdaMax_statement`;
-the excess target keeps the nonnegative excess coefficient explicit.
+excess-support target `traceMatrixExp_excess_supportDim_exp_lambdaMax_statement`.
+The deterministic bridge
+`traceMatrixExp_le_card_add_trace_support_mul_exp_sub_one_of_excessSupportDomination`
+and consumer `traceMatrixExp_excess_supportDim_exp_lambdaMax` are proved under
+explicit excess certificate, trace support-dimension, and nonnegative
+coefficient assumptions. The support/excess providers themselves remain open.
 The rank and effective-rank trace-exp targets keep `MatrixExpSupportDomination`,
 `MatrixExpExcessSupportDomination`, lambda-max, or trace-certificate assumptions explicit; the ambient certificate
 only gives the `(n + 1 : Real)` effective-rank parameter, so zero directions are
@@ -228,12 +241,9 @@ Use the examples from:
 
 ```lean
 import HighDimProb.Examples.RandomMatrix.StatementRoutes
-import HighDimProb.Examples.RandomMatrix.PrefixStateTroppUsage
-import HighDimProb.Examples.RandomMatrix.ConditionalStateEndpointUsage
-import HighDimProb.Examples.RandomMatrix.NaturalTroppPipelineUsage
-import HighDimProb.Examples.RandomMatrix.ReindexedTroppBridgeUsage
-import HighDimProb.Examples.RandomMatrix.HardboneStatementAtlasUsage
 ```
+
+`StatementRoutes` is the preferred reader entry point. It imports a small set of focused route examples and avoids exposing every intermediate bridge as a separate public example.
 
 ## Sample Covariance Surface
 
@@ -252,12 +262,18 @@ Preferred CFC-free wrappers after the Bernstein CFC hardbone leaf:
 
 - `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy_of_troppPrimitive`
 - `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive`
+- `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters_of_troppPrimitives`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives`
 
 These wrappers still require Tropp/Lieb trace-MGF primitives and analytic
-integrability assumptions. They only remove the user-supplied pointwise
-Bernstein CFC fields by applying `bernsteinMatrixExp_le_quadratic`; they do not
+integrability assumptions. The CFC-free wrappers remove the user-supplied
+pointwise Bernstein CFC fields by applying `bernsteinMatrixExp_le_quadratic`.
+The exact-row quadratic-form wrapper additionally removes the direct
+`MatrixVarianceProxyNormBound` premise on the positive-side route by using the
+hardbone exact-row consumer; it keeps the hardbone sharp-variance chain explicit
+and separates the uniform Bernstein radius from the row-specific variance-proxy
+radii. These wrappers do not
 prove Tropp/Lieb, Golden-Thompson, trace-exp integrability, variance-proxy
 control beyond existing named adapters, or unconditional sample-covariance
 concentration.
@@ -275,8 +291,25 @@ and they are not tail wrappers by themselves.
 
 ## Variance Proxy Surface
 
+- `integrableRandomMatrix_const_mul`
+- `integrableRandomMatrix_mul_const`
+- `matrixExpect_const_mul`
+- `matrixExpect_mul_const`
+- `randomMatrixSquare_centeredRandomMatrix_expand`
+- `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products`
+- `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_memLp_four`
+- `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two`
+- `integrableRandomMatrix_randomMatrixSquare_centeredRandomMatrix`
+- `integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_memLp_four`
+- `integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two`
+- `matrixSecondMoment_centeredRandomMatrix`
+- `deterministicMatrixVarianceProxyNorm_sum_le_sum`
+- `deterministicMatrixVarianceProxyNorm_matrixSecondMoment_rankOneRandomMatrix_le_sq_of_sqNorm_bound`
+- `deterministicMatrixVarianceProxyNorm_sum_matrixSecondMoment_rankOneRandomMatrix_le_sum_sq_of_sqNorm_bound`
+- `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two`
 - `MatrixVarianceProxyNormBound_of_pointwiseOperatorNormBound`
 - `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound`
+- `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two`
 - `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound`
 - `sampleCovarianceCenteredRankOneVarianceProxyBound`
 
@@ -292,8 +325,4 @@ and they are not tail wrappers by themselves.
   theorem still needs both sides.
 - Put domain vocabulary in examples as thin wrappers over the core RandomMatrix
   API, not as separate theorem machinery.
-- Use `PrefixStateTroppUsage`, `ConditionalStateEndpointUsage`, and
-  `NaturalTroppPipelineUsage` for examples of prefix/state endpoint and
-  natural-state TraceExp bookkeeping. Use `ReindexedTroppBridgeUsage` for
-  reindex transport bookkeeping. `ConditionalStateEndpointData` is example
-  local, not core API.
+- Use `StatementRoutes` first. Low-level prefix/state, reindex, and negative-family bridge APIs are covered by source, tests, and judge files rather than separate reader-facing examples.

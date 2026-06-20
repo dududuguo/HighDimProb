@@ -1,101 +1,19 @@
 import HighDimProb.Examples
 
-open HighDimProb
-open HighDimProb.Examples.RandomMatrix.AttentionFeatureGramOperatorNormUsage
-open HighDimProb.Examples.RandomMatrix.BoundedRowSampleCovarianceOperatorNormUsage
-open HighDimProb.Examples.RandomMatrix.CenteredRankOneCovarianceAdapterUsage
-open HighDimProb.Examples.RandomMatrix.EmpiricalFisherOperatorNormUsage
-open HighDimProb.Examples.RandomMatrix.GradientCovarianceUsage
-open HighDimProb.Examples.RandomMatrix.GradientNormToOperatorBoundUsage
-open HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
-open HighDimProb.Examples.RandomMatrix.KernelNullspaceUsage
-open HighDimProb.Examples.RandomMatrix.LoRAAdapterSubspaceCovarianceUsage
-open HighDimProb.Examples.RandomMatrix.NegativeFamilyTwoSidedUsage
-open HighDimProb.Examples.RandomMatrix.NTKGramDecompositionUsage
-open HighDimProb.Examples.RandomMatrix.NTKGramUsage
-open HighDimProb.Examples.RandomMatrix.RankOneKernelNullspaceUsage
-open HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage
-open HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage
+/-!
+Compact aggregate checks for the public examples surface. Focused API coverage
+belongs in the corresponding `HighDimProbTest` and `HighDimProbJudge` files;
+this test only verifies that the reader-facing example routes remain imported
+through `HighDimProb.Examples`.
+-/
 
-variable {rankOneN : Nat}
-variable (rankOneV : RankOneVector rankOneN)
-
-#check (rankOneOperatorNorm_le_vectorSqNorm rankOneV :
-  deterministicOperatorNorm (rankOneMatrix rankOneV) <= vectorSqNorm rankOneV)
-
-variable {kernelN : Nat}
-variable (kernelA : Matrix (Fin (kernelN + 1)) (Fin (kernelN + 1)) Real)
-variable (kernelX : Fin (kernelN + 1) -> Real)
-variable (kernelHPSD : Matrix.PosSemidef kernelA)
-variable (kernelHExplicitPSD : IsPSDMatrix kernelA)
-
-#check matrixAction_eq_mulVec
-#check invisible_of_quadraticNull_of_posSemidef
-#check invisible_of_quadraticNull_of_psd
-#check randomInvisible_of_quadraticNull_of_posSemidef
-#check randomInvisible_of_quadraticNull_of_psd
-#check rankOneKernelSum_invisible_of_forall_orthogonal
-#check rankOneKernelSum_quadraticNull_of_forall_orthogonal
-#check featureKernelSum_invisible_of_forall_orthogonal
-#check gradientCovarianceSum_invisible_of_forall_orthogonal
-
-#check randomGradientCovarianceContributionFamily
-#check randomGradientVectorFamily
-#check randomJacobianFeatureVectorFamily
-#check randomFeatureVectorFamily
-#check uncenteredGradientCovariance_pointwiseOperatorNormBound
-#check centeredGradientCovariance_pointwiseOperatorNormBound
-#check isRandomMatrix_rankOneCovarianceContribution
-#check integrable_rankOneCovarianceContribution_of_memLp_two
-#check sampleCovarianceCenteredRankOneRadius
-#check sampleCovarianceTailTheta
-#check sampleCovarianceCenteredRankOneVarianceProxyBoundOfRows
-#check sampleCovarianceTailThetaOfRows
-#check sampleCovarianceQuadraticFormTailRHS
-#check SampleCovarianceTailAssumptions
-#check sampleCovariance_quadraticForm_tail_usage
-#check sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive
-#check centeredSampleCovarianceRowRankOneFamilyNeg
-#check centeredSampleCovarianceRowRankOneSumNeg
-#check SampleCovarianceOperatorNormTailAssumptions
-#check sampleCovariance_operatorNorm_tail_usage
-#check sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives
-#check AttentionFeatureGramTailAssumptions
-#check attentionFeatureGram_quadraticForm_tail_usage
-#check attentionFeatureGram_operatorNorm_tail_usage
-#check boundedRowSampleCovariance_operatorNorm_tail_usage
-#check EmpiricalFisherTailAssumptions
-#check empiricalFisher_operatorNorm_tail_usage
-#check LoRAAdapterSubspaceCovarianceAssumptions
-#check loraAdapterSubspaceCovariance_operatorNorm_tail_usage
-#check MatrixBernsteinPositiveSideAssumptions
-#check MatrixBernsteinNegativeSideAssumptions
-#check MatrixBernsteinPositiveSideTroppAssumptions
-#check MatrixBernsteinNegativeSideTroppAssumptions
-#check matrixBernsteinOptimizedScalarTailRHS
-#check matrixBernsteinTwoSidedOptimizedScalarTailRHS
-#check matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
-#check matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions
-#check matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
-#check matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions
-#check matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions
-#check matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions
-#check RandomFeatureKernelOptimizedMatrixBernsteinAssumptions
-#check GradientCovarianceOptimizedMatrixBernsteinAssumptions
-#check NTKGramOptimizedMatrixBernsteinAssumptions
-#check PositiveFamilyAssumptions
-#check NegativeFamilyAssumptions
-#check negativeFamily_twoSided_quadraticForm_tail_usage
-#check negativeFamily_selfAdjoint_operatorNorm_tail_usage
-
-example :
-    matrixAction kernelA kernelX = Matrix.mulVec kernelA kernelX := by
-  exact matrixAction_eq_mulVec kernelA kernelX
-
-example (hNull : KernelQuadraticNullDirection kernelA kernelX) :
-    KernelInvisibleDirection kernelA kernelX := by
-  exact invisible_of_quadraticNull_of_posSemidef kernelHPSD hNull
-
-example (hNull : KernelQuadraticNullDirection kernelA kernelX) :
-    KernelInvisibleDirection kernelA kernelX := by
-  exact invisible_of_quadraticNull_of_psd kernelHExplicitPSD hNull
+#check HighDimProb.Examples.RandomMatrix.SampleCovarianceUsage.sampleCovariance_psd_usage
+#check HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage.sampleCovariance_quadraticForm_tail_usage
+#check HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage.sampleCovariance_operatorNorm_tail_usage
+#check HighDimProb.Examples.RandomMatrix.RankOneMatrixBernsteinPipelineUsage.rankOnePipeline_quadraticForm_tail_optimized_under_primitives
+#check HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage.randomFeatureKernel_quadraticForm_tail_optimized_under_primitives
+#check HighDimProb.Examples.RandomMatrix.NTKGramUsage.ntkGram_quadraticForm_tail_optimized_under_primitives
+#check HighDimProb.Examples.RandomMatrix.EmpiricalFisherOperatorNormUsage.empiricalFisher_operatorNorm_tail_usage
+#check HighDimProb.Examples.RandomMatrix.AttentionFeatureGramOperatorNormUsage.attentionFeatureGram_operatorNorm_tail_usage
+#check HighDimProb.Examples.RandomMatrix.LoRAAdapterSubspaceCovarianceUsage.loraAdapterSubspaceCovariance_operatorNorm_tail_usage
+#check HighDimProb.Examples.RandomMatrix.NaturalTroppPipelineUsage.naturalTropp_traceState_zero_usage

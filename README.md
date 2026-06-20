@@ -70,13 +70,14 @@ import HighDimProb.RandomMatrix
 Good starting points:
 
 - `docs/Status.md` for the shortest current project state.
+- `docs/APIOverview.md` for a stable route map of the public API.
 - `docs/RandomMatrixAPI.md` for the current RandomMatrix / Matrix Bernstein API.
 - `docs/TermMap.md` for a compact concept-to-source map.
 - `docs/TestPlan.md` for the checks expected before a PR.
 - `HighDimProb/Examples/` for small API usage examples.
 - `docs/JudgeSystem.md` for the judge suite.
 - `docs/Workflow.md` for the project workflow.
-- `docs/References.md` for the external references behind the MVP areas.
+- `docs/References.md` for the external references behind the current active areas.
 
 If you are new to the repository, read `docs/Status.md` first, then follow the
 source links from `docs/TermMap.md` or `docs/RandomMatrixAPI.md`. Stable scalar

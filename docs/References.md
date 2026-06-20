@@ -37,7 +37,7 @@ links.
 - Simon Foucart and Holger Rauhut, *A Mathematical Introduction to Compressive
   Sensing*, Birkhauser, 2013.
 
-## MVP Coverage Map
+## Current Coverage Map
 
 ### Probability And Scalar Objects
 

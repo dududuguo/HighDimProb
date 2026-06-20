@@ -8,7 +8,7 @@ HighDimProb uses the root namespace `HighDimProb`.
 - Experimental API: `import HighDimProb.Experimental`
 - Test root: `import HighDimProbTest`
 
-Stable modules expose the Milestone 1 probability object layer. Experimental modules expose partial high-dimensional vocabulary and proof-pilot infrastructure. Do not import experimental modules from the stable root.
+Stable modules expose the reviewed probability object layer. Experimental modules expose partial high-dimensional vocabulary, scalar concentration proof layers, and RandomMatrix proof infrastructure. Do not import experimental modules from the stable root.
 
 ## Lean Modules
 
@@ -65,19 +65,18 @@ Tests live under `HighDimProbTest/`.
 
 ## Documentation
 
+- `docs/APIOverview.md`: current public route map for imports, examples, and main API areas.
 - `docs/Status.md`: current status and active API pointers.
 - `docs/Workflow.md`: mandatory contribution workflow.
-- `docs/StageChecklist.md`: per-stage checklist.
 - `docs/TermMap.md`: compact concept-to-source map.
 - `docs/TheoremAtlas.md`: compact theorem-family registry.
 - `docs/RandomMatrixAPI.md`: current RandomMatrix / Matrix Bernstein API index.
 - `docs/TestPlan.md`: import and API regression policy.
 - `docs/Automation.md`: automation and simp policy.
-- `docs/Roadmap.md`: staged project roadmap.
 - `docs/ModuleTree.md`: root-to-branch module layout and migration policy.
 - `docs/BranchRegistry.md`: current branch map and promotion criteria.
-- `docs/LeafPlan.md`: planned leaf modules for each branch.
-- `docs/PhysicalMigrationPlan.md`: future physical migration order and rules.
+- `docs/LeafPlan.md`: current leaf boundary and next safe RandomMatrix work.
+- `docs/TODO.md`: short active task list.
 - `docs/archive.md`: short archive index only; use git history for exact old
   stage logs.
 

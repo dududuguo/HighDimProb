@@ -53,6 +53,7 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check MatrixExpSupportDomination
 #check MatrixExpExcessSupportDomination
 #check traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination
+#check traceMatrixExp_le_card_add_trace_support_mul_exp_sub_one_of_excessSupportDomination
 #check traceMatrixExp
 #check traceMatrixExp_apply
 #check isSelfAdjointMatrix_smul

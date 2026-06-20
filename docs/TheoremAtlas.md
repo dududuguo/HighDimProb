@@ -15,8 +15,8 @@ This is the current theorem-family index. Old atlas detail was collapsed into
 The scalar concentration layer is the most mature part of the library. It
 contains proved Markov/Chebyshev wrappers, Orlicz-to-tail and tail-to-Orlicz
 bridges, moment implications, Rademacher/Hoeffding routes, and scalar Bernstein
-families. See [`ScalarConcentrationTheoremIndex.md`](ScalarConcentrationTheoremIndex.md)
-for the denser scalar index.
+families. The Lean source, focused tests, and judge files are the detailed
+index; this atlas stays route-level.
 
 ## Random Object Vocabulary
 
@@ -47,10 +47,39 @@ consumer wrappers are proven thin applications of those targets; they do not
 close the hard theorem families. The trace-exp domination-provider consumer
 `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider` is proved
 under an explicit nonnegative integrable dominator and pointwise absolute
-domination assumption. The variance-proxy centered-square-chain consumer
-`varianceProxyNormBound_of_centeredSquareChain` is proved under explicit
-centered-square expansion, Loewner comparison, and deterministic norm-control
-assumptions. The rank/support trace-bound bridge is proved by
+domination assumption. The centered-square expectation expansion is proved by
+`matrixSquare_centeredRandomMatrix_expectation_expansion`, using the reusable
+matrix expectation helpers `matrixExpect_const_mul` and `matrixExpect_mul_const`
+and the identity `matrixSecondMoment_centeredRandomMatrix`. The
+variance-proxy centered-square-chain consumers
+`varianceProxyNormBound_of_centeredSquareChain` and
+`varianceProxyNormBound_of_centeredSquareChain_expansion` are proved; the latter
+removes the explicit expansion premise but still requires Loewner comparison
+and deterministic norm-control assumptions. The centered rank-one second-moment
+comparison is proved by `centeredRankOneSquare_le_rankOneSecondMoment`, using
+`matrixSecondMoment_centeredRandomMatrix_le_matrixSecondMoment` and
+`matrixLE_sub_right_of_isPSD`. The sample-covariance consumer
+`sampleCovarianceVarianceProxy_sharp_of_rankOneSecondMoment` supplies that
+comparison to the abstract sharp-variance chain, and
+`sampleCovarianceVarianceProxy_sharp_of_exactRowSecondMoment` chooses the exact
+uncentered row second moments so the row comparison is reflexive. The generic
+deterministic finite-sum norm-control bridge is exposed as
+`deterministicMatrixVarianceProxyNorm_sum_le_sum`. The exact rank-one
+second-moment norm providers
+`deterministicMatrixVarianceProxyNorm_matrixSecondMoment_rankOneRandomMatrix_le_sq_of_sqNorm_bound`
+and
+`deterministicMatrixVarianceProxyNorm_sum_matrixSecondMoment_rankOneRandomMatrix_le_sum_sq_of_sqNorm_bound`
+give row-specific `rowSqNormVarianceProxyNormRHS R` control under explicit square-integrability of
+the rank-one squares. The direct provider
+`integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products`
+supplies that premise from explicit four-coordinate product integrability, and
+`integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_memLp_four`
+supplies it from coordinate `MemLp 4` assumptions via Mathlib Holder product
+APIs. The bounded-row provider
+`integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two`
+supplies it from coordinate `MemLp 2` plus pointwise `vectorSqNorm <= R`.
+Centered rank-one square-integrability providers are proved for coordinate `MemLp 4` and bounded-row `MemLp 2` routes. The row-specific exact-row consumer `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two` now supplies a `rowSqNormVarianceProxyNormRHS R` variance-proxy bound from coordinate `MemLp 2`, pointwise `vectorSqNorm <= R_i`, nonnegative radii, and the explicit hardbone sharp-chain premise. Positive-side quadratic-form tail-wrapper integration is available through `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive`; concrete row-moment evaluation, negative-side exact-row transfer, two-sided control, and operator-norm exact-row integration remain open.
+The rank/support trace-bound bridge is proved by
 `traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination`,
 with rank/support consumers for the hardbone targets. Deterministic trace/rank
 certificates now include the ambient PSD lambda-max certificate
@@ -62,8 +91,12 @@ theorem while keeping the named `MatrixExpSupportDomination` certificate
 explicit. The remaining support-side work is split into the ambient
 identity-support provider target and the corrected excess-support target
 `MatrixExpExcessSupportDomination` /
-`traceMatrixExp_excess_supportDim_exp_lambdaMax_statement`; the excess route
-keeps the nonnegative excess coefficient explicit. Concrete support providers
+`traceMatrixExp_excess_supportDim_exp_lambdaMax_statement`. The deterministic
+excess trace bridge
+`traceMatrixExp_le_card_add_trace_support_mul_exp_sub_one_of_excessSupportDomination`
+and consumer `traceMatrixExp_excess_supportDim_exp_lambdaMax` are proved under
+explicit excess certificate, trace support-dimension, and nonnegative
+coefficient assumptions. Concrete support providers
 and true effective-rank trace certificates beyond the ambient fallback remain open. The Bernstein CFC route is now proved as
 `bernsteinMatrixExp_le_quadratic`, via scalar Bernstein, spectrum localization,
 Bernstein-specific CFC order transfer, and expression normalization. The
@@ -76,7 +109,9 @@ The preferred optimized Matrix Bernstein wrappers use
 fields in generic call sites. The sample-covariance route now also has
 CFC-free `_of_troppPrimitive` / `_of_troppPrimitives` wrappers that reuse
 `bernsteinMatrixExp_le_quadratic` while keeping Tropp/Lieb and integrability
-assumptions explicit. The local matrix-exp/log normalization leaf is proved as
+assumptions explicit. The positive-side quadratic-form wrapper
+`sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive` uses the exact-row variance-proxy hardbone consumer and keeps
+the sharp-chain premise explicit. The local matrix-exp/log normalization leaf is proved as
 `matrixExpLogSelfAdjointNormalization`; it supplies only the pointwise CFC
 normalization needed by the Tropp/Lieb one-step chain. The log/order-to-`K`
 route now includes the proved thin bridge `matrixLog_le_of_le_matrixExp`, which
@@ -98,9 +133,11 @@ or conditional-expectation inputs themselves.
 - Proofs of the remaining hardbone statement targets for operator-log
   monotonicity, `matrixExp` log-domain support, trace-exp monotonicity,
   Tropp/Lieb, automatic trace-exp domination/integrability, automatic
-  variance-proxy sharpening, support-domination providers, true
+  variance-proxy sharpening beyond centered-square expectation expansion,
+  support-domination providers, support-construction certificates, true
   effective-rank/support trace certificates, and dimension/rank refinements
   beyond explicit star-projection rank consumers.
+- A negative-side exact-row variance-proxy provider for two-sided/operator-norm sample-covariance wrappers.
 - A public-friendly Matrix Bernstein wrapper directly over the natural-state
   route.
 

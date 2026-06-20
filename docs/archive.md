@@ -1,28 +1,23 @@
 # Archive
 
-This file is intentionally small. It is not a second status document and it is
-not a place to keep old full snapshots.
+This file is intentionally small. It is not a second status document and it is not a place to keep old full snapshots.
 
-For exact current facts, read the Lean source, tests, generated docs, and the
-focused active docs. For exact old wording, use git history.
+For exact current facts, read the Lean source, tests, generated docs, and the focused active docs. For exact old wording, use git history.
 
 ## Stable Surfaces
 
-The stable scalar/probability-facing surface is mature enough that this archive
-does not track its old stage history. Read the source and tests instead:
+The stable scalar/probability-facing surface is mature enough that this archive does not track its old stage history. Read the source, tests, and judge files instead:
 
 - [`HighDimProb`](../HighDimProb)
 - [`HighDimProbTest`](../HighDimProbTest)
-- [`docs/ScalarConcentrationTheoremIndex.md`](ScalarConcentrationTheoremIndex.md)
+- [`HighDimProbJudge`](../HighDimProbJudge)
 - [`docs/TestPlan.md`](TestPlan.md)
 
 ## Current Active Areas
 
 - RandomMatrix and Matrix Bernstein remain experimental.
-- Sample-covariance wrappers are useful, but still expose real primitive
-  assumptions when no adapter theorem has been proved.
-- Documentation should stay short: current files carry current facts; this file
-  only records why old detail disappeared.
+- Sample-covariance wrappers are useful, but still expose real primitive assumptions when no adapter theorem has been proved.
+- Documentation should stay short: current files carry current facts; this file only records why old detail disappeared.
 
 ## Collapsed Historical Groups
 
@@ -42,26 +37,54 @@ The old long docs were collapsed into short current-facing files:
 | RandomMatrix API notes | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | Current RandomMatrix API names and caveats. |
 | Test-plan history | [`TestPlan.md`](TestPlan.md) | Current commands and policy surfaces. |
 
+## Removed Long Docs
+
+The following files were retired because they duplicated source/tests/judge coverage or kept historical milestone detail in the active docs tree:
+
+- `ConcentrationLeafAudit.md`
+- `ConcentrationTestCoverage.md`
+- `DependencyMap.md`
+- `HoeffdingMilestone.md`
+- `IndependencePlan.md`
+- `LLNPlan.md`
+- `Milestone-ScalarConcentration.md`
+- `PhysicalMigrationPlan.md`
+- `RademacherMilestone.md`
+- `RademacherPlan.md`
+- `ScalarConcentrationMilestone.md`
+- `ScalarConcentrationTheoremIndex.md`
+- `ScalarImplicationGraph.md`
+
+## Removed Intermediate Examples
+
+The following example files were retired because they only exposed lower-level bridge or alias routes already covered by source, tests, judge files, or a higher-level example route:
+
+- `BoundedRowSampleCovarianceOperatorNormUsage.lean`
+- `PrefixStateTroppUsage.lean`
+- `ConditionalStateEndpointUsage.lean`
+- `ReindexedTroppBridgeUsage.lean`
+- `NegativeFamilyTwoSidedUsage.lean`
+- `RankOneKernelNullspaceUsage.lean`
+- `ExpectationOperatorNormBoundUsage.lean`
+- `KernelNullspaceUsage.lean`
+- `NTKGramDecompositionUsage.lean`
+- `HardboneStatementAtlasUsage.lean`
+
+Use `HighDimProb.Examples.RandomMatrix.StatementRoutes` as the build-checked index of public RandomMatrix example routes.
+
 ## RandomMatrix Milestones Kept As Names
 
-Older RandomMatrix notes were reduced to milestone names because the Lean source
-is the source of truth:
+Older RandomMatrix notes were reduced to milestone names because the Lean source is the source of truth:
 
 - MC1/MC2: random-matrix vocabulary, operator-norm and unit-sphere bridges.
-- MC3/MC4/MC5: variance proxy, statement honesty, spectral/trace-exp/Laplace
-  vocabulary.
-- MB-S1 to MB-S9: PSD variance-proxy algebra, spectral/Laplace bridge,
-  trace-exp positivity, conditional Laplace route, Tropp/CFC typed primitives,
-  trace-MGF wrapper, and Matrix Bernstein under-primitives wrapper.
-- RM-S0 to RM-S7: centered families, rank-one adapters, sample-covariance
-  algebra, variance-proxy route, two-sided quadratic-form route, and
-  operator-norm wrappers.
+- MC3/MC4/MC5: variance proxy, statement honesty, spectral/trace-exp/Laplace vocabulary.
+- MB-S1 to MB-S9: PSD variance-proxy algebra, spectral/Laplace bridge, trace-exp positivity, conditional Laplace route, Tropp/CFC typed primitives, trace-MGF wrapper, and Matrix Bernstein under-primitives wrapper.
+- RM-S0 to RM-S7: centered families, rank-one adapters, sample-covariance algebra, variance-proxy route, two-sided quadratic-form route, and operator-norm wrappers.
 - RM-ON: positive-threshold arbitrary-dimensional operator-norm route.
 
 ## Scalar Milestones Kept As Names
 
-The scalar concentration history is considered stable background. Old stage
-detail is not repeated here:
+The scalar concentration history is considered stable background. Old stage detail is not repeated here:
 
 - Tail events, Markov, Chebyshev.
 - Orlicz-to-tail and tail-to-Orlicz bridges.
@@ -71,16 +94,15 @@ detail is not repeated here:
 
 ## Current Caveats Worth Remembering
 
-- A proved wrapper under explicit primitives is not a proof of the primitive
-  itself.
-- The arbitrary operator-norm Matrix Bernstein route is positive-threshold; the
-  zero-dimensional `t = 0` endpoint is intentionally not claimed.
+- A proved wrapper under explicit primitives is not a proof of the primitive itself.
+- The arbitrary operator-norm Matrix Bernstein route is positive-threshold; the zero-dimensional `t = 0` endpoint is intentionally not claimed.
 - Avoid anonymous negated-family public signatures; introduce named adapters.
 - Prefer shared RHS helpers over copied exponential formulas.
 
 ## Where To Look First
 
 - Current status: [`Status.md`](Status.md)
+- Current API route map: [`APIOverview.md`](APIOverview.md)
 - Current RandomMatrix API: [`RandomMatrixAPI.md`](RandomMatrixAPI.md)
 - Current abstraction rules: [`AbstractionLog.md`](AbstractionLog.md)
 - Current term/source map: [`TermMap.md`](TermMap.md)

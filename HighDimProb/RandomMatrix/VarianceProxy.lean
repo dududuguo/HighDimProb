@@ -74,6 +74,98 @@ theorem isRandomMatrix_matrixSquare {Omega : Type*} [MeasurableSpace Omega]
   simpa [matrixSquare, Matrix.mul_apply] using
     Finset.measurable_sum Finset.univ fun k _ => (hA i k).mul (hA k j)
 
+/-- Rank-one square integrability from explicit four-coordinate product
+integrability.
+
+For `rankOneRandomMatrix X`, each entry of the pointwise square is a finite sum
+of terms `(X_i * X_k) * (X_k * X_j)`. This provider deliberately keeps those
+four-coordinate product integrability assumptions explicit; it does not prove a
+general fourth-moment or `MemLp 4` theorem. -/
+theorem integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    {X : RandomVector Omega n}
+    (hProd4 : forall i k j : Fin n,
+      IntegrableRealRandomVariable P
+        (fun omega => (X omega i * X omega k) * (X omega k * X omega j))) :
+    IntegrableRandomMatrix P (randomMatrixSquare (rankOneRandomMatrix X)) := by
+  intro i j
+  change IntegrableRealRandomVariable P
+    (fun omega =>
+      Finset.univ.sum fun k : Fin n =>
+        (X omega i * X omega k) * (X omega k * X omega j))
+  exact integrable_finset_sum Finset.univ fun k _ => hProd4 i k j
+
+/-- Rank-one square integrability from coordinate `L^4` assumptions.
+
+The proof factors each four-coordinate product as a product of two `L^2`
+pair-products, using Mathlib's `MemLp.mul` / `MemLp.integrable_mul` Hölder API,
+and then reuses
+`integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products`.
+This theorem is only a square-integrability provider; it does not prove a
+variance-proxy norm bound or a sample-covariance tail theorem. -/
+theorem integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_memLp_four
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    {X : RandomVector Omega n}
+    (hX : forall j : Fin n,
+      MemLpRealRandomVariable P (coord X j) (4 : ENNReal)) :
+    IntegrableRandomMatrix P (randomMatrixSquare (rankOneRandomMatrix X)) := by
+  haveI : ENNReal.HolderTriple (4 : ENNReal) (4 : ENNReal) (2 : ENNReal) := by
+    have hReal : Real.HolderTriple (4 : Real) (4 : Real) (2 : Real) := by
+      refine ⟨?_, by norm_num, by norm_num⟩
+      norm_num
+    simpa using Real.HolderTriple.ennrealOfReal hReal
+  apply integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products
+  intro i k j
+  have hik : MemLp (fun omega => X omega i * X omega k) (2 : ENNReal) P := by
+    change MemLp (fun omega => coord X i omega * coord X k omega) (2 : ENNReal) P
+    exact (hX k).mul (hX i)
+  have hkj : MemLp (fun omega => X omega k * X omega j) (2 : ENNReal) P := by
+    change MemLp (fun omega => coord X k omega * coord X j omega) (2 : ENNReal) P
+    exact (hX j).mul (hX k)
+  exact hik.integrable_mul hkj
+
+/-- Rank-one square integrability from coordinate `L^2` assumptions and a
+pointwise squared-vector-norm bound.
+
+This is a square-integrability provider, not a variance-proxy norm bound.  It
+uses the existing four-products provider: the middle coordinate square is a
+bounded multiplier because `X_k^2 <= vectorSqNorm X <= R`, while the remaining
+rank-one entry `X_i * X_j` is integrable by the `MemLp 2` rank-one API. -/
+theorem integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    {X : RandomVector Omega n} {R : Real}
+    (hLp : forall j : Fin n,
+      MemLpRealRandomVariable P (coord X j) (2 : ENNReal))
+    (hSq : forall omega, vectorSqNorm (X omega) <= R) :
+    IntegrableRandomMatrix P (randomMatrixSquare (rankOneRandomMatrix X)) := by
+  apply integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products
+  intro i k j
+  have hij : IntegrableRealRandomVariable P (fun omega => X omega i * X omega j) := by
+    change Integrable ((coord X i) * (coord X j)) P
+    exact (hLp i).integrable_mul (hLp j)
+  have hk_aesm :
+      AEStronglyMeasurable (fun omega => X omega k * X omega k) P := by
+    exact ((hLp k).aestronglyMeasurable.mul (hLp k).aestronglyMeasurable)
+  have hk_bound :
+      ∀ᵐ omega ∂P, ‖X omega k * X omega k‖ <= R := by
+    filter_upwards with omega
+    have hk_sq : X omega k ^ 2 <= vectorSqNorm (X omega) :=
+      coordinate_sq_le_vectorSqNorm (X omega) k
+    have hk_nonneg : 0 <= X omega k * X omega k := mul_self_nonneg (X omega k)
+    have hk_eq : ‖X omega k * X omega k‖ = X omega k * X omega k := by
+      exact Real.norm_of_nonneg hk_nonneg
+    rw [hk_eq]
+    have : X omega k * X omega k <= R := by
+      nlinarith [hk_sq, hSq omega]
+    exact this
+  have hprod :
+      Integrable (fun omega => (X omega k * X omega k) * (X omega i * X omega j)) P :=
+    hij.bdd_mul hk_aesm hk_bound
+  convert hprod using 1
+  ext omega
+  ring
+
+
 /-- Entrywise second-moment matrix `E[A^2]` for a square random matrix. -/
 def matrixSecondMoment {Omega : Type*} [MeasurableSpace Omega] {n : Nat}
     (P : Measure Omega) (A : RandomMatrix Omega n n) :
@@ -138,6 +230,16 @@ theorem deterministicMatrixVarianceProxyNorm_apply {n : Nat}
     deterministicMatrixVarianceProxyNorm V = deterministicOperatorNorm V :=
   rfl
 
+/-- The deterministic variance-proxy norm of a finite sum is bounded by the sum
+of the deterministic variance-proxy norms. -/
+theorem deterministicMatrixVarianceProxyNorm_sum_le_sum
+    {I : Type*} [Fintype I] {n : Nat}
+    (V : I -> Matrix (Fin n) (Fin n) Real) :
+    deterministicMatrixVarianceProxyNorm (Finset.univ.sum fun i => V i) <=
+      Finset.univ.sum fun i => deterministicMatrixVarianceProxyNorm (V i) := by
+  dsimp [deterministicMatrixVarianceProxyNorm, deterministicOperatorNorm]
+  simpa using (norm_sum_le (s := Finset.univ) (f := fun i : I => V i))
+
 /-- Scalar variance proxy norm `‖sum_i E[A_i^2]‖`. -/
 def matrixVarianceProxyNorm {Omega : Type*} [MeasurableSpace Omega]
     {I : Type*} [Fintype I] {n : Nat} (P : Measure Omega)
@@ -165,6 +267,13 @@ operator-norm bound. -/
 abbrev pointwiseOperatorNormVarianceProxyNormRHS {I : Type*} [Fintype I]
     (R : Real) : Real :=
   (Fintype.card I : Real) * R ^ 2
+
+/-- Row-specific scalar RHS for variance-proxy norm control from per-index
+squared-vector-norm bounds. This names the common `rowSqNormVarianceProxyNormRHS R` expression used
+by exact-row sample-covariance variance-proxy routes. -/
+abbrev rowSqNormVarianceProxyNormRHS {I : Type*} [Fintype I]
+    (R : I -> Real) : Real :=
+  Finset.univ.sum fun i : I => (R i) ^ 2
 
 /-- The deterministic operator norm of a matrix square is bounded by the square
 of the deterministic operator norm. -/
@@ -220,6 +329,63 @@ theorem deterministicOperatorNorm_matrixSecondMoment_le_sq_of_forall
           simpa [randomMatrixSquare, deterministicOperatorNorm] using hsq
     _ = R ^ 2 := by
           simp
+
+/-- A pointwise squared-vector-norm bound controls the deterministic variance
+proxy norm of the exact uncentered rank-one second moment.
+
+This is the single-row provider for exact-row sample-covariance variance-proxy
+routes. Square-integrability of the rank-one square remains explicit; this
+theorem does not prove fourth-moment or product-integrability assumptions. -/
+theorem deterministicMatrixVarianceProxyNorm_matrixSecondMoment_rankOneRandomMatrix_le_sq_of_sqNorm_bound
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {n : Nat} {X : RandomVector Omega n}
+    {R : Real}
+    (hInt :
+      IntegrableRandomMatrix P (randomMatrixSquare (rankOneRandomMatrix X)))
+    (hSq : forall omega, vectorSqNorm (X omega) <= R)
+    (hR : 0 <= R) :
+    deterministicMatrixVarianceProxyNorm
+        (matrixSecondMoment P (rankOneRandomMatrix X)) <= R ^ 2 := by
+  change deterministicOperatorNorm
+      (matrixSecondMoment P (rankOneRandomMatrix X)) <= R ^ 2
+  exact deterministicOperatorNorm_matrixSecondMoment_le_sq_of_forall
+    (P := P) (A := rankOneRandomMatrix X) (R := R) hInt
+    (fun omega => (rankOneOperatorNorm_le_vectorSqNorm (X omega)).trans (hSq omega))
+    hR
+
+/-- Row-specific exact rank-one second-moment norm control.
+
+This combines the generic deterministic variance-proxy norm subadditivity with
+the single-row rank-one second-moment provider. It is distinct from the uniform
+crude bounded-row theorem: the right side is `rowSqNormVarianceProxyNormRHS R`, not
+`cardinality * R^2`. -/
+theorem deterministicMatrixVarianceProxyNorm_sum_matrixSecondMoment_rankOneRandomMatrix_le_sum_sq_of_sqNorm_bound
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    {X : I -> RandomVector Omega n} {R : I -> Real}
+    (hInt : forall i,
+      IntegrableRandomMatrix P (randomMatrixSquare (rankOneRandomMatrix (X i))))
+    (hSq : forall i omega, vectorSqNorm (X i omega) <= R i)
+    (hR : forall i, 0 <= R i) :
+    deterministicMatrixVarianceProxyNorm
+        (Finset.univ.sum fun i : I =>
+          matrixSecondMoment P (rankOneRandomMatrix (X i))) <=
+      rowSqNormVarianceProxyNormRHS R := by
+  calc
+    deterministicMatrixVarianceProxyNorm
+        (Finset.univ.sum fun i : I =>
+          matrixSecondMoment P (rankOneRandomMatrix (X i)))
+        <= Finset.univ.sum fun i : I =>
+          deterministicMatrixVarianceProxyNorm
+            (matrixSecondMoment P (rankOneRandomMatrix (X i))) := by
+          exact deterministicMatrixVarianceProxyNorm_sum_le_sum
+            (fun i : I => matrixSecondMoment P (rankOneRandomMatrix (X i)))
+    _ <= Finset.univ.sum fun i : I => (R i) ^ 2 := by
+          apply Finset.sum_le_sum
+          intro i _
+          exact
+            deterministicMatrixVarianceProxyNorm_matrixSecondMoment_rankOneRandomMatrix_le_sq_of_sqNorm_bound
+              (P := P) (X := X i) (R := R i) (hInt i) (hSq i) (hR i)
 
 /-- A pointwise operator-norm bound on every summand controls the scalar norm of
 the matrix variance proxy by the crude finite-family bound
@@ -430,6 +596,32 @@ theorem integrableRandomMatrix_smul {Omega : Type*} [MeasurableSpace Omega]
   change Integrable (fun omega => c * A omega i j) P
   exact (hA i j).const_mul c
 
+/-- Entrywise integrability is closed under deterministic left matrix
+multiplication. -/
+theorem integrableRandomMatrix_const_mul {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {l m n : Nat}
+    (C : Matrix (Fin l) (Fin m) Real)
+    {A : RandomMatrix Omega m n} (hA : IntegrableRandomMatrix P A) :
+    IntegrableRandomMatrix P (fun omega => C * A omega) := by
+  intro i j
+  change Integrable
+    (fun omega => Finset.univ.sum fun k : Fin m => C i k * A omega k j) P
+  exact integrable_finset_sum Finset.univ fun k _ =>
+    (hA k j).const_mul (C i k)
+
+/-- Entrywise integrability is closed under deterministic right matrix
+multiplication. -/
+theorem integrableRandomMatrix_mul_const {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {l m n : Nat}
+    {A : RandomMatrix Omega l m}
+    (C : Matrix (Fin m) (Fin n) Real)
+    (hA : IntegrableRandomMatrix P A) :
+    IntegrableRandomMatrix P (fun omega => A omega * C) := by
+  intro i j
+  change Integrable
+    (fun omega => Finset.univ.sum fun k : Fin m => A omega i k * C k j) P
+  exact integrable_finset_sum Finset.univ fun k _ =>
+    (hA i k).mul_const (C k j)
 /-- The zero random matrix is entrywise integrable. -/
 theorem integrableRandomMatrix_zero {Omega : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} {m n : Nat} :
@@ -479,6 +671,45 @@ theorem matrixExpect_smul {Omega : Type*} [MeasurableSpace Omega]
   simp [matrixExpect, expect, matrixEntry, Matrix.smul_apply]
   exact MeasureTheory.integral_smul c (fun omega => A omega i j)
 
+/-- Entrywise matrix expectation commutes with deterministic left matrix
+multiplication. -/
+theorem matrixExpect_const_mul {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {l m n : Nat}
+    (C : Matrix (Fin l) (Fin m) Real)
+    {A : RandomMatrix Omega m n}
+    (hA : IntegrableRandomMatrix P A) :
+    matrixExpect P (fun omega => C * A omega) = C * matrixExpect P A := by
+  ext i j
+  change
+    (∫ omega, Finset.univ.sum (fun k : Fin m => C i k * A omega k j) ∂P) =
+      Finset.univ.sum (fun k : Fin m => C i k * matrixExpect P A k j)
+  rw [MeasureTheory.integral_finset_sum Finset.univ]
+  · apply Finset.sum_congr rfl
+    intro k _
+    rw [MeasureTheory.integral_const_mul]
+    rfl
+  · intro k _
+    exact (hA k j).const_mul (C i k)
+
+/-- Entrywise matrix expectation commutes with deterministic right matrix
+multiplication. -/
+theorem matrixExpect_mul_const {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {l m n : Nat}
+    {A : RandomMatrix Omega l m}
+    (C : Matrix (Fin m) (Fin n) Real)
+    (hA : IntegrableRandomMatrix P A) :
+    matrixExpect P (fun omega => A omega * C) = matrixExpect P A * C := by
+  ext i j
+  change
+    (∫ omega, Finset.univ.sum (fun k : Fin m => A omega i k * C k j) ∂P) =
+      Finset.univ.sum (fun k : Fin m => matrixExpect P A i k * C k j)
+  rw [MeasureTheory.integral_finset_sum Finset.univ]
+  · apply Finset.sum_congr rfl
+    intro k _
+    rw [MeasureTheory.integral_mul_const]
+    rfl
+  · intro k _
+    exact (hA i k).mul_const (C k j)
 /-- The expectation of the zero random matrix is zero. -/
 theorem matrixExpect_zero {Omega : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} {m n : Nat} :
@@ -511,6 +742,162 @@ theorem matrixExpect_one_of_isProbabilityMeasure {Omega : Type*}
     (matrixExpect_const_of_isProbabilityMeasure
       (P := P) (A := (1 : Matrix (Fin n) (Fin n) Real)))
 
+/-- Pointwise algebraic expansion of the square of a centered random matrix.
+
+This is a deterministic matrix-ring identity. It does not use expectation
+linearity or integrability. -/
+theorem randomMatrixSquare_centeredRandomMatrix_expand {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    (A : RandomMatrix Omega n n) :
+    randomMatrixSquare (centeredRandomMatrix P A) =
+      fun omega =>
+        randomMatrixSquare A omega - A omega * matrixExpect P A -
+          matrixExpect P A * A omega + matrixSquare (matrixExpect P A) := by
+  funext omega
+  change matrixSquare (A omega - matrixExpect P A) =
+    matrixSquare (A omega) - A omega * matrixExpect P A -
+      matrixExpect P A * A omega + matrixSquare (matrixExpect P A)
+  simp [matrixSquare]
+  noncomm_ring
+
+/-- The centered matrix square is entrywise integrable when `A` and `A^2` are
+entrywise integrable over a finite measure. -/
+theorem integrableRandomMatrix_randomMatrixSquare_centeredRandomMatrix
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsFiniteMeasure P] {n : Nat} {A : RandomMatrix Omega n n}
+    (hA : IntegrableRandomMatrix P A)
+    (hSq : IntegrableRandomMatrix P (randomMatrixSquare A)) :
+    IntegrableRandomMatrix P (randomMatrixSquare (centeredRandomMatrix P A)) := by
+  let M : Matrix (Fin n) (Fin n) Real := matrixExpect P A
+  have hAM : IntegrableRandomMatrix P (fun omega => A omega * M) :=
+    integrableRandomMatrix_mul_const M hA
+  have hMA : IntegrableRandomMatrix P (fun omega => M * A omega) :=
+    integrableRandomMatrix_const_mul M hA
+  have hM2 : IntegrableRandomMatrix P (fun _omega => matrixSquare M) :=
+    integrableRandomMatrix_const (P := P) (matrixSquare M)
+  have hSub1 :
+      IntegrableRandomMatrix P
+        (fun omega => randomMatrixSquare A omega - A omega * M) :=
+    integrableRandomMatrix_sub hAM hSq
+  have hSub2 :
+      IntegrableRandomMatrix P
+        (fun omega => randomMatrixSquare A omega - A omega * M - M * A omega) :=
+    integrableRandomMatrix_sub hMA hSub1
+  have hExpanded :
+      IntegrableRandomMatrix P
+        (fun omega =>
+          randomMatrixSquare A omega - A omega * M - M * A omega + matrixSquare M) :=
+    integrableRandomMatrix_add hSub2 hM2
+  simpa [M, randomMatrixSquare_centeredRandomMatrix_expand (P := P) A] using hExpanded
+
+/-- Centered rank-one family square integrability from coordinate `L^4` assumptions.
+
+This is a family-level provider. It reuses the generic centered-square bridge,
+the uncentered rank-one integrability API, and the uncentered rank-one square
+integrability provider; it does not prove a variance-proxy norm bound. -/
+theorem integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_memLp_four
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsFiniteMeasure P] {I : Type*} {n : Nat}
+    {X : I -> RandomVector Omega n}
+    (hX : forall i, forall j : Fin n,
+      MemLpRealRandomVariable P (coord (X i) j) (4 : ENNReal)) :
+    forall i,
+      IntegrableRandomMatrix P
+        (randomMatrixSquare ((centeredRankOneRandomMatrixFamily P X) i)) := by
+  intro i
+  rw [centeredRankOneRandomMatrixFamily_apply]
+  have hX2 : forall j : Fin n,
+      MemLpRealRandomVariable P (coord (X i) j) (2 : ENNReal) := by
+    intro j
+    exact (hX i j).mono_exponent (by norm_num : (2 : ENNReal) <= 4)
+  exact integrableRandomMatrix_randomMatrixSquare_centeredRandomMatrix
+    (P := P) (A := rankOneRandomMatrix (X i))
+    (integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
+      (P := P) (X := X i) hX2)
+    (integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_memLp_four
+      (P := P) (X := X i) (hX i))
+
+/-- Centered rank-one family square integrability from coordinate `L^2`
+assumptions and a pointwise squared-vector-norm bound.
+
+This provider discharges the centered-square integrability premise only. It
+keeps variance-proxy norm control separate from integrability. -/
+theorem integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsFiniteMeasure P] {I : Type*} {n : Nat}
+    {X : I -> RandomVector Omega n} {R : Real}
+    (hLp : forall i, forall j : Fin n,
+      MemLpRealRandomVariable P (coord (X i) j) (2 : ENNReal))
+    (hSq : forall i omega, vectorSqNorm (X i omega) <= R) :
+    forall i,
+      IntegrableRandomMatrix P
+        (randomMatrixSquare ((centeredRankOneRandomMatrixFamily P X) i)) := by
+  intro i
+  rw [centeredRankOneRandomMatrixFamily_apply]
+  exact integrableRandomMatrix_randomMatrixSquare_centeredRandomMatrix
+    (P := P) (A := rankOneRandomMatrix (X i))
+    (integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
+      (P := P) (X := X i) (hLp i))
+    (integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two
+      (P := P) (X := X i) (R := R) (hLp i) (hSq i))
+
+/-- Centered-square expectation expansion.
+
+For a square random matrix `A`, entrywise expectation gives
+`E[(A - E A)^2] = E[A^2] - (E A)^2`. The proof is purely entrywise expectation
+algebra plus deterministic noncommutative matrix-ring expansion; it does not
+prove any Loewner comparison or variance-proxy norm control. -/
+theorem matrixSecondMoment_centeredRandomMatrix {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {n : Nat} {A : RandomMatrix Omega n n}
+    (hA : IntegrableRandomMatrix P A)
+    (hSq : IntegrableRandomMatrix P (randomMatrixSquare A)) :
+    matrixSecondMoment P (centeredRandomMatrix P A) =
+      matrixSecondMoment P A - matrixSquare (matrixExpect P A) := by
+  let M : Matrix (Fin n) (Fin n) Real := matrixExpect P A
+  have hExpand := randomMatrixSquare_centeredRandomMatrix_expand (P := P) A
+  have hAM : IntegrableRandomMatrix P (fun omega => A omega * M) :=
+    integrableRandomMatrix_mul_const M hA
+  have hMA : IntegrableRandomMatrix P (fun omega => M * A omega) :=
+    integrableRandomMatrix_const_mul M hA
+  have hM2 : IntegrableRandomMatrix P (fun _omega => matrixSquare M) :=
+    integrableRandomMatrix_const (P := P) (matrixSquare M)
+  have hLeft :
+      matrixExpect P (randomMatrixSquare (centeredRandomMatrix P A)) =
+        matrixExpect P
+          (fun omega =>
+            randomMatrixSquare A omega - A omega * M - M * A omega + matrixSquare M) := by
+    rw [hExpand]
+  have hSub1Int :
+      IntegrableRandomMatrix P
+        (fun omega => randomMatrixSquare A omega - A omega * M) :=
+    integrableRandomMatrix_sub hAM hSq
+  calc
+    matrixSecondMoment P (centeredRandomMatrix P A) =
+        matrixExpect P (randomMatrixSquare (centeredRandomMatrix P A)) := rfl
+    _ = matrixExpect P
+          (fun omega =>
+            randomMatrixSquare A omega - A omega * M - M * A omega + matrixSquare M) := hLeft
+    _ = matrixExpect P
+          (fun omega => randomMatrixSquare A omega - A omega * M - M * A omega) +
+          matrixExpect P (fun _omega => matrixSquare M) := by
+        rw [matrixExpect_add]
+        · exact integrableRandomMatrix_sub hMA hSub1Int
+        · exact hM2
+    _ = matrixExpect P (fun omega => randomMatrixSquare A omega - A omega * M) -
+          matrixExpect P (fun omega => M * A omega) +
+          matrixExpect P (fun _omega => matrixSquare M) := by
+        rw [matrixExpect_sub hMA hSub1Int]
+    _ = (matrixSecondMoment P A - matrixExpect P (fun omega => A omega * M)) -
+          matrixExpect P (fun omega => M * A omega) +
+          matrixExpect P (fun _omega => matrixSquare M) := by
+        rw [matrixExpect_sub hAM hSq]
+        rfl
+    _ = (matrixSecondMoment P A - M * M) - M * M + matrixSquare M := by
+        rw [matrixExpect_mul_const M hA, matrixExpect_const_mul M hA,
+          matrixExpect_const_of_isProbabilityMeasure]
+    _ = matrixSecondMoment P A - matrixSquare (matrixExpect P A) := by
+        simp [M, matrixSquare]
 /-- Entrywise expectation preserves pointwise PSD matrices. -/
 theorem isPSDMatrix_matrixExpect_of_pointwise_isPSD {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega}

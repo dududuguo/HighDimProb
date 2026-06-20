@@ -1,7 +1,11 @@
 /-
 Examples are kept out of `import HighDimProb` so the stable public import stays
-focused on the core API. Import this module explicitly when you want the usage
-examples.
+focused on the core API. Import this module explicitly when you want the compact
+usage surface.
+
+RandomMatrix examples are intentionally routed through `StatementRoutes` instead
+of importing every intermediate bridge file here. Focused lower-level examples
+can still be imported directly by contributors who need them.
 -/
 
 import HighDimProb.Examples.BasicUsage
@@ -13,28 +17,5 @@ import HighDimProb.Examples.RandomMatrixUsage
 import HighDimProb.Examples.RandomVariableUsage
 import HighDimProb.Examples.RandomVectorUsage
 import HighDimProb.Examples.TailUsage
-import HighDimProb.Examples.RandomMatrix.AttentionFeatureGramOperatorNormUsage
-import HighDimProb.Examples.RandomMatrix.BoundedRowSampleCovarianceOperatorNormUsage
-import HighDimProb.Examples.RandomMatrix.CenteredRankOneCovarianceAdapterUsage
-import HighDimProb.Examples.RandomMatrix.CenteredSelfAdjointClosureUsage
 import HighDimProb.Examples.RandomMatrix.StatementRoutes
-import HighDimProb.Examples.RandomMatrix.ConditionalStateEndpointUsage
-import HighDimProb.Examples.RandomMatrix.EmpiricalFisherOperatorNormUsage
-import HighDimProb.Examples.RandomMatrix.ExpectationOperatorNormBoundUsage
-import HighDimProb.Examples.RandomMatrix.GradientCovarianceUsage
-import HighDimProb.Examples.RandomMatrix.GradientNormToOperatorBoundUsage
-import HighDimProb.Examples.RandomMatrix.HardboneStatementAtlasUsage
-import HighDimProb.Examples.RandomMatrix.KernelNullspaceUsage
-import HighDimProb.Examples.RandomMatrix.LoRAAdapterSubspaceCovarianceUsage
-import HighDimProb.Examples.RandomMatrix.NegativeFamilyTwoSidedUsage
-import HighDimProb.Examples.RandomMatrix.NTKGramDecompositionUsage
-import HighDimProb.Examples.RandomMatrix.NTKGramUsage
-import HighDimProb.Examples.RandomMatrix.NaturalTroppPipelineUsage
-import HighDimProb.Examples.RandomMatrix.PrefixStateTroppUsage
-import HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage
-import HighDimProb.Examples.RandomMatrix.RankOneKernelNullspaceUsage
-import HighDimProb.Examples.RandomMatrix.RankOneMatrixBernsteinPipelineUsage
-import HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
-import HighDimProb.Examples.RandomMatrix.ReindexedTroppBridgeUsage
-import HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage
 import HighDimProb.Examples.RandomMatrix.SampleCovarianceUsage

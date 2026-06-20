@@ -1,25 +1,26 @@
 # Documentation
 
-This directory is a mix of public notes and active development records. The
-Lean source and the root `README.md` remain the source of truth for users.
+The Lean source, tests, judge files, and root `README.md` are the source of truth. This directory is intentionally small-facing: it gives route maps, current status, and contribution policy, not a duplicate theorem database.
 
-If you are new to the project, start with the public-facing files:
+Start here:
 
-- `RandomMatrixAPI.md`: current RandomMatrix / Matrix Bernstein API surface.
-- `AssumptionVocabulary.md`: assumption predicates and where they belong,
-  especially the distinction between core RandomMatrix objects and
-  `RandomMatrix.Assumptions` theorem-interface adapters.
+- `APIOverview.md`: import layers, main API areas, and the preferred example route.
+- `Status.md`: current repository state, caveats, and next safe task.
+- `RandomMatrixAPI.md`: RandomMatrix and Matrix Bernstein public names.
+- `TermMap.md`: compact concept-to-source map.
+- `TheoremAtlas.md`: theorem-family status without full signatures.
+- `TestPlan.md`: checks contributors should run.
+- `Workflow.md`: contribution and cleanup rules.
+- `TODO.md`: short active task list.
+
+Developer references:
+
+- `AssumptionVocabulary.md`: assumption predicates and theorem-interface adapters.
 - `JudgeSystem.md`: downstream-style API judge suite.
 - `LeanTooling.md`: local Lean, doc-gen4, and import-graph tooling.
-- `Workflow.md`: how changes are usually made.
-- `References.md`: lightweight reference map for the current MVP scope.
+- `ModuleTree.md`: module layout and import boundaries.
+- `BranchRegistry.md`: compact branch/import status.
+- `BookProgress.md`: short milestone index.
+- `archive.md`: why old detailed docs were removed; use git history for exact old wording.
 
-Useful contributor records:
-
-- `Status.md`: current branch status and next task notes.
-- `TODO.md`: open theorem-layer and infrastructure tasks.
-- `TheoremAtlas.md`: typed theorem targets, blockers, and proof status.
-- `BookProgress.md`: stage-by-stage progress log.
-
-Many of the longer files here are working documents. They may be useful for
-contributors, but they are not meant to be read as a polished manual.
+Avoid adding new long progress logs. Put stable API facts in source/docs, proof-frontier evidence in `external/validation`, and usage demonstrations in examples.

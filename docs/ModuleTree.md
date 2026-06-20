@@ -76,7 +76,7 @@ HighDimProb
 - Experimental (experimental aggregate)
 ```
 
-Planned leaves for these branches are tracked in `docs/LeafPlan.md`. Ownership, dependency, and promotion rules are tracked in `docs/BranchRegistry.md`.
+Planned leaves for these branches are tracked in `docs/LeafPlan.md`. Ownership and promotion rules are tracked in `docs/BranchRegistry.md`.
 
 Stage V1 adds human/agent-facing diagrams for this tree in
 `docs/visualizations/module_tree.mmd`, and the generated Lean import graph in
@@ -101,4 +101,4 @@ Each new public declaration needs at least one `#check` or tiny example test. Ea
 
 Logical aggregate modules are introduced first. Existing flat files are not physically moved in Stage I3 or Stage I4.
 
-Physical folder migration may happen later only after APIs stabilize and after import tests show the logical branch boundaries are correct. Migration rounds must preserve names where possible, update imports, and keep `lake build` and `lake test` passing. The migration order and rules are tracked in `docs/PhysicalMigrationPlan.md`.
+Physical folder migration may happen later only after APIs stabilize and after import tests show the logical branch boundaries are correct. Migration rounds must preserve names where possible, update imports, and keep `lake build` and `lake test` passing. Keep migration policy in `docs/Workflow.md` and current status notes rather than a separate planning log.

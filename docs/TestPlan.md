@@ -28,7 +28,7 @@ git diff --check
 - Scalar API tests: probability, tail, Lp/moment, Orlicz, subGaussian, subExponential, real-inequality helpers, and scalar concentration files under `HighDimProbTest`.
 - Random-family and process API checks: `HighDimProbTest/RandomFamilyAPI.lean` plus `BranchImports.lean` and `ExperimentalImports.lean`.
 - RandomMatrix API tests: variance proxy, spectral, trace-exp, hardbone
-  statement targets, thin consumers, rank/support trace bridge, `MatrixExpSupportDomination`, `MatrixExpExcessSupportDomination`, trace-exp eigenvalue-sum bridge, effective-rank consumer, ambient trace certificate, ambient effective-rank wrapper, star-projection trace/rank/PSD certificate and rank consumer, Laplace, concentration, and example API
+  statement targets, thin consumers, rank/support trace bridge, excess-support trace bridge, centered-square expectation expansion, `MatrixExpSupportDomination`, `MatrixExpExcessSupportDomination`, trace-exp eigenvalue-sum bridge, effective-rank consumer, ambient trace certificate, ambient effective-rank wrapper, star-projection trace/rank/PSD certificate and rank consumer, Laplace, concentration, and example API
   checks.
 - RandomMatrix bookkeeping checks: trace-exp endpoint wrappers and the
   natural-state TraceExp route are covered in
@@ -36,13 +36,13 @@ git diff --check
   `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`; example modules, including the `StatementRoutes` statement-route index, are covered
   through `lake build HighDimProb.Examples`.
 - RandomMatrix hardbone statement-target checks, including the proved Bernstein
-  CFC hardbone leaf, the proved matrix-exp/log normalization leaf, and the
-  proved matrix log/order bridge leaf are covered in
+  CFC hardbone leaf, the proved matrix-exp/log normalization leaf, the proved
+  matrix log/order bridge leaf, the proved excess-support trace bridge leaf,
+  and the proved centered-square expectation bridge leaf are covered in
   `HighDimProbTest/RandomMatrixHardboneStatementsAPI.lean`,
-  `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`, and the
-  `HardboneStatementAtlasUsage` example.
+  `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`.
 - RandomMatrix sample-covariance negative-side provider-transfer adapters and
-  CFC-free sample-covariance wrappers are covered in
+  CFC-free sample-covariance wrappers, including the positive-side exact-row variance-proxy quadratic-form wrapper, are covered in
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
   `HighDimProbTest/ExamplesAPI.lean`, and
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`.
@@ -51,6 +51,14 @@ git diff --check
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
   `HighDimProbTest/ExamplesAPI.lean`, and
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`.
+- Variance-proxy and hardbone API coverage includes the centered second-moment
+  comparison, rank-one second-moment consumer, exact row second-moment hardbone
+  consumer, deterministic variance-proxy norm subadditivity, exact rank-one
+  second-moment norm providers, the rank-one square-integrability four-product,
+  `MemLp 4`, bounded-row, centered-family providers, and the row-specific exact-row sample-covariance hardbone consumer in
+  `RandomMatrixVarianceProxyAPI`,
+  `RandomMatrixHardboneStatementsAPI`, and the corresponding judge/example
+  surfaces.
 - Judge tests: `HighDimProbJudge` plus `scripts/judge_policy_check.py`.
 
 ## Policy Checks

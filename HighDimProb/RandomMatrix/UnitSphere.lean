@@ -45,6 +45,15 @@ theorem vectorSqNorm_nonneg {n : Nat} (x : Fin n -> Real) :
     0 <= vectorSqNorm x :=
   Finset.sum_nonneg fun i _ => sq_nonneg (x i)
 
+/-- Each coordinate square is bounded by the squared Euclidean norm. -/
+theorem coordinate_sq_le_vectorSqNorm {n : Nat} (x : Fin n -> Real)
+    (i : Fin n) :
+    x i ^ 2 <= vectorSqNorm x := by
+  simpa [vectorSqNorm] using
+    Finset.single_le_sum
+      (fun j _hj => sq_nonneg (x j))
+      (Finset.mem_univ i)
+
 /--
 Explicit squared norm agrees with Mathlib's L2 norm on `EuclideanSpace`.
 

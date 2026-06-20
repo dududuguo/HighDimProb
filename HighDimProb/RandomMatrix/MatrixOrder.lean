@@ -249,6 +249,17 @@ theorem matrixLE_of_eq {n : Nat}
   subst h
   exact matrixLE_refl A
 
+/-- Subtracting a PSD matrix lowers a matrix in the explicit Loewner-style
+order. -/
+theorem matrixLE_sub_right_of_isPSD {n : Nat}
+    (A C : Matrix (Fin n) (Fin n) Real) (hC : IsPSDMatrix C) :
+    MatrixLE (A - C) A := by
+  unfold MatrixLE
+  have hEq : A - (A - C) = C := by
+    ext r c
+    simp [Matrix.sub_apply]
+  simpa [hEq] using hC
+
 /-- Transitivity of the explicit Loewner-style matrix comparison. -/
 theorem matrixLE_trans {n : Nat}
     {A B C : Matrix (Fin n) (Fin n) Real}

@@ -24,6 +24,7 @@ variable (hA : IsRandomMatrix P A)
 #check unitSphere
 #check vectorSqNorm_apply
 #check vectorSqNorm_nonneg
+#check coordinate_sq_le_vectorSqNorm
 #check vectorSqNorm_eq_norm_sq_toLp
 #check norm_sq_toLp_eq_vectorSqNorm
 #check mem_unitSphere_iff

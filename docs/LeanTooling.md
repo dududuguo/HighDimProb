@@ -67,11 +67,11 @@ Or from Bash/Git Bash:
 ./tools/build_import_graph.sh
 ```
 
-This generates:
+This regenerates the tracked DOT graph and a local ignored HTML view:
 
 ```text
 docs\visualizations\lake_import_graph.dot
 docs\visualizations\lake_import_graph.html
 ```
 
-These files are the raw official import graph output.
+The DOT file is tracked for lightweight audits. The HTML file is generated locally and ignored to keep the documentation surface small.

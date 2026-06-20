@@ -9,7 +9,10 @@ independence, integrability, Tropp, and analytic primitive
 assumptions explicit, while the crude bounded-row variance-proxy norm bound is
 supplied by the core wrappers. Radius, theta, variance-proxy RHS, and tail RHS
 helpers come from the core concentration API. The RHS helper takes the actual
-column dimension; the nonempty examples below therefore pass `n + 1`.
+column dimension; the nonempty examples below therefore pass `n + 1`. The
+row-specific exact-row variance-proxy wrapper is currently a lower-level
+positive-side API; this example keeps the uniform-radius route until matching
+negative-side and two-sided exact-row wrappers are available.
 -/
 
 namespace HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage

@@ -26,21 +26,18 @@
 - Hoeffding
   - Rademacher specialization: implemented in `RademacherSums`
   - Finite unweighted bounded-variable form: conservative, sharp centered, and sharp non-centered versions implemented in `Hoeffding`
-  - Finite unweighted milestone: completed in `docs/HoeffdingMilestone.md`
   - Weighted bounded-variable form: implemented in `Hoeffding`
 - Bernstein
   - Stage B1: `Concentration/SubExponentialSums.lean`, `Concentration/Bernstein.lean`
   - Stage B1-fix: `Concentration/MaxScale.lean`, normalized raw/lintegral finite-sum MGF, local quadratic Bernstein
   - Stage B2: full scalar Bernstein min-form tail bound under the lintegral predicate
-  - Stage SC-closeout: theorem-family import/test/doc audit recorded in `docs/ScalarConcentrationMilestone.md`
   - Stage B3: deterministic weighted scalar Bernstein theorem under the lintegral predicate
-  - Stage SC-final: leaf/theorem/test/milestone closure recorded in `docs/Milestone-ScalarConcentration.md`
   - Stage M-real-1: real-exponent `SubGaussianMoment` bridge
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
   - Current repository next task:
-    CG-B21-excess-support-trace-bridge-contract. Natural-state assumption
-    bundling, negative trace-MGF provider cleanup, Matrix Bernstein,
+    RM-VP-negative-exact-row-variance-proxy-provider-contract. Natural-state
+    assumption bundling, negative trace-MGF provider cleanup, Matrix Bernstein,
     Hanson-Wright, and WLLN/SLLN remain separate future directions.
 - OrliczToTail
 - TailToOrlicz
@@ -178,7 +175,68 @@
 - Follow-up completed abstraction leaf:
   `CG-B20-support-domination-provider-contract`, splitting the provider frontier
   into ambient identity-support and corrected excess-support statement targets.
-- Next safe leaf: `CG-B21-excess-support-trace-bridge-contract`.
+- Follow-up completed proof leaf:
+  `CG-B21-excess-support-trace-bridge-contract`, adding the deterministic
+  excess-support trace bridge and hardbone supportDim consumer under explicit
+  excess certificate, trace support-dimension, and nonnegative coefficient
+  assumptions.
+- Boundary preserved: this does not construct a support provider, prove a true
+  effective-rank certificate, prove Tropp/Lieb or Golden-Thompson, sharpen the
+  variance proxy, or prove Matrix Bernstein.
+- Follow-up completed proof leaf:
+  `RM-VP-deterministic-matrix-expectation-mul-bridge-contract`, proving
+  deterministic expectation multiplication bridges, centered-square expectation
+  expansion, and an expansion-free centered-square-chain variance-proxy
+  consumer.
+- Follow-up completed proof leaf:
+  `RM-VP-rank-one-second-moment-contract`, proving the centered rank-one
+  second-moment Loewner comparison and a thin sample-covariance hardbone
+  consumer that supplies that comparison to the abstract sharp-variance chain.
+- Boundary preserved: this does not prove the uncentered row second-moment
+  comparison against a concrete `V_i`, deterministic variance-proxy norm
+  control, sharper sample-covariance variance-proxy control, Tropp/Lieb,
+  Golden-Thompson, Bernstein CFC, or Matrix Bernstein.
+- Follow-up completed proof leaf:
+  `RM-VP-sample-covariance-row-second-moment-contract`, adding the exact
+  row-second-moment hardbone consumer and removing the reflexive row comparison
+  when `V_i` is chosen as `matrixSecondMoment P (rankOneRandomMatrix (X i))`.
+- Follow-up completed proof leaf:
+  `RM-VP-exact-row-second-moment-norm-control-contract`, adding the generic
+  finite-sum subadditivity bridge
+  `deterministicMatrixVarianceProxyNorm_sum_le_sum`.
+- Follow-up completed proof leaf:
+  `RM-VP-exact-row-second-moment-operator-norm-provider-contract`, adding
+  single-row and row-specific finite-family norm providers for exact rank-one
+  second moments under explicit rank-one square-integrability assumptions.
+- Follow-up completed proof leaf:
+  `RM-VP-rank-one-square-integrability-provider-contract`, adding
+  `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products`
+  as a direct provider from explicit four-coordinate product integrability.
+- Follow-up completed proof leaf:
+  `RM-VP-rank-one-square-integrability-memlp4-provider-contract`, adding
+  `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_memLp_four`
+  as a coordinate-`MemLp 4` provider via Mathlib Holder product APIs.
+- Follow-up completed proof leaf:
+  `RM-VP-rank-one-square-integrability-bounded-row-provider-contract`, adding
+  `coordinate_sq_le_vectorSqNorm` and
+  `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two`
+  as the bounded-row square-integrability provider from coordinate `MemLp 2`
+  plus pointwise `vectorSqNorm <= R`.
+- Follow-up completed proof leaf:
+  `RM-VP-centered-rank-one-square-integrability-provider-contract`, adding centered rank-one square-integrability providers and the bounded-row crude variance-proxy consumer that supplies the centered square-integrability premise.
+- Follow-up completed proof leaf:
+  `RM-VP-sample-covariance-exact-row-variance-proxy-wrapper-contract`, adding
+  `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two` as a
+  row-specific exact-row variance-proxy hardbone consumer with RHS `rowSqNormVarianceProxyNormRHS R`.
+- Boundary preserved: this does not prove concrete sample-covariance row-moment evaluation, the hardbone sharp-chain provider, Tropp/Lieb, Golden-Thompson, Bernstein CFC, or Matrix Bernstein.
+- Follow-up completed proof leaf:
+  `RM-VP-sample-covariance-tail-wrapper-with-exact-row-vp-contract`, adding
+  `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive` as a positive-side quadratic-form wrapper over the
+  row-specific exact-row variance-proxy consumer.
+- Boundary preserved: this does not prove the hardbone sharp-chain provider,
+  Tropp/Lieb, Golden-Thompson, Bernstein CFC, two-sided control, operator-norm
+  control, or Matrix Bernstein.
+- Next safe leaf: `RM-VP-negative-exact-row-variance-proxy-provider-contract`.
 
 ## Process
 
@@ -214,92 +272,3 @@
 - FinsetSimp
 - MatrixEntry
 - Tail
-
-## MB-S9 Bernstein Coefficient Leaf Update
-
-- `HighDimProb/RandomMatrix/TraceExp.lean` now contains
-  `bernsteinCoefficient_nonneg`, a proved scalar helper for the Bernstein
-  coefficient used by the typed CFC and single-summand MGF primitives.
-- The single-summand provider remains unproved. The downstream matrix
-  exponential lower bound `MatrixLE (1 + c smul V) (matrixExp (c smul V))`, the
-  Bernstein CFC primitive proof, trace-mgf provider, Golden-Thompson, Lieb,
-  and Matrix Bernstein remain unproved.
-- Next safe task was MB-S9-exp-lower-bound-contract.
-
-## MB-S9 Exp Lower Bound Leaf Update
-
-- `HighDimProb/RandomMatrix/TraceExp.lean` now contains
-  `matrixLE_one_add_self_le_matrixExp_of_selfAdjoint`, proving
-  `MatrixLE (1 + A) (matrixExp A)` for self-adjoint real matrices.
-- It also contains `matrixLE_one_add_smul_le_matrixExp_smul_of_selfAdjoint`,
-  the scalar-multiple wrapper for downstream single-summand provider work.
-- At this stage the Bernstein CFC primitive was still typed only; the later
-  hardbone leaf proves it as `bernsteinMatrixExp_le_quadratic`. Trace-MGF
-  provider, Golden-Thompson, Lieb, full CFC-free single-summand provider, and
-  Matrix Bernstein were still outside this leaf.
-- Next safe task was MB-S9-trace-mgf-to-laplace-tail-contract.
-
-## MB-S9 Single-Summand Provider Under CFC Leaf Update
-
-- `HighDimProb/RandomMatrix/TraceExp.lean` now contains
-  `singleSummandMatrixMGFVarianceProxy_of_bernsteinMatrixExp_le_quadratic`,
-  proving the single-summand matrix MGF variance-proxy target under an
-  explicit pointwise `bernsteinMatrixExp_le_quadratic_statement` assumption.
-- The theorem preserves the typed target's explicit centeredness,
-  integrability, boundedness, theta-range, self-adjointness, and
-  second-moment comparison assumptions.
-- At this stage the Bernstein CFC primitive itself was still typed only; the
-  later hardbone leaf proves it as `bernsteinMatrixExp_le_quadratic`.
-  Tropp/Lieb, trace-mgf provider, full CFC-free single-summand provider, and
-  Matrix Bernstein were still outside this leaf.
-- Next safe task was MB-S9-trace-mgf-to-laplace-tail-contract.
-
-## MB-S9 RHS Normalization Leaf Update
-
-- `HighDimProb/RandomMatrix/TraceExp.lean` now contains
-  `bernsteinMGFCoeff`, the canonical bounded Bernstein coefficient
-  `(theta ^ 2 / 2) / (1 - abs theta * R / 3)`.
-- It also contains `bernsteinMGFCoeff_nonneg`,
-  `TraceMGFBernsteinVarianceProxyBound`,
-  `TraceMGFBernsteinVarianceProxyBoundLIntegral`, and
-  `traceMGFBernsteinVarianceProxyBound_statement`.
-- `HighDimProb/RandomMatrix/ConcentrationStatements.lean` now contains
-  `matrixBernsteinTraceMGFWithBernsteinCoeff_statement`.
-- The retained `TraceMGFVarianceProxyBound` and
-  `matrixBernsteinTraceMGF_statement` use `theta ^ 2 / 2` and are not the
-  bounded Bernstein denominator target.
-- Trace-mgf provider, Tropp/Lieb, Bernstein CFC, full CFC-free
-  single-summand provider, and Matrix Bernstein remained open at this leaf.
-  Later RM-TROPP work proves only the narrow `Fin m` conditional-step provider
-  and conditional-step trace-MGF wrapper; the arbitrary finite-index provider
-  remains open.
-- MB-S9-tropp-shape-refactor adds
-  `troppMasterTraceMGFFiniteFamily_statement`, a typed-only finite-family
-  Tropp/Lieb iteration interface consuming per-summand matrix-MGF comparisons
-  and bounded-RHS normalization. The one-step Tropp primitive remains
-  available. Later RM-TROPP work proves only the narrow `Fin m`
-  conditional-step provider and conditional-step trace-MGF wrapper; no Lieb,
-  Golden-Thompson, arbitrary finite-index provider, or Matrix Bernstein theorem
-  is proved.
-- Follow-up at the time: MB-S9-trace-mgf-to-laplace-tail-contract.
-## MB-S9 Trace-MGF Thin Wrapper Leaf
-
-- Completed leaf: prove thin wrappers from
-  `troppMasterTraceMGFFiniteFamily_statement`.
-- New API:
-  `traceMGFBernsteinVarianceProxyBound_of_troppMasterTraceMGFFiniteFamily`;
-  `matrixBernsteinTraceMGFWithBernsteinCoeff_of_troppMasterTraceMGFFiniteFamily`.
-- Scope preserved: no Tropp/Lieb proof, no Bernstein CFC proof, no Matrix
-  Bernstein tail proof.
-- Next safe leaf:
-  MB-S9-trace-mgf-to-laplace-tail-contract.
-
-## MB-S9 Matrix Bernstein Trace-MGF Under Primitives Leaf
-
-- Completed leaf: prove high-level bounded Matrix Bernstein trace-MGF under
-  explicit finite-family Tropp and pointwise Bernstein CFC primitive
-  assumptions.
-- New API: `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`.
-- Scope preserved: no Tropp/Lieb proof, no Bernstein CFC proof, no Matrix
-  Bernstein tail proof.
-- Next safe leaf: MB-S9-trace-mgf-to-laplace-tail-contract.

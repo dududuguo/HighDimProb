@@ -80,6 +80,11 @@ def main() -> int:
     for path in git_files():
         if not is_text_file(path):
             continue
+        if not path.exists():
+            # A tracked file may be deleted in the working tree before the
+            # deletion is staged. CI sees the post-commit index, while local
+            # cleanup validation should not fail trying to read a removed file.
+            continue
 
         try:
             text = path.read_text(encoding="utf-8")

@@ -2670,6 +2670,108 @@ theorem sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_pr
           (sampleCovarianceCenteredRankOneRadius R))
       hTropp
 
+/-- Sample-covariance quadratic-form upper-tail wrapper using the exact-row
+bounded-row variance-proxy consumer.
+
+This is a positive-side, CFC-free wrapper. It uses a uniform row squared-norm
+radius `R` for the Bernstein radius and a row-specific radius family `Rvar` for
+the variance proxy RHS `rowSqNormVarianceProxyNormRHS Rvar`. The hardbone sharp-variance chain
+remains explicit; Tropp/Lieb and analytic integrability assumptions remain
+explicit as in the existing CFC-free sample-covariance wrapper. -/
+theorem sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m (n + 1))
+    (R t : Real)
+    (Rvar : Fin m -> Real)
+    (hm : 0 < m)
+    (hMeas : IsRandomMatrix P A)
+    (hLp :
+      forall k : Fin m, forall j : Fin (n + 1),
+        MemLpRealRandomVariable P (matrixEntry A k j) 2)
+    (hSq :
+      forall k : Fin m, forall omega,
+        vectorSqNorm (rowVector A k omega) <= R)
+    (hSqVar :
+      forall k : Fin m, forall omega,
+        vectorSqNorm (rowVector A k omega) <= Rvar k)
+    (hIndep :
+      IndependentRandomMatrices P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A))
+    (hExpInt :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily
+            (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+            (sampleCovarianceTailTheta (m := m) R t
+              (rowSqNormVarianceProxyNormRHS Rvar))
+            k))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand
+          (centeredSampleCovarianceRowRankOneSum (P := P) A)
+          (sampleCovarianceTailTheta (m := m) R t
+            (rowSqNormVarianceProxyNormRHS Rvar))))
+    (hSigma : 0 < rowSqNormVarianceProxyNormRHS Rvar)
+    (hR : 0 <= R)
+    (hRvar : forall i : Fin m, 0 <= Rvar i)
+    (ht : 0 < t)
+    (hChain :
+      sampleCovarianceVarianceProxy_sharp_statement (P := P) (X := rowVector A)
+        (fun i => matrixSecondMoment P (rankOneRandomMatrix (rowVector A i)))
+        (rowSqNormVarianceProxyNormRHS Rvar))
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P)
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        (bernsteinSecondMomentComparisonFamily P
+          (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+          (sampleCovarianceTailTheta (m := m) R t
+            (rowSqNormVarianceProxyNormRHS Rvar))
+          (sampleCovarianceCenteredRankOneRadius R))
+        (matrixVarianceProxy P
+          (centeredSampleCovarianceRowRankOneFamily (P := P) A))
+        (sampleCovarianceTailTheta (m := m) R t
+          (rowSqNormVarianceProxyNormRHS Rvar))
+        (sampleCovarianceCenteredRankOneRadius R)) :
+    P (quadraticFormUpperTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t) <=
+      sampleCovarianceQuadraticFormTailRHS
+        (m := m) (n := n + 1) R t
+        (rowSqNormVarianceProxyNormRHS Rvar) := by
+  have hRowsLp :
+      forall k : Fin m, forall j : Fin (n + 1),
+        MemLpRealRandomVariable P (coord (rowVector A k) j) 2 := by
+    intro k j
+    change MemLpRealRandomVariable P (matrixEntry A k j) 2
+    exact hLp k j
+  have hIntSq :
+      forall k : Fin m,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare
+            ((centeredSampleCovarianceRowRankOneFamily (P := P) A) k)) := by
+    intro k
+    change IntegrableRandomMatrix P
+      (randomMatrixSquare ((centeredRankOneRandomMatrixFamily P (rowVector A)) k))
+    exact
+      integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two
+        (P := P) (X := rowVector A) (R := R) hRowsLp hSq k
+  have hNorm :
+      MatrixVarianceProxyNormBound P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        (rowSqNormVarianceProxyNormRHS Rvar) := by
+    change MatrixVarianceProxyNormBound P
+      (centeredRankOneRandomMatrixFamily P (rowVector A))
+      (rowSqNormVarianceProxyNormRHS Rvar)
+    exact
+      sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two
+        (P := P) (X := rowVector A) (R := Rvar)
+        hChain hRowsLp hSqVar hRvar
+  exact
+    sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy_of_troppPrimitive
+      (P := P) (A := A) (R := R) (t := t)
+      (sigmaSq := rowSqNormVarianceProxyNormRHS Rvar)
+      hm hMeas hLp hSq hIndep hIntSq hExpInt hTraceInt hSigma hR ht hNorm hTropp
 /-- Sample-covariance quadratic-form upper-tail wrapper using the crude
 bounded-row variance-proxy norm bound.
 

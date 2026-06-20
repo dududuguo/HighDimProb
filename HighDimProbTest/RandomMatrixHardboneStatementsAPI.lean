@@ -44,13 +44,19 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check traceExpIntegrable_troppStateHistory_add_K_statement
 #check traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement
 #check matrixSquare_centeredRandomMatrix_expectation_expansion_statement
+#check matrixSquare_centeredRandomMatrix_expectation_expansion
 #check centeredRankOneSquare_le_rankOneSecondMoment_statement
+#check centeredRankOneSquare_le_rankOneSecondMoment
 #check sampleCovarianceVarianceProxy_sharp_statement
+#check sampleCovarianceVarianceProxy_sharp_of_rankOneSecondMoment
+#check sampleCovarianceVarianceProxy_sharp_of_exactRowSecondMoment
+#check sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two
 #check varianceProxyNormBound_of_centeredSquareChain_statement
 #check traceMatrixExp_le_rank_exp_lambdaMax_statement
 #check traceMatrixExp_le_supportDim_exp_lambdaMax_statement
 #check matrixExpSupportDomination_identity_statement
 #check traceMatrixExp_excess_supportDim_exp_lambdaMax_statement
+#check traceMatrixExp_excess_supportDim_exp_lambdaMax
 #check traceMatrixExp_effectiveRank_bound_statement
 #check traceMatrixExp_effectiveRank_bound
 #check traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate
@@ -68,10 +74,12 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check troppMasterTraceMGFConditionalStep_of_conditioningBridge
 #check traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider
 #check varianceProxyNormBound_of_centeredSquareChain
+#check varianceProxyNormBound_of_centeredSquareChain_expansion
 #check matrixTrace_smul
 #check matrixTrace_le_of_matrixLE
 #check traceMatrixExp_le_trace_support_exp_lambdaMax_of_matrixExp_le_smul_support
 #check traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination
+#check traceMatrixExp_le_card_add_trace_support_mul_exp_sub_one_of_excessSupportDomination
 #check traceMatrixExp_le_rank_exp_lambdaMax
 #check traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection
 #check traceMatrixExp_le_supportDim_exp_lambdaMax
@@ -145,7 +153,7 @@ example
     (hTrace : matrixTrace B <= effectiveRank * sigmaSq)
     (hB : IsSelfAdjointMatrix B)
     (hSpec : lambdaMaxOrdered B hB <= sigmaSq) :
-    traceMatrixExp (theta • B) <=
+    traceMatrixExp (theta •B) <=
       ((n + 1 : Nat) : Real) +
         effectiveRank * (Real.exp (theta * sigmaSq) - 1) := by
   have hStmt := traceMatrixExp_effectiveRank_bound B theta sigmaSq effectiveRank
@@ -156,7 +164,7 @@ example
     (hPSD : IsPSDMatrix B)
     (hB : IsSelfAdjointMatrix B)
     (hSpec : lambdaMaxOrdered B hB <= sigmaSq) :
-    traceMatrixExp (theta • B) <=
+    traceMatrixExp (theta •B) <=
       ((n + 1 : Nat) : Real) +
         ((n + 1 : Nat) : Real) * (Real.exp (theta * sigmaSq) - 1) :=
   traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate

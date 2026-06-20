@@ -19,6 +19,7 @@ surfaces are tracked in the focused reference docs linked below.
 
 ## Active API Pointers
 
+- API overview: [`APIOverview.md`](APIOverview.md)
 - RandomMatrix API index: [`RandomMatrixAPI.md`](RandomMatrixAPI.md)
 - Term map / symbol index: [`TermMap.md`](TermMap.md)
 - Theorem atlas: [`TheoremAtlas.md`](TheoremAtlas.md)
@@ -49,6 +50,7 @@ Core Matrix Bernstein helpers:
 
 - `matrixBernsteinOptimizedScalarTailRHS`
 - `matrixBernsteinTwoSidedOptimizedScalarTailRHS`
+- `rowSqNormVarianceProxyNormRHS`
 - `MatrixBernsteinPositiveSideAssumptions`
 - `MatrixBernsteinNegativeSideAssumptions`
 - `MatrixBernsteinPositiveSideTroppAssumptions`
@@ -81,6 +83,7 @@ Sample covariance wrappers:
 - `sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_proxy_of_troppPrimitive`
 - `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound`
 - `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive`
+- `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_rowSqNorm_bound_with_neg_adapters_of_troppPrimitives`
@@ -105,6 +108,8 @@ Hardbone proved leaves, deterministic bridges, statement targets, and thin consu
 - `bernsteinMatrixExp_le_quadratic`
 - `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider`
 - `varianceProxyNormBound_of_centeredSquareChain`
+- `matrixSquare_centeredRandomMatrix_expectation_expansion`
+- `varianceProxyNormBound_of_centeredSquareChain_expansion`
 - `matrixTrace_smul`
 - `matrixTrace_le_of_matrixLE`
 - `traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination`
@@ -121,6 +126,8 @@ Hardbone proved leaves, deterministic bridges, statement targets, and thin consu
 - `MatrixExpExcessSupportDomination`
 - `matrixExpSupportDomination_identity_statement`
 - `traceMatrixExp_excess_supportDim_exp_lambdaMax_statement`
+- `traceMatrixExp_le_card_add_trace_support_mul_exp_sub_one_of_excessSupportDomination`
+- `traceMatrixExp_excess_supportDim_exp_lambdaMax`
 
 Hardbone matrix-exp/log normalization leaf:
 
@@ -134,27 +141,17 @@ Hardbone conditioning bridge leaf:
 
 - `troppConditionalStep_of_iIndepFun`
 
-Example-layer wrappers:
-
-- `sampleCovariance_quadraticForm_tail_usage`
-- `sampleCovariance_operatorNorm_tail_usage`
-- `negativeFamily_twoSided_quadraticForm_tail_usage`
-- `negativeFamily_selfAdjoint_operatorNorm_tail_usage`
-- `boundedRowSampleCovariance_operatorNorm_tail_usage`
-- `attentionFeatureGram_quadraticForm_tail_usage`
-- `attentionFeatureGram_operatorNorm_tail_usage`
-- `empiricalFisher_operatorNorm_tail_usage`
-- `loraAdapterSubspaceCovariance_operatorNorm_tail_usage`
-
-Example modules:
+Reader-facing example routes:
 
 - `StatementRoutes`
-- `PrefixStateTroppUsage`
-- `ConditionalStateEndpointUsage`
+- `SampleCovarianceTailUsage`
+- `RankOneMatrixBernsteinPipelineUsage`
+- `RandomFeatureKernelUsage`
+- `NTKGramUsage`
+- `GradientCovarianceUsage`
 - `NaturalTroppPipelineUsage`
-- `ReindexedTroppBridgeUsage`
-- `HardboneStatementAtlasUsage`
 
+Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact adapter, and statement-atlas APIs remain covered by source, tests, and judge files; they are not all exposed as separate examples.
 ## Current Caveats
 
 - The random-family layer is vocabulary only: it adds indexed aliases, endpoint/map wrappers, and pointwise measurability lemmas, but no filtrations, adaptedness, martingales, or conditioning providers.
@@ -165,10 +162,45 @@ Example modules:
   typed statement targets. The trace-exp domination-provider consumer is proved as
   `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider`, but it only
   consumes an explicit nonnegative integrable dominator and pointwise absolute
-  domination. The variance-proxy provider-chain consumer is proved as
-  `varianceProxyNormBound_of_centeredSquareChain`, but it still requires
-  explicit centered-square expansion, Loewner comparison, and deterministic
-  norm-control assumptions. The rank/support trace-bound bridge is now proved through
+  domination. The centered-square expectation expansion is now proved as
+  `matrixSquare_centeredRandomMatrix_expectation_expansion`, reusing
+  `matrixSecondMoment_centeredRandomMatrix`. The centered rank-one second-moment
+  comparison is proved as `centeredRankOneSquare_le_rankOneSecondMoment`, via
+  the general covariance comparison
+  `matrixSecondMoment_centeredRandomMatrix_le_matrixSecondMoment` and the
+  deterministic order helper `matrixLE_sub_right_of_isPSD`. The
+  sample-covariance hardbone consumer
+  `sampleCovarianceVarianceProxy_sharp_of_rankOneSecondMoment` now supplies the
+  rank-one comparison to the abstract sharp-variance chain, and
+  `sampleCovarianceVarianceProxy_sharp_of_exactRowSecondMoment` removes the
+  reflexive row second-moment comparison by choosing
+  `V_i = matrixSecondMoment P (rankOneRandomMatrix (X i))`. The generic
+  finite-sum norm-control bridge for such deterministic sums is exposed as
+  `deterministicMatrixVarianceProxyNorm_sum_le_sum`. Row-specific exact
+  rank-one second-moment norm providers are now exposed as
+  `deterministicMatrixVarianceProxyNorm_matrixSecondMoment_rankOneRandomMatrix_le_sq_of_sqNorm_bound`
+  and
+  `deterministicMatrixVarianceProxyNorm_sum_matrixSecondMoment_rankOneRandomMatrix_le_sum_sq_of_sqNorm_bound`.
+  Rank-one square-integrability can now be provided from explicit
+  four-coordinate product integrability by
+  `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products`;
+  the coordinate-`MemLp 4` provider is
+  `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_memLp_four`;
+  the bounded-row provider from coordinate `MemLp 2` plus pointwise
+  `vectorSqNorm <= R` is
+  `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two`.
+  The row-specific exact-row sample-covariance hardbone consumer
+  `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two`
+  now combines this bounded-row square-integrability route with exact-row
+  deterministic norm control to produce RHS `rowSqNormVarianceProxyNormRHS R`; it still keeps the
+  abstract sharp-variance chain explicit. These are square-integrability and
+  hardbone-consumer providers only; they do not duplicate the crude
+  variance-proxy norm theorem. The
+  variance-proxy provider-chain consumer is
+  proved as `varianceProxyNormBound_of_centeredSquareChain`; the newer
+  `varianceProxyNormBound_of_centeredSquareChain_expansion` removes the explicit
+  centered-square expansion argument but still requires Loewner comparison and
+  deterministic norm-control assumptions. The rank/support trace-bound bridge is now proved through
   `traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination`
   and the `traceMatrixExp_le_rank_exp_lambdaMax` /
   `traceMatrixExp_le_supportDim_exp_lambdaMax` consumers. Explicit
@@ -182,8 +214,11 @@ Example modules:
   target is named by `matrixExpSupportDomination_identity_statement`. The
   corrected low-rank route is named separately by
   `MatrixExpExcessSupportDomination` and
-  `traceMatrixExp_excess_supportDim_exp_lambdaMax_statement`; the latter keeps
-  the nonnegative excess-coefficient premise explicit. None of these provider
+  `traceMatrixExp_excess_supportDim_exp_lambdaMax_statement`; the trace bridge
+  `traceMatrixExp_le_card_add_trace_support_mul_exp_sub_one_of_excessSupportDomination`
+  and thin consumer `traceMatrixExp_excess_supportDim_exp_lambdaMax` are now
+  proved under an explicit excess certificate, trace support-dimension bound,
+  and nonnegative excess-coefficient premise. None of these provider
   targets gives a true effective-rank certificate. The
   ambient route only supplies the
   certificate with effective-rank parameter `(n + 1 : Real)`. The Bernstein
@@ -211,9 +246,9 @@ Example modules:
   does not discharge the analytic conditional-step, history measurability,
   independence, trace-exp integrability, log/K, CFC, or variance-proxy
   hypotheses.
-- `StatementRoutes` is an examples-only route index; it groups existing example-level statement families and hardbone frontier entry points without adding core API. The conditional-state bundle is example-local, and the reindexed example is transport-only.
+- `StatementRoutes` is an examples-only route index; it groups representative example-level statement families without adding core API. Lower-level bridge and frontier checks belong in source, tests, and judge files rather than separate reader-facing examples.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
-- Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The preferred sample-covariance example route now uses Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
+- Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The positive-side quadratic-form route now has an exact-row variance-proxy wrapper, but two-sided and operator-norm exact-row wrappers still need a negative-side exact-row variance-proxy provider contract. The preferred sample-covariance example route now uses Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
 - Negative-side provider-transfer adapters only move explicit opposite-parameter
   assumptions onto the named negative sample-covariance family; they do not
   prove exponential integrability, trace-exponential integrability, or CFC.
@@ -242,9 +277,69 @@ Example modules:
   `matrixExpSupportDomination_identity_statement` and the corrected excess
   support route `MatrixExpExcessSupportDomination` /
   `traceMatrixExp_excess_supportDim_exp_lambdaMax_statement`.
-- Next safe hardbone task: `CG-B21-excess-support-trace-bridge-contract`,
-  focused on auditing the trace-linear algebra needed by the excess-support
-  route before proving any application-specific support certificate.
+- Completed hardbone proof leaf:
+  `CG-B21-excess-support-trace-bridge-contract`, proving the deterministic
+  excess-support trace bridge and supportDim consumer while leaving support
+  provider construction separate.
+- Completed hardbone proof leaf:
+  `RM-VP-deterministic-matrix-expectation-mul-bridge-contract`, proving
+  deterministic left/right matrix multiplication through expectation, the
+  centered-square expectation expansion, and a thin variance-proxy consumer that
+  no longer asks users for the expansion premise.
+- Completed hardbone proof leaf:
+  `RM-VP-rank-one-second-moment-contract`, proving the centered rank-one
+  second-moment / Loewner comparison and a thin sample-covariance hardbone
+  consumer that supplies it.
+- Completed hardbone proof leaf:
+  `RM-VP-sample-covariance-row-second-moment-contract`, adding the exact
+  row-second-moment hardbone consumer while leaving norm control explicit.
+- Completed hardbone proof leaf:
+  `RM-VP-exact-row-second-moment-norm-control-contract`, adding
+  `deterministicMatrixVarianceProxyNorm_sum_le_sum` as the reusable
+  finite-sum subadditivity bridge for deterministic variance-proxy norms.
+- Completed hardbone proof leaf:
+  `RM-VP-exact-row-second-moment-operator-norm-provider-contract`, adding
+  single-row and row-specific finite-family norm providers for exact rank-one
+  second moments under explicit rank-one square-integrability assumptions.
+- Completed hardbone proof leaf:
+  `RM-VP-rank-one-square-integrability-provider-contract`, adding
+  `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products`
+  as a direct provider from explicit four-coordinate product integrability.
+- Completed hardbone proof leaf:
+  `RM-VP-rank-one-square-integrability-memlp4-provider-contract`, adding
+  `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_memLp_four`
+  by reusing Mathlib `MemLp.mul`, `MemLp.integrable_mul`, and an explicit
+  `(4,4,2)` Holder triple.
+- Completed hardbone proof leaf:
+  `RM-VP-rank-one-square-integrability-bounded-row-provider-contract`, adding
+  `coordinate_sq_le_vectorSqNorm` and
+  `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two`.
+  The provider discharges uncentered rank-one square-integrability from
+  coordinate `MemLp 2` and pointwise `vectorSqNorm <= R`; it does not prove a
+  variance-proxy norm bound by itself. Centered rank-one square-integrability is
+  now supplied by
+  `integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_memLp_four`
+  and
+  `integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two`;
+  the bounded-row crude consumer
+  `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two`
+  removes the explicit centered square-integrability premise from that route.
+- Completed hardbone proof leaf:
+  `RM-VP-centered-rank-one-square-integrability-provider-contract`, adding centered rank-one square-integrability providers and the bounded-row crude variance-proxy consumer that supplies the centered square-integrability premise.
+- Completed hardbone proof leaf:
+  `RM-VP-sample-covariance-exact-row-variance-proxy-wrapper-contract`, adding
+  `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two` as a
+  row-specific exact-row variance-proxy consumer under explicit hardbone
+  sharp-chain, coordinate `MemLp 2`, pointwise row squared-norm, and
+  nonnegative radius assumptions.
+- Completed hardbone proof leaf:
+  `RM-VP-sample-covariance-tail-wrapper-with-exact-row-vp-contract`, adding
+  `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive` as a positive-side quadratic-form wrapper with row-specific
+  exact-row variance-proxy RHS and explicit hardbone sharp-chain premise.
+- Next safe hardbone task:
+  `RM-VP-negative-exact-row-variance-proxy-provider-contract`, focused on the
+  negative-side exact-row variance-proxy route required before two-sided or
+  operator-norm sample-covariance wrappers can use the exact-row RHS.
 
 ## Verification
 

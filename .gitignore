@@ -31,3 +31,6 @@ docbuild/.lake/
 # Validation scratch runs are local by default. Existing tracked reports remain tracked.
 external/validation/*/
 external/validation/agent-evidence-*.md
+
+# Local import-graph HTML output; regenerate with tools/build_import_graph.* when needed.
+docs/visualizations/lake_import_graph.html

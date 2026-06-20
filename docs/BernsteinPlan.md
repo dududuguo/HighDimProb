@@ -142,6 +142,7 @@ lintegral-predicate deterministic weighted theorem
 
 ## Next Safe Task
 
-Stage Branch-choice - choose exactly one next major branch after the scalar
-moment-bridge closeout. Remaining scalar Bernstein work is the raw-predicate
-bridge; matrix Bernstein and Hanson-Wright are separate future branches.
+This is a historical scalar Bernstein closeout note. Current active branch
+selection is tracked in `docs/Status.md` and `docs/TODO.md`; remaining scalar
+Bernstein work is the raw-predicate bridge, while matrix Bernstein and
+Hanson-Wright remain separate theorem families.

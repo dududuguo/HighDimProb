@@ -8,16 +8,29 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.randomMatrixSquare
 #check HighDimProb.randomMatrixSquare_neg
 #check HighDimProb.isRandomMatrix_matrixSquare
+#check HighDimProb.integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products
+#check HighDimProb.integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_memLp_four
+#check HighDimProb.integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two
 #check HighDimProb.matrixSecondMoment
+#check HighDimProb.randomMatrixSquare_centeredRandomMatrix_expand
+#check HighDimProb.integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_memLp_four
+#check HighDimProb.integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two
+#check HighDimProb.integrableRandomMatrix_randomMatrixSquare_centeredRandomMatrix
+#check HighDimProb.matrixSecondMoment_centeredRandomMatrix
+#check HighDimProb.matrixSecondMoment_centeredRandomMatrix_le_matrixSecondMoment
 #check HighDimProb.matrixVarianceProxy
 #check HighDimProb.MatrixVarianceProxy
 #check HighDimProb.matrixVarianceProxyBound
 #check HighDimProb.MatrixVarianceProxyBound
 #check HighDimProb.MatrixVarianceProxyUpperBound
 #check HighDimProb.deterministicMatrixVarianceProxyNorm
+#check HighDimProb.deterministicMatrixVarianceProxyNorm_sum_le_sum
+#check HighDimProb.deterministicMatrixVarianceProxyNorm_matrixSecondMoment_rankOneRandomMatrix_le_sq_of_sqNorm_bound
+#check HighDimProb.deterministicMatrixVarianceProxyNorm_sum_matrixSecondMoment_rankOneRandomMatrix_le_sum_sq_of_sqNorm_bound
 #check HighDimProb.matrixVarianceProxyNorm
 #check HighDimProb.MatrixVarianceProxyNormBound
 #check HighDimProb.pointwiseOperatorNormVarianceProxyNormRHS
+#check HighDimProb.rowSqNormVarianceProxyNormRHS
 #check HighDimProb.deterministicOperatorNorm_matrixSquare_le_sq
 #check HighDimProb.deterministicOperatorNorm_matrixSquare_le_sq_of_le
 #check HighDimProb.deterministicOperatorNorm_matrixSecondMoment_le_sq_of_forall
@@ -25,6 +38,8 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.MatrixVarianceProxyNormBound_of_pointwiseOperatorNormBound
 #check HighDimProb.centeredRankOneVarianceProxyNormRHS
 #check HighDimProb.MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound
+#check HighDimProb.MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two
+#check HighDimProb.sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two
 #check HighDimProb.matrixQuadraticForm_sum
 #check HighDimProb.matrixQuadraticForm_add
 #check HighDimProb.matrixQuadraticForm_smul
@@ -34,6 +49,7 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.isPSDMatrix_smul_of_nonneg
 #check HighDimProb.matrixLE_refl
 #check HighDimProb.matrixLE_of_eq
+#check HighDimProb.matrixLE_sub_right_of_isPSD
 #check HighDimProb.matrixLE_trans
 #check HighDimProb.matrixLE_add
 #check HighDimProb.matrixLE_add_left
@@ -46,11 +62,15 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.integrableRandomMatrix_sub
 #check HighDimProb.integrableRandomMatrix_add
 #check HighDimProb.integrableRandomMatrix_smul
+#check HighDimProb.integrableRandomMatrix_const_mul
+#check HighDimProb.integrableRandomMatrix_mul_const
 #check HighDimProb.integrableRandomMatrix_zero
 #check HighDimProb.integrableRandomMatrix_const
 #check HighDimProb.matrixExpect_sub
 #check HighDimProb.matrixExpect_add
 #check HighDimProb.matrixExpect_smul
+#check HighDimProb.matrixExpect_const_mul
+#check HighDimProb.matrixExpect_mul_const
 #check HighDimProb.matrixExpect_zero
 #check HighDimProb.matrixExpect_const
 #check HighDimProb.matrixExpect_const_of_isProbabilityMeasure
@@ -103,7 +123,7 @@ example {n : Nat} {M N K L : Matrix (Fin n) (Fin n) Real}
 
 example {n : Nat} {M N : Matrix (Fin n) (Fin n) Real}
     {a : Real} (ha : 0 <= a) (hMN : HighDimProb.MatrixLE M N) :
-    HighDimProb.MatrixLE (a • M) (a • N) := by
+    HighDimProb.MatrixLE (a •M) (a •N) := by
   exact HighDimProb.matrixLE_smul_of_nonneg ha hMN
 
 example {Omega : Type*} [MeasurableSpace Omega]
@@ -135,7 +155,7 @@ example {Omega : Type*} [MeasurableSpace Omega]
     {P : MeasureTheory.Measure Omega} {m n : Nat}
     {A : HighDimProb.RandomMatrix Omega m n}
     (a : Real) (hIntA : HighDimProb.IntegrableRandomMatrix P A) :
-    HighDimProb.IntegrableRandomMatrix P (fun omega => a • A omega) := by
+    HighDimProb.IntegrableRandomMatrix P (fun omega => a •A omega) := by
   exact HighDimProb.integrableRandomMatrix_smul a hIntA
 
 example {Omega : Type*} [MeasurableSpace Omega]
@@ -163,8 +183,8 @@ example {Omega : Type*} [MeasurableSpace Omega]
     {P : MeasureTheory.Measure Omega} {m n : Nat}
     {A : HighDimProb.RandomMatrix Omega m n}
     (a : Real) :
-    HighDimProb.matrixExpect P (fun omega => a • A omega) =
-      a • HighDimProb.matrixExpect P A := by
+    HighDimProb.matrixExpect P (fun omega => a •A omega) =
+      a •HighDimProb.matrixExpect P A := by
   exact HighDimProb.matrixExpect_smul a
 
 example {Omega : Type*} [MeasurableSpace Omega]
@@ -176,7 +196,7 @@ example {Omega : Type*} [MeasurableSpace Omega]
 example {Omega : Type*} [MeasurableSpace Omega]
     {P : MeasureTheory.Measure Omega} {m n : Nat}
     (M : Matrix (Fin m) (Fin n) Real) :
-    HighDimProb.matrixExpect P (fun _omega => M) = (P.real Set.univ) • M := by
+    HighDimProb.matrixExpect P (fun _omega => M) = (P.real Set.univ) •M := by
   exact HighDimProb.matrixExpect_const M
 
 example {Omega : Type*} [MeasurableSpace Omega]

@@ -126,6 +126,27 @@ theorem randomSelfAdjointMatrix_centeredRandomMatrix {Omega : Type*}
     isSelfAdjointMatrix_matrixExpect_of_randomSelfAdjoint (P := P) (A := A) hA
   simpa [centeredRandomMatrix] using (hA omega).sub hExp
 
+/-- Centering a self-adjoint random matrix lowers its second moment in the
+explicit Loewner order. The correction term is the PSD square of the entrywise
+mean matrix. -/
+theorem matrixSecondMoment_centeredRandomMatrix_le_matrixSecondMoment {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {n : Nat} {A : RandomMatrix Omega n n}
+    (hA : IntegrableRandomMatrix P A)
+    (hSq : IntegrableRandomMatrix P (randomMatrixSquare A))
+    (hSA : RandomSelfAdjointMatrix P A) :
+    MatrixLE
+      (matrixSecondMoment P (centeredRandomMatrix P A))
+      (matrixSecondMoment P A) := by
+  have hExpansion :=
+    matrixSecondMoment_centeredRandomMatrix (P := P) (A := A) hA hSq
+  rw [hExpansion]
+  have hMeanSA : IsSelfAdjointMatrix (matrixExpect P A) :=
+    isSelfAdjointMatrix_matrixExpect_of_randomSelfAdjoint (P := P) (A := A) hSA
+  exact matrixLE_sub_right_of_isPSD
+    (matrixSecondMoment P A) (matrixSquare (matrixExpect P A))
+    (isPSD_matrixSquare_of_selfAdjoint hMeanSA)
+
 /-- Centering every member of a self-adjoint random-matrix family preserves the family predicate. -/
 theorem selfAdjointRandomMatrixFamily_centeredRandomMatrixFamily {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {I : Type*} {n : Nat}
@@ -561,6 +582,27 @@ theorem MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm
     (PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound
       (P := P) (X := X) hMeas hLp hSq hR)
     hRadius
+
+/-- Centered rank-one variance-proxy norm bound from a pointwise squared-vector
+norm bound, with centered square-integrability supplied by the rank-one
+bounded-row provider. -/
+theorem MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    {X : I -> RandomVector Omega n} {R : Real}
+    (hMeas : forall i, IsRandomVector P (X i))
+    (hLp : forall i, forall j : Fin n,
+      MemLpRealRandomVariable P (coord (X i) j) 2)
+    (hSq : forall i omega, vectorSqNorm (X i omega) <= R)
+    (hR : 0 <= R) :
+    MatrixVarianceProxyNormBound P
+      (centeredRankOneRandomMatrixFamily P X)
+      (centeredRankOneVarianceProxyNormRHS (I := I) R) := by
+  exact MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound
+    (P := P) (X := X) (R := R)
+    hMeas hLp hSq hR
+    (integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two
+      (P := P) (X := X) (R := R) hLp hSq)
 
 /-- Alias emphasizing that the uniform bound is pointwise, not a.e. -/
 abbrev UniformOperatorNormBound {Omega : Type*} [MeasurableSpace Omega]

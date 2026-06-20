@@ -1,4 +1,5 @@
 import HighDimProb.RandomMatrix.TraceExp
+import HighDimProb.RandomMatrix.Assumptions
 import HighDimProb.Analysis.RealInequalities
 
 /-!
@@ -452,6 +453,20 @@ abbrev matrixSquare_centeredRandomMatrix_expectation_expansion_statement
         matrixSecondMoment P (centeredRandomMatrix P A) =
           matrixSecondMoment P A - matrixSquare (matrixExpect P A)
 
+/-- Proved centered-square expectation expansion target.
+
+This discharges the algebraic expectation part of the centered-square variance
+proxy chain by reusing `matrixSecondMoment_centeredRandomMatrix`. It does not
+prove the later Loewner comparison, deterministic norm control, rank-one
+second-moment comparison, or sample-covariance variance-proxy sharpening. -/
+theorem matrixSquare_centeredRandomMatrix_expectation_expansion
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {n : Nat} (A : RandomMatrix Omega n n) :
+    @matrixSquare_centeredRandomMatrix_expectation_expansion_statement
+      Omega mOmega P _ n A := by
+  intro hA hSq _hCenteredSq
+  exact matrixSecondMoment_centeredRandomMatrix (P := P) (A := A) hA hSq
 /-- Centered rank-one square comparison target.
 
 For rank-one covariance summands, this names the Loewner comparison that would
@@ -471,6 +486,24 @@ abbrev centeredRankOneSquare_le_rankOneSecondMoment_statement
             (matrixSecondMoment P (centeredRankOneRandomMatrix P X))
             (matrixSecondMoment P (rankOneRandomMatrix X))
 
+/-- Proved rank-one second-moment comparison for centered rank-one covariance
+summands.
+
+The proof uses the general covariance comparison for centered self-adjoint
+random matrices and the existing rank-one self-adjoint/integrability adapters.
+It does not prove sharper sample-covariance variance-proxy norm control. -/
+theorem centeredRankOneSquare_le_rankOneSecondMoment
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {n : Nat} (X : RandomVector Omega n) :
+    @centeredRankOneSquare_le_rankOneSecondMoment_statement
+      Omega mOmega P _ n X := by
+  intro _hX hLp _hCenteredSq hRankSq
+  have hRankInt : IntegrableRandomMatrix P (rankOneRandomMatrix X) :=
+    integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two (P := P) (X := X) hLp
+  exact matrixSecondMoment_centeredRandomMatrix_le_matrixSecondMoment
+    (P := P) (A := rankOneRandomMatrix X) hRankInt hRankSq
+    (randomSelfAdjointMatrix_rankOneRandomMatrix (P := P) X)
 /-- Sample-covariance variance-proxy sharpening target in abstract row-feature
 form.
 
@@ -494,6 +527,95 @@ abbrev sampleCovarianceVarianceProxy_sharp_statement
         MatrixVarianceProxyNormBound P
           (centeredRankOneRandomMatrixFamily P X) sigma2
 
+/-- Sample-covariance variance-proxy consumer with the proved rank-one
+second-moment comparison supplied by core API.
+
+The remaining explicit assumptions are the abstract sharp-variance chain, the
+uncentered rank-one second-moment comparison against `V`, and deterministic
+norm control for `sum_i V_i`. This does not prove a sharp sample-covariance
+variance proxy by itself. -/
+theorem sampleCovarianceVarianceProxy_sharp_of_rankOneSecondMoment
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {m n : Nat}
+    (X : Fin m -> RandomVector Omega n)
+    (V : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (sigma2 : Real)
+    (hChain : @sampleCovarianceVarianceProxy_sharp_statement
+      Omega mOmega P _ m n X V sigma2)
+    (hSecond : forall i,
+      MatrixLE (matrixSecondMoment P (rankOneRandomMatrix (X i))) (V i))
+    (hNorm : deterministicMatrixVarianceProxyNorm (Finset.univ.sum fun i => V i) <=
+      sigma2) :
+    MatrixVarianceProxyNormBound P
+      (centeredRankOneRandomMatrixFamily P X) sigma2 :=
+  hChain
+    (fun i => centeredRankOneSquare_le_rankOneSecondMoment (P := P) (X i))
+    hSecond hNorm
+
+/-- Sample-covariance variance-proxy consumer with the exact uncentered
+row-rank-one second moments used as the comparison matrices.
+
+This removes only the reflexive row second-moment comparison argument from
+`sampleCovarianceVarianceProxy_sharp_of_rankOneSecondMoment`. The hardbone chain
+and deterministic norm control of the exact second-moment sum remain explicit. -/
+theorem sampleCovarianceVarianceProxy_sharp_of_exactRowSecondMoment
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {m n : Nat}
+    (X : Fin m -> RandomVector Omega n)
+    (sigma2 : Real)
+    (hChain : @sampleCovarianceVarianceProxy_sharp_statement
+      Omega mOmega P _ m n X
+      (fun i => matrixSecondMoment P (rankOneRandomMatrix (X i))) sigma2)
+    (hNorm :
+      deterministicMatrixVarianceProxyNorm
+        (Finset.univ.sum fun i =>
+          matrixSecondMoment P (rankOneRandomMatrix (X i))) <= sigma2) :
+    MatrixVarianceProxyNormBound P
+      (centeredRankOneRandomMatrixFamily P X) sigma2 :=
+  sampleCovarianceVarianceProxy_sharp_of_rankOneSecondMoment
+    (P := P) X
+    (fun i => matrixSecondMoment P (rankOneRandomMatrix (X i)))
+    sigma2 hChain
+    (fun i => matrixLE_refl (matrixSecondMoment P (rankOneRandomMatrix (X i))))
+    hNorm
+
+/-- Exact-row sample-covariance variance-proxy consumer from row-specific
+squared-norm bounds.
+
+This is a thin hardbone-level wrapper over
+`sampleCovarianceVarianceProxy_sharp_of_exactRowSecondMoment`: the abstract
+sharp-variance chain remains explicit, while deterministic norm control of the
+exact uncentered row second moments is supplied by the row-specific rank-one
+second-moment norm provider. The right side is `rowSqNormVarianceProxyNormRHS R`, not the older
+uniform crude `cardinality * R^2` bound. -/
+theorem sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {m n : Nat}
+    (X : Fin m -> RandomVector Omega n)
+    (R : Fin m -> Real)
+    (hChain : @sampleCovarianceVarianceProxy_sharp_statement
+      Omega mOmega P _ m n X
+      (fun i => matrixSecondMoment P (rankOneRandomMatrix (X i)))
+      (rowSqNormVarianceProxyNormRHS R))
+    (hLp : forall i, forall j : Fin n,
+      MemLpRealRandomVariable P (coord (X i) j) 2)
+    (hSq : forall i omega, vectorSqNorm (X i omega) <= R i)
+    (hR : forall i, 0 <= R i) :
+    MatrixVarianceProxyNormBound P
+      (centeredRankOneRandomMatrixFamily P X)
+      (rowSqNormVarianceProxyNormRHS R) :=
+  sampleCovarianceVarianceProxy_sharp_of_exactRowSecondMoment
+    (P := P) X (rowSqNormVarianceProxyNormRHS R)
+    hChain
+    (deterministicMatrixVarianceProxyNorm_sum_matrixSecondMoment_rankOneRandomMatrix_le_sum_sq_of_sqNorm_bound
+      (P := P) (X := X) (R := R)
+      (fun i =>
+        integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two
+          (P := P) (X := X i) (R := R i) (hLp i) (hSq i))
+      hSq hR)
 /-- Generic provider-chain target from centered-square comparisons to a
 variance-proxy norm bound.
 
@@ -541,6 +663,29 @@ theorem varianceProxyNormBound_of_centeredSquareChain
     MatrixVarianceProxyNormBound P (centeredRandomMatrixFamily P A) sigma2 :=
   hChain hExpansion hLE hNorm
 
+/-- Centered-square variance-proxy consumer with the proved centered-square
+expectation expansion supplied by core API.
+
+The remaining explicit assumptions are the chain target, per-summand Loewner
+comparison, and deterministic norm control. -/
+theorem varianceProxyNormBound_of_centeredSquareChain_expansion
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n)
+    (V : I -> Matrix (Fin n) (Fin n) Real)
+    (sigma2 : Real)
+    (hChain :
+      @varianceProxyNormBound_of_centeredSquareChain_statement
+        Omega mOmega P _ I _ n A V sigma2)
+    (hLE : forall i,
+      MatrixLE (matrixSecondMoment P (centeredRandomMatrix P (A i))) (V i))
+    (hNorm : deterministicMatrixVarianceProxyNorm (Finset.univ.sum fun i => V i) <=
+      sigma2) :
+    MatrixVarianceProxyNormBound P (centeredRandomMatrixFamily P A) sigma2 :=
+  hChain
+    (fun i => matrixSquare_centeredRandomMatrix_expectation_expansion (P := P) (A i))
+    hLE hNorm
 /-! ## Dimension, support, and effective-rank hardbone statement chain -/
 
 /-- Rank-refined trace-exponential dimension-factor target with an explicit
@@ -616,6 +761,27 @@ abbrev traceMatrixExp_excess_supportDim_exp_lambdaMax_statement {n : Nat}
                     (supportDim : Real) *
                       (Real.exp (lambdaMaxOrdered A hA) - 1)
 
+/-- Support-dimension trace-exponential bound from an explicit excess support
+certificate.
+
+This proves the corrected excess-support target without constructing the
+support certificate. The ambient identity contribution remains explicit as
+`n + 1`, while only the excess term is support-dimension controlled. -/
+theorem traceMatrixExp_excess_supportDim_exp_lambdaMax {n : Nat}
+    (A support : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (supportDim : Nat) :
+    traceMatrixExp_excess_supportDim_exp_lambdaMax_statement A support supportDim := by
+  intro _hSupportDimPos _hSupportDimLe _hSupportPSD hTrace hA hCoeff hDom
+  have hBridge :=
+    traceMatrixExp_le_card_add_trace_support_mul_exp_sub_one_of_excessSupportDomination
+      hA hDom
+  have hTraceCoeff :
+      matrixTrace support * (Real.exp (lambdaMaxOrdered A hA) - 1) <=
+        (supportDim : Real) * (Real.exp (lambdaMaxOrdered A hA) - 1) :=
+    mul_le_mul_of_nonneg_right hTrace hCoeff
+  exact hBridge.trans (by
+    simpa [add_comm] using
+      add_le_add_left hTraceCoeff ((n + 1 : Nat) : Real))
 /-- Rank-refined trace-exponential bound from an explicit support certificate.
 
 This consumer proves the typed hardbone target using only the support domination

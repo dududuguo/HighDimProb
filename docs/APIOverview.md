@@ -1,0 +1,144 @@
+# HighDimProb API Overview
+
+This page is a stable route map for the public API. It follows the same
+principle as Mathlib module documentation: use short module-level explanations,
+name the main entry points, and leave exact theorem signatures to source,
+doc-gen, tests, and `#check`.
+
+Do not treat this page as a complete theorem index. Use it to choose the right
+module and example first, then inspect the referenced API file or generated
+documentation for exact arguments.
+
+## Import Layers
+
+```text
+import HighDimProb
+  stable scalar probability object layer and typed statement specifications
+
+import HighDimProb.Concentration
+  experimental scalar concentration theorem families
+
+import HighDimProb.RandomMatrix
+  experimental random-matrix and Matrix Bernstein surface
+
+import HighDimProb.Examples
+  usage examples and smoke tests, not part of the stable root import
+```
+
+The root import is intentionally narrow. Experimental theorem routes may be
+well tested and documented while still staying outside `import HighDimProb`.
+
+## Route Diagram
+
+```mermaid
+flowchart TD
+  Root["HighDimProb root import"] --> Scalar["Scalar probability objects"]
+  Root --> Statements["Typed statement specifications"]
+
+  Scalar --> Conc["Concentration"]
+  Conc --> SG["SubGaussian / SubExponential routes"]
+  Conc --> Bern["Scalar Bernstein / Hoeffding routes"]
+
+  RM["RandomMatrix"] --> RMObj["Random matrix objects, sums, algebra"]
+  RMObj --> Det["Deterministic order / spectral / trace helpers"]
+  Det --> VP["Variance-proxy bridge chain"]
+  Det --> Trace["Trace-exp / Tropp primitive layer"]
+  VP --> MB["Matrix Bernstein wrappers under explicit primitives"]
+  Trace --> MB
+  MB --> SCov["Sample covariance wrappers"]
+  SCov --> Ex["Examples and downstream-style judge files"]
+```
+
+## Stable Reader Path
+
+For a first pass through the repository:
+
+1. Read [`Status.md`](Status.md) for the current state and next task.
+2. Use [`TermMap.md`](TermMap.md) to find the relevant area.
+3. Read the focused API page, such as
+   [`RandomMatrixAPI.md`](RandomMatrixAPI.md), for public names and caveats.
+4. Open the corresponding example under `HighDimProb/Examples`.
+5. Use generated docs, [`LeanTooling.md`](LeanTooling.md), or `#check` for exact Lean signatures.
+
+This is deliberately close to Mathlib practice: route documentation is
+conceptual, while exact declarations are checked by the Lean compiler.
+
+## Main API Areas
+
+| Area | Import | Main docs | Example surface |
+|---|---|---|---|
+| Stable scalar objects | `HighDimProb` | [`ModuleTree.md`](ModuleTree.md) | smoke/API tests |
+| Scalar concentration | `HighDimProb.Concentration` | source modules, tests, and judge files | concentration tests/judge |
+| Random matrices | `HighDimProb.RandomMatrix` | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | `HighDimProb/Examples/RandomMatrix` |
+| Matrix Bernstein hardbone | `HighDimProb.RandomMatrix` | [`TheoremAtlas.md`](TheoremAtlas.md) and [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | tests and judge files |
+| Sample covariance routes | `HighDimProb.RandomMatrix` | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | `SampleCovarianceTailUsage` |
+| External-facing checks | `HighDimProbJudge` | [`JudgeSystem.md`](JudgeSystem.md) | judge files |
+
+## RandomMatrix Route Map
+
+The RandomMatrix layer is experimental but has a stable internal organization.
+
+```text
+Basic / Algebra / MatrixOrder
+  vocabulary, matrix algebra, Loewner order, PSD/self-adjoint facts
+
+Sums
+  random-matrix finite sums, prefix/suffix bookkeeping, natural-state helpers
+
+OperatorNorm / Spectral / UnitSphere
+  deterministic operator-norm and spectral event bridges
+
+TraceExp
+  trace-exponential vocabulary, Tropp finite-family and conditional-step routes
+
+VarianceProxy
+  matrix variance proxy, deterministic norm control, rank-one providers
+
+HardboneStatements
+  named hard theorem targets and thin consumers that expose current blockers
+
+ConcentrationStatements
+  Matrix Bernstein and sample-covariance wrappers under explicit primitives
+```
+
+Use the named helpers in [`RandomMatrixAPI.md`](RandomMatrixAPI.md) instead of
+copying unfolded right-hand sides into examples or tests.
+
+## Recommended RandomMatrix Entry Points
+
+| Use case | Start here | What remains explicit |
+|---|---|---|
+| Generic quadratic-form Matrix Bernstein | `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions` | Tropp/Lieb trace-MGF primitives, integrability, variance proxy |
+| Generic operator-norm Matrix Bernstein | `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions` | positive threshold, positive/negative Tropp primitives, variance proxies |
+| Sample covariance quadratic-form tail | `SampleCovarianceTailUsage.sampleCovariance_quadraticForm_tail_usage` | independence, integrability, Tropp primitive |
+| Sample covariance operator-norm tail | `SampleCovarianceTailUsage.sampleCovariance_operatorNorm_tail_usage` | positive/negative primitive assumptions |
+| Lower-level exact-row positive-side route | `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive` | hardbone sharp-chain premise, Tropp primitive, integrability |
+
+The exact-row positive-side wrapper is intentionally not the main example route
+yet. It is useful for continuing the proof spine, but matching negative-side,
+two-sided, and operator-norm exact-row wrappers remain future work.
+
+## What Is Not Claimed
+
+The current Matrix Bernstein surface does not claim:
+
+- a proof of Tropp/Lieb;
+- a proof of Golden-Thompson;
+- automatic trace-exp integrability;
+- automatic hardbone sharp-variance-chain providers;
+- full unconditional Matrix Bernstein;
+- full sample-covariance operator-norm concentration without explicit
+  primitive assumptions.
+
+When these facts appear in theorem statements, they should be visible as named
+premises or named assumption bundles.
+
+## Documentation Rules
+
+- Keep this overview stable and route-level.
+- Put exact theorem-family status in [`TheoremAtlas.md`](TheoremAtlas.md).
+- Put concrete public names and import paths in
+  [`RandomMatrixAPI.md`](RandomMatrixAPI.md).
+- Put short active next tasks in [`TODO.md`](TODO.md).
+- Put current branch status in [`Status.md`](Status.md).
+- Put usage demonstrations in examples, not in long prose.
