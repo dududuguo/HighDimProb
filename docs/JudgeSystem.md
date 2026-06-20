@@ -73,7 +73,7 @@ theorems or typed statements without relying on local test internals.
   Laplace/Chernoff/operator-norm Laplace statement APIs.
 - `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`: proof-ready matrix
   Bernstein statement surface, `matrixBernsteinLaplacePrerequisitesStatement`,
-  `matrixBernsteinTraceMGF_statement`, sample-covariance exact-row and centered-square-chain wrapper visibility,
+  `matrixBernsteinTraceMGF_statement`, sample-covariance exact-row centered-square-chain wrapper and assumption-bundle visibility,
   negative exact-row variance-proxy provider visibility, and their main
   structural/analytic dependencies.
 

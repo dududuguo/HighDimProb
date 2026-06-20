@@ -17,12 +17,13 @@ This is the active short list. Old completed task logs were collapsed into
   Matrix Bernstein proofs.
 - Prefer shared RandomMatrix APIs over unfolded formulas in examples, tests,
   judge files, and docs.
-- Current RandomMatrix hardbone closeout: finish PR/check review for
-  `RM-VP-centered-square-chain-wrapper-integration-contract`.
+- Current RandomMatrix hardbone branch: assumption-bundle follow-up for
+  `RM-natural-state-centered-square-wrapper-assumption-bundling-contract`.
 - The centered-square-chain wrapper variants are available for both the
-  positive-side quadratic-form route and the two-sided/operator-norm route.
-  Keep follow-up tasks from claiming new Tropp/Lieb, trace-MGF, or full Matrix
-  Bernstein proofs.
+  positive-side quadratic-form route and the two-sided/operator-norm route;
+  natural assumption bundles now package those exact-row routes without
+  discharging the centered-square chain, Tropp/Lieb, trace-MGF, or full Matrix
+  Bernstein blockers.
 
 ## Active Documentation Work
 

@@ -2721,6 +2721,131 @@ theorem sampleCovariance_quadraticForm_tail_optimized_under_explicit_variance_pr
           (sampleCovarianceCenteredRankOneRadius R))
       hTropp
 
+
+/-- Positive-side assumption bundle for the exact-row centered-square-chain
+sample-covariance route.
+
+This packages the hypotheses consumed by
+`sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_centeredSquareChain_of_troppPrimitive`.
+It is only a semantic bundle: the generic centered-square variance-proxy chain,
+Tropp/Lieb trace-MGF primitive, independence, integrability, and radius
+conditions remain explicit fields. -/
+structure SampleCovarianceExactRowCenteredSquareTroppAssumptions {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
+    {m n : Nat}
+    (A : RandomMatrix Omega m n) (R t : Real) (Rvar : Fin m -> Real) : Prop where
+  nonemptyRows : 0 < m
+  measurable : IsRandomMatrix P A
+  rowMemLp :
+    forall k : Fin m, forall j : Fin n,
+      MemLpRealRandomVariable P (matrixEntry A k j) 2
+  rowSqNormBound :
+    forall k : Fin m, forall omega,
+      vectorSqNorm (rowVector A k omega) <= R
+  rowSqNormVarianceBound :
+    forall k : Fin m, forall omega,
+      vectorSqNorm (rowVector A k omega) <= Rvar k
+  independentRows :
+    IndependentRandomMatrices P
+      (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+  expIntegrable :
+    forall k : Fin m,
+      IntegrableRandomMatrix P
+        (matrixExpScaledFamily
+          (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+          (sampleCovarianceTailTheta (m := m) R t
+            (rowSqNormVarianceProxyNormRHS Rvar))
+          k)
+  traceExpIntegrable :
+    IntegrableRealRandomVariable P
+      (traceExpIntegrand
+        (centeredSampleCovarianceRowRankOneSum (P := P) A)
+        (sampleCovarianceTailTheta (m := m) R t
+          (rowSqNormVarianceProxyNormRHS Rvar)))
+  variancePositive : 0 < rowSqNormVarianceProxyNormRHS Rvar
+  radiusNonneg : 0 <= R
+  varianceRadiiNonneg : forall i : Fin m, 0 <= Rvar i
+  deviationPositive : 0 < t
+  centeredSquareChain :
+    @varianceProxyNormBound_of_centeredSquareChain_statement
+      Omega _ P _ (Fin m) _ n
+      (rankOneRandomMatrixFamily (rowVector A))
+      (fun i => matrixSecondMoment P (rankOneRandomMatrix (rowVector A i)))
+      (rowSqNormVarianceProxyNormRHS Rvar)
+  troppPrimitive :
+    troppMasterTraceMGFFiniteFamily_statement
+      (P := P)
+      (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+      (bernsteinSecondMomentComparisonFamily P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        (sampleCovarianceTailTheta (m := m) R t
+          (rowSqNormVarianceProxyNormRHS Rvar))
+        (sampleCovarianceCenteredRankOneRadius R))
+      (matrixVarianceProxy P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A))
+      (sampleCovarianceTailTheta (m := m) R t
+        (rowSqNormVarianceProxyNormRHS Rvar))
+      (sampleCovarianceCenteredRankOneRadius R)
+
+/-- Two-sided/operator-norm assumption bundle for the exact-row
+centered-square-chain sample-covariance route.
+
+The positive-side fields are reused through
+`SampleCovarianceExactRowCenteredSquareTroppAssumptions`. Negative-side fields
+remain explicit because they use the negative centered row-rank-one family and a
+separate variance-radius family. -/
+structure SampleCovarianceExactRowCenteredSquareTwoSidedTroppAssumptions
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m n) (R Rneg t : Real)
+    (Rvar RvarNeg : Fin m -> Real) : Prop where
+  positive :
+    SampleCovarianceExactRowCenteredSquareTroppAssumptions
+      (P := P) A R t Rvar
+  negRowSqNormBound :
+    forall k : Fin m, forall omega,
+      vectorSqNorm (rowVector A k omega) <= Rneg
+  negRowSqNormVarianceBound :
+    forall k : Fin m, forall omega,
+      vectorSqNorm (rowVector A k omega) <= RvarNeg k
+  negExpIntegrable :
+    forall k : Fin m,
+      IntegrableRandomMatrix P
+        (matrixExpScaledFamily
+          (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+          (sampleCovarianceTailTheta (m := m) Rneg t
+            (rowSqNormVarianceProxyNormRHS RvarNeg))
+          k)
+  negTraceExpIntegrable :
+    IntegrableRealRandomVariable P
+      (traceExpIntegrand
+        (centeredSampleCovarianceRowRankOneSumNeg (P := P) A)
+        (sampleCovarianceTailTheta (m := m) Rneg t
+          (rowSqNormVarianceProxyNormRHS RvarNeg)))
+  negVariancePositive : 0 < rowSqNormVarianceProxyNormRHS RvarNeg
+  negRadiusNonneg : 0 <= Rneg
+  negVarianceRadiiNonneg : forall i : Fin m, 0 <= RvarNeg i
+  negCenteredSquareChain :
+    @varianceProxyNormBound_of_centeredSquareChain_statement
+      Omega _ P _ (Fin m) _ n
+      (rankOneRandomMatrixFamily (rowVector A))
+      (fun i => matrixSecondMoment P (rankOneRandomMatrix (rowVector A i)))
+      (rowSqNormVarianceProxyNormRHS RvarNeg)
+  negTroppPrimitive :
+    troppMasterTraceMGFFiniteFamily_statement
+      (P := P)
+      (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+      (bernsteinSecondMomentComparisonFamily P
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+        (sampleCovarianceTailTheta (m := m) Rneg t
+          (rowSqNormVarianceProxyNormRHS RvarNeg))
+        (sampleCovarianceCenteredRankOneRadius Rneg))
+      (matrixVarianceProxy P
+        (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A))
+      (sampleCovarianceTailTheta (m := m) Rneg t
+        (rowSqNormVarianceProxyNormRHS RvarNeg))
+      (sampleCovarianceCenteredRankOneRadius Rneg)
+
 /-- Sample-covariance quadratic-form upper-tail wrapper using the exact-row
 bounded-row variance-proxy consumer.
 
@@ -2917,6 +3042,36 @@ theorem sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound
       (P := P) (A := A) (R := R) (t := t) (Rvar := Rvar)
       hm hMeas hLp hSq hSqVar hIndep hExpInt hTraceInt hSigma hR hRvar ht
       hSharp hTropp
+
+/-- Sample-covariance quadratic-form upper-tail wrapper consuming the bundled
+exact-row centered-square-chain Tropp assumptions.
+
+This is a thin natural-state wrapper over
+`sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_centeredSquareChain_of_troppPrimitive`.
+It packages existing premises only and proves no new Tropp/Lieb, trace-MGF,
+variance-proxy, or concentration theorem. -/
+theorem sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_centeredSquareChain_of_troppAssumptions
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m (n + 1))
+    (R t : Real)
+    (Rvar : Fin m -> Real)
+    (h : SampleCovarianceExactRowCenteredSquareTroppAssumptions
+      (P := P) A R t Rvar) :
+    P (quadraticFormUpperTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t) <=
+      sampleCovarianceQuadraticFormTailRHS
+        (m := m) (n := n + 1) R t
+        (rowSqNormVarianceProxyNormRHS Rvar) := by
+  exact
+    sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_centeredSquareChain_of_troppPrimitive
+      (P := P) (A := A) (R := R) (t := t) (Rvar := Rvar)
+      h.nonemptyRows h.measurable h.rowMemLp h.rowSqNormBound
+      h.rowSqNormVarianceBound h.independentRows h.expIntegrable
+      h.traceExpIntegrable h.variancePositive h.radiusNonneg
+      h.varianceRadiiNonneg h.deviationPositive h.centeredSquareChain
+      h.troppPrimitive
+
 /-- Sample-covariance quadratic-form upper-tail wrapper using the crude
 bounded-row variance-proxy norm bound.
 
@@ -4039,6 +4194,43 @@ theorem sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos
       hm hMeas hLp hSq hSqNeg hSqVar hSqVarNeg hIndep hExpInt hTraceInt
       hSigma hR hRvar ht hSharp hTropp hExpIntNeg hTraceIntNeg hSigmaNeg
       hRNeg hRvarNeg hSharpNeg hTroppNeg
+
+
+/-- Arbitrary-column sample-covariance operator-norm wrapper consuming the
+bundled exact-row centered-square-chain Tropp assumptions.
+
+This is a thin natural-state wrapper over the corresponding `..._of_troppPrimitives`
+route. It keeps the positive and negative centered-square chains and Tropp
+primitives explicit inside the bundle. -/
+theorem sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_centeredSquareChain_of_troppAssumptions
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m n)
+    (R Rneg t : Real)
+    (Rvar RvarNeg : Fin m -> Real)
+    (h : SampleCovarianceExactRowCenteredSquareTwoSidedTroppAssumptions
+      (P := P) A R Rneg t Rvar RvarNeg) :
+    P (SelfAdjointOperatorNormTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t) <=
+      sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n) R t (rowSqNormVarianceProxyNormRHS Rvar) +
+        sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n) Rneg t
+          (rowSqNormVarianceProxyNormRHS RvarNeg) := by
+  exact
+    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_centeredSquareChain_of_troppPrimitives
+      (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
+      (Rvar := Rvar) (RvarNeg := RvarNeg)
+      h.positive.nonemptyRows h.positive.measurable h.positive.rowMemLp
+      h.positive.rowSqNormBound h.negRowSqNormBound
+      h.positive.rowSqNormVarianceBound h.negRowSqNormVarianceBound
+      h.positive.independentRows h.positive.expIntegrable
+      h.positive.traceExpIntegrable h.positive.variancePositive
+      h.positive.radiusNonneg h.positive.varianceRadiiNonneg
+      h.positive.deviationPositive h.positive.centeredSquareChain
+      h.positive.troppPrimitive h.negExpIntegrable h.negTraceExpIntegrable
+      h.negVariancePositive h.negRadiusNonneg h.negVarianceRadiiNonneg
+      h.negCenteredSquareChain h.negTroppPrimitive
 
 /-- Arbitrary-column sample-covariance self-adjoint operator-norm tail wrapper
 using crude bounded-row variance-proxy norm bounds.
