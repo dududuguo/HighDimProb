@@ -260,7 +260,7 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   hypotheses.
 - `StatementRoutes` is an examples-only route index; it groups representative example-level statement families without adding core API. Lower-level bridge and frontier checks belong in source, tests, and judge files rather than separate reader-facing examples.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
-- Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The positive-side quadratic-form route and the two-sided/operator-norm route now have exact-row variance-proxy wrappers, and the named negative sample-covariance family has an exact-row variance-proxy provider. The preferred sample-covariance example route now uses Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
+- Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The positive-side quadratic-form route and the two-sided/operator-norm route now have exact-row variance-proxy wrappers, plus centered-square-chain variants that replace sample-specific sharp-chain premises by generic centered-square-chain premises. The named negative sample-covariance family has an exact-row variance-proxy provider. The preferred sample-covariance example route now uses Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
 - Negative-side provider-transfer adapters only move explicit opposite-parameter
   assumptions onto the named negative sample-covariance family; they do not
   prove exponential integrability, trace-exponential integrability, or CFC. The
@@ -364,11 +364,14 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   `RM-VP-concrete-row-moment-evaluation-contract`, adding the exact-row
   concrete row-moment bridge from the generic centered-square variance-proxy
   chain to the sample-specific sharp-chain statement and consumer.
-- Next safe hardbone task:
-  `RM-VP-centered-square-chain-wrapper-integration-contract`, focused on adding
-  thin sample-covariance wrapper variants that consume the generic
-  centered-square chain bridge instead of the sample-specific sharp-chain
-  premise, without changing Tropp/Lieb or Matrix Bernstein boundaries.
+- Completed hardbone proof leaf:
+  `RM-VP-centered-square-chain-wrapper-integration-contract`, adding
+  positive-side quadratic-form and two-sided/operator-norm sample-covariance
+  wrappers that consume generic centered-square variance-proxy chains instead
+  of sample-specific sharp-chain premises.
+- Next safe hardbone task: PR/check closeout for this wrapper integration, then
+  select the next RandomMatrix leaf without changing Tropp/Lieb or Matrix
+  Bernstein boundaries.
 
 ## Verification
 

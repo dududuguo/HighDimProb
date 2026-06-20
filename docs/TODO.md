@@ -17,13 +17,12 @@ This is the active short list. Old completed task logs were collapsed into
   Matrix Bernstein proofs.
 - Prefer shared RandomMatrix APIs over unfolded formulas in examples, tests,
   judge files, and docs.
-- Next RandomMatrix hardbone task:
+- Current RandomMatrix hardbone closeout: finish PR/check review for
   `RM-VP-centered-square-chain-wrapper-integration-contract`.
-- The concrete exact-row row-moment bridge is available. The next task should
-  add thin sample-covariance wrapper variants that consume the generic
-  centered-square variance-proxy chain bridge instead of the sample-specific
-  sharp-chain premise, without claiming new Tropp/Lieb or full Matrix Bernstein
-  proofs.
+- The centered-square-chain wrapper variants are available for both the
+  positive-side quadratic-form route and the two-sided/operator-norm route.
+  Keep follow-up tasks from claiming new Tropp/Lieb, trace-MGF, or full Matrix
+  Bernstein proofs.
 
 ## Active Documentation Work
 

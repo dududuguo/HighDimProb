@@ -42,7 +42,7 @@ git diff --check
   `HighDimProbTest/RandomMatrixHardboneStatementsAPI.lean`,
   `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`.
 - RandomMatrix sample-covariance negative-side provider-transfer adapters and
-  CFC-free sample-covariance wrappers, including the positive-side exact-row variance-proxy quadratic-form wrapper and the negative exact-row variance-proxy provider, are covered in
+  CFC-free sample-covariance wrappers, including the positive-side exact-row variance-proxy quadratic-form wrapper, its centered-square-chain variant, the two-sided/operator-norm exact-row wrappers, and the negative exact-row variance-proxy provider, are covered in
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
   `HighDimProbTest/ExamplesAPI.lean`, and
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`.

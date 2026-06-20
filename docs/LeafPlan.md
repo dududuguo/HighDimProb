@@ -35,10 +35,11 @@
   - Stage M-real-1: real-exponent `SubGaussianMoment` bridge
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
-  - Current repository next task:
-    RM-VP-centered-square-chain-wrapper-integration-contract. Natural-state
-    assumption bundling, negative trace-MGF provider cleanup, Matrix Bernstein,
-    Hanson-Wright, and WLLN/SLLN remain separate future directions.
+  - Current repository closeout:
+    PR/check review for RM-VP-centered-square-chain-wrapper-integration-contract.
+    Natural-state assumption bundling, negative trace-MGF provider cleanup,
+    Matrix Bernstein, Hanson-Wright, and WLLN/SLLN remain separate future
+    directions.
 - OrliczToTail
 - TailToOrlicz
 - MomentImplications
@@ -258,9 +259,13 @@
   `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two_of_centeredSquareChain`
   as the exact-row bridge from the generic centered-square variance-proxy chain
   to the sample-specific sharp-chain statement and consumer.
+- Follow-up completed proof leaf:
+  `RM-VP-centered-square-chain-wrapper-integration-contract`, adding
+  positive-side quadratic-form and two-sided/operator-norm wrappers that consume
+  generic centered-square variance-proxy chains over the row-rank-one family.
 - Boundary preserved: this does not prove the generic centered-square chain,
   Tropp/Lieb, Golden-Thompson, Bernstein CFC, or Matrix Bernstein.
-- Next safe leaf: `RM-VP-centered-square-chain-wrapper-integration-contract`.
+- Next safe leaf: PR/check closeout, then select the next RandomMatrix leaf.
 
 ## Process
 
