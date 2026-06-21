@@ -58,6 +58,7 @@ Core Matrix Bernstein helpers:
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_troppPrimitive`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions`
+- `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge`
 - `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`
 - `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions`
 - `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions`
@@ -245,7 +246,10 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   conditioning chain now has the thin theorem witness
   `troppConditionalStep_of_iIndepFun`, which only forwards the explicit
   per-index conditional-expectation provider and does not prove history
-  measurability or independence. The preferred optimized Matrix Bernstein
+  measurability or independence. The S10 wrapper
+  `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge` threads
+  the S9 trace-MGF consumer into the quadratic-form Laplace/tail route under an
+  explicit tail-event subset assumption. The preferred optimized Matrix Bernstein
   assumption bundles are now `MatrixBernsteinPositiveSideTroppAssumptions` and
   `MatrixBernsteinNegativeSideTroppAssumptions`, which expose Tropp/Lieb
   primitives but not pointwise CFC fields. The older explicit-CFC bundles and
@@ -362,8 +366,12 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   `RM-LIEB-S5-real-to-cstar-transport-api-contract`, proving the basic real-to-`CStarMatrix` transport shape in a probe, including entrywise, add/sub, and self-adjoint transport; positivity/order/log transport remains provider work, not a current main-repository completion.
 - Progress-first hardbone scaffold:
   `RM-LIEB-S9-conditional-step-assumption-composition-contract`, adding `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge` as a finite-family trace-MGF consumer from explicit conditioning, natural-state, integrability, and variance-proxy assumptions. The hard assumptions consumed by the theorem are recorded in `docs/STATEMENTS.md`; this does not prove those assumptions.
-- Next aggressive hardbone task:
-  `RM-LIEB-S10-trace-mgf-to-tail-assumption-composition-contract`, focused on threading the conditional trace-MGF consumer into the downstream tail route under explicit tail-side assumptions.
+- Progress-first hardbone scaffold:
+  `RM-LIEB-S10-trace-mgf-to-tail-assumption-composition-contract`, adding
+  `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge` as a
+  trace-MGF-to-tail consumer under explicit tail-side assumptions. The hard
+  assumptions consumed by the theorem are recorded in `docs/STATEMENTS.md`;
+  this does not prove those assumptions or a full Matrix Bernstein theorem.
 
 ## Verification
 

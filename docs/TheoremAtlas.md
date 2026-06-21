@@ -129,7 +129,11 @@ or conditional-expectation inputs themselves. The conditional route is now also
 composed into the finite-family Bernstein trace-MGF conclusion by
 `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge`, under explicit
 natural-state, integrability, MGF, and variance-proxy assumptions recorded in
-`docs/STATEMENTS.md`.
+`docs/STATEMENTS.md`. The S10 wrapper
+`matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge` threads
+that trace-MGF conclusion into the quadratic-form Laplace/tail route under an
+explicit trace-exp threshold event subset assumption; it is not a full Matrix
+Bernstein theorem.
 
 ## Not Yet Proved
 

@@ -41,7 +41,9 @@ git diff --check
   the proved centered-square expectation bridge leaf, and the progress-first
   conditional finite-family trace-MGF assumption-composition consumer are covered in
   `HighDimProbTest/RandomMatrixHardboneStatementsAPI.lean`,
-  `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`.
+  `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
+  `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`, and
+  `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`.
 - RandomMatrix sample-covariance negative-side provider-transfer adapters, the
   compact `SampleCovarianceTailTarget` /
   `SampleCovarianceBoundedRowTroppAssumptions` route, bridge-layer exact-row
