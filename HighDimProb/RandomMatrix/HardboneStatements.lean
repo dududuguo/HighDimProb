@@ -1448,6 +1448,58 @@ theorem troppMasterTraceMGFStep_of_liebJensen {Omega : Type*}
     troppMasterTraceMGFStep_statement (P := P) H Z :=
   hChain hJensen hNormalize
 
+/-- Progress-first composition of the Lieb/Jensen one-step chain with the
+log/order-to-`K` chain.
+
+This theorem deliberately consumes the hard analytic assumptions explicitly:
+Lieb/Jensen, log-exp normalization, operator-log/log-domain comparison, and
+trace-exp monotonicity are premises.  It does not prove those facts, nor
+Golden-Thompson, conditional expectation, integrability propagation, variance
+proxy control, or full Matrix Bernstein. -/
+theorem troppMasterTraceMGFStep_trace_bound_of_liebJensen_logOrder {Omega : Type*}
+    [MeasurableSpace Omega] {P : MeasureTheory.Measure Omega}
+    [MeasureTheory.IsProbabilityMeasure P] {n : Nat}
+    (H K : Matrix (Fin n) (Fin n) Real)
+    (Z : RandomMatrix Omega n n)
+    (hStepChain : troppMasterTraceMGFStep_of_liebJensen_statement (P := P) H Z)
+    (hJensen :
+      liebJensenTraceExp_statement (P := P) H
+        (fun omega => matrixExp (Z omega)))
+    (hNormalize :
+      forall omega, matrixExpLogSelfAdjointNormalization_statement (Z omega))
+    (hLogChain :
+      troppLogExpComparisonToK_of_logOrderKChain_statement H
+        (matrixExpect P (fun omega => matrixExp (Z omega))) K)
+    (hLog : matrixLog_le_of_le_matrixExp_statement
+      (matrixExpect P (fun omega => matrixExp (Z omega))) K)
+    (hTrace : traceMatrixExp_mono_add_selfAdjoint_statement H
+      (CFC.log (matrixExpect P (fun omega => matrixExp (Z omega)))) K)
+    (hH : IsSelfAdjointMatrix H)
+    (hZ : RandomSelfAdjointMatrix P Z)
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (fun omega => traceMatrixExp (H + Z omega)))
+    (hExpInt : IntegrableRandomMatrix P (fun omega => matrixExp (Z omega)))
+    (hExpMeanSA :
+      IsSelfAdjointMatrix
+        (matrixExpect P (fun omega => matrixExp (Z omega))))
+    (hExpMeanPos :
+      IsStrictlyPositive
+        (matrixExpect P (fun omega => matrixExp (Z omega))))
+    (hKSA : IsSelfAdjointMatrix K)
+    (hMGF :
+      MatrixLE
+        (matrixExpect P (fun omega => matrixExp (Z omega)))
+        (matrixExp K)) :
+    expect P (fun omega => traceMatrixExp (H + Z omega)) <=
+      traceMatrixExp (H + K) :=
+  troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK H K Z
+    (troppMasterTraceMGFStep_of_liebJensen H Z hStepChain hJensen hNormalize)
+    (troppLogExpComparisonToK_of_logMonotone_traceExpMono H
+      (matrixExpect P (fun omega => matrixExp (Z omega))) K
+      hLogChain hLog hTrace)
+    hH hZ hTraceInt hExpInt hExpMeanSA hExpMeanPos hKSA hMGF
+
 /-- Thin witness for the finite-family conditioning hardbone chain.
 
 This theorem does not prove natural history measurability, history/current-step

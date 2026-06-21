@@ -9,6 +9,7 @@ Start here:
 - `RandomMatrixAPI.md`: RandomMatrix and Matrix Bernstein public names.
 - `TermMap.md`: compact concept-to-source map.
 - `TheoremAtlas.md`: theorem-family status without full signatures.
+- `STATEMENTS.md`: explicit hard assumptions consumed by progress-first contracts.
 - `TestPlan.md`: checks contributors should run.
 - `Workflow.md`: contribution and cleanup rules.
 - `TODO.md`: short active task list.

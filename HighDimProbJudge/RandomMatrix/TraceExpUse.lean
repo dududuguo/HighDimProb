@@ -140,6 +140,7 @@ example {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
 #check HighDimProb.matrixExpLogSelfAdjointNormalization_statement
 #check HighDimProb.matrixExpLogSelfAdjointNormalization
 #check HighDimProb.troppMasterTraceMGFStep_of_liebJensen_statement
+#check HighDimProb.troppMasterTraceMGFStep_trace_bound_of_liebJensen_logOrder
 #check HighDimProb.troppNaturalHistoryMeasurable_statement
 #check HighDimProb.troppHistoryStepIndependent_of_iIndepFun_statement
 #check HighDimProb.condExp_traceExp_history_add_independent_step_statement

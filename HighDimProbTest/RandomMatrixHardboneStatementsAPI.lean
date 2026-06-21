@@ -89,6 +89,7 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check troppLogExpComparisonToK_of_logMonotone_traceExpMono
 #check matrixExpLogSelfAdjointNormalization
 #check troppMasterTraceMGFStep_of_liebJensen
+#check troppMasterTraceMGFStep_trace_bound_of_liebJensen_logOrder
 #check troppMasterTraceMGFConditionalStep_of_conditioningBridge
 #check traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider
 #check varianceProxyNormBound_of_centeredSquareChain
@@ -147,6 +148,43 @@ example
 
 example : Prop :=
   troppMasterTraceMGFStep_of_liebJensen_statement (P := P) H Y
+
+example
+    (hStepChain : troppMasterTraceMGFStep_of_liebJensen_statement (P := P) H Y)
+    (hJensen :
+      liebJensenTraceExp_statement (P := P) H
+        (fun omega => matrixExp (Y omega)))
+    (hNormalize :
+      forall omega, matrixExpLogSelfAdjointNormalization_statement (Y omega))
+    (hLogChain :
+      troppLogExpComparisonToK_of_logOrderKChain_statement H
+        (matrixExpect P (fun omega => matrixExp (Y omega))) K)
+    (hLog : matrixLog_le_of_le_matrixExp_statement
+      (matrixExpect P (fun omega => matrixExp (Y omega))) K)
+    (hTrace : traceMatrixExp_mono_add_selfAdjoint_statement H
+      (CFC.log (matrixExpect P (fun omega => matrixExp (Y omega)))) K)
+    (hH : IsSelfAdjointMatrix H)
+    (hY : RandomSelfAdjointMatrix P Y)
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (fun omega => traceMatrixExp (H + Y omega)))
+    (hExpInt : IntegrableRandomMatrix P (fun omega => matrixExp (Y omega)))
+    (hExpMeanSA :
+      IsSelfAdjointMatrix
+        (matrixExpect P (fun omega => matrixExp (Y omega))))
+    (hExpMeanPos :
+      IsStrictlyPositive
+        (matrixExpect P (fun omega => matrixExp (Y omega))))
+    (hKSA : IsSelfAdjointMatrix K)
+    (hMGF :
+      MatrixLE
+        (matrixExpect P (fun omega => matrixExp (Y omega)))
+        (matrixExp K)) :
+    expect P (fun omega => traceMatrixExp (H + Y omega)) <=
+      traceMatrixExp (H + K) :=
+  troppMasterTraceMGFStep_trace_bound_of_liebJensen_logOrder
+    H K Y hStepChain hJensen hNormalize hLogChain hLog hTrace
+    hH hY hTraceInt hExpInt hExpMeanSA hExpMeanPos hKSA hMGF
 
 example : Prop :=
   troppConditionalStep_of_iIndepFun_statement (P := P) theta X Kfam mHist

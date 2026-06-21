@@ -39,7 +39,8 @@ git diff --check
   CFC hardbone leaf, the proved matrix-exp/log normalization and log-domain leaves, the proved
   matrix log/order bridge leaf, the proved excess-support trace bridge leaf,
   the proved centered-square expectation bridge leaf, and the proved
-  real-to-`CStarMatrix` complexified positivity/order transport leaf are covered in
+  real-to-`CStarMatrix` complexified positivity/order transport leaf, and the
+  progress-first Tropp/Lieb one-step assumption-composition consumer are covered in
   `HighDimProbTest/RandomMatrixHardboneStatementsAPI.lean`,
   `HighDimProbTest/RandomMatrixCStarBridgeAPI.lean`, and
   `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`.

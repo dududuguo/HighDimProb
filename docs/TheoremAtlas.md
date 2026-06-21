@@ -122,7 +122,11 @@ the sharp-chain premise explicit. The local matrix-exp/log normalization leaf is
 route now includes the proved thin bridge `matrixLog_le_of_le_matrixExp`, which
 composes explicit operator-log monotonicity and `matrixExp` log-domain premises.
 It does not prove those premises or the downstream trace-exponential
-monotonicity step. The finite-family conditioning chain now has the thin witness
+monotonicity step. The progress-first consumer
+`troppMasterTraceMGFStep_trace_bound_of_liebJensen_logOrder` now threads explicit
+Lieb/Jensen, log normalization, log/order, trace-exp monotonicity, and ordinary
+one-step side assumptions into the direct trace-MGF `K` bound; the consumed hard
+assumptions are tracked in `docs/STATEMENTS.md`. The finite-family conditioning chain now has the thin witness
 `troppConditionalStep_of_iIndepFun`; it forwards the explicit per-index
 conditional-expectation provider and does not prove the history, independence,
 or conditional-expectation inputs themselves.

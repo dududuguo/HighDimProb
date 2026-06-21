@@ -26,12 +26,13 @@ This is the active short list. Old completed task logs were collapsed into
   future provider compression; the compact bounded-row sample-covariance route
   remains the reader-facing surface.
 - Next RandomMatrix hardbone task:
-  `RM-LIEB-S7-real-to-complexified-positivity-order-bridge-audit-contract`.
-- That next task should audit whether HighDimProb real PSD, `MatrixLE`, and real
-  strict-positivity assumptions can provide the complexified premises consumed
-  by the proved real-to-`CStarMatrix` transport lemmas. Do not treat `CFC.log`
-  log-back compatibility as proved unless a separate compatibility theorem is
-  established.
+  `RM-LIEB-S9-conditional-step-assumption-composition-contract`.
+- Current strategy is progress-first: if a hard analytic ingredient is missing,
+  consume it as an explicit assumption, register it in `docs/STATEMENTS.md`, and
+  keep moving the high-level Tropp/Lieb trace-MGF route forward. Do not claim
+  Lieb/Jensen, Golden-Thompson, operator-log monotonicity, trace-exp
+  monotonicity, conditional expectation, or full Matrix Bernstein unless a
+  separate provider theorem proves it.
 
 ## Active Documentation Work
 

@@ -362,8 +362,10 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   `RM-LIEB-S5-real-to-cstar-transport-api-contract`, proving the basic real-to-`CStarMatrix` transport shape in a probe, including entrywise, add/sub, and self-adjoint transport; positivity/order/log transport remains open.
 - Completed hardbone contract leaf:
   `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`, proving the CStar-side transport from explicit complexified nonnegativity, Loewner-order, and strict-positivity premises. The real-to-complex positivity/order bridge and unconditional `CFC.log` log-back compatibility remain open.
-- Next safe hardbone task:
-  `RM-LIEB-S7-real-to-complexified-positivity-order-bridge-audit-contract`, focused on whether HighDimProb real PSD/`MatrixLE`/strict-positivity facts can supply the complexified premises without overstating log-back compatibility.
+- Progress-first hardbone contract leaf:
+  `RM-LIEB-S8-tropp-master-trace-mgf-assumption-composition-contract`, adding `troppMasterTraceMGFStep_trace_bound_of_liebJensen_logOrder` as a high-level consumer from explicit Lieb/Jensen and log/order assumptions to the one-step trace-MGF `K` bound. The hard assumptions consumed by the theorem are recorded in `docs/STATEMENTS.md`; this does not prove those assumptions.
+- Next aggressive hardbone task:
+  `RM-LIEB-S9-conditional-step-assumption-composition-contract`, focused on threading explicit one-step/conditional assumptions into the finite-family trace-MGF route without waiting for the hard assumption providers.
 
 ## Verification
 
