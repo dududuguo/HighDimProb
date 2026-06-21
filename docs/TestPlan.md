@@ -43,8 +43,10 @@ git diff --check
   progress-first Tropp/Lieb one-step assumption-composition consumer and the
   conditional finite-family trace-MGF assumption-composition consumer are covered in
   `HighDimProbTest/RandomMatrixHardboneStatementsAPI.lean`,
-  `HighDimProbTest/RandomMatrixCStarBridgeAPI.lean`, and
-  `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`.
+  `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
+  `HighDimProbTest/RandomMatrixCStarBridgeAPI.lean`,
+  `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`, and
+  `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`.
 - RandomMatrix sample-covariance negative-side provider-transfer adapters, the
   compact `SampleCovarianceTailTarget` /
   `SampleCovarianceBoundedRowTroppAssumptions` route, bridge-layer exact-row

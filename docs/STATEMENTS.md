@@ -80,3 +80,31 @@ Non-goals for this consumer:
   trace-exponential integrability propagation, strict positivity of the
   matrix-exponential mean, variance-proxy control, Lieb/Jensen,
   Golden-Thompson, or full Matrix Bernstein.
+
+## RM-LIEB-S10: conditioning trace-MGF to explicit Laplace/tail route
+
+Consumer theorem:
+
+- `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge`
+
+This theorem composes the S9 conditioning trace-MGF consumer with the existing
+quadratic-form Laplace route. It requires all S9 assumptions listed above, plus
+the following tail-side facts as explicit premises:
+
+- AEMeasurability of `fun omega => ENNReal.ofReal
+  (traceExpIntegrand (randomMatrixSum X) theta omega)`.
+- The event bridge `quadraticFormUpperTailEvent (randomMatrixSum X) t ⊆
+  traceExpThresholdEvent (randomMatrixSum X) theta t`.
+
+The real trace-MGF to `TraceMGFBernsteinVarianceProxyBoundLIntegral` conversion
+is provided by the existing proved bridge, using the explicit full-sum
+trace-exponential integrability and self-adjoint summand assumptions already
+required by S9.
+
+Non-goals for this consumer:
+
+- It does not prove the tail event domination, natural-history measurability,
+  independence conditioning, conditional-expectation reduction, trace-exp
+  integrability propagation, strict positivity of matrix-exponential means,
+  variance-proxy control, Lieb/Jensen, Golden-Thompson, theta optimization,
+  dimension/rank reduction, or full Matrix Bernstein.
