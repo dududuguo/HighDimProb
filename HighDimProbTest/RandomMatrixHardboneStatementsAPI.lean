@@ -3,7 +3,7 @@ import HighDimProb.RandomMatrix.HardboneStatements
 
 open MeasureTheory
 open HighDimProb
-open scoped MatrixOrder Matrix.Norms.Operator
+open scoped ComplexOrder MatrixOrder Matrix.Norms.Operator
 
 variable {Omega : Type*} [MeasurableSpace Omega]
 variable {P : Measure Omega}
@@ -36,6 +36,10 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check realMatrixToCStarStrictlyPositive_statement
 #check realMatrixToCStarMatrixLE_statement
 #check realMatrixToCStarLogBack_statement
+#check realMatrixToCStarMatrix_nonneg_of_complexified_nonneg
+#check realMatrixToCStarMatrixLE_of_complexified_le
+#check realMatrixToCStarStrictlyPositive_of_complexified
+#check realMatrixToCStarLogBack_of_transport
 #check traceMatrixExp_mono_add_selfAdjoint_statement
 #check troppLogExpComparisonToK_of_logOrderKChain_statement
 #check liebTraceExpConcavity_statement
@@ -119,6 +123,27 @@ example : Prop :=
 
 example : Prop :=
   realMatrixToCStarLogBack_statement A
+
+example
+    (hA : 0 <= A.map (algebraMap Real Complex)) :
+    0 <= realMatrixToCStarMatrix A :=
+  realMatrixToCStarMatrix_nonneg_of_complexified_nonneg A hA
+
+example
+    (hAB : M.map (algebraMap Real Complex) <= K.map (algebraMap Real Complex)) :
+    realMatrixToCStarMatrix M <= realMatrixToCStarMatrix K :=
+  realMatrixToCStarMatrixLE_of_complexified_le M K hAB
+
+example
+    (hA : IsStrictlyPositive (A.map (algebraMap Real Complex))) :
+    IsStrictlyPositive (realMatrixToCStarMatrix A) :=
+  realMatrixToCStarStrictlyPositive_of_complexified A hA
+
+example
+    (hlog : CFC.log (realMatrixToCStarMatrix A) =
+      realMatrixToCStarMatrix (CFC.log A)) :
+    realMatrixToCStarLogBack_statement A :=
+  realMatrixToCStarLogBack_of_transport A hlog
 
 example : Prop :=
   troppMasterTraceMGFStep_of_liebJensen_statement (P := P) H Y

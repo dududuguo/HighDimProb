@@ -2,7 +2,7 @@ import HighDimProb.RandomMatrix
 
 noncomputable section
 
-open scoped MatrixOrder Matrix.Norms.Operator
+open scoped ComplexOrder MatrixOrder Matrix.Norms.Operator
 
 #check HighDimProb.matrixExp
 #check HighDimProb.matrixTrace
@@ -103,6 +103,32 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.realMatrixToCStarStrictlyPositive_statement
 #check HighDimProb.realMatrixToCStarMatrixLE_statement
 #check HighDimProb.realMatrixToCStarLogBack_statement
+#check HighDimProb.realMatrixToCStarMatrix_nonneg_of_complexified_nonneg
+#check HighDimProb.realMatrixToCStarMatrixLE_of_complexified_le
+#check HighDimProb.realMatrixToCStarStrictlyPositive_of_complexified
+#check HighDimProb.realMatrixToCStarLogBack_of_transport
+
+example {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
+    (hA : 0 <= A.map (algebraMap Real Complex)) :
+    0 <= HighDimProb.realMatrixToCStarMatrix A :=
+  HighDimProb.realMatrixToCStarMatrix_nonneg_of_complexified_nonneg A hA
+
+example {n : Nat} (A B : Matrix (Fin n) (Fin n) Real)
+    (hAB : A.map (algebraMap Real Complex) <= B.map (algebraMap Real Complex)) :
+    HighDimProb.realMatrixToCStarMatrix A <= HighDimProb.realMatrixToCStarMatrix B :=
+  HighDimProb.realMatrixToCStarMatrixLE_of_complexified_le A B hAB
+
+example {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
+    (hA : IsStrictlyPositive (A.map (algebraMap Real Complex))) :
+    IsStrictlyPositive (HighDimProb.realMatrixToCStarMatrix A) :=
+  HighDimProb.realMatrixToCStarStrictlyPositive_of_complexified A hA
+
+example {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
+    (hlog : CFC.log (HighDimProb.realMatrixToCStarMatrix A) =
+      HighDimProb.realMatrixToCStarMatrix (CFC.log A)) :
+    HighDimProb.realMatrixToCStarLogBack_statement A :=
+  HighDimProb.realMatrixToCStarLogBack_of_transport A hlog
+
 #check HighDimProb.matrixExpLogDomainForSelfAdjoint_statement
 #check HighDimProb.matrixLog_le_of_le_matrixExp_statement
 #check HighDimProb.matrixLog_le_of_le_matrixExp

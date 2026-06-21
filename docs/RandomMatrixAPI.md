@@ -46,14 +46,20 @@ CStar representation bridge:
 - `realMatrixToCStarMatrix_add`
 - `realMatrixToCStarMatrix_sub`
 - `isSelfAdjoint_realMatrixToCStarMatrix`
+- `realMatrixToCStarMatrix_nonneg_of_complexified_nonneg`
+- `realMatrixToCStarMatrixLE_of_complexified_le`
+- `realMatrixToCStarStrictlyPositive_of_complexified`
 - `realMatrixToCStarStrictlyPositive_statement`
 - `realMatrixToCStarMatrixLE_statement`
 - `realMatrixToCStarLogBack_statement`
+- `realMatrixToCStarLogBack_of_transport`
 
 These expose the real-matrix to `CStarMatrix` representation layer needed to
-reuse Mathlib CStar functional-calculus order results. Strict positivity,
-Loewner-order, and `CFC.log` transport are still statement targets, not proved
-facts.
+reuse Mathlib CStar functional-calculus order results. The CStar-side transport
+from explicit complexified nonnegativity, Loewner order, and strict positivity
+premises is proved. The real-matrix-to-complexified positivity/order bridge and
+unconditional `CFC.log` transport remain open; `realMatrixToCStarLogBack_of_transport`
+only consumes an explicitly supplied log-back equality.
 
 ## Matrix Bernstein Surface
 
@@ -194,7 +200,7 @@ Hardbone status table:
 | Scalar Bernstein hardbone leaf | `scalarBernsteinExpQuadraticInequality_statement` | proven by `scalarBernsteinExpQuadraticInequality` | CFC-chain assumptions can reuse the proved scalar theorem | none for this scalar leaf |
 | Bernstein CFC | `bernsteinMatrixExp_le_quadratic_statement` | proven by `bernsteinMatrixExp_le_quadratic` | `bernsteinMatrixExp_le_quadratic_of_cfcLeaves` documents the reusable composition | preferred `*_of_troppAssumptions` wrappers bypass pointwise CFC fields; explicit-CFC wrappers remain for compatibility |
 | Matrix log/order bridge | `matrixLog_le_of_le_matrixExp_statement` | proven by `matrixLog_le_of_le_matrixExp` | turns explicit log-monotonicity and `matrixExp` log-domain premises into `log M <= K` | `matrixExp` log-domain is supplied by `matrixExpLogDomainForSelfAdjoint`; operator-log monotonicity remains the external input |
-| Real-to-CStar bridge | `realMatrixToCStarMatrix` and transport statement targets | basic representation map, add/sub, and self-adjoint transport proved | exposes the CStar representation route for future operator-log monotonicity proofs | strict positivity/order/log-back transport from real matrices to `CStarMatrix` remains open |
+| Real-to-CStar bridge | `realMatrixToCStarMatrix` and transport statement targets | representation map, add/sub, self-adjoint transport, and CStar-side positivity/order/strict-positivity transport from explicit complexified premises proved | exposes the CStar representation route for future operator-log monotonicity proofs | real-to-complex positivity/order premises and unconditional log-back transport remain open |
 | Log/order-to-`K` | `troppLogExpComparisonToK_of_logOrderKChain_statement` | typed-prop | `troppLogExpComparisonToK_of_logMonotone_traceExpMono` | trace-exp monotonicity plus the explicit log/order bridge inputs |
 | Tropp/Lieb/GT one-step | `troppMasterTraceMGFStep_of_liebJensen_statement` | typed-prop | `troppMasterTraceMGFStep_of_liebJensen` | Lieb concavity, probability-measure Jensen, log-exp normalization; Golden-Thompson is separate |
 | Conditioning / independence | `troppConditionalStep_of_iIndepFun_statement` | proven by `troppConditionalStep_of_iIndepFun` | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | thin forwarder only; generated histories, history/current-step independence, finite-family independence, and conditional expectation reduction remain explicit premises |

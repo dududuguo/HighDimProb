@@ -26,8 +26,12 @@ This is the active short list. Old completed task logs were collapsed into
   future provider compression; the compact bounded-row sample-covariance route
   remains the reader-facing surface.
 - Next RandomMatrix hardbone task:
-  `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
-- That next task should audit positivity/order/log transport for the real-to-CStar route; the basic transport map, entrywise behavior, add/sub, and self-adjoint transport are probe-ready.
+  `RM-LIEB-S7-real-to-complexified-positivity-order-bridge-audit-contract`.
+- That next task should audit whether HighDimProb real PSD, `MatrixLE`, and real
+  strict-positivity assumptions can provide the complexified premises consumed
+  by the proved real-to-`CStarMatrix` transport lemmas. Do not treat `CFC.log`
+  log-back compatibility as proved unless a separate compatibility theorem is
+  established.
 
 ## Active Documentation Work
 

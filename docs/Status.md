@@ -360,8 +360,10 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   `RM-LIEB-S4-real-matrix-to-cstar-log-monotonicity-contract`, proving that Mathlib `CFC.log_le_log` is available on `CStarMatrix (Fin n) (Fin n) ℂ` while leaving real-matrix transport open.
 - Completed hardbone contract leaf:
   `RM-LIEB-S5-real-to-cstar-transport-api-contract`, proving the basic real-to-`CStarMatrix` transport shape in a probe, including entrywise, add/sub, and self-adjoint transport; positivity/order/log transport remains open.
+- Completed hardbone contract leaf:
+  `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`, proving the CStar-side transport from explicit complexified nonnegativity, Loewner-order, and strict-positivity premises. The real-to-complex positivity/order bridge and unconditional `CFC.log` log-back compatibility remain open.
 - Next safe hardbone task:
-  `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`, focused on positivity/order/log transport for the real-to-CStar route.
+  `RM-LIEB-S7-real-to-complexified-positivity-order-bridge-audit-contract`, focused on whether HighDimProb real PSD/`MatrixLE`/strict-positivity facts can supply the complexified premises without overstating log-back compatibility.
 
 ## Verification
 
