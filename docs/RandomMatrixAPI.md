@@ -61,6 +61,8 @@ facts.
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_troppPrimitive`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 - `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge`
+- `MatrixBernsteinConditioningTraceMGFTailAssumptions`
+- `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions`
 - `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
@@ -77,9 +79,12 @@ public surface is the `*_of_troppAssumptions` family, which uses
 `MatrixBernsteinNegativeSideTroppAssumptions` to expose Tropp/Lieb and
 bookkeeping assumptions without a user-supplied CFC field. The older
 `*_of_assumptions` and `_under_primitives` names remain compatibility surfaces.
-The route still does not prove Tropp/Lieb, Golden-Thompson, trace-exp
-integrability, variance-proxy control, tail event domination, or a full unconditional Matrix
-Bernstein theorem. The conditioning-to-tail wrapper
+The S10 conditioning-to-tail route also exposes
+`MatrixBernsteinConditioningTraceMGFTailAssumptions` and the thin
+`matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions`
+wrapper for reusable assumption passing. The route still does not prove
+Tropp/Lieb, Golden-Thompson, trace-exp integrability, variance-proxy control,
+tail event domination, or a full unconditional Matrix Bernstein theorem. The conditioning-to-tail wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge` is a thin
 composition from the S9 conditioning trace-MGF consumer to the existing
 quadratic-form Laplace route under an explicit tail-event subset assumption.

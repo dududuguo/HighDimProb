@@ -25,6 +25,9 @@ This is the active short list. Old completed task logs were collapsed into
   transfer, and PSD Loewner norm monotonicity are bridge-layer infrastructure for
   future provider compression; the compact bounded-row sample-covariance route
   remains the reader-facing surface.
+- S10 now has a reusable tail/conditioning assumption bundle; future work can
+  compress providers into that bundle or build a public-friendly natural-state
+  wrapper without changing theorem strength.
 - Next RandomMatrix hardbone task: select the next provider-compression or
   public-friendly Matrix Bernstein natural-state wrapper after S10.
 - Current strategy is progress-first: if a hard analytic ingredient is missing,

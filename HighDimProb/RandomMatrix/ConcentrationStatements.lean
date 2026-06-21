@@ -5163,6 +5163,110 @@ abbrev matrixBernsteinTraceMGFToLaplaceContract_under_primitives_statement
                 ENNReal.ofReal
                   (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V))
 
+/-- Named assumption bundle for the S10 conditioning trace-MGF to tail route.
+
+This structure packages exactly the explicit S9 conditioning trace-MGF premises
+and the two tail-side bridge premises consumed by
+`matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge`. It is an
+assumption contract only: it does not prove conditioning, tail domination,
+integrability propagation, variance-proxy control, or an unconditional Matrix
+Bernstein theorem. -/
+structure MatrixBernsteinConditioningTraceMGFTailAssumptions
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (V : Matrix (Fin n) (Fin n) Real)
+    (theta R t : Real)
+    (mHist : Fin m -> MeasurableSpace Omega) : Prop where
+  chain :
+    @troppConditionalStep_of_iIndepFun_statement Omega mOmega P m n
+      theta X K mHist
+  historyMeasurable :
+    @troppNaturalHistoryMeasurable_statement Omega mOmega m n
+      theta X K mHist
+  historyStepIndependent :
+    @troppHistoryStepIndependent_of_iIndepFun_statement Omega mOmega P m n
+      theta X K
+  conditionalExpectation :
+    forall i,
+      @condExp_traceExp_history_add_independent_step_statement
+        Omega mOmega P n
+        (mHist i) (@troppStateHistory Omega mOmega m n theta X K i)
+        (@troppCurrentRandomStep Omega mOmega m n theta X i) (K i)
+  historySub : forall i, mHist i <= mOmega
+  historyRandom :
+    forall i,
+      @IsRandomMatrix Omega mOmega n n P
+        (troppStateHistory theta X K i)
+  stepRandom :
+    forall i,
+      @IsRandomMatrix Omega mOmega n n P
+        (troppCurrentRandomStep theta X i)
+  historySelfAdjoint :
+    forall i omega, IsSelfAdjointMatrix (troppStateHistory theta X K i omega)
+  stepSelfAdjoint :
+    forall i,
+      @RandomSelfAdjointMatrix Omega mOmega n P
+        (troppCurrentRandomStep theta X i)
+  conditionalTraceIntegrable :
+    forall i,
+      @IntegrableRealRandomVariable Omega mOmega P
+        (fun omega =>
+          traceMatrixExp
+            (troppStateHistory theta X K i omega +
+              troppCurrentRandomStep theta X i omega))
+  stepExpIntegrable :
+    forall i,
+      @IntegrableRandomMatrix Omega mOmega n n P
+        (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))
+  expMeanSelfAdjoint :
+    forall i,
+      IsSelfAdjointMatrix
+        (@matrixExpect Omega mOmega n n P
+          (fun omega => matrixExp (troppCurrentRandomStep theta X i omega)))
+  expMeanStrictlyPositive :
+    forall i,
+      IsStrictlyPositive
+        (@matrixExpect Omega mOmega n n P
+          (fun omega => matrixExp (troppCurrentRandomStep theta X i omega)))
+  sigmaFiniteHistory : forall i, SigmaFinite (P.trim (historySub i))
+  rhsTraceIntegrable :
+    forall i,
+      @IntegrableRealRandomVariable Omega mOmega P
+        (fun omega =>
+          traceMatrixExp (troppStateHistory theta X K i omega + K i))
+  randomMatrix : forall i, IsRandomMatrix P (X i)
+  selfAdjoint : forall i, RandomSelfAdjointMatrix P (X i)
+  independent : ProbabilityTheory.iIndepFun X P
+  expIntegrable :
+    forall i,
+      IntegrableRandomMatrix P
+        (fun omega => matrixExp (SMul.smul theta (X i omega)))
+  traceIntegrable :
+    IntegrableRealRandomVariable P
+      (traceExpIntegrand (randomMatrixSum X) theta)
+  comparisonSelfAdjoint : forall i, IsSelfAdjointMatrix (K i)
+  varianceProxySelfAdjoint : IsSelfAdjointMatrix V
+  radiusNonneg : 0 <= R
+  thetaRange : abs theta * R < 3
+  mgfComparison :
+    forall i,
+      MatrixLE
+        (matrixExpect P
+          (fun omega => matrixExp (SMul.smul theta (X i omega))))
+        (matrixExp (K i))
+  varianceProxyNormalization :
+    Finset.univ.sum (fun i : Fin m => K i) =
+      SMul.smul (bernsteinMGFCoeff theta R) V
+  tailAEMeasurable :
+    AEMeasurable
+      (fun omega => ENNReal.ofReal
+        (traceExpIntegrand (randomMatrixSum X) theta omega)) P
+  tailEventSubset :
+    quadraticFormUpperTailEvent (randomMatrixSum X) t ⊆
+      traceExpThresholdEvent (randomMatrixSum X) theta t
+
 /-- Progress-first composition from the S9 conditioning trace-MGF bridge to the
 quadratic-form Laplace/tail bound.
 
@@ -5290,6 +5394,38 @@ theorem matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge
   exact
     quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral
       (randomMatrixSum X) V theta t R hTailMeas hTailSubset hLInt
+
+/-- Bundle-based S10 wrapper for the conditioning trace-MGF to tail route.
+
+This is only a field-access wrapper around
+`matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge`; the
+bundle name records that the assumptions are still tail/conditioning premises,
+not a full or unconditional Matrix Bernstein theorem. -/
+theorem matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (V : Matrix (Fin n) (Fin n) Real)
+    (theta R t : Real)
+    (mHist : Fin m -> MeasurableSpace Omega)
+    (h : MatrixBernsteinConditioningTraceMGFTailAssumptions
+      (P := P) X K V theta R t mHist) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum X) t) <=
+      ENNReal.ofReal (Real.exp (-(theta * t))) *
+        ENNReal.ofReal
+          (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V)) := by
+  exact
+    matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge
+      X K V theta R t mHist
+      h.chain h.historyMeasurable h.historyStepIndependent
+      h.conditionalExpectation h.historySub h.historyRandom h.stepRandom
+      h.historySelfAdjoint h.stepSelfAdjoint h.conditionalTraceIntegrable
+      h.stepExpIntegrable h.expMeanSelfAdjoint h.expMeanStrictlyPositive
+      h.sigmaFiniteHistory h.rhsTraceIntegrable h.randomMatrix h.selfAdjoint
+      h.independent h.expIntegrable h.traceIntegrable h.comparisonSelfAdjoint
+      h.varianceProxySelfAdjoint h.radiusNonneg h.thetaRange h.mgfComparison
+      h.varianceProxyNormalization h.tailAEMeasurable h.tailEventSubset
 
 /-- Typed target for the spectral-radius reduction for self-adjoint matrices.
 

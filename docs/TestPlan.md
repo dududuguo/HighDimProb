@@ -38,8 +38,9 @@ git diff --check
 - RandomMatrix hardbone statement-target checks, including the proved Bernstein
   CFC hardbone leaf, the proved matrix-exp/log normalization and log-domain leaves, the proved
   matrix log/order bridge leaf, the proved excess-support trace bridge leaf,
-  the proved centered-square expectation bridge leaf, and the progress-first
-  conditional finite-family trace-MGF assumption-composition consumer are covered in
+  the proved centered-square expectation bridge leaf, the progress-first
+  conditional finite-family trace-MGF assumption-composition consumer, and the
+  S10 tail/conditioning assumption bundle wrapper are covered in
   `HighDimProbTest/RandomMatrixHardboneStatementsAPI.lean`,
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
   `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`, and
