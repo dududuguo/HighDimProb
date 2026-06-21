@@ -359,9 +359,11 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
 - Completed hardbone contract leaf:
   `RM-LIEB-S4-real-matrix-to-cstar-log-monotonicity-contract`, proving that Mathlib `CFC.log_le_log` is available on `CStarMatrix (Fin n) (Fin n) ℂ` while leaving real-matrix transport open.
 - Completed hardbone contract leaf:
-  `RM-LIEB-S5-real-to-cstar-transport-api-contract`, proving the basic real-to-`CStarMatrix` transport shape in a probe, including entrywise, add/sub, and self-adjoint transport; positivity/order/log transport remains open.
-- Next safe hardbone task:
-  `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`, focused on positivity/order/log transport for the real-to-CStar route.
+  `RM-LIEB-S5-real-to-cstar-transport-api-contract`, proving the basic real-to-`CStarMatrix` transport shape in a probe, including entrywise, add/sub, and self-adjoint transport; positivity/order/log transport remains provider work, not a current main-repository completion.
+- Progress-first hardbone scaffold:
+  `RM-LIEB-S9-conditional-step-assumption-composition-contract`, adding `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge` as a finite-family trace-MGF consumer from explicit conditioning, natural-state, integrability, and variance-proxy assumptions. The hard assumptions consumed by the theorem are recorded in `docs/STATEMENTS.md`; this does not prove those assumptions.
+- Next aggressive hardbone task:
+  `RM-LIEB-S10-trace-mgf-to-tail-assumption-composition-contract`, focused on threading the conditional trace-MGF consumer into the downstream tail route under explicit tail-side assumptions.
 
 ## Verification
 

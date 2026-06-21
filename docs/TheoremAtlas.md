@@ -125,7 +125,11 @@ It does not prove those premises or the downstream trace-exponential
 monotonicity step. The finite-family conditioning chain now has the thin witness
 `troppConditionalStep_of_iIndepFun`; it forwards the explicit per-index
 conditional-expectation provider and does not prove the history, independence,
-or conditional-expectation inputs themselves.
+or conditional-expectation inputs themselves. The conditional route is now also
+composed into the finite-family Bernstein trace-MGF conclusion by
+`traceMGFBernsteinVarianceProxyBound_of_conditioningBridge`, under explicit
+natural-state, integrability, MGF, and variance-proxy assumptions recorded in
+`docs/STATEMENTS.md`.
 
 ## Not Yet Proved
 
