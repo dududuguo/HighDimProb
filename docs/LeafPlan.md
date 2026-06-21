@@ -291,20 +291,12 @@
 - Status: partially proved.
 - Added: `matrixExpLogDomainForSelfAdjoint`, proving the `matrixExp` log-domain and normalization provider used by `matrixLog_le_of_le_matrixExp`.
 - Boundary preserved: this does not prove operator-log monotonicity, trace-exp monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, or full Matrix Bernstein.
-- Integrated bridge-layer PR stack: exact-row centered-square sample-covariance
-  wrappers/bundles, negative-side exact-row variance-proxy transfer, and
-  deterministic PSD Loewner variance-proxy norm monotonicity. These are proof
-  infrastructure, not a replacement for the compact bounded-row public route.
 - Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
 ## RM-LIEB-S3 Operator-Log Monotonicity Representation Bridge
 
 - Status: partially proved.
 - Added: `isPSDMatrix_of_posSemidef`, `matrixLE_of_mathlib_le`, and `mathlib_le_of_matrixLE` as reusable order-representation bridges.
 - Boundary preserved: this does not prove `operatorLogMonotoneOnPositiveMatrices_statement`; direct reuse of Mathlib `CFC.log_le_log` is blocked for the current real-matrix representation by the missing CStar route.
-- Integrated bridge-layer PR stack: exact-row centered-square sample-covariance
-  wrappers/bundles, negative-side exact-row variance-proxy transfer, and
-  deterministic PSD Loewner variance-proxy norm monotonicity. These are proof
-  infrastructure, not a replacement for the compact bounded-row public route.
 - Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
 ## RM-LIEB-S4 Real Matrix To CStar Log Monotonicity Contract
 
@@ -312,10 +304,6 @@
 - Result: Mathlib `CFC.log_le_log` is available on `CStarMatrix (Fin n) (Fin n) ℂ`.
 - Blocker: the current HighDimProb target is over `Matrix (Fin n) (Fin n) Real`; a real-to-CStar transport API is needed before the operator-log theorem can be proved from Mathlib.
 - Boundary preserved: this does not prove operator-log monotonicity for real matrices, trace-exp monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, or full Matrix Bernstein.
-- Integrated bridge-layer PR stack: exact-row centered-square sample-covariance
-  wrappers/bundles, negative-side exact-row variance-proxy transfer, and
-  deterministic PSD Loewner variance-proxy norm monotonicity. These are proof
-  infrastructure, not a replacement for the compact bounded-row public route.
 - Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
 ## RM-LIEB-S5 Real To CStar Transport API Contract
 
@@ -323,8 +311,4 @@
 - Result: the basic real-to-`CStarMatrix` transport map has clean entrywise, add/sub, and self-adjoint transport proofs.
 - Blocker: strict positivity, order, and `CFC.log` transport remain separate proof obligations before `operatorLogMonotoneOnPositiveMatrices_statement` can use Mathlib `CFC.log_le_log`.
 - Boundary preserved: this does not prove operator-log monotonicity, trace-exp monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, or full Matrix Bernstein.
-- Integrated bridge-layer PR stack: exact-row centered-square sample-covariance
-  wrappers/bundles, negative-side exact-row variance-proxy transfer, and
-  deterministic PSD Loewner variance-proxy norm monotonicity. These are proof
-  infrastructure, not a replacement for the compact bounded-row public route.
 - Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.

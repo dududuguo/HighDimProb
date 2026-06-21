@@ -14,7 +14,7 @@ This is the active term index. The old detailed map was collapsed into
 | Random vectors | random-vector, covariance, isotropic, subGaussian-vector vocabulary | [`HighDimProb/Vector.lean`](../HighDimProb/Vector.lean) |
 | Geometry | nets, metric entropy, Gaussian width vocabulary | [`HighDimProb/Geometry.lean`](../HighDimProb/Geometry.lean) |
 | Random matrices | random matrix families, self-adjointness, sums, operator norm, spectral events | [`HighDimProb/RandomMatrix`](../HighDimProb/RandomMatrix) |
-| Matrix Bernstein | trace-MGF/Tropp bundles, Bernstein CFC hardbone, variance-proxy bridge chain, support/effective-rank trace bridges, prefix/reindex/negative adapters, optimized RHS helpers, compact sample-covariance target/assumption records, and quadratic-form/operator-norm wrappers | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) |
+| Matrix Bernstein | trace-MGF/Tropp bundles, Bernstein CFC hardbone, variance-proxy bridge chain, PSD Loewner norm monotonicity, centered-square exact-row adapters, support/effective-rank trace bridges, prefix/reindex/negative adapters, optimized RHS helpers, compact sample-covariance target/assumption records, and quadratic-form/operator-norm wrappers | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) |
 | Examples | compact statement-route index plus representative sample covariance, random-feature, gradient, NTK, LoRA, attention, Fisher, and natural-Tropp routes | [`HighDimProb/Examples/RandomMatrix`](../HighDimProb/Examples/RandomMatrix) |
 
 ## Lookup Rule

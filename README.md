@@ -58,6 +58,11 @@ directly when you are working on that experimental branch:
 import HighDimProb.RandomMatrix
 ```
 
+For sample-covariance Matrix Bernstein examples, start from the compact
+bounded-row route in `HighDimProb/Examples/RandomMatrix/SampleCovarianceTailUsage.lean`.
+Longer exact-row centered-square declarations are bridge-layer infrastructure
+for proof development, not the default reader-facing API.
+
 ## What Is In The Repo
 
 - `HighDimProb/`: the Lean library.

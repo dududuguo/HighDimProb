@@ -113,10 +113,12 @@ copying unfolded right-hand sides into examples or tests.
 | Sample covariance quadratic-form tail | `SampleCovarianceTailUsage.sampleCovariance_quadraticForm_tail_usage` | independence, integrability, Tropp primitive |
 | Sample covariance operator-norm tail | `SampleCovarianceTailUsage.sampleCovariance_operatorNorm_tail_usage` | positive/negative primitive assumptions |
 | Lower-level exact-row positive-side route | `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive` | hardbone sharp-chain premise, Tropp primitive, integrability |
+| Bridge-layer exact-row centered-square route | `SampleCovarianceExactRowCenteredSquareTroppAssumptions` and `SampleCovarianceExactRowCenteredSquareTwoSidedTroppAssumptions` | centered-square-chain provider premises, negative-side adapters, Tropp primitives, integrability |
 
-The exact-row positive-side wrapper is intentionally not the main example route
-yet. It is useful for continuing the proof spine, but matching negative-side,
-two-sided, and operator-norm exact-row wrappers remain future work.
+The compact bounded-row route remains the reader-facing sample-covariance entry
+point. Exact-row centered-square wrappers and bundles are public bridge-layer
+infrastructure for continuing provider compression; use them when developing the
+variance-proxy proof spine, not as the default user surface.
 
 ## What Is Not Claimed
 
