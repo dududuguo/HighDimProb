@@ -40,3 +40,43 @@ Non-goals for this consumer:
 - It does not prove Lieb concavity, Jensen, operator-log monotonicity,
   trace-exp monotonicity, Golden-Thompson, conditional expectation,
   integrability propagation, variance-proxy control, or full Matrix Bernstein.
+
+## RM-LIEB-S9: finite-family trace-MGF from explicit conditioning inputs
+
+Consumer theorem:
+
+- `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge`
+
+This theorem composes the Phase 4 conditioning bridge with the natural-state
+finite-family trace-MGF route.  It requires the following hard facts as explicit
+premises:
+
+- `troppConditionalStep_of_iIndepFun_statement theta X K mHist`, the
+  source-level conditioning chain target.
+- `troppNaturalHistoryMeasurable_statement theta X K mHist`, used with
+  `hHistSub` to supply natural-state history measurability.
+- `troppHistoryStepIndependent_of_iIndepFun_statement theta X K`, used with
+  finite-family `iIndepFun X P` to supply history/current-step independence.
+- Per-index `condExp_traceExp_history_add_independent_step_statement`, the
+  conditional-expectation reduction from a history-measurable matrix and an
+  independent current step.
+- Natural-state side conditions for each index: history sub-sigma algebra,
+  history/current random-matrix measurability, self-adjoint history/current
+  steps, trace-exponential integrability of `H_i + Z_i`, matrix-exponential
+  integrability of `Z_i`, self-adjointness and strict positivity of the
+  matrix-exponential mean, sigma-finiteness of the trimmed history measure, and
+  trace-exponential integrability of `H_i + K_i`.
+- Finite-family Bernstein side conditions: random/self-adjoint summands,
+  finite-family independence, scaled matrix-exponential integrability,
+  full-sum trace-exponential integrability, self-adjoint comparison matrices,
+  self-adjoint variance proxy, nonnegative radius, Bernstein theta range,
+  per-index MGF Loewner comparison, and the variance-proxy normalization
+  `sum K_i = bernsteinMGFCoeff theta R • V`.
+
+Non-goals for this consumer:
+
+- It does not prove natural-history measurability, history/current-step
+  independence, finite-family independence, conditional-expectation reduction,
+  trace-exponential integrability propagation, strict positivity of the
+  matrix-exponential mean, variance-proxy control, Lieb/Jensen,
+  Golden-Thompson, or full Matrix Bernstein.

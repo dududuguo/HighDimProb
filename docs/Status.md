@@ -364,8 +364,10 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`, proving the CStar-side transport from explicit complexified nonnegativity, Loewner-order, and strict-positivity premises. The real-to-complex positivity/order bridge and unconditional `CFC.log` log-back compatibility remain open.
 - Progress-first hardbone contract leaf:
   `RM-LIEB-S8-tropp-master-trace-mgf-assumption-composition-contract`, adding `troppMasterTraceMGFStep_trace_bound_of_liebJensen_logOrder` as a high-level consumer from explicit Lieb/Jensen and log/order assumptions to the one-step trace-MGF `K` bound. The hard assumptions consumed by the theorem are recorded in `docs/STATEMENTS.md`; this does not prove those assumptions.
+- Progress-first hardbone contract leaf:
+  `RM-LIEB-S9-conditional-step-assumption-composition-contract`, adding `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge` as a finite-family trace-MGF consumer from explicit conditioning, natural-state, integrability, and variance-proxy assumptions. The hard assumptions consumed by the theorem are recorded in `docs/STATEMENTS.md`; this does not prove those assumptions.
 - Next aggressive hardbone task:
-  `RM-LIEB-S9-conditional-step-assumption-composition-contract`, focused on threading explicit one-step/conditional assumptions into the finite-family trace-MGF route without waiting for the hard assumption providers.
+  `RM-LIEB-S10-trace-mgf-to-tail-assumption-composition-contract`, focused on threading the new conditional trace-MGF consumer into the downstream tail route under explicit tail-side assumptions.
 
 ## Verification
 

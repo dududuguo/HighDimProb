@@ -91,6 +91,7 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check troppMasterTraceMGFStep_of_liebJensen
 #check troppMasterTraceMGFStep_trace_bound_of_liebJensen_logOrder
 #check troppMasterTraceMGFConditionalStep_of_conditioningBridge
+#check traceMGFBernsteinVarianceProxyBound_of_conditioningBridge
 #check traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider
 #check varianceProxyNormBound_of_centeredSquareChain
 #check varianceProxyNormBound_of_centeredSquareChain_expansion
@@ -192,6 +193,72 @@ example : Prop :=
 example :
     troppConditionalStep_of_iIndepFun_statement (P := P) theta X Kfam mHist :=
   troppConditionalStep_of_iIndepFun theta X Kfam mHist
+
+example
+    (hChain : troppConditionalStep_of_iIndepFun_statement (P := P) theta X Kfam mHist)
+    (hHist : troppNaturalHistoryMeasurable_statement theta X Kfam mHist)
+    (hHistIndep : troppHistoryStepIndependent_of_iIndepFun_statement (P := P) theta X Kfam)
+    (hCondExp : forall i,
+      @condExp_traceExp_history_add_independent_step_statement
+        Omega (inferInstance : MeasurableSpace Omega) P n
+        (mHist i)
+        (@troppStateHistory Omega (inferInstance : MeasurableSpace Omega) m n theta X Kfam i)
+        (@troppCurrentRandomStep Omega (inferInstance : MeasurableSpace Omega) m n theta X i)
+        (Kfam i))
+    (hHistSub : forall i, mHist i <= (inferInstance : MeasurableSpace Omega))
+    (hHistRand : forall i,
+      @IsRandomMatrix Omega (inferInstance : MeasurableSpace Omega) n n P
+        (troppStateHistory theta X Kfam i))
+    (hZRand : forall i,
+      @IsRandomMatrix Omega (inferInstance : MeasurableSpace Omega) n n P
+        (troppCurrentRandomStep theta X i))
+    (hHistSA : forall i omega, IsSelfAdjointMatrix (troppStateHistory theta X Kfam i omega))
+    (hZSA : forall i,
+      @RandomSelfAdjointMatrix Omega (inferInstance : MeasurableSpace Omega) n P
+        (troppCurrentRandomStep theta X i))
+    (hCondTraceInt : forall i,
+      @IntegrableRealRandomVariable Omega (inferInstance : MeasurableSpace Omega) P
+        (fun omega => traceMatrixExp
+          (troppStateHistory theta X Kfam i omega +
+            troppCurrentRandomStep theta X i omega)))
+    (hExpIntStep : forall i,
+      @IntegrableRandomMatrix Omega (inferInstance : MeasurableSpace Omega) n n P
+        (fun omega => matrixExp (troppCurrentRandomStep theta X i omega)))
+    (hExpMeanSA : forall i,
+      IsSelfAdjointMatrix
+        (@matrixExpect Omega (inferInstance : MeasurableSpace Omega) n n P
+          (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))))
+    (hExpMeanPos : forall i,
+      IsStrictlyPositive
+        (@matrixExpect Omega (inferInstance : MeasurableSpace Omega) n n P
+          (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))))
+    (hSigma : forall i, MeasureTheory.SigmaFinite (P.trim (hHistSub i)))
+    (hRhsInt : forall i,
+      @IntegrableRealRandomVariable Omega (inferInstance : MeasurableSpace Omega) P
+        (fun omega => traceMatrixExp (troppStateHistory theta X Kfam i omega + Kfam i)))
+    (hRand : forall i, IsRandomMatrix P (X i))
+    (hSA : forall i, RandomSelfAdjointMatrix P (X i))
+    (hIndep : ProbabilityTheory.iIndepFun X P)
+    (hExpInt : forall i,
+      IntegrableRandomMatrix P
+        (fun omega => matrixExp (SMul.smul theta (X i omega))))
+    (hTraceInt : IntegrableRealRandomVariable P (traceExpIntegrand (randomMatrixSum X) theta))
+    (hKSA : forall i, IsSelfAdjointMatrix (Kfam i))
+    (hVSA : IsSelfAdjointMatrix M)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hMGF : forall i,
+      MatrixLE
+        (matrixExpect P (fun omega => matrixExp (SMul.smul theta (X i omega))))
+        (matrixExp (Kfam i)))
+    (hNorm : Finset.univ.sum (fun i : Fin m => Kfam i) =
+      SMul.smul (bernsteinMGFCoeff theta R) M) :
+    TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum X) M theta R :=
+  traceMGFBernsteinVarianceProxyBound_of_conditioningBridge
+    X Kfam M theta R mHist hChain hHist hHistIndep hCondExp hHistSub
+    hHistRand hZRand hHistSA hZSA hCondTraceInt hExpIntStep hExpMeanSA
+    hExpMeanPos hSigma hRhsInt hRand hSA hIndep hExpInt hTraceInt hKSA
+    hVSA hR hRange hMGF hNorm
 
 example : Prop :=
   traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement

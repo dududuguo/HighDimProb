@@ -146,6 +146,7 @@ example {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
 #check HighDimProb.condExp_traceExp_history_add_independent_step_statement
 #check HighDimProb.troppConditionalStep_of_iIndepFun_statement
 #check HighDimProb.troppConditionalStep_of_iIndepFun
+#check HighDimProb.traceMGFBernsteinVarianceProxyBound_of_conditioningBridge
 #check HighDimProb.matrixExpScaledIntegrable_of_provider_statement
 #check HighDimProb.traceExpIntegrable_troppStateHistory_add_step_statement
 #check HighDimProb.traceExpIntegrable_troppStateHistory_add_K_statement

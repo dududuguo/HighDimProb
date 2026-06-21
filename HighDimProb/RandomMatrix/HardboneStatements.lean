@@ -1552,6 +1552,115 @@ theorem troppMasterTraceMGFConditionalStep_of_conditioningBridge
       (@troppCurrentRandomStep Omega mOmega m n theta X i) (K i) :=
   hChain hHist hHistIndep hCondExp hIndep i
 
+/-- Progress-first finite-family trace-MGF provider from explicit conditioning
+bridge assumptions.
+
+This theorem composes the Phase 4 conditioning bridge with the natural-state
+finite-family trace-MGF route. It deliberately consumes all hard probabilistic,
+conditional-expectation, integrability, and variance-proxy assumptions
+explicitly; those assumptions are tracked in `docs/STATEMENTS.md`. -/
+theorem traceMGFBernsteinVarianceProxyBound_of_conditioningBridge
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {m n : Nat}
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (V : Matrix (Fin n) (Fin n) Real)
+    (theta R : Real)
+    (mHist : Fin m -> MeasurableSpace Omega)
+    (hChain :
+      @troppConditionalStep_of_iIndepFun_statement Omega mOmega P m n
+        theta X K mHist)
+    (hHist :
+      @troppNaturalHistoryMeasurable_statement Omega mOmega m n
+        theta X K mHist)
+    (hHistIndep :
+      @troppHistoryStepIndependent_of_iIndepFun_statement Omega mOmega P m n
+        theta X K)
+    (hCondExp :
+      forall i,
+        @condExp_traceExp_history_add_independent_step_statement
+          Omega mOmega P n
+          (mHist i) (@troppStateHistory Omega mOmega m n theta X K i)
+          (@troppCurrentRandomStep Omega mOmega m n theta X i) (K i))
+    (hHistSub : forall i, mHist i <= mOmega)
+    (hHistRand :
+      forall i,
+        @IsRandomMatrix Omega mOmega n n P
+          (troppStateHistory theta X K i))
+    (hZRand :
+      forall i,
+        @IsRandomMatrix Omega mOmega n n P
+          (troppCurrentRandomStep theta X i))
+    (hHistSA :
+      forall i omega, IsSelfAdjointMatrix (troppStateHistory theta X K i omega))
+    (hZSA :
+      forall i,
+        @RandomSelfAdjointMatrix Omega mOmega n P
+          (troppCurrentRandomStep theta X i))
+    (hCondTraceInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega =>
+            traceMatrixExp
+              (troppStateHistory theta X K i omega +
+                troppCurrentRandomStep theta X i omega)))
+    (hExpIntStep :
+      forall i,
+        @IntegrableRandomMatrix Omega mOmega n n P
+          (fun omega => matrixExp (troppCurrentRandomStep theta X i omega)))
+    (hExpMeanSA :
+      forall i,
+        IsSelfAdjointMatrix
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))))
+    (hExpMeanPos :
+      forall i,
+        IsStrictlyPositive
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))))
+    (hSigma : forall i, MeasureTheory.SigmaFinite (P.trim (hHistSub i)))
+    (hRhsInt :
+      forall i,
+        @IntegrableRealRandomVariable Omega mOmega P
+          (fun omega =>
+            traceMatrixExp (troppStateHistory theta X K i omega + K i)))
+    (hRand : forall i, IsRandomMatrix P (X i))
+    (hSA : forall i, RandomSelfAdjointMatrix P (X i))
+    (hIndep : ProbabilityTheory.iIndepFun X P)
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (fun omega => matrixExp (SMul.smul theta (X i omega))))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum X) theta))
+    (hKSA : forall i, IsSelfAdjointMatrix (K i))
+    (hVSA : IsSelfAdjointMatrix V)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hMGF :
+      forall i,
+        MatrixLE
+          (matrixExpect P
+            (fun omega => matrixExp (SMul.smul theta (X i omega))))
+          (matrixExp (K i)))
+    (hNorm :
+      Finset.univ.sum (fun i : Fin m => K i) =
+        SMul.smul (bernsteinMGFCoeff theta R) V) :
+    TraceMGFBernsteinVarianceProxyBound P (randomMatrixSum X) V theta R :=
+  traceMGFBernsteinVarianceProxyBound_of_naturalStateConditionalSteps
+    X K V theta R mHist
+    (fun i =>
+      troppMasterTraceMGFConditionalStep_of_conditioningBridge
+        theta X K mHist hChain hHist hHistIndep hCondExp hIndep i)
+    hHistSub hHistRand hZRand
+    (hHist hHistSub)
+    hHistSA hZSA
+    (hHistIndep hIndep)
+    hCondTraceInt hExpIntStep hExpMeanSA hExpMeanPos hSigma hRhsInt
+    hRand hSA hIndep hExpInt hTraceInt hKSA hVSA hR hRange hMGF hNorm
+
 end
 
 end HighDimProb

@@ -26,7 +26,7 @@ This is the active short list. Old completed task logs were collapsed into
   future provider compression; the compact bounded-row sample-covariance route
   remains the reader-facing surface.
 - Next RandomMatrix hardbone task:
-  `RM-LIEB-S9-conditional-step-assumption-composition-contract`.
+  `RM-LIEB-S10-trace-mgf-to-tail-assumption-composition-contract`.
 - Current strategy is progress-first: if a hard analytic ingredient is missing,
   consume it as an explicit assumption, register it in `docs/STATEMENTS.md`, and
   keep moving the high-level Tropp/Lieb trace-MGF route forward. Do not claim
