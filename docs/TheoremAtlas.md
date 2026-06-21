@@ -136,8 +136,11 @@ natural-state, integrability, MGF, and variance-proxy assumptions recorded in
 `docs/STATEMENTS.md`. The S10 wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge` threads
 that trace-MGF conclusion into the quadratic-form Laplace/tail route under an
-explicit trace-exp threshold event subset assumption; it is not a full Matrix
-Bernstein theorem.
+explicit trace-exp threshold event subset assumption. Its reusable assumption
+bundle `MatrixBernsteinConditioningTraceMGFTailAssumptions` and thin wrapper
+`matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions`
+package the same tail/conditioning assumptions without proving new hard facts;
+this is not a full Matrix Bernstein theorem.
 
 ## Not Yet Proved
 

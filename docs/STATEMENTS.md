@@ -83,9 +83,12 @@ Non-goals for this consumer:
 
 ## RM-LIEB-S10: conditioning trace-MGF to explicit Laplace/tail route
 
-Consumer theorem:
+Consumer theorems:
 
 - `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge`
+- `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions`,
+  which is only a field-access wrapper around the named assumption bundle
+  `MatrixBernsteinConditioningTraceMGFTailAssumptions`.
 
 This theorem composes the S9 conditioning trace-MGF consumer with the existing
 quadratic-form Laplace route. It requires all S9 assumptions listed above, plus
