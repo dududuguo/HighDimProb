@@ -87,6 +87,10 @@ Sample covariance wrappers:
 - lower-level positive-side wrappers, including
   `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive`
   and `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive`
+- bridge-layer exact-row centered-square wrappers and bundles, including
+  `SampleCovarianceExactRowCenteredSquareTroppAssumptions`,
+  `SampleCovarianceExactRowCenteredSquareTwoSidedTroppAssumptions`, and their
+  `..._of_centeredSquareChain...` wrappers
 - lower-level compatibility operator-norm wrappers remain available for explicit
   proof-boundary work, but the compact target/record route is the preferred
   reader-facing bounded-row surface.
@@ -195,15 +199,20 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   The row-specific exact-row sample-covariance hardbone consumer
   `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two`
   now combines this bounded-row square-integrability route with exact-row
-  deterministic norm control to produce RHS `rowSqNormVarianceProxyNormRHS R`; it still keeps the
-  abstract sharp-variance chain explicit. These are square-integrability and
-  hardbone-consumer providers only; they do not duplicate the crude
-  variance-proxy norm theorem. The
-  variance-proxy provider-chain consumer is
+  deterministic norm control to produce RHS `rowSqNormVarianceProxyNormRHS R`.
+  The bridge layer also exposes the generic centered-square to exact-row
+  sample-covariance adapter, the named negative-family exact-row variance-proxy
+  transfer, and exact-row centered-square sample-covariance wrappers/bundles for
+  positive and two-sided/operator-norm routes. These are proof-infrastructure
+  providers only: the compact bounded-row sample-covariance target route remains
+  the reader-facing surface. The variance-proxy provider-chain consumer is
   proved as `varianceProxyNormBound_of_centeredSquareChain`; the newer
-  `varianceProxyNormBound_of_centeredSquareChain_expansion` removes the explicit
+  `varianceProxyNormBound_of_centeredSquareChain_of_normMono` proves the
+  finite-sum Loewner bookkeeping under an explicit norm-monotonicity premise,
+  and `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE` discharges the
+  PSD Loewner-to-operator-norm bridge. `varianceProxyNormBound_of_centeredSquareChain_expansion` removes the explicit
   centered-square expansion argument but still requires Loewner comparison and
-  deterministic norm-control assumptions. The rank/support trace-bound bridge is now proved through
+  deterministic norm-control assumptions at the wrapper boundary. The rank/support trace-bound bridge is now proved through
   `traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination`
   and the `traceMatrixExp_le_rank_exp_lambdaMax` /
   `traceMatrixExp_le_supportDim_exp_lambdaMax` consumers. Explicit
@@ -339,6 +348,12 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   `RM-VP-sample-covariance-tail-wrapper-with-exact-row-vp-contract`, adding
   `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive` as a positive-side quadratic-form wrapper with row-specific
   exact-row variance-proxy RHS and explicit hardbone sharp-chain premise.
+- Integrated bridge-layer PR stack:
+  exact-row centered-square sample-covariance wrappers/bundles, negative-side
+  exact-row variance-proxy transfer, and
+  `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE`. These are kept as
+  infrastructure for future provider compression rather than the preferred
+  user-facing sample-covariance route.
 - Completed hardbone proof leaf:
   `RM-LIEB-S3-operator-log-monotonicity-representation-bridge-contract`, adding `isPSDMatrix_of_posSemidef`, `matrixLE_of_mathlib_le`, and `mathlib_le_of_matrixLE`; direct `CFC.log_le_log` use remains blocked for real matrices by the missing CStar route.
 - Completed hardbone contract leaf:

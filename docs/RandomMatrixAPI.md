@@ -140,7 +140,13 @@ Variance-proxy / centered-square chain:
 - `sampleCovarianceVarianceProxy_sharp_of_rankOneSecondMoment`
 - `sampleCovarianceVarianceProxy_sharp_of_exactRowSecondMoment`
 - `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two`
+- `sampleCovarianceVarianceProxy_sharp_statement_of_centeredSquareChain_exactRowSqNorm_bound_memLp_two`
+- `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two_of_centeredSquareChain`
+- `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_of_exactRowSqNorm_bound_memLp_two`
 - `varianceProxyNormBound_of_centeredSquareChain_statement`
+- `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement`
+- `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE`
+- `varianceProxyNormBound_of_centeredSquareChain_of_normMono`
 - `varianceProxyNormBound_of_centeredSquareChain_expansion`
 
 Dimension / rank / effective-rank chain:
@@ -172,6 +178,8 @@ Thin hardbone consumers:
 - `troppMasterTraceMGFConditionalStep_of_conditioningBridge`
 - `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider`
 - `varianceProxyNormBound_of_centeredSquareChain`
+- `varianceProxyNormBound_of_centeredSquareChain_of_normMono`
+- `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE`
 - `traceMatrixExp_le_rank_exp_lambdaMax`
 - `traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection`
 - `traceMatrixExp_le_supportDim_exp_lambdaMax`
@@ -191,7 +199,7 @@ Hardbone status table:
 | Tropp/Lieb/GT one-step | `troppMasterTraceMGFStep_of_liebJensen_statement` | typed-prop | `troppMasterTraceMGFStep_of_liebJensen` | Lieb concavity, probability-measure Jensen, log-exp normalization; Golden-Thompson is separate |
 | Conditioning / independence | `troppConditionalStep_of_iIndepFun_statement` | proven by `troppConditionalStep_of_iIndepFun` | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | thin forwarder only; generated histories, history/current-step independence, finite-family independence, and conditional expectation reduction remain explicit premises |
 | Trace-exp integrability | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement` | typed-prop with proved thin consumer | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider` | automatic absolute domination, Golden-Thompson/product, or boundedness provider |
-| Variance proxy / centered square | `varianceProxyNormBound_of_centeredSquareChain_statement`, `matrixSquare_centeredRandomMatrix_expectation_expansion_statement`, `centeredRankOneSquare_le_rankOneSecondMoment_statement` | centered-square expectation expansion and centered rank-one second-moment comparison proved; typed-prop chain has proved thin consumers | `matrixSquare_centeredRandomMatrix_expectation_expansion`, `matrixSecondMoment_centeredRandomMatrix_le_matrixSecondMoment`, `centeredRankOneSquare_le_rankOneSecondMoment`, `varianceProxyNormBound_of_centeredSquareChain`, `varianceProxyNormBound_of_centeredSquareChain_expansion`, `sampleCovarianceVarianceProxy_sharp_of_rankOneSecondMoment`, `sampleCovarianceVarianceProxy_sharp_of_exactRowSecondMoment`, `deterministicMatrixVarianceProxyNorm_sum_le_sum`, `deterministicMatrixVarianceProxyNorm_matrixSecondMoment_rankOneRandomMatrix_le_sq_of_sqNorm_bound`, `deterministicMatrixVarianceProxyNorm_sum_matrixSecondMoment_rankOneRandomMatrix_le_sum_sq_of_sqNorm_bound`, `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two`, `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products`, `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_memLp_four`, `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two`, `integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_memLp_four`, `integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two`, `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two` | hardbone sharp-variance-chain provider, concrete row-moment evaluation, negative-side exact-row provider, and two-sided/operator-norm exact-row wrapper integration |
+| Variance proxy / centered square | `varianceProxyNormBound_of_centeredSquareChain_statement`, `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement`, `matrixSquare_centeredRandomMatrix_expectation_expansion_statement`, `centeredRankOneSquare_le_rankOneSecondMoment_statement` | centered-square expectation expansion, finite-sum MatrixLE bookkeeping, PSD Loewner-to-operator-norm monotonicity, and centered rank-one second-moment comparison proved; typed-prop chain has proved thin consumers | `matrixSquare_centeredRandomMatrix_expectation_expansion`, `matrixSecondMoment_centeredRandomMatrix_le_matrixSecondMoment`, `centeredRankOneSquare_le_rankOneSecondMoment`, `varianceProxyNormBound_of_centeredSquareChain`, `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE`, `varianceProxyNormBound_of_centeredSquareChain_of_normMono`, `varianceProxyNormBound_of_centeredSquareChain_expansion`, `sampleCovarianceVarianceProxy_sharp_of_rankOneSecondMoment`, `sampleCovarianceVarianceProxy_sharp_of_exactRowSecondMoment`, `deterministicMatrixVarianceProxyNorm_sum_le_sum`, `deterministicMatrixVarianceProxyNorm_matrixSecondMoment_rankOneRandomMatrix_le_sq_of_sqNorm_bound`, `deterministicMatrixVarianceProxyNorm_sum_matrixSecondMoment_rankOneRandomMatrix_le_sum_sq_of_sqNorm_bound`, `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two`, `sampleCovarianceVarianceProxy_sharp_statement_of_centeredSquareChain_exactRowSqNorm_bound_memLp_two`, `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two_of_centeredSquareChain`, `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_of_exactRowSqNorm_bound_memLp_two`, exact-row centered-square sample-covariance wrappers and bundles, `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products`, `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_memLp_four`, `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two`, `integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_memLp_four`, `integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two`, `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two` | full generic centered-square-chain providers, Tropp/Lieb, trace-MGF integrability, and full Matrix Bernstein remain explicit or open |
 | Dimension / support / effective rank | `traceMatrixExp_le_rank_exp_lambdaMax_statement`, `traceMatrixExp_le_supportDim_exp_lambdaMax_statement`, `traceMatrixExp_effectiveRank_bound_statement`, `matrixExpSupportDomination_identity_statement`, `traceMatrixExp_excess_supportDim_exp_lambdaMax_statement` | rank/support targets and effective-rank consumer proved under explicit support, PSD, lambda-max, and trace-certificate assumptions; ambient trace certificate and star-projection rank/PSD consumer proved; identity support provider target named only; excess trace bridge and supportDim consumer proved under explicit excess certificate | `traceMatrixExp_le_rank_exp_lambdaMax`, `traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection`, `traceMatrixExp_le_supportDim_exp_lambdaMax`, `traceMatrixExp_excess_supportDim_exp_lambdaMax`, `traceMatrixExp_effectiveRank_bound`, `traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate`; deterministic helpers include `MatrixExpSupportDomination`, `MatrixExpExcessSupportDomination`, `traceMatrixExp_le_card_add_trace_support_mul_exp_sub_one_of_excessSupportDomination`, `traceMatrixExp_eq_sum_exp_eigenvalues`, `traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le`, `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le`, `matrixTrace_eq_rank_of_isStarProjection`, `isPSDMatrix_of_isStarProjection` | identity/excess support-domination providers and support-construction certificates; true effective-rank trace certificate provider beyond ambient dimension |
 | Thin consumers | `troppMasterTraceMGFConditionalStep_of_conditioningBridge` | proven | public API/test/judge/example checks | thin wrapper only; no hard fact is discharged |
 
@@ -293,6 +301,12 @@ The compact record is the full bounded-row Tropp route: it exposes the common
 row assumptions and the remaining negative-side Tropp/integrability providers,
 but it does not include a finite-family tail conclusion as a field.
 
+Advanced bridge-layer routes also expose exact-row centered-square infrastructure.
+Those declarations connect generic centered-square variance-proxy chains and
+negative-family transfer adapters to sample-covariance wrappers. They are public
+proof infrastructure for later provider compression, not a replacement for the
+compact reader-facing bounded-row route.
+
 Lower-level compatibility wrappers remain available when a proof needs fewer
 assumptions or a more explicit proof boundary:
 
@@ -301,6 +315,13 @@ assumptions or a more explicit proof boundary:
 - `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound`
 - `sampleCovariance_quadraticForm_tail_optimized_under_rowSqNorm_bound_of_troppPrimitive`
 - `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive`
+- `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_centeredSquareChain_of_troppPrimitive`
+- `SampleCovarianceExactRowCenteredSquareTroppAssumptions`
+- `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_centeredSquareChain_of_troppAssumptions`
+- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives`
+- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_centeredSquareChain_of_troppPrimitives`
+- `SampleCovarianceExactRowCenteredSquareTwoSidedTroppAssumptions`
+- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_centeredSquareChain_of_troppAssumptions`
 - `sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`

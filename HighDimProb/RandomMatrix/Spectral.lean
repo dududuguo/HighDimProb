@@ -380,25 +380,6 @@ theorem matrixQuadraticForm_nonneg_of_posSemidef {n : Nat}
   simpa [matrixQuadraticForm, dotProduct, Matrix.mulVec,
     Finset.mul_sum, Finset.sum_mul, mul_assoc] using h
 
-/-- HighDimProb's explicit PSD predicate gives Mathlib positive
-semidefiniteness.
-
-Formula reference: positive semidefinite real matrices are characterized by a
-nonnegative quadratic form; see https://en.wikipedia.org/wiki/Definite_matrix .
-This bridge keeps the explicit HighDimProb assumptions visible while exposing
-Mathlib's `Matrix.PosSemidef` API. -/
-theorem posSemidef_of_isPSDMatrix {n : Nat}
-    {A : Matrix (Fin n) (Fin n) Real} (hA : IsPSDMatrix A) :
-    A.PosSemidef := by
-  apply Matrix.PosSemidef.of_dotProduct_mulVec_nonneg
-  · apply Matrix.IsHermitian.ext
-    intro i j
-    simpa using Matrix.IsSymm.apply hA.1 i j
-  · intro x
-    have hx := hA.2 x
-    simpa [matrixQuadraticForm, dotProduct, Matrix.mulVec,
-      Finset.mul_sum, Finset.sum_mul, mul_assoc] using hx
-
 /-- Mathlib positive semidefiniteness gives HighDimProb's explicit PSD predicate.
 
 This is the converse representation bridge to `posSemidef_of_isPSDMatrix`.
@@ -602,6 +583,57 @@ theorem lambdaMaxOrdered_rayleighUpperBound
     matrixQuadraticForm_le_lambdaMaxOrdered_statement A hA :=
   rayleighUpperBound_of_spectralUpperBound
     (lambdaMaxOrdered_spectralUpperBound hA)
+
+/-- The absolute explicit quadratic form of a unit vector is bounded by the
+deterministic L2 operator norm. -/
+theorem abs_matrixQuadraticForm_le_deterministicOperatorNorm {n : Nat}
+    (A : Matrix (Fin n) (Fin n) Real) {x : Fin n -> Real}
+    (hx : IsUnitVector x) :
+    abs (matrixQuadraticForm A x) <= deterministicOperatorNorm A := by
+  have hxnorm :
+      norm (WithLp.toLp 2 x : EuclideanSpace Real (Fin n)) = 1 :=
+    norm_toLp_eq_one_of_isUnitVector hx
+  have hmul :=
+    Matrix.l2_opNorm_mulVec A (WithLp.toLp 2 x : EuclideanSpace Real (Fin n))
+  have hmul' :
+      norm ((EuclideanSpace.equiv (Fin n) Real).symm (Matrix.mulVec A x) :
+        EuclideanSpace Real (Fin n)) <= norm A := by
+    simpa [hxnorm] using hmul
+  have hinner :
+      matrixQuadraticForm A x =
+        inner Real
+          ((EuclideanSpace.equiv (Fin n) Real).symm (Matrix.mulVec A x) :
+            EuclideanSpace Real (Fin n))
+          (WithLp.toLp 2 x : EuclideanSpace Real (Fin n)) := by
+    simp [matrixQuadraticForm, Matrix.mulVec, dotProduct, inner, mul_assoc]
+    apply Finset.sum_congr rfl
+    intro i _
+    rw [<- Finset.mul_sum]
+  calc
+    abs (matrixQuadraticForm A x)
+        = abs (inner Real
+          ((EuclideanSpace.equiv (Fin n) Real).symm (Matrix.mulVec A x) :
+            EuclideanSpace Real (Fin n))
+          (WithLp.toLp 2 x : EuclideanSpace Real (Fin n))) := by rw [hinner]
+    _ <= norm ((EuclideanSpace.equiv (Fin n) Real).symm (Matrix.mulVec A x) :
+          EuclideanSpace Real (Fin n)) *
+        norm (WithLp.toLp 2 x : EuclideanSpace Real (Fin n)) :=
+      abs_real_inner_le_norm _ _
+    _ = norm ((EuclideanSpace.equiv (Fin n) Real).symm (Matrix.mulVec A x) :
+          EuclideanSpace Real (Fin n)) * 1 := by rw [hxnorm]
+    _ <= norm A * 1 := by
+      exact mul_le_mul_of_nonneg_right hmul' zero_le_one
+    _ = deterministicOperatorNorm A := by
+      simp [deterministicOperatorNorm]
+
+/-- The explicit quadratic form of a unit vector is bounded above by the
+deterministic L2 operator norm. -/
+theorem matrixQuadraticForm_le_deterministicOperatorNorm {n : Nat}
+    (A : Matrix (Fin n) (Fin n) Real) {x : Fin n -> Real}
+    (hx : IsUnitVector x) :
+    matrixQuadraticForm A x <= deterministicOperatorNorm A :=
+  (le_abs_self (matrixQuadraticForm A x)).trans
+    (abs_matrixQuadraticForm_le_deterministicOperatorNorm A hx)
 
 /-- The ordered lambda-max endpoint is attained by an explicit unit
 eigenvector in HighDimProb's quadratic-form convention. -/

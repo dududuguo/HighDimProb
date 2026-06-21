@@ -4,11 +4,11 @@ import HighDimProb.RandomMatrix.ConcentrationStatements
 # Sample covariance tail wrapper usage examples
 
 This examples-only file shows the compact bounded-row sample-covariance tail
-route. The core record `SampleCovarianceBoundedRowTroppAssumptions` packages the
-common row assumptions and the remaining sign-specific Tropp/integrability
-providers. The target parameter chooses the quadratic-form or self-adjoint
-operator-norm event without requiring a separate public theorem name for each
-combination of route choices.
+route and the lower-level exact-row centered-square bridge route. The compact
+route remains the preferred reader-facing surface through
+`SampleCovarianceBoundedRowTroppAssumptions`; the exact-row centered-square
+examples show how bridge-layer infrastructure feeds the sample-covariance
+wrappers without making those bridge bundles the default user entry point.
 -/
 
 namespace HighDimProb.Examples.RandomMatrix.SampleCovarianceTailUsage
@@ -37,6 +37,30 @@ theorem sampleCovariance_quadraticForm_tail_usage
     sampleCovariance_tail_optimized_under_boundedRowTroppAssumptions
       (P := P) A R Rneg t SampleCovarianceTailTarget.quadraticFormUpper h
 
+/-- Example-level exact-row centered-square-chain quadratic-form tail usage.
+
+This demonstrates the core assumption bundle
+`SampleCovarianceExactRowCenteredSquareTroppAssumptions` directly, rather than
+copying its long field list into an example-local structure. This is a
+bridge-layer example: the generic centered-square chain, Tropp primitive, and
+analytic assumptions remain fields of that core bundle. -/
+theorem sampleCovariance_exactRow_centeredSquare_quadraticForm_tail_usage
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m (n + 1))
+    (R t : Real)
+    (Rvar : Fin m -> Real)
+    (h : SampleCovarianceExactRowCenteredSquareTroppAssumptions
+      (P := P) A R t Rvar) :
+    P (quadraticFormUpperTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t) <=
+      sampleCovarianceQuadraticFormTailRHS
+        (m := m) (n := n + 1) R t
+        (rowSqNormVarianceProxyNormRHS Rvar) := by
+  exact
+    sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_centeredSquareChain_of_troppAssumptions
+      (P := P) A R t Rvar h
+
 /-- The self-adjoint operator-norm specialization of the compact bounded-row route. -/
 theorem sampleCovariance_operatorNorm_tail_usage
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
@@ -55,6 +79,30 @@ theorem sampleCovariance_operatorNorm_tail_usage
   simpa [SampleCovarianceTailTarget.event, SampleCovarianceTailTarget.rhs] using
     sampleCovariance_tail_optimized_under_boundedRowTroppAssumptions
       (P := P) A R Rneg t SampleCovarianceTailTarget.selfAdjointOperatorNorm h
+
+/-- Example-level exact-row centered-square-chain operator-norm tail usage.
+
+This demonstrates the two-sided core bundle
+`SampleCovarianceExactRowCenteredSquareTwoSidedTroppAssumptions`. It adds no
+new mathematics; it routes bridge-layer assumptions to the public wrapper. -/
+theorem sampleCovariance_exactRow_centeredSquare_operatorNorm_tail_usage
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m (n + 1))
+    (R Rneg t : Real)
+    (Rvar RvarNeg : Fin m -> Real)
+    (h : SampleCovarianceExactRowCenteredSquareTwoSidedTroppAssumptions
+      (P := P) A R Rneg t Rvar RvarNeg) :
+    P (SelfAdjointOperatorNormTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t) <=
+      sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n + 1) R t (rowSqNormVarianceProxyNormRHS Rvar) +
+        sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n + 1) Rneg t
+          (rowSqNormVarianceProxyNormRHS RvarNeg) := by
+  exact
+    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_centeredSquareChain_of_troppAssumptions
+      (P := P) A R Rneg t Rvar RvarNeg h
 
 end
 

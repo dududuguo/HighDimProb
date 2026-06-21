@@ -1,4 +1,5 @@
 import HighDimProb.RandomMatrix.TraceExp
+import HighDimProb.RandomMatrix.MatrixOrder
 import HighDimProb.RandomMatrix.Assumptions
 import HighDimProb.Analysis.RealInequalities
 import Mathlib.Analysis.SpecialFunctions.ContinuousFunctionalCalculus.ExpLog.Order
@@ -617,6 +618,7 @@ theorem sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two
         integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two
           (P := P) (X := X i) (R := R i) (hLp i) (hSq i))
       hSq hR)
+
 /-- Generic provider-chain target from centered-square comparisons to a
 variance-proxy norm bound.
 
@@ -638,6 +640,99 @@ abbrev varianceProxyNormBound_of_centeredSquareChain_statement
       deterministicMatrixVarianceProxyNorm (Finset.univ.sum fun i => V i) <=
         sigma2 ->
         MatrixVarianceProxyNormBound P (centeredRandomMatrixFamily P A) sigma2
+
+/-- Typed blocker for Loewner-to-operator-norm monotonicity of deterministic
+variance proxies.
+
+The centered-square provider can prove the finite-sum Loewner comparison from
+per-summand comparisons. Turning that comparison into a scalar operator-norm
+bound still requires a PSD/order-to-norm monotonicity theorem, kept explicit by
+this contract. -/
+abbrev deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement {n : Nat}
+    (U V : Matrix (Fin n) (Fin n) Real) : Prop :=
+  IsPSDMatrix U ->
+    MatrixLE U V ->
+      deterministicMatrixVarianceProxyNorm U <= deterministicMatrixVarianceProxyNorm V
+
+/-- Deterministic PSD Loewner monotonicity for the variance-proxy norm.
+
+This discharges the local HighDimProb-to-Mathlib order bridge only: `U` is
+assumed PSD in the explicit HighDimProb predicate, `U <= V` is assumed via the
+explicit `MatrixLE` predicate, and the conclusion is the corresponding
+operator-norm monotonicity for deterministic variance proxies. -/
+theorem deterministicMatrixVarianceProxyNorm_mono_of_matrixLE {n : Nat}
+    (U V : Matrix (Fin n) (Fin n) Real) :
+    deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement U V := by
+  intro hU hUV
+  cases n with
+  | zero =>
+      have hUzero : U = 0 := by
+        ext i
+        exact Fin.elim0 i
+      have hVzero : V = 0 := by
+        ext i
+        exact Fin.elim0 i
+      simp [hUzero, hVzero, deterministicMatrixVarianceProxyNorm,
+        deterministicOperatorNorm]
+  | succ n =>
+      have hUself : IsSelfAdjointMatrix U :=
+        (posSemidef_of_isPSDMatrix hU).1
+      rcases exists_unitVector_abs_matrixQuadraticForm_eq_deterministicOperatorNorm
+          hUself with ⟨x, hx, hnorm⟩
+      have hUquad_nonneg : 0 <= matrixQuadraticForm U x := hU.2 x
+      have hnormU_eq :
+          deterministicMatrixVarianceProxyNorm U = matrixQuadraticForm U x := by
+        rw [deterministicMatrixVarianceProxyNorm, ← hnorm,
+          abs_of_nonneg hUquad_nonneg]
+      calc
+        deterministicMatrixVarianceProxyNorm U
+            = matrixQuadraticForm U x := hnormU_eq
+        _ <= matrixQuadraticForm V x := quadraticForm_le_of_matrixLE hUV x
+        _ <= deterministicMatrixVarianceProxyNorm V := by
+          simpa [deterministicMatrixVarianceProxyNorm] using
+            matrixQuadraticForm_le_deterministicOperatorNorm V hx
+
+/-- Centered-square variance-proxy provider under an explicit norm-monotonicity
+contract.
+
+This theorem proves the available bookkeeping part of the generic
+centered-square chain: per-summand Loewner comparisons sum to a variance-proxy
+Loewner comparison. The remaining conversion from Loewner order to deterministic
+operator norm is exactly the `hNormMono` premise. -/
+theorem varianceProxyNormBound_of_centeredSquareChain_of_normMono
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n)
+    (V : I -> Matrix (Fin n) (Fin n) Real)
+    (sigma2 : Real)
+    (hNormMono :
+      deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement
+        (Finset.univ.sum fun i : I =>
+          matrixSecondMoment P (centeredRandomMatrix P (A i)))
+        (Finset.univ.sum fun i : I => V i))
+    (hPSD : IsPSDMatrix
+      (Finset.univ.sum fun i : I =>
+        matrixSecondMoment P (centeredRandomMatrix P (A i))))
+    (hLE : forall i,
+      MatrixLE (matrixSecondMoment P (centeredRandomMatrix P (A i))) (V i))
+    (hNorm : deterministicMatrixVarianceProxyNorm (Finset.univ.sum fun i => V i) <=
+      sigma2) :
+    MatrixVarianceProxyNormBound P (centeredRandomMatrixFamily P A) sigma2 := by
+  have hSumLE : MatrixLE
+      (Finset.univ.sum fun i : I =>
+        matrixSecondMoment P (centeredRandomMatrix P (A i)))
+      (Finset.univ.sum fun i : I => V i) :=
+    matrixLE_sum hLE
+  have hNormLe :
+      deterministicMatrixVarianceProxyNorm
+          (Finset.univ.sum fun i : I =>
+            matrixSecondMoment P (centeredRandomMatrix P (A i))) <=
+        deterministicMatrixVarianceProxyNorm (Finset.univ.sum fun i : I => V i) :=
+    hNormMono hPSD hSumLE
+  simpa [MatrixVarianceProxyNormBound, matrixVarianceProxyNorm,
+    deterministicMatrixVarianceProxyNorm, matrixVarianceProxy, centeredRandomMatrixFamily]
+    using hNormLe.trans hNorm
 
 /-- Thin consumer for the centered-square variance-proxy provider chain.
 
@@ -687,6 +782,98 @@ theorem varianceProxyNormBound_of_centeredSquareChain_expansion
   hChain
     (fun i => matrixSquare_centeredRandomMatrix_expectation_expansion (P := P) (A i))
     hLE hNorm
+/-- Exact-row sample-covariance sharp-chain statement provider from the generic
+centered-square variance-proxy chain.
+
+This bridges the generic `varianceProxyNormBound_of_centeredSquareChain_statement`
+for the rank-one row family to the sample-covariance-specific
+`sampleCovarianceVarianceProxy_sharp_statement`. The concrete row assumptions
+only discharge the integrability premises needed by the centered rank-one
+second-moment comparison. The generic centered-square chain remains explicit;
+this theorem does not prove Matrix Bernstein, Tropp/Lieb, trace-MGF iteration,
+or an unconditional sample-covariance tail bound. -/
+theorem sampleCovarianceVarianceProxy_sharp_statement_of_centeredSquareChain_exactRowSqNorm_bound_memLp_two
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {m n : Nat}
+    (X : Fin m -> RandomVector Omega n)
+    (R : Fin m -> Real)
+    (hChain : @varianceProxyNormBound_of_centeredSquareChain_statement
+      Omega mOmega P _ (Fin m) _ n (rankOneRandomMatrixFamily X)
+      (fun i => matrixSecondMoment P (rankOneRandomMatrix (X i)))
+      (rowSqNormVarianceProxyNormRHS R))
+    (hMeas : forall i, IsRandomVector P (X i))
+    (hLp : forall i, forall j : Fin n,
+      MemLpRealRandomVariable P (coord (X i) j) 2)
+    (hSq : forall i omega, vectorSqNorm (X i omega) <= R i) :
+    @sampleCovarianceVarianceProxy_sharp_statement
+      Omega mOmega P _ m n X
+      (fun i => matrixSecondMoment P (rankOneRandomMatrix (X i)))
+      (rowSqNormVarianceProxyNormRHS R) := by
+  intro hCentered hSecond hNorm
+  have hResult : MatrixVarianceProxyNormBound P
+      (centeredRandomMatrixFamily P (rankOneRandomMatrixFamily X))
+      (rowSqNormVarianceProxyNormRHS R) := by
+    apply hChain
+    · intro i
+      exact matrixSquare_centeredRandomMatrix_expectation_expansion
+        (P := P) ((rankOneRandomMatrixFamily X) i)
+    · intro i
+      have hRankSq : IntegrableRandomMatrix P
+          (randomMatrixSquare (rankOneRandomMatrix (X i))) :=
+        integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two
+          (P := P) (X := X i) (R := R i) (hLp i) (hSq i)
+      have hRankInt : IntegrableRandomMatrix P (rankOneRandomMatrix (X i)) :=
+        integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
+          (P := P) (X := X i) (hLp i)
+      have hCenteredSq : IntegrableRandomMatrix P
+          (randomMatrixSquare (centeredRankOneRandomMatrix P (X i))) := by
+        simpa [centeredRankOneRandomMatrix] using
+          integrableRandomMatrix_randomMatrixSquare_centeredRandomMatrix
+            (P := P) (A := rankOneRandomMatrix (X i)) hRankInt hRankSq
+      have hCenteredLE : MatrixLE
+          (matrixSecondMoment P (centeredRankOneRandomMatrix P (X i)))
+          (matrixSecondMoment P (rankOneRandomMatrix (X i))) :=
+        hCentered i (hMeas i) (hLp i) hCenteredSq hRankSq
+      have hLE : MatrixLE
+          (matrixSecondMoment P (centeredRankOneRandomMatrix P (X i)))
+          (matrixSecondMoment P (rankOneRandomMatrix (X i))) := hCenteredLE
+      simpa [rankOneRandomMatrixFamily, centeredRankOneRandomMatrix] using
+        matrixLE_trans hLE (hSecond i)
+    · simpa [rankOneRandomMatrixFamily] using hNorm
+  simpa [centeredRankOneRandomMatrixFamily] using hResult
+
+/-- Exact-row sample-covariance variance-proxy consumer from the generic
+centered-square chain.
+
+Compared with `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two`,
+this theorem replaces the sample-specific sharp-chain premise by the generic
+centered-square chain plus concrete row measurability, `MemLp 2`, and exact row
+squared-norm witnesses. The row-specific deterministic norm control remains the
+existing `rowSqNormVarianceProxyNormRHS R` route. -/
+theorem sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two_of_centeredSquareChain
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {m n : Nat}
+    (X : Fin m -> RandomVector Omega n)
+    (R : Fin m -> Real)
+    (hChain : @varianceProxyNormBound_of_centeredSquareChain_statement
+      Omega mOmega P _ (Fin m) _ n (rankOneRandomMatrixFamily X)
+      (fun i => matrixSecondMoment P (rankOneRandomMatrix (X i)))
+      (rowSqNormVarianceProxyNormRHS R))
+    (hMeas : forall i, IsRandomVector P (X i))
+    (hLp : forall i, forall j : Fin n,
+      MemLpRealRandomVariable P (coord (X i) j) 2)
+    (hSq : forall i omega, vectorSqNorm (X i omega) <= R i)
+    (hR : forall i, 0 <= R i) :
+    MatrixVarianceProxyNormBound P
+      (centeredRankOneRandomMatrixFamily P X)
+      (rowSqNormVarianceProxyNormRHS R) :=
+  sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two
+    (P := P) X R
+    (sampleCovarianceVarianceProxy_sharp_statement_of_centeredSquareChain_exactRowSqNorm_bound_memLp_two
+      (P := P) X R hChain hMeas hLp hSq)
+    hLp hSq hR
 /-! ## Dimension, support, and effective-rank hardbone statement chain -/
 
 /-- Rank-refined trace-exponential dimension-factor target with an explicit

@@ -52,9 +52,9 @@ theorems or typed statements without relying on local test internals.
   PSD and quadratic-form nonnegativity APIs.
 - `HighDimProbJudge/RandomMatrix/VarianceProxyUse.lean`: matrix square, second
   moment, variance proxy, semantic variance-proxy bounds,
-  variance-proxy norm, self-adjointness lemmas, matrix expectation PSD/order
-  and add/smul/zero/constant normalization lemmas, PSD typed targets, and
-  matrix Bernstein statement surface.
+  variance-proxy norm, self-adjointness lemmas, exact-row generic-centered-square
+  chain bridge visibility, matrix expectation PSD/order and add/smul/zero/constant
+  normalization lemmas, PSD typed targets, and matrix Bernstein statement surface.
 - `HighDimProbJudge/RandomMatrix/SpectralUse.lean`: lambda-max wrappers,
   ordered endpoint wrappers, quadratic-form bound predicates, monotonicity
   lemmas, two-sided tail events, and spectral tail event APIs.
@@ -65,7 +65,9 @@ theorems or typed statements without relying on local test internals.
   nonnegativity bridges, random self-adjoint trace-exp moment nonnegativity,
   real/lintegral bridge theorem, natural-state Tropp/trace-MGF route checks,
   the hardbone matrix-exp/log normalization theorem, the proved matrix log/order
-  bridge, and remaining typed statement APIs.
+  bridge, centered-square provider/norm-monotonicity contract APIs including
+  `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE`, and remaining typed
+  statement APIs.
 - `HighDimProbJudge/RandomMatrix/LaplaceUse.lean`: matrix Laplace RHS and
   lintegral RHS vocabulary, trace-exp threshold events, MB-S5 conditional
   Markov/Laplace bridge APIs, MB-S6 explicit-dominance conditional wrappers,
@@ -73,8 +75,9 @@ theorems or typed statements without relying on local test internals.
   Laplace/Chernoff/operator-norm Laplace statement APIs.
 - `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`: proof-ready matrix
   Bernstein statement surface, `matrixBernsteinLaplacePrerequisitesStatement`,
-  `matrixBernsteinTraceMGF_statement`, and its main structural/analytic
-  dependencies.
+  `matrixBernsteinTraceMGF_statement`, sample-covariance exact-row centered-square-chain wrapper and assumption-bundle visibility,
+  negative exact-row variance-proxy provider visibility, and their main
+  structural/analytic dependencies.
 
 ## How It Differs From Normal Tests
 
@@ -255,7 +258,7 @@ MB-S9-matrixle-algebra-proof adds variance-proxy judge checks for
 `matrixQuadraticForm_add`, `matrixQuadraticForm_smul`,
 `isPSDMatrix_zero`, `isPSDMatrix_add`,
 `isPSDMatrix_smul_of_nonneg`, `matrixLE_refl`, `matrixLE_of_eq`,
-`matrixLE_trans`, `matrixLE_add`, `matrixLE_add_left`,
+`matrixLE_trans`, `matrixLE_add`, `matrixLE_sum`, `matrixLE_add_left`,
 `matrixLE_add_right`, and `matrixLE_smul_of_nonneg`. The examples use only
 explicit MatrixLE/PSD hypotheses and do not claim the single-summand MGF
 theorem, Bernstein CFC proof, trace-mgf provider, Golden-Thompson, Lieb, or
@@ -336,7 +339,8 @@ python scripts/judge_policy_check.py
   adapters, the explicit-CFC sample-covariance wrappers, the CFC-free
   `_of_troppPrimitive` / `_of_troppPrimitives` sample-covariance wrappers, and
   the opposite-parameter sample-covariance exp/trace/CFC provider-transfer
-  adapters.
+  adapters. Example API checks cover the exact-row centered-square bundle usage
+  wrappers through `StatementRoutes`.
 - The checks are import-boundary/API checks only; they do not prove
   exponential/trace integrability, Tropp/Lieb, Golden-Thompson, full Matrix
   Bernstein, or unconditional sample-covariance concentration. The CFC-free

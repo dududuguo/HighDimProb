@@ -65,9 +65,13 @@ variable (hRnonneg : 0 <= R)
 #check matrixLE_sub_right_of_isPSD
 #check matrixLE_trans
 #check matrixLE_add
+#check matrixLE_sum
 #check matrixLE_add_left
 #check matrixLE_add_right
 #check matrixLE_smul_of_nonneg
+#check posSemidef_of_isPSDMatrix
+#check matrix_nonneg_of_isPSDMatrix
+#check matrix_le_of_matrixLE
 #check randomMatrixSquare
 #check randomMatrixSquare_apply
 #check randomMatrixSquare_neg

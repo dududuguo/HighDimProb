@@ -39,6 +39,8 @@ obligations without creating another core sample-covariance API.
 -/
 
 #check sampleCovariance_operatorNorm_tail_usage
+#check sampleCovariance_exactRow_centeredSquare_quadraticForm_tail_usage
+#check sampleCovariance_exactRow_centeredSquare_operatorNorm_tail_usage
 
 /-!
 ## Rank-one covariance and Gram routes
