@@ -2,7 +2,15 @@
 
 This file lists hard analytic assumptions that progress-first RandomMatrix
 contracts are allowed to consume explicitly while separate provider work fills
-them in.  Entries here are not claims that the assumptions are proved.
+them in. Entries here are not claims that the assumptions are proved.
+
+This is a developer-facing hardbone ledger, not a downstream API reference.
+The strategy is to make hard proof frontiers precise enough that independent
+provider work can discharge them while HighDimProb remains deliverable and
+extensible. Composition theorems recorded here may be useful scaffolds for
+type-checking the route, but they should not be treated as the preferred
+user-facing surface. Once provider theorems are imported, these scaffolds should
+be collapsed, deprecated, or hidden behind smaller stable wrappers.
 
 ## RM-LIEB-S8: Tropp one-step `K` bound from explicit Lieb/log-order inputs
 
@@ -71,7 +79,7 @@ premises:
   full-sum trace-exponential integrability, self-adjoint comparison matrices,
   self-adjoint variance proxy, nonnegative radius, Bernstein theta range,
   per-index MGF Loewner comparison, and the variance-proxy normalization
-  `sum K_i = bernsteinMGFCoeff theta R • V`.
+  `sum K_i = SMul.smul (bernsteinMGFCoeff theta R) V`.
 
 Non-goals for this consumer:
 
