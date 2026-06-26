@@ -35,6 +35,12 @@ git diff --check
   `HighDimProbTest/RandomMatrixTraceExpAPI.lean` and
   `HighDimProbJudge/RandomMatrix/TraceExpUse.lean`; example modules, including the `StatementRoutes` statement-route index, are covered
   through `lake build HighDimProb.Examples`.
+- RandomMatrix provider-backed Lieb/Tropp ports are covered in
+  `HighDimProbTest/RandomMatrixLiebProviderAPI.lean` and
+  `HighDimProbJudge/RandomMatrix/LiebProviderUse.lean`, including S11
+  deterministic log/order and trace-exp monotonicity, S12 conditional
+  `EpsteinAffineLineConcavity` wrappers, and S13 bounded provider compression
+  bundle checks.
 - RandomMatrix hardbone statement-target checks, including the proved Bernstein
   CFC hardbone leaf, the proved matrix-exp/log normalization and log-domain leaves, the proved
   matrix log/order bridge leaf, the proved excess-support trace bridge leaf,

@@ -1,5 +1,6 @@
 import HighDimProb.RandomMatrix.CStarBridge
 import HighDimProb.RandomMatrix.HardboneStatements
+import HighDimProb.RandomMatrix.LiebProvider
 
 open MeasureTheory
 open HighDimProb
@@ -25,6 +26,19 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check bernsteinCFCExpressionNormalization_statement
 #check bernsteinMatrixExp_le_quadratic_of_cfcChain_statement
 #check operatorLogMonotoneOnPositiveMatrices_statement
+#check operatorLogMonotoneOnPositiveMatrices
+#check traceMatrixExp_mono_add_selfAdjoint
+#check troppLogExpComparisonToK_of_providerLogOrder
+#check EpsteinAffineLineConcavity
+#check liebTraceExpConcavity_of_epsteinAffineLine
+#check liebJensenTraceExp_statement_of_epsteinAffineLine
+#check troppMasterTraceMGFStep_of_epsteinAffineLine
+#check troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder
+#check troppNaturalHistoryMeasurable_of_suffix_entry_measurable
+#check matrixExpScaledIntegrable_of_provider_finiteMeasure
+#check traceExpIntegrable_troppStateHistory_add_step_of_operatorNormBounds_finiteMeasure
+#check traceExpIntegrable_troppStateHistory_add_K_of_operatorNormBounds_finiteMeasure
+#check matrixExpSupportDomination_identity
 #check matrixExpLogDomainForSelfAdjoint_statement
 #check matrixLog_le_of_le_matrixExp_statement
 #check matrixLog_le_of_le_matrixExp

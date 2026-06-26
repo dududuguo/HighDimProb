@@ -366,6 +366,25 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   `RM-LIEB-S4-real-matrix-to-cstar-log-monotonicity-contract`, proving that Mathlib `CFC.log_le_log` is available on `CStarMatrix (Fin n) (Fin n) ℂ` while leaving real-matrix transport open.
 - Completed hardbone contract leaf:
   `RM-LIEB-S5-real-to-cstar-transport-api-contract`, proving the basic real-to-`CStarMatrix` transport shape in a probe, including entrywise, add/sub, and self-adjoint transport; positivity/order/log transport remains provider work, not a current main-repository completion.
+
+- Completed provider theorem-push leaf:
+  `RM-LIEB-S11-provider-log-order-trace-mono-ingestion`, porting the deterministic
+  operator-log monotonicity, trace-exponential monotonicity, and direct
+  `troppLogExpComparisonToK_of_providerLogOrder` leaves into
+  `HighDimProb.RandomMatrix.LiebProvider`. This does not prove Lieb/Jensen or
+  any conditioning theorem.
+- Completed conditional provider theorem-push leaf:
+  `RM-LIEB-S12-epstein-affine-line-conditional-tropp-step`, exposing
+  `EpsteinAffineLineConcavity` and conditional Lieb/Jensen/Tropp one-step
+  wrappers. The Epstein affine-line theorem remains an explicit assumption.
+- Completed provider-compression scaffold:
+  `RM-LIEB-S13-s9-s10-provider-assumption-compression`, adding bounded
+  finite-measure integrability providers, suffix-entry natural-history
+  measurability, identity support domination, and the compressed S10 bundle
+  `MatrixBernsteinConditioningTraceMGFProviderAssumptions`. Independence,
+  conditional expectation, variance proxy, full-sum trace integrability, and
+  tail-side assumptions remain explicit.
+
 - Progress-first hardbone scaffold:
   `RM-LIEB-S9-conditional-step-assumption-composition-contract`, adding `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge` as a finite-family trace-MGF consumer from explicit conditioning, natural-state, integrability, and variance-proxy assumptions. The hard assumptions consumed by the theorem are recorded in `docs/STATEMENTS.md`; this does not prove those assumptions.
 - Progress-first hardbone scaffold:
