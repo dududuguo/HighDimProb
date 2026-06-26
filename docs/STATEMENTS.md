@@ -274,3 +274,25 @@ Non-goals for this S9/S10 compression step:
   theta optimization, or full Matrix Bernstein.
 - It should reduce explicit assumption burden only where the provider theorem
   actually supplies a named premise.
+
+## RM-LIEB-S16: public-friendly natural-state provider tail route
+
+Consumer theorem:
+
+- `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
+
+This wrapper is a public route over the S10 provider-compressed bundle. It
+constructs `MatrixBernsteinConditioningTraceMGFProviderAssumptions` internally
+and then uses `.toTailAssumptions`, so callers do not supply the provider-
+discharged natural-history measurability and bounded integrability fields as
+separate tail assumptions.
+
+WATCH boundary: the conditioning contract is unchanged. The wrapper still keeps
+`troppHistoryStepIndependent_of_iIndepFun_statement`, the per-index
+`condExp_traceExp_history_add_independent_step_statement`, finite-family
+`ProbabilityTheory.iIndepFun X P`, variance-proxy normalization and
+self-adjointness, full-sum trace integrability, theta/radius range, MGF
+comparison, and the tail AEMeasurability/subset assumptions explicit. A
+sigma-algebra independence bridge for the history/current step remains missing;
+this is not a full Matrix Bernstein theorem or an unconditional sample-covariance
+route.

@@ -87,3 +87,21 @@ example, test, and judge files.
 Keep this file short. Add new details only when they change what contributors
 must run or what CI enforces. Archive old stage-by-stage test history in
 `archive.md`.
+
+
+## RM-LIEB-S16-natural-state-tail-wrapper validation
+
+For changes to the public-friendly provider tail route, run:
+
+```bash
+lake build HighDimProb.RandomMatrix.ConcentrationStatements
+lake env lean HighDimProbTest/RandomMatrixLiebProviderAPI.lean
+lake env lean HighDimProbJudge/RandomMatrix/LiebProviderUse.lean
+python scripts/judge_policy_check.py
+python .github/scripts/check_text_quality.py
+git diff --check
+```
+
+The API and judge files should `#check`
+`matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions` in
+addition to the provider bundle and `.toTailAssumptions` route.

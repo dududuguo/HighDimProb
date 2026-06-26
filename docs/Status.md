@@ -384,6 +384,12 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   `MatrixBernsteinConditioningTraceMGFProviderAssumptions`. Independence,
   conditional expectation, variance proxy, full-sum trace integrability, and
   tail-side assumptions remain explicit.
+- Added S16 public-friendly WATCH route:
+  `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`.
+  It constructs the provider bundle internally and hides only the provider-
+  discharged natural-history and bounded-integrability tail fields; the
+  history/current independence and conditional-expectation contracts are still
+  explicit because the sigma-algebra independence bridge remains missing.
 
 - Progress-first hardbone scaffold:
   `RM-LIEB-S9-conditional-step-assumption-composition-contract`, adding `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge` as a finite-family trace-MGF consumer from explicit conditioning, natural-state, integrability, and variance-proxy assumptions. The hard assumptions consumed by the theorem are recorded in `docs/STATEMENTS.md`; this does not prove those assumptions.

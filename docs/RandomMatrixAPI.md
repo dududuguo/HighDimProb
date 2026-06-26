@@ -214,6 +214,7 @@ Thin hardbone consumers:
 - `MatrixBernsteinConditioningTraceMGFProviderAssumptions`
 - `MatrixBernsteinConditioningTraceMGFProviderAssumptions.toTailAssumptions`
 - `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions`
+- `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
 
 Hardbone status table:
 
