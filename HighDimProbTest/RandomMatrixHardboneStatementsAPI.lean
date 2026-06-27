@@ -3,7 +3,7 @@ import HighDimProb.RandomMatrix.HardboneStatements
 
 open MeasureTheory
 open HighDimProb
-open scoped MatrixOrder Matrix.Norms.Operator
+open scoped ComplexOrder MatrixOrder Matrix.Norms.Operator
 
 variable {Omega : Type*} [MeasurableSpace Omega]
 variable {P : Measure Omega}
@@ -25,20 +25,27 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check bernsteinCFCExpressionNormalization_statement
 #check bernsteinMatrixExp_le_quadratic_of_cfcChain_statement
 #check operatorLogMonotoneOnPositiveMatrices_statement
+#check operatorLogMonotoneOnPositiveMatrices
 #check matrixExpLogDomainForSelfAdjoint_statement
 #check matrixLog_le_of_le_matrixExp_statement
 #check matrixLog_le_of_le_matrixExp
 #check realMatrixToCStarMatrix
+#check matrixLE_of_realMatrixToCStar_matrixLE
+#check posSemidef_of_complexification_posSemidef
+#check cstarMatrixOfMatrix_posSemidef_of_nonneg
+#check isSelfAdjointMatrix_cfc_log
+#check realMatrixToCStar_log
+#check realMatrixToCStar_matrixLE
+#check realMatrixToCStar_strictlyPositive
+#check realMatrixToCStar_nonneg
+#check realMatrixToCStarStarAlgHom
 #check realMatrixToCStarMatrix_apply
 #check realMatrixToCStarMatrix_add
 #check realMatrixToCStarMatrix_sub
 #check isSelfAdjoint_realMatrixToCStarMatrix
-#check realMatrixToCStarStrictlyPositive_statement
-#check realMatrixToCStarMatrixLE_statement
-#check realMatrixToCStarLogBack_statement
 #check traceMatrixExp_mono_add_selfAdjoint_statement
 #check traceMatrixExp_mono_add_selfAdjoint
-#check troppLogExpComparisonToK_of_logOrderKChain_statement
+#check troppLogExpComparisonToK
 #check liebTraceExpConcavity_statement
 #check liebJensenTraceExp_statement
 #check goldenThompsonTraceExp_statement
@@ -83,7 +90,6 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check bernsteinMatrixExp_le_quadratic
 #check bernsteinMatrixExp_le_quadratic_of_spectrum_cfcOrder
 #check bernsteinMatrixExp_le_quadratic_of_cfcChain_spectrum
-#check troppLogExpComparisonToK_of_logMonotone_traceExpMono
 #check matrixExpLogSelfAdjointNormalization
 #check troppMasterTraceMGFStep_of_liebJensen
 #check troppMasterTraceMGFConditionalStep_of_conditioningBridge
@@ -106,21 +112,33 @@ example : Prop :=
 example : Prop :=
   bernsteinMatrixExp_le_quadratic_of_cfcChain_statement A theta R
 
-example : Prop :=
-  troppLogExpComparisonToK_of_logOrderKChain_statement H M K
-
 example :
     matrixLog_le_of_le_matrixExp_statement M K :=
   matrixLog_le_of_le_matrixExp M K
+
+example :
+    troppLogExpComparisonToK_statement H M K :=
+  troppLogExpComparisonToK H M K
+
 example (hA : IsSelfAdjointMatrix A) :
     IsSelfAdjoint (realMatrixToCStarMatrix A) :=
   isSelfAdjoint_realMatrixToCStarMatrix hA
 
-example : Prop :=
-  realMatrixToCStarMatrixLE_statement M K
 
-example : Prop :=
-  realMatrixToCStarLogBack_statement A
+example :
+    operatorLogMonotoneOnPositiveMatrices_statement M K :=
+  operatorLogMonotoneOnPositiveMatrices M K
+
+example {A B : Matrix (Fin n) (Fin n) Real}
+    (hAB : MatrixLE A B) :
+    realMatrixToCStarMatrix A <= realMatrixToCStarMatrix B :=
+  realMatrixToCStar_matrixLE hAB
+
+example {A : Matrix (Fin n) (Fin n) Real}
+    (hA : IsSelfAdjointMatrix A) (hApos : IsStrictlyPositive A) :
+    CFC.log (realMatrixToCStarMatrix A) =
+      realMatrixToCStarMatrix (CFC.log A) :=
+  (realMatrixToCStar_log hA.isSelfAdjoint hApos).symm
 
 example : Prop :=
   troppMasterTraceMGFStep_of_liebJensen_statement (P := P) H Y

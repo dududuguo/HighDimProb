@@ -58,7 +58,7 @@ theorem sampleCovariance_exactRow_centeredSquare_quadraticForm_tail_usage
         (m := m) (n := n + 1) R t
         (rowSqNormVarianceProxyNormRHS Rvar) := by
   exact
-    sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_centeredSquareChain_of_troppAssumptions
+    sampleCovariance_quadTail_centeredSq_exactRow_of_tropp
       (P := P) A R t Rvar h
 
 /-- The self-adjoint operator-norm specialization of the compact bounded-row route. -/
@@ -101,7 +101,7 @@ theorem sampleCovariance_exactRow_centeredSquare_operatorNorm_tail_usage
           (m := m) (n := n + 1) Rneg t
           (rowSqNormVarianceProxyNormRHS RvarNeg) := by
   exact
-    sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_centeredSquareChain_of_troppAssumptions
+    sampleCovariance_opNormTail_centeredSq_exactRow_of_tropp
       (P := P) A R Rneg t Rvar RvarNeg h
 
 end

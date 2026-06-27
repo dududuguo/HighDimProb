@@ -911,6 +911,33 @@ theorem matrixBernsteinTraceMGFWithBernsteinCoeff_under_troppPrimitive
     hRange (fun i omega => bernsteinMatrixExp_le_quadratic (A i omega) theta R)
     hTropp
 
+/-- Short recommended alias for the Tropp-only Matrix Bernstein trace-MGF wrapper. -/
+abbrev matrixBernsteinTraceMGF_under_tropp
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n) (theta R : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P (matrixExpScaledFamily A theta i))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A) theta))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
+        (matrixVarianceProxy P A) theta R) :
+    matrixBernsteinTraceMGFWithBernsteinCoeff_statement P A theta R :=
+  matrixBernsteinTraceMGFWithBernsteinCoeff_under_troppPrimitive
+    A theta R hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt hBound hR
+    hRange hTropp
+
 /-- Explicit-theta quadratic-form Matrix Bernstein upper-tail wrapper under
 explicit primitive assumptions.
 
@@ -979,6 +1006,82 @@ theorem matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_primitives
   exact
     quadraticFormUpperTail_laplace_bound_of_traceMGFBernsteinVarianceProxyBoundLIntegral
       (randomMatrixSum A) (matrixVarianceProxy P A) theta t R hMeas hSubset hLInt
+
+/-- Explicit-theta quadratic-form Matrix Bernstein upper-tail wrapper with the
+pointwise Bernstein CFC primitive supplied by `bernsteinMatrixExp_le_quadratic`.
+
+This is the CFC-free version to use when the remaining hard analytic input is
+only the finite-family Tropp/Lieb primitive. It still does not prove Tropp/Lieb,
+trace-exp integrability, variance-proxy control, or a full Matrix Bernstein
+theorem. -/
+theorem matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_troppPrimitive
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (theta R t : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P (matrixExpScaledFamily A theta i))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A) theta))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hTheta : 0 < theta)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
+        (matrixVarianceProxy P A) theta R) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal (Real.exp (-(theta * t))) *
+        ENNReal.ofReal
+          (traceMatrixExp
+            (SMul.smul (bernsteinMGFCoeff theta R)
+              (matrixVarianceProxy P A))) :=
+  matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_primitives
+    A theta R t hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt hBound
+    hR hRange hTheta
+    (fun i omega => bernsteinMatrixExp_le_quadratic (A i omega) theta R)
+    hTropp
+
+/-- Short recommended alias for the trace-RHS quadratic-form tail wrapper. -/
+abbrev matrixBernsteinQuadTail_trace_under_tropp
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (theta R t : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P (matrixExpScaledFamily A theta i))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A) theta))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hTheta : 0 < theta)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
+        (matrixVarianceProxy P A) theta R) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal (Real.exp (-(theta * t))) *
+        ENNReal.ofReal
+          (traceMatrixExp
+            (SMul.smul (bernsteinMGFCoeff theta R)
+              (matrixVarianceProxy P A))) :=
+  matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_troppPrimitive
+    A theta R t hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt hBound
+    hR hRange hTheta hTropp
 
 /-- Variance-proxy specialization of the deterministic trace-exponential
 dimension bound with the bounded Matrix Bernstein coefficient.
@@ -1137,6 +1240,78 @@ theorem matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_unde
   rw [Real.exp_add]
   ring_nf
 
+/-- Explicit-theta scalar-RHS Matrix Bernstein wrapper with the pointwise
+Bernstein CFC primitive supplied by `bernsteinMatrixExp_le_quadratic`.
+
+This is the CFC-free scalar-exponential version to use when the remaining hard
+analytic input is only the finite-family Tropp/Lieb primitive. -/
+theorem matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_troppPrimitive
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (theta R t sigmaSq : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P (matrixExpScaledFamily A theta i))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A) theta))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hTheta : 0 < theta)
+    (hNorm : MatrixVarianceProxyNormBound P A sigmaSq)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
+        (matrixVarianceProxy P A) theta R) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        ((n + 1 : Real) *
+          Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq)) :=
+  matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives
+    A theta R t sigmaSq hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt
+    hBound hR hRange hTheta hNorm
+    (fun i omega => bernsteinMatrixExp_le_quadratic (A i omega) theta R)
+    hTropp
+
+/-- Short recommended alias for the scalar-RHS quadratic-form tail wrapper. -/
+abbrev matrixBernsteinQuadTail_scalar_under_tropp
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (theta R t sigmaSq : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P (matrixExpScaledFamily A theta i))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A) theta))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hTheta : 0 < theta)
+    (hNorm : MatrixVarianceProxyNormBound P A sigmaSq)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
+        (matrixVarianceProxy P A) theta R) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        ((n + 1 : Real) *
+          Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq)) :=
+  matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_troppPrimitive
+    A theta R t sigmaSq hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt
+    hBound hR hRange hTheta hNorm hTropp
+
 /-- Theta-optimized quadratic-form Matrix Bernstein upper-tail wrapper under
 explicit primitive assumptions.
 
@@ -1238,12 +1413,96 @@ theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoef
       h.cfcPrimitive
       h.troppPrimitive)
 
+/-- Theta-optimized quadratic-form Matrix Bernstein wrapper with the pointwise
+Bernstein CFC primitive supplied by `bernsteinMatrixExp_le_quadratic`.
+
+This direct-argument wrapper is useful for example-local assumption records that
+already expose the remaining Tropp/Lieb primitive but should not expose the
+proved pointwise Bernstein CFC field. -/
+theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_troppPrimitive
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (R t sigmaSq : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily A (bernsteinThetaChoice t sigmaSq R) i))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A)
+          (bernsteinThetaChoice t sigmaSq R)))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hSigma : 0 < sigmaSq)
+    (hR : 0 <= R)
+    (ht : 0 < t)
+    (hNorm : MatrixVarianceProxyNormBound P A sigmaSq)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A
+        (bernsteinSecondMomentComparisonFamily P A
+          (bernsteinThetaChoice t sigmaSq R) R)
+        (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        ((n + 1 : Real) *
+          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) :=
+  matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+    A R t sigmaSq hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt hBound
+    hSigma hR ht hNorm
+    (fun i omega =>
+      bernsteinMatrixExp_le_quadratic (A i omega)
+        (bernsteinThetaChoice t sigmaSq R) R)
+    hTropp
+
+/-- Short recommended alias for the optimized direct-argument quadratic-form tail wrapper. -/
+abbrev matrixBernsteinQuadTail_opt_under_tropp
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (R t sigmaSq : Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P A)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P A)
+    (hIntX : forall i, IntegrableRandomMatrix P (A i))
+    (hIntSq : forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i)))
+    (hExpInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (matrixExpScaledFamily A (bernsteinThetaChoice t sigmaSq R) i))
+    (hTraceInt :
+      IntegrableRealRandomVariable P
+        (traceExpIntegrand (randomMatrixSum A)
+          (bernsteinThetaChoice t sigmaSq R)))
+    (hBound : PointwiseOperatorNormBound A R)
+    (hSigma : 0 < sigmaSq)
+    (hR : 0 <= R)
+    (ht : 0 < t)
+    (hNorm : MatrixVarianceProxyNormBound P A sigmaSq)
+    (hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A
+        (bernsteinSecondMomentComparisonFamily P A
+          (bernsteinThetaChoice t sigmaSq R) R)
+        (matrixVarianceProxy P A) (bernsteinThetaChoice t sigmaSq R) R) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      ENNReal.ofReal
+        ((n + 1 : Real) *
+          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) :=
+  matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_troppPrimitive
+    A R t sigmaSq hCentered hIndepSA hIntX hIntSq hExpInt hTraceInt hBound
+    hSigma hR ht hNorm hTropp
+
 /-- Preferred optimized one-sided quadratic-form Matrix Bernstein wrapper after
 the Bernstein CFC hardbone leaf.
 
-This consumes the CFC-free positive-side bundle and reuses the compatibility
-wrapper internally. The remaining hard primitive is the finite-family Tropp/Lieb
-trace-MGF statement carried by the bundle. -/
+This consumes the CFC-free positive-side bundle and calls the direct
+`_under_troppPrimitive` wrapper, so the proved pointwise Bernstein CFC theorem
+stays below the public assumption boundary. The remaining hard primitive is the
+finite-family Tropp/Lieb trace-MGF statement carried by the bundle. -/
 theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
@@ -1253,9 +1512,27 @@ theorem matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoef
       MatrixBernsteinPositiveSideTroppAssumptions
         (P := P) A R t sigmaSq) :
     P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
+      matrixBernsteinOptimizedScalarTailRHS (n + 1) R t sigmaSq := by
+  simpa [matrixBernsteinOptimizedScalarTailRHS, Nat.cast_add, Nat.cast_one] using
+    (matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_troppPrimitive
+      (P := P) A R t sigmaSq h.centered h.independentSelfAdjoint
+      h.integrable h.squareIntegrable h.expIntegrable h.traceExpIntegrable
+      h.operatorNormBound h.sigmaPositive h.radiusNonneg h.deviationPositive
+      h.varianceProxyNormBound h.troppPrimitive)
+
+/-- Short recommended alias for the optimized assumption-bundle quadratic-form tail wrapper. -/
+abbrev matrixBernsteinQuadTail_opt_of_tropp
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (R t sigmaSq : Real)
+    (h :
+      MatrixBernsteinPositiveSideTroppAssumptions
+        (P := P) A R t sigmaSq) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
       matrixBernsteinOptimizedScalarTailRHS (n + 1) R t sigmaSq :=
-  matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
-    (P := P) A R t sigmaSq h.toPositiveSideAssumptions
+  matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions
+    (P := P) A R t sigmaSq h
 
 /-- Two-sided quadratic-form Matrix Bernstein wrapper under explicit primitive
 assumptions for both `A` and the pointwise negated summand family.
@@ -1546,6 +1823,23 @@ theorem matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinC
   matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
     (P := P) A R Rneg t sigmaSq sigmaSqNeg
     hPos.toPositiveSideAssumptions hNeg.toNegativeSideAssumptions
+
+/-- Short recommended alias for the two-sided optimized quadratic-form tail wrapper. -/
+abbrev matrixBernsteinQuadTail_twoSided_opt_of_tropp
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega (n + 1) (n + 1))
+    (R Rneg t sigmaSq sigmaSqNeg : Real)
+    (hPos :
+      MatrixBernsteinPositiveSideTroppAssumptions (P := P) A R t sigmaSq)
+    (hNeg :
+      MatrixBernsteinNegativeSideTroppAssumptions
+        (P := P) A Rneg t sigmaSqNeg) :
+    P (twoSidedQuadraticFormTailEvent (randomMatrixSum A) t) <=
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        (n + 1) R Rneg t sigmaSq sigmaSqNeg :=
+  matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions
+    (P := P) A R Rneg t sigmaSq sigmaSqNeg hPos hNeg
 
 /-- Self-adjoint operator-norm Matrix Bernstein wrapper under the explicit
 operator-norm-to-two-sided-quadratic-form bridge.
@@ -1959,6 +2253,23 @@ theorem matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernstei
   matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions
     (P := P) A R Rneg t sigmaSq sigmaSqNeg
     hPos.toPositiveSideAssumptions hNeg.toNegativeSideAssumptions
+
+/-- Short recommended alias for the high-level optimized operator-norm tail wrapper. -/
+abbrev matrixBernsteinOpNormTail_opt_of_tropp
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
+    (A : I -> RandomMatrix Omega n n)
+    (R Rneg t sigmaSq sigmaSqNeg : Real)
+    (hPos :
+      MatrixBernsteinPositiveSideTroppAssumptions (P := P) A R t sigmaSq)
+    (hNeg :
+      MatrixBernsteinNegativeSideTroppAssumptions
+        (P := P) A Rneg t sigmaSqNeg) :
+    P (SelfAdjointOperatorNormTailEvent (randomMatrixSum A) t) <=
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        n R Rneg t sigmaSq sigmaSqNeg :=
+  matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions
+    (P := P) A R Rneg t sigmaSq sigmaSqNeg hPos hNeg
 
 /-- Sample-covariance operator-norm event bridge to the unnormalized centered
 row rank-one sum.
@@ -3072,6 +3383,24 @@ theorem sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound
       h.varianceRadiiNonneg h.deviationPositive h.centeredSquareChain
       h.troppPrimitive
 
+
+/-- Short recommended alias for the bundled exact-row centered-square-chain
+sample-covariance quadratic-form tail wrapper. -/
+abbrev sampleCovariance_quadTail_centeredSq_exactRow_of_tropp
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m (n + 1))
+    (R t : Real)
+    (Rvar : Fin m -> Real)
+    (h : SampleCovarianceExactRowCenteredSquareTroppAssumptions
+      (P := P) A R t Rvar) :
+    P (quadraticFormUpperTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t) <=
+      sampleCovarianceQuadraticFormTailRHS
+        (m := m) (n := n + 1) R t
+        (rowSqNormVarianceProxyNormRHS Rvar) :=
+  sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_centeredSquareChain_of_troppAssumptions
+    (P := P) A R t Rvar h
 /-- Sample-covariance quadratic-form upper-tail wrapper using the crude
 bounded-row variance-proxy norm bound.
 
@@ -3679,7 +4008,6 @@ theorem sampleCovariance_selfAdjointOperatorNorm_tail_optimized_nonempty_under_e
         hExpIntNeg hTraceIntNeg hBoundNeg hSigmaNeg hRadiusNeg hNormNeg
         hCFCNeg hTroppNeg
   exact (measure_mono hSubset).trans hMB
-
 /-- Arbitrary-column sample-covariance self-adjoint operator-norm tail wrapper
 under explicit variance-proxy and Matrix Bernstein primitive assumptions.
 
@@ -4232,6 +4560,26 @@ theorem sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos
       h.negVariancePositive h.negRadiusNonneg h.negVarianceRadiiNonneg
       h.negCenteredSquareChain h.negTroppPrimitive
 
+
+/-- Short recommended alias for the bundled exact-row centered-square-chain
+sample-covariance operator-norm tail wrapper. -/
+abbrev sampleCovariance_opNormTail_centeredSq_exactRow_of_tropp
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m n)
+    (R Rneg t : Real)
+    (Rvar RvarNeg : Fin m -> Real)
+    (h : SampleCovarianceExactRowCenteredSquareTwoSidedTroppAssumptions
+      (P := P) A R Rneg t Rvar RvarNeg) :
+    P (SelfAdjointOperatorNormTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t) <=
+      sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n) R t (rowSqNormVarianceProxyNormRHS Rvar) +
+        sampleCovarianceQuadraticFormTailRHS
+          (m := m) (n := n) Rneg t
+          (rowSqNormVarianceProxyNormRHS RvarNeg) :=
+  sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_centeredSquareChain_of_troppAssumptions
+    (P := P) A R Rneg t Rvar RvarNeg h
 /-- Arbitrary-column sample-covariance self-adjoint operator-norm tail wrapper
 using crude bounded-row variance-proxy norm bounds.
 

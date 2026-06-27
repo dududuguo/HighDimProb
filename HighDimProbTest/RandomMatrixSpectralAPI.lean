@@ -39,6 +39,9 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check lambdaMaxOrdered_is_greatest_eigenvalue_statement
 #check lambdaMaxOrdered_is_greatest_eigenvalue
 #check lambdaMin_is_least_eigenvalue_statement
+#check lambdaMinOrdered_is_least_eigenvalue_statement
+#check lambdaMinOrdered_is_least_eigenvalue
+#check lambdaMinOrdered_le_eigenvalues₀
 #check matrixQuadraticForm_le_lambdaMax_statement
 #check matrixQuadraticForm_le_lambdaMaxOrdered_statement
 #check LambdaMaxPSDUpperBound
@@ -106,6 +109,7 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check (matrixUpperBoundTailEvent A Z t : Set Omega)
 #check (lambdaMaxOrdered H hH : Real)
 #check (lambdaMin H hH : Real)
+#check (lambdaMinOrdered H hH : Real)
 #check (QuadraticFormUpperBound M t : Prop)
 #check (QuadraticFormLowerBound M t : Prop)
 #check (LambdaMaxBound M t : Prop)
@@ -113,6 +117,10 @@ variable (hB : forall omega, IsSelfAdjointMatrix (B omega))
 #check (lambdaMax_eq_lambdaMaxOrdered_statement H hH : Prop)
 #check (lambdaMaxOrdered_is_greatest_eigenvalue_statement H hH : Prop)
 #check (lambdaMin_is_least_eigenvalue_statement H hH : Prop)
+#check (lambdaMinOrdered_is_least_eigenvalue_statement H hH : Prop)
+#check (lambdaMinOrdered_le_eigenvalues₀ H hH :
+  forall i : Fin (Fintype.card (Fin (d + 1))),
+    lambdaMinOrdered H hH <= hH.eigenvalues₀ i)
 #check (matrixQuadraticForm_le_lambdaMax_statement H hH : Prop)
 #check (matrixQuadraticForm_le_lambdaMaxOrdered_statement H hH : Prop)
 #check (LambdaMaxPSDUpperBound H hH : Prop)

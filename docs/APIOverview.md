@@ -108,8 +108,8 @@ copying unfolded right-hand sides into examples or tests.
 
 | Use case | Start here | What remains explicit |
 |---|---|---|
-| Generic quadratic-form Matrix Bernstein | `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions` | Tropp/Lieb trace-MGF primitives, integrability, variance proxy |
-| Generic operator-norm Matrix Bernstein | `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions` | positive threshold, positive/negative Tropp primitives, variance proxies |
+| Generic quadratic-form Matrix Bernstein | `matrixBernsteinQuadTail_opt_of_tropp` | Tropp/Lieb trace-MGF primitives, integrability, variance proxy |
+| Generic operator-norm Matrix Bernstein | `matrixBernsteinOpNormTail_opt_of_tropp` | positive threshold, positive/negative Tropp primitives, variance proxies |
 | Sample covariance quadratic-form tail | `SampleCovarianceTailUsage.sampleCovariance_quadraticForm_tail_usage` | independence, integrability, Tropp primitive |
 | Sample covariance operator-norm tail | `SampleCovarianceTailUsage.sampleCovariance_operatorNorm_tail_usage` | positive/negative primitive assumptions |
 | Lower-level exact-row positive-side route | `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive` | hardbone sharp-chain premise, Tropp primitive, integrability |

@@ -55,16 +55,19 @@ Core Matrix Bernstein helpers:
 - `MatrixBernsteinNegativeSideAssumptions`
 - `MatrixBernsteinPositiveSideTroppAssumptions`
 - `MatrixBernsteinNegativeSideTroppAssumptions`
-- `matrixBernsteinTraceMGFWithBernsteinCoeff_under_troppPrimitive`
+- `matrixBernsteinTraceMGF_under_tropp`
+- `matrixBernsteinQuadTail_trace_under_tropp`
+- `matrixBernsteinQuadTail_scalar_under_tropp`
+- `matrixBernsteinQuadTail_opt_under_tropp`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`
-- `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions`
+- `matrixBernsteinQuadTail_opt_of_tropp`
 - `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge`
 - `MatrixBernsteinConditioningTraceMGFTailAssumptions`
 - `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions`
 - `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`
-- `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions`
+- `matrixBernsteinQuadTail_twoSided_opt_of_tropp`
 - `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions`
-- `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions`
+- `matrixBernsteinOpNormTail_opt_of_tropp`
 
 TraceExp / Tropp bookkeeping helpers:
 
@@ -125,8 +128,20 @@ Hardbone proved leaves, deterministic bridges, statement targets, and thin consu
 - `traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le`
 - `traceMatrixExp_effectiveRank_bound`
 - `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le`
+- `lambdaMinOrdered`
+- `lambdaMinOrdered_is_least_eigenvalue_statement`
+- `lambdaMinOrdered_is_least_eigenvalue`
+- `lambdaMinOrdered_le_eigenvalues₀`
 - `traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate`
 - `matrixTrace_eq_rank_of_isStarProjection`
+- `realMatrixToCStarStarAlgHom`
+- `realMatrixToCStar_nonneg`
+- `realMatrixToCStar_strictlyPositive`
+- `realMatrixToCStar_matrixLE`
+- `realMatrixToCStar_log`
+- `matrixLE_of_realMatrixToCStar_matrixLE`
+- `operatorLogMonotoneOnPositiveMatrices`
+- `troppLogExpComparisonToK`
 - `matrixExpLogDomainForSelfAdjoint`
 - `isPSDMatrix_of_isStarProjection`
 - `isPSDMatrix_of_posSemidef`
@@ -244,10 +259,11 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   normalization. The local matrix-exp/log normalization leaf is now proved by
   `matrixExpLogSelfAdjointNormalization`; it is only the pointwise CFC
   normalization consumed by the Tropp/Lieb one-step chain. The matrix log/order
-  bridge is now proved through `matrixLog_le_of_le_matrixExp`, and the
+  bridge is now proved through `matrixLog_le_of_le_matrixExp`; the operator-log
+  premise is supplied by `operatorLogMonotoneOnPositiveMatrices`, the
   trace-exponential monotonicity leaf is proved by
-  `traceMatrixExp_mono_add_selfAdjoint`; operator-log monotonicity remains an
-  explicit premise. The
+  `traceMatrixExp_mono_add_selfAdjoint`, and the deterministic log/order-to-`K`
+  target is proved by `troppLogExpComparisonToK`. The
   conditioning chain now has the thin theorem witness
   `troppConditionalStep_of_iIndepFun`, which only forwards the explicit
   per-index conditional-expectation provider and does not prove history
@@ -269,7 +285,7 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   hypotheses.
 - `StatementRoutes` is an examples-only route index; it groups representative example-level statement families without adding core API. Lower-level bridge and frontier checks belong in source, tests, and judge files rather than separate reader-facing examples.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
-- Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The positive-side quadratic-form route now has an exact-row variance-proxy wrapper, but two-sided and operator-norm exact-row wrappers still need a negative-side exact-row variance-proxy provider contract. The preferred sample-covariance example route now uses Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
+- Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The positive-side quadratic-form route now has an exact-row variance-proxy wrapper, but two-sided and operator-norm exact-row wrappers still need a negative-side exact-row variance-proxy provider contract. The preferred sample-covariance and reader-facing Matrix Bernstein example routes now use Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
 - Negative-side provider-transfer adapters only move explicit opposite-parameter
   assumptions onto the named negative sample-covariance family; they do not
   prove exponential integrability, trace-exponential integrability, or CFC.
@@ -364,11 +380,13 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   infrastructure for future provider compression rather than the preferred
   user-facing sample-covariance route.
 - Completed hardbone proof leaf:
-  `RM-LIEB-S3-operator-log-monotonicity-representation-bridge-contract`, adding `isPSDMatrix_of_posSemidef`, `matrixLE_of_mathlib_le`, and `mathlib_le_of_matrixLE`; direct `CFC.log_le_log` use remains blocked for real matrices by the missing CStar route.
+  `RM-LIEB-S3-operator-log-monotonicity-representation-bridge-contract`, with the reusable `MatrixOrder` bridges `isPSDMatrix_of_posSemidef`, `matrixLE_of_mathlib_le`, and `mathlib_le_of_matrixLE` now living below `Spectral`.
 - Completed hardbone contract leaf:
-  `RM-LIEB-S4-real-matrix-to-cstar-log-monotonicity-contract`, proving that Mathlib `CFC.log_le_log` is available on `CStarMatrix (Fin n) (Fin n) ℂ` while leaving real-matrix transport open.
-- Completed hardbone contract leaf:
-  `RM-LIEB-S5-real-to-cstar-transport-api-contract`, proving the basic real-to-`CStarMatrix` transport shape in a probe, including entrywise, add/sub, and self-adjoint transport; positivity/order/log transport remains provider work, not a current main-repository completion.
+  `RM-LIEB-S4-real-matrix-to-cstar-log-monotonicity-contract`, confirming Mathlib `CFC.log_le_log` on `CStarMatrix (Fin n) (Fin n) ℂ`; this is now consumed by the main operator-log witness.
+- Completed hardbone proof leaf:
+  `RM-LIEB-S6-real-to-cstar-transport-and-operator-log`, proving strict positivity/order/log-back transport through `CStarBridge` and the main witness `operatorLogMonotoneOnPositiveMatrices`.
+- Completed hardbone proof leaf:
+  `RM-LIEB-S8-direct-log-order-to-K-wrapper`, proving the deterministic `troppLogExpComparisonToK` wrapper from the already proved operator-log and trace-exp monotonicity leaves.
 - Progress-first hardbone scaffold:
   `RM-LIEB-S9-conditional-step-assumption-composition-contract`, adding `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge` as a finite-family trace-MGF consumer from explicit conditioning, natural-state, integrability, and variance-proxy assumptions. The hard assumptions consumed by the theorem are recorded in `docs/STATEMENTS.md`; this does not prove those assumptions.
 - Progress-first hardbone scaffold:

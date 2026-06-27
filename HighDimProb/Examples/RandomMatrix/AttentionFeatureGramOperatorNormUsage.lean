@@ -129,7 +129,7 @@ theorem attentionFeatureGram_quadraticForm_tail_usage
     P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
       matrixBernsteinOptimizedScalarTailRHS (numTokens + 1) R t sigmaSq := by
   exact
-    randomFeatureKernel_quadraticForm_tail_optimized_under_primitives
+    randomFeatureKernel_quadTail_opt_of_tropp
       (P := P) Phi A R t sigmaSq
       { featureAdapter := h.randomFeatureAdapter
         matrixBernsteinSide := h.positiveSide }
@@ -147,7 +147,7 @@ theorem attentionFeatureGram_operatorNorm_tail_usage
       matrixBernsteinTwoSidedOptimizedScalarTailRHS
         (numTokens + 1) R Rneg t sigmaSq sigmaSqNeg := by
   exact
-    matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions
+    matrixBernsteinOpNormTail_opt_of_tropp
       (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
       (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
       h.positiveSide h.negativeSide

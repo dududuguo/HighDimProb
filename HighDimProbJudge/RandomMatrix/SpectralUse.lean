@@ -8,6 +8,10 @@ import HighDimProb.RandomMatrix
 #check HighDimProb.lambdaMaxOrdered
 #check HighDimProb.lambdaMaxOrdered_eq_eigenvalues₀_zero
 #check HighDimProb.lambdaMin
+#check HighDimProb.lambdaMinOrdered
+#check HighDimProb.lambdaMinOrdered_is_least_eigenvalue_statement
+#check HighDimProb.lambdaMinOrdered_is_least_eigenvalue
+#check HighDimProb.lambdaMinOrdered_le_eigenvalues₀
 #check HighDimProb.QuadraticFormUpperBound
 #check HighDimProb.QuadraticFormLowerBound
 #check HighDimProb.quadraticFormUpperBound_mono
@@ -145,6 +149,19 @@ example {n : Nat}
 example {n : Nat}
     (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (hA : HighDimProb.IsSelfAdjointMatrix A) :
+    HighDimProb.lambdaMinOrdered_is_least_eigenvalue_statement A hA := by
+  exact HighDimProb.lambdaMinOrdered_is_least_eigenvalue A hA
+
+example {n : Nat}
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : HighDimProb.IsSelfAdjointMatrix A) :
+    forall i : Fin (Fintype.card (Fin (n + 1))),
+      HighDimProb.lambdaMinOrdered A hA <= hA.eigenvalues₀ i := by
+  exact HighDimProb.lambdaMinOrdered_le_eigenvalues₀ A hA
+
+example {n : Nat}
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : HighDimProb.IsSelfAdjointMatrix A) :
     HighDimProb.lambdaMaxOrdered_is_greatest_eigenvalue_statement A hA := by
   exact HighDimProb.lambdaMaxOrdered_is_greatest_eigenvalue A hA
 
@@ -154,6 +171,7 @@ example {n : Nat}
     (hBridge : HighDimProb.lambdaMax_eq_lambdaMaxOrdered_statement A hA) :
     HighDimProb.lambdaMax A hA = HighDimProb.lambdaMaxOrdered A hA := by
   exact hBridge
+
 
 example {n : Nat} (A : Matrix (Fin n) (Fin n) Real)
     (x : Fin n -> Real) (hA : A.PosSemidef) :

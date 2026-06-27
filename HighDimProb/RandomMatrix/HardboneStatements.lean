@@ -1,5 +1,6 @@
 import HighDimProb.RandomMatrix.TraceExp
 import HighDimProb.RandomMatrix.TraceExpMonotonicity
+import HighDimProb.RandomMatrix.CStarBridge
 import HighDimProb.RandomMatrix.MatrixOrder
 import HighDimProb.RandomMatrix.Assumptions
 import HighDimProb.Analysis.RealInequalities
@@ -18,7 +19,7 @@ namespace HighDimProb
 
 noncomputable section
 
-open scoped MatrixOrder Matrix.Norms.Operator
+open scoped ComplexOrder MatrixOrder Matrix.Norms.Operator
 
 /-- Scalar Bernstein exponential/quadratic inequality target.
 
@@ -106,6 +107,40 @@ abbrev operatorLogMonotoneOnPositiveMatrices_statement {n : Nat}
           MatrixLE M N ->
             MatrixLE (CFC.log M) (CFC.log N)
 
+set_option maxHeartbeats 2000000 in
+/-- Proved real-matrix operator-log monotonicity on the strictly positive cone.
+
+The proof transports the comparison to Mathlib's `CStarMatrix` model, applies
+`CFC.log_le_log`, and reflects the result back to HighDimProb's explicit
+`MatrixLE` vocabulary. It does not prove Lieb concavity, Golden-Thompson,
+Tropp trace-MGF iteration, variance-proxy control, or full Matrix Bernstein. -/
+theorem operatorLogMonotoneOnPositiveMatrices {n : Nat}
+    (M N : Matrix (Fin n) (Fin n) Real) :
+    operatorLogMonotoneOnPositiveMatrices_statement M N := by
+  intro hM hMpos hN hNpos hMN
+  have hCOrder :
+      realMatrixToCStarMatrix M <= realMatrixToCStarMatrix N :=
+    realMatrixToCStar_matrixLE hMN
+  have hCPos : IsStrictlyPositive (realMatrixToCStarMatrix M) :=
+    realMatrixToCStar_strictlyPositive hMpos
+  have hCLog :
+      CFC.log (realMatrixToCStarMatrix M) <=
+        CFC.log (realMatrixToCStarMatrix N) :=
+    CFC.log_le_log hCOrder hCPos
+  have hBackM :
+      realMatrixToCStarMatrix (CFC.log M) =
+        CFC.log (realMatrixToCStarMatrix M) :=
+    realMatrixToCStar_log hM.isSelfAdjoint hMpos
+  have hBackN :
+      realMatrixToCStarMatrix (CFC.log N) =
+        CFC.log (realMatrixToCStarMatrix N) :=
+    realMatrixToCStar_log hN.isSelfAdjoint hNpos
+  have hImageOrder :
+      realMatrixToCStarMatrix (CFC.log M) <=
+        realMatrixToCStarMatrix (CFC.log N) := by
+    simpa [hBackM, hBackN] using hCLog
+  exact matrixLE_of_realMatrixToCStar_matrixLE hImageOrder
+
 /-- Domain and normalization target for applying matrix log to `matrixExp K`.
 
 This records the extra log-domain and expression-normalization facts needed to
@@ -143,18 +178,6 @@ abbrev traceMatrixExp_mono_add_selfAdjoint_statement {n : Nat}
       IsSelfAdjointMatrix B ->
         MatrixLE A B ->
           traceMatrixExp (H + A) <= traceMatrixExp (H + B)
-
-/-- Statement-chain target reducing the Tropp log/`K` comparison to smaller
-order facts.
-
-The existing bridge appears here only as the conclusion of the chain. The
-premises are the smaller log-order and trace-exponential monotonicity targets
-named above. -/
-abbrev troppLogExpComparisonToK_of_logOrderKChain_statement {n : Nat}
-    (H M K : Matrix (Fin n) (Fin n) Real) : Prop :=
-  matrixLog_le_of_le_matrixExp_statement M K ->
-    traceMatrixExp_mono_add_selfAdjoint_statement H (CFC.log M) K ->
-      troppLogExpComparisonToK_statement H M K
 
 /-! ## Tropp/Lieb/Golden-Thompson hardbone statement chain -/
 
@@ -1390,6 +1413,7 @@ theorem matrixExpLogDomainForSelfAdjoint {n : Nat}
         simpa [matrixExp] using (Matrix.isUnit_exp K)
       exact hUnit.isStrictlyPositive hNonneg
     · simpa [matrixExp] using (CFC.log_exp (a := K) hK.isSelfAdjoint)
+
 /-- Thin bridge from a log-monotonicity premise and the matrix-exp log-domain
 premise to the direct `log M <= K` comparison.
 
@@ -1421,17 +1445,23 @@ theorem traceMatrixExp_mono_add_selfAdjoint {n : Nat}
   intro hH hA hB hAB
   exact traceMatrixExp_mono_add_selfAdjoint_of_matrixLE H A B hH hA hB hAB
 
-/-- Thin consumer for the log/order-to-`K` hardbone chain.
+/-- Proved deterministic log/order-to-`K` comparison.
 
-This theorem only composes the Phase 2 log-order and trace-exp monotonicity
-targets into the existing Tropp log/`K` comparison target. -/
-theorem troppLogExpComparisonToK_of_logMonotone_traceExpMono {n : Nat}
-    (H M K : Matrix (Fin n) (Fin n) Real)
-    (hChain : troppLogExpComparisonToK_of_logOrderKChain_statement H M K)
-    (hLog : matrixLog_le_of_le_matrixExp_statement M K)
-    (hTrace : traceMatrixExp_mono_add_selfAdjoint_statement H (CFC.log M) K) :
-    troppLogExpComparisonToK_statement H M K :=
-  hChain hLog hTrace
+This composes the proved matrix-exp log-domain leaf, the real-matrix
+operator-log monotonicity witness, and the deterministic trace-exponential
+monotonicity leaf. It is still only the deterministic comparison step; it does
+not prove Lieb concavity, Jensen, Golden-Thompson, conditioning, integrability
+propagation, variance-proxy control, or full Matrix Bernstein. -/
+theorem troppLogExpComparisonToK {n : Nat}
+    (H M K : Matrix (Fin n) (Fin n) Real) :
+    troppLogExpComparisonToK_statement H M K := by
+  intro hH hM hMpos hK hMK
+  have hLogLE : MatrixLE (CFC.log M) K :=
+    matrixLog_le_of_le_matrixExp M K
+      (operatorLogMonotoneOnPositiveMatrices M (matrixExp K))
+      (matrixExpLogDomainForSelfAdjoint K) hM hMpos hK hMK
+  exact traceMatrixExp_mono_add_selfAdjoint H (CFC.log M) K
+    hH (isSelfAdjointMatrix_cfc_log hM) hK hLogLE
 
 /-- Matrix-log normalization for self-adjoint exponentials.
 

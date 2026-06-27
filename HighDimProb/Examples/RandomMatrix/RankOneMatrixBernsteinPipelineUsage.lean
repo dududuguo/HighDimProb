@@ -76,11 +76,6 @@ structure RankOneMatrixBernsteinPipelineAssumptions {Omega : Type*}
   varianceProxyNormBound :
     MatrixVarianceProxyNormBound P
       (centeredRankOnePipelineSummands (P := P) X) sigmaSq
-  cfcPrimitive :
-    forall i omega,
-      bernsteinMatrixExp_le_quadratic_statement
-        (centeredRankOnePipelineSummands (P := P) X i omega)
-        (bernsteinThetaChoice t sigmaSq R) R
   troppPrimitive :
     troppMasterTraceMGFFiniteFamily_statement
       (P := P)
@@ -125,8 +120,8 @@ theorem centeredRankOnePipeline_integrable {Omega : Type*}
       (P := P) (X := X i) (hMemLp i))
 
 /-- Optimized Matrix Bernstein tail bound for the centered rank-one covariance
-pipeline under explicit primitive assumptions. -/
-theorem rankOnePipeline_quadraticForm_tail_optimized_under_primitives
+pipeline under the remaining Tropp primitive assumptions. -/
+theorem rankOnePipeline_quadTail_opt_under_tropp
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {I : Type*} [Fintype I] {n : Nat}
     (X : I -> RandomRankOneVector Omega n)
@@ -137,7 +132,7 @@ theorem rankOnePipeline_quadraticForm_tail_optimized_under_primitives
         (randomMatrixSum (centeredRankOnePipelineSummands (P := P) X)) t) <=
       matrixBernsteinOptimizedScalarTailRHS (n + 1) R t sigmaSq := by
   simpa [matrixBernsteinOptimizedScalarTailRHS, Nat.cast_add, Nat.cast_one] using
-    (matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives
+    (matrixBernsteinQuadTail_opt_under_tropp
       (centeredRankOnePipelineSummands (P := P) X) R t sigmaSq
       (centeredRankOnePipeline_centeredSelfAdjoint
         (P := P) X h.randomVector h.coordinateMemLpTwo)
@@ -146,8 +141,7 @@ theorem rankOnePipeline_quadraticForm_tail_optimized_under_primitives
         (P := P) X h.coordinateMemLpTwo)
       h.squareIntegrable h.expIntegrable h.traceExpIntegrable
       h.operatorNormBound h.sigmaPositive h.radiusNonneg
-      h.deviationPositive h.varianceProxyNormBound h.cfcPrimitive
-      h.troppPrimitive)
+      h.deviationPositive h.varianceProxyNormBound h.troppPrimitive)
 
 end
 

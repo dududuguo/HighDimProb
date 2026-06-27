@@ -41,36 +41,62 @@ Order / PSD representation bridges:
 These bridge HighDimProb's explicit quadratic-form PSD vocabulary and Mathlib's
 ordered-matrix API without installing a new matrix order abstraction.
 
+Spectral endpoints:
+
+- `lambdaMax`
+- `lambdaMaxOrdered`
+- `lambdaMaxOrdered_eq_eigenvalues₀_zero`
+- `lambdaMaxOrdered_is_greatest_eigenvalue_statement`
+- `lambdaMaxOrdered_is_greatest_eigenvalue`
+- `lambdaMin`
+- `lambdaMinOrdered`
+- `lambdaMinOrdered_is_least_eigenvalue_statement`
+- `lambdaMinOrdered_is_least_eigenvalue`
+- `lambdaMinOrdered_le_eigenvalues₀`
+
+These wrappers keep the legacy `lambdaMax` / `lambdaMin` names while exposing
+the canonical ordered `eigenvalues₀` endpoints.
+
+
 CStar representation bridge:
 
 - `realMatrixToCStarMatrix`
+- `realMatrixToCStarStarAlgHom`
+- `realMatrixToCStar_nonneg`
+- `realMatrixToCStar_strictlyPositive`
+- `realMatrixToCStar_matrixLE`
+- `realMatrixToCStar_log`
+- `isSelfAdjointMatrix_cfc_log`
+- `cstarMatrixOfMatrix_posSemidef_of_nonneg`
+- `posSemidef_of_complexification_posSemidef`
+- `matrixLE_of_realMatrixToCStar_matrixLE`
 - `realMatrixToCStarMatrix_apply`
 - `realMatrixToCStarMatrix_add`
 - `realMatrixToCStarMatrix_sub`
 - `isSelfAdjoint_realMatrixToCStarMatrix`
-- `realMatrixToCStarStrictlyPositive_statement`
-- `realMatrixToCStarMatrixLE_statement`
-- `realMatrixToCStarLogBack_statement`
 
 These expose the real-matrix to `CStarMatrix` representation layer needed to
 reuse Mathlib CStar functional-calculus order results. Strict positivity,
-Loewner-order, and `CFC.log` transport are still statement targets, not proved
-facts.
+Loewner-order, and strictly-positive self-adjoint `CFC.log` transport are now
+proved in the main repository; `realMatrixToCStar_log` is intentionally restricted to that domain.
 
 ## Matrix Bernstein Surface
 
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
-- `matrixBernsteinTraceMGFWithBernsteinCoeff_under_troppPrimitive`
+- `matrixBernsteinTraceMGF_under_tropp`
+- `matrixBernsteinQuadTail_trace_under_tropp`
+- `matrixBernsteinQuadTail_scalar_under_tropp`
+- `matrixBernsteinQuadTail_opt_under_tropp`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 - `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge`
 - `MatrixBernsteinConditioningTraceMGFTailAssumptions`
 - `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`
-- `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions`
+- `matrixBernsteinQuadTail_opt_of_tropp`
 - `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
-- `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions`
+- `matrixBernsteinQuadTail_twoSided_opt_of_tropp`
 - `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives`
-- `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions`
+- `matrixBernsteinOpNormTail_opt_of_tropp`
 
 These are under explicit primitive assumptions. The pointwise Bernstein CFC
 primitive is now proved by `bernsteinMatrixExp_le_quadratic`; the
@@ -111,13 +137,14 @@ Bernstein CFC chain:
 Log/order-to-`K` chain:
 
 - `operatorLogMonotoneOnPositiveMatrices_statement`
+- `operatorLogMonotoneOnPositiveMatrices`
 - `matrixExpLogDomainForSelfAdjoint_statement`
 - `matrixExpLogDomainForSelfAdjoint`
 - `matrixLog_le_of_le_matrixExp_statement`
 - `matrixLog_le_of_le_matrixExp`
 - `traceMatrixExp_mono_add_selfAdjoint_statement`
 - `traceMatrixExp_mono_add_selfAdjoint`
-- `troppLogExpComparisonToK_of_logOrderKChain_statement`
+- `troppLogExpComparisonToK`
 
 Tropp/Lieb/Golden-Thompson chain:
 
@@ -185,7 +212,6 @@ Thin hardbone consumers:
 - `bernsteinMatrixExp_le_quadratic_of_cfcLeaves`
 - `bernsteinMatrixExp_le_quadratic`
 - `matrixLog_le_of_le_matrixExp`
-- `troppLogExpComparisonToK_of_logMonotone_traceExpMono`
 - `troppMasterTraceMGFStep_of_liebJensen`
 - `troppConditionalStep_of_iIndepFun`
 - `troppMasterTraceMGFConditionalStep_of_conditioningBridge`
@@ -207,9 +233,9 @@ Hardbone status table:
 |---|---|---|---|---|
 | Scalar Bernstein hardbone leaf | `scalarBernsteinExpQuadraticInequality_statement` | proven by `scalarBernsteinExpQuadraticInequality` | CFC-chain assumptions can reuse the proved scalar theorem | none for this scalar leaf |
 | Bernstein CFC | `bernsteinMatrixExp_le_quadratic_statement` | proven by `bernsteinMatrixExp_le_quadratic` | `bernsteinMatrixExp_le_quadratic_of_cfcLeaves` documents the reusable composition | preferred `*_of_troppAssumptions` wrappers bypass pointwise CFC fields; explicit-CFC wrappers remain for compatibility |
-| Matrix log/order bridge | `matrixLog_le_of_le_matrixExp_statement` | proven by `matrixLog_le_of_le_matrixExp` | turns explicit log-monotonicity and `matrixExp` log-domain premises into `log M <= K` | `matrixExp` log-domain is supplied by `matrixExpLogDomainForSelfAdjoint`; operator-log monotonicity remains the external input |
-| Real-to-CStar bridge | `realMatrixToCStarMatrix` and transport statement targets | basic representation map, add/sub, and self-adjoint transport proved | exposes the CStar representation route for future operator-log monotonicity proofs | strict positivity/order/log-back transport from real matrices to `CStarMatrix` remains open |
-| Log/order-to-`K` | `troppLogExpComparisonToK_of_logOrderKChain_statement` | partial | `troppLogExpComparisonToK_of_logMonotone_traceExpMono` | trace-exp monotonicity is proved by `traceMatrixExp_mono_add_selfAdjoint`; operator-log monotonicity and explicit log/order bridge inputs remain |
+| Matrix log/order bridge | `matrixLog_le_of_le_matrixExp_statement` | proven by `matrixLog_le_of_le_matrixExp`; operator-log premise can now be supplied by `operatorLogMonotoneOnPositiveMatrices` | turns log-monotonicity and `matrixExp` log-domain premises into `log M <= K` | `matrixExp` log-domain is supplied by `matrixExpLogDomainForSelfAdjoint`; the wrapper intentionally keeps premises explicit |
+| Real-to-CStar bridge | `realMatrixToCStarMatrix` and transport lemmas | representation map, add/sub, self-adjoint, strict positivity, order, log-back, and reflected order transport proved | supplies the CStar representation route used by `operatorLogMonotoneOnPositiveMatrices` | log-back is restricted to strictly positive self-adjoint real matrices |
+| Log/order-to-`K` | `troppLogExpComparisonToK_statement` | proven by `troppLogExpComparisonToK` | direct deterministic comparison from `M <= matrixExp K` | still deterministic only; Lieb/Jensen, Golden-Thompson, conditioning, integrability, and variance-proxy inputs remain separate |
 | Tropp/Lieb/GT one-step | `troppMasterTraceMGFStep_of_liebJensen_statement` | typed-prop | `troppMasterTraceMGFStep_of_liebJensen` | Lieb concavity, probability-measure Jensen, log-exp normalization; Golden-Thompson is separate |
 | Conditioning / independence | `troppConditionalStep_of_iIndepFun_statement` | proven by `troppConditionalStep_of_iIndepFun` | `troppMasterTraceMGFConditionalStep_of_conditioningBridge`; `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge` composes this route into the finite-family trace-MGF bound | thin forwarder/composer only; generated histories, history/current-step independence, finite-family independence, conditional expectation reduction, integrability, and variance-proxy inputs remain explicit premises |
 | Trace-exp integrability | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement` | typed-prop with proved thin consumer | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider` | automatic absolute domination, Golden-Thompson/product, or boundedness provider |
@@ -221,9 +247,10 @@ Most hardbone declarations are typed `Prop` contracts, not hard theorem proofs.
 The Bernstein CFC chain is now proved by `bernsteinMatrixExp_le_quadratic`
 after splitting out scalar Bernstein, spectrum localization, CFC order
 transfer, and expression normalization. The direct matrix log/order bridge is
-proved by `matrixLog_le_of_le_matrixExp`, while
-`traceMatrixExp_mono_add_selfAdjoint` now closes the downstream
-trace-exponential monotonicity leaf; operator-log monotonicity remains explicit.
+proved by `matrixLog_le_of_le_matrixExp`; `operatorLogMonotoneOnPositiveMatrices`
+supplies the operator-log premise, `traceMatrixExp_mono_add_selfAdjoint`
+closes the downstream trace-exponential monotonicity leaf, and
+`troppLogExpComparisonToK` now proves the deterministic log/order-to-`K` comparison.
 The finite-family conditioning chain is proved by `troppConditionalStep_of_iIndepFun`,
 but it only forwards the explicit per-index conditional-expectation provider and
 does not discharge the history or independence hypotheses. The remaining
@@ -332,11 +359,11 @@ assumptions or a more explicit proof boundary:
 - `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive`
 - `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_centeredSquareChain_of_troppPrimitive`
 - `SampleCovarianceExactRowCenteredSquareTroppAssumptions`
-- `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_centeredSquareChain_of_troppAssumptions`
+- `sampleCovariance_quadTail_centeredSq_exactRow_of_tropp`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_troppPrimitives`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_centeredSquareChain_of_troppPrimitives`
 - `SampleCovarianceExactRowCenteredSquareTwoSidedTroppAssumptions`
-- `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_exactRowSqNorm_bound_with_neg_square_adapters_of_centeredSquareChain_of_troppAssumptions`
+- `sampleCovariance_opNormTail_centeredSq_exactRow_of_tropp`
 - `sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_under_explicit_variance_proxy`
 - `sampleCovariance_selfAdjointOperatorNorm_tail_optimized_arbitrary_of_pos_under_explicit_variance_proxy`

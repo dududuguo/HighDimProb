@@ -129,7 +129,7 @@ theorem loraAdapterSubspaceCovariance_operatorNorm_tail_usage
       matrixBernsteinTwoSidedOptimizedScalarTailRHS
         (r + 1) R Rneg t sigmaSq sigmaSqNeg := by
   exact
-    matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions
+    matrixBernsteinOpNormTail_opt_of_tropp
       (P := P) (A := A) (R := R) (Rneg := Rneg) (t := t)
       (sigmaSq := sigmaSq) (sigmaSqNeg := sigmaSqNeg)
       h.positiveSide h.negativeSide

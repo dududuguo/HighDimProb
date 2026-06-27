@@ -117,6 +117,41 @@ theorem matrix_le_of_matrixLE {n : Nat}
   rw [Matrix.le_iff]
   exact posSemidef_of_isPSDMatrix hAB
 
+/-- Convert Mathlib positive semidefiniteness into HighDimProb's explicit
+double-sum quadratic-form nonnegativity. -/
+theorem matrixQuadraticForm_nonneg_of_posSemidef {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (hA : A.PosSemidef)
+    (x : Fin n -> Real) :
+    0 <= matrixQuadraticForm A x := by
+  have h := hA.dotProduct_mulVec_nonneg x
+  simpa [matrixQuadraticForm, dotProduct, Matrix.mulVec,
+    Finset.mul_sum, Finset.sum_mul, mul_assoc] using h
+
+/-- Mathlib positive semidefiniteness gives HighDimProb's explicit PSD
+predicate. This is the converse bridge to `posSemidef_of_isPSDMatrix`. -/
+theorem isPSDMatrix_of_posSemidef {n : Nat}
+    {A : Matrix (Fin n) (Fin n) Real} (hA : A.PosSemidef) :
+    IsPSDMatrix A := by
+  constructor
+  · apply Matrix.IsSymm.ext
+    intro i j
+    have h := Matrix.IsHermitian.apply hA.isHermitian i j
+    simpa using h
+  · intro x
+    exact matrixQuadraticForm_nonneg_of_posSemidef hA x
+
+/-- Convert Mathlib matrix order into HighDimProb's explicit `MatrixLE`. -/
+theorem matrixLE_of_mathlib_le {n : Nat}
+    {A B : Matrix (Fin n) (Fin n) Real} (hAB : A <= B) :
+    MatrixLE A B := by
+  exact isPSDMatrix_of_posSemidef (Matrix.le_iff.mp hAB)
+
+/-- Compatibility alias for `matrix_le_of_matrixLE`. -/
+theorem mathlib_le_of_matrixLE {n : Nat}
+    {A B : Matrix (Fin n) (Fin n) Real} (hAB : MatrixLE A B) :
+    A <= B :=
+  matrix_le_of_matrixLE hAB
+
 theorem matrixQuadraticForm_sub {n : Nat}
     (B A : Matrix (Fin n) (Fin n) Real) (x : Fin n -> Real) :
     matrixQuadraticForm (B - A) x =

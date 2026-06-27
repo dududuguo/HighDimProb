@@ -105,9 +105,6 @@ structure NTKGramMatrixBernsteinAssumptions {Omega : Type*}
   thetaRange : abs theta * R < 3
   thetaPositive : 0 < theta
   varianceProxyNormBound : MatrixVarianceProxyNormBound P A sigmaSq
-  cfcPrimitive :
-    forall a omega,
-      bernsteinMatrixExp_le_quadratic_statement (A a omega) theta R
   troppPrimitive :
     troppMasterTraceMGFFiniteFamily_statement
       (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
@@ -118,7 +115,7 @@ structure NTKGramMatrixBernsteinAssumptions {Omega : Type*}
 The conclusion is stated for the centered NTK Gram deviation
 `randomMatrixSum A`; the adapter field records that `A` is the centered
 rank-one NTK/random-feature Gram summand family. -/
-theorem ntkGram_quadraticForm_tail_scalar_exp_under_primitives
+theorem ntkGram_quadTail_scalar_under_tropp
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {n width : Nat}
     (J : Fin width -> RandomNTKFeatureVector Omega n)
@@ -131,14 +128,14 @@ theorem ntkGram_quadraticForm_tail_scalar_exp_under_primitives
         ((n + 1 : Real) *
           Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq)) := by
   exact
-    matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives
+    matrixBernsteinQuadTail_scalar_under_tropp
       A theta R t sigmaSq h.centered h.independentSelfAdjoint h.integrable
       h.squareIntegrable h.expIntegrable h.traceExpIntegrable
       h.operatorNormBound h.radiusNonneg h.thetaRange h.thetaPositive
-      h.varianceProxyNormBound h.cfcPrimitive h.troppPrimitive
+      h.varianceProxyNormBound h.troppPrimitive
 
 /-- Same NTK-style route, retaining the trace-exponential RHS. -/
-theorem ntkGram_quadraticForm_tail_traceExp_under_primitives
+theorem ntkGram_quadTail_trace_under_tropp
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {n width : Nat}
     (J : Fin width -> RandomNTKFeatureVector Omega n)
@@ -153,11 +150,11 @@ theorem ntkGram_quadraticForm_tail_traceExp_under_primitives
             (SMul.smul (bernsteinMGFCoeff theta R)
               (matrixVarianceProxy P A))) := by
   exact
-    matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_primitives
+    matrixBernsteinQuadTail_trace_under_tropp
       A theta R t h.centered h.independentSelfAdjoint h.integrable
       h.squareIntegrable h.expIntegrable h.traceExpIntegrable
       h.operatorNormBound h.radiusNonneg h.thetaRange h.thetaPositive
-      h.cfcPrimitive h.troppPrimitive
+      h.troppPrimitive
 
 /-- Optimized-theta assumptions needed to use Matrix Bernstein for an
 NTK/random-feature Gram matrix.
@@ -181,7 +178,7 @@ Matrix Bernstein RHS.
 
 This usage theorem has no explicit theta parameter. The theta choice and scalar
 optimization are supplied by the existing Matrix Bernstein theorem. -/
-theorem ntkGram_quadraticForm_tail_optimized_under_primitives
+theorem ntkGram_quadTail_opt_of_tropp
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {n width : Nat}
     (J : Fin width -> RandomNTKFeatureVector Omega n)
@@ -192,7 +189,7 @@ theorem ntkGram_quadraticForm_tail_optimized_under_primitives
     P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
       matrixBernsteinOptimizedScalarTailRHS (n + 1) R t sigmaSq := by
   exact
-    matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions
+    matrixBernsteinQuadTail_opt_of_tropp
       (P := P) A R t sigmaSq h.matrixBernsteinSide
 
 end

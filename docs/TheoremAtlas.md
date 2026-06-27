@@ -101,7 +101,7 @@ and true effective-rank trace certificates beyond the ambient fallback remain op
 `bernsteinMatrixExp_le_quadratic`, via scalar Bernstein, spectrum localization,
 Bernstein-specific CFC order transfer, and expression normalization. The
 trace-MGF provider surface includes
-`matrixBernsteinTraceMGFWithBernsteinCoeff_under_troppPrimitive`, which reuses
+`matrixBernsteinTraceMGF_under_tropp`, which reuses
 that CFC proof while keeping Tropp/Lieb and integrability assumptions explicit.
 The preferred optimized Matrix Bernstein wrappers use
 `MatrixBernsteinPositiveSideTroppAssumptions` and
@@ -119,10 +119,11 @@ assumptions explicit. The positive-side quadratic-form wrapper
 the sharp-chain premise explicit. The local matrix-exp/log normalization leaf is proved as
 `matrixExpLogSelfAdjointNormalization`; the matrix-exp log-domain leaf is proved as
 `matrixExpLogDomainForSelfAdjoint`. Together they provide CFC normalization and log-domain facts needed by the Tropp/Lieb one-step chain. The log/order-to-`K`
-route now includes the proved thin bridge `matrixLog_le_of_le_matrixExp`, which
-composes explicit operator-log monotonicity and `matrixExp` log-domain premises.
-It does not prove operator-log monotonicity, but the downstream trace-exponential
-monotonicity step is now proved by `traceMatrixExp_mono_add_selfAdjoint`.
+route now includes the proved thin bridge `matrixLog_le_of_le_matrixExp`, whose
+operator-log premise can be supplied by the proved witness
+`operatorLogMonotoneOnPositiveMatrices`. The downstream trace-exponential
+monotonicity step is proved by `traceMatrixExp_mono_add_selfAdjoint`, and
+`troppLogExpComparisonToK` proves the resulting deterministic comparison.
 The finite-family conditioning chain now has the thin witness
 `troppConditionalStep_of_iIndepFun`; it forwards the explicit per-index
 conditional-expectation provider and does not prove the history, independence,
@@ -147,9 +148,8 @@ this is not a full Matrix Bernstein theorem.
 - Natural history measurability, independence conditioning,
   conditional-expectation reduction, and trace-exp integrability propagation for
   the conditional-step Tropp route.
-- Proofs of the remaining hardbone statement targets for operator-log
-  monotonicity,
-  Tropp/Lieb, automatic trace-exp domination/integrability, automatic
+- Proofs of the remaining hardbone statement targets for Tropp/Lieb,
+  automatic trace-exp domination/integrability, automatic
   variance-proxy sharpening beyond centered-square expectation expansion,
   support-domination providers, support-construction certificates, true
   effective-rank/support trace certificates, and dimension/rank refinements

@@ -98,6 +98,48 @@ def lambdaMin {n : Nat} (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
     (hA : IsSelfAdjointMatrix A) : Real :=
   hA.eigenvalues (Fin.last n)
 
+/-- Canonical smallest-eigenvalue endpoint using Mathlib's ordered Hermitian
+eigenvalue API directly.
+
+This is intentionally separate from `lambdaMin`, whose public meaning remains
+the existing `eigenvalues (Fin.last n)` wrapper. -/
+def lambdaMinOrdered {n : Nat}
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : IsSelfAdjointMatrix A) : Real :=
+  hA.eigenvalues₀ (Fin.cast (by simp) (Fin.last n))
+
+/-- Typed target recording that the `lambdaMinOrdered` wrapper is the least
+ordered Hermitian eigenvalue. -/
+abbrev lambdaMinOrdered_is_least_eigenvalue_statement {n : Nat}
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : IsSelfAdjointMatrix A) : Prop :=
+  forall i : Fin (Fintype.card (Fin (n + 1))),
+    lambdaMinOrdered A hA <= hA.eigenvalues₀ i
+
+
+/-- Mathlib's ordered Hermitian endpoint is least in the ordered list. -/
+theorem lambdaMinOrdered_is_least_eigenvalue {n : Nat}
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : IsSelfAdjointMatrix A) :
+    lambdaMinOrdered_is_least_eigenvalue_statement A hA := by
+  intro i
+  have hi : i <= Fin.cast (by simp) (Fin.last n) := by
+    simpa using
+      (Fin.cast_le_cast (eq := by simp) (a := i.cast (by simp))
+        (b := Fin.last n)).2 (Fin.le_last (i.cast (by simp)))
+  simpa [lambdaMinOrdered,
+    lambdaMinOrdered_is_least_eigenvalue_statement] using
+    (hA.eigenvalues₀_antitone hi)
+
+/-- Compatibility theorem spelling for the ordered smallest-eigenvalue
+element. -/
+theorem lambdaMinOrdered_le_eigenvalues₀ {n : Nat}
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+    (hA : IsSelfAdjointMatrix A) :
+    forall i : Fin (Fintype.card (Fin (n + 1))),
+      lambdaMinOrdered A hA <= hA.eigenvalues₀ i := by
+  exact lambdaMinOrdered_is_least_eigenvalue A hA
+
 /-! ## Explicit quadratic-form bound predicates -/
 
 /-- Quadratic-form upper bound over the explicit unit sphere.
@@ -367,45 +409,6 @@ theorem spectralUpperBound_of_lambdaMaxOrderedPSDUpperBound
     SpectralUpperBound A (lambdaMaxOrdered A hA) :=
   hPSD
 
-/-- Mathlib positive semidefiniteness implies nonnegativity of the
-HighDimProb explicit double-sum quadratic form.
-
-This is only a conversion lemma. It does not identify HighDimProb's
-`IsPSDMatrix` with Mathlib's `Matrix.PosSemidef`. -/
-theorem matrixQuadraticForm_nonneg_of_posSemidef {n : Nat}
-    {A : Matrix (Fin n) (Fin n) Real} (hA : A.PosSemidef)
-    (x : Fin n -> Real) :
-    0 <= matrixQuadraticForm A x := by
-  have h := hA.dotProduct_mulVec_nonneg x
-  simpa [matrixQuadraticForm, dotProduct, Matrix.mulVec,
-    Finset.mul_sum, Finset.sum_mul, mul_assoc] using h
-
-/-- Mathlib positive semidefiniteness gives HighDimProb's explicit PSD predicate.
-
-This is the converse representation bridge to `posSemidef_of_isPSDMatrix`.
-It does not install a global matrix order instance. -/
-theorem isPSDMatrix_of_posSemidef {n : Nat}
-    {A : Matrix (Fin n) (Fin n) Real} (hA : A.PosSemidef) :
-    IsPSDMatrix A := by
-  constructor
-  · apply Matrix.IsSymm.ext
-    intro i j
-    have h := Matrix.IsHermitian.apply hA.isHermitian i j
-    simpa using h
-  · intro x
-    exact matrixQuadraticForm_nonneg_of_posSemidef hA x
-
-/-- Convert Mathlib matrix order into HighDimProb's explicit `MatrixLE`. -/
-theorem matrixLE_of_mathlib_le {n : Nat}
-    {A B : Matrix (Fin n) (Fin n) Real} (hAB : A <= B) :
-    MatrixLE A B := by
-  exact isPSDMatrix_of_posSemidef (Matrix.le_iff.mp hAB)
-
-/-- Convert HighDimProb's explicit `MatrixLE` into Mathlib matrix order. -/
-theorem mathlib_le_of_matrixLE {n : Nat}
-    {A B : Matrix (Fin n) (Fin n) Real} (hAB : MatrixLE A B) :
-    A <= B :=
-  Matrix.le_iff.mpr (posSemidef_of_isPSDMatrix hAB)
 /-- PSD nullspace converse in HighDimProb's explicit quadratic-form vocabulary.
 
 Formula reference: for a positive semidefinite matrix, a zero quadratic form

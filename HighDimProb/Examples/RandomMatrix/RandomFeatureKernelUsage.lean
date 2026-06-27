@@ -212,9 +212,6 @@ structure RandomFeatureKernelMatrixBernsteinAssumptions {Omega : Type*}
   thetaRange : abs theta * R < 3
   thetaPositive : 0 < theta
   varianceProxyNormBound : MatrixVarianceProxyNormBound P A sigmaSq
-  cfcPrimitive :
-    forall a omega,
-      bernsteinMatrixExp_le_quadratic_statement (A a omega) theta R
   troppPrimitive :
     troppMasterTraceMGFFiniteFamily_statement
       (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
@@ -222,7 +219,7 @@ structure RandomFeatureKernelMatrixBernsteinAssumptions {Omega : Type*}
 
 /-- Random-feature kernel quadratic-form upper-tail bound with the normalized
 scalar Matrix Bernstein RHS. -/
-theorem randomFeatureKernel_quadraticForm_tail_scalar_exp_under_primitives
+theorem randomFeatureKernel_quadTail_scalar_under_tropp
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {numFeatures n : Nat}
     (Phi : RandomFeatureTable Omega numFeatures n)
@@ -235,15 +232,15 @@ theorem randomFeatureKernel_quadraticForm_tail_scalar_exp_under_primitives
         ((n + 1 : Real) *
           Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq)) := by
   exact
-    matrixBernsteinQuadraticFormUpperTailScalarExpRHSWithBernsteinCoeff_under_primitives
+    matrixBernsteinQuadTail_scalar_under_tropp
       A theta R t sigmaSq h.centered h.independentSelfAdjoint h.integrable
       h.squareIntegrable h.expIntegrable h.traceExpIntegrable
       h.operatorNormBound h.radiusNonneg h.thetaRange h.thetaPositive
-      h.varianceProxyNormBound h.cfcPrimitive h.troppPrimitive
+      h.varianceProxyNormBound h.troppPrimitive
 
 /-- Random-feature kernel quadratic-form upper-tail bound retaining the
 trace-exponential Matrix Bernstein RHS. -/
-theorem randomFeatureKernel_quadraticForm_tail_traceExp_under_primitives
+theorem randomFeatureKernel_quadTail_trace_under_tropp
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {numFeatures n : Nat}
     (Phi : RandomFeatureTable Omega numFeatures n)
@@ -258,11 +255,11 @@ theorem randomFeatureKernel_quadraticForm_tail_traceExp_under_primitives
             (SMul.smul (bernsteinMGFCoeff theta R)
               (matrixVarianceProxy P A))) := by
   exact
-    matrixBernsteinQuadraticFormUpperTailWithBernsteinCoeff_under_primitives
+    matrixBernsteinQuadTail_trace_under_tropp
       A theta R t h.centered h.independentSelfAdjoint h.integrable
       h.squareIntegrable h.expIntegrable h.traceExpIntegrable
       h.operatorNormBound h.radiusNonneg h.thetaRange h.thetaPositive
-      h.cfcPrimitive h.troppPrimitive
+      h.troppPrimitive
 
 /-- Optimized-theta assumptions needed to use Matrix Bernstein for a
 random-feature kernel.
@@ -286,7 +283,7 @@ scalar Matrix Bernstein RHS.
 
 This usage theorem has no explicit theta parameter. The theta choice and scalar
 optimization are supplied by the existing Matrix Bernstein theorem. -/
-theorem randomFeatureKernel_quadraticForm_tail_optimized_under_primitives
+theorem randomFeatureKernel_quadTail_opt_of_tropp
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {numFeatures n : Nat}
     (Phi : RandomFeatureTable Omega numFeatures n)
@@ -297,7 +294,7 @@ theorem randomFeatureKernel_quadraticForm_tail_optimized_under_primitives
     P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
       matrixBernsteinOptimizedScalarTailRHS (n + 1) R t sigmaSq := by
   exact
-    matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions
+    matrixBernsteinQuadTail_opt_of_tropp
       (P := P) A R t sigmaSq h.matrixBernsteinSide
 
 end

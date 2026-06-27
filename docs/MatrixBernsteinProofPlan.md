@@ -6,14 +6,14 @@ collapsed into [`archive.md`](archive.md); use git history for exact old wording
 ## Proved Under Explicit Primitives
 
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
-- `matrixBernsteinTraceMGFWithBernsteinCoeff_under_troppPrimitive`
+- `matrixBernsteinTraceMGF_under_tropp`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`
-- `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions`
+- `matrixBernsteinQuadTail_opt_of_tropp`
 - `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
-- `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_of_troppAssumptions`
+- `matrixBernsteinQuadTail_twoSided_opt_of_tropp`
 - `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives`
-- `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_troppAssumptions`
+- `matrixBernsteinOpNormTail_opt_of_tropp`
 - sample-covariance quadratic-form and operator-norm wrappers listed in [`RandomMatrixAPI.md`](RandomMatrixAPI.md)
 
 ## Shared RHS Helpers

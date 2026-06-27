@@ -249,7 +249,7 @@
   wrappers/bundles, negative-side exact-row variance-proxy transfer, and
   deterministic PSD Loewner variance-proxy norm monotonicity. These are proof
   infrastructure, not a replacement for the compact bounded-row public route.
-- Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
+- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
 
 ## Process
 
@@ -291,30 +291,46 @@
 - Status: partially proved.
 - Added: `matrixExpLogDomainForSelfAdjoint`, proving the `matrixExp` log-domain and normalization provider used by `matrixLog_le_of_le_matrixExp`.
 - Boundary preserved: this does not prove operator-log monotonicity, trace-exp monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, or full Matrix Bernstein.
-- Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
+- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+
 ## RM-LIEB-S3 Operator-Log Monotonicity Representation Bridge
 
-- Status: partially proved.
-- Added: `isPSDMatrix_of_posSemidef`, `matrixLE_of_mathlib_le`, and `mathlib_le_of_matrixLE` as reusable order-representation bridges.
-- Boundary preserved: this does not prove `operatorLogMonotoneOnPositiveMatrices_statement`; direct reuse of Mathlib `CFC.log_le_log` is blocked for the current real-matrix representation by the missing CStar route.
-- Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
+- Status: proved as infrastructure.
+- Added: `isPSDMatrix_of_posSemidef`, `matrixLE_of_mathlib_le`, and `mathlib_le_of_matrixLE` as reusable `MatrixOrder` bridges below `Spectral`.
+- Boundary preserved: this bridge only relates HighDimProb's explicit PSD/order vocabulary to Mathlib's matrix order.
+- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+
 ## RM-LIEB-S4 Real Matrix To CStar Log Monotonicity Contract
 
-- Status: blocked clean.
-- Result: Mathlib `CFC.log_le_log` is available on `CStarMatrix (Fin n) (Fin n) ℂ`.
-- Blocker: the current HighDimProb target is over `Matrix (Fin n) (Fin n) Real`; a real-to-CStar transport API is needed before the operator-log theorem can be proved from Mathlib.
-- Boundary preserved: this does not prove operator-log monotonicity for real matrices, trace-exp monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, or full Matrix Bernstein.
-- Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
+- Status: consumed by proof.
+- Result: Mathlib `CFC.log_le_log` is available on `CStarMatrix (Fin n) (Fin n) ℂ` and is now used by `operatorLogMonotoneOnPositiveMatrices`.
+- Boundary preserved: this does not prove Lieb concavity, Jensen, Golden-Thompson, conditioning, or full Matrix Bernstein.
+- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+
 ## RM-LIEB-S5 Real To CStar Transport API Contract
 
-- Status: partially proved by probe.
-- Result: the basic real-to-`CStarMatrix` transport map has clean entrywise, add/sub, and self-adjoint transport proofs.
-- Blocker: strict positivity, order, and `CFC.log` transport remain separate proof obligations before `operatorLogMonotoneOnPositiveMatrices_statement` can use Mathlib `CFC.log_le_log`.
-- Boundary preserved: this does not prove operator-log monotonicity, trace-exp monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, or full Matrix Bernstein.
-- Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
+- Status: proved in main.
+- Result: `CStarBridge` now proves the real-to-`CStarMatrix` star-algebra hom, strict positivity transport, `MatrixLE` transport, strictly-positive self-adjoint `CFC.log` transport, and reflected order transport.
+- Boundary preserved: log-back is intentionally restricted to strictly positive self-adjoint matrices.
+- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+
+## RM-LIEB-S6 Real-To-CStar Transport And Operator-Log Witness
+
+- Status: proved.
+- Added: `realMatrixToCStar_nonneg`, `realMatrixToCStar_strictlyPositive`, `realMatrixToCStar_matrixLE`, `realMatrixToCStar_log`, `matrixLE_of_realMatrixToCStar_matrixLE`, and `operatorLogMonotoneOnPositiveMatrices`.
+- Boundary preserved: this closes the real-matrix operator-log monotonicity leaf only. It does not prove Lieb concavity, Jensen, Golden-Thompson, conditioning, trace-exp integrability propagation, variance-proxy control, or full Matrix Bernstein.
+- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+
 ## RM-LIEB-S7 Trace-Exponential Monotonicity Hardbone Witness
 
 - Status: proved.
 - Added: `TraceExpDerivative.lean` for the scalar derivative of `trace (exp (X + t • C))`, `TraceExpMonotonicity.lean` for deterministic Loewner-direction trace-exp monotonicity, and the hardbone witness `traceMatrixExp_mono_add_selfAdjoint`.
 - Boundary preserved: this proves only the deterministic trace-exponential monotonicity leaf. It does not prove operator-log monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, trace-exp integrability propagation, variance-proxy control, or full Matrix Bernstein.
-- Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract` for the remaining operator-log monotonicity route.
+- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+
+## RM-LIEB-S8 Direct Log/Order-To-K Wrapper
+
+- Status: proved.
+- Added: `troppLogExpComparisonToK`, a deterministic wrapper proving `troppLogExpComparisonToK_statement` from the already proved matrix-exp log-domain, operator-log monotonicity, and trace-exp monotonicity leaves.
+- Boundary preserved: this does not prove Lieb concavity, Jensen, Golden-Thompson, conditioning, trace-exp integrability propagation, variance-proxy control, or full Matrix Bernstein.
+- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.

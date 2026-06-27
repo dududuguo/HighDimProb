@@ -50,7 +50,7 @@ the shared Matrix Bernstein wrappers. Example-specific names stay in examples;
 reusable matrix facts stay in core.
 -/
 
-#check RankOneMatrixBernsteinPipelineUsage.rankOnePipeline_quadraticForm_tail_optimized_under_primitives
+#check RankOneMatrixBernsteinPipelineUsage.rankOnePipeline_quadTail_opt_under_tropp
 
 /-!
 ## Structured covariance operator-norm routes
