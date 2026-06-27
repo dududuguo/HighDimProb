@@ -1,4 +1,5 @@
 import HighDimProb.RandomMatrix.TraceExp
+import HighDimProb.RandomMatrix.TraceExpMonotonicity
 import HighDimProb.RandomMatrix.MatrixOrder
 import HighDimProb.RandomMatrix.Assumptions
 import HighDimProb.Analysis.RealInequalities
@@ -1393,10 +1394,12 @@ theorem matrixExpLogDomainForSelfAdjoint {n : Nat}
 premise to the direct `log M <= K` comparison.
 
 This theorem only composes explicit assumptions from the log/order-to-`K`
-chain. It does not prove operator-log monotonicity, strict positivity of
-`matrixExp K`, trace-exp monotonicity, Tropp/Lieb, Golden-Thompson,
-integrability propagation, variance-proxy control, or full Matrix
-Bernstein. -/
+chain. It does not itself prove operator-log monotonicity, strict positivity
+of `matrixExp K`, or the separate trace-exp monotonicity statement; that
+trace-exp monotonicity statement is discharged below by
+`traceMatrixExp_mono_add_selfAdjoint`. It also does not prove Tropp/Lieb,
+Golden-Thompson, integrability propagation, variance-proxy control, or full
+Matrix Bernstein. -/
 theorem matrixLog_le_of_le_matrixExp {n : Nat}
     (M K : Matrix (Fin n) (Fin n) Real) :
     matrixLog_le_of_le_matrixExp_statement M K := by
@@ -1406,6 +1409,17 @@ theorem matrixLog_le_of_le_matrixExp {n : Nat}
     hLog hM hMpos hExpSA hExpPos hMK
   rw [hLogExp] at hLE
   exact hLE
+
+/-- Proved witness for the trace-exponential monotonicity hardbone statement.
+
+This closes the deterministic order-preservation leaf in the log/order-to-`K`
+chain. It does not prove operator-log monotonicity, Lieb concavity,
+Golden-Thompson, Tropp trace-MGF, or Matrix Bernstein. -/
+theorem traceMatrixExp_mono_add_selfAdjoint {n : Nat}
+    (H A B : Matrix (Fin n) (Fin n) Real) :
+    traceMatrixExp_mono_add_selfAdjoint_statement H A B := by
+  intro hH hA hB hAB
+  exact traceMatrixExp_mono_add_selfAdjoint_of_matrixLE H A B hH hA hB hAB
 
 /-- Thin consumer for the log/order-to-`K` hardbone chain.
 

@@ -107,6 +107,7 @@ open scoped MatrixOrder Matrix.Norms.Operator
 #check HighDimProb.matrixLog_le_of_le_matrixExp_statement
 #check HighDimProb.matrixLog_le_of_le_matrixExp
 #check HighDimProb.traceMatrixExp_mono_add_selfAdjoint_statement
+#check HighDimProb.traceMatrixExp_mono_add_selfAdjoint
 #check HighDimProb.troppLogExpComparisonToK_of_logOrderKChain_statement
 #check HighDimProb.liebTraceExpConcavity_statement
 #check HighDimProb.liebJensenTraceExp_statement

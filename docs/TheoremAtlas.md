@@ -121,8 +121,9 @@ the sharp-chain premise explicit. The local matrix-exp/log normalization leaf is
 `matrixExpLogDomainForSelfAdjoint`. Together they provide CFC normalization and log-domain facts needed by the Tropp/Lieb one-step chain. The log/order-to-`K`
 route now includes the proved thin bridge `matrixLog_le_of_le_matrixExp`, which
 composes explicit operator-log monotonicity and `matrixExp` log-domain premises.
-It does not prove those premises or the downstream trace-exponential
-monotonicity step. The finite-family conditioning chain now has the thin witness
+It does not prove operator-log monotonicity, but the downstream trace-exponential
+monotonicity step is now proved by `traceMatrixExp_mono_add_selfAdjoint`.
+The finite-family conditioning chain now has the thin witness
 `troppConditionalStep_of_iIndepFun`; it forwards the explicit per-index
 conditional-expectation provider and does not prove the history, independence,
 or conditional-expectation inputs themselves. The conditional route is now also
@@ -147,7 +148,7 @@ this is not a full Matrix Bernstein theorem.
   conditional-expectation reduction, and trace-exp integrability propagation for
   the conditional-step Tropp route.
 - Proofs of the remaining hardbone statement targets for operator-log
-  monotonicity, trace-exp monotonicity,
+  monotonicity,
   Tropp/Lieb, automatic trace-exp domination/integrability, automatic
   variance-proxy sharpening beyond centered-square expectation expansion,
   support-domination providers, support-construction certificates, true

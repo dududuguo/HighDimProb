@@ -15,6 +15,8 @@ import HighDimProb.RandomMatrix.Sums
 import HighDimProb.RandomMatrix.VarianceProxy
 import HighDimProb.RandomMatrix.Spectral
 import HighDimProb.RandomMatrix.TraceExp
+import HighDimProb.RandomMatrix.TraceExpDerivative
+import HighDimProb.RandomMatrix.TraceExpMonotonicity
 import HighDimProb.RandomMatrix.HardboneStatements
 import HighDimProb.RandomMatrix.CStarBridge
 import HighDimProb.RandomMatrix.Laplace

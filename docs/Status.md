@@ -146,6 +146,7 @@ Hardbone matrix-exp/log normalization leaf:
 Hardbone log/order bridge leaf:
 
 - `matrixLog_le_of_le_matrixExp`
+- `traceMatrixExp_mono_add_selfAdjoint`
 
 Hardbone conditioning bridge leaf:
 
@@ -243,8 +244,10 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   normalization. The local matrix-exp/log normalization leaf is now proved by
   `matrixExpLogSelfAdjointNormalization`; it is only the pointwise CFC
   normalization consumed by the Tropp/Lieb one-step chain. The matrix log/order
-  bridge is now proved through `matrixLog_le_of_le_matrixExp`, but it only
-  composes explicit log-monotonicity and `matrixExp` log-domain premises. The
+  bridge is now proved through `matrixLog_le_of_le_matrixExp`, and the
+  trace-exponential monotonicity leaf is proved by
+  `traceMatrixExp_mono_add_selfAdjoint`; operator-log monotonicity remains an
+  explicit premise. The
   conditioning chain now has the thin theorem witness
   `troppConditionalStep_of_iIndepFun`, which only forwards the explicit
   per-index conditional-expectation provider and does not prove history

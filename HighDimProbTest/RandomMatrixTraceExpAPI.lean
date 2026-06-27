@@ -1,4 +1,5 @@
 import HighDimProb.RandomMatrix.TraceExp
+import HighDimProb.RandomMatrix.TraceExpMonotonicity
 
 open MeasureTheory
 open HighDimProb
@@ -56,6 +57,10 @@ variable (hBernsteinRange : abs theta * R < 3)
 #check traceMatrixExp_le_card_add_trace_support_mul_exp_sub_one_of_excessSupportDomination
 #check traceMatrixExp
 #check traceMatrixExp_apply
+#check hasDerivAt_trace_exp_add_smul_const
+#check matrixTrace_mul_matrixExp_nonneg_of_selfAdjoint_of_nonneg_left
+#check monotone_traceMatrixExp_add_smul_of_selfAdjoint_of_nonneg_direction
+#check traceMatrixExp_mono_add_selfAdjoint_of_matrixLE
 #check isSelfAdjointMatrix_smul
 #check isSelfAdjointMatrix_neg
 #check randomSelfAdjointMatrix_smul

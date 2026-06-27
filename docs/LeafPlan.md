@@ -312,3 +312,9 @@
 - Blocker: strict positivity, order, and `CFC.log` transport remain separate proof obligations before `operatorLogMonotoneOnPositiveMatrices_statement` can use Mathlib `CFC.log_le_log`.
 - Boundary preserved: this does not prove operator-log monotonicity, trace-exp monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, or full Matrix Bernstein.
 - Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract`.
+## RM-LIEB-S7 Trace-Exponential Monotonicity Hardbone Witness
+
+- Status: proved.
+- Added: `TraceExpDerivative.lean` for the scalar derivative of `trace (exp (X + t • C))`, `TraceExpMonotonicity.lean` for deterministic Loewner-direction trace-exp monotonicity, and the hardbone witness `traceMatrixExp_mono_add_selfAdjoint`.
+- Boundary preserved: this proves only the deterministic trace-exponential monotonicity leaf. It does not prove operator-log monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, trace-exp integrability propagation, variance-proxy control, or full Matrix Bernstein.
+- Next safe leaf: `RM-LIEB-S6-real-to-cstar-positivity-order-transport-contract` for the remaining operator-log monotonicity route.

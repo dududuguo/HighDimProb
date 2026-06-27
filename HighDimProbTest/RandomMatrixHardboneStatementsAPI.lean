@@ -37,6 +37,7 @@ variable (mHist : Fin m -> MeasurableSpace Omega)
 #check realMatrixToCStarMatrixLE_statement
 #check realMatrixToCStarLogBack_statement
 #check traceMatrixExp_mono_add_selfAdjoint_statement
+#check traceMatrixExp_mono_add_selfAdjoint
 #check troppLogExpComparisonToK_of_logOrderKChain_statement
 #check liebTraceExpConcavity_statement
 #check liebJensenTraceExp_statement

@@ -11,6 +11,8 @@ This is the current compact API index. Old historical notes were collapsed into
 - [`OperatorNorm.lean`](../HighDimProb/RandomMatrix/OperatorNorm.lean)
 - [`Spectral.lean`](../HighDimProb/RandomMatrix/Spectral.lean)
 - [`TraceExp.lean`](../HighDimProb/RandomMatrix/TraceExp.lean)
+- [`TraceExpDerivative.lean`](../HighDimProb/RandomMatrix/TraceExpDerivative.lean)
+- [`TraceExpMonotonicity.lean`](../HighDimProb/RandomMatrix/TraceExpMonotonicity.lean)
 - [`HardboneStatements.lean`](../HighDimProb/RandomMatrix/HardboneStatements.lean)
 - [`CStarBridge.lean`](../HighDimProb/RandomMatrix/CStarBridge.lean)
 - [`VarianceProxy.lean`](../HighDimProb/RandomMatrix/VarianceProxy.lean)
@@ -114,6 +116,7 @@ Log/order-to-`K` chain:
 - `matrixLog_le_of_le_matrixExp_statement`
 - `matrixLog_le_of_le_matrixExp`
 - `traceMatrixExp_mono_add_selfAdjoint_statement`
+- `traceMatrixExp_mono_add_selfAdjoint`
 - `troppLogExpComparisonToK_of_logOrderKChain_statement`
 
 Tropp/Lieb/Golden-Thompson chain:
@@ -206,7 +209,7 @@ Hardbone status table:
 | Bernstein CFC | `bernsteinMatrixExp_le_quadratic_statement` | proven by `bernsteinMatrixExp_le_quadratic` | `bernsteinMatrixExp_le_quadratic_of_cfcLeaves` documents the reusable composition | preferred `*_of_troppAssumptions` wrappers bypass pointwise CFC fields; explicit-CFC wrappers remain for compatibility |
 | Matrix log/order bridge | `matrixLog_le_of_le_matrixExp_statement` | proven by `matrixLog_le_of_le_matrixExp` | turns explicit log-monotonicity and `matrixExp` log-domain premises into `log M <= K` | `matrixExp` log-domain is supplied by `matrixExpLogDomainForSelfAdjoint`; operator-log monotonicity remains the external input |
 | Real-to-CStar bridge | `realMatrixToCStarMatrix` and transport statement targets | basic representation map, add/sub, and self-adjoint transport proved | exposes the CStar representation route for future operator-log monotonicity proofs | strict positivity/order/log-back transport from real matrices to `CStarMatrix` remains open |
-| Log/order-to-`K` | `troppLogExpComparisonToK_of_logOrderKChain_statement` | typed-prop | `troppLogExpComparisonToK_of_logMonotone_traceExpMono` | trace-exp monotonicity plus the explicit log/order bridge inputs |
+| Log/order-to-`K` | `troppLogExpComparisonToK_of_logOrderKChain_statement` | partial | `troppLogExpComparisonToK_of_logMonotone_traceExpMono` | trace-exp monotonicity is proved by `traceMatrixExp_mono_add_selfAdjoint`; operator-log monotonicity and explicit log/order bridge inputs remain |
 | Tropp/Lieb/GT one-step | `troppMasterTraceMGFStep_of_liebJensen_statement` | typed-prop | `troppMasterTraceMGFStep_of_liebJensen` | Lieb concavity, probability-measure Jensen, log-exp normalization; Golden-Thompson is separate |
 | Conditioning / independence | `troppConditionalStep_of_iIndepFun_statement` | proven by `troppConditionalStep_of_iIndepFun` | `troppMasterTraceMGFConditionalStep_of_conditioningBridge`; `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge` composes this route into the finite-family trace-MGF bound | thin forwarder/composer only; generated histories, history/current-step independence, finite-family independence, conditional expectation reduction, integrability, and variance-proxy inputs remain explicit premises |
 | Trace-exp integrability | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement` | typed-prop with proved thin consumer | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider` | automatic absolute domination, Golden-Thompson/product, or boundedness provider |
@@ -218,13 +221,14 @@ Most hardbone declarations are typed `Prop` contracts, not hard theorem proofs.
 The Bernstein CFC chain is now proved by `bernsteinMatrixExp_le_quadratic`
 after splitting out scalar Bernstein, spectrum localization, CFC order
 transfer, and expression normalization. The direct matrix log/order bridge is
-proved by `matrixLog_le_of_le_matrixExp`, but it only composes explicit
-operator-log monotonicity and `matrixExp` log-domain premises. The finite-family
-conditioning chain is proved by `troppConditionalStep_of_iIndepFun`, but it only
-forwards the explicit per-index conditional-expectation provider and does not
-discharge the history or independence hypotheses. The remaining trace-exp
-monotonicity, Tropp/Lieb, automatic integrability, variance-proxy, and
-dimension/rank blockers stay split into named leaves. The rank/support
+proved by `matrixLog_le_of_le_matrixExp`, while
+`traceMatrixExp_mono_add_selfAdjoint` now closes the downstream
+trace-exponential monotonicity leaf; operator-log monotonicity remains explicit.
+The finite-family conditioning chain is proved by `troppConditionalStep_of_iIndepFun`,
+but it only forwards the explicit per-index conditional-expectation provider and
+does not discharge the history or independence hypotheses. The remaining
+Tropp/Lieb, automatic trace-exp integrability, variance-proxy,
+and dimension/rank blockers stay split into named leaves. The rank/support
 trace-bound bridge is proved under the named support-domination certificate
 `MatrixExpSupportDomination` and explicit support trace assumptions. The
 projection trace/rank certificate
