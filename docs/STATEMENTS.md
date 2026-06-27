@@ -82,3 +82,34 @@ Non-goals for this consumer:
   integrability propagation, strict positivity of matrix-exponential means,
   variance-proxy control, Lieb/Jensen, Golden-Thompson, theta optimization,
   dimension/rank reduction, or full Matrix Bernstein.
+
+## RM-LIEB-S11-S16: provider-facing Lieb/Tropp and natural-state route
+
+Provider-facing import:
+
+- `HighDimProb.RandomMatrix.LiebProvider`
+
+Provider theorem surfaces:
+
+- `EpsteinAffineLineConcavity`, an explicit analytic assumption. It is not
+  proved here.
+- `liebTraceExpConcavity_of_epsteinAffineLine` and
+  `liebJensenTraceExp_statement_of_epsteinAffineLine`, which route the explicit
+  Epstein affine-line assumption into the existing Lieb/Jensen statement shape.
+- `troppMasterTraceMGFStep_of_epsteinAffineLine` and
+  `troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder`,
+  which compose the conditional Lieb/Jensen route with the proved deterministic
+  log/order-to-`K` bridge.
+- `MatrixBernsteinConditioningTraceMGFProviderAssumptions` and
+  `MatrixBernsteinConditioningTraceMGFProviderAssumptions.toTailAssumptions`,
+  which synthesize natural-history measurability and bounded finite-measure
+  trace-exp integrability fields only.
+- `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`,
+  which exposes the S10 tail bound through the provider-compressed bundle.
+
+Non-goals for this provider layer:
+
+- It does not prove the unconditional Epstein affine-line theorem, full Lieb
+  concavity, Golden-Thompson, history/current independence, conditional
+  expectation, variance-proxy normalization, full-sum trace-integrability,
+  tail-event domination, or full Matrix Bernstein.

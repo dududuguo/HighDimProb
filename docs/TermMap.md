@@ -22,3 +22,10 @@ This is the active term index. The old detailed map was collapsed into
 Use this file for orientation only. For exact declarations, use doc-gen output,
 `#check`, or source search. Keep new entries short and link to the source rather
 than copying full theorem signatures.
+
+## Provider-Facing RandomMatrix Terms
+
+`HighDimProb.RandomMatrix.LiebProvider` is the explicit import for conditional
+Epstein/Lieb/Tropp provider bridges and provider-compressed natural-state tail
+helpers.  Keep this separate from reader-facing examples and the core
+`HighDimProb.RandomMatrix` aggregate.

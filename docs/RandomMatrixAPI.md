@@ -428,3 +428,31 @@ and they are not tail wrappers by themselves.
 - Put domain vocabulary in examples as thin wrappers over the core RandomMatrix
   API, not as separate theorem machinery.
 - Use `StatementRoutes` first. Low-level prefix/state, reindex, and negative-family bridge APIs are covered by source, tests, and judge files rather than separate reader-facing examples.
+
+## Provider-Facing Lieb/Tropp Layer
+
+Use this layer explicitly, not through the core `HighDimProb.RandomMatrix` aggregate:
+
+```lean
+import HighDimProb.RandomMatrix.LiebProvider
+```
+
+This import exposes the upstream provider facade and conditional bridges:
+
+- `matrixLog_le_of_le_matrixExp_of_providerLogMonotone`
+- `troppLogExpComparisonToK_of_providerLogOrder`
+- `EpsteinAffineLineConcavity`
+- `liebTraceExpConcavity_of_epsteinAffineLine`
+- `liebJensenTraceExp_statement_of_epsteinAffineLine`
+- `troppMasterTraceMGFStep_of_epsteinAffineLine`
+- `troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder`
+- `MatrixBernsteinConditioningTraceMGFProviderAssumptions`
+- `MatrixBernsteinConditioningTraceMGFProviderAssumptions.toTailAssumptions`
+- `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions`
+- `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
+
+The provider layer is conditional: it does not prove full Epstein/Lieb,
+Golden-Thompson, history/current independence, conditional expectation,
+variance-proxy normalization, tail-event domination, or full Matrix Bernstein.
+It separates upstream proof-provider surfaces from downstream example and tail
+wrappers.

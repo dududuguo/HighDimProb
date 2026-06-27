@@ -81,3 +81,12 @@ example, test, and judge files.
 Keep this file short. Add new details only when they change what contributors
 must run or what CI enforces. Archive old stage-by-stage test history in
 `archive.md`.
+
+## Provider-focused RandomMatrix Check
+
+Run this after changing the provider-facing Lieb/Tropp layer or the
+provider-compressed natural-state tail route:
+
+```bash
+lake build HighDimProb.RandomMatrix.LiebProvider HighDimProbTest.RandomMatrixLiebProviderAPI HighDimProbJudge.RandomMatrix.LiebProviderUse
+```

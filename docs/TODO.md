@@ -25,11 +25,15 @@ This is the active short list. Old completed task logs were collapsed into
   transfer, and PSD Loewner norm monotonicity are bridge-layer infrastructure for
   future provider compression; the compact bounded-row sample-covariance route
   remains the reader-facing surface.
-- S10 now has a reusable tail/conditioning assumption bundle; future work can
-  compress providers into that bundle or build a public-friendly natural-state
-  wrapper without changing theorem strength.
-- Next RandomMatrix hardbone task: select the next provider-compression or
-  public-friendly Matrix Bernstein natural-state wrapper after S10.
+- S16 now has `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
+  as the provider-compressed natural-state tail wrapper. Future work should
+  compress only genuinely provider-dischargeable assumptions and keep
+  independence, conditional expectation, variance-proxy normalization,
+  full-sum trace-integrability, and tail-event domination explicit.
+- Next RandomMatrix hardbone task: attack the explicit analytic/provider
+  blockers behind `EpsteinAffineLineConcavity` or the sigma-algebra
+  independence/conditional-expectation bridge; do not add new Matrix Bernstein
+  wrappers unless they consume existing provider APIs.
 - Current strategy is progress-first: if a hard analytic ingredient is missing,
   consume it as an explicit assumption, register it in `docs/STATEMENTS.md`, and
   keep moving the high-level Tropp/Lieb trace-MGF route forward. Do not claim

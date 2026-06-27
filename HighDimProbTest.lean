@@ -46,6 +46,7 @@ import HighDimProbTest.RandomMatrixLaplaceAPI
 import HighDimProbTest.RandomMatrixVarianceProxyAPI
 import HighDimProbTest.RandomMatrixStatementsAPI
 import HighDimProbTest.RandomMatrixConcentrationAPI
+import HighDimProbTest.RandomMatrixLiebProviderAPI
 import HighDimProbTest.RandomMatrixProofsAPI
 import HighDimProbTest.LimitTheoremsAPI
 import HighDimProbTest.NetsMetricEntropyAPI

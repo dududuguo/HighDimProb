@@ -396,6 +396,20 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   assumptions consumed by the theorem are recorded in `docs/STATEMENTS.md`;
   this does not prove those assumptions or a full Matrix Bernstein theorem.
 
+## Provider-Facing Lieb/Tropp Layer
+
+Integrated `HighDimProb.RandomMatrix.LiebProvider` as a separate provider-facing
+import layer. It exposes facade imports, the explicit
+`EpsteinAffineLineConcavity` conditional route, bounded finite-measure
+integrability providers, natural-history measurability from suffix-entry
+measurability, identity support domination, and the S16 natural-state tail
+wrapper `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`.
+
+This does not claim full Epstein/Lieb, Golden-Thompson, independence,
+conditional expectation, variance proxy, tail-event domination, or full Matrix
+Bernstein. The core aggregate and downstream examples remain separate from the
+provider import path.
+
 ## Verification
 
 Run before pushing API or docs changes:
@@ -409,7 +423,7 @@ lake test
 lake build HighDimProbJudge
 ```
 
-Last verified locally on 2026-06-20 with the commands above.
+Last verified locally on 2026-06-27 with the commands above.
 
 ## Archive
 
