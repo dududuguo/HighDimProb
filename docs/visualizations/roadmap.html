@@ -1,0 +1,2311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高维概率论 Lean 形式化路线图</title>
+<script src="https://cdn.jsdelivr.net/npm/@antv/g6@5/dist/g6.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+          background: #f5f5f5; color: #262626; overflow: hidden; height: 100vh; }
+
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 24px; background: #fff; border-bottom: 1px solid #e8e8e8;
+    height: 56px; flex-shrink: 0;
+  }
+  .header h1 { font-size: 18px; font-weight: 600; }
+  .header .subtitle { font-size: 13px; color: #8c8c8c; margin-left: 8px; }
+  .header-actions { display: flex; gap: 8px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 16px; border: 1px solid #d9d9d9; border-radius: 6px;
+    background: #fff; cursor: pointer; font-size: 13px; transition: all 0.2s;
+  }
+  .btn:hover { border-color: #1890ff; color: #1890ff; }
+
+  .main { display: flex; height: calc(100vh - 56px); position: relative; }
+
+  .legend {
+    width: 180px; flex-shrink: 0; padding: 20px 16px;
+    background: #fff; border-right: 1px solid #e8e8e8;
+  }
+  .legend h3 { font-size: 13px; font-weight: 600; color: #595959; margin-bottom: 12px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px; }
+  .legend-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+
+  .canvas-wrap { flex: 1; position: relative; overflow: hidden; }
+  #container { width: 100%; height: 100%; }
+  .zoom-toolbar {
+    position: absolute; top: 16px; right: 16px; z-index: 20;
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px; background: rgba(255,255,255,0.94);
+    border: 1px solid #e8e8e8; border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  .zoom-btn {
+    min-width: 32px; height: 30px; padding: 0 10px;
+    border: 1px solid #d9d9d9; border-radius: 6px;
+    background: #fff; color: #262626; cursor: pointer;
+    font-size: 13px; line-height: 28px;
+  }
+  .zoom-btn:hover { border-color: #1890ff; color: #1890ff; }
+  .zoom-level { min-width: 44px; text-align: center; font-size: 12px; color: #595959; }
+
+  .sidebar {
+    position: fixed; top: 56px; right: -420px; width: 400px; height: calc(100vh - 56px);
+    background: #fff; box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000; display: flex; flex-direction: column;
+  }
+  .sidebar.open { right: 0; }
+  .sidebar-overlay {
+    position: fixed; top: 56px; left: 0; width: 100%; height: calc(100vh - 56px);
+    background: rgba(0,0,0,0.15); z-index: 999; display: none;
+  }
+  .sidebar-overlay.show { display: block; }
+  .sidebar-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 24px 12px; border-bottom: 1px solid #f0f0f0; flex-shrink: 0;
+  }
+  .sidebar-header h2 { font-size: 16px; font-weight: 600; }
+  .sidebar-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #8c8c8c; }
+  .sidebar-close:hover { color: #262626; }
+  .sidebar-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+  .info-group { margin-bottom: 20px; }
+  .info-label { font-size: 12px; color: #8c8c8c; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .info-value { font-size: 14px; color: #262626; line-height: 1.5; }
+  .info-value code { background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+  .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 500; }
+  .dep-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  .dep-chip { display: inline-block; padding: 2px 8px; background: #f0f0f0; border-radius: 4px; font-size: 12px; color: #595959; }
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    padding: 10px 24px; background: #262626; color: #fff;
+    border-radius: 8px; font-size: 14px; z-index: 2000;
+    opacity: 0; transition: opacity 0.3s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+  .stats-bar { display: flex; gap: 16px; padding: 12px 0 0 0; font-size: 12px; color: #8c8c8c; flex-wrap: wrap; }
+  .stats-bar .stat { display: flex; align-items: center; gap: 4px; }
+  .stats-bar .stat-dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+  .color-mode-note { margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0f0f0; font-size: 12px; color: #8c8c8c; line-height: 1.45; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="display:flex;align-items:baseline;gap:12px;">
+    <h1>高维概率论 Lean 形式化路线图</h1>
+    <span class="subtitle">2026-06-28 · 59 leaf tasks</span>
+  </div>
+  <div class="header-actions">
+    <button class="btn" onclick="exportTodo()">📋 导出 Todo.md</button>
+    <button class="btn" onclick="exportSvg()">🖼 导出 PNG</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="legend">
+    <h3>状态图例</h3>
+    <div class="legend-item"><span class="legend-dot" style="background:#52C41A;border:1px solid #389E0D"></span>已完成</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#1890FF;border:1px solid #096DD9"></span>进行中</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#FF4D4F;border:1px solid #CF1322"></span>阻塞</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#E8E8E8;border:1px solid #BFBFBF"></span>待开始</div>
+    <div class="color-mode-note">节点按任务状态着色；粒度为 Lean 叶模块组 / provider contract / example surface。</div>
+    <div class="stats-bar" id="stats-bar"></div>
+  </div>
+  <div class="canvas-wrap">
+    <div class="zoom-toolbar" aria-label="Zoom controls">
+      <button class="zoom-btn" onclick="zoomGraph(1.2)" title="放大">+</button>
+      <span class="zoom-level" id="zoom-level">100%</span>
+      <button class="zoom-btn" onclick="zoomGraph(0.8)" title="缩小">−</button>
+      <button class="zoom-btn" onclick="resetZoom()" title="适配视图">适配</button>
+    </div>
+    <div id="container"></div>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h2 id="sidebar-title">概念详情</h2>
+    <button class="sidebar-close" onclick="closeSidebar()">&times;</button>
+  </div>
+  <div class="sidebar-body" id="sidebar-body"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var STATUS_COLORS = {
+    "integrated": {fill: "#52C41A", stroke: "#389E0D", badge: "✅", label: "已完成" },
+    "in_progress": {fill: "#1890FF", stroke: "#096DD9", badge: "🔄", label: "进行中" },
+    "blocked": {fill: "#FF4D4F", stroke: "#CF1322", badge: "🚫", label: "阻塞" },
+    "pending": {fill: "#E8E8E8", stroke: "#BFBFBF", badge: "⏳", label: "待开始" }
+  };
+var NODES = [
+  {
+    "id": "git-change-audit",
+    "style": {
+      "x": 80,
+      "y": 48.0,
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    },
+    "data": {
+      "label": "git-change-audit",
+      "title": "git 变更审计与未跟踪产物登记",
+      "status": "in_progress",
+      "lean_module": "docs/visualizations/roadmap.todo.md; docs/visualizations/roadmap.html; wiki_pages_found.md",
+      "depth": 0,
+      "index": 1,
+      "deps": [],
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    }
+  },
+  {
+    "id": "stable-root-import",
+    "style": {
+      "x": 80,
+      "y": 112.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "stable-root-import",
+      "title": "稳定根导入面：Init / Scalar / Statements",
+      "status": "integrated",
+      "lean_module": "HighDimProb.lean; HighDimProb/Init.lean; HighDimProb/Scalar.lean; HighDimProb/Statements.lean",
+      "depth": 0,
+      "index": 2,
+      "deps": [
+        "git-change-audit"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "experimental-aggregate",
+    "style": {
+      "x": 80,
+      "y": 176.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "experimental-aggregate",
+      "title": "实验聚合导入面：Vector / Geometry / Concentration / RandomMatrix / LimitTheorems / Process",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Experimental.lean",
+      "depth": 0,
+      "index": 3,
+      "deps": [
+        "stable-root-import"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "docs-status-indices",
+    "style": {
+      "x": 80,
+      "y": 240.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "docs-status-indices",
+      "title": "当前状态索引：Status / TODO / LeafPlan / API 文档保持短链路",
+      "status": "integrated",
+      "lean_module": "docs/Status.md; docs/TODO.md; docs/LeafPlan.md; docs/APIOverview.md",
+      "depth": 0,
+      "index": 4,
+      "deps": [
+        "git-change-audit"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "wiki-concept-index",
+    "style": {
+      "x": 80,
+      "y": 304.0,
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    },
+    "data": {
+      "label": "wiki-concept-index",
+      "title": "Wikipedia 概念对照表用于外部概念索引，不作为证明进度来源",
+      "status": "in_progress",
+      "lean_module": "wiki_pages_found.md",
+      "depth": 0,
+      "index": 5,
+      "deps": [
+        "git-change-audit"
+      ],
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    }
+  },
+  {
+    "id": "probability-space-events",
+    "style": {
+      "x": 360,
+      "y": 64.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "probability-space-events",
+      "title": "概率空间、事件和可测事件对象层",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Basic.lean; HighDimProb/ProbabilitySpace.lean",
+      "depth": 1,
+      "index": 6,
+      "deps": [
+        "stable-root-import"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "random-variable-distribution",
+    "style": {
+      "x": 360,
+      "y": 128.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "random-variable-distribution",
+      "title": "随机变量、分布和期望桥接",
+      "status": "integrated",
+      "lean_module": "HighDimProb/RandomVariable.lean; HighDimProb/Distribution.lean; HighDimProb/Expectation.lean",
+      "depth": 1,
+      "index": 7,
+      "deps": [
+        "probability-space-events"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "tail-moment-variance-covariance",
+    "style": {
+      "x": 360,
+      "y": 192.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "tail-moment-variance-covariance",
+      "title": "尾部、矩、方差、协方差基础 API",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Tail.lean; HighDimProb/Moment.lean; HighDimProb/Scalar/Variance.lean; HighDimProb/Covariance.lean",
+      "depth": 1,
+      "index": 8,
+      "deps": [
+        "random-variable-distribution"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "lp-orlicz-scale",
+    "style": {
+      "x": 360,
+      "y": 256.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "lp-orlicz-scale",
+      "title": "Lp 与 Orlicz 标量尺度",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Lp.lean; HighDimProb/Orlicz.lean",
+      "depth": 1,
+      "index": 9,
+      "deps": [
+        "tail-moment-variance-covariance"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "random-family-vocabulary",
+    "style": {
+      "x": 360,
+      "y": 320.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "random-family-vocabulary",
+      "title": "RandomFamily / Process / Sample 词汇层；不含 filtrations 或 conditioning",
+      "status": "integrated",
+      "lean_module": "HighDimProb/RandomFamily.lean; HighDimProb/RandomProcess.lean; HighDimProb/Process.lean",
+      "depth": 1,
+      "index": 10,
+      "deps": [
+        "random-variable-distribution"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "analysis-carriers",
+    "style": {
+      "x": 360,
+      "y": 384.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "analysis-carriers",
+      "title": "实不等式、自伴载体和正域分析辅助",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Analysis.lean; HighDimProb/Analysis/*.lean",
+      "depth": 1,
+      "index": 11,
+      "deps": [
+        "stable-root-import"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "concentration-basic-tail",
+    "style": {
+      "x": 640,
+      "y": 48.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "concentration-basic-tail",
+      "title": "集中基础尾部事件与通用引理",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Concentration/Basic.lean",
+      "depth": 2,
+      "index": 12,
+      "deps": [
+        "tail-moment-variance-covariance"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "layer-cake-markov-chebyshev",
+    "style": {
+      "x": 640,
+      "y": 112.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "layer-cake-markov-chebyshev",
+      "title": "Layer cake、Markov、Chebyshev 叶模块",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Concentration/LayerCake.lean; Markov.lean; Chebyshev.lean",
+      "depth": 2,
+      "index": 13,
+      "deps": [
+        "concentration-basic-tail"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "mgf-tail-cycle",
+    "style": {
+      "x": 640,
+      "y": 176.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "mgf-tail-cycle",
+      "title": "MGF 到尾部与尾部到 Orlicz/MGF 的桥接",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Concentration/MGF.lean; OrliczToTail.lean; TailToOrlicz.lean",
+      "depth": 2,
+      "index": 14,
+      "deps": [
+        "lp-orlicz-scale",
+        "layer-cake-markov-chebyshev"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "moment-implications",
+    "style": {
+      "x": 640,
+      "y": 240.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "moment-implications",
+      "title": "矩、Orlicz、固定尺度次高斯/次指数蕴含图",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Concentration/MomentImplications.lean; Implications.lean",
+      "depth": 2,
+      "index": 15,
+      "deps": [
+        "mgf-tail-cycle"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "subgaussian-sums",
+    "style": {
+      "x": 640,
+      "y": 304.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "subgaussian-sums",
+      "title": "次高斯变量和与固定尺度矩桥",
+      "status": "integrated",
+      "lean_module": "HighDimProb/SubGaussian.lean; HighDimProb/Concentration/SubGaussianSums.lean",
+      "depth": 2,
+      "index": 16,
+      "deps": [
+        "moment-implications"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "subexponential-sums",
+    "style": {
+      "x": 640,
+      "y": 368.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "subexponential-sums",
+      "title": "次指数变量和、最大尺度和 Bernstein 原料",
+      "status": "integrated",
+      "lean_module": "HighDimProb/SubExponential.lean; HighDimProb/Concentration/SubExponentialSums.lean; MaxScale.lean",
+      "depth": 2,
+      "index": 17,
+      "deps": [
+        "moment-implications"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "rademacher-hoeffding",
+    "style": {
+      "x": 640,
+      "y": 432.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "rademacher-hoeffding",
+      "title": "Rademacher 分布/族、Rademacher 和、Hoeffding",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Distributions/*.lean; Concentration/RademacherSums.lean; Hoeffding.lean",
+      "depth": 2,
+      "index": 18,
+      "deps": [
+        "subgaussian-sums"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "scalar-bernstein",
+    "style": {
+      "x": 640,
+      "y": 496.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "scalar-bernstein",
+      "title": "标量 Bernstein min-form 与加权版本",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Concentration/Bernstein.lean",
+      "depth": 2,
+      "index": 19,
+      "deps": [
+        "subexponential-sums",
+        "mgf-tail-cycle"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "nets-metric-entropy",
+    "style": {
+      "x": 920,
+      "y": 64.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "nets-metric-entropy",
+      "title": "Nets、覆盖/填装数、度量熵声明",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Nets.lean; MetricEntropy.lean; MetricEntropyStatements.lean",
+      "depth": 3,
+      "index": 20,
+      "deps": [
+        "analysis-carriers"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "gaussian-width-geometry",
+    "style": {
+      "x": 920,
+      "y": 128.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "gaussian-width-geometry",
+      "title": "高斯宽度和几何词汇层",
+      "status": "integrated",
+      "lean_module": "HighDimProb/GaussianWidth.lean; HighDimProb/Geometry.lean",
+      "depth": 3,
+      "index": 21,
+      "deps": [
+        "nets-metric-entropy",
+        "subgaussian-sums"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "random-vector-isotropy",
+    "style": {
+      "x": 920,
+      "y": 192.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "random-vector-isotropy",
+      "title": "随机向量、各向同性和向量聚合 API",
+      "status": "integrated",
+      "lean_module": "HighDimProb/RandomVector.lean; Isotropic.lean; Vector.lean",
+      "depth": 3,
+      "index": 22,
+      "deps": [
+        "random-variable-distribution",
+        "lp-orlicz-scale"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "subgaussian-vector",
+    "style": {
+      "x": 920,
+      "y": 256.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "subgaussian-vector",
+      "title": "次高斯随机向量接口",
+      "status": "integrated",
+      "lean_module": "HighDimProb/SubGaussianVector.lean",
+      "depth": 3,
+      "index": 23,
+      "deps": [
+        "random-vector-isotropy",
+        "subgaussian-sums"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "empirical-process-vocabulary",
+    "style": {
+      "x": 920,
+      "y": 320.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "empirical-process-vocabulary",
+      "title": "经验过程与过程侧词汇",
+      "status": "integrated",
+      "lean_module": "HighDimProb/EmpiricalProcess.lean; HighDimProb/Process.lean",
+      "depth": 3,
+      "index": 24,
+      "deps": [
+        "random-family-vocabulary",
+        "nets-metric-entropy"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "weak-law-scaffold",
+    "style": {
+      "x": 920,
+      "y": 384.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "weak-law-scaffold",
+      "title": "样本均值、弱大数定律和假设词汇",
+      "status": "integrated",
+      "lean_module": "HighDimProb/LimitTheorems/*.lean",
+      "depth": 3,
+      "index": 25,
+      "deps": [
+        "random-variable-distribution",
+        "scalar-bernstein"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "signal-recovery-statements",
+    "style": {
+      "x": 920,
+      "y": 448.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "signal-recovery-statements",
+      "title": "信号恢复/陈述层占位与术语索引",
+      "status": "integrated",
+      "lean_module": "HighDimProb/SignalRecovery.lean; HighDimProb/BookStatements.lean; docs/STATEMENTS.md",
+      "depth": 3,
+      "index": 26,
+      "deps": [
+        "gaussian-width-geometry",
+        "subgaussian-vector"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "rm-basic-rowscols-action",
+    "style": {
+      "x": 1200,
+      "y": 48.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "rm-basic-rowscols-action",
+      "title": "随机矩阵基元、行列和矩阵-向量作用",
+      "status": "integrated",
+      "lean_module": "HighDimProb/RandomMatrix/Basic.lean; RowsCols.lean; Action.lean",
+      "depth": 4,
+      "index": 27,
+      "deps": [
+        "random-vector-isotropy"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "rm-norms-operatornorm-unitsphere",
+    "style": {
+      "x": 1200,
+      "y": 112.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "rm-norms-operatornorm-unitsphere",
+      "title": "矩阵范数、算子范数和单位球面",
+      "status": "integrated",
+      "lean_module": "HighDimProb/RandomMatrix/Norms.lean; OperatorNorm.lean; UnitSphere.lean",
+      "depth": 4,
+      "index": 28,
+      "deps": [
+        "rm-basic-rowscols-action",
+        "nets-metric-entropy"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "rm-selfadjoint-order-spectral",
+    "style": {
+      "x": 1200,
+      "y": 176.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "rm-selfadjoint-order-spectral",
+      "title": "自伴、PSD/Loewner 序和谱桥",
+      "status": "integrated",
+      "lean_module": "HighDimProb/RandomMatrix/SelfAdjoint.lean; MatrixOrder.lean; Spectral.lean",
+      "depth": 4,
+      "index": 29,
+      "deps": [
+        "analysis-carriers",
+        "rm-norms-operatornorm-unitsphere"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "rm-expectation-sums-vp",
+    "style": {
+      "x": 1200,
+      "y": 240.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "rm-expectation-sums-vp",
+      "title": "矩阵期望、有限和、方差代理",
+      "status": "integrated",
+      "lean_module": "HighDimProb/RandomMatrix/Expectation.lean; Sums.lean; VarianceProxy.lean",
+      "depth": 4,
+      "index": 30,
+      "deps": [
+        "rm-selfadjoint-order-spectral",
+        "random-family-vocabulary"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "rm-quadratic-samplecovariance",
+    "style": {
+      "x": 1200,
+      "y": 304.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "rm-quadratic-samplecovariance",
+      "title": "二次型、样本协方差和随机矩阵代数",
+      "status": "integrated",
+      "lean_module": "HighDimProb/RandomMatrix/QuadraticForm.lean; SampleCovariance.lean; Algebra.lean",
+      "depth": 4,
+      "index": 31,
+      "deps": [
+        "rm-expectation-sums-vp",
+        "random-vector-isotropy"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "rm-statement-atlas",
+    "style": {
+      "x": 1200,
+      "y": 368.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "rm-statement-atlas",
+      "title": "RandomMatrix statement atlas / hardbone typed targets",
+      "status": "integrated",
+      "lean_module": "HighDimProb/RandomMatrix/Statements.lean; ConcentrationStatements.lean; HardboneStatements.lean",
+      "depth": 4,
+      "index": 32,
+      "deps": [
+        "rm-quadratic-samplecovariance",
+        "scalar-bernstein"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "trace-exp-core",
+    "style": {
+      "x": 1480,
+      "y": 64.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "trace-exp-core",
+      "title": "TraceExp 核心 API 与 Laplace 路由",
+      "status": "integrated",
+      "lean_module": "HighDimProb/RandomMatrix/TraceExp.lean; Laplace.lean",
+      "depth": 5,
+      "index": 33,
+      "deps": [
+        "rm-statement-atlas"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "trace-exp-monotonicity",
+    "style": {
+      "x": 1480,
+      "y": 128.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "trace-exp-monotonicity",
+      "title": "trace-exp 导数、单调性和 provider witness",
+      "status": "integrated",
+      "lean_module": "TraceExpDerivative.lean; TraceExpMonotonicity.lean; TraceExpMonotonicityProvider.lean",
+      "depth": 5,
+      "index": 34,
+      "deps": [
+        "trace-exp-core",
+        "rm-selfadjoint-order-spectral"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "cstar-log-order-transport",
+    "style": {
+      "x": 1480,
+      "y": 192.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "cstar-log-order-transport",
+      "title": "CStar transport、矩阵 log provider 与 log/order bridge",
+      "status": "integrated",
+      "lean_module": "CStarBridge.lean; CStarOrderTransport.lean; MatrixLogProvider.lean; TraceExpLogOrderProvider.lean",
+      "depth": 5,
+      "index": 35,
+      "deps": [
+        "trace-exp-monotonicity",
+        "analysis-carriers"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "tropp-state-bookkeeping",
+    "style": {
+      "x": 1480,
+      "y": 256.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "tropp-state-bookkeeping",
+      "title": "prefix/suffix partial sum 和 natural trace state bookkeeping",
+      "status": "integrated",
+      "lean_module": "HighDimProb/RandomMatrix/Sums.lean; TraceExpTroppStepProvider.lean",
+      "depth": 5,
+      "index": 36,
+      "deps": [
+        "trace-exp-core",
+        "rm-expectation-sums-vp"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "trace-mgf-consumer",
+    "style": {
+      "x": 1480,
+      "y": 320.0,
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    },
+    "data": {
+      "label": "trace-mgf-consumer",
+      "title": "有限族 trace-MGF consumer 与条件步骤组合",
+      "status": "in_progress",
+      "lean_module": "HighDimProb/RandomMatrix/TraceExp.lean; docs/STATEMENTS.md",
+      "depth": 5,
+      "index": 37,
+      "deps": [
+        "tropp-state-bookkeeping",
+        "cstar-log-order-transport"
+      ],
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    }
+  },
+  {
+    "id": "provider-facades",
+    "style": {
+      "x": 1480,
+      "y": 384.0,
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    },
+    "data": {
+      "label": "provider-facades",
+      "title": "Lieb/Tropp provider-facing import layer",
+      "status": "in_progress",
+      "lean_module": "HighDimProb/RandomMatrix/LiebProvider.lean; EpsteinProvider.lean; NaturalHistoryProvider.lean",
+      "depth": 5,
+      "index": 38,
+      "deps": [
+        "trace-mgf-consumer"
+      ],
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    }
+  },
+  {
+    "id": "support-dimension-bridges",
+    "style": {
+      "x": 1480,
+      "y": 448.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "support-dimension-bridges",
+      "title": "rank/support/excess-support trace bound consumers",
+      "status": "integrated",
+      "lean_module": "HighDimProb/RandomMatrix/SupportProvider.lean; HardboneStatements.lean",
+      "depth": 5,
+      "index": 39,
+      "deps": [
+        "trace-exp-monotonicity"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "matrix-bernstein-assumption-bundles",
+    "style": {
+      "x": 1760,
+      "y": 48.0,
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    },
+    "data": {
+      "label": "matrix-bernstein-assumption-bundles",
+      "title": "CFC-free Matrix Bernstein Tropp assumption bundles",
+      "status": "in_progress",
+      "lean_module": "HighDimProb/RandomMatrix/ConcentrationStatements.lean",
+      "depth": 6,
+      "index": 40,
+      "deps": [
+        "provider-facades",
+        "scalar-bernstein"
+      ],
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    }
+  },
+  {
+    "id": "matrix-bernstein-tail-wrappers",
+    "style": {
+      "x": 1760,
+      "y": 112.0,
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    },
+    "data": {
+      "label": "matrix-bernstein-tail-wrappers",
+      "title": "二次型、two-sided、operator-norm Matrix Bernstein tail wrappers",
+      "status": "in_progress",
+      "lean_module": "HighDimProb/RandomMatrix/ConcentrationStatements.lean; Laplace.lean",
+      "depth": 6,
+      "index": 41,
+      "deps": [
+        "matrix-bernstein-assumption-bundles",
+        "trace-mgf-consumer"
+      ],
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    }
+  },
+  {
+    "id": "sample-covariance-compact-route",
+    "style": {
+      "x": 1760,
+      "y": 176.0,
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    },
+    "data": {
+      "label": "sample-covariance-compact-route",
+      "title": "读者优先的 bounded-row sample-covariance target/record route",
+      "status": "in_progress",
+      "lean_module": "HighDimProb/RandomMatrix/SampleCovariance.lean; ConcentrationStatements.lean",
+      "depth": 6,
+      "index": 42,
+      "deps": [
+        "matrix-bernstein-tail-wrappers",
+        "rm-quadratic-samplecovariance"
+      ],
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    }
+  },
+  {
+    "id": "exact-row-centered-square-infra",
+    "style": {
+      "x": 1760,
+      "y": 240.0,
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    },
+    "data": {
+      "label": "exact-row-centered-square-infra",
+      "title": "exact-row centered-square wrapper/bundle infrastructure",
+      "status": "in_progress",
+      "lean_module": "HighDimProb/RandomMatrix/SampleCovariance.lean; VarianceProxy.lean",
+      "depth": 6,
+      "index": 43,
+      "deps": [
+        "sample-covariance-compact-route"
+      ],
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    }
+  },
+  {
+    "id": "negative-side-transfer",
+    "style": {
+      "x": 1760,
+      "y": 304.0,
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    },
+    "data": {
+      "label": "negative-side-transfer",
+      "title": "negative-side exact-row variance-proxy transfer adapters",
+      "status": "in_progress",
+      "lean_module": "HighDimProb/RandomMatrix/SampleCovariance.lean",
+      "depth": 6,
+      "index": 44,
+      "deps": [
+        "exact-row-centered-square-infra"
+      ],
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    }
+  },
+  {
+    "id": "reader-example-routes",
+    "style": {
+      "x": 1760,
+      "y": 368.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "reader-example-routes",
+      "title": "读者级 RandomMatrix / sample covariance / feature-kernel examples",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Examples/RandomMatrix/*.lean; HighDimProb/Examples/RandomMatrixUsage.lean",
+      "depth": 6,
+      "index": 45,
+      "deps": [
+        "sample-covariance-compact-route"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "judge-api-coverage",
+    "style": {
+      "x": 1760,
+      "y": 432.0,
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    },
+    "data": {
+      "label": "judge-api-coverage",
+      "title": "HighDimProbTest 与 HighDimProbJudge 覆盖 public route",
+      "status": "integrated",
+      "lean_module": "HighDimProbTest/*.lean; HighDimProbJudge/**/*.lean",
+      "depth": 6,
+      "index": 46,
+      "deps": [
+        "reader-example-routes",
+        "matrix-bernstein-tail-wrappers"
+      ],
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
+    }
+  },
+  {
+    "id": "epstein-lieb-concavity",
+    "style": {
+      "x": 2040,
+      "y": 64.0,
+      "fill": "#FF4D4F",
+      "stroke": "#CF1322"
+    },
+    "data": {
+      "label": "epstein-lieb-concavity",
+      "title": "Epstein/Lieb concavity provider：当前显式假设，未证明",
+      "status": "blocked",
+      "lean_module": "HighDimProb/RandomMatrix/EpsteinProvider.lean; LiebProvider.lean",
+      "depth": 7,
+      "index": 47,
+      "deps": [
+        "provider-facades"
+      ],
+      "fill": "#FF4D4F",
+      "stroke": "#CF1322"
+    }
+  },
+  {
+    "id": "conditioning-independence-bridge",
+    "style": {
+      "x": 2040,
+      "y": 128.0,
+      "fill": "#FF4D4F",
+      "stroke": "#CF1322"
+    },
+    "data": {
+      "label": "conditioning-independence-bridge",
+      "title": "有限族 independence / conditional-expectation bridge",
+      "status": "blocked",
+      "lean_module": "HighDimProb/RandomMatrix/TraceExpTroppStepProvider.lean",
+      "depth": 7,
+      "index": 48,
+      "deps": [
+        "trace-mgf-consumer",
+        "random-family-vocabulary"
+      ],
+      "fill": "#FF4D4F",
+      "stroke": "#CF1322"
+    }
+  },
+  {
+    "id": "trace-exp-integrability-propagation",
+    "style": {
+      "x": 2040,
+      "y": 192.0,
+      "fill": "#FF4D4F",
+      "stroke": "#CF1322"
+    },
+    "data": {
+      "label": "trace-exp-integrability-propagation",
+      "title": "trace-exp integrability propagation provider",
+      "status": "blocked",
+      "lean_module": "HighDimProb/RandomMatrix/TraceExpIntegrabilityProvider.lean",
+      "depth": 7,
+      "index": 49,
+      "deps": [
+        "trace-exp-core",
+        "provider-facades"
+      ],
+      "fill": "#FF4D4F",
+      "stroke": "#CF1322"
+    }
+  },
+  {
+    "id": "natural-history-measurability",
+    "style": {
+      "x": 2040,
+      "y": 256.0,
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    },
+    "data": {
+      "label": "natural-history-measurability",
+      "title": "natural history measurability / suffix-entry provider",
+      "status": "in_progress",
+      "lean_module": "HighDimProb/RandomMatrix/NaturalHistoryProvider.lean",
+      "depth": 7,
+      "index": 50,
+      "deps": [
+        "tropp-state-bookkeeping"
+      ],
+      "fill": "#1890FF",
+      "stroke": "#096DD9"
+    }
+  },
+  {
+    "id": "variance-proxy-sharp-provider",
+    "style": {
+      "x": 2040,
+      "y": 320.0,
+      "fill": "#FF4D4F",
+      "stroke": "#CF1322"
+    },
+    "data": {
+      "label": "variance-proxy-sharp-provider",
+      "title": "sample covariance hardbone sharp-chain provider 缺口",
+      "status": "blocked",
+      "lean_module": "HighDimProb/RandomMatrix/VarianceProxy.lean; SampleCovariance.lean",
+      "depth": 7,
+      "index": 51,
+      "deps": [
+        "exact-row-centered-square-infra"
+      ],
+      "fill": "#FF4D4F",
+      "stroke": "#CF1322"
+    }
+  },
+  {
+    "id": "support-provider-construction",
+    "style": {
+      "x": 2040,
+      "y": 384.0,
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    },
+    "data": {
+      "label": "support-provider-construction",
+      "title": "非平凡 support domination / excess support construction",
+      "status": "pending",
+      "lean_module": "HighDimProb/RandomMatrix/SupportProvider.lean",
+      "depth": 7,
+      "index": 52,
+      "deps": [
+        "support-dimension-bridges"
+      ],
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    }
+  },
+  {
+    "id": "tail-event-domination",
+    "style": {
+      "x": 2040,
+      "y": 448.0,
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    },
+    "data": {
+      "label": "tail-event-domination",
+      "title": "trace-MGF route 到 tail-event 的 domination 前提消解",
+      "status": "pending",
+      "lean_module": "HighDimProb/RandomMatrix/Laplace.lean; ConcentrationStatements.lean",
+      "depth": 7,
+      "index": 53,
+      "deps": [
+        "matrix-bernstein-tail-wrappers"
+      ],
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    }
+  },
+  {
+    "id": "full-matrix-bernstein",
+    "style": {
+      "x": 2320,
+      "y": 48.0,
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    },
+    "data": {
+      "label": "full-matrix-bernstein",
+      "title": "完整 Matrix Bernstein 定理：仅在 provider 缺口关闭后推进",
+      "status": "pending",
+      "lean_module": "HighDimProb/RandomMatrix/ConcentrationStatements.lean",
+      "depth": 8,
+      "index": 54,
+      "deps": [
+        "epstein-lieb-concavity",
+        "conditioning-independence-bridge",
+        "trace-exp-integrability-propagation",
+        "variance-proxy-sharp-provider",
+        "tail-event-domination"
+      ],
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    }
+  },
+  {
+    "id": "hanson-wright",
+    "style": {
+      "x": 2320,
+      "y": 112.0,
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    },
+    "data": {
+      "label": "hanson-wright",
+      "title": "Hanson-Wright statement / proof route",
+      "status": "pending",
+      "lean_module": "docs/LeafPlan.md; HighDimProb/RandomMatrix/Statements.lean",
+      "depth": 8,
+      "index": 55,
+      "deps": [
+        "full-matrix-bernstein",
+        "subgaussian-vector"
+      ],
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    }
+  },
+  {
+    "id": "covariance-estimation",
+    "style": {
+      "x": 2320,
+      "y": 176.0,
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    },
+    "data": {
+      "label": "covariance-estimation",
+      "title": "协方差估计与 operator-norm deviation theorem family",
+      "status": "pending",
+      "lean_module": "docs/LeafPlan.md; HighDimProb/RandomMatrix/SampleCovariance.lean",
+      "depth": 8,
+      "index": 56,
+      "deps": [
+        "sample-covariance-compact-route",
+        "full-matrix-bernstein"
+      ],
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    }
+  },
+  {
+    "id": "jl-rip-statements",
+    "style": {
+      "x": 2320,
+      "y": 240.0,
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    },
+    "data": {
+      "label": "jl-rip-statements",
+      "title": "Johnson-Lindenstrauss / RIP / signal recovery statements",
+      "status": "pending",
+      "lean_module": "HighDimProb/SignalRecovery.lean; docs/LeafPlan.md",
+      "depth": 8,
+      "index": 57,
+      "deps": [
+        "gaussian-width-geometry",
+        "covariance-estimation"
+      ],
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    }
+  },
+  {
+    "id": "strong-law-process-chaining",
+    "style": {
+      "x": 2320,
+      "y": 304.0,
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    },
+    "data": {
+      "label": "strong-law-process-chaining",
+      "title": "SLLN、subGaussian increments 和 chaining/VC 过程族",
+      "status": "pending",
+      "lean_module": "HighDimProb/LimitTheorems/*.lean; HighDimProb/Process.lean",
+      "depth": 8,
+      "index": 58,
+      "deps": [
+        "weak-law-scaffold",
+        "empirical-process-vocabulary"
+      ],
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    }
+  },
+  {
+    "id": "stable-promotion-audit",
+    "style": {
+      "x": 2320,
+      "y": 368.0,
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    },
+    "data": {
+      "label": "stable-promotion-audit",
+      "title": "实验模块升入稳定根的测试/文档/API 审计",
+      "status": "pending",
+      "lean_module": "docs/ModuleTree.md; docs/TestPlan.md",
+      "depth": 8,
+      "index": 59,
+      "deps": [
+        "full-matrix-bernstein",
+        "covariance-estimation",
+        "strong-law-process-chaining"
+      ],
+      "fill": "#E8E8E8",
+      "stroke": "#BFBFBF"
+    }
+  }
+];
+var EDGES = [
+  {
+    "id": "e0",
+    "source": "git-change-audit",
+    "target": "stable-root-import"
+  },
+  {
+    "id": "e1",
+    "source": "stable-root-import",
+    "target": "experimental-aggregate"
+  },
+  {
+    "id": "e2",
+    "source": "git-change-audit",
+    "target": "docs-status-indices"
+  },
+  {
+    "id": "e3",
+    "source": "git-change-audit",
+    "target": "wiki-concept-index"
+  },
+  {
+    "id": "e4",
+    "source": "stable-root-import",
+    "target": "probability-space-events"
+  },
+  {
+    "id": "e5",
+    "source": "probability-space-events",
+    "target": "random-variable-distribution"
+  },
+  {
+    "id": "e6",
+    "source": "random-variable-distribution",
+    "target": "tail-moment-variance-covariance"
+  },
+  {
+    "id": "e7",
+    "source": "tail-moment-variance-covariance",
+    "target": "lp-orlicz-scale"
+  },
+  {
+    "id": "e8",
+    "source": "random-variable-distribution",
+    "target": "random-family-vocabulary"
+  },
+  {
+    "id": "e9",
+    "source": "stable-root-import",
+    "target": "analysis-carriers"
+  },
+  {
+    "id": "e10",
+    "source": "tail-moment-variance-covariance",
+    "target": "concentration-basic-tail"
+  },
+  {
+    "id": "e11",
+    "source": "concentration-basic-tail",
+    "target": "layer-cake-markov-chebyshev"
+  },
+  {
+    "id": "e12",
+    "source": "lp-orlicz-scale",
+    "target": "mgf-tail-cycle"
+  },
+  {
+    "id": "e13",
+    "source": "layer-cake-markov-chebyshev",
+    "target": "mgf-tail-cycle"
+  },
+  {
+    "id": "e14",
+    "source": "mgf-tail-cycle",
+    "target": "moment-implications"
+  },
+  {
+    "id": "e15",
+    "source": "moment-implications",
+    "target": "subgaussian-sums"
+  },
+  {
+    "id": "e16",
+    "source": "moment-implications",
+    "target": "subexponential-sums"
+  },
+  {
+    "id": "e17",
+    "source": "subgaussian-sums",
+    "target": "rademacher-hoeffding"
+  },
+  {
+    "id": "e18",
+    "source": "subexponential-sums",
+    "target": "scalar-bernstein"
+  },
+  {
+    "id": "e19",
+    "source": "mgf-tail-cycle",
+    "target": "scalar-bernstein"
+  },
+  {
+    "id": "e20",
+    "source": "analysis-carriers",
+    "target": "nets-metric-entropy"
+  },
+  {
+    "id": "e21",
+    "source": "nets-metric-entropy",
+    "target": "gaussian-width-geometry"
+  },
+  {
+    "id": "e22",
+    "source": "subgaussian-sums",
+    "target": "gaussian-width-geometry"
+  },
+  {
+    "id": "e23",
+    "source": "random-variable-distribution",
+    "target": "random-vector-isotropy"
+  },
+  {
+    "id": "e24",
+    "source": "lp-orlicz-scale",
+    "target": "random-vector-isotropy"
+  },
+  {
+    "id": "e25",
+    "source": "random-vector-isotropy",
+    "target": "subgaussian-vector"
+  },
+  {
+    "id": "e26",
+    "source": "subgaussian-sums",
+    "target": "subgaussian-vector"
+  },
+  {
+    "id": "e27",
+    "source": "random-family-vocabulary",
+    "target": "empirical-process-vocabulary"
+  },
+  {
+    "id": "e28",
+    "source": "nets-metric-entropy",
+    "target": "empirical-process-vocabulary"
+  },
+  {
+    "id": "e29",
+    "source": "random-variable-distribution",
+    "target": "weak-law-scaffold"
+  },
+  {
+    "id": "e30",
+    "source": "scalar-bernstein",
+    "target": "weak-law-scaffold"
+  },
+  {
+    "id": "e31",
+    "source": "gaussian-width-geometry",
+    "target": "signal-recovery-statements"
+  },
+  {
+    "id": "e32",
+    "source": "subgaussian-vector",
+    "target": "signal-recovery-statements"
+  },
+  {
+    "id": "e33",
+    "source": "random-vector-isotropy",
+    "target": "rm-basic-rowscols-action"
+  },
+  {
+    "id": "e34",
+    "source": "rm-basic-rowscols-action",
+    "target": "rm-norms-operatornorm-unitsphere"
+  },
+  {
+    "id": "e35",
+    "source": "nets-metric-entropy",
+    "target": "rm-norms-operatornorm-unitsphere"
+  },
+  {
+    "id": "e36",
+    "source": "analysis-carriers",
+    "target": "rm-selfadjoint-order-spectral"
+  },
+  {
+    "id": "e37",
+    "source": "rm-norms-operatornorm-unitsphere",
+    "target": "rm-selfadjoint-order-spectral"
+  },
+  {
+    "id": "e38",
+    "source": "rm-selfadjoint-order-spectral",
+    "target": "rm-expectation-sums-vp"
+  },
+  {
+    "id": "e39",
+    "source": "random-family-vocabulary",
+    "target": "rm-expectation-sums-vp"
+  },
+  {
+    "id": "e40",
+    "source": "rm-expectation-sums-vp",
+    "target": "rm-quadratic-samplecovariance"
+  },
+  {
+    "id": "e41",
+    "source": "random-vector-isotropy",
+    "target": "rm-quadratic-samplecovariance"
+  },
+  {
+    "id": "e42",
+    "source": "rm-quadratic-samplecovariance",
+    "target": "rm-statement-atlas"
+  },
+  {
+    "id": "e43",
+    "source": "scalar-bernstein",
+    "target": "rm-statement-atlas"
+  },
+  {
+    "id": "e44",
+    "source": "rm-statement-atlas",
+    "target": "trace-exp-core"
+  },
+  {
+    "id": "e45",
+    "source": "trace-exp-core",
+    "target": "trace-exp-monotonicity"
+  },
+  {
+    "id": "e46",
+    "source": "rm-selfadjoint-order-spectral",
+    "target": "trace-exp-monotonicity"
+  },
+  {
+    "id": "e47",
+    "source": "trace-exp-monotonicity",
+    "target": "cstar-log-order-transport"
+  },
+  {
+    "id": "e48",
+    "source": "analysis-carriers",
+    "target": "cstar-log-order-transport"
+  },
+  {
+    "id": "e49",
+    "source": "trace-exp-core",
+    "target": "tropp-state-bookkeeping"
+  },
+  {
+    "id": "e50",
+    "source": "rm-expectation-sums-vp",
+    "target": "tropp-state-bookkeeping"
+  },
+  {
+    "id": "e51",
+    "source": "tropp-state-bookkeeping",
+    "target": "trace-mgf-consumer"
+  },
+  {
+    "id": "e52",
+    "source": "cstar-log-order-transport",
+    "target": "trace-mgf-consumer"
+  },
+  {
+    "id": "e53",
+    "source": "trace-mgf-consumer",
+    "target": "provider-facades"
+  },
+  {
+    "id": "e54",
+    "source": "trace-exp-monotonicity",
+    "target": "support-dimension-bridges"
+  },
+  {
+    "id": "e55",
+    "source": "provider-facades",
+    "target": "matrix-bernstein-assumption-bundles"
+  },
+  {
+    "id": "e56",
+    "source": "scalar-bernstein",
+    "target": "matrix-bernstein-assumption-bundles"
+  },
+  {
+    "id": "e57",
+    "source": "matrix-bernstein-assumption-bundles",
+    "target": "matrix-bernstein-tail-wrappers"
+  },
+  {
+    "id": "e58",
+    "source": "trace-mgf-consumer",
+    "target": "matrix-bernstein-tail-wrappers"
+  },
+  {
+    "id": "e59",
+    "source": "matrix-bernstein-tail-wrappers",
+    "target": "sample-covariance-compact-route"
+  },
+  {
+    "id": "e60",
+    "source": "rm-quadratic-samplecovariance",
+    "target": "sample-covariance-compact-route"
+  },
+  {
+    "id": "e61",
+    "source": "sample-covariance-compact-route",
+    "target": "exact-row-centered-square-infra"
+  },
+  {
+    "id": "e62",
+    "source": "exact-row-centered-square-infra",
+    "target": "negative-side-transfer"
+  },
+  {
+    "id": "e63",
+    "source": "sample-covariance-compact-route",
+    "target": "reader-example-routes"
+  },
+  {
+    "id": "e64",
+    "source": "reader-example-routes",
+    "target": "judge-api-coverage"
+  },
+  {
+    "id": "e65",
+    "source": "matrix-bernstein-tail-wrappers",
+    "target": "judge-api-coverage"
+  },
+  {
+    "id": "e66",
+    "source": "provider-facades",
+    "target": "epstein-lieb-concavity"
+  },
+  {
+    "id": "e67",
+    "source": "trace-mgf-consumer",
+    "target": "conditioning-independence-bridge"
+  },
+  {
+    "id": "e68",
+    "source": "random-family-vocabulary",
+    "target": "conditioning-independence-bridge"
+  },
+  {
+    "id": "e69",
+    "source": "trace-exp-core",
+    "target": "trace-exp-integrability-propagation"
+  },
+  {
+    "id": "e70",
+    "source": "provider-facades",
+    "target": "trace-exp-integrability-propagation"
+  },
+  {
+    "id": "e71",
+    "source": "tropp-state-bookkeeping",
+    "target": "natural-history-measurability"
+  },
+  {
+    "id": "e72",
+    "source": "exact-row-centered-square-infra",
+    "target": "variance-proxy-sharp-provider"
+  },
+  {
+    "id": "e73",
+    "source": "support-dimension-bridges",
+    "target": "support-provider-construction"
+  },
+  {
+    "id": "e74",
+    "source": "matrix-bernstein-tail-wrappers",
+    "target": "tail-event-domination"
+  },
+  {
+    "id": "e75",
+    "source": "epstein-lieb-concavity",
+    "target": "full-matrix-bernstein"
+  },
+  {
+    "id": "e76",
+    "source": "conditioning-independence-bridge",
+    "target": "full-matrix-bernstein"
+  },
+  {
+    "id": "e77",
+    "source": "trace-exp-integrability-propagation",
+    "target": "full-matrix-bernstein"
+  },
+  {
+    "id": "e78",
+    "source": "variance-proxy-sharp-provider",
+    "target": "full-matrix-bernstein"
+  },
+  {
+    "id": "e79",
+    "source": "tail-event-domination",
+    "target": "full-matrix-bernstein"
+  },
+  {
+    "id": "e80",
+    "source": "full-matrix-bernstein",
+    "target": "hanson-wright"
+  },
+  {
+    "id": "e81",
+    "source": "subgaussian-vector",
+    "target": "hanson-wright"
+  },
+  {
+    "id": "e82",
+    "source": "sample-covariance-compact-route",
+    "target": "covariance-estimation"
+  },
+  {
+    "id": "e83",
+    "source": "full-matrix-bernstein",
+    "target": "covariance-estimation"
+  },
+  {
+    "id": "e84",
+    "source": "gaussian-width-geometry",
+    "target": "jl-rip-statements"
+  },
+  {
+    "id": "e85",
+    "source": "covariance-estimation",
+    "target": "jl-rip-statements"
+  },
+  {
+    "id": "e86",
+    "source": "weak-law-scaffold",
+    "target": "strong-law-process-chaining"
+  },
+  {
+    "id": "e87",
+    "source": "empirical-process-vocabulary",
+    "target": "strong-law-process-chaining"
+  },
+  {
+    "id": "e88",
+    "source": "full-matrix-bernstein",
+    "target": "stable-promotion-audit"
+  },
+  {
+    "id": "e89",
+    "source": "covariance-estimation",
+    "target": "stable-promotion-audit"
+  },
+  {
+    "id": "e90",
+    "source": "strong-law-process-chaining",
+    "target": "stable-promotion-audit"
+  }
+];
+
+var dependents = {};
+NODES.forEach(function(n) { dependents[n.id] = []; });
+EDGES.forEach(function(e) {
+  if (dependents[e.target]) dependents[e.target].push(e.source);
+});
+
+var graph;
+var selectedNodeId = null;
+var suppressNextCanvasClick = false;
+
+function getNodeIdFromEvent(evt) {
+  var candidates = [];
+  function addCandidate(value) {
+    if (typeof value === 'string' && value.length) candidates.push(value);
+  }
+  addCandidate(evt && evt.target && evt.target.id);
+  addCandidate(evt && evt.target && evt.target.attributes && evt.target.attributes.id);
+  addCandidate(evt && evt.id);
+  if (evt && evt.item && typeof evt.item.getID === 'function') addCandidate(evt.item.getID());
+  if (evt && evt.item && typeof evt.item.getModel === 'function') {
+    var model = evt.item.getModel();
+    addCandidate(model && model.id);
+  }
+  for (var i = 0; i < candidates.length; i++) {
+    if (NODES.some(function(n) { return n.id === candidates[i]; })) return candidates[i];
+  }
+  var raw = candidates.join(' ');
+  var byLength = NODES.slice().sort(function(a, b) { return b.id.length - a.id.length; });
+  var matched = byLength.find(function(n) { return raw.indexOf(n.id) !== -1; });
+  return matched ? matched.id : null;
+}
+
+function stopGraphEvent(evt) {
+  if (evt && typeof evt.stopPropagation === 'function') evt.stopPropagation();
+  if (evt && evt.originalEvent && typeof evt.originalEvent.stopPropagation === 'function') evt.originalEvent.stopPropagation();
+  if (evt && evt.nativeEvent && typeof evt.nativeEvent.stopPropagation === 'function') evt.nativeEvent.stopPropagation();
+}
+
+function getClientPointFromEvent(evt) {
+  var sources = [evt, evt && evt.originalEvent, evt && evt.nativeEvent];
+  for (var i = 0; i < sources.length; i++) {
+    var e = sources[i];
+    if (!e) continue;
+    if (typeof e.clientX === 'number' && typeof e.clientY === 'number') return [e.clientX, e.clientY];
+    if (typeof e.x === 'number' && typeof e.y === 'number') return [e.x, e.y];
+  }
+  return null;
+}
+
+function getNodeIdAtClientPoint(evt) {
+  if (!graph) return null;
+  var client = getClientPointFromEvent(evt);
+  if (!client) return null;
+  var canvasPoint = null;
+  if (typeof graph.getCanvasByClient === 'function') {
+    canvasPoint = graph.getCanvasByClient(client);
+  } else if (typeof graph.getCanvasByViewport === 'function') {
+    var rect = document.getElementById('container').getBoundingClientRect();
+    canvasPoint = graph.getCanvasByViewport([client[0] - rect.left, client[1] - rect.top]);
+  }
+  if (!canvasPoint) return null;
+  var x = canvasPoint[0], y = canvasPoint[1];
+  var best = null;
+  var bestScore = Infinity;
+  NODES.forEach(function(n) {
+    var sx = n.style && n.style.x;
+    var sy = n.style && n.style.y;
+    if (typeof sx !== 'number' || typeof sy !== 'number') return;
+    var dx = Math.abs(x - sx);
+    var dy = Math.abs(y - sy);
+    if (dx <= 90 && dy <= 32) {
+      var score = dx * dx + dy * dy;
+      if (score < bestScore) {
+        bestScore = score;
+        best = n.id;
+      }
+    }
+  });
+  return best;
+}
+
+function openNodeCard(nodeId) {
+  if (!nodeId) return;
+  showSidebar(nodeId);
+  highlightRelated(nodeId);
+}
+
+function handleNativeCanvasClick(evt) {
+  var id = getNodeIdAtClientPoint(evt);
+  if (!id) return;
+  suppressNextCanvasClick = true;
+  openNodeCard(id);
+  stopGraphEvent(evt);
+}
+
+function bindNativeCanvasClickFallback() {
+  var container = document.getElementById('container');
+  if (!container || container.dataset.nodeCardClickBound === '1') return;
+  container.dataset.nodeCardClickBound = '1';
+  container.addEventListener('click', handleNativeCanvasClick, true);
+  var canvas = container.querySelector('canvas');
+  if (canvas) canvas.addEventListener('click', handleNativeCanvasClick, true);
+}
+
+function initGraph() {
+  graph = new G6.Graph({
+    container: 'container',
+    width: document.getElementById('container').clientWidth,
+    height: document.getElementById('container').clientHeight,
+    autoFit: 'view',
+    animation: false,
+    node: {
+      type: 'rect',
+      style: {
+        size: [160, 40],
+        radius: 6,
+        lineWidth: 2,
+        labelText: function(d) { return d.data.label; },
+        labelFill: '#262626',
+        labelFontSize: 12,
+        labelFontWeight: '500',
+        labelPlacement: 'center',
+        cursor: 'pointer',
+      },
+      state: {
+        selected: { lineWidth: 3, shadowColor: '#1890FF', shadowBlur: 12 },
+        highlight: { lineWidth: 3, shadowColor: '#FAAD14', shadowBlur: 10 },
+        dimmed: { opacity: 0.3 },
+      },
+    },
+    edge: {
+      type: 'polyline',
+      style: {
+        stroke: '#C0C0C0', lineWidth: 1.5,
+        endArrow: true, endArrowSize: 8, radius: 4, offset: 12,
+      },
+      state: {
+        highlight: { stroke: '#FAAD14', lineWidth: 2.5 },
+        dimmed: { stroke: '#E8E8E8', opacity: 0.3 },
+      },
+    },
+    behaviors: [
+      'drag-canvas',
+      { type: 'zoom-canvas', key: 'zoom-canvas', trigger: ['Control'], preventDefault: true, sensitivity: 1 },
+      'drag-element',
+    ],
+    plugins: [{
+      type: 'minimap',
+      size: [160, 100],
+      backgroundColor: '#fff',
+    }],
+    autoResize: true,
+  });
+
+  graph.setData({ nodes: NODES, edges: EDGES });
+  var renderResult = graph.render();
+  Promise.resolve(renderResult).then(function() {
+    updateZoomLabel();
+    bindNativeCanvasClickFallback();
+  });
+
+  graph.on('node:click', function(evt) {
+    var id = getNodeIdFromEvent(evt);
+    if (!id) return;
+    suppressNextCanvasClick = true;
+    stopGraphEvent(evt);
+    openNodeCard(id);
+  });
+
+  graph.on('canvas:click', function(evt) {
+    if (suppressNextCanvasClick || getNodeIdFromEvent(evt)) {
+      suppressNextCanvasClick = false;
+      return;
+    }
+    var id = getNodeIdAtClientPoint(evt);
+    if (id) {
+      openNodeCard(id);
+      return;
+    }
+    closeSidebar();
+    clearHighlight();
+  });
+
+  graph.on('node:mouseenter', function(evt) {
+    var id = getNodeIdFromEvent(evt);
+    if (!id) return;
+    if (selectedNodeId !== id) highlightRelated(id);
+  });
+
+  graph.on('node:mouseleave', function() {
+    if (selectedNodeId) { highlightRelated(selectedNodeId); }
+    else { clearHighlight(); }
+  });
+}
+
+function highlightRelated(nodeId) {
+  selectedNodeId = nodeId;
+  var related = {};
+  related[nodeId] = true;
+  EDGES.forEach(function(e) {
+    if (e.source === nodeId) related[e.target] = true;
+    if (e.target === nodeId) related[e.source] = true;
+  });
+  NODES.forEach(function(n) {
+    if (related[n.id]) {
+      graph.setElementState(n.id, n.id === nodeId ? ['selected'] : ['highlight']);
+    } else {
+      graph.setElementState(n.id, ['dimmed']);
+    }
+  });
+  EDGES.forEach(function(e) {
+    if (related[e.source] && related[e.target]) {
+      graph.setElementState(e.id, ['highlight']);
+    } else {
+      graph.setElementState(e.id, ['dimmed']);
+    }
+  });
+}
+
+function clearHighlight() {
+  selectedNodeId = null;
+  NODES.forEach(function(n) { graph.setElementState(n.id, []); });
+  EDGES.forEach(function(e) { graph.setElementState(e.id, []); });
+}
+
+function updateZoomLabel() {
+  if (!graph) return;
+  var el = document.getElementById('zoom-level');
+  if (!el) return;
+  var zoom = graph.getZoom ? graph.getZoom() : 1;
+  el.textContent = Math.round(zoom * 100) + '%';
+}
+
+function zoomGraph(ratio) {
+  if (!graph) return;
+  var center = graph.getCanvasCenter ? graph.getCanvasCenter() : undefined;
+  Promise.resolve(graph.zoomBy(ratio, { duration: 180, easing: 'ease' }, center))
+    .then(updateZoomLabel);
+}
+
+function resetZoom() {
+  if (!graph) return;
+  Promise.resolve(graph.fitView({ when: 'always', direction: 'both' }, { duration: 240, easing: 'ease' }))
+    .then(updateZoomLabel);
+}
+
+function showSidebar(nodeId) {
+  var node = NODES.find(function(n) { return n.id === nodeId; });
+  if (!node) return;
+  var d = node.data;
+  var sc = STATUS_COLORS[d.status] || STATUS_COLORS.pending;
+  var deps = d.deps.length
+    ? d.deps.map(function(dep) { return '<span class="dep-chip">' + dep + '</span>'; }).join('')
+    : '<span style="color:#8c8c8c">无</span>';
+  var depsList = (dependents[nodeId] && dependents[nodeId].length)
+    ? dependents[nodeId].map(function(dep) { return '<span class="dep-chip">' + dep + '</span>'; }).join('')
+    : '<span style="color:#8c8c8c">无</span>';
+
+  document.getElementById('sidebar-title').textContent = d.label;
+  document.getElementById('sidebar-body').innerHTML =
+    '<div class="info-group"><div class="info-label">状态</div><div class="info-value">' +
+      '<span class="status-badge" style="background:' + sc.fill + '22;color:' + sc.stroke + ';border:1px solid ' + sc.stroke + '44">' +
+        sc.badge + ' ' + sc.label +
+      '</span></div></div>' +
+    '<div class="info-group"><div class="info-label">标题</div><div class="info-value">' + d.title + '</div></div>' +
+    '<div class="info-group"><div class="info-label">Lean 模块</div><div class="info-value"><code>' + d.lean_module + '</code></div></div>' +
+    '<div class="info-group"><div class="info-label">层深 (Depth)</div><div class="info-value">' + d.depth + '</div></div>' +
+    '<div class="info-group"><div class="info-label">依赖 (前置概念)</div><div class="dep-list">' + deps + '</div></div>' +
+    '<div class="info-group"><div class="info-label">被依赖 (后续概念)</div><div class="dep-list">' + depsList + '</div></div>';
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('show');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+function exportTodo() {
+  var byDepth = {};
+  NODES.forEach(function(n) {
+    var d = n.data.depth;
+    if (!byDepth[d]) byDepth[d] = [];
+    byDepth[d].push(n);
+  });
+  var now = new Date().toISOString().slice(0, 10);
+  var counts = { integrated: 0, in_progress: 0, blocked: 0, pending: 0 };
+  NODES.forEach(function(n) { counts[n.data.status]++; });
+  var md = '# Theory Roadmap — Leaf-Level Formalization Tasks\n';
+  md += '> 生成于 ' + now + '\n';
+  md += '> 共 ' + NODES.length + ' 个叶任务\n';
+  md += '> ✅ ' + counts.integrated + ' 已完成 • 🔄 ' + counts.in_progress + ' 进行中 • 🚫 ' + counts.blocked + ' 阻塞 • ⏳ ' + counts.pending + ' 待开始\n\n';
+  var depthKeys = Object.keys(byDepth).sort(function(a,b) { return Number(a)-Number(b); });
+  depthKeys.forEach(function(d) {
+    var label = DEPTH_NAMES[d] || 'Depth ' + d;
+    md += '## Depth ' + d + ' (' + label + ')\n\n';
+    byDepth[d].sort(function(a,b) { return a.data.index - b.data.index; });
+    byDepth[d].forEach(function(n) {
+      var sc = STATUS_COLORS[n.data.status] || STATUS_COLORS.pending;
+      var depStr = n.data.deps.length ? ' (依赖: ' + n.data.deps.join(', ') + ')' : '';
+      md += '- ' + sc.badge + ' **' + n.data.label + '** — ' + n.data.title + depStr + '\n';
+      md += '  - 模块: `' + n.data.lean_module + '`\n';
+    });
+    md += '\n';
+  });
+  downloadFile('theory-roadmap-tasks.md', md);
+  showToast('✅ Todo.md 已导出');
+}
+
+function exportSvg() {
+  var canvas = document.querySelector('#container canvas');
+  if (canvas) {
+    var link = document.createElement('a');
+    link.download = 'roadmap.png';
+    link.href = canvas.toDataURL();
+    link.click();
+    showToast('✅ PNG 已导出');
+  }
+}
+
+function downloadFile(filename, content) {
+  var blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function showToast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(function() { el.classList.remove('show'); }, 2500);
+}
+
+function renderStats() {
+  var counts = { integrated: 0, in_progress: 0, blocked: 0, pending: 0 };
+  NODES.forEach(function(n) { counts[n.data.status]++; });
+  document.getElementById('stats-bar').innerHTML =
+    '<div class="stat"><span class="stat-dot" style="background:#52C41A"></span>' + counts.integrated + ' 已完成</div>' +
+    '<div class="stat"><span class="stat-dot" style="background:#1890FF"></span>' + counts.in_progress + ' 进行中</div>' +
+    '<div class="stat"><span class="stat-dot" style="background:#FF4D4F"></span>' + counts.blocked + ' 阻塞</div>' +
+    '<div class="stat"><span class="stat-dot" style="background:#BFBFBF"></span>' + counts.pending + ' 待开始</div>';
+}
+
+var DEPTH_NAMES = {
+  "0": "仓库与导入面",
+  "1": "标量概率对象",
+  "2": "标量集中脊柱",
+  "3": "几何/向量/极限定理",
+  "4": "随机矩阵基础层",
+  "5": "TraceExp / Tropp 提供者层",
+  "6": "矩阵 Bernstein / 样本协方差消费者",
+  "7": "当前硬骨头提供者缺口",
+  "8": "后续定理族与稳定化"
+};
+
+window.addEventListener('resize', function() {
+  if (graph) {
+    graph.resize(
+      document.getElementById('container').clientWidth,
+      document.getElementById('container').clientHeight
+    );
+  }
+});
+
+window.addEventListener('load', function() {
+  initGraph();
+  renderStats();
+});
+</script>
+</body>
+</html>
