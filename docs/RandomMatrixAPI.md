@@ -439,6 +439,10 @@ import HighDimProb.RandomMatrix.LiebProvider
 
 This import exposes the upstream provider facade and conditional bridges:
 
+- `matrixExpFDeriv`
+- `hasFDerivAt_matrix_exp`
+- `hasStrictFDerivAt_matrix_exp`
+- `hasFDerivAt_matrix_exp_trunc`
 - `matrixLog_le_of_le_matrixExp_of_providerLogMonotone`
 - `troppLogExpComparisonToK_of_providerLogOrder`
 - `EpsteinAffineLineConcavity`
@@ -446,13 +450,23 @@ This import exposes the upstream provider facade and conditional bridges:
 - `liebJensenTraceExp_statement_of_epsteinAffineLine`
 - `troppMasterTraceMGFStep_of_epsteinAffineLine`
 - `troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder`
+- `lambdaMaxOrdered_le_of_matrixLE_selfAdjoint`
+- `lambdaMinOrdered_le_of_matrixLE_selfAdjoint`
+- `traceMGFBernsteinVarianceProxyBoundLIntegral_of_real`
+- `matrixBernsteinTraceMGFToLaplaceContract`
+- `matrixBernsteinTraceMGFToLaplaceContract_under_primitives`
 - `MatrixBernsteinConditioningTraceMGFProviderAssumptions`
 - `MatrixBernsteinConditioningTraceMGFProviderAssumptions.toTailAssumptions`
 - `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions`
 - `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
 
-The provider layer is conditional: it does not prove full Epstein/Lieb,
-Golden-Thompson, history/current independence, conditional expectation,
-variance-proxy normalization, tail-event domination, or full Matrix Bernstein.
-It separates upstream proof-provider surfaces from downstream example and tail
-wrappers.
+The matrix-exp derivative names are the ambient finite-dimensional Frechet
+derivative layer only. They do not include the self-adjoint carrier
+derivative, the `CFC.log` derivative, Epstein, or Lieb/Tropp proofs.
+
+The provider layer is conditional: spectral endpoint monotonicity and the
+trace-MGF-to-Laplace contracts are proved bridge theorems, but they do not prove
+full Epstein/Lieb, Golden-Thompson, history/current independence, conditional
+expectation, variance-proxy normalization, tail-event domination, or full Matrix
+Bernstein. It separates upstream proof-provider surfaces from downstream example
+and tail wrappers.

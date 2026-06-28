@@ -138,7 +138,11 @@ explicit trace-exp threshold event subset assumption. Its reusable assumption
 bundle `MatrixBernsteinConditioningTraceMGFTailAssumptions` and thin wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions`
 package the same tail/conditioning assumptions without proving new hard facts;
-this is not a full Matrix Bernstein theorem.
+this is not a full Matrix Bernstein theorem. The provider-facing
+`HighDimProb.RandomMatrix.LiebProvider` facade also exposes the ambient
+matrix-exp Frechet derivative layer, spectral endpoint monotonicity, and
+trace-MGF-to-Laplace contracts as bridge infrastructure; these do not close the
+self-adjoint carrier, `CFC.log`, or Lieb/Tropp analytic blockers.
 
 ## Not Yet Proved
 

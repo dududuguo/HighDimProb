@@ -25,7 +25,9 @@ than copying full theorem signatures.
 
 ## Provider-Facing RandomMatrix Terms
 
-`HighDimProb.RandomMatrix.LiebProvider` is the explicit import for conditional
-Epstein/Lieb/Tropp provider bridges and provider-compressed natural-state tail
-helpers.  Keep this separate from reader-facing examples and the core
-`HighDimProb.RandomMatrix` aggregate.
+`HighDimProb.RandomMatrix.LiebProvider` is the explicit import for the ambient
+matrix-exp Frechet derivative primitives, conditional Epstein/Lieb/Tropp
+provider bridges, spectral endpoint monotonicity, trace-MGF-to-Laplace
+contracts, and provider-compressed natural-state tail helpers. Keep this
+separate from reader-facing examples and the core `HighDimProb.RandomMatrix`
+aggregate.

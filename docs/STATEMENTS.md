@@ -91,6 +91,16 @@ Provider-facing import:
 
 Provider theorem surfaces:
 
+- `matrixExpFDeriv`, `hasFDerivAt_matrix_exp`,
+  `hasStrictFDerivAt_matrix_exp`, and `hasFDerivAt_matrix_exp_trunc`, the
+  ambient finite-dimensional matrix-exponential Frechet derivative layer only.
+- `lambdaMaxOrdered_le_of_matrixLE_selfAdjoint` and
+  `lambdaMinOrdered_le_of_matrixLE_selfAdjoint`, ordered spectral endpoint
+  monotonicity under explicit self-adjointness and `MatrixLE`.
+- `traceMGFBernsteinVarianceProxyBoundLIntegral_of_real`,
+  `matrixBernsteinTraceMGFToLaplaceContract`, and
+  `matrixBernsteinTraceMGFToLaplaceContract_under_primitives`, thin
+  trace-MGF-to-Laplace contracts under explicit premises.
 - `EpsteinAffineLineConcavity`, an explicit analytic assumption. It is not
   proved here.
 - `liebTraceExpConcavity_of_epsteinAffineLine` and
@@ -109,7 +119,8 @@ Provider theorem surfaces:
 
 Non-goals for this provider layer:
 
-- It does not prove the unconditional Epstein affine-line theorem, full Lieb
-  concavity, Golden-Thompson, history/current independence, conditional
+- It does not prove the self-adjoint carrier matrix-exp derivative, the
+  `CFC.log` derivative, the unconditional Epstein affine-line theorem, full
+  Lieb concavity, Golden-Thompson, history/current independence, conditional
   expectation, variance-proxy normalization, full-sum trace-integrability,
   tail-event domination, or full Matrix Bernstein.

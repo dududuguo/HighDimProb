@@ -1,0 +1,16 @@
+import HighDimProb.RandomMatrix.MatrixExpDerivativeProvider
+
+open HighDimProb
+open scoped Matrix.Norms.Operator RightActions
+
+
+#check matrixExpFDerivTerm
+#check matrixExpFDerivTerm_apply
+#check norm_matrixExpFDerivTerm_le
+#check norm_matrixExpFDerivTerm_le_norm_pow_div_factorial
+#check summable_matrixExpFDerivTerm
+#check matrixExpFDeriv
+#check hasFDerivAt_matrix_pow_sum
+#check hasFDerivAt_matrix_exp
+#check hasStrictFDerivAt_matrix_exp
+#check hasFDerivAt_matrix_exp_trunc

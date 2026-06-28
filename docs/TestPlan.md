@@ -88,5 +88,5 @@ Run this after changing the provider-facing Lieb/Tropp layer or the
 provider-compressed natural-state tail route:
 
 ```bash
-lake build HighDimProb.RandomMatrix.LiebProvider HighDimProbTest.RandomMatrixLiebProviderAPI HighDimProbJudge.RandomMatrix.LiebProviderUse
+lake build HighDimProb.RandomMatrix.MatrixExpDerivativeProvider HighDimProb.RandomMatrix.LiebProvider HighDimProbTest.RandomMatrixMatrixExpDerivativeProviderAPI HighDimProbTest.RandomMatrixLiebProviderAPI HighDimProbJudge.RandomMatrix.LiebProviderUse
 ```

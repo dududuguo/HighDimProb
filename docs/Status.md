@@ -399,13 +399,18 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
 ## Provider-Facing Lieb/Tropp Layer
 
 Integrated `HighDimProb.RandomMatrix.LiebProvider` as a separate provider-facing
-import layer. It exposes facade imports, the explicit
+import layer. It exposes the ambient matrix-exp Frechet derivative primitives
+`matrixExpFDeriv`, `hasFDerivAt_matrix_exp`,
+`hasStrictFDerivAt_matrix_exp`, and `hasFDerivAt_matrix_exp_trunc`, facade
+imports, the explicit
 `EpsteinAffineLineConcavity` conditional route, bounded finite-measure
 integrability providers, natural-history measurability from suffix-entry
-measurability, identity support domination, and the S16 natural-state tail
-wrapper `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`.
+measurability, identity support domination, spectral endpoint monotonicity,
+thin trace-MGF-to-Laplace contracts, and the S16 natural-state tail wrapper
+`matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`.
 
-This does not claim full Epstein/Lieb, Golden-Thompson, independence,
+This does not claim the self-adjoint carrier matrix-exp derivative, the
+`CFC.log` derivative, full Epstein/Lieb, Golden-Thompson, independence,
 conditional expectation, variance proxy, tail-event domination, or full Matrix
 Bernstein. The core aggregate and downstream examples remain separate from the
 provider import path.
@@ -423,7 +428,7 @@ lake test
 lake build HighDimProbJudge
 ```
 
-Last verified locally on 2026-06-27 with the commands above.
+Last verified locally on 2026-06-29 with the commands above.
 
 ## Archive
 
