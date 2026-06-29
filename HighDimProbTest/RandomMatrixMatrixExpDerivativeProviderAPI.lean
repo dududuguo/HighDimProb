@@ -1,8 +1,8 @@
 import HighDimProb.RandomMatrix.MatrixExpDerivativeProvider
+import HighDimProb.RandomMatrix.CFCLogDerivativeProvider
 
 open HighDimProb
 open scoped Matrix.Norms.Operator RightActions
-
 
 #check matrixExpFDerivTerm
 #check matrixExpFDerivTerm_apply
@@ -19,3 +19,42 @@ open scoped Matrix.Norms.Operator RightActions
 #check hasFDerivAt_matrix_exp_selfAdjoint
 #check hasStrictFDerivAt_matrix_exp_selfAdjoint
 #check hasFDerivAt_matrix_exp_trunc
+
+#check continuousOn_cfcLog_selfAdjointCarrier_strictlyPositive
+#check continuousAt_cfcLog_selfAdjointCarrier_of_strictlyPositive
+#check cfcLogSelfAdjoint
+#check cfcLogSelfAdjoint_coe
+#check matrixExpSelfAdjoint_cfcLogSelfAdjoint_eq_of_strictlyPositive
+#check eventually_exp_cfcLog_selfAdjointCarrier_eq_of_strictlyPositive
+#check eventually_matrixExpSelfAdjoint_cfcLogSelfAdjoint_eq_of_strictlyPositive
+#check cfcLogSelfAdjoint_matrixExpSelfAdjoint_eq
+#check eventually_cfcLogSelfAdjoint_matrixExpSelfAdjoint_eq
+#check hasStrictFDerivAt_cfcLogSelfAdjoint_at_matrixExpSelfAdjoint_of_equiv
+#check hasStrictFDerivAt_cfcLogSelfAdjoint_of_strictlyPositive_of_equiv
+#check hasStrictFDerivAt_cfcLogSelfAdjoint_at_matrixExpSelfAdjoint
+#check hasStrictFDerivAt_cfcLogSelfAdjoint_of_strictlyPositive
+#check CFCLog.selfAdjoint_add_smul
+#check CFCLog.Carrier
+#check CFCLog.DerivOp
+#check CFCLog.derivSAAt
+#check CFCLog.hasStrictFDerivAt_derivSAAt
+#check CFCLog.expFDeriv_derivSAAt
+#check CFCLog.derivSAAt_expFDeriv
+#check CFCLog.lineDerivSA
+#check CFCLog.lineDerivSA_eq_derivSAAt
+#check CFCLog.hasDerivAt_lineDerivSA_iff
+#check CFCLog.hasDerivAt_lineDerivSA_iff_derivSAAt_eval
+#check CFCLog.hasDerivAt_lineDerivSA_of_hasDerivAt_eval
+#check CFCLog.hasDerivAt_eval_of_hasDerivAt_lineDerivSA
+#check CFCLog.lineDerivSA_forward_matrixExpFDeriv
+#check CFCLog.lineDeriv
+#check CFCLog.hasDerivAt_lineDerivSA_coe
+#check CFCLog.hasDerivAt_lineDeriv_of_lineDerivSA
+#check CFCLog.hasDerivAt_lineDerivSA_coe_of_hasDerivAt_eval
+#check CFCLog.hasDerivAt_lineDeriv_of_hasDerivAt_eval
+#check CFCLog.isSelfAdjoint_lineDeriv
+#check CFCLog.lineDeriv_forward_matrixExpFDeriv
+#check CFCLog.hasDerivAt_lineSA
+#check CFCLog.hasDerivAt_line
+#check exists_hasDerivAt_cfcLog_affineLine_of_strictlyPositive
+#check hasDerivAt_cfcLog_affineLine_of_strictlyPositive

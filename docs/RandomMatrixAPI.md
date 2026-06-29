@@ -438,7 +438,9 @@ import HighDimProb.RandomMatrix.LiebProvider
 ```
 
 This import exposes the upstream provider facade, the ambient and
-self-adjoint matrix-exp derivative primitives, and the conditional bridges:
+self-adjoint matrix-exp derivative primitives, the first-order `CFC.log`
+affine-line layer, the derivative-level Epstein consumer reductions, and the
+conditional bridges:
 
 - `matrixExpFDeriv`
 - `hasFDerivAt_matrix_exp`
@@ -449,6 +451,22 @@ self-adjoint matrix-exp derivative primitives, and the conditional bridges:
 - `matrixExpFDerivSelfAdjoint_spectral_equiv`
 - `hasFDerivAt_matrix_exp_selfAdjoint`
 - `hasStrictFDerivAt_matrix_exp_selfAdjoint`
+- `cfcLogSelfAdjoint`
+- `CFCLog.Carrier`
+- `CFCLog.DerivOp`
+- `CFCLog.derivSAAt`
+- `CFCLog.hasStrictFDerivAt_derivSAAt`
+- `CFCLog.lineDeriv`
+- `CFCLog.hasDerivAt_line`
+- `exists_hasDerivAt_cfcLog_affineLine_of_strictlyPositive`
+- `hasDerivAt_cfcLog_affineLine_of_strictlyPositive`
+- `cfcLogLineDerivTraceSecond`
+- `EpsteinLine.traceSlope`
+- `EpsteinLine.traceSecond`
+- `EpsteinLine.hasDerivAt_traceSlope_of_lineDerivSA`
+- `EpsteinLine.hasDerivAt_traceSlope_of_hasDerivAt_eval`
+- `EpsteinLine.concavity_of_traceSecond_nonpos_of_lineDerivSA`
+- `EpsteinLine.concavity_of_traceSecond_nonpos_of_eval`
 - `matrixLog_le_of_le_matrixExp_of_providerLogMonotone`
 - `troppLogExpComparisonToK_of_providerLogOrder`
 - `EpsteinAffineLineConcavity`
@@ -472,15 +490,16 @@ ambient matrix space, while `matrixExpSelfAdjoint`,
 `matrixExpFDerivSelfAdjoint`, `matrixExpFDerivSelfAdjoint_spectral_equiv`,
 `hasFDerivAt_matrix_exp_selfAdjoint`, and
 `hasStrictFDerivAt_matrix_exp_selfAdjoint` live on the self-adjoint carrier.
-Main downstream Tropp/Bernstein/Epstein consumers currently use ambient,
-self-adjoint, PSD, and strictly positive facts in different places, but they do
-not yet consume a strictly positive carrier derivative API. This surface now
-includes `matrixExpFDerivSelfAdjoint_spectral_equiv`, but it still does not
-include the `CFC.log` derivative or a direct Epstein/Lieb/Tropp hookup.
+`cfcLogSelfAdjoint`, `CFCLog.derivSAAt`, `CFCLog.lineDeriv`, and
+`CFCLog.hasDerivAt_line` now expose the strictly-positive carrier `CFC.log`
+first derivative, while `cfcLogLineDerivTraceSecond` and the `EpsteinLine.*`
+wrappers expose the derivative-level Epstein consumer route. `CFCLog.DerivOp`
+remains pointwise derivative bookkeeping only; it is not a stable second-level
+Frechet codomain.
 
-The provider layer is conditional: spectral endpoint monotonicity and the
+The provider layer is still conditional: spectral endpoint monotonicity and the
 trace-MGF-to-Laplace contracts are proved bridge theorems, but they do not prove
-full Epstein/Lieb, Golden-Thompson, history/current independence, conditional
-expectation, variance-proxy normalization, tail-event domination, or full Matrix
-Bernstein. It separates upstream proof-provider surfaces from downstream example
-and tail wrappers.
+the Epstein sign theorem, full Epstein/Lieb, Golden-Thompson, the resolvent
+route, history/current independence, conditional expectation, variance-proxy
+normalization, tail-event domination, or full Matrix Bernstein. It separates
+upstream proof-provider surfaces from downstream example and tail wrappers.

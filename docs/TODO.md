@@ -30,10 +30,10 @@ This is the active short list. Old completed task logs were collapsed into
   compress only genuinely provider-dischargeable assumptions and keep
   independence, conditional expectation, variance-proxy normalization,
   full-sum trace-integrability, and tail-event domination explicit.
-- Next RandomMatrix hardbone task: attack the explicit analytic/provider
-  blockers behind `EpsteinAffineLineConcavity` or the sigma-algebra
-  independence/conditional-expectation bridge; do not add new Matrix Bernstein
-  wrappers unless they consume existing provider APIs.
+- Next RandomMatrix hardbone task: migrate the short resolvent derivative
+  provider layer into `HighDimProb.RandomMatrix.ResolventDerivativeProvider`,
+  starting with `hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle` and
+  `_of_strictlyPositive`, then wire it through `LiebProvider` test/judge/docs.
 - Current strategy is progress-first: if a hard analytic ingredient is missing,
   consume it as an explicit assumption, register it in `docs/STATEMENTS.md`, and
   keep moving the high-level Tropp/Lieb trace-MGF route forward. Do not claim

@@ -85,9 +85,10 @@ must run or what CI enforces. Archive old stage-by-stage test history in
 ## Provider-focused RandomMatrix Check
 
 Run this after changing the provider-facing Lieb/Tropp layer, including the
-ambient or self-adjoint carrier matrix-exp derivative surface, or the
-provider-compressed natural-state tail route:
+ambient or self-adjoint carrier matrix-exp derivative surface, the
+first-order `CFC.log` affine-line provider layer, the derivative-level Epstein
+consumer layer, or the provider-compressed natural-state tail route:
 
 ```bash
-lake build HighDimProb.RandomMatrix.MatrixExpDerivativeProvider HighDimProb.RandomMatrix.LiebProvider HighDimProbTest.RandomMatrixMatrixExpDerivativeProviderAPI HighDimProbTest.RandomMatrixLiebProviderAPI HighDimProbJudge.RandomMatrix.LiebProviderUse
+lake build HighDimProb.RandomMatrix.MatrixExpDerivativeProvider HighDimProb.RandomMatrix.CFCLogDerivativeProvider HighDimProb.RandomMatrix.EpsteinDerivativeProvider HighDimProb.RandomMatrix.LiebProvider HighDimProbTest.RandomMatrixMatrixExpDerivativeProviderAPI HighDimProbTest.RandomMatrixLiebProviderAPI HighDimProbJudge.RandomMatrix.LiebProviderUse
 ```

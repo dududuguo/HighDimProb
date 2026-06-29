@@ -399,27 +399,34 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
 ## Provider-Facing Lieb/Tropp Layer
 
 Integrated `HighDimProb.RandomMatrix.LiebProvider` as a separate provider-facing
-import layer. It exposes the ambient matrix-exp Frechet derivative primitives
-`matrixExpFDeriv`, `hasFDerivAt_matrix_exp`,
+import layer. It now exposes the ambient matrix-exp Frechet derivative
+primitives `matrixExpFDeriv`, `hasFDerivAt_matrix_exp`,
 `hasStrictFDerivAt_matrix_exp`, and `hasFDerivAt_matrix_exp_trunc`, the
 self-adjoint carrier restriction `matrixExpSelfAdjoint`,
 `matrixExpFDerivSelfAdjoint`, `matrixExpFDerivSelfAdjoint_spectral_equiv`,
 `hasFDerivAt_matrix_exp_selfAdjoint`, and
-`hasStrictFDerivAt_matrix_exp_selfAdjoint`, facade imports, the explicit
-`EpsteinAffineLineConcavity` conditional route, bounded finite-measure
-integrability providers, natural-history measurability from suffix-entry
-measurability, identity support domination, spectral endpoint monotonicity,
-thin trace-MGF-to-Laplace contracts, and the S16 natural-state tail wrapper
+`hasStrictFDerivAt_matrix_exp_selfAdjoint`, the strictly-positive carrier
+`CFC.log` first-derivative layer (`cfcLogSelfAdjoint`, `CFCLog.derivSAAt`,
+`CFCLog.lineDeriv`, `CFCLog.hasDerivAt_line`,
+`exists_hasDerivAt_cfcLog_affineLine_of_strictlyPositive`), the derivative-level
+Epstein consumer layer (`cfcLogLineDerivTraceSecond`, `EpsteinLine.traceSlope`,
+`EpsteinLine.traceSecond`, `EpsteinLine.concavity_of_traceSecond_nonpos_of_lineDerivSA`,
+and `_of_eval`), facade imports, the explicit `EpsteinAffineLineConcavity`
+conditional route, bounded finite-measure integrability providers,
+natural-history measurability from suffix-entry measurability, identity support
+domination, spectral endpoint monotonicity, thin trace-MGF-to-Laplace
+contracts, and the S16 natural-state tail wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`.
 
-Interface audit: the migrated theorems stop at the ambient and self-adjoint
-matrix-exp derivative layers plus the self-adjoint spectral-equivalence
-primitive. Main downstream Tropp/Bernstein/Epstein consumers still consume
-ambient, self-adjoint, PSD, and strictly positive facts through other
-contracts; none of them currently consumes a strictly positive carrier
-derivative API. This does not yet claim the `CFC.log` derivative, full
-Epstein/Lieb, Golden-Thompson, independence, conditional expectation,
-variance proxy, tail-event domination, or full Matrix Bernstein.
+Interface audit: the migrated theorems now cover the ambient and self-adjoint
+matrix-exp derivative layers, the strictly-positive self-adjoint carrier
+`CFC.log` first derivative, and the derivative-level Epstein reductions that
+consume that first-derivative API. The new `CFCLog.DerivOp` name is only
+pointwise derivative bookkeeping; it is not a stable second-level Frechet
+codomain. The provider layer still does not prove the Epstein sign theorem,
+full Epstein/Lieb, Golden-Thompson, the resolvent route, independence,
+conditional expectation, variance proxy, tail-event domination, or full Matrix
+Bernstein.
 
 ## Verification
 
