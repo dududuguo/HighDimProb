@@ -13,9 +13,10 @@ import HighDimProb.RandomMatrix.TraceExpLaplaceProvider
 
 This aggregate module exposes the provider-proof leaves ported into the main
 HighDimProb namespace. The imported modules keep the theorem boundaries
-explicit: ambient matrix-exp Frechet derivatives, deterministic log/order and
-trace-exp monotonicity, conditional Epstein-to-Lieb/Tropp wrappers, bounded
-finite-measure integrability providers,
+explicit: ambient and self-adjoint carrier matrix-exp Frechet derivatives, including the self-adjoint spectral-equivalence primitive,
+deterministic log/order and trace-exp monotonicity, conditional
+Epstein-to-Lieb/Tropp wrappers, bounded finite-measure integrability
+providers,
 natural-history measurability from suffix entries, identity support domination,
 spectral endpoint monotonicity, and thin trace-MGF-to-Laplace contracts.
 -/

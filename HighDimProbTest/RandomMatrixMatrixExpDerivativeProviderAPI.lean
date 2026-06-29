@@ -13,4 +13,9 @@ open scoped Matrix.Norms.Operator RightActions
 #check hasFDerivAt_matrix_pow_sum
 #check hasFDerivAt_matrix_exp
 #check hasStrictFDerivAt_matrix_exp
+#check matrixExpSelfAdjoint
+#check matrixExpFDerivSelfAdjoint
+#check matrixExpFDerivSelfAdjoint_spectral_equiv
+#check hasFDerivAt_matrix_exp_selfAdjoint
+#check hasStrictFDerivAt_matrix_exp_selfAdjoint
 #check hasFDerivAt_matrix_exp_trunc

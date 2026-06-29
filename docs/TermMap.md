@@ -26,8 +26,11 @@ than copying full theorem signatures.
 ## Provider-Facing RandomMatrix Terms
 
 `HighDimProb.RandomMatrix.LiebProvider` is the explicit import for the ambient
-matrix-exp Frechet derivative primitives, conditional Epstein/Lieb/Tropp
+and self-adjoint carrier matrix-exp Frechet derivative primitives, including
+`matrixExpFDerivSelfAdjoint_spectral_equiv`, conditional Epstein/Lieb/Tropp
 provider bridges, spectral endpoint monotonicity, trace-MGF-to-Laplace
-contracts, and provider-compressed natural-state tail helpers. Keep this
-separate from reader-facing examples and the core `HighDimProb.RandomMatrix`
-aggregate.
+contracts, and provider-compressed natural-state tail helpers. Downstream
+consumers still do not use a strictly positive carrier derivative API here, so
+this remains pre-`CFC.log` / Epstein analytic infrastructure rather than a
+direct hookup. Keep this separate from
+reader-facing examples and the core `HighDimProb.RandomMatrix` aggregate.

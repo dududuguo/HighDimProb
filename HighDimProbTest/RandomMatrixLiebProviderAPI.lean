@@ -10,6 +10,11 @@ open scoped MatrixOrder Matrix.Norms.Operator Matrix.Norms.L2Operator
 #check matrixExpFDeriv
 #check hasFDerivAt_matrix_exp
 #check hasStrictFDerivAt_matrix_exp
+#check matrixExpSelfAdjoint
+#check matrixExpFDerivSelfAdjoint
+#check matrixExpFDerivSelfAdjoint_spectral_equiv
+#check hasFDerivAt_matrix_exp_selfAdjoint
+#check hasStrictFDerivAt_matrix_exp_selfAdjoint
 #check troppLogExpComparisonToK_of_providerLogOrder
 #check EpsteinAffineLineConcavity
 #check liebTraceExpConcavity_of_epsteinAffineLine

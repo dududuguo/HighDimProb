@@ -437,12 +437,18 @@ Use this layer explicitly, not through the core `HighDimProb.RandomMatrix` aggre
 import HighDimProb.RandomMatrix.LiebProvider
 ```
 
-This import exposes the upstream provider facade and conditional bridges:
+This import exposes the upstream provider facade, the ambient and
+self-adjoint matrix-exp derivative primitives, and the conditional bridges:
 
 - `matrixExpFDeriv`
 - `hasFDerivAt_matrix_exp`
 - `hasStrictFDerivAt_matrix_exp`
 - `hasFDerivAt_matrix_exp_trunc`
+- `matrixExpSelfAdjoint`
+- `matrixExpFDerivSelfAdjoint`
+- `matrixExpFDerivSelfAdjoint_spectral_equiv`
+- `hasFDerivAt_matrix_exp_selfAdjoint`
+- `hasStrictFDerivAt_matrix_exp_selfAdjoint`
 - `matrixLog_le_of_le_matrixExp_of_providerLogMonotone`
 - `troppLogExpComparisonToK_of_providerLogOrder`
 - `EpsteinAffineLineConcavity`
@@ -460,9 +466,17 @@ This import exposes the upstream provider facade and conditional bridges:
 - `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions`
 - `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
 
-The matrix-exp derivative names are the ambient finite-dimensional Frechet
-derivative layer only. They do not include the self-adjoint carrier
-derivative, the `CFC.log` derivative, Epstein, or Lieb/Tropp proofs.
+Interface audit: `matrixExpFDeriv`, `hasFDerivAt_matrix_exp`,
+`hasStrictFDerivAt_matrix_exp`, and `hasFDerivAt_matrix_exp_trunc` live on the
+ambient matrix space, while `matrixExpSelfAdjoint`,
+`matrixExpFDerivSelfAdjoint`, `matrixExpFDerivSelfAdjoint_spectral_equiv`,
+`hasFDerivAt_matrix_exp_selfAdjoint`, and
+`hasStrictFDerivAt_matrix_exp_selfAdjoint` live on the self-adjoint carrier.
+Main downstream Tropp/Bernstein/Epstein consumers currently use ambient,
+self-adjoint, PSD, and strictly positive facts in different places, but they do
+not yet consume a strictly positive carrier derivative API. This surface now
+includes `matrixExpFDerivSelfAdjoint_spectral_equiv`, but it still does not
+include the `CFC.log` derivative or a direct Epstein/Lieb/Tropp hookup.
 
 The provider layer is conditional: spectral endpoint monotonicity and the
 trace-MGF-to-Laplace contracts are proved bridge theorems, but they do not prove

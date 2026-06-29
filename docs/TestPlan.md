@@ -84,7 +84,8 @@ must run or what CI enforces. Archive old stage-by-stage test history in
 
 ## Provider-focused RandomMatrix Check
 
-Run this after changing the provider-facing Lieb/Tropp layer or the
+Run this after changing the provider-facing Lieb/Tropp layer, including the
+ambient or self-adjoint carrier matrix-exp derivative surface, or the
 provider-compressed natural-state tail route:
 
 ```bash

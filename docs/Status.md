@@ -401,19 +401,25 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
 Integrated `HighDimProb.RandomMatrix.LiebProvider` as a separate provider-facing
 import layer. It exposes the ambient matrix-exp Frechet derivative primitives
 `matrixExpFDeriv`, `hasFDerivAt_matrix_exp`,
-`hasStrictFDerivAt_matrix_exp`, and `hasFDerivAt_matrix_exp_trunc`, facade
-imports, the explicit
+`hasStrictFDerivAt_matrix_exp`, and `hasFDerivAt_matrix_exp_trunc`, the
+self-adjoint carrier restriction `matrixExpSelfAdjoint`,
+`matrixExpFDerivSelfAdjoint`, `matrixExpFDerivSelfAdjoint_spectral_equiv`,
+`hasFDerivAt_matrix_exp_selfAdjoint`, and
+`hasStrictFDerivAt_matrix_exp_selfAdjoint`, facade imports, the explicit
 `EpsteinAffineLineConcavity` conditional route, bounded finite-measure
 integrability providers, natural-history measurability from suffix-entry
 measurability, identity support domination, spectral endpoint monotonicity,
 thin trace-MGF-to-Laplace contracts, and the S16 natural-state tail wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`.
 
-This does not claim the self-adjoint carrier matrix-exp derivative, the
-`CFC.log` derivative, full Epstein/Lieb, Golden-Thompson, independence,
-conditional expectation, variance proxy, tail-event domination, or full Matrix
-Bernstein. The core aggregate and downstream examples remain separate from the
-provider import path.
+Interface audit: the migrated theorems stop at the ambient and self-adjoint
+matrix-exp derivative layers plus the self-adjoint spectral-equivalence
+primitive. Main downstream Tropp/Bernstein/Epstein consumers still consume
+ambient, self-adjoint, PSD, and strictly positive facts through other
+contracts; none of them currently consumes a strictly positive carrier
+derivative API. This does not yet claim the `CFC.log` derivative, full
+Epstein/Lieb, Golden-Thompson, independence, conditional expectation,
+variance proxy, tail-event domination, or full Matrix Bernstein.
 
 ## Verification
 

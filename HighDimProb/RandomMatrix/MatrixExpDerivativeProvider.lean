@@ -1,15 +1,17 @@
 import HighDimProb.RandomMatrix.TraceExpDerivative
+import HighDimProb.Analysis.SelfAdjointCarrier
+import Mathlib.Analysis.Matrix.Spectrum
 
 /-!
-# Ambient matrix-exp Frechet derivative provider
+# Matrix-exp Frechet derivative provider
 
 This module packages the ambient finite-dimensional Frechet derivative of the
-matrix exponential and the small analytic helper layer needed to state it in the
-main HighDimProb repository.
+matrix exponential together with its restriction to the self-adjoint carrier.
+It provides only the matrix-exp derivative layer needed before any local
+inverse route to `CFC.log`.
 
-It proves only the ambient matrix-exponential derivative and truncated-series
-helpers. It does not prove the self-adjoint carrier layer, the `CFC.log`
-derivative, Epstein, Lieb, or Tropp.
+It does not prove the `CFC.log` derivative, Epstein, Lieb, Tropp, or Matrix
+Bernstein.
 -/
 
 namespace HighDimProb
@@ -83,6 +85,106 @@ def matrixExpFDerivTerm
           (A ^ (j - i)) (A ^ i)) B) = _
   rw [ContinuousLinearMap.sum_apply]
   simp [ContinuousLinearMap.mulLeftRight_apply]
+
+private theorem matrix_conj_pow_of_mul_eq_one
+    {n : Nat} (U V A : Matrix (Fin n) (Fin n) Real)
+    (hUV : U * V = 1) (hVU : V * U = 1) (k : Nat) :
+    (U * A * V) ^ k = U * A ^ k * V := by
+  induction k with
+  | zero =>
+      simp [pow_zero, hUV, mul_assoc]
+  | succ k hk =>
+      calc
+        (U * A * V) ^ (k + 1) = (U * A * V) ^ k * (U * A * V) := by
+          rw [pow_succ]
+        _ = (U * A ^ k * V) * (U * A * V) := by rw [hk]
+        _ = U * A ^ k * (V * U) * A * V := by simp [mul_assoc]
+        _ = U * A ^ k * A * V := by simp [hVU, mul_assoc]
+        _ = U * A ^ (k + 1) * V := by simp [pow_succ, mul_assoc]
+
+/-- Conjugating both the base point and direction by inverse matrices conjugates
+each shifted derivative-series term by the same change of basis. -/
+private theorem matrixExpFDerivTerm_conj_apply_of_mul_eq_one
+    {n : Nat} (U V A B : Matrix (Fin n) (Fin n) Real)
+    (hUV : U * V = 1) (hVU : V * U = 1) (j : Nat) :
+    matrixExpFDerivTerm (U * A * V) j (U * B * V) =
+      U * matrixExpFDerivTerm A j B * V := by
+  rw [matrixExpFDerivTerm_apply, matrixExpFDerivTerm_apply]
+  have hsum :
+      (Finset.sum (Finset.range (j + 1)) fun i =>
+        (U * A * V) ^ (j - i) * (U * B * V) * (U * A * V) ^ i) =
+      U * (Finset.sum (Finset.range (j + 1)) fun i =>
+        A ^ (j - i) * B * A ^ i) * V := by
+    calc
+      (Finset.sum (Finset.range (j + 1)) fun i =>
+          (U * A * V) ^ (j - i) * (U * B * V) * (U * A * V) ^ i) =
+          Finset.sum (Finset.range (j + 1)) (fun i =>
+            U * (A ^ (j - i) * B * A ^ i) * V) := by
+              refine Finset.sum_congr rfl ?_
+              intro i hi
+              rw [matrix_conj_pow_of_mul_eq_one U V A hUV hVU (j - i)]
+              rw [matrix_conj_pow_of_mul_eq_one U V A hUV hVU i]
+              calc
+                (U * A ^ (j - i) * V) * (U * B * V) * (U * A ^ i * V) =
+                    U * A ^ (j - i) * (V * U) * B * (V * U) * A ^ i * V := by
+                      simp [mul_assoc]
+                _ = U * A ^ (j - i) * B * A ^ i * V := by
+                      simp [hVU, mul_assoc]
+                _ = U * (A ^ (j - i) * B * A ^ i) * V := by
+                      simp [mul_assoc]
+      _ = (Finset.sum (Finset.range (j + 1)) fun i =>
+            U * (A ^ (j - i) * B * A ^ i)) * V := by
+              rw [← Finset.sum_mul]
+      _ = (U * Finset.sum (Finset.range (j + 1)) fun i =>
+            A ^ (j - i) * B * A ^ i) * V := by
+              rw [← Finset.mul_sum]
+      _ = U * (Finset.sum (Finset.range (j + 1)) fun i =>
+            A ^ (j - i) * B * A ^ i) * V := by
+              rw [mul_assoc]
+  calc
+    (1 / (Nat.factorial (j + 1) : Real)) •
+        (Finset.sum (Finset.range (j + 1)) fun i =>
+          (U * A * V) ^ (j - i) * (U * B * V) * (U * A * V) ^ i) =
+        (1 / (Nat.factorial (j + 1) : Real)) •
+          (U * (Finset.sum (Finset.range (j + 1)) fun i =>
+            A ^ (j - i) * B * A ^ i) * V) := by
+              rw [hsum]
+    _ = U * ((1 / (Nat.factorial (j + 1) : Real)) •
+          (Finset.sum (Finset.range (j + 1)) fun i =>
+            A ^ (j - i) * B * A ^ i)) * V := by
+              simp [mul_assoc]
+
+/-- Entry formula for multiplying a matrix on both sides by powers of the same
+real diagonal matrix. This is the finite-dimensional bookkeeping step used by
+the diagonal-basis analysis of `matrixExpFDeriv`. -/
+private theorem diagonal_pow_mul_mul_diagonal_pow_apply
+    {n : Nat} (d : Fin n -> Real) (B : Matrix (Fin n) (Fin n) Real)
+    (p q : Fin n) (a b : Nat) :
+    (((Matrix.diagonal d) ^ a * B * (Matrix.diagonal d) ^ b) p q) =
+      d p ^ a * B p q * d q ^ b := by
+  rw [Matrix.diagonal_pow, Matrix.diagonal_pow]
+  simp [Matrix.mul_apply, Matrix.diagonal, mul_assoc]
+
+/-- Entry formula for one shifted derivative-series term of the matrix
+exponential at a real diagonal base point. -/
+private theorem matrixExpFDerivTerm_diagonal_apply
+    {n : Nat} (d : Fin n -> Real) (B : Matrix (Fin n) (Fin n) Real)
+    (p q : Fin n) (j : Nat) :
+    (matrixExpFDerivTerm (Matrix.diagonal d) j B) p q =
+      (1 / (Nat.factorial (j + 1) : Real)) *
+        (Finset.sum (Finset.range (j + 1)) fun i =>
+          d p ^ (j - i) * B p q * d q ^ i) := by
+  rw [matrixExpFDerivTerm_apply]
+  change (((1 / (Nat.factorial (j + 1) : Real)) •
+      (Finset.sum (Finset.range (j + 1)) fun i =>
+        (Matrix.diagonal d) ^ (j - i) * B * (Matrix.diagonal d) ^ i)) p q) =
+      (1 / (Nat.factorial (j + 1) : Real)) *
+        (Finset.sum (Finset.range (j + 1)) fun i =>
+          d p ^ (j - i) * B p q * d q ^ i)
+  simp only [Matrix.smul_apply, Matrix.sum_apply]
+  congr 1
+  exact Finset.sum_congr rfl (fun i _hi =>
+    diagonal_pow_mul_mul_diagonal_pow_apply d B p q (j - i) i)
 
 /-- Norm bound for one shifted derivative-series term of the full matrix
 exponential Frechet derivative. -/
@@ -179,6 +281,322 @@ def matrixExpFDeriv
       (Matrix (Fin n) (Fin n) Real) (Matrix (Fin n) (Fin n) Real) :=
   tsum (matrixExpFDerivTerm A)
 
+private theorem matrixExpFDeriv_conj_apply_of_mul_eq_one
+    {n : Nat} (U V A B : Matrix (Fin n) (Fin n) Real)
+    (hUV : U * V = 1) (hVU : V * U = 1) :
+    matrixExpFDeriv (U * A * V) (U * B * V) =
+      U * matrixExpFDeriv A B * V := by
+  let applyConj :=
+    ContinuousLinearMap.apply Real (Matrix (Fin n) (Fin n) Real) (U * B * V)
+  let applyBase := ContinuousLinearMap.apply Real (Matrix (Fin n) (Fin n) Real) B
+  let conjCLM :=
+    ContinuousLinearMap.mulLeftRight Real (Matrix (Fin n) (Fin n) Real) U V
+  have hCLMConj : Summable (matrixExpFDerivTerm (U * A * V)) :=
+    summable_matrixExpFDerivTerm (U * A * V)
+  have hCLMBase : Summable (matrixExpFDerivTerm A) :=
+    summable_matrixExpFDerivTerm A
+  have hValsBase : Summable (fun j : Nat => matrixExpFDerivTerm A j B) := by
+    have h := hCLMBase.map applyBase applyBase.continuous
+    simpa [Function.comp_def, applyBase] using h
+  have hBaseTsum : tsum (fun j : Nat => matrixExpFDerivTerm A j B) =
+      matrixExpFDeriv A B := by
+    rw [matrixExpFDeriv]
+    exact (by
+      simpa [applyBase] using
+        (ContinuousLinearMap.map_tsum applyBase hCLMBase).symm)
+  calc
+    matrixExpFDeriv (U * A * V) (U * B * V) =
+        applyConj (tsum (matrixExpFDerivTerm (U * A * V))) := by
+          simp [matrixExpFDeriv, applyConj]
+    _ = tsum (fun j : Nat => matrixExpFDerivTerm (U * A * V) j (U * B * V)) := by
+          simpa [applyConj] using ContinuousLinearMap.map_tsum applyConj hCLMConj
+    _ = tsum (fun j : Nat => U * matrixExpFDerivTerm A j B * V) := by
+          apply congrArg tsum
+          funext j
+          exact matrixExpFDerivTerm_conj_apply_of_mul_eq_one U V A B hUV hVU j
+    _ = tsum (fun j : Nat => conjCLM (matrixExpFDerivTerm A j B)) := by
+          apply congrArg tsum
+          funext j
+          simp [conjCLM, ContinuousLinearMap.mulLeftRight_apply]
+    _ = conjCLM (tsum (fun j : Nat => matrixExpFDerivTerm A j B)) := by
+          exact (ContinuousLinearMap.map_tsum conjCLM hValsBase).symm
+    _ = U * matrixExpFDeriv A B * V := by
+          rw [hBaseTsum]
+          simp [conjCLM, ContinuousLinearMap.mulLeftRight_apply]
+
+private theorem matrixExpFDeriv_conj_injective_of_mul_eq_one
+    {n : Nat} (U V A : Matrix (Fin n) (Fin n) Real)
+    (hUV : U * V = 1) (hVU : V * U = 1)
+    (hA : Function.Injective (matrixExpFDeriv A)) :
+    Function.Injective (matrixExpFDeriv (U * A * V)) := by
+  intro B C hBC
+  have hBase : V * (U * A * V) * U = A := by
+    calc
+      V * (U * A * V) * U = (V * U) * A * (V * U) := by
+        simp only [mul_assoc]
+      _ = A := by simp [hVU]
+  have hBpull :
+      matrixExpFDeriv A (V * B * U) =
+        V * matrixExpFDeriv (U * A * V) B * U := by
+    have h := matrixExpFDeriv_conj_apply_of_mul_eq_one V U (U * A * V) B hVU hUV
+    rw [hBase] at h
+    simpa [mul_assoc] using h
+  have hCpull :
+      matrixExpFDeriv A (V * C * U) =
+        V * matrixExpFDeriv (U * A * V) C * U := by
+    have h := matrixExpFDeriv_conj_apply_of_mul_eq_one V U (U * A * V) C hVU hUV
+    rw [hBase] at h
+    simpa [mul_assoc] using h
+  have hPulled : matrixExpFDeriv A (V * B * U) = matrixExpFDeriv A (V * C * U) := by
+    calc
+      matrixExpFDeriv A (V * B * U) = V * matrixExpFDeriv (U * A * V) B * U := hBpull
+      _ = V * matrixExpFDeriv (U * A * V) C * U := by rw [hBC]
+      _ = matrixExpFDeriv A (V * C * U) := hCpull.symm
+  have hDir : V * B * U = V * C * U := hA hPulled
+  have hBcancel : U * (V * B * U) * V = B := by
+    calc
+      U * (V * B * U) * V = (U * V) * B * (U * V) := by
+        simp only [mul_assoc]
+      _ = B := by simp [hUV]
+  have hCcancel : U * (V * C * U) * V = C := by
+    calc
+      U * (V * C * U) * V = (U * V) * C * (U * V) := by
+        simp only [mul_assoc]
+      _ = C := by simp [hUV]
+  calc
+    B = U * (V * B * U) * V := hBcancel.symm
+    _ = U * (V * C * U) * V := by rw [hDir]
+    _ = C := hCcancel
+
+private def matrixExpDividedDifferenceSeries (x y : Real) : Real :=
+  tsum (fun j : Nat =>
+    (1 / (Nat.factorial (j + 1) : Real)) *
+      (Finset.sum (Finset.range (j + 1)) fun i => x ^ (j - i) * y ^ i))
+/-- On the diagonal of the divided-difference kernel, the coefficient series
+collapses to the ordinary scalar exponential. -/
+private theorem matrixExpDividedDifferenceSeries_self (x : Real) :
+    matrixExpDividedDifferenceSeries x x = Real.exp x := by
+  rw [matrixExpDividedDifferenceSeries]
+  trans tsum (fun j : Nat => x ^ j / (Nat.factorial j : Real))
+  · congr
+    ext j
+    have hsum :
+        (Finset.sum (Finset.range (j + 1)) fun i => x ^ (j - i) * x ^ i) =
+          (j + 1 : Real) * x ^ j := by
+      calc
+        (Finset.sum (Finset.range (j + 1)) fun i => x ^ (j - i) * x ^ i) =
+            Finset.sum (Finset.range (j + 1)) (fun _i => x ^ j) := by
+          refine Finset.sum_congr rfl ?_
+          intro i hi
+          have hi_le : i <= j := Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
+          rw [← pow_add, Nat.sub_add_cancel hi_le]
+        _ = (j + 1 : Real) * x ^ j := by simp [nsmul_eq_mul]
+    rw [hsum]
+    rw [Nat.factorial_succ]
+    push_cast
+    have hj : (j : Real) + 1 ≠ 0 := by positivity
+    have hf : (Nat.factorial j : Real) ≠ 0 := by positivity
+    field_simp [hj, hf]
+  · rw [Real.exp_eq_exp_ℝ]
+    exact (congrFun (NormedSpace.exp_eq_tsum_div (𝔸 := Real)) x).symm
+
+/-- The diagonal divided-difference coefficient is strictly positive. -/
+private theorem matrixExpDividedDifferenceSeries_self_pos (x : Real) :
+    0 < matrixExpDividedDifferenceSeries x x := by
+  rw [matrixExpDividedDifferenceSeries_self]
+  exact Real.exp_pos x
+
+/-- The diagonal divided-difference coefficient is nonzero. -/
+private theorem matrixExpDividedDifferenceSeries_self_ne_zero (x : Real) :
+    matrixExpDividedDifferenceSeries x x ≠ 0 :=
+  (matrixExpDividedDifferenceSeries_self_pos x).ne'
+/-- Scalar exponential tail starting at degree one. -/
+private theorem tsum_pow_succ_div_factorial_succ (x : Real) :
+    tsum (fun j : Nat => x ^ (j + 1) / (Nat.factorial (j + 1) : Real)) =
+      Real.exp x - 1 := by
+  let f : Nat -> Real := fun k => x ^ k / (Nat.factorial k : Real)
+  have hsum : Summable f := by
+    simpa [f] using Real.summable_pow_div_factorial x
+  have hsplit := Summable.sum_add_tsum_nat_add (f := f) 1 hsum
+  have hexp : Real.exp x = tsum f := by
+    rw [Real.exp_eq_exp_ℝ]
+    simpa [f] using (congrFun (NormedSpace.exp_eq_tsum_div (𝔸 := Real)) x)
+  have htail : tsum (fun j : Nat => f (j + 1)) = tsum f - 1 := by
+    have hsum1 : Finset.sum (Finset.range 1) f = 1 := by simp [f]
+    linarith
+  simp [f, htail, hexp]
+
+/-- Finite geometric divided-difference identity in the orientation used by
+`matrixExpDividedDifferenceSeries`, under `x < y`. -/
+private theorem finite_geometric_dividedDifference_sum_of_lt {x y : Real}
+    (hxy : x < y) (j : Nat) :
+    (Finset.sum (Finset.range (j + 1)) fun i => x ^ (j - i) * y ^ i) =
+      (y ^ (j + 1) - x ^ (j + 1)) / (y - x) := by
+  have hmul := geom_sum₂_mul_of_ge (x := y) (y := x) hxy.le (j + 1)
+  have hsum :
+      (Finset.sum (Finset.range (j + 1)) fun i => x ^ (j - i) * y ^ i) =
+        Finset.sum (Finset.range (j + 1)) (fun i => y ^ i * x ^ (j + 1 - 1 - i)) := by
+    refine Finset.sum_congr rfl ?_
+    intro i _hi
+    rw [Nat.add_sub_cancel]
+    ring
+  rw [hsum]
+  exact eq_div_of_mul_eq (sub_ne_zero.mpr hxy.ne') hmul
+
+/-- Symmetry of the exponential divided-difference coefficient. -/
+private theorem matrixExpDividedDifferenceSeries_comm (x y : Real) :
+    matrixExpDividedDifferenceSeries x y = matrixExpDividedDifferenceSeries y x := by
+  rw [matrixExpDividedDifferenceSeries, matrixExpDividedDifferenceSeries]
+  congr
+  ext j
+  congr 1
+  rw [← Finset.sum_range_reflect (fun i : Nat => y ^ (j - i) * x ^ i) (j + 1)]
+  refine Finset.sum_congr rfl ?_
+  intro i hi
+  have hi_le : i <= j := Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
+  rw [Nat.add_sub_cancel, Nat.sub_sub_self hi_le]
+  ring
+
+/-- Closed form of the exponential divided-difference coefficient when
+`x < y`. -/
+private theorem matrixExpDividedDifferenceSeries_of_lt {x y : Real} (hxy : x < y) :
+    matrixExpDividedDifferenceSeries x y = (Real.exp y - Real.exp x) / (y - x) := by
+  rw [matrixExpDividedDifferenceSeries]
+  trans tsum (fun j : Nat =>
+      (y ^ (j + 1) / (Nat.factorial (j + 1) : Real) -
+        x ^ (j + 1) / (Nat.factorial (j + 1) : Real)) / (y - x))
+  · congr
+    ext j
+    rw [finite_geometric_dividedDifference_sum_of_lt hxy j]
+    have hden : y - x ≠ 0 := sub_ne_zero.mpr hxy.ne'
+    have hfac : (Nat.factorial (j + 1) : Real) ≠ 0 := by positivity
+    field_simp [hden, hfac]
+  · change (tsum (fun j : Nat =>
+        (y ^ (j + 1) / (Nat.factorial (j + 1) : Real) -
+          x ^ (j + 1) / (Nat.factorial (j + 1) : Real)) * (y - x)⁻¹)) =
+        (Real.exp y - Real.exp x) * (y - x)⁻¹
+    rw [tsum_mul_right]
+    have hy : Summable (fun j : Nat => y ^ (j + 1) / (Nat.factorial (j + 1) : Real)) := by
+      let f : Nat -> Real := fun k => y ^ k / (Nat.factorial k : Real)
+      have hfull : Summable f := by simpa [f] using Real.summable_pow_div_factorial y
+      simpa [f] using ((summable_nat_add_iff (G := Real) (f := f) 1).2 hfull)
+    have hx : Summable (fun j : Nat => x ^ (j + 1) / (Nat.factorial (j + 1) : Real)) := by
+      let f : Nat -> Real := fun k => x ^ k / (Nat.factorial k : Real)
+      have hfull : Summable f := by simpa [f] using Real.summable_pow_div_factorial x
+      simpa [f] using ((summable_nat_add_iff (G := Real) (f := f) 1).2 hfull)
+    rw [Summable.tsum_sub hy hx]
+    rw [tsum_pow_succ_div_factorial_succ y]
+    rw [tsum_pow_succ_div_factorial_succ x]
+    ring
+
+/-- The exponential divided-difference coefficient is strictly positive for all
+real arguments. -/
+private theorem matrixExpDividedDifferenceSeries_pos (x y : Real) :
+    0 < matrixExpDividedDifferenceSeries x y := by
+  rcases lt_trichotomy x y with hxy | hxy | hyx
+  · rw [matrixExpDividedDifferenceSeries_of_lt hxy]
+    exact div_pos (sub_pos.mpr ((Real.exp_lt_exp).2 hxy)) (sub_pos.mpr hxy)
+  · subst hxy
+    exact matrixExpDividedDifferenceSeries_self_pos x
+  · rw [matrixExpDividedDifferenceSeries_comm x y]
+    rw [matrixExpDividedDifferenceSeries_of_lt hyx]
+    exact div_pos (sub_pos.mpr ((Real.exp_lt_exp).2 hyx)) (sub_pos.mpr hyx)
+
+/-- The exponential divided-difference coefficient is nonzero for all real
+arguments. -/
+private theorem matrixExpDividedDifferenceSeries_ne_zero (x y : Real) :
+    matrixExpDividedDifferenceSeries x y ≠ 0 :=
+  (matrixExpDividedDifferenceSeries_pos x y).ne'
+/-- Entry formula for the full matrix-exponential Frechet derivative at a real
+diagonal base point. The coefficient series is the divided-difference form that
+will later be used to prove invertibility of the self-adjoint-carrier
+derivative. -/
+private theorem matrixExpFDeriv_diagonal_apply
+    {n : Nat} (d : Fin n -> Real) (B : Matrix (Fin n) (Fin n) Real)
+    (p q : Fin n) :
+    (matrixExpFDeriv (Matrix.diagonal d) B) p q =
+      tsum (fun j : Nat =>
+        (1 / (Nat.factorial (j + 1) : Real)) *
+          (Finset.sum (Finset.range (j + 1)) fun i =>
+            d p ^ (j - i) * B p q * d q ^ i)) := by
+  let applyB := ContinuousLinearMap.apply Real (Matrix (Fin n) (Fin n) Real) B
+  let entryL : Matrix (Fin n) (Fin n) Real →ₗ[Real] Real :=
+    { toFun := fun M : Matrix (Fin n) (Fin n) Real => M p q
+      map_add' := by intro X Y; rfl
+      map_smul' := by intro c X; rfl }
+  let entry : Matrix (Fin n) (Fin n) Real →L[Real] Real :=
+    LinearMap.toContinuousLinearMap entryL
+  have hCLM : Summable (matrixExpFDerivTerm (Matrix.diagonal d)) :=
+    summable_matrixExpFDerivTerm (Matrix.diagonal d)
+  have hMat : Summable (fun j : Nat => matrixExpFDerivTerm (Matrix.diagonal d) j B) := by
+    have h := hCLM.map applyB applyB.continuous
+    simpa [Function.comp_def, applyB] using h
+  calc
+    (matrixExpFDeriv (Matrix.diagonal d) B) p q =
+        entry (applyB (tsum (matrixExpFDerivTerm (Matrix.diagonal d)))) := by
+          simp [matrixExpFDeriv, applyB, entry, entryL]
+    _ = entry (tsum (fun j : Nat => matrixExpFDerivTerm (Matrix.diagonal d) j B)) := by
+          have hmap := ContinuousLinearMap.map_tsum applyB hCLM
+          exact congrArg entry (by simpa [applyB] using hmap)
+    _ = tsum (fun j : Nat => entry (matrixExpFDerivTerm (Matrix.diagonal d) j B)) := by
+          rw [ContinuousLinearMap.map_tsum entry hMat]
+    _ = tsum (fun j : Nat =>
+          (1 / (Nat.factorial (j + 1) : Real)) *
+            (Finset.sum (Finset.range (j + 1)) fun i =>
+              d p ^ (j - i) * B p q * d q ^ i)) := by
+          congr
+          ext j
+          change (matrixExpFDerivTerm (Matrix.diagonal d) j B) p q = _
+          exact matrixExpFDerivTerm_diagonal_apply d B p q j
+/-- Diagonal-basis entry formula for the full matrix-exponential Frechet
+derivative, factored through the divided-difference series coefficient. -/
+private theorem matrixExpFDeriv_diagonal_apply_eq_dividedDifferenceSeries_mul
+    {n : Nat} (d : Fin n -> Real) (B : Matrix (Fin n) (Fin n) Real)
+    (p q : Fin n) :
+    (matrixExpFDeriv (Matrix.diagonal d) B) p q =
+      matrixExpDividedDifferenceSeries (d p) (d q) * B p q := by
+  rw [matrixExpFDeriv_diagonal_apply]
+  simp [matrixExpDividedDifferenceSeries]
+  trans tsum (fun j : Nat =>
+      ((1 / (Nat.factorial (j + 1) : Real)) *
+        (Finset.sum (Finset.range (j + 1)) fun i => d p ^ (j - i) * d q ^ i)) * B p q)
+  · congr
+    ext j
+    have hsum :
+        (Finset.sum (Finset.range (j + 1)) fun i => d p ^ (j - i) * B p q * d q ^ i) =
+          (Finset.sum (Finset.range (j + 1)) fun i => d p ^ (j - i) * d q ^ i) * B p q := by
+      rw [Finset.sum_mul]
+      exact Finset.sum_congr rfl (fun i _hi => by ring)
+    rw [hsum]
+    ring
+  · rw [tsum_mul_right]
+    simp [one_div]
+/-- The matrix-exponential Frechet derivative at a real diagonal base point is
+injective on the full matrix space. In the standard matrix-unit basis, it acts
+entrywise by the strictly positive divided-difference coefficients above. -/
+private theorem matrixExpFDeriv_diagonal_injective
+    {n : Nat} (d : Fin n -> Real) :
+    Function.Injective (matrixExpFDeriv (Matrix.diagonal d)) := by
+  intro B C hBC
+  ext p q
+  have hentry : (matrixExpFDeriv (Matrix.diagonal d) B) p q =
+      (matrixExpFDeriv (Matrix.diagonal d) C) p q := by
+    simpa using congrFun (congrFun hBC p) q
+  have hscaled : matrixExpDividedDifferenceSeries (d p) (d q) * B p q =
+      matrixExpDividedDifferenceSeries (d p) (d q) * C p q := by
+    simpa [matrixExpFDeriv_diagonal_apply_eq_dividedDifferenceSeries_mul] using hentry
+  exact mul_left_cancel₀ (matrixExpDividedDifferenceSeries_ne_zero (d p) (d q)) hscaled
+
+/-- Diagonal injectivity of the matrix-exponential Frechet derivative,
+transported across an inverse change of basis. This is the ambient form of
+the spectral-conjugation transfer needed for the `CFC.log` inverse route. -/
+private theorem matrixExpFDeriv_conj_diagonal_injective_of_mul_eq_one
+    {n : Nat} (U V : Matrix (Fin n) (Fin n) Real) (d : Fin n -> Real)
+    (hUV : U * V = 1) (hVU : V * U = 1) :
+    Function.Injective (matrixExpFDeriv (U * Matrix.diagonal d * V)) :=
+  matrixExpFDeriv_conj_injective_of_mul_eq_one U V (Matrix.diagonal d) hUV hVU
+    (matrixExpFDeriv_diagonal_injective d)
+
 /-- Frechet derivative of `fun X => X ^ k` in the standard noncommutative
 cyclic-sum form. -/
 theorem hasFDerivAt_matrix_pow_sum
@@ -223,6 +641,57 @@ private theorem hasFDerivAt_matrix_exp_series_term
   refine h.congr_fderiv ?_
   rw [matrixExpFDerivTerm, hsum]
   rfl
+
+/-- Each shifted matrix-exponential derivative term preserves self-adjointness
+when evaluated at a self-adjoint base point in a self-adjoint direction. -/
+private theorem isSelfAdjoint_matrixExpFDerivTerm_apply
+    {n j : Nat} {A B : Matrix (Fin n) (Fin n) Real}
+    (hA : IsSelfAdjoint A) (hB : IsSelfAdjoint B) :
+    IsSelfAdjoint (matrixExpFDerivTerm A j B) := by
+  rw [matrixExpFDerivTerm_apply]
+  refine IsSelfAdjoint.smul (IsSelfAdjoint.all _) ?_
+  rw [IsSelfAdjoint]
+  rw [star_sum]
+  simp only [star_mul, star_pow, hA.star_eq, hB.star_eq, mul_assoc]
+  rw [(Finset.sum_range_reflect (fun i : Nat => A ^ i * (B * A ^ (j - i))) (j + 1)).symm]
+  refine Finset.sum_congr rfl ?_
+  intro i hi
+  have hi_le : i <= j := Nat.lt_succ_iff.mp (Finset.mem_range.mp hi)
+  simp [Nat.sub_sub_self hi_le]
+
+/-- The matrix exponential Frechet derivative preserves self-adjointness when
+both the base point and direction are self-adjoint. -/
+private theorem isSelfAdjoint_matrixExpFDeriv_apply
+    {n : Nat} {A B : Matrix (Fin n) (Fin n) Real}
+    (hA : IsSelfAdjoint A) (hB : IsSelfAdjoint B) :
+    IsSelfAdjoint (matrixExpFDeriv A B) := by
+  have hval : Summable (fun j : Nat => matrixExpFDerivTerm A j B) := by
+    have h := (summable_matrixExpFDerivTerm A).map
+      (ContinuousLinearMap.apply Real (Matrix (Fin n) (Fin n) Real) B)
+      (ContinuousLinearMap.continuous _)
+    simpa [Function.comp_def] using h
+  have hClosed : IsClosed (selfAdjoint (Matrix (Fin n) (Fin n) Real) :
+      Set (Matrix (Fin n) (Fin n) Real)) := by
+    simpa [selfAdjoint.mem_iff] using
+      (isClosed_eq (continuous_star :
+        Continuous fun X : Matrix (Fin n) (Fin n) Real => star X)
+        continuous_id : IsClosed {X : Matrix (Fin n) (Fin n) Real | star X = X})
+  rw [matrixExpFDeriv]
+  change IsSelfAdjoint
+    (((ContinuousLinearMap.apply Real (Matrix (Fin n) (Fin n) Real) B)
+      (tsum (matrixExpFDerivTerm A))))
+  rw [ContinuousLinearMap.map_tsum
+    (ContinuousLinearMap.apply Real (Matrix (Fin n) (Fin n) Real) B)
+    (summable_matrixExpFDerivTerm A)]
+  change Set.Mem (selfAdjoint (Matrix (Fin n) (Fin n) Real) :
+      Set (Matrix (Fin n) (Fin n) Real))
+    (tsum (fun j : Nat => matrixExpFDerivTerm A j B))
+  exact hClosed.mem_of_tendsto hval.hasSum.tendsto_sum_nat
+    (Filter.Eventually.of_forall fun m => by
+      change IsSelfAdjoint
+        (Finset.sum (Finset.range m) fun j => matrixExpFDerivTerm A j B)
+      exact isSelfAdjoint_sum (Finset.range m) (fun j _hj =>
+        isSelfAdjoint_matrixExpFDerivTerm_apply (A := A) (B := B) hA hB))
 
 /-- The matrix-exponential power series is summable at every matrix. -/
 private theorem summable_matrix_exp_series_full
@@ -354,6 +823,136 @@ theorem hasStrictFDerivAt_matrix_exp
   have hStrict := hAnalytic.hasStrictFDerivAt
   have hfderiv := (hasFDerivAt_matrix_exp A).fderiv
   simpa [hfderiv] using hStrict
+
+
+/-- Matrix exponential as a map on the self-adjoint carrier. -/
+def matrixExpSelfAdjoint
+    {n : Nat} (A : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+    selfAdjoint (Matrix (Fin n) (Fin n) Real) :=
+  Subtype.mk (NormedSpace.exp (A : Matrix (Fin n) (Fin n) Real)) A.2.exp
+
+@[simp]
+private theorem matrixExpSelfAdjoint_coe
+    {n : Nat} (A : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+    (matrixExpSelfAdjoint A : Matrix (Fin n) (Fin n) Real) =
+      NormedSpace.exp (A : Matrix (Fin n) (Fin n) Real) :=
+  rfl
+
+/-- The Frechet derivative of matrix exponential, restricted to self-adjoint
+directions and codomain. -/
+def matrixExpFDerivSelfAdjoint
+    {n : Nat} (A : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+    ContinuousLinearMap (RingHom.id Real)
+      (selfAdjoint (Matrix (Fin n) (Fin n) Real))
+      (selfAdjoint (Matrix (Fin n) (Fin n) Real)) :=
+  (selfAdjoint.submoduleContinuousLinearEquiv
+      (A := Matrix (Fin n) (Fin n) Real)).symm.toContinuousLinearMap.comp
+    (((matrixExpFDeriv (A : Matrix (Fin n) (Fin n) Real)).comp
+        (selfAdjoint.subtypeL (A := Matrix (Fin n) (Fin n) Real))).codRestrict
+      (selfAdjoint.submodule Real (Matrix (Fin n) (Fin n) Real))
+      (fun B => isSelfAdjoint_matrixExpFDeriv_apply A.2 B.2))
+
+@[simp]
+private theorem matrixExpFDerivSelfAdjoint_apply_coe
+    {n : Nat} (A B : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+    (matrixExpFDerivSelfAdjoint A B : Matrix (Fin n) (Fin n) Real) =
+      matrixExpFDeriv (A : Matrix (Fin n) (Fin n) Real)
+        (B : Matrix (Fin n) (Fin n) Real) := by
+  simp [matrixExpFDerivSelfAdjoint]
+
+private theorem matrixExpFDerivSelfAdjoint_conj_diagonal_injective_of_mul_eq_one
+    {n : Nat} (X : selfAdjoint (Matrix (Fin n) (Fin n) Real))
+    (U V : Matrix (Fin n) (Fin n) Real) (d : Fin n -> Real)
+    (hX : (X : Matrix (Fin n) (Fin n) Real) = U * Matrix.diagonal d * V)
+    (hUV : U * V = 1) (hVU : V * U = 1) :
+    Function.Injective (matrixExpFDerivSelfAdjoint X) := by
+  intro B C hBC
+  apply Subtype.ext
+  apply matrixExpFDeriv_conj_diagonal_injective_of_mul_eq_one U V d hUV hVU
+  have hamb := congrArg (fun Y : selfAdjoint (Matrix (Fin n) (Fin n) Real) =>
+    (Y : Matrix (Fin n) (Fin n) Real)) hBC
+  simpa [matrixExpFDerivSelfAdjoint_apply_coe, hX] using hamb
+
+private theorem selfAdjoint_spectral_conj_diagonal_eq
+    {n : Nat} (X : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+    (X : Matrix (Fin n) (Fin n) Real) =
+      (X.2.isHermitian.eigenvectorUnitary : Matrix (Fin n) (Fin n) Real) *
+        Matrix.diagonal X.2.isHermitian.eigenvalues *
+        star (X.2.isHermitian.eigenvectorUnitary : Matrix (Fin n) (Fin n) Real) := by
+  simpa [Unitary.conjStarAlgAut_apply] using X.2.isHermitian.spectral_theorem
+
+/-- The self-adjoint carrier exponential derivative is injective at every
+self-adjoint base point. The proof packages Mathlib's finite-dimensional
+spectral theorem into the conjugated-diagonal transfer already proved above. -/
+private theorem matrixExpFDerivSelfAdjoint_spectral_injective
+    {n : Nat} (X : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+    Function.Injective (matrixExpFDerivSelfAdjoint X) := by
+  refine matrixExpFDerivSelfAdjoint_conj_diagonal_injective_of_mul_eq_one X
+    (X.2.isHermitian.eigenvectorUnitary : Matrix (Fin n) (Fin n) Real)
+    (star (X.2.isHermitian.eigenvectorUnitary : Matrix (Fin n) (Fin n) Real))
+    X.2.isHermitian.eigenvalues ?_ ?_ ?_
+  · exact selfAdjoint_spectral_conj_diagonal_eq X
+  · simp
+  · simp
+
+/-- Continuous linear equivalence form of the self-adjoint carrier exponential
+derivative at an arbitrary self-adjoint base point. This is the inverse-function
+primitive needed by the general carrier `CFC.log` strict derivative. -/
+noncomputable def matrixExpFDerivSelfAdjoint_spectral_equiv
+    {n : Nat} (X : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+    ContinuousLinearEquiv (RingHom.id Real)
+      (selfAdjoint (Matrix (Fin n) (Fin n) Real))
+      (selfAdjoint (Matrix (Fin n) (Fin n) Real)) :=
+  (LinearEquiv.ofInjectiveEndo
+      (matrixExpFDerivSelfAdjoint X).toLinearMap
+      (matrixExpFDerivSelfAdjoint_spectral_injective X)).toContinuousLinearEquiv
+
+/-- Carrier-form Frechet derivative of matrix exponential on the self-adjoint
+subspace. This is the self-adjoint carrier restriction of the matrix
+exponential only; it is not a `CFC.log` derivative or an Epstein/Lieb/Tropp
+statement. -/
+theorem hasFDerivAt_matrix_exp_selfAdjoint
+    {n : Nat} (A : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+    HasFDerivAt
+      (fun X : selfAdjoint (Matrix (Fin n) (Fin n) Real) => matrixExpSelfAdjoint X)
+      (matrixExpFDerivSelfAdjoint A)
+      A := by
+  have hAmbient :
+      HasFDerivAt
+        (fun X : selfAdjoint (Matrix (Fin n) (Fin n) Real) =>
+          NormedSpace.exp (X : Matrix (Fin n) (Fin n) Real))
+        ((matrixExpFDeriv (A : Matrix (Fin n) (Fin n) Real)).comp
+          (selfAdjoint.subtypeL (A := Matrix (Fin n) (Fin n) Real)))
+        A :=
+    (hasFDerivAt_matrix_exp (A : Matrix (Fin n) (Fin n) Real)).comp A
+      (selfAdjoint.subtypeL (A := Matrix (Fin n) (Fin n) Real)).hasFDerivAt
+  exact HasFDerivAt.of_isLittleO (by
+    rw [<- Asymptotics.isLittleO_norm_left]
+    simpa [matrixExpSelfAdjoint, matrixExpFDerivSelfAdjoint_apply_coe] using
+      hAmbient.isLittleO.norm_left)
+
+/-- Carrier-form strict Frechet derivative of matrix exponential on the
+self-adjoint subspace. This remains only the matrix-exp side of the future
+`CFC.log` derivative route. -/
+theorem hasStrictFDerivAt_matrix_exp_selfAdjoint
+    {n : Nat} (A : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+    HasStrictFDerivAt
+      (fun X : selfAdjoint (Matrix (Fin n) (Fin n) Real) => matrixExpSelfAdjoint X)
+      (matrixExpFDerivSelfAdjoint A)
+      A := by
+  have hAmbient :
+      HasStrictFDerivAt
+        (fun X : selfAdjoint (Matrix (Fin n) (Fin n) Real) =>
+          NormedSpace.exp (X : Matrix (Fin n) (Fin n) Real))
+        ((matrixExpFDeriv (A : Matrix (Fin n) (Fin n) Real)).comp
+          (selfAdjoint.subtypeL (A := Matrix (Fin n) (Fin n) Real)))
+        A :=
+    (hasStrictFDerivAt_matrix_exp (A : Matrix (Fin n) (Fin n) Real)).comp A
+      (selfAdjoint.subtypeL (A := Matrix (Fin n) (Fin n) Real)).hasStrictFDerivAt
+  exact HasStrictFDerivAt.of_isLittleO (by
+    rw [<- Asymptotics.isLittleO_norm_left]
+    simpa [matrixExpSelfAdjoint, matrixExpFDerivSelfAdjoint_apply_coe] using
+      hAmbient.isLittleO.norm_left)
 
 /-- Frechet derivative of the finite truncated matrix-exponential polynomial.
 

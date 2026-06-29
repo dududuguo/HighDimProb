@@ -92,8 +92,15 @@ Provider-facing import:
 Provider theorem surfaces:
 
 - `matrixExpFDeriv`, `hasFDerivAt_matrix_exp`,
-  `hasStrictFDerivAt_matrix_exp`, and `hasFDerivAt_matrix_exp_trunc`, the
-  ambient finite-dimensional matrix-exponential Frechet derivative layer only.
+  `hasStrictFDerivAt_matrix_exp`, `hasFDerivAt_matrix_exp_trunc`,
+  `matrixExpSelfAdjoint`, `matrixExpFDerivSelfAdjoint`,
+  `matrixExpFDerivSelfAdjoint_spectral_equiv`,
+  `hasFDerivAt_matrix_exp_selfAdjoint`, and
+  `hasStrictFDerivAt_matrix_exp_selfAdjoint`, the ambient and self-adjoint
+  carrier finite-dimensional matrix-exponential Frechet derivative layers plus
+  the self-adjoint spectral-equivalence primitive. Main downstream consumers
+  still do not consume a strictly positive carrier derivative API, and this
+  surface does not yet include the `CFC.log` derivative.
 - `lambdaMaxOrdered_le_of_matrixLE_selfAdjoint` and
   `lambdaMinOrdered_le_of_matrixLE_selfAdjoint`, ordered spectral endpoint
   monotonicity under explicit self-adjointness and `MatrixLE`.

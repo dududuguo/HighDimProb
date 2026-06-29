@@ -6,6 +6,11 @@ import HighDimProb.RandomMatrix.ConcentrationStatements
 #check HighDimProb.matrixExpFDeriv
 #check HighDimProb.hasFDerivAt_matrix_exp
 #check HighDimProb.hasStrictFDerivAt_matrix_exp
+#check HighDimProb.matrixExpSelfAdjoint
+#check HighDimProb.matrixExpFDerivSelfAdjoint
+#check HighDimProb.matrixExpFDerivSelfAdjoint_spectral_equiv
+#check HighDimProb.hasFDerivAt_matrix_exp_selfAdjoint
+#check HighDimProb.hasStrictFDerivAt_matrix_exp_selfAdjoint
 #check HighDimProb.troppLogExpComparisonToK_of_providerLogOrder
 #check HighDimProb.EpsteinAffineLineConcavity
 #check HighDimProb.troppMasterTraceMGFStep_of_epsteinAffineLine
