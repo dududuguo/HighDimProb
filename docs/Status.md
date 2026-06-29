@@ -408,8 +408,12 @@ self-adjoint carrier restriction `matrixExpSelfAdjoint`,
 `hasStrictFDerivAt_matrix_exp_selfAdjoint`, the strictly-positive carrier
 `CFC.log` first-derivative layer (`cfcLogSelfAdjoint`, `CFCLog.derivSAAt`,
 `CFCLog.lineDeriv`, `CFCLog.hasDerivAt_line`,
-`exists_hasDerivAt_cfcLog_affineLine_of_strictlyPositive`), the derivative-level
-Epstein consumer layer (`cfcLogLineDerivTraceSecond`, `EpsteinLine.traceSlope`,
+`exists_hasDerivAt_cfcLog_affineLine_of_strictlyPositive`), the short
+resolvent derivative layer (`hasDerivAt_inverse_affineLine`,
+`trace_resolvent_derivative_cycle`,
+`hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle`, and strict-positive
+specializations), the derivative-level Epstein consumer layer
+(`cfcLogLineDerivTraceSecond`, `EpsteinLine.traceSlope`,
 `EpsteinLine.traceSecond`, `EpsteinLine.concavity_of_traceSecond_nonpos_of_lineDerivSA`,
 and `_of_eval`), facade imports, the explicit `EpsteinAffineLineConcavity`
 conditional route, bounded finite-measure integrability providers,
@@ -421,12 +425,21 @@ contracts, and the S16 natural-state tail wrapper
 Interface audit: the migrated theorems now cover the ambient and self-adjoint
 matrix-exp derivative layers, the strictly-positive self-adjoint carrier
 `CFC.log` first derivative, and the derivative-level Epstein reductions that
-consume that first-derivative API. The new `CFCLog.DerivOp` name is only
-pointwise derivative bookkeeping; it is not a stable second-level Frechet
-codomain. The provider layer still does not prove the Epstein sign theorem,
-full Epstein/Lieb, Golden-Thompson, the resolvent route, independence,
-conditional expectation, variance proxy, tail-event domination, or full Matrix
-Bernstein.
+consume that first-derivative API. The short resolvent provider layer now adds
+inverse and trace-resolvent affine-line derivative bookkeeping, but it still
+does not prove a log-resolvent representation or an Epstein sign theorem. The
+honest finite-measure trace-exp side now also exposes
+`troppCurrentRandomStep_operatorNorm_le_of_summand_bound`,
+`troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds`, and the
+finite-measure wrappers
+`traceExpIntegrable_troppStateHistory_add_step_of_summand_and_comparison_bounds_finiteMeasure`
+/ `traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure`.
+The hardbone `traceExpIntegrable_troppStateHistory_add_*_statement` targets
+remain typed contracts and were not tightened in this pass. The new
+`CFCLog.DerivOp` name is only pointwise derivative bookkeeping; it is not a
+stable second-level Frechet codomain. The provider layer still does not prove
+full Epstein/Lieb, Golden-Thompson, independence, conditional expectation,
+variance proxy, tail-event domination, or full Matrix Bernstein.
 
 ## Verification
 

@@ -98,9 +98,17 @@ Provider theorem surfaces:
   `hasFDerivAt_matrix_exp_selfAdjoint`, and
   `hasStrictFDerivAt_matrix_exp_selfAdjoint`, the ambient and self-adjoint
   carrier finite-dimensional matrix-exponential Frechet derivative layers plus
-  the self-adjoint spectral-equivalence primitive. Main downstream consumers
-  still do not consume a strictly positive carrier derivative API, and this
-  surface does not yet include the `CFC.log` derivative.
+  the self-adjoint spectral-equivalence primitive.
+- `cfcLogSelfAdjoint`, `CFCLog.derivSAAt`, `CFCLog.lineDeriv`,
+  `CFCLog.hasDerivAt_line`,
+  `exists_hasDerivAt_cfcLog_affineLine_of_strictlyPositive`, and
+  `hasDerivAt_cfcLog_affineLine_of_strictlyPositive`, the strictly-positive
+  self-adjoint carrier first-order `CFC.log` derivative layer. This is not a
+  second-order sign theorem.
+- `hasDerivAt_inverse_affineLine`,
+  `hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle`, and their
+  strict-positive / identity-line specializations, the short inverse and
+  trace-resolvent derivative layer. This is not a log-resolvent representation.
 - `lambdaMaxOrdered_le_of_matrixLE_selfAdjoint` and
   `lambdaMinOrdered_le_of_matrixLE_selfAdjoint`, ordered spectral endpoint
   monotonicity under explicit self-adjointness and `MatrixLE`.
@@ -108,6 +116,15 @@ Provider theorem surfaces:
   `matrixBernsteinTraceMGFToLaplaceContract`, and
   `matrixBernsteinTraceMGFToLaplaceContract_under_primitives`, thin
   trace-MGF-to-Laplace contracts under explicit premises.
+- `troppNaturalHistoryMeasurable_of_suffix_entry_measurable`, the conditional
+  suffix-entry measurability bridge for natural Tropp histories.
+- `matrixExpScaledIntegrable_of_provider_finiteMeasure`,
+  `traceExpIntegrable_troppStateHistory_add_step_of_operatorNormBounds_finiteMeasure`,
+  `traceExpIntegrable_troppStateHistory_add_K_of_operatorNormBounds_finiteMeasure`,
+  `troppCurrentRandomStep_operatorNorm_le_of_summand_bound`,
+  `troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds`, and the
+  summand/comparison-bound finite-measure trace-exp wrappers, bounded
+  replacements that do not discharge weaker unbounded hardbone statements.
 - `EpsteinAffineLineConcavity`, an explicit analytic assumption. It is not
   proved here.
 - `liebTraceExpConcavity_of_epsteinAffineLine` and
@@ -126,8 +143,8 @@ Provider theorem surfaces:
 
 Non-goals for this provider layer:
 
-- It does not prove the self-adjoint carrier matrix-exp derivative, the
-  `CFC.log` derivative, the unconditional Epstein affine-line theorem, full
-  Lieb concavity, Golden-Thompson, history/current independence, conditional
+- It does not prove a log-resolvent representation, the Epstein trace-second
+  sign theorem, the unconditional Epstein affine-line theorem, full Lieb
+  concavity, Golden-Thompson, history/current independence, conditional
   expectation, variance-proxy normalization, full-sum trace-integrability,
   tail-event domination, or full Matrix Bernstein.

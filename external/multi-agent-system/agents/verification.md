@@ -71,7 +71,7 @@ Fixes compilation errors that are syntactic or type-level (not proof gaps).
 | `type_mismatch` | Insert explicit type coercion (`(X : ℝ)`) |
 | `unknown_identifier` | Add missing `import` or qualify name |
 | `synthesize_placeholder` | Add typeclass instance argument, or open namespace |
-| `unknown_identifier` (typo) | Fuzzy-match against known identifiers (codebase-memory), suggest correction |
+| `unknown_identifier` (typo) | Fuzzy-match against known identifiers with lean-local-search, suggest correction |
 
 ### Process
 

@@ -8,8 +8,6 @@ imports, and the main documentation in `README.md` and `docs/`.
 Current contents:
 
 - `theory-roadmap/`: optional Git submodule with theory-side planning material.
-- `codebase-memory/`: generated code knowledge-graph artifacts for agent and
-  maintainer workflows.
 - `multi-agent-system/`: experimental planning notes for theory-to-Lean work.
 - `validation/`: selected validation and milestone logs from development runs.
 

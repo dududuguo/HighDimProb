@@ -144,6 +144,188 @@ theorem traceExpIntegrable_troppStateHistory_add_K_of_operatorNormBounds_finiteM
       RH RK
       (hHist i) hKrand (hHistBound i) (hKBound i)
 
+private theorem comparisonMatrixPrefixSum_deterministicOperatorNorm_le
+    {m n : Nat} (K : Fin m -> Matrix (Fin n) (Fin n) Real) (RK : Real)
+    (hRK : 0 <= RK)
+    (hK : forall j, deterministicOperatorNorm (K j) <= RK) :
+    forall k : Fin (m + 1),
+      deterministicOperatorNorm (comparisonMatrixPrefixSum K k) <= m * RK := by
+  intro k
+  rw [comparisonMatrixPrefixSum, deterministicOperatorNorm]
+  calc
+    norm ((Finset.univ.filter fun i : Fin m => (i : Nat) < (k : Nat)).sum fun i => K i)
+        <=
+          (Finset.univ.filter fun i : Fin m => (i : Nat) < (k : Nat)).sum fun i => norm (K i) := by
+            simpa using
+              (norm_sum_le (Finset.univ.filter fun i : Fin m => (i : Nat) < (k : Nat))
+                fun i => K i)
+    _ <= (Finset.univ.filter fun i : Fin m => (i : Nat) < (k : Nat)).sum fun _ => RK := by
+          refine Finset.sum_le_sum ?_
+          intro i hi
+          exact hK i
+    _ =
+        (((Finset.univ.filter fun i : Fin m => (i : Nat) < (k : Nat)).card : Nat) :
+          Real) * RK := by
+          simp
+    _ <= m * RK := by
+          have hcardNat :
+              (Finset.univ.filter fun i : Fin m => (i : Nat) < (k : Nat)).card <= m := by
+            simpa [Fintype.card_fin] using
+              (Finset.card_filter_le (s := (Finset.univ : Finset (Fin m)))
+                (p := fun i : Fin m => (i : Nat) < (k : Nat)))
+          have hcard :
+              (((Finset.univ.filter fun i : Fin m => (i : Nat) < (k : Nat)).card :
+                Nat) : Real) <= m := by
+            exact_mod_cast hcardNat
+          exact mul_le_mul_of_nonneg_right hcard hRK
+
+private theorem comparisonMatrixSuffixSum_deterministicOperatorNorm_le
+    {m n : Nat} (K : Fin m -> Matrix (Fin n) (Fin n) Real) (RK : Real)
+    (hRK : 0 <= RK)
+    (hK : forall j, deterministicOperatorNorm (K j) <= RK) :
+    forall k : Fin (m + 1),
+      deterministicOperatorNorm (comparisonMatrixSuffixSum K k) <= m * RK := by
+  intro k
+  rw [comparisonMatrixSuffixSum, deterministicOperatorNorm]
+  calc
+    norm ((Finset.univ.filter fun i : Fin m => (k : Nat) <= (i : Nat)).sum fun i => K i)
+        <=
+          (Finset.univ.filter fun i : Fin m => (k : Nat) <= (i : Nat)).sum fun i => norm (K i) := by
+            simpa using
+              (norm_sum_le (Finset.univ.filter fun i : Fin m => (k : Nat) <= (i : Nat))
+                fun i => K i)
+    _ <= (Finset.univ.filter fun i : Fin m => (k : Nat) <= (i : Nat)).sum fun _ => RK := by
+          refine Finset.sum_le_sum ?_
+          intro i hi
+          exact hK i
+    _ =
+        (((Finset.univ.filter fun i : Fin m => (k : Nat) <= (i : Nat)).card : Nat) :
+          Real) * RK := by
+          simp
+    _ <= m * RK := by
+          have hcardNat :
+              (Finset.univ.filter fun i : Fin m => (k : Nat) <= (i : Nat)).card <= m := by
+            simpa [Fintype.card_fin] using
+              (Finset.card_filter_le (s := (Finset.univ : Finset (Fin m)))
+                (p := fun i : Fin m => (k : Nat) <= (i : Nat)))
+          have hcard :
+              (((Finset.univ.filter fun i : Fin m => (k : Nat) <= (i : Nat)).card :
+                Nat) : Real) <= m := by
+            exact_mod_cast hcardNat
+          exact mul_le_mul_of_nonneg_right hcard hRK
+
+/-- Operator-norm bound for the natural current Tropp step from a summand bound. -/
+theorem troppCurrentRandomStep_operatorNorm_le_of_summand_bound
+    {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (theta RX : Real) (X : Fin m -> RandomMatrix Omega n n)
+    (hXBound : forall j omega, operatorNorm (X j) omega <= RX) :
+    forall i omega,
+      operatorNorm (@troppCurrentRandomStep Omega _ m n theta X i) omega <= abs theta * RX := by
+  intro i omega
+  change norm (SMul.smul theta (X i omega)) <= abs theta * RX
+  rw [show norm (SMul.smul theta (X i omega)) = abs theta * norm (X i omega) by
+    simpa using norm_smul theta (X i omega)]
+  exact mul_le_mul_of_nonneg_left (hXBound i omega) (abs_nonneg theta)
+
+/-- Operator-norm bound for the natural Tropp history from summand and comparison bounds. -/
+theorem troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds
+    {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (theta RX RK : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (hRX : 0 <= RX) (hRK : 0 <= RK)
+    (hXBound : forall j omega, operatorNorm (X j) omega <= RX)
+    (hKBound : forall j, deterministicOperatorNorm (K j) <= RK) :
+    forall i omega,
+      operatorNorm (@troppStateHistory Omega _ m n theta X K i) omega <=
+        m * RK + m * (abs theta * RX) := by
+  intro i omega
+  change norm (troppComparisonHistory K i + troppRandomHistory theta X i omega) <=
+    m * RK + m * (abs theta * RX)
+  have hComp : deterministicOperatorNorm (troppComparisonHistory K i) <= m * RK :=
+    comparisonMatrixPrefixSum_deterministicOperatorNorm_le K RK hRK hKBound i.castSucc
+  have hScaled :
+      forall j omega, operatorNorm (scaledRandomMatrixFamily theta X j) omega <= abs theta * RX :=
+    troppCurrentRandomStep_operatorNorm_le_of_summand_bound theta RX X hXBound
+  have hRand : operatorNorm (troppRandomHistory theta X i) omega <= m * (abs theta * RX) := by
+    change norm (comparisonMatrixSuffixSum (fun j => scaledRandomMatrixFamily theta X j omega) i.succ) <=
+      m * (abs theta * RX)
+    exact comparisonMatrixSuffixSum_deterministicOperatorNorm_le
+      (fun j => scaledRandomMatrixFamily theta X j omega) (abs theta * RX)
+      (mul_nonneg (abs_nonneg theta) hRX) (fun j => hScaled j omega) i.succ
+  calc
+    norm (troppComparisonHistory K i + troppRandomHistory theta X i omega)
+        <= norm (troppComparisonHistory K i) + norm (troppRandomHistory theta X i omega) :=
+          norm_add_le _ _
+    _ <= m * RK + m * (abs theta * RX) := by
+          simpa [deterministicOperatorNorm] using add_le_add hComp hRand
+
+/-- Finite-measure Tropp add-step integrability from summand and comparison bounds.
+
+This is stronger than the raw finite-measure wrapper: instead of requiring
+pointwise bounds on `troppStateHistory` and `troppCurrentRandomStep`
+themselves, it derives those bounds from a pointwise summand bound on `X`
+and a deterministic operator-norm bound on the comparison family `K`. -/
+theorem traceExpIntegrable_troppStateHistory_add_step_of_summand_and_comparison_bounds_finiteMeasure
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsFiniteMeasure P]
+    {m n : Nat} (theta RX RK : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (hHist : forall i,
+      IsRandomMatrix P
+        (@troppStateHistory Omega _ m n theta X K i))
+    (hStep : forall i,
+      IsRandomMatrix P
+        (@troppCurrentRandomStep Omega _ m n theta X i))
+    (hRX : 0 <= RX) (hRK : 0 <= RK)
+    (hXBound : forall j omega, operatorNorm (X j) omega <= RX)
+    (hKBound : forall j, deterministicOperatorNorm (K j) <= RK) :
+    forall i,
+      IntegrableRealRandomVariable P
+        (fun omega =>
+          traceMatrixExp
+            (@troppStateHistory Omega _ m n theta X K i omega +
+              @troppCurrentRandomStep Omega _ m n theta X i omega)) := by
+  exact
+    traceExpIntegrable_troppStateHistory_add_step_of_operatorNormBounds_finiteMeasure
+      (P := P) theta X K (m * RK + m * (abs theta * RX)) (abs theta * RX)
+      hHist hStep
+      (troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds
+        theta RX RK X K hRX hRK hXBound hKBound)
+      (troppCurrentRandomStep_operatorNorm_le_of_summand_bound theta RX X hXBound)
+
+/-- Finite-measure Tropp add-K integrability from summand and comparison bounds.
+
+This derives the history bound from the Tropp construction and uses a
+deterministic operator-norm bound on `K`, rather than requiring a pointwise
+bound on the constant random matrix `fun _ => K i`. -/
+theorem traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsFiniteMeasure P]
+    {m n : Nat} (theta RX RK : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (hHist : forall i,
+      IsRandomMatrix P
+        (@troppStateHistory Omega _ m n theta X K i))
+    (hRX : 0 <= RX) (hRK : 0 <= RK)
+    (hXBound : forall j omega, operatorNorm (X j) omega <= RX)
+    (hKBound : forall j, deterministicOperatorNorm (K j) <= RK) :
+    forall i,
+      IntegrableRealRandomVariable P
+        (fun omega =>
+          traceMatrixExp
+            (@troppStateHistory Omega _ m n theta X K i omega + K i)) := by
+  have hKBound' : forall i omega, operatorNorm (fun _ : Omega => K i) omega <= RK := by
+    intro i omega
+    simpa [operatorNorm, deterministicOperatorNorm] using hKBound i
+  exact
+    traceExpIntegrable_troppStateHistory_add_K_of_operatorNormBounds_finiteMeasure
+      (P := P) theta X K (m * RK + m * (abs theta * RX)) RK
+      hHist
+      (troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds
+        theta RX RK X K hRX hRK hXBound hKBound)
+      hKBound'
+
 end
 
 end HighDimProb

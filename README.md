@@ -124,9 +124,8 @@ git submodule update --init --recursive
 ```
 
 It lives at `external/theory-roadmap/`. Other folders under `external/` contain
-generated knowledge-graph artifacts, validation logs, and planning notes. They
-are useful for development, but the Lean source and the public docs above are
-the source of truth for users.
+validation logs and planning notes. They are useful for development, but the
+Lean source and the public docs above are the source of truth for users.
 
 ## Acknowledgements
 

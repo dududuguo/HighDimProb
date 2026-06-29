@@ -90,7 +90,7 @@ and idiom usage.
 
 1. Load project style guide (`ORGANISATION.md`, `CONTRIBUTING.md`)
 2. Lint the `.lean` file for each check
-3. Compare naming against existing codebase patterns (via codebase-memory)
+3. Compare naming against existing codebase patterns with lean-local-search
 4. Return `approved | changes_requested` + style fixes
 
 ---
@@ -138,9 +138,9 @@ Ensures the module's import structure is correct and minimal.
 ### Process
 
 1. Extract all free variables/symbols in the module
-2. Resolve each to its defining module via codebase-memory graph
+2. Resolve each to its defining module via lean-local-search
 3. Check: imported modules ⊇ defining modules of all used symbols
-4. Check: no import cycle (query codebase-memory `CONTAINS_FILE` → `IMPORTS` closure)
+4. Check: no import cycle using the Lean import graph and indexed imports
 
 ---
 
@@ -163,11 +163,11 @@ no conflicting theorems, no naming collisions.
 
 ### Process
 
-1. Query codebase-memory: `search_graph(name_pattern="{name}")` for each declaration
+1. Query lean-local-search: `search_graph(name_pattern="{name}")` for each declaration
 2. For name collisions:
    - If statements are equivalent → avoid duplicate declaration
    - If statements differ → flag as conflict
-3. Check notation declarations against codebase-memory USAGE graph
+3. Check notation declarations against lean-local-search and source search
 
 ---
 

@@ -22,6 +22,16 @@ open scoped MatrixOrder Matrix.Norms.Operator Matrix.Norms.L2Operator
 #check CFCLog.hasDerivAt_line
 #check exists_hasDerivAt_cfcLog_affineLine_of_strictlyPositive
 #check hasDerivAt_cfcLog_affineLine_of_strictlyPositive
+#check hasDerivAt_inverse_affineLine
+#check hasDerivAt_inverse_affineLine_of_strictlyPositive
+#check trace_resolvent_derivative_cycle
+#check neg_trace_resolvent_derivative_cycle
+#check hasDerivAt_trace_mul_inverse_affineLine_general
+#check hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle
+#check hasDerivAt_trace_mul_inverse_affineLine_general_of_strictlyPositive
+#check hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle_of_strictlyPositive
+#check hasDerivAt_trace_mul_inverse_affineLine
+#check hasDerivAt_trace_mul_inverse_affineLine_of_strictlyPositive
 #check cfcLogLineDerivTraceSecond
 #check EpsteinLine.traceSlope
 #check EpsteinLine.traceSecond
@@ -44,6 +54,65 @@ open scoped MatrixOrder Matrix.Norms.Operator Matrix.Norms.L2Operator
 #check matrixExpScaledIntegrable_of_provider_finiteMeasure
 #check traceExpIntegrable_troppStateHistory_add_step_of_operatorNormBounds_finiteMeasure
 #check traceExpIntegrable_troppStateHistory_add_K_of_operatorNormBounds_finiteMeasure
+#check troppCurrentRandomStep_operatorNorm_le_of_summand_bound
+#check troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds
+#check traceExpIntegrable_troppStateHistory_add_step_of_summand_and_comparison_bounds_finiteMeasure
+#check traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure
+
+example {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (theta RX : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (hXBound : forall j omega, operatorNorm (X j) omega <= RX) :
+    forall i omega,
+      operatorNorm (@troppCurrentRandomStep Omega _ m n theta X i) omega <= abs theta * RX := by
+  exact troppCurrentRandomStep_operatorNorm_le_of_summand_bound theta RX X hXBound
+
+example {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (theta RX RK : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (hRX : 0 <= RX) (hRK : 0 <= RK)
+    (hXBound : forall j omega, operatorNorm (X j) omega <= RX)
+    (hKBound : forall j, deterministicOperatorNorm (K j) <= RK) :
+    forall i omega,
+      operatorNorm (@troppStateHistory Omega _ m n theta X K i) omega <=
+        m * RK + m * (abs theta * RX) := by
+  exact troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds
+    theta RX RK X K hRX hRK hXBound hKBound
+
+example {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsFiniteMeasure P]
+    {m n : Nat} (theta RX RK : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (hHist : forall i, IsRandomMatrix P (@troppStateHistory Omega _ m n theta X K i))
+    (hStep : forall i, IsRandomMatrix P (@troppCurrentRandomStep Omega _ m n theta X i))
+    (hRX : 0 <= RX) (hRK : 0 <= RK)
+    (hXBound : forall j omega, operatorNorm (X j) omega <= RX)
+    (hKBound : forall j, deterministicOperatorNorm (K j) <= RK) :
+    forall i,
+      IntegrableRealRandomVariable P
+        (fun omega =>
+          traceMatrixExp
+            (@troppStateHistory Omega _ m n theta X K i omega +
+              @troppCurrentRandomStep Omega _ m n theta X i omega)) := by
+  exact traceExpIntegrable_troppStateHistory_add_step_of_summand_and_comparison_bounds_finiteMeasure
+    (P := P) theta RX RK X K hHist hStep hRX hRK hXBound hKBound
+
+example {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsFiniteMeasure P]
+    {m n : Nat} (theta RX RK : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (hHist : forall i, IsRandomMatrix P (@troppStateHistory Omega _ m n theta X K i))
+    (hRX : 0 <= RX) (hRK : 0 <= RK)
+    (hXBound : forall j omega, operatorNorm (X j) omega <= RX)
+    (hKBound : forall j, deterministicOperatorNorm (K j) <= RK) :
+    forall i,
+      IntegrableRealRandomVariable P
+        (fun omega =>
+          traceMatrixExp
+            (@troppStateHistory Omega _ m n theta X K i omega + K i)) := by
+  exact traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure
+    (P := P) theta RX RK X K hHist hRX hRK hXBound hKBound
 #check matrixExpSupportDomination_identity
 #check lambdaMaxOrdered_le_of_matrixLE_selfAdjoint
 #check lambdaMinOrdered_le_of_matrixLE_selfAdjoint

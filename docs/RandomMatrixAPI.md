@@ -439,8 +439,8 @@ import HighDimProb.RandomMatrix.LiebProvider
 
 This import exposes the upstream provider facade, the ambient and
 self-adjoint matrix-exp derivative primitives, the first-order `CFC.log`
-affine-line layer, the derivative-level Epstein consumer reductions, and the
-conditional bridges:
+affine-line layer, the short resolvent derivative layer, the derivative-level
+Epstein consumer reductions, and the conditional bridges:
 
 - `matrixExpFDeriv`
 - `hasFDerivAt_matrix_exp`
@@ -460,6 +460,16 @@ conditional bridges:
 - `CFCLog.hasDerivAt_line`
 - `exists_hasDerivAt_cfcLog_affineLine_of_strictlyPositive`
 - `hasDerivAt_cfcLog_affineLine_of_strictlyPositive`
+- `hasDerivAt_inverse_affineLine`
+- `hasDerivAt_inverse_affineLine_of_strictlyPositive`
+- `trace_resolvent_derivative_cycle`
+- `neg_trace_resolvent_derivative_cycle`
+- `hasDerivAt_trace_mul_inverse_affineLine_general`
+- `hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle`
+- `hasDerivAt_trace_mul_inverse_affineLine_general_of_strictlyPositive`
+- `hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle_of_strictlyPositive`
+- `hasDerivAt_trace_mul_inverse_affineLine`
+- `hasDerivAt_trace_mul_inverse_affineLine_of_strictlyPositive`
 - `cfcLogLineDerivTraceSecond`
 - `EpsteinLine.traceSlope`
 - `EpsteinLine.traceSecond`
@@ -474,6 +484,14 @@ conditional bridges:
 - `liebJensenTraceExp_statement_of_epsteinAffineLine`
 - `troppMasterTraceMGFStep_of_epsteinAffineLine`
 - `troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder`
+- `troppNaturalHistoryMeasurable_of_suffix_entry_measurable`
+- `matrixExpScaledIntegrable_of_provider_finiteMeasure`
+- `traceExpIntegrable_troppStateHistory_add_step_of_operatorNormBounds_finiteMeasure`
+- `traceExpIntegrable_troppStateHistory_add_K_of_operatorNormBounds_finiteMeasure`
+- `troppCurrentRandomStep_operatorNorm_le_of_summand_bound`
+- `troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds`
+- `traceExpIntegrable_troppStateHistory_add_step_of_summand_and_comparison_bounds_finiteMeasure`
+- `traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure`
 - `lambdaMaxOrdered_le_of_matrixLE_selfAdjoint`
 - `lambdaMinOrdered_le_of_matrixLE_selfAdjoint`
 - `traceMGFBernsteinVarianceProxyBoundLIntegral_of_real`
@@ -492,14 +510,21 @@ ambient matrix space, while `matrixExpSelfAdjoint`,
 `hasStrictFDerivAt_matrix_exp_selfAdjoint` live on the self-adjoint carrier.
 `cfcLogSelfAdjoint`, `CFCLog.derivSAAt`, `CFCLog.lineDeriv`, and
 `CFCLog.hasDerivAt_line` now expose the strictly-positive carrier `CFC.log`
-first derivative, while `cfcLogLineDerivTraceSecond` and the `EpsteinLine.*`
-wrappers expose the derivative-level Epstein consumer route. `CFCLog.DerivOp`
-remains pointwise derivative bookkeeping only; it is not a stable second-level
-Frechet codomain.
+first derivative. `hasDerivAt_inverse_affineLine`,
+`hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle`, and their
+specializations expose the small inverse/trace-resolvent affine-line layer
+without adding any log-resolvent representation claim, while
+`cfcLogLineDerivTraceSecond` and the `EpsteinLine.*` wrappers expose the
+derivative-level Epstein consumer route. The finite-measure trace-exp sublayer
+now exposes both the raw endpoint-bound wrappers and the stronger
+summand/comparison-bound wrappers with explicit `X` / `K` operator-norm
+premises. `CFCLog.DerivOp` remains pointwise derivative bookkeeping only; it is
+not a stable second-level Frechet codomain.
 
 The provider layer is still conditional: spectral endpoint monotonicity and the
 trace-MGF-to-Laplace contracts are proved bridge theorems, but they do not prove
-the Epstein sign theorem, full Epstein/Lieb, Golden-Thompson, the resolvent
-route, history/current independence, conditional expectation, variance-proxy
-normalization, tail-event domination, or full Matrix Bernstein. It separates
-upstream proof-provider surfaces from downstream example and tail wrappers.
+the Epstein sign theorem, full Epstein/Lieb, Golden-Thompson, any
+log-resolvent representation, history/current independence, conditional
+expectation, variance-proxy normalization, tail-event domination, or full
+Matrix Bernstein. It separates upstream proof-provider surfaces from downstream
+example and tail wrappers.

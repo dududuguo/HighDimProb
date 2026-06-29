@@ -23,7 +23,7 @@ Hard rules for actual repository changes:
 
 - `agents/`: rough agent role descriptions.
 - `fsm/`: finite-state-machine planning notes.
-- `integration/`: notes on theory-roadmap and codebase-memory integration.
+- `integration/`: notes on theory-roadmap integration and Lean MCP discovery.
 - `workflows/`: draft workflows for formalization and repair tasks.
 
 These files are allowed to be rough. They are not public API documentation.

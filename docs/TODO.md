@@ -30,10 +30,20 @@ This is the active short list. Old completed task logs were collapsed into
   compress only genuinely provider-dischargeable assumptions and keep
   independence, conditional expectation, variance-proxy normalization,
   full-sum trace-integrability, and tail-event domination explicit.
-- Next RandomMatrix hardbone task: migrate the short resolvent derivative
-  provider layer into `HighDimProb.RandomMatrix.ResolventDerivativeProvider`,
-  starting with `hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle` and
-  `_of_strictlyPositive`, then wire it through `LiebProvider` test/judge/docs.
+- Short resolvent derivative provider layer is now upstream as
+  `HighDimProb.RandomMatrix.ResolventDerivativeProvider`, including
+  `hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle` and
+  `hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle_of_strictlyPositive`.
+  Any later downstream resolvent work should stay limited to exact proved
+  inverse/trace bridges and must not claim a log-resolvent representation or an
+  Epstein sign theorem without separate proofs.
+- Keep the hardbone integrability signature unchanged until a downstream-safe
+  tightening pass is ready; the honest main-provider bridges are now
+  `troppCurrentRandomStep_operatorNorm_le_of_summand_bound`,
+  `troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds`, and the
+  finite-measure wrappers
+  `traceExpIntegrable_troppStateHistory_add_step_of_summand_and_comparison_bounds_finiteMeasure`
+  / `traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure`.
 - Current strategy is progress-first: if a hard analytic ingredient is missing,
   consume it as an explicit assumption, register it in `docs/STATEMENTS.md`, and
   keep moving the high-level Tropp/Lieb trace-MGF route forward. Do not claim

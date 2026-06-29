@@ -28,12 +28,15 @@ than copying full theorem signatures.
 `HighDimProb.RandomMatrix.LiebProvider` is the explicit import for the ambient
 and self-adjoint carrier matrix-exp Frechet derivative primitives, the
 strictly-positive carrier `CFC.log` first-derivative namespace `CFCLog`
-(`Carrier`, `DerivOp`, `derivSAAt`, `lineDeriv`, `hasDerivAt_line`), the
-Epstein consumer namespace `EpsteinLine` (`traceSlope`, `traceSecond`,
-`concavity_of_traceSecond_nonpos_of_lineDerivSA`, `_of_eval`), conditional
-Epstein/Lieb/Tropp provider bridges, spectral endpoint monotonicity,
-trace-MGF-to-Laplace contracts, and provider-compressed natural-state tail
-helpers. `CFCLog.DerivOp` is bookkeeping only, and the provider layer still
-stops short of the Epstein sign theorem and full Lieb/Tropp claims. Keep this
-separate from reader-facing examples and the core `HighDimProb.RandomMatrix`
-aggregate.
+(`Carrier`, `DerivOp`, `derivSAAt`, `lineDeriv`, `hasDerivAt_line`), the short
+inverse/trace-resolvent derivative layer
+(`hasDerivAt_inverse_affineLine`,
+`hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle`, and
+specializations), the Epstein consumer namespace `EpsteinLine`
+(`traceSlope`, `traceSecond`, `concavity_of_traceSecond_nonpos_of_lineDerivSA`,
+`_of_eval`), conditional Epstein/Lieb/Tropp provider bridges, spectral
+endpoint monotonicity, trace-MGF-to-Laplace contracts, and provider-compressed
+natural-state tail helpers. `CFCLog.DerivOp` is bookkeeping only, and the
+provider layer still stops short of any log-resolvent representation, the
+Epstein sign theorem, and full Lieb/Tropp claims. Keep this separate from
+reader-facing examples and the core `HighDimProb.RandomMatrix` aggregate.

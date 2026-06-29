@@ -1,25 +1,23 @@
 # Agent Instructions
 
-<!-- codebase-memory-mcp:start -->
-# Codebase Knowledge Graph (codebase-memory-mcp)
+<!-- lean-local-search-mcp:start -->
+# Lean Local Search MCP
 
-This project uses codebase-memory-mcp to maintain a knowledge graph of the codebase.
-ALWAYS prefer MCP graph tools over grep/glob/file-search for code discovery.
+Use `lean-local-search` MCP before broad text search for Lean/mathlib/HighDimProb API discovery.
 
 ## Priority Order
-1. `search_graph` - find functions, classes, routes, variables by pattern
-2. `trace_path` - trace who calls a function or what it calls
-3. `get_code_snippet` - read specific function/class source code
-4. `query_graph` - run Cypher queries for complex patterns
-5. `get_architecture` - high-level project summary
 
-## When to fall back to grep/glob
-- Searching for string literals, error messages, config values
-- Searching non-code files (Dockerfiles, shell scripts, configs)
-- When MCP tools return insufficient results
+1. `index_repository` / `index_status` after switching repos or meaningful edits.
+2. `search_theorems` for theorem and lemma discovery.
+3. `search_graph` for non-theorem declarations and module-level structure.
+4. `theorem_card`, `get_context`, and `get_code_snippet` before editing a proof leaf.
+5. `proof_probe` for import, name, and typeclass checks before adding source code.
+6. `consumer_fit` and `cross_repo_lookup` when matching provider APIs to HighDimProb consumers.
+7. Fall back to `rg` for docs, configs, string literals, and MCP coverage gaps.
 
-## Examples
-- Find a handler: `search_graph(name_pattern=".*OrderHandler.*")`
-- Who calls it: `trace_path(function_name="OrderHandler", direction="inbound")`
-- Read source: `get_code_snippet(qualified_name="pkg/orders.OrderHandler")`
-<!-- codebase-memory-mcp:end -->
+## Validation Rule
+
+Lean MCP helps find and probe APIs; it does not validate proofs. Every source change still needs the narrow `lake build` target first, then broader `lake build` / `lake test` when appropriate.
+
+Do not rely on `.codebase-memory`; it is intentionally retired for this repository.
+<!-- lean-local-search-mcp:end -->

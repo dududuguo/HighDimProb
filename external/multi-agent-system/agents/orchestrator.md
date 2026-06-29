@@ -21,7 +21,7 @@ maintains the global work queue, and makes escalation decisions.
 | Input | Source | Format |
 |-------|--------|--------|
 | Theory roadmap | `external/theory-roadmap/roadmap/lean_toposort.json` | JSON |
-| Current codebase state | `external/codebase-memory/HighDimProb.db` | SQLite (via MCP) |
+| Current codebase discovery | lean-local-search MCP index | MCP |
 | Agent outputs | Other agents | Structured messages |
 | FSM definition | `fsm/states.md`, `fsm/transitions.md` | Markdown |
 

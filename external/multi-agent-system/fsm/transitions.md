@@ -59,7 +59,7 @@ guard:
 ```yaml
 guard:
   - mathlib_reuse_report_complete: existing Mathlib candidates were searched and recorded
-  - existing_declaration_search_complete: HighDimProb/codebase-memory search was recorded
+  - existing_declaration_search_complete: HighDimProb Lean MCP search was recorded
   - source_validation_report_complete: OCR/KG statement was checked against source locations
   - action_classified:
       one_of:

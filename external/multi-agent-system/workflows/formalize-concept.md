@@ -131,7 +131,7 @@ Orchestrator selects a concept from the topological queue.
 │      docs/AbstractionLog.md, docs/TODO.md, docs/Status.md    │
 │    Add focused API/proof tests for public declarations       │
 │    Run full `lake build` and `lake test`                     │
-│    Optionally re-index codebase-memory graph                 │
+│    Refresh lean-local-search index if needed                 │
 │    Do not write to external submodules automatically         │
 │    → INTEGRATED                                              │
 └────────────────────────────┬─────────────────────────────────┘

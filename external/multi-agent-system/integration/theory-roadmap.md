@@ -70,7 +70,7 @@ resolution:
       keyword_hits: 985
       sections: ["2.5 SubGaussian random variables"]
   dependencies_integrated:
-    - "basic-concentration"  # verified via codebase-memory
+    - "basic-concentration"  # verified via Lean MCP discovery
 ```
 
 ---
