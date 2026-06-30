@@ -27,6 +27,17 @@ surfaces are tracked in the focused reference docs linked below.
 - Judge system: [`JudgeSystem.md`](JudgeSystem.md)
 - Workflow: [`Workflow.md`](Workflow.md)
 
+## Current PrecisionDA Application Entry Names
+
+PrecisionDA application scaffolding is isolated under
+`HighDimProb.Applications.PrecisionDA` and is intentionally application-facing.
+Current stable entry points include deterministic column-sample covariance,
+leave-one-out covariance, shrinkage resolvents, rank-one/Woodbury identities,
+Frobenius trace-expansion wrappers, and explicit provider contracts for the H1,
+H2, and Theorem 1 paper-tail statement boundaries. These entries do not prove
+paper concentration bounds, deterministic equivalents, H1/H2 discharge, or
+PrecisionDA Theorem 1.
+
 ## Current Process / Random Object Entry Names
 
 Random-family helpers:

@@ -55,6 +55,16 @@ This is the active short list. Old completed task logs were collapsed into
   monotonicity, conditional expectation, or full Matrix Bernstein unless a
   separate provider theorem proves it.
 
+## Active PrecisionDA Application Work
+
+- Keep `HighDimProb.Applications.PrecisionDA` as an application statement and
+  deterministic algebra layer. Do not promote paper-specific objects into core
+  RandomMatrix APIs unless a second consumer needs the same abstraction.
+- Next PrecisionDA task: continue with a small deterministic/application proof
+  leaf or a provider-contract audit; do not claim H1/H2 probability bounds,
+  deterministic equivalents, concentration, or Theorem 1 without separate
+  proofs.
+
 ## Active Documentation Work
 
 - Keep `Status.md`, `TODO.md`, and plan files short.

@@ -19,3 +19,4 @@ import HighDimProbJudge.RandomMatrix.TraceExpUse
 import HighDimProbJudge.RandomMatrix.LaplaceUse
 import HighDimProbJudge.RandomMatrix.MatrixBernsteinUse
 import HighDimProbJudge.RandomMatrix.LiebProviderUse
+import HighDimProbJudge.PrecisionDA.CovarianceTraceExpansionUse

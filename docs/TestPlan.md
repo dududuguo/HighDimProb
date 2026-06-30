@@ -27,6 +27,13 @@ git diff --check
 - Root import smoke tests: `HighDimProbTest/Smoke.lean`, `PublicImports.lean`, `BranchImports.lean`, `ExperimentalImports.lean`.
 - Scalar API tests: probability, tail, Lp/moment, Orlicz, subGaussian, subExponential, real-inequality helpers, and scalar concentration files under `HighDimProbTest`.
 - Random-family and process API checks: `HighDimProbTest/RandomFamilyAPI.lean` plus `BranchImports.lean` and `ExperimentalImports.lean`.
+- PrecisionDA application checks: `HighDimProbTest/PrecisionDAAPI.lean` covers
+  the deterministic PrecisionDA object/provider surface, `HighDimProbTest/ExamplesAPI.lean`
+  covers the reader-facing example import, and
+  `HighDimProbJudge/PrecisionDA/CovarianceTraceExpansionUse.lean` covers the
+  judge consumer. Focused commands: `lake build HighDimProb.Applications.PrecisionDA`,
+  `lake build HighDimProbTest.PrecisionDAAPI`, and
+  lake build HighDimProbJudge.PrecisionDA.CovarianceTraceExpansionUse.
 - RandomMatrix API tests: variance proxy, spectral, trace-exp, hardbone
   statement targets, thin consumers, rank/support trace bridge, excess-support trace bridge, centered-square expectation expansion, PSD Loewner variance-proxy norm monotonicity, `MatrixExpSupportDomination`, `MatrixExpExcessSupportDomination`, trace-exp eigenvalue-sum bridge, effective-rank consumer, ambient trace certificate, ambient effective-rank wrapper, star-projection trace/rank/PSD certificate and rank consumer, Laplace, concentration, and example API
   checks.

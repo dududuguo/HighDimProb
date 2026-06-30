@@ -152,3 +152,25 @@ Non-goals for this provider layer:
   statement without explicit summand measurability, conditional expectation,
   variance-proxy normalization, full-sum trace-integrability, tail-event
   domination, or full Matrix Bernstein.
+
+## PrecisionDA application statement/provider boundary
+
+Application import:
+
+- `HighDimProb.Applications.PrecisionDA`
+
+Current surfaces:
+
+- deterministic paper-oriented covariance, leave-one-out covariance, shrinkage
+  resolvent, rank-one/Woodbury, and Frobenius trace-expansion wrappers;
+- H1/H2 and Theorem 1 paper-tail provider-contract vocabulary with explicit
+  fields for future measurability, probability, bias, and tail-bound inputs;
+- example, test, and judge consumers for the deterministic covariance
+  trace-expansion route.
+
+Non-goals for this application layer:
+
+- It does not prove paper H1/H2 from primitive distributional assumptions,
+  concentration estimates, deterministic equivalents, probability bounds,
+  closed-form tail RHS formulas, or PrecisionDA Theorem 1. These remain explicit
+  future provider or assumption surfaces.
