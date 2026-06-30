@@ -118,6 +118,9 @@ Provider theorem surfaces:
   trace-MGF-to-Laplace contracts under explicit premises.
 - `troppNaturalHistoryMeasurable_of_suffix_entry_measurable`, the conditional
   suffix-entry measurability bridge for natural Tropp histories.
+- `troppHistoryStepIndependent_of_iIndepFun_of_measurable`, the strengthened
+  independence bridge from `iIndepFun X P` plus explicit summand measurability;
+  the weaker exact statement contract is still kept separate.
 - `matrixExpScaledIntegrable_of_provider_finiteMeasure`,
   `traceExpIntegrable_troppStateHistory_add_step_of_operatorNormBounds_finiteMeasure`,
   `traceExpIntegrable_troppStateHistory_add_K_of_operatorNormBounds_finiteMeasure`,

@@ -252,8 +252,11 @@ supplies the operator-log premise, `traceMatrixExp_mono_add_selfAdjoint`
 closes the downstream trace-exponential monotonicity leaf, and
 `troppLogExpComparisonToK` now proves the deterministic log/order-to-`K` comparison.
 The finite-family conditioning chain is proved by `troppConditionalStep_of_iIndepFun`,
-but it only forwards the explicit per-index conditional-expectation provider and
-does not discharge the history or independence hypotheses. The remaining
+but it only forwards explicit per-index providers. The separate theorem
+`troppHistoryStepIndependent_of_iIndepFun_of_measurable` supplies
+history/current-step independence from `iIndepFun X P` plus explicit summand
+measurability, but the exact weaker independence statement and
+conditional-expectation provider remain separate. The remaining
 Tropp/Lieb, automatic trace-exp integrability, variance-proxy,
 and dimension/rank blockers stay split into named leaves. The rank/support
 trace-bound bridge is proved under the named support-domination certificate
@@ -485,6 +488,7 @@ Epstein consumer reductions, and the conditional bridges:
 - `troppMasterTraceMGFStep_of_epsteinAffineLine`
 - `troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder`
 - `troppNaturalHistoryMeasurable_of_suffix_entry_measurable`
+- `troppHistoryStepIndependent_of_iIndepFun_of_measurable`
 - `matrixExpScaledIntegrable_of_provider_finiteMeasure`
 - `traceExpIntegrable_troppStateHistory_add_step_of_operatorNormBounds_finiteMeasure`
 - `traceExpIntegrable_troppStateHistory_add_K_of_operatorNormBounds_finiteMeasure`
@@ -524,7 +528,7 @@ not a stable second-level Frechet codomain.
 The provider layer is still conditional: spectral endpoint monotonicity and the
 trace-MGF-to-Laplace contracts are proved bridge theorems, but they do not prove
 the Epstein sign theorem, full Epstein/Lieb, Golden-Thompson, any
-log-resolvent representation, history/current independence, conditional
+log-resolvent representation, exact history/current independence without explicit measurability, conditional
 expectation, variance-proxy normalization, tail-event domination, or full
 Matrix Bernstein. It separates upstream proof-provider surfaces from downstream
 example and tail wrappers.

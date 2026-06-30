@@ -29,7 +29,7 @@ This is the active short list. Old completed task logs were collapsed into
   as the provider-compressed natural-state tail wrapper. Future work should
   compress only genuinely provider-dischargeable assumptions and keep
   independence, conditional expectation, variance-proxy normalization,
-  full-sum trace-integrability, and tail-event domination explicit.
+  full-sum trace-integrability, and tail-event domination explicit. The strengthened history/current-step independence bridge is available as `troppHistoryStepIndependent_of_iIndepFun_of_measurable`, but the exact weaker hardbone statement and conditional expectation remain separate.
 - Short resolvent derivative provider layer is now upstream as
   `HighDimProb.RandomMatrix.ResolventDerivativeProvider`, including
   `hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle` and

@@ -36,7 +36,7 @@ specializations), the Epstein consumer namespace `EpsteinLine`
 (`traceSlope`, `traceSecond`, `concavity_of_traceSecond_nonpos_of_lineDerivSA`,
 `_of_eval`), conditional Epstein/Lieb/Tropp provider bridges, spectral
 endpoint monotonicity, trace-MGF-to-Laplace contracts, and provider-compressed
-natural-state tail helpers. `CFCLog.DerivOp` is bookkeeping only, and the
+natural-state tail helpers, and the strengthened history/current-step independence bridge. `CFCLog.DerivOp` is bookkeeping only, and the
 provider layer still stops short of any log-resolvent representation, the
-Epstein sign theorem, and full Lieb/Tropp claims. Keep this separate from
+Epstein sign theorem, and full Lieb/Tropp claims or the exact conditioning expectation chain. Keep this separate from
 reader-facing examples and the core `HighDimProb.RandomMatrix` aggregate.

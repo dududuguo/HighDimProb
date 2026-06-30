@@ -77,6 +77,7 @@ TraceExp / Tropp bookkeeping helpers:
 - `troppNaturalState_last`
 - `troppNaturalState_left`
 - `troppNaturalState_right`
+- `troppHistoryStepIndependent_of_iIndepFun_of_measurable`
 - `troppTraceExpFiniteFamilyIterationSkeleton_of_naturalStateConditionalSteps`
 - `troppMasterTraceMGFFiniteFamily_of_naturalStateConditionalSteps`
 - `traceMGFBernsteinVarianceProxyBound_of_naturalStateConditionalSteps`
@@ -417,7 +418,7 @@ specializations), the derivative-level Epstein consumer layer
 `EpsteinLine.traceSecond`, `EpsteinLine.concavity_of_traceSecond_nonpos_of_lineDerivSA`,
 and `_of_eval`), facade imports, the explicit `EpsteinAffineLineConcavity`
 conditional route, bounded finite-measure integrability providers,
-natural-history measurability from suffix-entry measurability, identity support
+natural-history measurability from suffix-entry measurability, strengthened history/current-step independence from `iIndepFun` plus summand measurability, identity support
 domination, spectral endpoint monotonicity, thin trace-MGF-to-Laplace
 contracts, and the S16 natural-state tail wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`.
