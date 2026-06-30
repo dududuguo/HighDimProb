@@ -176,11 +176,121 @@ Reader-facing example routes:
 - `NTKGramUsage`
 - `GradientCovarianceUsage`
 - `NaturalTroppPipelineUsage`
+- `PrecisionDA.CovarianceTraceExpansionUsage`
 
 Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact adapter, and statement-atlas APIs remain covered by source, tests, and judge files; they are not all exposed as separate examples.
 ## Current Caveats
 
 - The random-family layer is vocabulary only: it adds indexed aliases, endpoint/map wrappers, and pointwise measurability lemmas, but no filtrations, adaptedness, martingales, or conditioning providers.
+
+- PrecisionDA is an experimental object/proof layer. Its proved theorem layer is
+  still deterministic only: it exposes
+  paper-oriented data matrices, shifted covariance matrices, shrinkage
+  resolvents, Frobenius error objects, trace-expansion RHS/typed statement
+  vocabulary, and the deterministic symmetric-matrix trace expansion
+  `precisionQuadraticErrorTraceExpansion`. The deterministic symmetry providers
+  `sampleCovariance_isSymm`, `precisionResolvent_isSymm`, and
+  `shrinkageResolvent_isSymm` now feed
+  `shrinkageQuadraticErrorTraceExpansion`; `inverseCovariance_isSymm` also
+  gives covariance-input error/RHS wrappers
+  `shrinkageQuadraticError_of_covariance` and
+  `shrinkageQuadraticErrorTraceRHS_of_covariance`, typed statement
+  `shrinkageQuadraticErrorTraceExpansionStatement_of_covariance` and theorem
+  `shrinkageQuadraticErrorTraceExpansion_of_covariance`. The theorem is also
+  checked from a downstream judge surface in
+  `HighDimProbJudge.PrecisionDA.CovarianceTraceExpansionUse`. The layer has now
+  entered the deterministic proof part with the shifted-resolvent difference
+  identity `precisionResolventIdentity`, under explicit `IsUnit det` hypotheses
+  for the shifted matrices, plus the leave-one-out covariance update
+  `sampleCovariance_eq_leaveOneOut_add_sampleOuter` and common-shift
+  cancellation lemma `shiftedMatrix_sub_eq_sub`. The specialized shifted
+  leave-one-out difference lemma
+  `shrinkageShiftedMatrix_sub_leaveOneOutShiftedMatrix` exposes the removed
+  rank-one sample term for future Sherman-Morrison/Woodbury routes. The
+  rank-one vocabulary `sampleLeftAction`, `sampleRightAction`,
+  `sampleOuterProduct_apply`, `mul_sampleOuterProduct_apply`,
+  `sampleOuterProduct_mul_apply`, `mul_sampleOuterProduct_mul_apply`, and
+  `mul_smul_sampleOuterProduct_mul_apply` now expands
+  `A * (c • x_k x_kᵀ) * B` into scalar sample-column contractions, preparing
+  the deterministic RHS shape for Sherman-Morrison/Woodbury. The wrapper
+  `shrinkageLeaveOneOutRankOneRHS`, theorem
+  `shrinkageLeaveOneOutResolventIdentityRHS_eq_rankOne`, and entrywise theorem
+  `shrinkageLeaveOneOutRankOneRHS_apply` expose the leave-one-out resolvent RHS
+  as the scaled rank-one term `-(1 / n) x_k x_kᵀ`. The deterministic Woodbury
+  layer now also provides the matrix-shaped RHS theorem
+  `shrinkageResolvent_eq_leaveOneOutWoodburyMatrixRHS`, scalarization theorem
+  `shrinkageLeaveOneOutWoodburyMatrixRHS_eq_scalarRHS`, and scalar RHS theorem
+  `shrinkageResolvent_eq_leaveOneOutWoodburyRHS`, all under explicit
+  invertibility providers. The convenience providers `sampleWeightMatrix_isUnit`
+  and `shrinkageLeaveOneOutWoodburyMiddle_isUnit_of_denominator_ne_zero` reduce
+  the Woodbury side assumptions to the leave-one-out shifted determinant plus a
+  nonzero scalar denominator in
+  `shrinkageResolvent_eq_leaveOneOutWoodburyRHS_of_denominator_ne_zero`,
+  without positivity-provider construction. The
+  shrinkage/leave-one-out convenience
+  vocabulary `shrinkageShiftedMatrix`, `leaveOneOutShiftedMatrix`,
+  `leaveOneOutShrinkageResolvent`, and
+  `shrinkageLeaveOneOutResolventIdentity` packages the same deterministic
+  identity behind explicit determinant providers. The stochastic surface now
+  begins with H1 and H2 provider vocabulary:
+  `RandomDataMatrix`, `IndependentMatrixEntries`,
+  `IndependentSampleColumns`, `SubGaussianColumnsOrlicz`,
+  `CenteredSampleColumns`, `SampleColumnCovarianceEquals`,
+  `PaperH1SubGaussianModelStatement`, `PaperH1SubGaussianModelProvider`,
+  `leaveOneOutCovarianceLowerBound`, `paperH2LeaveOneOutGoodEvent`,
+  `PaperH2LeaveOneOutGoodEventStatement`,
+  `PaperH2LeaveOneOutGoodEventProvider`, the H2 bad-event probability target
+  `PaperH2GoodEventProbabilityRHS`, `paperH2LeaveOneOutBadEvent`,
+  `paperH2LeaveOneOutBadEvent_mem_iff`,
+  `paperH2LeaveOneOutBadEvent_eq_compl`,
+  `PaperH2LeaveOneOutBadEventMeasurabilityProvider`,
+  `paperH2LeaveOneOutBadEvent_measurable_of_provider`,
+  `PaperH2LeaveOneOutGoodEventProbabilityStatement`,
+  `PaperH2LeaveOneOutGoodEventProbabilityProvider`,
+  `paperH2LeaveOneOutGoodEventProbabilityStatement_of_provider`, and
+  `paperH2LeaveOneOutGoodEventProbability_bound_of_provider`,
+  `PaperH2LeaveOneOutProbabilityConsumerStatement`,
+  `paperH2LeaveOneOutProbabilityConsumerStatement_of_providers`, and
+  `paperH2LeaveOneOutProbabilityConsumer_bound_of_providers`, the
+  lower-singular-value proof-entry shell `PaperH2LowerSingularValueProvider`
+  and its projections to the existing H2 measurability, probability, and
+  consumer statement providers, the minimal H1/H2 bundle
+  `ShrinkageTheorem1Providers`, the typed Theorem 1 tail skeleton
+  `ShrinkageTheorem1BiasTerm`, `ShrinkageTheorem1TailRHS`,
+  `shrinkageTheorem1TailEvent`, and `ShrinkageTheorem1TailStatement`, the paper
+  estimator/bias vocabulary `paperShrinkageError`, `randomPaperShrinkageError`,
+  `PaperShrinkageEstimator`, `PaperShrinkageBias`,
+  `paperShrinkageEstimatedError`, `paperShrinkageBiasTerm`,
+  `randomPaperShrinkageEstimatedError`, and `randomPaperShrinkageBiasTerm`, and
+  the paper-facing tail wrapper `shrinkageTheorem1PaperTailEvent` /
+  `ShrinkageTheorem1PaperTailStatement`, and the paper-side scalar tail RHS
+  provider vocabulary `PaperShrinkageTailRHS`, `paperShrinkageTailRHS`, and
+  `ShrinkageTheorem1PaperTailRHSProvider`, the pointwise
+  `Delta_X(lambda)` bias-control provider
+  `PaperShrinkageBiasControlProvider`, and the paper-tail event measurability
+  provider `ShrinkageTheorem1PaperTailMeasurabilityProvider`, which records only
+  the explicit `MeasurableSet` side condition for
+  `shrinkageTheorem1PaperTailEvent`. The bundled paper-tail provider surface
+  `ShrinkageTheorem1PaperTailProviders` collects the core H1/H2 provider bundle,
+  paper-tail RHS provider, pointwise bias-control provider, and paper-tail event
+  measurability provider behind one downstream-consumer contract. The thin H2
+  probability consumer `shrinkageTheorem1PaperTailH2Probability_of_providers`
+  threads an explicitly supplied `PaperH2LeaveOneOutGoodEventProbabilityProvider`
+  alongside that bundle without adding it as a bundle field. The paper-tail H2
+  probability consumer-statement wrapper
+  `shrinkageTheorem1PaperTailH2ProbabilityConsumerStatement_of_providers` and
+  short-name alias `shrinkageTheorem1PaperTailH2ProbabilityConsumer_of_providers`
+  thread explicit H2 bad-event measurability and probability providers alongside
+  the unchanged paper-tail bundle to produce
+  `PaperH2LeaveOneOutProbabilityConsumerStatement`. The paper-tail bound
+  projection `shrinkageTheorem1PaperTailH2ProbabilityConsumer_badEventProbability_of_providers`
+  exposes the packaged `bad_event_probability` field only. The thin bridge
+  `shrinkageTheorem1PaperTailStatement_of_providers` turns that bundle plus
+  explicit `0 < lam`, `0 <= t`, and `tail_bound` premises into
+  `ShrinkageTheorem1PaperTailStatement` by projection only. These are typed
+  assumptions/provider contracts, not probability, concentration,
+  deterministic-equivalent, uniform-bias, event-measurability proofs,
+  closed-form RHS proofs, or `Delta_X(lambda)` bound estimates.
 
 - RandomMatrix / Matrix Bernstein remains experimental.
 - The hardbone statement atlas names CFC, log/order, Tropp/Lieb,
@@ -284,6 +394,12 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   independence, trace-exp integrability, log/K, CFC, or variance-proxy
   hypotheses.
 - `StatementRoutes` is an examples-only route index; it groups representative example-level statement families without adding core API. Lower-level bridge and frontier checks belong in source, tests, and judge files rather than separate reader-facing examples.
+- `PrecisionDA.CovarianceTraceExpansionUsage` is a deterministic
+  examples-only consumer of the covariance-input trace expansion; it does not
+  add probability or concentration assumptions.
+- `HighDimProbJudge.PrecisionDA.CovarianceTraceExpansionUse` is the matching
+  judge-only downstream consumer for the same deterministic theorem; it also
+  does not add probability or concentration assumptions.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
 - Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The positive-side quadratic-form route now has an exact-row variance-proxy wrapper, but two-sided and operator-norm exact-row wrappers still need a negative-side exact-row variance-proxy provider contract. The preferred sample-covariance and reader-facing Matrix Bernstein example routes now use Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
 - Negative-side provider-transfer adapters only move explicit opposite-parameter
@@ -395,6 +511,142 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   trace-MGF-to-tail consumer under explicit tail-side assumptions. The hard
   assumptions consumed by the theorem are recorded in `docs/STATEMENTS.md`;
   this does not prove those assumptions or a full Matrix Bernstein theorem.
+- PrecisionDA deterministic Woodbury preparation:
+  added sample-column/row/one-dimensional-weight vocabulary, the scalar
+  Sherman-Morrison denominator/correction/RHS API, the shifted-matrix
+  column-weight-row update,
+  `shrinkageResolvent_eq_leaveOneOutWoodburyMatrixRHS` as a direct deterministic
+  Woodbury RHS theorem from mathlib's matrix Woodbury identity,
+  `shrinkageLeaveOneOutWoodburyMatrixRHS_eq_scalarRHS` as the 1x1-middle
+  scalarization bridge, and `shrinkageResolvent_eq_leaveOneOutWoodburyRHS` as
+  the scalar denominator/correction RHS theorem. Added
+  `sampleWeightMatrix_isUnit`,
+  `shrinkageLeaveOneOutWoodburyMiddle_isUnit_of_denominator_ne_zero`, and
+  `shrinkageResolvent_eq_leaveOneOutWoodburyRHS_of_denominator_ne_zero` as
+  deterministic convenience providers that keep only the leave-one-out shifted
+  determinant and scalar denominator nonzero assumptions explicit. This remains
+  a
+  finite-dimensional algebra layer and does not enter probability,
+  concentration, or positivity-provider construction.
+
+
+
+
+- PrecisionDA H2 good-event probability target:
+  added `PaperH2GoodEventProbabilityRHS`, `paperH2LeaveOneOutBadEvent`,
+  `paperH2LeaveOneOutBadEvent_mem_iff`,
+  `paperH2LeaveOneOutBadEvent_eq_compl`,
+  `PaperH2LeaveOneOutBadEventMeasurabilityProvider`,
+  `paperH2LeaveOneOutBadEvent_measurable_of_provider`,
+  `PaperH2LeaveOneOutGoodEventProbabilityStatement`,
+  `PaperH2LeaveOneOutGoodEventProbabilityProvider`,
+  `paperH2LeaveOneOutGoodEventProbabilityStatement_of_provider`, and
+  `paperH2LeaveOneOutGoodEventProbability_bound_of_provider` as typed proof-entry
+  contracts for the complement of the pointwise H2 good event. This records
+  only explicit measurability/probability fields and does not prove probability bounds,
+  measurability, concentration, deterministic equivalents, Theorem 1, or the
+  closed-form RHS.
+- PrecisionDA first H2 bad-event proof leaves:
+  added `paperH2LeaveOneOutBadEvent_mem_iff`, a pure definitional membership
+  rewrite from bad-event membership to non-membership in the good event;
+  `paperH2LeaveOneOutBadEvent_eq_compl`, the corresponding set-level
+  complement identity; and
+  `paperH2LeaveOneOutBadEvent_measurable_of_provider`, a projection from the
+  explicit measurability provider. The two complement rewrites are proved by
+  `rfl`, and this work does not enter measurability proofs, probability,
+  concentration, deterministic-equivalent, Theorem 1, or closed-form RHS work.
+- PrecisionDA Theorem 1 paper-tail H2 probability consumer:
+  added `shrinkageTheorem1PaperTailH2Probability_of_providers` as a thin
+  projection that accepts the existing `ShrinkageTheorem1PaperTailProviders`
+  bundle plus an explicit `PaperH2LeaveOneOutGoodEventProbabilityProvider` and
+  returns that H2 probability provider unchanged. This preserves the bundle
+  shape and proves no probability, concentration, measurability,
+  deterministic-equivalent, Theorem 1, closed-form RHS, or `Delta_X(lambda)`
+  result.
+- PrecisionDA Theorem 1 paper-tail H2 probability consumer-statement wrapper:
+  added `shrinkageTheorem1PaperTailH2ProbabilityConsumerStatement_of_providers`
+  as a thin adapter from `ShrinkageTheorem1PaperTailProviders`, explicit
+  `PaperH2LeaveOneOutBadEventMeasurabilityProvider`, and explicit
+  `PaperH2LeaveOneOutGoodEventProbabilityProvider` to
+  `PaperH2LeaveOneOutProbabilityConsumerStatement`. The short-name alias
+  `shrinkageTheorem1PaperTailH2ProbabilityConsumer_of_providers` has the same
+  target. This does not add H2 probability fields to the paper-tail bundle and
+  proves no probability, measurability, concentration, deterministic-equivalent,
+  Theorem 1, closed-form RHS, or `Delta_X(lambda)` result.
+- PrecisionDA Theorem 1 paper-tail H2 bad-event probability projection:
+  added `shrinkageTheorem1PaperTailH2ProbabilityConsumer_badEventProbability_of_providers`
+  as a field projection from the paper-tail H2 probability consumer statement
+  wrapper to the bad-event probability bound. This reuses explicit H2 provider
+  inputs and proves no new probability, measurability, concentration,
+  deterministic-equivalent, Theorem 1, closed-form RHS, or `Delta_X(lambda)`
+  result.
+- PrecisionDA H2 probability provider projection leaf:
+  added `paperH2LeaveOneOutGoodEventProbabilityStatement_of_provider` and
+  `paperH2LeaveOneOutGoodEventProbability_bound_of_provider` as thin
+  projections from `PaperH2LeaveOneOutGoodEventProbabilityProvider`. This only
+  projects existing provider fields and proves no probability, measurability,
+  concentration, deterministic-equivalent, Theorem 1, or closed-form RHS result.
+- PrecisionDA H2 lower-singular-value eta-only event layer:
+  added `paperH2LowerSingularValueGoodEvent`,
+  `paperH2LowerSingularValueBadEvent`, membership/complement rewrites,
+  `PaperH2LowerSingularValueStatement`, and
+  `PaperH2LowerSingularValueEventProvider` for the eta-only leave-one-out
+  covariance lower-bound event. This is an API/event split only, distinct from
+  the lam-dependent `PaperH2LowerSingularValueProvider` proof-entry shell, and
+  proves no measurability, probability, concentration, deterministic-equivalent,
+  Theorem 1, or closed-form RHS result.
+
+- PrecisionDA H2 lower-singular-value provider shell:
+  added `PaperH2LowerSingularValueProvider` as the minimal proof-entry boundary
+  for the future “H2 from lower singular value” route, with explicit
+  `eta_positive`, `rhs_nonnegative`, `bad_event_measurable`, and
+  `bad_event_probability` fields targeting the existing
+  `paperH2LeaveOneOutBadEvent`. The projection theorems
+  `paperH2LeaveOneOutBadEventMeasurabilityProvider_of_lowerSingularValueProvider`,
+  `paperH2LeaveOneOutGoodEventProbabilityProvider_of_lowerSingularValueProvider`,
+  and
+  `paperH2LeaveOneOutProbabilityConsumerStatement_of_lowerSingularValueProvider`
+  only repackage those fields into existing H2 provider/consumer surfaces. This
+  proves no lower-singular-value theorem, probability bound, measurability,
+  concentration, deterministic-equivalent, Theorem 1, or closed-form RHS result.
+- PrecisionDA H2 probability consumer statement:
+  added `PaperH2LeaveOneOutProbabilityConsumerStatement` as a combined
+  downstream statement boundary for explicit H2 bad-event measurability and the
+  supplied H2 good-event probability provider. The bridge
+  `paperH2LeaveOneOutProbabilityConsumerStatement_of_providers` and bound helper
+  `paperH2LeaveOneOutProbabilityConsumer_bound_of_providers` only project
+  existing provider fields. This proves no probability bound, measurability,
+  concentration, deterministic equivalent, Theorem 1 result, or closed-form RHS.
+- PrecisionDA Theorem 1 paper-tail bridge projection checks:
+  added downstream API coverage that projects `providers`, `lambda_positive`,
+  `threshold_nonnegative`, `tail_rhs_nonnegative`, and `tail_bound` from
+  `shrinkageTheorem1PaperTailStatement_of_providers`. This is regression
+  coverage for the thin bridge only and proves no probability, concentration,
+  measurability, deterministic-equivalent, closed-form RHS, or
+  `Delta_X(lambda)` bound.
+- PrecisionDA Theorem 1 paper-tail statement bridge:
+  added `shrinkageTheorem1PaperTailStatement_of_providers` as a thin consumer
+  from `ShrinkageTheorem1PaperTailProviders` and explicit scalar/tail-bound
+  assumptions to `ShrinkageTheorem1PaperTailStatement`. This does not prove
+  Theorem 1, probability bounds, concentration, measurability, deterministic
+  equivalents, the closed-form RHS, or `Delta_X(lambda)` bounds.
+- PrecisionDA Theorem 1 paper-tail provider bundle:
+  added `ShrinkageTheorem1PaperTailProviders` as a bundled downstream-consumer
+  contract for the `core`, `rhs`, `bias_control`, and `measurability` paper-tail
+  provider fields. This does not prove Theorem 1, probability bounds,
+  measurability, concentration, deterministic equivalents, the closed-form RHS,
+  or `Delta_X(lambda)` bounds.
+- PrecisionDA Theorem 1 paper-tail measurability provider:
+  added `ShrinkageTheorem1PaperTailMeasurabilityProvider` as an explicit
+  provider for measurability of `shrinkageTheorem1PaperTailEvent`. This records
+  the side condition only and does not prove measurability, probability bounds,
+  concentration, deterministic equivalents, or Theorem 1.
+- PrecisionDA H1 provider vocabulary:
+  added the random paper-oriented data-matrix alias, column/entry assumption
+  predicates, and `PaperH1SubGaussianModelStatement` /
+  `PaperH1SubGaussianModelProvider` for the paper model
+  `X = SigmaSqrt * Z`. This is a statement/API layer only and proves no
+  concentration or Theorem 1 probability bound.
 
 ## Provider-Facing Lieb/Tropp Layer
 
@@ -423,7 +675,7 @@ lake test
 lake build HighDimProbJudge
 ```
 
-Last verified locally on 2026-06-27 with the commands above.
+Last verified locally on 2026-06-30 with the commands above.
 
 ## Archive
 

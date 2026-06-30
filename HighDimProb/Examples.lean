@@ -6,6 +6,9 @@ usage surface.
 RandomMatrix examples are intentionally routed through `StatementRoutes` instead
 of importing every intermediate bridge file here. Focused lower-level examples
 can still be imported directly by contributors who need them.
+
+PrecisionDA examples are deterministic object-layer consumers only; they do not
+open probability or concentration routes.
 -/
 
 import HighDimProb.Examples.BasicUsage
@@ -17,5 +20,6 @@ import HighDimProb.Examples.RandomMatrixUsage
 import HighDimProb.Examples.RandomVariableUsage
 import HighDimProb.Examples.RandomVectorUsage
 import HighDimProb.Examples.TailUsage
+import HighDimProb.Examples.PrecisionDA.CovarianceTraceExpansionUsage
 import HighDimProb.Examples.RandomMatrix.StatementRoutes
 import HighDimProb.Examples.RandomMatrix.SampleCovarianceUsage

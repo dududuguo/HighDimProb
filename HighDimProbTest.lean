@@ -56,3 +56,4 @@ import HighDimProbTest.BookStatements
 import HighDimProbTest.NoDeepMathYet
 import HighDimProbTest.ExperimentalImports
 import HighDimProbTest.ExamplesAPI
+import HighDimProbTest.PrecisionDAAPI
