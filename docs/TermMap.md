@@ -35,8 +35,12 @@ inverse/trace-resolvent derivative layer
 specializations), the Epstein consumer namespace `EpsteinLine`
 (`traceSlope`, `traceSecond`, `concavity_of_traceSecond_nonpos_of_lineDerivSA`,
 `_of_eval`), conditional Epstein/Lieb/Tropp provider bridges, spectral
-endpoint monotonicity, trace-MGF-to-Laplace contracts, and provider-compressed
-natural-state tail helpers, and the strengthened history/current-step independence bridge. `CFCLog.DerivOp` is bookkeeping only, and the
-provider layer still stops short of any log-resolvent representation, the
-Epstein sign theorem, and full Lieb/Tropp claims or the exact conditioning expectation chain. Keep this separate from
-reader-facing examples and the core `HighDimProb.RandomMatrix` aggregate.
+endpoint monotonicity, trace-MGF-to-Laplace contracts, provider-compressed
+natural-state tail helpers, and the `TroppNaturalHistory.*` short aliases for
+suffix measurability and strengthened history/current-step independence. The
+long natural-history theorem names remain compatibility surfaces.
+`CFCLog.DerivOp` is bookkeeping only, and the provider layer still stops short
+of any log-resolvent representation, the Epstein sign theorem, full Lieb/Tropp
+claims, the weaker independence statement without explicit summand
+measurability, or the exact conditioning expectation chain. Keep this separate
+from reader-facing examples and the core `HighDimProb.RandomMatrix` aggregate.

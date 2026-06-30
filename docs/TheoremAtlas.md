@@ -126,8 +126,11 @@ monotonicity step is proved by `traceMatrixExp_mono_add_selfAdjoint`, and
 `troppLogExpComparisonToK` proves the resulting deterministic comparison.
 The finite-family conditioning chain now has the thin witness
 `troppConditionalStep_of_iIndepFun`; it forwards the explicit per-index
-conditional-expectation provider and does not prove the history, independence,
-or conditional-expectation inputs themselves. The conditional route is now also
+conditional-expectation provider and does not prove the history,
+weaker-independence, or conditional-expectation inputs themselves. The
+provider facade separately exposes strengthened history/current-step
+independence from `iIndepFun` plus explicit summand measurability. The
+conditional route is now also
 composed into the finite-family Bernstein trace-MGF conclusion by
 `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge`, under explicit
 natural-state, integrability, MGF, and variance-proxy assumptions recorded in
@@ -142,16 +145,17 @@ this is not a full Matrix Bernstein theorem. The provider-facing
 `HighDimProb.RandomMatrix.LiebProvider` facade also exposes the ambient
 matrix-exp Frechet derivative layer, spectral endpoint monotonicity, and
 trace-MGF-to-Laplace contracts as bridge infrastructure; these do not close the
-self-adjoint carrier, `CFC.log`, or Lieb/Tropp analytic blockers.
+weaker independence statement, conditional expectation, log-resolvent, or
+Lieb/Tropp analytic blockers.
 
 ## Not Yet Proved
 
 - Full Tropp/Lieb machinery.
 - Golden-Thompson route.
 - Full unconditional Matrix Bernstein theorem.
-- Natural history measurability, independence conditioning,
-  conditional-expectation reduction, and trace-exp integrability propagation for
-  the conditional-step Tropp route.
+- The weaker natural-history independence statement without explicit summand
+  measurability, conditional-expectation reduction, and trace-exp integrability
+  propagation for the conditional-step Tropp route.
 - Proofs of the remaining hardbone statement targets for Tropp/Lieb,
   automatic trace-exp domination/integrability, automatic
   variance-proxy sharpening beyond centered-square expectation expansion,

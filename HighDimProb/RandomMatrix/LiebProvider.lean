@@ -21,6 +21,7 @@ first-order `CFC.log` affine-line derivatives, short inverse/trace-resolvent
 derivatives, derivative-level Epstein consumer reductions, deterministic
 log/order and trace-exp monotonicity, conditional Epstein-to-Lieb/Tropp
 wrappers, bounded finite-measure integrability providers, natural-history
-measurability from suffix entries, identity support domination, spectral
-endpoint monotonicity, and thin trace-MGF-to-Laplace contracts.
+measurability and strengthened independence under the `TroppNaturalHistory.*`
+alias layer, identity support domination, spectral endpoint monotonicity, and
+thin trace-MGF-to-Laplace contracts.
 -/

@@ -148,6 +148,7 @@ Non-goals for this provider layer:
 
 - It does not prove a log-resolvent representation, the Epstein trace-second
   sign theorem, the unconditional Epstein affine-line theorem, full Lieb
-  concavity, Golden-Thompson, history/current independence, conditional
-  expectation, variance-proxy normalization, full-sum trace-integrability,
-  tail-event domination, or full Matrix Bernstein.
+  concavity, Golden-Thompson, the weaker exact history/current independence
+  statement without explicit summand measurability, conditional expectation,
+  variance-proxy normalization, full-sum trace-integrability, tail-event
+  domination, or full Matrix Bernstein.

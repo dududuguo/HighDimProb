@@ -1,11 +1,14 @@
 import HighDimProb.RandomMatrix.HardboneStatements
 
 /-!
-# Natural-history measurability provider
+# Natural-history provider bridges
 
-This module proves the smallest suffix-entry measurability bridge needed by
-the Tropp natural-history statement. It does not prove independence or
-conditional expectation.
+This module contains the provider-facing natural-history bridges currently
+available in the main repository: suffix-entry measurability for natural Tropp
+histories and a strengthened history/current-step independence bridge from
+finite-family independence plus explicit summand measurability. It does not
+prove the weaker independence statement without that measurability premise or
+the conditional-expectation reduction.
 -/
 
 namespace HighDimProb
@@ -163,6 +166,45 @@ theorem troppHistoryStepIndependent_of_iIndepFun_of_measurable
     simpa [troppRandomHistory, troppCurrentRandomStep, troppStateHistory] using
       hSuffixIndep.comp hAdd measurable_id
   simpa [troppStateHistory] using hHist
+
+/- Short namespaced aliases for the provider-facing natural-history bridges.
+
+The long theorem names above remain the descriptive compatibility surface; these
+aliases are the preferred downstream and agent-facing entry points. -/
+namespace TroppNaturalHistory
+
+/-- Short alias for suffix-entry measurability of natural Tropp histories. -/
+theorem suffixMeasurable
+    {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
+    (theta : Real)
+    (X : Fin m -> HighDimProb.RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (mHist : Fin m -> MeasurableSpace Omega)
+    (hSuffix : forall i : Fin m,
+      forall j : Fin m,
+        ((i.succ : Fin (m + 1)) : Nat) <= (j : Nat) ->
+          forall r c,
+            @Measurable Omega Real (mHist i) inferInstance
+              (fun omega => X j omega r c)) :
+    HighDimProb.troppNaturalHistoryMeasurable_statement theta X K mHist :=
+  troppNaturalHistoryMeasurable_of_suffix_entry_measurable theta X K mHist hSuffix
+
+/-- Short alias for the strengthened history/current-step independence bridge. -/
+theorem historyStepIndependent
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} {m n : Nat}
+    (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (hIndep : ProbabilityTheory.iIndepFun X P)
+    (hMeas : forall i, Measurable (X i)) :
+    forall i,
+      @ProbabilityTheory.IndepFun Omega _ _ mOmega _ _
+        (@troppStateHistory Omega mOmega m n theta X K i)
+        (@troppCurrentRandomStep Omega mOmega m n theta X i) P :=
+  troppHistoryStepIndependent_of_iIndepFun_of_measurable theta X K hIndep hMeas
+
+end TroppNaturalHistory
 
 end
 

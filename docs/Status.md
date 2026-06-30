@@ -418,7 +418,9 @@ specializations), the derivative-level Epstein consumer layer
 `EpsteinLine.traceSecond`, `EpsteinLine.concavity_of_traceSecond_nonpos_of_lineDerivSA`,
 and `_of_eval`), facade imports, the explicit `EpsteinAffineLineConcavity`
 conditional route, bounded finite-measure integrability providers,
-natural-history measurability from suffix-entry measurability, strengthened history/current-step independence from `iIndepFun` plus summand measurability, identity support
+natural-history measurability from suffix-entry measurability, the
+`TroppNaturalHistory.*` short aliases, strengthened history/current-step
+independence from `iIndepFun` plus summand measurability, identity support
 domination, spectral endpoint monotonicity, thin trace-MGF-to-Laplace
 contracts, and the S16 natural-state tail wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`.
@@ -439,8 +441,9 @@ The hardbone `traceExpIntegrable_troppStateHistory_add_*_statement` targets
 remain typed contracts and were not tightened in this pass. The new
 `CFCLog.DerivOp` name is only pointwise derivative bookkeeping; it is not a
 stable second-level Frechet codomain. The provider layer still does not prove
-full Epstein/Lieb, Golden-Thompson, independence, conditional expectation,
-variance proxy, tail-event domination, or full Matrix Bernstein.
+full Epstein/Lieb, Golden-Thompson, the weaker exact independence statement
+without explicit summand measurability, conditional expectation, variance proxy,
+tail-event domination, or full Matrix Bernstein.
 
 ## Verification
 
@@ -455,7 +458,7 @@ lake test
 lake build HighDimProbJudge
 ```
 
-Last verified locally on 2026-06-29 with the commands above.
+Last verified locally on 2026-06-30 with the commands above.
 
 ## Archive
 

@@ -487,6 +487,8 @@ Epstein consumer reductions, and the conditional bridges:
 - `liebJensenTraceExp_statement_of_epsteinAffineLine`
 - `troppMasterTraceMGFStep_of_epsteinAffineLine`
 - `troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder`
+- `TroppNaturalHistory.suffixMeasurable`
+- `TroppNaturalHistory.historyStepIndependent`
 - `troppNaturalHistoryMeasurable_of_suffix_entry_measurable`
 - `troppHistoryStepIndependent_of_iIndepFun_of_measurable`
 - `matrixExpScaledIntegrable_of_provider_finiteMeasure`
@@ -525,10 +527,11 @@ summand/comparison-bound wrappers with explicit `X` / `K` operator-norm
 premises. `CFCLog.DerivOp` remains pointwise derivative bookkeeping only; it is
 not a stable second-level Frechet codomain.
 
-The provider layer is still conditional: spectral endpoint monotonicity and the
-trace-MGF-to-Laplace contracts are proved bridge theorems, but they do not prove
-the Epstein sign theorem, full Epstein/Lieb, Golden-Thompson, any
-log-resolvent representation, exact history/current independence without explicit measurability, conditional
-expectation, variance-proxy normalization, tail-event domination, or full
-Matrix Bernstein. It separates upstream proof-provider surfaces from downstream
-example and tail wrappers.
+The provider layer is still conditional: spectral endpoint monotonicity,
+strengthened natural-history independence, and the trace-MGF-to-Laplace
+contracts are proved bridge theorems, but they do not prove the Epstein sign
+theorem, full Epstein/Lieb, Golden-Thompson, any log-resolvent representation,
+the weaker exact history/current independence statement without explicit
+summand measurability, conditional expectation, variance-proxy normalization,
+tail-event domination, or full Matrix Bernstein. It separates upstream
+proof-provider surfaces from downstream example and tail wrappers.
