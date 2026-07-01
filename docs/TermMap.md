@@ -26,22 +26,25 @@ than copying full theorem signatures.
 
 ## Provider-Facing RandomMatrix Terms
 
-`HighDimProb.RandomMatrix.LiebProvider` is the explicit import for the ambient
-and self-adjoint carrier matrix-exp Frechet derivative primitives, the
-strictly-positive carrier `CFC.log` first-derivative namespace `CFCLog`
-(`Carrier`, `DerivOp`, `derivSAAt`, `lineDeriv`, `hasDerivAt_line`), the short
-inverse/trace-resolvent derivative layer
-(`hasDerivAt_inverse_affineLine`,
-`hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle`, and
-specializations), the Epstein consumer namespace `EpsteinLine`
-(`traceSlope`, `traceSecond`, `concavity_of_traceSecond_nonpos_of_lineDerivSA`,
-`_of_eval`), conditional Epstein/Lieb/Tropp provider bridges, spectral
-endpoint monotonicity, trace-MGF-to-Laplace contracts, provider-compressed
-natural-state tail helpers, and the `TroppNaturalHistory.*` short aliases for
-suffix measurability and strengthened history/current-step independence. The
-long natural-history theorem names remain compatibility surfaces.
-`CFCLog.DerivOp` is bookkeeping only, and the provider layer still stops short
-of any log-resolvent representation, the Epstein sign theorem, full Lieb/Tropp
-claims, the weaker independence statement without explicit summand
+`HighDimProb.RandomMatrix.LiebProvider` is the explicit import for the provider
+proof layer. It contains ambient and self-adjoint carrier matrix-exp Frechet
+derivative primitives, the scalar divided-difference coefficient
+`matrixExpDividedDifferenceSeries`, the preferred trace-pairing alias
+`MatrixExpFDeriv.conjDiagonalSymmTraceSum`, the strictly-positive carrier
+`CFC.log` first-derivative namespace `CFCLog`, preferred diagonal adapters
+`CFCLog.diagonalDerivEntryMul`, `CFCLog.diagonalLineDerivEntryMul`, and
+`CFCLog.diagonalLineDerivTraceSum`, the short inverse/trace-resolvent derivative
+layer, and the finite-cutoff log-resolvent namespace `LogResolvent`.
+
+The same import also exposes the Epstein consumer namespace `EpsteinLine`,
+conditional Epstein/Lieb/Tropp provider bridges, spectral endpoint monotonicity,
+trace-MGF-to-Laplace contracts, provider-compressed natural-state tail helpers,
+and the `TroppNaturalHistory.*` short aliases for suffix measurability and
+strengthened history/current-step independence. Long natural-history theorem
+names remain compatibility surfaces.
+
+`CFCLog.DerivOp` is bookkeeping only. The provider layer still stops short of a
+weighted CFC-log resolvent-kernel adapter, the Epstein second-derivative sign,
+full Lieb/Tropp, the weaker independence statement without explicit summand
 measurability, or the exact conditioning expectation chain. Keep this separate
 from reader-facing examples and the core `HighDimProb.RandomMatrix` aggregate.

@@ -440,10 +440,13 @@ Use this layer explicitly, not through the core `HighDimProb.RandomMatrix` aggre
 import HighDimProb.RandomMatrix.LiebProvider
 ```
 
-This import exposes the upstream provider facade, the ambient and
-self-adjoint matrix-exp derivative primitives, the first-order `CFC.log`
-affine-line layer, the short resolvent derivative layer, the derivative-level
-Epstein consumer reductions, and the conditional bridges:
+This import exposes the upstream provider facade: ambient and self-adjoint
+matrix-exp derivatives, first-order strictly-positive `CFC.log` affine-line
+APIs, short inverse/trace-resolvent derivatives, finite-cutoff log-resolvent
+identities, derivative-level Epstein consumers, and conditional Tropp/Lieb
+bridges.
+
+Matrix-exp and divided-difference API:
 
 - `matrixExpFDeriv`
 - `hasFDerivAt_matrix_exp`
@@ -454,6 +457,21 @@ Epstein consumer reductions, and the conditional bridges:
 - `matrixExpFDerivSelfAdjoint_spectral_equiv`
 - `hasFDerivAt_matrix_exp_selfAdjoint`
 - `hasStrictFDerivAt_matrix_exp_selfAdjoint`
+- `matrixExpDividedDifferenceSeries`
+- `matrixExpDividedDifferenceSeries_pos`
+- `matrixExpDividedDifferenceSeries_ne_zero`
+
+Preferred spectral adapter aliases:
+
+- `MatrixExpFDeriv.conjDiagonalSymmTraceSum`
+
+Backing low-level theorem names, kept for exact proof work and compatibility:
+
+- `matrixExpFDerivSelfAdjoint_diagonal_symm_entry_mul`
+- `trace_mul_matrixExpFDerivSelfAdjoint_conj_diagonal_symm_eq_sum`
+
+Strictly-positive `CFC.log` derivative API:
+
 - `cfcLogSelfAdjoint`
 - `CFCLog.Carrier`
 - `CFCLog.DerivOp`
@@ -463,6 +481,21 @@ Epstein consumer reductions, and the conditional bridges:
 - `CFCLog.hasDerivAt_line`
 - `exists_hasDerivAt_cfcLog_affineLine_of_strictlyPositive`
 - `hasDerivAt_cfcLog_affineLine_of_strictlyPositive`
+
+Preferred diagonal and trace-paired spectral adapter aliases:
+
+- `CFCLog.diagonalDerivEntryMul`
+- `CFCLog.diagonalLineDerivEntryMul`
+- `CFCLog.diagonalLineDerivTraceSum`
+
+Backing low-level theorem names, kept for exact proof work and compatibility:
+
+- `CFCLog.derivSAAt_matrixExpSelfAdjoint_diagonal_entry_mul`
+- `CFCLog.lineDerivSA_matrixExpSelfAdjoint_diagonal_entry_mul`
+- `CFCLog.trace_mul_lineDerivSA_matrixExpSelfAdjoint_diagonal_eq_sum`
+
+Resolvent and finite-cutoff log-resolvent API:
+
 - `hasDerivAt_inverse_affineLine`
 - `hasDerivAt_inverse_affineLine_of_strictlyPositive`
 - `trace_resolvent_derivative_cycle`
@@ -473,6 +506,21 @@ Epstein consumer reductions, and the conditional bridges:
 - `hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle_of_strictlyPositive`
 - `hasDerivAt_trace_mul_inverse_affineLine`
 - `hasDerivAt_trace_mul_inverse_affineLine_of_strictlyPositive`
+- `LogResolvent.kernelFixedSum`
+- `LogResolvent.kernelCutoffSum`
+- `LogResolvent.shiftedInvTraceSum`
+- `LogResolvent.identityCutoffSum`
+- `LogResolvent.identityCutoffTraceLogSub`
+- `LogResolvent.weightedCutoffSum`
+- `LogResolvent.weightedCutoffTraceLogSub`
+- `LogResolvent.weightedTraceLogEqShiftSubCutoff`
+- `LogResolvent.weightedShiftTraceLogSubScalarLog_tendsto_zero`
+- `LogResolvent.weightedCutoffSubScalarLog_tendsto_negTraceLog`
+- `LogResolvent.weightedShiftRemainderTendstoZero`
+- `LogResolvent.weightedCutoffRenormTendstoNegTraceLog`
+
+Epstein/Tropp conditional consumers and support APIs:
+
 - `cfcLogLineDerivTraceSecond`
 - `EpsteinLine.traceSlope`
 - `EpsteinLine.traceSecond`
@@ -508,30 +556,12 @@ Epstein consumer reductions, and the conditional bridges:
 - `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions`
 - `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
 
-Interface audit: `matrixExpFDeriv`, `hasFDerivAt_matrix_exp`,
-`hasStrictFDerivAt_matrix_exp`, and `hasFDerivAt_matrix_exp_trunc` live on the
-ambient matrix space, while `matrixExpSelfAdjoint`,
-`matrixExpFDerivSelfAdjoint`, `matrixExpFDerivSelfAdjoint_spectral_equiv`,
-`hasFDerivAt_matrix_exp_selfAdjoint`, and
-`hasStrictFDerivAt_matrix_exp_selfAdjoint` live on the self-adjoint carrier.
-`cfcLogSelfAdjoint`, `CFCLog.derivSAAt`, `CFCLog.lineDeriv`, and
-`CFCLog.hasDerivAt_line` now expose the strictly-positive carrier `CFC.log`
-first derivative. `hasDerivAt_inverse_affineLine`,
-`hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle`, and their
-specializations expose the small inverse/trace-resolvent affine-line layer
-without adding any log-resolvent representation claim, while
-`cfcLogLineDerivTraceSecond` and the `EpsteinLine.*` wrappers expose the
-derivative-level Epstein consumer route. The finite-measure trace-exp sublayer
-now exposes both the raw endpoint-bound wrappers and the stronger
-summand/comparison-bound wrappers with explicit `X` / `K` operator-norm
-premises. `CFCLog.DerivOp` remains pointwise derivative bookkeeping only; it is
-not a stable second-level Frechet codomain.
-
-The provider layer is still conditional: spectral endpoint monotonicity,
-strengthened natural-history independence, and the trace-MGF-to-Laplace
-contracts are proved bridge theorems, but they do not prove the Epstein sign
-theorem, full Epstein/Lieb, Golden-Thompson, any log-resolvent representation,
-the weaker exact history/current independence statement without explicit
-summand measurability, conditional expectation, variance-proxy normalization,
-tail-event domination, or full Matrix Bernstein. It separates upstream
-proof-provider surfaces from downstream example and tail wrappers.
+Interface audit: `CFCLog.DerivOp` is pointwise derivative bookkeeping only, not a
+stable second-level Frechet codomain. The `LogResolvent` layer gives spectral
+sum, CFC-log cutoff, and renormalized cutoff-limit handles; it does not yet give
+a weighted `CFCLog.lineDeriv` / `CFCLog.derivSAAt` resolvent-kernel adapter or an
+Epstein sign proof. The provider layer remains conditional and stops short of
+full Epstein/Lieb, Golden-Thompson, exact conditioning expectation,
+variance-proxy normalization, tail-event domination, or full Matrix Bernstein.
+It is intentionally separate from reader-facing examples and the core
+`HighDimProb.RandomMatrix` aggregate.

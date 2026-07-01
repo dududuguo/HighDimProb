@@ -336,6 +336,35 @@ theorem derivSAAt_expFDeriv
   rw [← he]
   exact e.symm_apply_apply D
 
+/-- Entrywise divided-difference inverse formula for `CFCLog.derivSAAt` at an
+exponential diagonal base point.
+
+If `D = Matrix.diagonal d`, then the `(p,q)` entry of the logarithm derivative
+at `matrixExpSelfAdjoint D` is scaled by the reciprocal exponential
+divided-difference coefficient. This is a spectral bookkeeping adapter, not an
+Epstein sign theorem. -/
+theorem derivSAAt_matrixExpSelfAdjoint_diagonal_entry_mul
+    {n : Nat} (D B : Carrier n) (d : Fin n -> Real)
+    (hD : (D : Matrix (Fin n) (Fin n) Real) = Matrix.diagonal d)
+    (p q : Fin n) :
+    matrixExpDividedDifferenceSeries (d p) (d q) *
+      (((derivSAAt (matrixExpSelfAdjoint D) B : Carrier n) :
+          Matrix (Fin n) (Fin n) Real) p q) =
+        (B : Matrix (Fin n) (Fin n) Real) p q := by
+  simpa [derivSAAt, cfcLogSelfAdjoint_matrixExpSelfAdjoint_eq D] using
+    matrixExpFDerivSelfAdjoint_diagonal_symm_entry_mul D B d hD p q
+
+/-- Preferred short alias for
+`CFCLog.derivSAAt_matrixExpSelfAdjoint_diagonal_entry_mul`. -/
+theorem diagonalDerivEntryMul
+    {n : Nat} (D B : Carrier n) (d : Fin n -> Real)
+    (hD : (D : Matrix (Fin n) (Fin n) Real) = Matrix.diagonal d)
+    (p q : Fin n) :
+    matrixExpDividedDifferenceSeries (d p) (d q) *
+      (((derivSAAt (matrixExpSelfAdjoint D) B : Carrier n) :
+          Matrix (Fin n) (Fin n) Real) p q) =
+        (B : Matrix (Fin n) (Fin n) Real) p q :=
+  derivSAAt_matrixExpSelfAdjoint_diagonal_entry_mul D B d hD p q
 /-- Carrier derivative vector for `CFC.log` along a self-adjoint affine line. -/
 noncomputable def lineDerivSA
     {n : Nat} (A C : Carrier n) (t : Real) : Carrier n :=
@@ -346,6 +375,99 @@ noncomputable def lineDerivSA
 theorem lineDerivSA_eq_derivSAAt
     {n : Nat} (A C : Carrier n) (t : Real) :
     lineDerivSA A C t = derivSAAt (A + t • C) C := rfl
+
+/-- CFCLog.lineDerivSA at t = 0 inherits the same entrywise
+divided-difference inverse formula at an exponential diagonal base point. -/
+theorem lineDerivSA_matrixExpSelfAdjoint_diagonal_entry_mul
+    {n : Nat} (D B : Carrier n) (d : Fin n -> Real)
+    (hD : (D : Matrix (Fin n) (Fin n) Real) = Matrix.diagonal d)
+    (p q : Fin n) :
+    matrixExpDividedDifferenceSeries (d p) (d q) *
+      (((lineDerivSA (matrixExpSelfAdjoint D) B 0 : Carrier n) :
+          Matrix (Fin n) (Fin n) Real) p q) =
+        (B : Matrix (Fin n) (Fin n) Real) p q := by
+  simpa [lineDerivSA_eq_derivSAAt] using
+    derivSAAt_matrixExpSelfAdjoint_diagonal_entry_mul D B d hD p q
+
+/-- Trace-paired diagonal double-sum formula for `CFCLog.lineDerivSA` at an
+exponential diagonal base point.
+
+This packages the diagonal entry formula into the weighted trace form needed by
+later resolvent-kernel adapters. -/
+theorem trace_mul_lineDerivSA_matrixExpSelfAdjoint_diagonal_eq_sum
+    {n : Nat} (D B C : Carrier n) (d : Fin n -> Real)
+    (hD : (D : Matrix (Fin n) (Fin n) Real) = Matrix.diagonal d) :
+    Matrix.trace ((B : Matrix (Fin n) (Fin n) Real) *
+      (((lineDerivSA (matrixExpSelfAdjoint D) C 0 : Carrier n) : Carrier n) :
+        Matrix (Fin n) (Fin n) Real)) =
+      Finset.univ.sum (fun p => Finset.univ.sum (fun q =>
+        (B : Matrix (Fin n) (Fin n) Real) q p *
+          ((C : Matrix (Fin n) (Fin n) Real) p q /
+            matrixExpDividedDifferenceSeries (d p) (d q)))) := by
+  let L : Matrix (Fin n) (Fin n) Real :=
+    (((lineDerivSA (matrixExpSelfAdjoint D) C 0 : Carrier n) : Carrier n) :
+      Matrix (Fin n) (Fin n) Real)
+  change Matrix.trace ((B : Matrix (Fin n) (Fin n) Real) * L) =
+      Finset.univ.sum (fun p => Finset.univ.sum (fun q =>
+        (B : Matrix (Fin n) (Fin n) Real) q p *
+          ((C : Matrix (Fin n) (Fin n) Real) p q /
+            matrixExpDividedDifferenceSeries (d p) (d q))))
+  calc
+    Matrix.trace ((B : Matrix (Fin n) (Fin n) Real) * L) =
+        Finset.univ.sum (fun p => Finset.univ.sum (fun q =>
+          (B : Matrix (Fin n) (Fin n) Real) p q * L q p)) := by
+            simp [L, Matrix.trace, Matrix.mul_apply]
+    _ = Finset.univ.sum (fun p => Finset.univ.sum (fun q =>
+          (B : Matrix (Fin n) (Fin n) Real) q p * L p q)) := by
+            rw [Finset.sum_comm]
+    _ = Finset.univ.sum (fun p => Finset.univ.sum (fun q =>
+          (B : Matrix (Fin n) (Fin n) Real) q p *
+            ((C : Matrix (Fin n) (Fin n) Real) p q /
+              matrixExpDividedDifferenceSeries (d p) (d q)))) := by
+            refine Finset.sum_congr rfl ?_
+            intro p hp
+            refine Finset.sum_congr rfl ?_
+            intro q hq
+            have hEntry :
+                matrixExpDividedDifferenceSeries (d p) (d q) * L p q =
+                  (C : Matrix (Fin n) (Fin n) Real) p q := by
+              simpa [L] using
+                lineDerivSA_matrixExpSelfAdjoint_diagonal_entry_mul D C d hD p q
+            have hphi :
+                matrixExpDividedDifferenceSeries (d p) (d q) ≠ 0 :=
+              matrixExpDividedDifferenceSeries_ne_zero (d p) (d q)
+            have hEntryDiv :
+                L p q =
+                  (C : Matrix (Fin n) (Fin n) Real) p q /
+                    matrixExpDividedDifferenceSeries (d p) (d q) := by
+              exact (eq_div_iff hphi).2 (by simpa [mul_comm] using hEntry)
+            rw [hEntryDiv]
+
+/-- Preferred short alias for
+`CFCLog.lineDerivSA_matrixExpSelfAdjoint_diagonal_entry_mul`. -/
+theorem diagonalLineDerivEntryMul
+    {n : Nat} (D B : Carrier n) (d : Fin n -> Real)
+    (hD : (D : Matrix (Fin n) (Fin n) Real) = Matrix.diagonal d)
+    (p q : Fin n) :
+    matrixExpDividedDifferenceSeries (d p) (d q) *
+      (((lineDerivSA (matrixExpSelfAdjoint D) B 0 : Carrier n) :
+          Matrix (Fin n) (Fin n) Real) p q) =
+        (B : Matrix (Fin n) (Fin n) Real) p q :=
+  lineDerivSA_matrixExpSelfAdjoint_diagonal_entry_mul D B d hD p q
+
+/-- Preferred short alias for
+`CFCLog.trace_mul_lineDerivSA_matrixExpSelfAdjoint_diagonal_eq_sum`. -/
+theorem diagonalLineDerivTraceSum
+    {n : Nat} (D B C : Carrier n) (d : Fin n -> Real)
+    (hD : (D : Matrix (Fin n) (Fin n) Real) = Matrix.diagonal d) :
+    Matrix.trace ((B : Matrix (Fin n) (Fin n) Real) *
+      (((lineDerivSA (matrixExpSelfAdjoint D) C 0 : Carrier n) : Carrier n) :
+        Matrix (Fin n) (Fin n) Real)) =
+      Finset.univ.sum (fun p => Finset.univ.sum (fun q =>
+        (B : Matrix (Fin n) (Fin n) Real) q p *
+          ((C : Matrix (Fin n) (Fin n) Real) p q /
+            matrixExpDividedDifferenceSeries (d p) (d q)))) :=
+  trace_mul_lineDerivSA_matrixExpSelfAdjoint_diagonal_eq_sum D B C d hD
 
 /-- Differentiability of `CFCLog.lineDerivSA` is exactly differentiability of the
 pointwise derivative operator after evaluating it on the affine-line direction.

@@ -412,49 +412,57 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
 
 Integrated `HighDimProb.RandomMatrix.LiebProvider` as a separate provider-facing
 import layer. It now exposes the ambient matrix-exp Frechet derivative
-primitives `matrixExpFDeriv`, `hasFDerivAt_matrix_exp`,
-`hasStrictFDerivAt_matrix_exp`, and `hasFDerivAt_matrix_exp_trunc`, the
-self-adjoint carrier restriction `matrixExpSelfAdjoint`,
-`matrixExpFDerivSelfAdjoint`, `matrixExpFDerivSelfAdjoint_spectral_equiv`,
-`hasFDerivAt_matrix_exp_selfAdjoint`, and
-`hasStrictFDerivAt_matrix_exp_selfAdjoint`, the strictly-positive carrier
-`CFC.log` first-derivative layer (`cfcLogSelfAdjoint`, `CFCLog.derivSAAt`,
-`CFCLog.lineDeriv`, `CFCLog.hasDerivAt_line`,
-`exists_hasDerivAt_cfcLog_affineLine_of_strictlyPositive`), the short
-resolvent derivative layer (`hasDerivAt_inverse_affineLine`,
-`trace_resolvent_derivative_cycle`,
-`hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle`, and strict-positive
-specializations), the derivative-level Epstein consumer layer
-(`cfcLogLineDerivTraceSecond`, `EpsteinLine.traceSlope`,
-`EpsteinLine.traceSecond`, `EpsteinLine.concavity_of_traceSecond_nonpos_of_lineDerivSA`,
-and `_of_eval`), facade imports, the explicit `EpsteinAffineLineConcavity`
-conditional route, bounded finite-measure integrability providers,
-natural-history measurability from suffix-entry measurability, the
-`TroppNaturalHistory.*` short aliases, strengthened history/current-step
-independence from `iIndepFun` plus summand measurability, identity support
-domination, spectral endpoint monotonicity, thin trace-MGF-to-Laplace
-contracts, and the S16 natural-state tail wrapper
-`matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`.
+primitives, the self-adjoint carrier restriction, and the reusable scalar
+matrix-exp divided-difference coefficient layer:
+`matrixExpDividedDifferenceSeries`, `matrixExpDividedDifferenceSeries_pos`,
+`matrixExpDividedDifferenceSeries_ne_zero`, and the preferred trace-pairing
+alias `MatrixExpFDeriv.conjDiagonalSymmTraceSum`. The longer theorem names
+`matrixExpFDerivSelfAdjoint_diagonal_symm_entry_mul` and
+`trace_mul_matrixExpFDerivSelfAdjoint_conj_diagonal_symm_eq_sum` remain available
+as precise backing APIs for low-level proof work.
 
-Interface audit: the migrated theorems now cover the ambient and self-adjoint
-matrix-exp derivative layers, the strictly-positive self-adjoint carrier
-`CFC.log` first derivative, and the derivative-level Epstein reductions that
-consume that first-derivative API. The short resolvent provider layer now adds
-inverse and trace-resolvent affine-line derivative bookkeeping, but it still
-does not prove a log-resolvent representation or an Epstein sign theorem. The
-honest finite-measure trace-exp side now also exposes
-`troppCurrentRandomStep_operatorNorm_le_of_summand_bound`,
-`troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds`, and the
-finite-measure wrappers
-`traceExpIntegrable_troppStateHistory_add_step_of_summand_and_comparison_bounds_finiteMeasure`
-/ `traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure`.
-The hardbone `traceExpIntegrable_troppStateHistory_add_*_statement` targets
-remain typed contracts and were not tightened in this pass. The new
-`CFCLog.DerivOp` name is only pointwise derivative bookkeeping; it is not a
-stable second-level Frechet codomain. The provider layer still does not prove
-full Epstein/Lieb, Golden-Thompson, the weaker exact independence statement
-without explicit summand measurability, conditional expectation, variance proxy,
+The strictly-positive carrier `CFC.log` first-derivative layer remains exposed
+through `cfcLogSelfAdjoint`, `CFCLog.derivSAAt`, `CFCLog.lineDeriv`, and
+`CFCLog.hasDerivAt_line`. The preferred spectral adapter aliases are
+`CFCLog.diagonalDerivEntryMul`, `CFCLog.diagonalLineDerivEntryMul`, and
+`CFCLog.diagonalLineDerivTraceSum`; the longer descriptive theorem names remain
+available for exact proof matching. These are diagonal and trace-paired spectral
+adapters at exponential self-adjoint diagonal base points; they are not the
+conjugated-eigenbasis weighted resolvent-kernel adapter and do not prove the
+Epstein sign theorem or Lieb concavity.
+
+The resolvent side is split into two stable namespaces. The older short
+derivative layer exposes inverse and trace-resolvent affine-line derivative
+bookkeeping. The new `LogResolvent` namespace exposes finite-cutoff trace/CFC
+log-resolvent identities and renormalized cutoff limits:
+`LogResolvent.kernelFixedSum`, `LogResolvent.kernelCutoffSum`,
+`LogResolvent.shiftedInvTraceSum`, `LogResolvent.identityCutoffSum`,
+`LogResolvent.identityCutoffTraceLogSub`, `LogResolvent.weightedCutoffSum`,
+`LogResolvent.weightedCutoffTraceLogSub`,
+`LogResolvent.weightedTraceLogEqShiftSubCutoff`,
+`LogResolvent.weightedShiftTraceLogSubScalarLog_tendsto_zero`,
+`LogResolvent.weightedCutoffSubScalarLog_tendsto_negTraceLog`,
+`LogResolvent.weightedShiftRemainderTendstoZero`, and
+`LogResolvent.weightedCutoffRenormTendstoNegTraceLog`.
+
+Interface audit: these migrations give downstream proof agents concrete
+finite-dimensional spectral, CFC-log, and cutoff-resolvent handles inside the
+main repository. They still do not prove a weighted `CFCLog.lineDeriv` /
+`CFCLog.derivSAAt` resolvent-kernel adapter, the arbitrary-weight plain cutoff
+removal without scalar-log renormalization, the Epstein second-derivative sign,
+full Epstein/Lieb, Golden-Thompson, conditional expectation, variance proxy,
 tail-event domination, or full Matrix Bernstein.
+
+The layer also continues to expose derivative-level Epstein consumer reductions,
+the explicit `EpsteinAffineLineConcavity` conditional route, bounded
+finite-measure integrability providers, natural-history measurability from
+suffix-entry measurability, the `TroppNaturalHistory.*` short aliases,
+strengthened history/current-step independence from `iIndepFun` plus summand
+measurability, identity support domination, spectral endpoint monotonicity,
+thin trace-MGF-to-Laplace contracts, and the S16 natural-state tail wrapper
+`matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`.
+`CFCLog.DerivOp` remains pointwise derivative bookkeeping only; it is not a
+stable second-level Frechet codomain.
 
 ## Verification
 
@@ -469,7 +477,7 @@ lake test
 lake build HighDimProbJudge
 ```
 
-Last verified locally on 2026-06-30 with the commands above.
+Last verified locally on 2026-07-01 with the commands above.
 
 ## Archive
 

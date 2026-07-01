@@ -368,13 +368,13 @@ private theorem matrixExpFDeriv_conj_injective_of_mul_eq_one
     _ = U * (V * C * U) * V := by rw [hDir]
     _ = C := hCcancel
 
-private def matrixExpDividedDifferenceSeries (x y : Real) : Real :=
+def matrixExpDividedDifferenceSeries (x y : Real) : Real :=
   tsum (fun j : Nat =>
     (1 / (Nat.factorial (j + 1) : Real)) *
       (Finset.sum (Finset.range (j + 1)) fun i => x ^ (j - i) * y ^ i))
 /-- On the diagonal of the divided-difference kernel, the coefficient series
 collapses to the ordinary scalar exponential. -/
-private theorem matrixExpDividedDifferenceSeries_self (x : Real) :
+theorem matrixExpDividedDifferenceSeries_self (x : Real) :
     matrixExpDividedDifferenceSeries x x = Real.exp x := by
   rw [matrixExpDividedDifferenceSeries]
   trans tsum (fun j : Nat => x ^ j / (Nat.factorial j : Real))
@@ -401,13 +401,13 @@ private theorem matrixExpDividedDifferenceSeries_self (x : Real) :
     exact (congrFun (NormedSpace.exp_eq_tsum_div (𝔸 := Real)) x).symm
 
 /-- The diagonal divided-difference coefficient is strictly positive. -/
-private theorem matrixExpDividedDifferenceSeries_self_pos (x : Real) :
+theorem matrixExpDividedDifferenceSeries_self_pos (x : Real) :
     0 < matrixExpDividedDifferenceSeries x x := by
   rw [matrixExpDividedDifferenceSeries_self]
   exact Real.exp_pos x
 
 /-- The diagonal divided-difference coefficient is nonzero. -/
-private theorem matrixExpDividedDifferenceSeries_self_ne_zero (x : Real) :
+theorem matrixExpDividedDifferenceSeries_self_ne_zero (x : Real) :
     matrixExpDividedDifferenceSeries x x ≠ 0 :=
   (matrixExpDividedDifferenceSeries_self_pos x).ne'
 /-- Scalar exponential tail starting at degree one. -/
@@ -444,7 +444,7 @@ private theorem finite_geometric_dividedDifference_sum_of_lt {x y : Real}
   exact eq_div_of_mul_eq (sub_ne_zero.mpr hxy.ne') hmul
 
 /-- Symmetry of the exponential divided-difference coefficient. -/
-private theorem matrixExpDividedDifferenceSeries_comm (x y : Real) :
+theorem matrixExpDividedDifferenceSeries_comm (x y : Real) :
     matrixExpDividedDifferenceSeries x y = matrixExpDividedDifferenceSeries y x := by
   rw [matrixExpDividedDifferenceSeries, matrixExpDividedDifferenceSeries]
   congr
@@ -459,7 +459,7 @@ private theorem matrixExpDividedDifferenceSeries_comm (x y : Real) :
 
 /-- Closed form of the exponential divided-difference coefficient when
 `x < y`. -/
-private theorem matrixExpDividedDifferenceSeries_of_lt {x y : Real} (hxy : x < y) :
+theorem matrixExpDividedDifferenceSeries_of_lt {x y : Real} (hxy : x < y) :
     matrixExpDividedDifferenceSeries x y = (Real.exp y - Real.exp x) / (y - x) := by
   rw [matrixExpDividedDifferenceSeries]
   trans tsum (fun j : Nat =>
@@ -491,7 +491,7 @@ private theorem matrixExpDividedDifferenceSeries_of_lt {x y : Real} (hxy : x < y
 
 /-- The exponential divided-difference coefficient is strictly positive for all
 real arguments. -/
-private theorem matrixExpDividedDifferenceSeries_pos (x y : Real) :
+theorem matrixExpDividedDifferenceSeries_pos (x y : Real) :
     0 < matrixExpDividedDifferenceSeries x y := by
   rcases lt_trichotomy x y with hxy | hxy | hyx
   · rw [matrixExpDividedDifferenceSeries_of_lt hxy]
@@ -504,7 +504,7 @@ private theorem matrixExpDividedDifferenceSeries_pos (x y : Real) :
 
 /-- The exponential divided-difference coefficient is nonzero for all real
 arguments. -/
-private theorem matrixExpDividedDifferenceSeries_ne_zero (x y : Real) :
+theorem matrixExpDividedDifferenceSeries_ne_zero (x y : Real) :
     matrixExpDividedDifferenceSeries x y ≠ 0 :=
   (matrixExpDividedDifferenceSeries_pos x y).ne'
 /-- Entry formula for the full matrix-exponential Frechet derivative at a real
@@ -860,7 +860,119 @@ private theorem matrixExpFDerivSelfAdjoint_apply_coe
         (B : Matrix (Fin n) (Fin n) Real) := by
   simp [matrixExpFDerivSelfAdjoint]
 
-private theorem matrixExpFDerivSelfAdjoint_conj_diagonal_injective_of_mul_eq_one
+/-- Carrier version of diagonal injectivity for the self-adjoint restriction,
+stated with an explicit equality to a real diagonal matrix. This avoids adding a
+new diagonal self-adjoint carrier constructor while still exposing the exact
+bridge needed by spectral-conjugation work. -/
+theorem matrixExpFDerivSelfAdjoint_diagonal_injective
+    {n : Nat} (D : selfAdjoint (Matrix (Fin n) (Fin n) Real))
+    (d : Fin n -> Real)
+    (hD : (D : Matrix (Fin n) (Fin n) Real) = Matrix.diagonal d) :
+    Function.Injective (matrixExpFDerivSelfAdjoint D) := by
+  intro B C hBC
+  apply Subtype.ext
+  apply matrixExpFDeriv_diagonal_injective d
+  have hamb := congrArg (fun X : selfAdjoint (Matrix (Fin n) (Fin n) Real) =>
+    (X : Matrix (Fin n) (Fin n) Real)) hBC
+  simpa [matrixExpFDerivSelfAdjoint_apply_coe, hD] using hamb
+
+/-- Continuous linear equivalence form of the diagonal self-adjoint carrier
+exponential derivative. This is the exact object consumed by the carrier
+`CFC.log` inverse-function bridge in the diagonal case. -/
+noncomputable def matrixExpFDerivSelfAdjoint_diagonal_equiv
+    {n : Nat} (D : selfAdjoint (Matrix (Fin n) (Fin n) Real))
+    (d : Fin n -> Real)
+    (hD : (D : Matrix (Fin n) (Fin n) Real) = Matrix.diagonal d) :
+    selfAdjoint (Matrix (Fin n) (Fin n) Real) ≃L[Real]
+      selfAdjoint (Matrix (Fin n) (Fin n) Real) :=
+  (LinearEquiv.ofInjectiveEndo
+      (matrixExpFDerivSelfAdjoint D).toLinearMap
+      (matrixExpFDerivSelfAdjoint_diagonal_injective D d hD)).toContinuousLinearEquiv
+
+@[simp]
+theorem matrixExpFDerivSelfAdjoint_diagonal_equiv_toContinuousLinearMap
+    {n : Nat} (D : selfAdjoint (Matrix (Fin n) (Fin n) Real))
+    (d : Fin n -> Real)
+    (hD : (D : Matrix (Fin n) (Fin n) Real) = Matrix.diagonal d) :
+    ((matrixExpFDerivSelfAdjoint_diagonal_equiv D d hD :
+      selfAdjoint (Matrix (Fin n) (Fin n) Real) ≃L[Real]
+        selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+      selfAdjoint (Matrix (Fin n) (Fin n) Real) →L[Real]
+        selfAdjoint (Matrix (Fin n) (Fin n) Real)) =
+      matrixExpFDerivSelfAdjoint D := by
+  ext B
+  simp [matrixExpFDerivSelfAdjoint_diagonal_equiv]
+
+/-- Entrywise formula for the inverse of the diagonal self-adjoint carrier
+exponential derivative, in multiplicative form.
+
+This is the log-side computation primitive behind `CFCLog.lineDeriv`: applying
+`(matrixExpFDerivSelfAdjoint_diagonal_equiv D d hD).symm` divides each entry by
+the positive exponential divided-difference coefficient. The multiplicative form
+avoids an unnecessary division normalization in downstream spectral transport. -/
+theorem matrixExpFDerivSelfAdjoint_diagonal_symm_entry_mul
+    {n : Nat} (D B : selfAdjoint (Matrix (Fin n) (Fin n) Real))
+    (d : Fin n -> Real)
+    (hD : (D : Matrix (Fin n) (Fin n) Real) = Matrix.diagonal d)
+    (p q : Fin n) :
+    matrixExpDividedDifferenceSeries (d p) (d q) *
+      ((((matrixExpFDerivSelfAdjoint_diagonal_equiv D d hD).symm B :
+        selfAdjoint (Matrix (Fin n) (Fin n) Real)) : Matrix (Fin n) (Fin n) Real) p q) =
+      (B : Matrix (Fin n) (Fin n) Real) p q := by
+  let e := matrixExpFDerivSelfAdjoint_diagonal_equiv D d hD
+  let R : selfAdjoint (Matrix (Fin n) (Fin n) Real) := e.symm B
+  have hForwardEntry :
+      ((matrixExpFDerivSelfAdjoint D R : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+          Matrix (Fin n) (Fin n) Real) p q =
+        matrixExpDividedDifferenceSeries (d p) (d q) *
+          (R : Matrix (Fin n) (Fin n) Real) p q := by
+    simp [matrixExpFDerivSelfAdjoint_apply_coe, hD,
+      matrixExpFDeriv_diagonal_apply_eq_dividedDifferenceSeries_mul]
+  have heCLM :
+      (e : ContinuousLinearMap (RingHom.id Real)
+        (selfAdjoint (Matrix (Fin n) (Fin n) Real))
+        (selfAdjoint (Matrix (Fin n) (Fin n) Real))) =
+        matrixExpFDerivSelfAdjoint D := by
+    simp [e, matrixExpFDerivSelfAdjoint_diagonal_equiv_toContinuousLinearMap D d hD]
+  have hMapEntry :
+      ((e R : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+          Matrix (Fin n) (Fin n) Real) p q =
+        ((matrixExpFDerivSelfAdjoint D R : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+          Matrix (Fin n) (Fin n) Real) p q := by
+    exact congrArg
+      (fun F : ContinuousLinearMap (RingHom.id Real)
+          (selfAdjoint (Matrix (Fin n) (Fin n) Real))
+          (selfAdjoint (Matrix (Fin n) (Fin n) Real)) =>
+        ((F R : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+          Matrix (Fin n) (Fin n) Real) p q)
+      heCLM
+  have hEntryEq :
+      ((e R : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+          Matrix (Fin n) (Fin n) Real) p q =
+        (B : Matrix (Fin n) (Fin n) Real) p q := by
+    have h := e.apply_symm_apply B
+    change
+      ((e (e.symm B) : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+          Matrix (Fin n) (Fin n) Real) p q =
+        (B : Matrix (Fin n) (Fin n) Real) p q
+    exact congrArg
+      (fun Y : selfAdjoint (Matrix (Fin n) (Fin n) Real) =>
+        ((Y : Matrix (Fin n) (Fin n) Real) p q)) h
+  calc
+    matrixExpDividedDifferenceSeries (d p) (d q) *
+        ((((matrixExpFDerivSelfAdjoint_diagonal_equiv D d hD).symm B :
+          selfAdjoint (Matrix (Fin n) (Fin n) Real)) : Matrix (Fin n) (Fin n) Real) p q) =
+        matrixExpDividedDifferenceSeries (d p) (d q) *
+          (R : Matrix (Fin n) (Fin n) Real) p q := by
+          rfl
+    _ = ((matrixExpFDerivSelfAdjoint D R : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+          Matrix (Fin n) (Fin n) Real) p q := by
+          exact hForwardEntry.symm
+    _ = ((e R : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+          Matrix (Fin n) (Fin n) Real) p q := by
+          exact hMapEntry.symm
+    _ = (B : Matrix (Fin n) (Fin n) Real) p q := hEntryEq
+theorem matrixExpFDerivSelfAdjoint_conj_diagonal_injective_of_mul_eq_one
     {n : Nat} (X : selfAdjoint (Matrix (Fin n) (Fin n) Real))
     (U V : Matrix (Fin n) (Fin n) Real) (d : Fin n -> Real)
     (hX : (X : Matrix (Fin n) (Fin n) Real) = U * Matrix.diagonal d * V)
@@ -872,6 +984,166 @@ private theorem matrixExpFDerivSelfAdjoint_conj_diagonal_injective_of_mul_eq_one
   have hamb := congrArg (fun Y : selfAdjoint (Matrix (Fin n) (Fin n) Real) =>
     (Y : Matrix (Fin n) (Fin n) Real)) hBC
   simpa [matrixExpFDerivSelfAdjoint_apply_coe, hX] using hamb
+
+/-- Continuous linear equivalence form of the conjugated-diagonal
+self-adjoint carrier exponential derivative. This is the exact shape needed
+by the carrier `CFC.log` inverse-function bridge once a spectral
+diagonalization has supplied the conjugation data. -/
+noncomputable def matrixExpFDerivSelfAdjoint_conj_diagonal_equiv
+    {n : Nat} (X : selfAdjoint (Matrix (Fin n) (Fin n) Real))
+    (U V : Matrix (Fin n) (Fin n) Real) (d : Fin n -> Real)
+    (hX : (X : Matrix (Fin n) (Fin n) Real) = U * Matrix.diagonal d * V)
+    (hUV : U * V = 1) (hVU : V * U = 1) :
+    selfAdjoint (Matrix (Fin n) (Fin n) Real) ≃L[Real]
+      selfAdjoint (Matrix (Fin n) (Fin n) Real) :=
+  (LinearEquiv.ofInjectiveEndo
+      (matrixExpFDerivSelfAdjoint X).toLinearMap
+      (matrixExpFDerivSelfAdjoint_conj_diagonal_injective_of_mul_eq_one
+        X U V d hX hUV hVU)).toContinuousLinearEquiv
+
+@[simp]
+theorem matrixExpFDerivSelfAdjoint_conj_diagonal_equiv_toContinuousLinearMap
+    {n : Nat} (X : selfAdjoint (Matrix (Fin n) (Fin n) Real))
+    (U V : Matrix (Fin n) (Fin n) Real) (d : Fin n -> Real)
+    (hX : (X : Matrix (Fin n) (Fin n) Real) = U * Matrix.diagonal d * V)
+    (hUV : U * V = 1) (hVU : V * U = 1) :
+    ((matrixExpFDerivSelfAdjoint_conj_diagonal_equiv X U V d hX hUV hVU :
+      selfAdjoint (Matrix (Fin n) (Fin n) Real) ≃L[Real]
+        selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
+      selfAdjoint (Matrix (Fin n) (Fin n) Real) →L[Real]
+        selfAdjoint (Matrix (Fin n) (Fin n) Real)) =
+      matrixExpFDerivSelfAdjoint X := by
+  ext B
+  simp [matrixExpFDerivSelfAdjoint_conj_diagonal_equiv]
+
+/-- Trace-paired conjugated-diagonal double-sum formula for the inverse of the
+self-adjoint carrier exponential derivative.
+
+This is the conjugated-basis companion to
+`matrixExpFDerivSelfAdjoint_diagonal_symm_entry_mul`. It transports the inverse
+derivative into the diagonal basis via `U`, `V`, then packages the resulting
+entrywise divided-difference formula back into a trace pairing. -/
+theorem trace_mul_matrixExpFDerivSelfAdjoint_conj_diagonal_symm_eq_sum
+    {n : Nat} (X B C : selfAdjoint (Matrix (Fin n) (Fin n) Real))
+    (U V : Matrix (Fin n) (Fin n) Real) (d : Fin n -> Real)
+    (hX : (X : Matrix (Fin n) (Fin n) Real) = U * Matrix.diagonal d * V)
+    (hUV : U * V = 1) (hVU : V * U = 1) :
+    Matrix.trace ((B : Matrix (Fin n) (Fin n) Real) *
+      (((matrixExpFDerivSelfAdjoint_conj_diagonal_equiv X U V d hX hUV hVU).symm C :
+          selfAdjoint (Matrix (Fin n) (Fin n) Real)) : Matrix (Fin n) (Fin n) Real)) =
+      Finset.univ.sum (fun p => Finset.univ.sum (fun q =>
+        ((V * (B : Matrix (Fin n) (Fin n) Real) * U) q p) *
+          (((V * (C : Matrix (Fin n) (Fin n) Real) * U) p q) /
+            matrixExpDividedDifferenceSeries (d p) (d q)))) := by
+  let e := matrixExpFDerivSelfAdjoint_conj_diagonal_equiv X U V d hX hUV hVU
+  let Lsa : selfAdjoint (Matrix (Fin n) (Fin n) Real) := e.symm C
+  let L : Matrix (Fin n) (Fin n) Real := (Lsa : Matrix (Fin n) (Fin n) Real)
+  let B' : Matrix (Fin n) (Fin n) Real := V * (B : Matrix (Fin n) (Fin n) Real) * U
+  let C' : Matrix (Fin n) (Fin n) Real := V * (C : Matrix (Fin n) (Fin n) Real) * U
+  let R : Matrix (Fin n) (Fin n) Real := V * L * U
+  have hTraceRaw :
+      Matrix.trace ((B : Matrix (Fin n) (Fin n) Real) * L) =
+        Matrix.trace ((V * (B : Matrix (Fin n) (Fin n) Real) * U) * (V * L * U)) := by
+    calc
+      Matrix.trace ((B : Matrix (Fin n) (Fin n) Real) * L) =
+          Matrix.trace (V * (((B : Matrix (Fin n) (Fin n) Real) * L)) * U) := by
+            simpa [Matrix.mul_assoc, hUV] using
+              (Matrix.trace_mul_cycle V (((B : Matrix (Fin n) (Fin n) Real) * L)) U).symm
+      _ = Matrix.trace ((V * (B : Matrix (Fin n) (Fin n) Real) * U) * (V * L * U)) := by
+            congr 1
+            calc
+              V * (((B : Matrix (Fin n) (Fin n) Real) * L)) * U =
+                  V * (B : Matrix (Fin n) (Fin n) Real) * L * U := by
+                    simp [Matrix.mul_assoc]
+              _ = V * (B : Matrix (Fin n) (Fin n) Real) * (U * V) * L * U := by
+                    rw [hUV]
+                    simp [Matrix.mul_assoc]
+              _ = (V * (B : Matrix (Fin n) (Fin n) Real) * U) * (V * L * U) := by
+                    simp [Matrix.mul_assoc]
+  have hTrace :
+      Matrix.trace ((B : Matrix (Fin n) (Fin n) Real) * L) = Matrix.trace (B' * R) := by
+    simpa [B', R] using hTraceRaw
+  have hForwardEq : e Lsa = C := by
+    exact e.apply_symm_apply C
+  have hForward : matrixExpFDerivSelfAdjoint X Lsa = C := by
+    change ((e : ContinuousLinearMap (RingHom.id Real)
+      (selfAdjoint (Matrix (Fin n) (Fin n) Real))
+      (selfAdjoint (Matrix (Fin n) (Fin n) Real))) Lsa) = C
+    simpa [e] using hForwardEq
+  have hXdiag : V * (X : Matrix (Fin n) (Fin n) Real) * U = Matrix.diagonal d := by
+    calc
+      V * (X : Matrix (Fin n) (Fin n) Real) * U = V * (U * Matrix.diagonal d * V) * U := by
+        rw [hX]
+      _ = (V * U) * Matrix.diagonal d * (V * U) := by
+        simp [Matrix.mul_assoc]
+      _ = Matrix.diagonal d := by
+        simp [hVU]
+  have hConj : matrixExpFDeriv (Matrix.diagonal d) R = C' := by
+    calc
+      matrixExpFDeriv (Matrix.diagonal d) R =
+          matrixExpFDeriv (V * (X : Matrix (Fin n) (Fin n) Real) * U) (V * L * U) := by
+            simpa [R] using congrArg (fun M => matrixExpFDeriv M R) hXdiag.symm
+      _ = V * matrixExpFDeriv (X : Matrix (Fin n) (Fin n) Real) L * U := by
+            simpa [L, R] using
+              matrixExpFDeriv_conj_apply_of_mul_eq_one V U
+                (X : Matrix (Fin n) (Fin n) Real) L hVU hUV
+      _ = C' := by
+            simpa [C', L, matrixExpFDerivSelfAdjoint_apply_coe] using
+              congrArg
+                (fun Y : selfAdjoint (Matrix (Fin n) (Fin n) Real) =>
+                  V * ((Y : Matrix (Fin n) (Fin n) Real)) * U)
+                hForward
+  change Matrix.trace ((B : Matrix (Fin n) (Fin n) Real) * L) =
+      Finset.univ.sum (fun p => Finset.univ.sum (fun q =>
+        (B' q p) * ((C' p q) / matrixExpDividedDifferenceSeries (d p) (d q))))
+  calc
+    Matrix.trace ((B : Matrix (Fin n) (Fin n) Real) * L) = Matrix.trace (B' * R) := hTrace
+    _ = Finset.univ.sum (fun p => Finset.univ.sum (fun q => B' p q * R q p)) := by
+          simp [Matrix.trace, Matrix.mul_apply]
+    _ = Finset.univ.sum (fun p => Finset.univ.sum (fun q => B' q p * R p q)) := by
+          rw [Finset.sum_comm]
+    _ = Finset.univ.sum (fun p => Finset.univ.sum (fun q =>
+          B' q p * ((C' p q) / matrixExpDividedDifferenceSeries (d p) (d q)))) := by
+          refine Finset.sum_congr rfl ?_
+          intro p hp
+          refine Finset.sum_congr rfl ?_
+          intro q hq
+          have hEntry :
+              matrixExpDividedDifferenceSeries (d p) (d q) * R p q = C' p q := by
+            calc
+              matrixExpDividedDifferenceSeries (d p) (d q) * R p q =
+                  (matrixExpFDeriv (Matrix.diagonal d) R) p q := by
+                    exact
+                      (matrixExpFDeriv_diagonal_apply_eq_dividedDifferenceSeries_mul d R p q).symm
+              _ = C' p q := by
+                    exact congrFun (congrFun hConj p) q
+          have hphi : matrixExpDividedDifferenceSeries (d p) (d q) ≠ 0 :=
+            matrixExpDividedDifferenceSeries_ne_zero (d p) (d q)
+          have hEntryDiv :
+              R p q = (C' p q) / matrixExpDividedDifferenceSeries (d p) (d q) := by
+            exact (eq_div_iff hphi).2 (by simpa [mul_comm] using hEntry)
+          rw [hEntryDiv]
+
+namespace MatrixExpFDeriv
+
+/-- Preferred short alias for
+`trace_mul_matrixExpFDerivSelfAdjoint_conj_diagonal_symm_eq_sum`. -/
+theorem conjDiagonalSymmTraceSum
+    {n : Nat} (X B C : selfAdjoint (Matrix (Fin n) (Fin n) Real))
+    (U V : Matrix (Fin n) (Fin n) Real) (d : Fin n -> Real)
+    (hX : (X : Matrix (Fin n) (Fin n) Real) = U * Matrix.diagonal d * V)
+    (hUV : U * V = 1) (hVU : V * U = 1) :
+    Matrix.trace ((B : Matrix (Fin n) (Fin n) Real) *
+      (((matrixExpFDerivSelfAdjoint_conj_diagonal_equiv X U V d hX hUV hVU).symm C :
+          selfAdjoint (Matrix (Fin n) (Fin n) Real)) : Matrix (Fin n) (Fin n) Real)) =
+      Finset.univ.sum (fun p => Finset.univ.sum (fun q =>
+        ((V * (B : Matrix (Fin n) (Fin n) Real) * U) q p) *
+          (((V * (C : Matrix (Fin n) (Fin n) Real) * U) p q) /
+            matrixExpDividedDifferenceSeries (d p) (d q)))) :=
+  trace_mul_matrixExpFDerivSelfAdjoint_conj_diagonal_symm_eq_sum
+    X B C U V d hX hUV hVU
+
+end MatrixExpFDeriv
 
 private theorem selfAdjoint_spectral_conj_diagonal_eq
     {n : Nat} (X : selfAdjoint (Matrix (Fin n) (Fin n) Real)) :
