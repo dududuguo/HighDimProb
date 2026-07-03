@@ -445,10 +445,18 @@ log-resolvent identities and renormalized cutoff limits:
 `LogResolvent.weightedShiftRemainderTendstoZero`, and
 `LogResolvent.weightedCutoffRenormTendstoNegTraceLog`.
 
+The inverse-convexity quadratic-form variational subleaf is also upstream as
+`inv_quadraticForm_affine_le_of_posDef` and
+`inv_quadraticForm_iSup_affine_of_posDef`. These are reusable
+positive-definite quadratic-form identities; they do not prove the scalar
+segment inequality, MatrixLE inverse convexity, relative-entropy joint
+convexity, or Lieb concavity.
+
 Interface audit: these migrations give downstream proof agents concrete
-finite-dimensional spectral, CFC-log, and cutoff-resolvent handles inside the
-main repository. They still do not prove a weighted `CFCLog.lineDeriv` /
-`CFCLog.derivSAAt` resolvent-kernel adapter, the arbitrary-weight plain cutoff
+finite-dimensional spectral, CFC-log, cutoff-resolvent, and
+inverse-convexity variational handles inside the main repository. They still do
+not prove a weighted `CFCLog.lineDeriv` / `CFCLog.derivSAAt`
+resolvent-kernel adapter, the arbitrary-weight plain cutoff
 removal without scalar-log renormalization, the Epstein second-derivative sign,
 full Epstein/Lieb, Golden-Thompson, conditional expectation, variance proxy,
 tail-event domination, or full Matrix Bernstein.

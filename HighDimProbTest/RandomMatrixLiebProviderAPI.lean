@@ -56,6 +56,8 @@ open scoped MatrixOrder Matrix.Norms.Operator Matrix.Norms.L2Operator
 #check LogResolvent.weightedCutoffSubScalarLog_tendsto_negTraceLog
 #check LogResolvent.weightedShiftRemainderTendstoZero
 #check LogResolvent.weightedCutoffRenormTendstoNegTraceLog
+#check inv_quadraticForm_affine_le_of_posDef
+#check inv_quadraticForm_iSup_affine_of_posDef
 #check cfcLogLineDerivTraceSecond
 #check EpsteinLine.traceSlope
 #check EpsteinLine.traceSecond

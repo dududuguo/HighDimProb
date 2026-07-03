@@ -443,8 +443,8 @@ import HighDimProb.RandomMatrix.LiebProvider
 This import exposes the upstream provider facade: ambient and self-adjoint
 matrix-exp derivatives, first-order strictly-positive `CFC.log` affine-line
 APIs, short inverse/trace-resolvent derivatives, finite-cutoff log-resolvent
-identities, derivative-level Epstein consumers, and conditional Tropp/Lieb
-bridges.
+identities, inverse-convexity quadratic-form variational identities,
+derivative-level Epstein consumers, and conditional Tropp/Lieb bridges.
 
 Matrix-exp and divided-difference API:
 
@@ -519,6 +519,15 @@ Resolvent and finite-cutoff log-resolvent API:
 - `LogResolvent.weightedShiftRemainderTendstoZero`
 - `LogResolvent.weightedCutoffRenormTendstoNegTraceLog`
 
+Inverse-convexity variational API:
+
+- `inv_quadraticForm_affine_le_of_posDef`
+- `inv_quadraticForm_iSup_affine_of_posDef`
+
+These are quadratic-form variational identities for positive definite matrices;
+they do not package the scalar segment inequality, Loewner-order inverse
+convexity, or relative-entropy joint convexity.
+
 Epstein/Tropp conditional consumers and support APIs:
 
 - `cfcLogLineDerivTraceSecond`
@@ -557,7 +566,8 @@ Epstein/Tropp conditional consumers and support APIs:
 - `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
 
 Interface audit: `CFCLog.DerivOp` is pointwise derivative bookkeeping only, not a
-stable second-level Frechet codomain. The `LogResolvent` layer gives spectral
+stable second-level Frechet codomain. The inverse-convexity variational API is
+a quadratic-form subleaf only. The `LogResolvent` layer gives spectral
 sum, CFC-log cutoff, and renormalized cutoff-limit handles; it does not yet give
 a weighted `CFCLog.lineDeriv` / `CFCLog.derivSAAt` resolvent-kernel adapter or an
 Epstein sign proof. The provider layer remains conditional and stops short of

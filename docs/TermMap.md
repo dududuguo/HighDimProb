@@ -34,7 +34,10 @@ derivative primitives, the scalar divided-difference coefficient
 `CFC.log` first-derivative namespace `CFCLog`, preferred diagonal adapters
 `CFCLog.diagonalDerivEntryMul`, `CFCLog.diagonalLineDerivEntryMul`, and
 `CFCLog.diagonalLineDerivTraceSum`, the short inverse/trace-resolvent derivative
-layer, and the finite-cutoff log-resolvent namespace `LogResolvent`.
+layer, the finite-cutoff log-resolvent namespace `LogResolvent`, and the
+inverse-convexity quadratic-form variational identities
+`inv_quadraticForm_affine_le_of_posDef` and
+`inv_quadraticForm_iSup_affine_of_posDef`.
 
 The same import also exposes the Epstein consumer namespace `EpsteinLine`,
 conditional Epstein/Lieb/Tropp provider bridges, spectral endpoint monotonicity,
@@ -43,8 +46,9 @@ and the `TroppNaturalHistory.*` short aliases for suffix measurability and
 strengthened history/current-step independence. Long natural-history theorem
 names remain compatibility surfaces.
 
-`CFCLog.DerivOp` is bookkeeping only. The provider layer still stops short of a
-weighted CFC-log resolvent-kernel adapter, the Epstein second-derivative sign,
+`CFCLog.DerivOp` is bookkeeping only. The provider layer still stops short of
+MatrixLE inverse convexity, relative-entropy joint convexity, a weighted
+CFC-log resolvent-kernel adapter, the Epstein second-derivative sign,
 full Lieb/Tropp, the weaker independence statement without explicit summand
 measurability, or the exact conditioning expectation chain. Keep this separate
 from reader-facing examples and the core `HighDimProb.RandomMatrix` aggregate.

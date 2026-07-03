@@ -51,6 +51,8 @@ import HighDimProb.RandomMatrix.ConcentrationStatements
 #check HighDimProb.LogResolvent.weightedCutoffSubScalarLog_tendsto_negTraceLog
 #check HighDimProb.LogResolvent.weightedShiftRemainderTendstoZero
 #check HighDimProb.LogResolvent.weightedCutoffRenormTendstoNegTraceLog
+#check HighDimProb.inv_quadraticForm_affine_le_of_posDef
+#check HighDimProb.inv_quadraticForm_iSup_affine_of_posDef
 #check HighDimProb.cfcLogLineDerivTraceSecond
 #check HighDimProb.EpsteinLine.traceSlope
 #check HighDimProb.EpsteinLine.traceSecond
