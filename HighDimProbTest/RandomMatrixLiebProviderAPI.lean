@@ -58,6 +58,15 @@ open scoped MatrixOrder Matrix.Norms.Operator Matrix.Norms.L2Operator
 #check LogResolvent.weightedCutoffRenormTendstoNegTraceLog
 #check inv_quadraticForm_affine_le_of_posDef
 #check inv_quadraticForm_iSup_affine_of_posDef
+#check RelativeEntropy.scalarTerm
+#check RelativeEntropy.diagonalTerm
+#check RelativeEntropy.scalarTerm_nonneg
+#check RelativeEntropy.diagonalTerm_nonneg
+#check kleinInequality_scalar_relativeEntropy_nonneg
+#check kleinInequality_relativeEntropy_nonneg_diagonal
+#check gibbsObjective_le_traceMatrixExp_of_kleinPremise
+#check gibbsObjective_eq_traceMatrixExp_at_matrixExp
+#check epsteinAffineLineConcavity_of_liebTraceExpConcavity_selfAdjointCarrier
 #check cfcLogLineDerivTraceSecond
 #check EpsteinLine.traceSlope
 #check EpsteinLine.traceSecond

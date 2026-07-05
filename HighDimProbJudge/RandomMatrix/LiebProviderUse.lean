@@ -53,6 +53,15 @@ import HighDimProb.RandomMatrix.ConcentrationStatements
 #check HighDimProb.LogResolvent.weightedCutoffRenormTendstoNegTraceLog
 #check HighDimProb.inv_quadraticForm_affine_le_of_posDef
 #check HighDimProb.inv_quadraticForm_iSup_affine_of_posDef
+#check HighDimProb.RelativeEntropy.scalarTerm
+#check HighDimProb.RelativeEntropy.diagonalTerm
+#check HighDimProb.RelativeEntropy.scalarTerm_nonneg
+#check HighDimProb.RelativeEntropy.diagonalTerm_nonneg
+#check HighDimProb.kleinInequality_scalar_relativeEntropy_nonneg
+#check HighDimProb.kleinInequality_relativeEntropy_nonneg_diagonal
+#check HighDimProb.gibbsObjective_le_traceMatrixExp_of_kleinPremise
+#check HighDimProb.gibbsObjective_eq_traceMatrixExp_at_matrixExp
+#check HighDimProb.epsteinAffineLineConcavity_of_liebTraceExpConcavity_selfAdjointCarrier
 #check HighDimProb.cfcLogLineDerivTraceSecond
 #check HighDimProb.EpsteinLine.traceSlope
 #check HighDimProb.EpsteinLine.traceSecond

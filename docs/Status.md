@@ -452,12 +452,25 @@ positive-definite quadratic-form identities; they do not prove the scalar
 segment inequality, MatrixLE inverse convexity, relative-entropy joint
 convexity, or Lieb concavity.
 
+The relative-entropy route MVPs are upstream as the scalar/diagonal Klein
+surface `RelativeEntropy.scalarTerm_nonneg`,
+`RelativeEntropy.diagonalTerm_nonneg`,
+`kleinInequality_scalar_relativeEntropy_nonneg`, and
+`kleinInequality_relativeEntropy_nonneg_diagonal`; the Gibbs operational
+lemmas `gibbsObjective_le_traceMatrixExp_of_kleinPremise` and
+`gibbsObjective_eq_traceMatrixExp_at_matrixExp`; and the conditional
+carrier bridge
+`epsteinAffineLineConcavity_of_liebTraceExpConcavity_selfAdjointCarrier`.
+These do not prove full matrix Klein, relative-entropy joint convexity,
+Epstein, Lieb, or Tropp.
+
 Interface audit: these migrations give downstream proof agents concrete
-finite-dimensional spectral, CFC-log, cutoff-resolvent, and
-inverse-convexity variational handles inside the main repository. They still do
-not prove a weighted `CFCLog.lineDeriv` / `CFCLog.derivSAAt`
-resolvent-kernel adapter, the arbitrary-weight plain cutoff
-removal without scalar-log renormalization, the Epstein second-derivative sign,
+finite-dimensional spectral, CFC-log, cutoff-resolvent, inverse-convexity
+variational, and relative-entropy route MVP handles inside the main
+repository. They still do not prove a weighted `CFCLog.lineDeriv` /
+`CFCLog.derivSAAt` resolvent-kernel adapter, the arbitrary-weight plain cutoff
+removal without scalar-log renormalization, full matrix Klein,
+relative-entropy joint convexity, the Epstein second-derivative sign,
 full Epstein/Lieb, Golden-Thompson, conditional expectation, variance proxy,
 tail-event domination, or full Matrix Bernstein.
 
@@ -485,7 +498,7 @@ lake test
 lake build HighDimProbJudge
 ```
 
-Last verified locally on 2026-07-01 with the commands above.
+Last verified locally on 2026-07-05 with the commands above.
 
 ## Archive
 

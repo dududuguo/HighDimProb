@@ -444,7 +444,8 @@ This import exposes the upstream provider facade: ambient and self-adjoint
 matrix-exp derivatives, first-order strictly-positive `CFC.log` affine-line
 APIs, short inverse/trace-resolvent derivatives, finite-cutoff log-resolvent
 identities, inverse-convexity quadratic-form variational identities,
-derivative-level Epstein consumers, and conditional Tropp/Lieb bridges.
+relative-entropy route MVPs, derivative-level Epstein consumers, and
+conditional Tropp/Lieb bridges.
 
 Matrix-exp and divided-difference API:
 
@@ -528,6 +529,23 @@ These are quadratic-form variational identities for positive definite matrices;
 they do not package the scalar segment inequality, Loewner-order inverse
 convexity, or relative-entropy joint convexity.
 
+Relative-entropy route MVP API:
+
+- `RelativeEntropy.scalarTerm`
+- `RelativeEntropy.diagonalTerm`
+- `RelativeEntropy.scalarTerm_nonneg`
+- `RelativeEntropy.diagonalTerm_nonneg`
+- `kleinInequality_scalar_relativeEntropy_nonneg`
+- `kleinInequality_relativeEntropy_nonneg_diagonal`
+- `gibbsObjective_le_traceMatrixExp_of_kleinPremise`
+- `gibbsObjective_eq_traceMatrixExp_at_matrixExp`
+- `epsteinAffineLineConcavity_of_liebTraceExpConcavity_selfAdjointCarrier`
+
+These expose scalar/diagonal Klein nonnegativity, Gibbs operational
+inequalities under an explicit Klein premise, and a conditional
+strictly-positive carrier-to-Epstein wrapper. They do not prove full matrix
+Klein, relative-entropy joint convexity, Epstein, Lieb, or Tropp.
+
 Epstein/Tropp conditional consumers and support APIs:
 
 - `cfcLogLineDerivTraceSecond`
@@ -567,11 +585,14 @@ Epstein/Tropp conditional consumers and support APIs:
 
 Interface audit: `CFCLog.DerivOp` is pointwise derivative bookkeeping only, not a
 stable second-level Frechet codomain. The inverse-convexity variational API is
-a quadratic-form subleaf only. The `LogResolvent` layer gives spectral
+a quadratic-form subleaf only, and the relative-entropy route API is still
+at scalar/diagonal, explicit-Klein, and conditional carrier-wrapper MVPs.
+The `LogResolvent` layer gives spectral
 sum, CFC-log cutoff, and renormalized cutoff-limit handles; it does not yet give
 a weighted `CFCLog.lineDeriv` / `CFCLog.derivSAAt` resolvent-kernel adapter or an
 Epstein sign proof. The provider layer remains conditional and stops short of
-full Epstein/Lieb, Golden-Thompson, exact conditioning expectation,
+full matrix Klein, relative-entropy joint convexity, full Epstein/Lieb,
+Golden-Thompson, exact conditioning expectation,
 variance-proxy normalization, tail-event domination, or full Matrix Bernstein.
 It is intentionally separate from reader-facing examples and the core
 `HighDimProb.RandomMatrix` aggregate.

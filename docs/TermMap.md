@@ -37,7 +37,11 @@ derivative primitives, the scalar divided-difference coefficient
 layer, the finite-cutoff log-resolvent namespace `LogResolvent`, and the
 inverse-convexity quadratic-form variational identities
 `inv_quadraticForm_affine_le_of_posDef` and
-`inv_quadraticForm_iSup_affine_of_posDef`.
+`inv_quadraticForm_iSup_affine_of_posDef`, plus the relative-entropy route
+MVPs `RelativeEntropy.scalarTerm_nonneg`,
+`RelativeEntropy.diagonalTerm_nonneg`,
+`gibbsObjective_le_traceMatrixExp_of_kleinPremise`, and
+`epsteinAffineLineConcavity_of_liebTraceExpConcavity_selfAdjointCarrier`.
 
 The same import also exposes the Epstein consumer namespace `EpsteinLine`,
 conditional Epstein/Lieb/Tropp provider bridges, spectral endpoint monotonicity,
@@ -47,8 +51,9 @@ strengthened history/current-step independence. Long natural-history theorem
 names remain compatibility surfaces.
 
 `CFCLog.DerivOp` is bookkeeping only. The provider layer still stops short of
-MatrixLE inverse convexity, relative-entropy joint convexity, a weighted
-CFC-log resolvent-kernel adapter, the Epstein second-derivative sign,
+MatrixLE inverse convexity, full matrix Klein, relative-entropy joint
+convexity, a weighted CFC-log resolvent-kernel adapter, the Epstein
+second-derivative sign,
 full Lieb/Tropp, the weaker independence statement without explicit summand
 measurability, or the exact conditioning expectation chain. Keep this separate
 from reader-facing examples and the core `HighDimProb.RandomMatrix` aggregate.
