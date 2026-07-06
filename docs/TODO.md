@@ -51,8 +51,8 @@ This is the active short list. Old completed task logs were collapsed into
 - Current strategy is progress-first: if a hard analytic ingredient is missing,
   consume it as an explicit assumption, register it in `docs/STATEMENTS.md`, and
   keep moving the high-level Tropp/Lieb trace-MGF route forward. Do not claim
-  Lieb/Jensen, Golden-Thompson, operator-log monotonicity, trace-exp
-  monotonicity, conditional expectation, or full Matrix Bernstein unless a
+  Lieb/Jensen, Golden-Thompson, relative-entropy joint convexity, the Epstein
+  sign theorem, conditional expectation, or full Matrix Bernstein unless a
   separate provider theorem proves it.
 
 ## Active PrecisionDA Application Work

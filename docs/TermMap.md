@@ -35,13 +35,16 @@ derivative primitives, the scalar divided-difference coefficient
 `CFCLog.diagonalDerivEntryMul`, `CFCLog.diagonalLineDerivEntryMul`, and
 `CFCLog.diagonalLineDerivTraceSum`, the short inverse/trace-resolvent derivative
 layer, the finite-cutoff log-resolvent namespace `LogResolvent`, and the
-inverse-convexity quadratic-form variational identities
-`inv_quadraticForm_affine_le_of_posDef` and
-`inv_quadraticForm_iSup_affine_of_posDef`, plus the relative-entropy route
-MVPs `RelativeEntropy.scalarTerm_nonneg`,
+inverse-convexity quadratic-form and segment identities
+`inv_quadraticForm_affine_le_of_posDef`,
+`inv_quadraticForm_iSup_affine_of_posDef`, and
+`inv_matrixLE_convex_combo_le_of_posDef`, plus the relative-entropy route
+APIs `RelativeEntropy.scalarTerm_nonneg`,
 `RelativeEntropy.diagonalTerm_nonneg`,
-`gibbsObjective_le_traceMatrixExp_of_kleinPremise`, and
-`epsteinAffineLineConcavity_of_liebTraceExpConcavity_selfAdjointCarrier`.
+`RelativeEntropy.fullMatrixKlein_nonneg_of_isHermitian_of_strictlyPositive`,
+`RelativeEntropy.logShift`, `RelativeEntropy.expLogMatrix`,
+`gibbsVariationalUpperBoundPremise_of_fullMatrixKlein`, and
+`epsteinAffineLineConcavity_of_relativeEntropyJointConvexity_and_fullMatrixKlein`.
 
 The same import also exposes the Epstein consumer namespace `EpsteinLine`,
 conditional Epstein/Lieb/Tropp provider bridges, spectral endpoint monotonicity,
@@ -50,10 +53,10 @@ and the `TroppNaturalHistory.*` short aliases for suffix measurability and
 strengthened history/current-step independence. Long natural-history theorem
 names remain compatibility surfaces.
 
-`CFCLog.DerivOp` is bookkeeping only. The provider layer still stops short of
-MatrixLE inverse convexity, full matrix Klein, relative-entropy joint
-convexity, a weighted CFC-log resolvent-kernel adapter, the Epstein
-second-derivative sign,
-full Lieb/Tropp, the weaker independence statement without explicit summand
+`CFCLog.DerivOp` is bookkeeping only. The provider layer now includes
+positive-definite inverse-convexity segment/`MatrixLE` APIs and full matrix
+Klein, but still stops short of relative-entropy joint convexity, a weighted
+CFC-log resolvent-kernel adapter, the Epstein second-derivative sign, full
+Lieb/Tropp, the weaker independence statement without explicit summand
 measurability, or the exact conditioning expectation chain. Keep this separate
 from reader-facing examples and the core `HighDimProb.RandomMatrix` aggregate.

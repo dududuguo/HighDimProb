@@ -1,0 +1,7 @@
+import HighDimProb.RandomMatrix.InverseConvexityProvider
+
+#check HighDimProb.inv_quadraticForm_affine_le_of_posDef
+#check HighDimProb.inv_quadraticForm_iSup_affine_of_posDef
+#check HighDimProb.convexCombo_posDef_of_posDef
+#check HighDimProb.inv_quadraticForm_convex_combo_le_of_posDef
+#check HighDimProb.inv_matrixLE_convex_combo_le_of_posDef

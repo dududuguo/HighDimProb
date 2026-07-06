@@ -445,34 +445,37 @@ log-resolvent identities and renormalized cutoff limits:
 `LogResolvent.weightedShiftRemainderTendstoZero`, and
 `LogResolvent.weightedCutoffRenormTendstoNegTraceLog`.
 
-The inverse-convexity quadratic-form variational subleaf is also upstream as
-`inv_quadraticForm_affine_le_of_posDef` and
-`inv_quadraticForm_iSup_affine_of_posDef`. These are reusable
-positive-definite quadratic-form identities; they do not prove the scalar
-segment inequality, MatrixLE inverse convexity, relative-entropy joint
-convexity, or Lieb concavity.
+The inverse-convexity positive-definite segment layer is upstream as
+`inv_quadraticForm_affine_le_of_posDef`,
+`inv_quadraticForm_iSup_affine_of_posDef`,
+`convexCombo_posDef_of_posDef`,
+`inv_quadraticForm_convex_combo_le_of_posDef`, and
+`inv_matrixLE_convex_combo_le_of_posDef`. These are reusable quadratic-form and
+`MatrixLE` segment identities; they do not prove full operator convexity of
+inverse, relative-entropy joint convexity, or Lieb concavity.
 
-The relative-entropy route MVPs are upstream as the scalar/diagonal Klein
-surface `RelativeEntropy.scalarTerm_nonneg`,
-`RelativeEntropy.diagonalTerm_nonneg`,
-`kleinInequality_scalar_relativeEntropy_nonneg`, and
-`kleinInequality_relativeEntropy_nonneg_diagonal`; the Gibbs operational
-lemmas `gibbsObjective_le_traceMatrixExp_of_kleinPremise` and
-`gibbsObjective_eq_traceMatrixExp_at_matrixExp`; and the conditional
-carrier bridge
-`epsteinAffineLineConcavity_of_liebTraceExpConcavity_selfAdjointCarrier`.
-These do not prove full matrix Klein, relative-entropy joint convexity,
-Epstein, Lieb, or Tropp.
+The relative-entropy route now includes the scalar/diagonal Klein surface,
+diagonal-matrix and same-basis `CFC.log` bookkeeping, common-eigenbasis and
+overlap-weight spectral expansions, and the full finite-dimensional real matrix
+Klein theorem under Hermitian strictly-positive hypotheses:
+`RelativeEntropy.fullMatrixKlein_nonneg_of_isHermitian_of_strictlyPositive`,
+`RelativeEntropy.kleinInequality_relativeEntropy_nonneg`, and the root alias
+`kleinInequality_relativeEntropy_nonneg`. The bridge layer also exposes
+`RelativeEntropyJointConvexity`, `GibbsKleinPremise`,
+`gibbsVariationalUpperBoundPremise_of_fullMatrixKlein`, and
+`epsteinAffineLineConcavity_of_relativeEntropyJointConvexity_and_fullMatrixKlein`.
+This discharges the Gibbs upper-bound premise from full matrix Klein, but still
+does not prove relative-entropy joint convexity, Epstein, Lieb, or Tropp.
 
 Interface audit: these migrations give downstream proof agents concrete
 finite-dimensional spectral, CFC-log, cutoff-resolvent, inverse-convexity
-variational, and relative-entropy route MVP handles inside the main
-repository. They still do not prove a weighted `CFCLog.lineDeriv` /
-`CFCLog.derivSAAt` resolvent-kernel adapter, the arbitrary-weight plain cutoff
-removal without scalar-log renormalization, full matrix Klein,
-relative-entropy joint convexity, the Epstein second-derivative sign,
-full Epstein/Lieb, Golden-Thompson, conditional expectation, variance proxy,
-tail-event domination, or full Matrix Bernstein.
+segment/`MatrixLE`, and full-matrix-Klein relative-entropy handles inside
+the main repository. They still do not prove a weighted `CFCLog.lineDeriv` /
+`CFCLog.derivSAAt` resolvent-kernel adapter, arbitrary-weight plain cutoff
+removal without scalar-log renormalization, relative-entropy joint convexity,
+the Epstein second-derivative sign, full Epstein/Lieb, Golden-Thompson,
+conditional expectation, variance proxy, tail-event domination, or full
+Matrix Bernstein.
 
 The layer also continues to expose derivative-level Epstein consumer reductions,
 the explicit `EpsteinAffineLineConcavity` conditional route, bounded

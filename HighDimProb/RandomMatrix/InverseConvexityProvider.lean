@@ -7,9 +7,9 @@ import Mathlib.Order.ConditionallyCompleteLattice.Basic
 
 Quadratic-form variational subleaf behind finite-dimensional inverse operator
 convexity. This module proves the affine upper bound and supremum identity for
-positive-definite real matrices. It does not prove the scalar segment
-inequality, MatrixLE packaging, full operator convexity of inverse, or relative
-entropy joint convexity.
+positive-definite real matrices, together with the scalar segment inequality
+and its explicit `MatrixLE` packaging. It does not prove full operator
+convexity of inverse or relative entropy joint convexity.
 -/
 
 namespace HighDimProb
@@ -135,6 +135,115 @@ theorem inv_quadraticForm_iSup_affine_of_posDef
         rw [hw]
         exact inv_quadraticForm_affine_le_of_posDef A hA v w
   exact le_antisymm (le_csSup hBdd hMem) (by simpa [S] using hLe)
+
+/-- Positive-definite convex combinations remain positive definite. -/
+theorem convexCombo_posDef_of_posDef
+    {n : Nat} (A B : Matrix (Fin n) (Fin n) Real)
+    (hA : A.PosDef) (hB : B.PosDef)
+    {theta : Real} (h0 : 0 <= theta) (h1 : theta <= 1) :
+    (((1 - theta) • A) + theta • B).PosDef := by
+  by_cases htheta0 : theta = 0
+  case pos =>
+    subst htheta0
+    simpa using hA
+  case neg =>
+    by_cases htheta1 : theta = 1
+    case pos =>
+      subst htheta1
+      simpa using hB
+    case neg =>
+      have hLeft : 0 < 1 - theta := sub_pos.mpr (lt_of_not_ge fun h =>
+        htheta1 (le_antisymm h1 h))
+      have hRight : 0 < theta := lt_of_le_of_ne h0 (Ne.symm htheta0)
+      simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
+        (hA.smul hLeft).add (hB.smul hRight)
+
+/-- Scalar quadratic-form segment inequality behind inverse operator convexity. -/
+theorem inv_quadraticForm_convex_combo_le_of_posDef
+    {n : Nat} (A B : Matrix (Fin n) (Fin n) Real)
+    (hA : A.PosDef) (hB : B.PosDef)
+    {theta : Real} (h0 : 0 <= theta) (h1 : theta <= 1)
+    (v : Fin n -> Real) :
+    HighDimProb.matrixQuadraticForm
+        (Inv.inv (((1 - theta) • A) + theta • B)) v <=
+      (1 - theta) * HighDimProb.matrixQuadraticForm (Inv.inv A) v +
+        theta * HighDimProb.matrixQuadraticForm (Inv.inv B) v := by
+  let C : Matrix (Fin n) (Fin n) Real := (1 - theta) • A + theta • B
+  have hC : C.PosDef := convexCombo_posDef_of_posDef A B hA hB h0 h1
+  have hSup :
+      HighDimProb.matrixQuadraticForm (Inv.inv C) v =
+        sSup {r : Real | Exists fun w : Fin n -> Real =>
+          r = 2 * dotProduct w v - HighDimProb.matrixQuadraticForm C w} :=
+    inv_quadraticForm_iSup_affine_of_posDef C hC v
+  calc
+    HighDimProb.matrixQuadraticForm
+        (Inv.inv (((1 - theta) • A) + theta • B)) v
+        = sSup {r : Real | Exists fun w : Fin n -> Real =>
+            r = 2 * dotProduct w v -
+              HighDimProb.matrixQuadraticForm (((1 - theta) • A) + theta • B) w} := by
+          simpa [C] using hSup
+    _ <= (1 - theta) * HighDimProb.matrixQuadraticForm (Inv.inv A) v +
+          theta * HighDimProb.matrixQuadraticForm (Inv.inv B) v := by
+          apply csSup_le
+          · refine ⟨0, ?_⟩
+            refine ⟨fun _ => 0, ?_⟩
+            simp [HighDimProb.matrixQuadraticForm]
+          · intro r hr
+            rcases hr with ⟨w, rfl⟩
+            have hAffA := inv_quadraticForm_affine_le_of_posDef A hA v w
+            have hAffB := inv_quadraticForm_affine_le_of_posDef B hB v w
+            rw [HighDimProb.matrixQuadraticForm_add,
+              HighDimProb.matrixQuadraticForm_smul,
+              HighDimProb.matrixQuadraticForm_smul]
+            nlinarith
+
+/-- Matrix-order packaging of the inverse-convexity scalar segment theorem. -/
+theorem inv_matrixLE_convex_combo_le_of_posDef
+    {n : Nat} (A B : Matrix (Fin n) (Fin n) Real)
+    (hA : A.PosDef) (hB : B.PosDef)
+    {theta : Real} (h0 : 0 <= theta) (h1 : theta <= 1) :
+    HighDimProb.MatrixLE
+      (Inv.inv (((1 - theta) • A) + theta • B))
+      (((1 - theta) • Inv.inv A) + theta • Inv.inv B) := by
+  let convexCombo : Matrix (Fin n) (Fin n) Real := ((1 - theta) • A) + theta • B
+  let lhs : Matrix (Fin n) (Fin n) Real := Inv.inv convexCombo
+  let rhs : Matrix (Fin n) (Fin n) Real := ((1 - theta) • Inv.inv A) + theta • Inv.inv B
+  have hConvexCombo : convexCombo.PosDef :=
+    convexCombo_posDef_of_posDef A B hA hB h0 h1
+  have hHermitian : (rhs - lhs).IsHermitian := by
+    have hAinv : (Inv.inv A).IsHermitian := (hA.inv).isHermitian
+    have hBinv : (Inv.inv B).IsHermitian := (hB.inv).isHermitian
+    have hSelfLeft : IsSelfAdjoint (1 - theta) := by
+      change star (1 - theta) = (1 - theta)
+      simp
+    have hSelfTheta : IsSelfAdjoint theta := by
+      change star theta = theta
+      simp
+    have hRhs : rhs.IsHermitian := by
+      dsimp [rhs]
+      exact (hAinv.smul hSelfLeft).add (hBinv.smul hSelfTheta)
+    have hLhs : lhs.IsHermitian := by
+      simpa [lhs] using hConvexCombo.inv.isHermitian
+    exact hRhs.sub hLhs
+  have hQuad :
+      forall x : Fin n -> Real, 0 <= HighDimProb.matrixQuadraticForm (rhs - lhs) x := by
+    intro x
+    have hx := inv_quadraticForm_convex_combo_le_of_posDef A B hA hB h0 h1 x
+    rw [HighDimProb.matrixQuadraticForm_sub]
+    apply sub_nonneg.mpr
+    change HighDimProb.matrixQuadraticForm (Inv.inv (((1 - theta) • A) + theta • B)) x <=
+      HighDimProb.matrixQuadraticForm (((1 - theta) • Inv.inv A) + theta • Inv.inv B) x
+    rw [HighDimProb.matrixQuadraticForm_add, HighDimProb.matrixQuadraticForm_smul,
+      HighDimProb.matrixQuadraticForm_smul]
+    simpa using hx
+  apply HighDimProb.matrixLE_of_mathlib_le
+  rw [Matrix.le_iff]
+  refine (Matrix.posSemidef_iff_dotProduct_mulVec).2 ?_
+  constructor
+  · exact hHermitian
+  · intro x
+    simpa [HighDimProb.matrixQuadraticForm, dotProduct, Matrix.mulVec,
+      Finset.mul_sum, Finset.sum_mul, mul_assoc] using hQuad x
 
 end
 

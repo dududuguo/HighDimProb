@@ -95,9 +95,11 @@ Run this after changing the provider-facing Lieb/Tropp layer, including the
 ambient or self-adjoint carrier matrix-exp derivative surface, the
 first-order `CFC.log` affine-line provider layer and its diagonal/trace-paired
 spectral adapters, the finite-cutoff log-resolvent provider layer, the
-derivative-level Epstein consumer layer, the natural-history provider alias
-layer, or the provider-compressed natural-state tail route:
+inverse-convexity segment provider, the full-matrix-Klein relative-entropy
+provider, the conditional relative-entropy/Gibbs bridge, the derivative-level
+Epstein consumer layer, the natural-history provider alias layer, or the
+provider-compressed natural-state tail route:
 
 ```bash
-lake build HighDimProb.RandomMatrix.MatrixExpDerivativeProvider HighDimProb.RandomMatrix.CFCLogDerivativeProvider HighDimProb.RandomMatrix.ResolventDerivativeProvider HighDimProb.RandomMatrix.LogResolventProvider HighDimProb.RandomMatrix.EpsteinDerivativeProvider HighDimProb.RandomMatrix.LiebProvider HighDimProbTest.RandomMatrixMatrixExpDerivativeProviderAPI HighDimProbTest.RandomMatrixLiebProviderAPI HighDimProbJudge.RandomMatrix.LiebProviderUse
+lake build HighDimProb.RandomMatrix.MatrixExpDerivativeProvider HighDimProb.RandomMatrix.CFCLogDerivativeProvider HighDimProb.RandomMatrix.ResolventDerivativeProvider HighDimProb.RandomMatrix.LogResolventProvider HighDimProb.RandomMatrix.InverseConvexityProvider HighDimProb.RandomMatrix.RelativeEntropyProvider HighDimProb.RandomMatrix.RelativeEntropyBridgeProvider HighDimProb.RandomMatrix.EpsteinDerivativeProvider HighDimProb.RandomMatrix.LiebProvider HighDimProbTest.RandomMatrixMatrixExpDerivativeProviderAPI HighDimProbTest.RandomMatrixInverseConvexityProviderAPI HighDimProbTest.RandomMatrixRelativeEntropyProviderAPI HighDimProbTest.RandomMatrixLiebProviderAPI HighDimProbJudge.RandomMatrix.InverseConvexityProviderUse HighDimProbJudge.RandomMatrix.RelativeEntropyProviderUse HighDimProbJudge.RandomMatrix.LiebProviderUse
 ```

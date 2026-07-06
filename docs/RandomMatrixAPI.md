@@ -443,9 +443,9 @@ import HighDimProb.RandomMatrix.LiebProvider
 This import exposes the upstream provider facade: ambient and self-adjoint
 matrix-exp derivatives, first-order strictly-positive `CFC.log` affine-line
 APIs, short inverse/trace-resolvent derivatives, finite-cutoff log-resolvent
-identities, inverse-convexity quadratic-form variational identities,
-relative-entropy route MVPs, derivative-level Epstein consumers, and
-conditional Tropp/Lieb bridges.
+identities, inverse-convexity segment/`MatrixLE` identities, full-matrix-Klein
+relative-entropy APIs, conditional relative-entropy/Gibbs bridges,
+derivative-level Epstein consumers, and conditional Tropp/Lieb bridges.
 
 Matrix-exp and divided-difference API:
 
@@ -520,31 +520,42 @@ Resolvent and finite-cutoff log-resolvent API:
 - `LogResolvent.weightedShiftRemainderTendstoZero`
 - `LogResolvent.weightedCutoffRenormTendstoNegTraceLog`
 
-Inverse-convexity variational API:
+Inverse-convexity positive-definite segment API:
 
 - `inv_quadraticForm_affine_le_of_posDef`
 - `inv_quadraticForm_iSup_affine_of_posDef`
+- `convexCombo_posDef_of_posDef`
+- `inv_quadraticForm_convex_combo_le_of_posDef`
+- `inv_matrixLE_convex_combo_le_of_posDef`
 
-These are quadratic-form variational identities for positive definite matrices;
-they do not package the scalar segment inequality, Loewner-order inverse
-convexity, or relative-entropy joint convexity.
+These are quadratic-form variational and segment identities for positive
+definite matrices, including the explicit `MatrixLE` packaging. They do not
+prove full operator convexity of inverse or relative-entropy joint convexity.
 
-Relative-entropy route MVP API:
+Relative-entropy route API:
 
 - `RelativeEntropy.scalarTerm`
 - `RelativeEntropy.diagonalTerm`
-- `RelativeEntropy.scalarTerm_nonneg`
-- `RelativeEntropy.diagonalTerm_nonneg`
-- `kleinInequality_scalar_relativeEntropy_nonneg`
-- `kleinInequality_relativeEntropy_nonneg_diagonal`
-- `gibbsObjective_le_traceMatrixExp_of_kleinPremise`
-- `gibbsObjective_eq_traceMatrixExp_at_matrixExp`
+- `RelativeEntropy.diagonalMatrixTerm`
+- `RelativeEntropy.diagonalMatrixTerm_cfcLog_nonneg`
+- `RelativeEntropy.weightedSpectralKlein_nonneg`
+- `RelativeEntropy.fullMatrixKlein_nonneg_of_isHermitian_of_strictlyPositive`
+- `RelativeEntropy.kleinInequality_relativeEntropy_nonneg`
+- `kleinInequality_relativeEntropy_nonneg`
+- `RelativeEntropy.logShift`
+- `RelativeEntropy.expLogMatrix`
+- `RelativeEntropy.carrierGibbs_le_traceMatrixExp_of_kleinPremise`
+- `RelativeEntropy.carrierGibbs_eq_traceMatrixExp_at_matrixExp_logPoint`
+- `RelativeEntropyJointConvexity`
+- `GibbsKleinPremise`
+- `gibbsVariationalUpperBoundPremise_of_fullMatrixKlein`
+- `epsteinAffineLineConcavity_of_relativeEntropyJointConvexity_and_fullMatrixKlein`
 - `epsteinAffineLineConcavity_of_liebTraceExpConcavity_selfAdjointCarrier`
 
-These expose scalar/diagonal Klein nonnegativity, Gibbs operational
-inequalities under an explicit Klein premise, and a conditional
-strictly-positive carrier-to-Epstein wrapper. They do not prove full matrix
-Klein, relative-entropy joint convexity, Epstein, Lieb, or Tropp.
+These expose scalar/diagonal Klein nonnegativity, full finite-dimensional matrix
+Klein under Hermitian strictly-positive hypotheses, Gibbs/full-Klein bridge
+adapters, and conditional strictly-positive carrier-to-Epstein wrappers. They
+still do not prove relative-entropy joint convexity, Epstein, Lieb, or Tropp.
 
 Epstein/Tropp conditional consumers and support APIs:
 
@@ -584,15 +595,14 @@ Epstein/Tropp conditional consumers and support APIs:
 - `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
 
 Interface audit: `CFCLog.DerivOp` is pointwise derivative bookkeeping only, not a
-stable second-level Frechet codomain. The inverse-convexity variational API is
-a quadratic-form subleaf only, and the relative-entropy route API is still
-at scalar/diagonal, explicit-Klein, and conditional carrier-wrapper MVPs.
-The `LogResolvent` layer gives spectral
-sum, CFC-log cutoff, and renormalized cutoff-limit handles; it does not yet give
-a weighted `CFCLog.lineDeriv` / `CFCLog.derivSAAt` resolvent-kernel adapter or an
-Epstein sign proof. The provider layer remains conditional and stops short of
-full matrix Klein, relative-entropy joint convexity, full Epstein/Lieb,
-Golden-Thompson, exact conditioning expectation,
+stable second-level Frechet codomain. The inverse-convexity API now includes
+positive-definite segment and `MatrixLE` packaging, and the relative-entropy
+route includes full matrix Klein plus conditional carrier-wrapper MVPs. The
+`LogResolvent` layer gives spectral sum, CFC-log cutoff, and renormalized
+cutoff-limit handles; it does not yet give a weighted `CFCLog.lineDeriv` /
+`CFCLog.derivSAAt` resolvent-kernel adapter or an Epstein sign proof. The
+provider layer remains conditional and stops short of relative-entropy joint
+convexity, full Epstein/Lieb, Golden-Thompson, exact conditioning expectation,
 variance-proxy normalization, tail-event domination, or full Matrix Bernstein.
 It is intentionally separate from reader-facing examples and the core
 `HighDimProb.RandomMatrix` aggregate.
