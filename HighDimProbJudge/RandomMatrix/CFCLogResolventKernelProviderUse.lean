@@ -1,0 +1,6 @@
+import HighDimProb.RandomMatrix.CFCLogResolventKernelProvider
+
+#check HighDimProb.LogResolvent.derivSAAtCutoffRemainder
+#check HighDimProb.LogResolvent.trace_mul_derivSAAt_eq_cutoffKernel_add_remainder
+#check HighDimProb.LogResolvent.trace_mul_lineDerivSA_eq_cutoffKernel_add_remainder
+#check HighDimProb.LogResolvent.trace_mul_lineDeriv_eq_cutoffKernel_add_remainder

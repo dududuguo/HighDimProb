@@ -1,0 +1,5 @@
+import HighDimProb.RandomMatrix.TraceResolventPerspectiveProvider
+
+open HighDimProb
+
+#check trace_mul_mono_right_of_matrixLE_of_isPSDMatrix

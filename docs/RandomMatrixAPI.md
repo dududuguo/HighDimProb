@@ -327,6 +327,24 @@ import HighDimProb.Examples.RandomMatrix.StatementRoutes
 
 `StatementRoutes` is the preferred reader entry point. It imports a small set of focused route examples and avoids exposing every intermediate bridge as a separate public example.
 
+
+Recent provider-compression APIs:
+
+- `LogResolvent.trace_mul_derivSAAt_eq_cutoffKernel_add_remainder`
+- `LogResolvent.trace_mul_lineDeriv_eq_cutoffKernel_add_remainder`
+- `LogResolvent.derivSAAtCutoffRemainder_eq_sum_conjDiagonal`
+- `LogResolvent.derivSAAtCutoffRemainder_eq_sum_inv_sub_kernel_conjDiagonal_of_strictlyPositive`
+- `indepFun_of_history_entry_measurable_of_indep`
+- `historyCondExp_ae_eq_frozenParameterIntegral_of_indepFun`
+- `historyCondExp_le_of_indepFun_under_uniform_bound`
+- `trace_mul_mono_right_of_matrixLE_of_isPSDMatrix`
+- `trace_mul_inv_add_const_convex_combo_le`
+- `matrixExpExcessSupportDomination_of_supportDomination_of_support_le_one`
+- `matrixExpExcessSupportDomination_identity`
+- `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_randomSelfAdjoint`
+- `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions_tailSubsetDischarged_of_randomSelfAdjoint`
+
+These are proof-provider APIs. They remove local bookkeeping and selected tail/support/conditioning premises, but they do not prove full Lieb, full Tropp, Golden-Thompson, variance-proxy normalization, or full Matrix Bernstein.
 ## Sample Covariance Surface
 
 Preferred compact bounded-row route:
@@ -445,7 +463,7 @@ matrix-exp derivatives, first-order strictly-positive `CFC.log` affine-line
 APIs, short inverse/trace-resolvent derivatives, finite-cutoff log-resolvent
 identities, inverse-convexity segment/`MatrixLE` identities, full-matrix-Klein
 relative-entropy APIs, conditional relative-entropy/Gibbs bridges,
-derivative-level Epstein consumers, and conditional Tropp/Lieb bridges.
+derivative-level Epstein consumers, conditional Tropp/Lieb bridges, CFC-log resolvent cutoff/remainder bridges, conditioning-kernel reductions over `MeasurableSpace.comap H`, fixed-numerator trace-resolvent convexity, support-to-excess compression, and tail-event subset-discharge wrappers.
 
 Matrix-exp and divided-difference API:
 
@@ -603,6 +621,6 @@ cutoff-limit handles; it does not yet give a weighted `CFCLog.lineDeriv` /
 `CFCLog.derivSAAt` resolvent-kernel adapter or an Epstein sign proof. The
 provider layer remains conditional and stops short of relative-entropy joint
 convexity, full Epstein/Lieb, Golden-Thompson, exact conditioning expectation,
-variance-proxy normalization, tail-event domination, or full Matrix Bernstein.
+variance-proxy normalization or full Matrix Bernstein. Self-adjoint quadratic-form tail subset discharge is now available through the TailEvent provider wrappers.
 It is intentionally separate from reader-facing examples and the core
 `HighDimProb.RandomMatrix` aggregate.

@@ -1,0 +1,9 @@
+import HighDimProb.RandomMatrix.ConditioningKernelProvider
+
+namespace HighDimProbJudge.RandomMatrix
+
+#check HighDimProb.indepFun_of_measurable_of_indep_comap
+#check HighDimProb.historyCondExp_ae_eq_frozenParameterIntegral_of_indepFun
+#check HighDimProb.historyCondExp_le_of_indepFun_under_uniform_bound
+
+end HighDimProbJudge.RandomMatrix

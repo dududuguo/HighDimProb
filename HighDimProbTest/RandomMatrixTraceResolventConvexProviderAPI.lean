@@ -1,0 +1,5 @@
+import HighDimProb.RandomMatrix.TraceResolventConvexProvider
+
+open HighDimProb
+
+#check trace_mul_inv_add_const_convex_combo_le

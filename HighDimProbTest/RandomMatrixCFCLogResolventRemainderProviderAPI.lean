@@ -1,0 +1,6 @@
+import HighDimProb.RandomMatrix.CFCLogResolventRemainderProvider
+
+open HighDimProb
+
+#check LogResolvent.derivSAAtCutoffRemainder_eq_sum_conjDiagonal
+#check LogResolvent.derivSAAtCutoffRemainder_eq_sum_inv_sub_kernel_conjDiagonal_of_strictlyPositive

@@ -49,14 +49,19 @@ APIs `RelativeEntropy.scalarTerm_nonneg`,
 The same import also exposes the Epstein consumer namespace `EpsteinLine`,
 conditional Epstein/Lieb/Tropp provider bridges, spectral endpoint monotonicity,
 trace-MGF-to-Laplace contracts, provider-compressed natural-state tail helpers,
-and the `TroppNaturalHistory.*` short aliases for suffix measurability and
+CFC-log resolvent cutoff/remainder bridges, conditioning-kernel reductions,
+fixed-numerator trace-resolvent convexity, support-to-excess compression, and
+the `TroppNaturalHistory.*` short aliases for suffix measurability and
 strengthened history/current-step independence. Long natural-history theorem
 names remain compatibility surfaces.
 
 `CFCLog.DerivOp` is bookkeeping only. The provider layer now includes
-positive-definite inverse-convexity segment/`MatrixLE` APIs and full matrix
-Klein, but still stops short of relative-entropy joint convexity, a weighted
-CFC-log resolvent-kernel adapter, the Epstein second-derivative sign, full
-Lieb/Tropp, the weaker independence statement without explicit summand
-measurability, or the exact conditioning expectation chain. Keep this separate
-from reader-facing examples and the core `HighDimProb.RandomMatrix` aggregate.
+positive-definite inverse-convexity segment/`MatrixLE` APIs, full matrix Klein,
+finite-cutoff CFC-log resolvent-kernel bridges with explicit remainders, and
+self-adjoint tail-event subset discharge wrappers, but still stops short of
+relative-entropy joint convexity, arbitrary-weight plain cutoff removal, the
+Epstein second-derivative sign, full Lieb/Tropp, the weaker independence
+statement without explicit summand measurability, the exact conditioning
+expectation chain for arbitrary larger history sigma-algebras, variance-proxy
+normalization, or full Matrix Bernstein. Keep this separate from reader-facing
+examples and the core `HighDimProb.RandomMatrix` aggregate.
