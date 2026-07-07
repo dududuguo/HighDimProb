@@ -57,8 +57,10 @@ names remain compatibility surfaces.
 
 `CFCLog.DerivOp` is bookkeeping only. The provider layer now includes
 positive-definite inverse-convexity segment/`MatrixLE` APIs, full matrix Klein,
-finite-cutoff CFC-log resolvent-kernel bridges with explicit remainders, and
-self-adjoint tail-event subset discharge wrappers, but still stops short of
+finite-cutoff CFC-log resolvent-kernel bridges with explicit remainders, the
+`SameEigenbasisDiagonal` predicate, same-eigenbasis diagonal remainder cutoff
+removal, and self-adjoint tail-event subset discharge wrappers, but still
+stops short of
 relative-entropy joint convexity, arbitrary-weight plain cutoff removal, the
 Epstein second-derivative sign, full Lieb/Tropp, the weaker independence
 statement without explicit summand measurability, the exact conditioning

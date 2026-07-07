@@ -27,6 +27,7 @@ import HighDimProb.RandomMatrix.ExcessSupportCompressionProvider
 import HighDimProb.RandomMatrix.ConditioningKernelProvider
 import HighDimProb.RandomMatrix.ConditioningExpectationProvider
 import HighDimProb.RandomMatrix.CFCLogResolventRemainderProvider
+import HighDimProb.RandomMatrix.CFCLogResolventRemainderLimitProvider
 import HighDimProb.RandomMatrix.CFCLogResolventKernelProvider
 
 /-!

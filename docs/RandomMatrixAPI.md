@@ -334,6 +334,10 @@ Recent provider-compression APIs:
 - `LogResolvent.trace_mul_lineDeriv_eq_cutoffKernel_add_remainder`
 - `LogResolvent.derivSAAtCutoffRemainder_eq_sum_conjDiagonal`
 - `LogResolvent.derivSAAtCutoffRemainder_eq_sum_inv_sub_kernel_conjDiagonal_of_strictlyPositive`
+- `LogResolvent.SameEigenbasisDiagonal`
+- `LogResolvent.scalarSquareKernelIntegral`
+- `LogResolvent.scalarSquareKernelRemainderTendstoZero`
+- `LogResolvent.sameEigenbasisCutoffRemainderTendstoZero`
 - `indepFun_of_history_entry_measurable_of_indep`
 - `historyCondExp_ae_eq_frozenParameterIntegral_of_indepFun`
 - `historyCondExp_le_of_indepFun_under_uniform_bound`
@@ -537,6 +541,16 @@ Resolvent and finite-cutoff log-resolvent API:
 - `LogResolvent.weightedCutoffSubScalarLog_tendsto_negTraceLog`
 - `LogResolvent.weightedShiftRemainderTendstoZero`
 - `LogResolvent.weightedCutoffRenormTendstoNegTraceLog`
+- `LogResolvent.SameEigenbasisDiagonal`
+- `LogResolvent.scalarSquareKernelIntegral`
+- `LogResolvent.scalarSquareKernelRemainderTendstoZero`
+- `LogResolvent.sameEigenbasisCutoffRemainderTendstoZero`
+
+The `SameEigenbasisDiagonal` predicate packages the repeated conjugation-to-diagonal
+hypothesis. The final cutoff-removal theorem removes the explicit cutoff only for
+that same-eigenbasis diagonal remainder exposed by
+`CFCLogResolventRemainderProvider`; it does not prove the general two-index
+weighted cutoff limit.
 
 Inverse-convexity positive-definite segment API:
 

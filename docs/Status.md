@@ -443,7 +443,12 @@ log-resolvent identities and renormalized cutoff limits:
 `LogResolvent.weightedShiftTraceLogSubScalarLog_tendsto_zero`,
 `LogResolvent.weightedCutoffSubScalarLog_tendsto_negTraceLog`,
 `LogResolvent.weightedShiftRemainderTendstoZero`, and
-`LogResolvent.weightedCutoffRenormTendstoNegTraceLog`.
+`LogResolvent.weightedCutoffRenormTendstoNegTraceLog`. It also exposes
+`LogResolvent.SameEigenbasisDiagonal`, `LogResolvent.scalarSquareKernelIntegral`,
+`LogResolvent.scalarSquareKernelRemainderTendstoZero`, and
+`LogResolvent.sameEigenbasisCutoffRemainderTendstoZero` for the explicit
+same-eigenbasis diagonal remainder. This removes that cutoff only in the
+same-eigenbasis case; it is not the general two-index weighted cutoff limit.
 
 The inverse-convexity positive-definite segment layer is upstream as
 `inv_quadraticForm_affine_le_of_posDef`,

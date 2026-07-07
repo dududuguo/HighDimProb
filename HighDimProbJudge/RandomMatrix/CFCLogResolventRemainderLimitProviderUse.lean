@@ -1,0 +1,6 @@
+import HighDimProb.RandomMatrix.CFCLogResolventRemainderLimitProvider
+
+#check HighDimProb.LogResolvent.SameEigenbasisDiagonal
+#check HighDimProb.LogResolvent.scalarSquareKernelIntegral
+#check HighDimProb.LogResolvent.scalarSquareKernelRemainderTendstoZero
+#check HighDimProb.LogResolvent.sameEigenbasisCutoffRemainderTendstoZero
