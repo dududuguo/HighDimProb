@@ -112,6 +112,9 @@ open scoped MatrixOrder Matrix.Norms.Operator Matrix.Norms.L2Operator
 #check gibbsKleinPremise_of_fullMatrixKlein
 #check gibbsVariationalUpperBoundPremise_of_fullMatrixKlein
 #check epsteinAffineLineConcavity_of_relativeEntropyJointConvexity_and_fullMatrixKlein
+#check RelativeEntropy.fullKlein_liebCarrierConcavity
+#check RelativeEntropy.fullKlein_liebConcavity
+#check RelativeEntropy.fullKlein_epsteinConcavity
 
 example : GibbsKleinPremise :=
   gibbsKleinPremise_of_fullMatrixKlein
@@ -120,7 +123,7 @@ example : GibbsVariationalUpperBoundPremise :=
   gibbsVariationalUpperBoundPremise_of_fullMatrixKlein
 
 example (hRE : RelativeEntropyJointConvexity) : EpsteinAffineLineConcavity :=
-  epsteinAffineLineConcavity_of_relativeEntropyJointConvexity_and_fullMatrixKlein hRE
+  RelativeEntropy.fullKlein_epsteinConcavity hRE
 #check epsteinAffineLineConcavity_of_liebTraceExpConcavity_selfAdjointCarrier
 #check cfcLogLineDerivTraceSecond
 #check EpsteinLine.traceSlope

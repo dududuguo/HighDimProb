@@ -467,8 +467,9 @@ Klein theorem under Hermitian strictly-positive hypotheses:
 `RelativeEntropy.kleinInequality_relativeEntropy_nonneg`, and the root alias
 `kleinInequality_relativeEntropy_nonneg`. The bridge layer also exposes
 `RelativeEntropyJointConvexity`, `GibbsKleinPremise`,
-`gibbsVariationalUpperBoundPremise_of_fullMatrixKlein`, and
-`epsteinAffineLineConcavity_of_relativeEntropyJointConvexity_and_fullMatrixKlein`.
+`gibbsVariationalUpperBoundPremise_of_fullMatrixKlein`, and the short facades
+`RelativeEntropy.fullKlein_liebCarrierConcavity`, `RelativeEntropy.fullKlein_liebConcavity`, and
+`RelativeEntropy.fullKlein_epsteinConcavity`.
 This discharges the Gibbs upper-bound premise from full matrix Klein, but still
 does not prove relative-entropy joint convexity, Epstein, Lieb, or Tropp.
 

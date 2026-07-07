@@ -107,6 +107,9 @@ import HighDimProb.RandomMatrix.ConcentrationStatements
 #check HighDimProb.gibbsKleinPremise_of_fullMatrixKlein
 #check HighDimProb.gibbsVariationalUpperBoundPremise_of_fullMatrixKlein
 #check HighDimProb.epsteinAffineLineConcavity_of_relativeEntropyJointConvexity_and_fullMatrixKlein
+#check HighDimProb.RelativeEntropy.fullKlein_liebCarrierConcavity
+#check HighDimProb.RelativeEntropy.fullKlein_liebConcavity
+#check HighDimProb.RelativeEntropy.fullKlein_epsteinConcavity
 
 example : HighDimProb.GibbsKleinPremise :=
   HighDimProb.gibbsKleinPremise_of_fullMatrixKlein
@@ -116,7 +119,7 @@ example : HighDimProb.GibbsVariationalUpperBoundPremise :=
 
 example (hRE : HighDimProb.RelativeEntropyJointConvexity) :
     HighDimProb.EpsteinAffineLineConcavity :=
-  HighDimProb.epsteinAffineLineConcavity_of_relativeEntropyJointConvexity_and_fullMatrixKlein hRE
+  HighDimProb.RelativeEntropy.fullKlein_epsteinConcavity hRE
 #check HighDimProb.epsteinAffineLineConcavity_of_liebTraceExpConcavity_selfAdjointCarrier
 #check HighDimProb.cfcLogLineDerivTraceSecond
 #check HighDimProb.EpsteinLine.traceSlope

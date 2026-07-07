@@ -44,7 +44,7 @@ APIs `RelativeEntropy.scalarTerm_nonneg`,
 `RelativeEntropy.fullMatrixKlein_nonneg_of_isHermitian_of_strictlyPositive`,
 `RelativeEntropy.logShift`, `RelativeEntropy.expLogMatrix`,
 `gibbsVariationalUpperBoundPremise_of_fullMatrixKlein`, and
-`epsteinAffineLineConcavity_of_relativeEntropyJointConvexity_and_fullMatrixKlein`.
+`RelativeEntropy.fullKlein_epsteinConcavity`.
 
 The same import also exposes the Epstein consumer namespace `EpsteinLine`,
 conditional Epstein/Lieb/Tropp provider bridges, spectral endpoint monotonicity,

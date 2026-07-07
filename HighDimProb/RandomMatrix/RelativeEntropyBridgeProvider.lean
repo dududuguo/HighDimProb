@@ -432,12 +432,45 @@ theorem gibbsVariationalUpperBoundPremise_of_fullMatrixKlein :
   gibbsVariationalUpperBoundPremise_of_gibbsKleinPremise
     gibbsKleinPremise_of_fullMatrixKlein
 
-/-- Conditional Epstein bridge that now consumes full matrix Klein directly,
-while keeping relative-entropy joint convexity explicit. -/
+/-- Conditional Epstein bridge that consumes full matrix Klein directly while
+keeping relative-entropy joint convexity explicit. -/
 theorem epsteinAffineLineConcavity_of_relativeEntropyJointConvexity_and_fullMatrixKlein
     (hRE : RelativeEntropyJointConvexity) : EpsteinAffineLineConcavity :=
   epsteinAffineLineConcavity_of_relativeEntropyJointConvexity_and_gibbsUpperBoundPremise
     hRE gibbsVariationalUpperBoundPremise_of_fullMatrixKlein
+
+namespace RelativeEntropy
+
+/-- Short facade for the full-Klein carrier Lieb-concavity bridge. -/
+theorem fullKlein_liebCarrierConcavity
+    (hRE : RelativeEntropyJointConvexity) :
+    forall {n : Nat} (H : Matrix (Fin n) (Fin n) Real),
+      IsSelfAdjointMatrix H ->
+        ConcaveOn Real (selfAdjointStrictlyPositiveSet n)
+          (fun A : selfAdjoint (Matrix (Fin n) (Fin n) Real) =>
+            traceMatrixExp (H + CFC.log (A : Matrix (Fin n) (Fin n) Real))) := by
+  intro n H hH
+  simpa [RelativeEntropy.logShift] using
+    (liebTraceExpConcavity_selfAdjointCarrier_of_relativeEntropyJointConvexity_and_gibbsUpperBoundPremise
+      hRE gibbsVariationalUpperBoundPremise_of_fullMatrixKlein H hH)
+
+/-- Short facade for ambient Lieb concavity from joint convexity plus full
+matrix Klein. -/
+theorem fullKlein_liebConcavity
+    (hRE : RelativeEntropyJointConvexity)
+    {n : Nat} (H : Matrix (Fin n) (Fin n) Real) :
+    liebTraceExpConcavity_statement H :=
+  liebTraceExpConcavity_of_selfAdjointCarrier H
+    (fullKlein_liebCarrierConcavity hRE H)
+
+/-- Short facade for the conditional Epstein bridge from joint convexity plus
+full matrix Klein. -/
+theorem fullKlein_epsteinConcavity
+    (hRE : RelativeEntropyJointConvexity) : EpsteinAffineLineConcavity :=
+  epsteinAffineLineConcavity_of_relativeEntropyJointConvexity_and_fullMatrixKlein hRE
+
+end RelativeEntropy
+
 end
 
 end HighDimProb

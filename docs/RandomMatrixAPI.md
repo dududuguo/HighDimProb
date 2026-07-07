@@ -581,7 +581,9 @@ Relative-entropy route API:
 - `RelativeEntropyJointConvexity`
 - `GibbsKleinPremise`
 - `gibbsVariationalUpperBoundPremise_of_fullMatrixKlein`
-- `epsteinAffineLineConcavity_of_relativeEntropyJointConvexity_and_fullMatrixKlein`
+- `RelativeEntropy.fullKlein_liebCarrierConcavity`
+- `RelativeEntropy.fullKlein_liebConcavity`
+- `RelativeEntropy.fullKlein_epsteinConcavity`
 - `epsteinAffineLineConcavity_of_liebTraceExpConcavity_selfAdjointCarrier`
 
 These expose scalar/diagonal Klein nonnegativity, full finite-dimensional matrix
