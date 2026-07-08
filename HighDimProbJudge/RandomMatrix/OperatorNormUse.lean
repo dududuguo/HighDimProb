@@ -8,6 +8,7 @@ open scoped Matrix.Norms.L2Operator
 #check HighDimProb.rankOneOperatorNorm_le_vectorSqNorm
 #check HighDimProb.matrixExpect_eq_integral_l2Operator
 #check HighDimProb.matrixExpect_eq_integral
+#check HighDimProb.integrable_matrix_of_integrableRandomMatrix
 #check HighDimProb.deterministicOperatorNorm_matrixExpect_le_of_boundedOperatorNorm
 #check HighDimProb.expectationOperatorNormBound_of_pointwiseOperatorNormBound
 #check HighDimProb.rankOneRandomMatrixFamily
@@ -66,6 +67,13 @@ example {Omega : Type*} [MeasurableSpace Omega]
     (hA : HighDimProb.IntegrableRandomMatrix P A) :
     HighDimProb.matrixExpect P A = ∫ omega, A omega ∂P := by
   exact HighDimProb.matrixExpect_eq_integral hA
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat}
+    {A : HighDimProb.RandomMatrix Omega m n}
+    (hA : HighDimProb.IntegrableRandomMatrix P A) :
+    Integrable A P := by
+  exact HighDimProb.integrable_matrix_of_integrableRandomMatrix hA
 
 example {Omega : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} [IsProbabilityMeasure P] {I : Type*} {m n : Nat}

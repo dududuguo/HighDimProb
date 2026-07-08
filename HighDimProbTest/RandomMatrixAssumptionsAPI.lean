@@ -31,6 +31,7 @@ variable (K R : Real)
 #check PointwiseOperatorNormBound_centered_of_bound_expect_bound_same
 #check matrixExpect_eq_integral_l2Operator
 #check matrixExpect_eq_integral
+#check integrable_matrix_of_integrableRandomMatrix
 #check deterministicOperatorNorm_matrixExpect_le_of_boundedOperatorNorm
 #check BoundedOperatorNorm_centered_of_boundedOperatorNorm
 #check PointwiseOperatorNormBound_centered_of_pointwiseOperatorNormBound
@@ -87,6 +88,10 @@ variable (K R : Real)
   (P := P) (A := A) :
   IntegrableRandomMatrix P A ->
   matrixExpect P A = ∫ omega, A omega ∂P)
+#check (integrable_matrix_of_integrableRandomMatrix
+  (P := P) (A := A) :
+  IntegrableRandomMatrix P A ->
+  Integrable A P)
 #check (deterministicOperatorNorm_matrixExpect_le_of_boundedOperatorNorm
   (P := P) (X := A) (R := R) :
   IsRandomMatrix P A ->

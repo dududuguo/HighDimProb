@@ -55,7 +55,12 @@ private def matrixEntryCLM {m n : Nat} (i : Fin m) (j : Fin n) :
       map_add' := by intro A B; rfl
       map_smul' := by intro c A; rfl }
 
-private theorem integrable_matrix_of_integrableRandomMatrix {Omega : Type*}
+/-- Entrywise matrix integrability implies Bochner integrability.
+
+This is the bridge from the public `IntegrableRandomMatrix` API to Mathlib's
+matrix-valued Bochner integral. Use it when a proof needs linear-map or
+measure-map integral lemmas after checking entries separately. -/
+theorem integrable_matrix_of_integrableRandomMatrix {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {m n : Nat}
     {A : RandomMatrix Omega m n} (hA : IntegrableRandomMatrix P A) :
     Integrable A P := by

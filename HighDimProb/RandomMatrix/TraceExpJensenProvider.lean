@@ -26,36 +26,6 @@ open scoped MatrixOrder Matrix.Norms.L2Operator
 
 noncomputable section
 
-private def matrixToPiContinuousLinearEquiv {m n : Nat} :
-    Matrix (Fin m) (Fin n) Real ≃L[Real] (Fin m -> Fin n -> Real) :=
-  let e : Matrix (Fin m) (Fin n) Real ≃ₗ[Real] (Fin m -> Fin n -> Real) :=
-    { toFun := fun A => fun i => fun j => A i j
-      invFun := fun f => fun i => fun j => f i j
-      left_inv := by intro A; rfl
-      right_inv := by intro f; rfl
-      map_add' := by intro A B; rfl
-      map_smul' := by intro c A; rfl }
-  e.toContinuousLinearEquiv
-
-private theorem integrable_matrix_of_integrableRandomMatrix {Omega : Type*}
-    [MeasurableSpace Omega] {P : Measure Omega} {m n : Nat}
-    {A : RandomMatrix Omega m n} (hA : IntegrableRandomMatrix P A) :
-    Integrable A P := by
-  let toPi := matrixToPiContinuousLinearEquiv (m := m) (n := n)
-  have hRows : forall i : Fin m, Integrable (fun omega => A omega i) P := by
-    intro i
-    apply Integrable.of_eval
-    intro j
-    exact hA i j
-  have hEntries :
-      Integrable (fun omega => fun i : Fin m => fun j : Fin n => A omega i j) P :=
-    Integrable.of_eval hRows
-  have hPi : Integrable (fun omega => toPi (A omega)) P := by
-    simpa [toPi, matrixToPiContinuousLinearEquiv] using hEntries
-  have hMatrix : Integrable (fun omega => toPi.symm (toPi (A omega))) P :=
-    (ContinuousLinearEquiv.integrable_comp_iff (L := toPi.symm)).2 hPi
-  simpa using hMatrix
-
 /-- Carrier-native Lieb concavity wrapper on the strictly positive self-adjoint
 domain. -/
 theorem liebTraceExpConcavity_selfAdjointCarrier

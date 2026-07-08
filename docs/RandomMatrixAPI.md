@@ -31,6 +31,17 @@ This is the current compact API index. Old historical notes were collapsed into
 
 Use these helpers in examples and tests instead of copying RHS formulas.
 
+Expectation / integrability bridges:
+
+- `integrable_matrix_of_integrableRandomMatrix`
+- `matrixExpect_eq_integral_l2Operator`
+- `matrixExpect_eq_integral`
+
+These connect the public entrywise `IntegrableRandomMatrix` and `matrixExpect`
+API to Mathlib's Bochner `Integrable` / integral lemmas. Use them when provider
+proofs need linear-map, measure-map, or Jensen-style integral machinery without
+duplicating entrywise-to-Bochner boilerplate.
+
 Order / PSD representation bridges:
 
 - `isPSDMatrix_of_posSemidef`
