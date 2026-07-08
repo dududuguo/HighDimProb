@@ -24,4 +24,18 @@ example
 
 end
 
+section
+
+variable {Omega Alpha Beta : Type*} [mOmega : MeasurableSpace Omega]
+variable [MeasurableSpace Alpha] [MeasurableSpace Beta]
+variable [StandardBorelSpace Beta] [Nonempty Omega] [Nonempty Beta]
+variable {P : Measure Omega} [IsFiniteMeasure P]
+variable {mHist : MeasurableSpace Omega}
+variable {H : Omega -> Alpha} {Z : Omega -> Beta}
+variable {F : Alpha -> Beta -> Real} {B : Alpha -> Real}
+
+#check HighDimProb.condExp_le_of_indep_sigma_under_frozen_bound
+
+end
+
 end HighDimProbJudge.RandomMatrix

@@ -352,6 +352,7 @@ Recent provider-compression APIs:
 - `indepFun_of_history_entry_measurable_of_indep`
 - `historyCondExp_ae_eq_frozenParameterIntegral_of_indepFun`
 - `historyCondExp_le_of_indepFun_under_uniform_bound`
+- `condExp_le_of_indep_sigma_under_frozen_bound`
 - `trace_mul_mono_right_of_matrixLE_of_isPSDMatrix`
 - `trace_mul_inv_add_const_convex_combo_le`
 - `matrixExpExcessSupportDomination_of_supportDomination_of_support_le_one`

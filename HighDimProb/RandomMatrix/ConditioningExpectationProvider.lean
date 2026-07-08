@@ -1,21 +1,27 @@
 import HighDimProb.RandomMatrix.Basic
+import HighDimProb.RandomMatrix.ConditioningKernelProvider
 import Mathlib.Probability.Independence.Basic
 
 /-!
 # Conditioning expectation provider bridges
 
-This module records the smallest honest independence bridge needed by the
-conditional-expectation Tropp step audit.
+This module records the smallest honest independence and conditioning bridges
+needed by the conditional-expectation Tropp step audit.
 
-It does not prove the full conditional-expectation trace-exp reduction. It only
-shows how an arbitrary history sigma-algebra assumption can be converted into
-the `IndepFun` shape consumed by existing downstream statements when the history
-matrix is measurable with respect to that sigma-algebra.
+It does not prove the full conditional-expectation trace-exp reduction. It
+supplies:
+
+- the matrix-valued bridge from an explicit history sigma-algebra assumption to
+  `IndepFun`;
+- a frozen-parameter conditional-expectation bound relative to an explicit
+  history sigma-algebra, obtained by wrapping that sigma-algebra as a measurable
+  history parameter.
 -/
 
 namespace HighDimProb
 
 open MeasureTheory
+open scoped ProbabilityTheory
 
 /-- Convert independence from an explicit history sigma-algebra into function
 independence for a history random matrix and the current random step.
@@ -48,5 +54,117 @@ theorem indepFun_of_history_entry_measurable_of_indep
   rw [ProbabilityTheory.IndepFun_iff_Indep H Z P]
   refine ProbabilityTheory.indep_of_indep_of_le_left hIndepSigma ?_
   exact (measurable_iff_comap_le).mp hHmeasSub
+
+/-- Restate the frozen-parameter kernel bound with the ambient measurable-space
+instance pinned explicitly in the pair-law and current-step-law hypotheses. -/
+private theorem historyCondExp_le_of_indepFun_under_uniform_bound_explicitMap
+    {Omega Alpha Beta : Type*}
+    [mOmega : MeasurableSpace Omega] [MeasurableSpace Alpha] [MeasurableSpace Beta]
+    [StandardBorelSpace Beta] [Nonempty Alpha] [Nonempty Beta]
+    {P : Measure Omega} [IsFiniteMeasure P]
+    {H : Omega -> Alpha} {Z : Omega -> Beta}
+    {F : Alpha -> Beta -> Real} {B : Alpha -> Real}
+    (hH : @Measurable Omega Alpha mOmega inferInstance H)
+    (hZ : AEMeasurable Z P)
+    (hIndep : ProbabilityTheory.IndepFun H Z P)
+    (hInt : Integrable (fun p : Prod Alpha Beta => F p.1 p.2)
+      (@Measure.map Omega (Alpha × Beta) mOmega inferInstance
+        (fun omega => (H omega, Z omega)) P))
+    (hBound : forall a,
+      MeasureTheory.integral (@Measure.map Omega Beta mOmega inferInstance Z P)
+        (fun z => F a z) <= B a) :
+    Filter.EventuallyLE (MeasureTheory.ae P)
+      (@HighDimProb.historyCondExp Omega Alpha Beta mOmega inferInstance inferInstance P H Z F)
+      (fun omega => B (H omega)) := by
+  simpa using HighDimProb.historyCondExp_le_of_indepFun_under_uniform_bound
+    (P := P) (H := H) (Z := Z) (F := F) (B := B) hH hZ hIndep hInt hBound
+
+private structure HistoryPoint (Omega : Type*) where
+  val : Omega
+
+/-- Lift the frozen-parameter conditional-expectation bound from
+`MeasurableSpace.comap H` to an explicit history sigma-algebra `mHist` when `H`
+is `mHist`-measurable and `mHist` is independent of the sigma-algebra generated
+by `Z`. -/
+theorem condExp_le_of_indep_sigma_under_frozen_bound
+    {Omega Alpha Beta : Type*}
+    [mOmega : MeasurableSpace Omega] [MeasurableSpace Alpha] [MeasurableSpace Beta]
+    [StandardBorelSpace Beta] [Nonempty Omega] [Nonempty Beta]
+    {P : Measure Omega} [IsFiniteMeasure P]
+    {mHist : MeasurableSpace Omega}
+    {H : Omega -> Alpha} {Z : Omega -> Beta}
+    {F : Alpha -> Beta -> Real} {B : Alpha -> Real}
+    (hHistSub : mHist ≤ mOmega)
+    (hH : @Measurable Omega Alpha mHist inferInstance H)
+    (hZ : AEMeasurable Z P)
+    (hIndepSigma :
+      ProbabilityTheory.Indep mHist (MeasurableSpace.comap Z inferInstance) P)
+    (hInt : Integrable (fun p : Prod Alpha Beta => F p.1 p.2)
+      (@Measure.map Omega (Alpha × Beta) mOmega inferInstance
+        (fun omega => (H omega, Z omega)) P))
+    (hBound : forall a,
+      MeasureTheory.integral (@Measure.map Omega Beta mOmega inferInstance Z P)
+        (fun z => F a z) <= B a) :
+    Filter.EventuallyLE (MeasureTheory.ae P)
+      (MeasureTheory.condExp (m := mHist) P (fun omega => F (H omega) (Z omega)))
+      (fun omega => B (H omega)) := by
+  letI : MeasurableSpace (HistoryPoint Omega) :=
+    MeasurableSpace.comap HistoryPoint.val mHist
+  let H0 : Omega -> HistoryPoint Omega := HistoryPoint.mk
+  let F0 : HistoryPoint Omega -> Beta -> Real := fun hp z => F (H hp.val) z
+  let B0 : HistoryPoint Omega -> Real := fun hp => B (H hp.val)
+  letI : Nonempty (HistoryPoint Omega) :=
+    ⟨HistoryPoint.mk (Classical.choice ‹Nonempty Omega›)⟩
+  have hComapEq : MeasurableSpace.comap H0 inferInstance = mHist := by
+    change (mHist.comap HistoryPoint.val).comap HistoryPoint.mk = mHist
+    rw [MeasurableSpace.comap_comp]
+    change mHist.comap id = mHist
+    simp
+  have hH0 : @Measurable Omega (HistoryPoint Omega) mOmega inferInstance H0 := by
+    refine (measurable_iff_comap_le).2 ?_
+    simpa [H0, hComapEq] using hHistSub
+  have hIndepFun0 : ProbabilityTheory.IndepFun H0 Z P := by
+    rw [ProbabilityTheory.IndepFun_iff_Indep H0 Z P]
+    simpa [H0, hComapEq] using hIndepSigma
+  have hValMeas :
+      @Measurable (HistoryPoint Omega) Omega inferInstance mHist HistoryPoint.val := by
+    exact (measurable_iff_comap_le).2 le_rfl
+  have hHlift : @Measurable (HistoryPoint Omega) Alpha inferInstance inferInstance
+      (fun hp => H hp.val) := by
+    exact hH.comp hValMeas
+  have hLift :
+      @Measurable (HistoryPoint Omega × Beta) (Alpha × Beta) inferInstance inferInstance
+        (fun p => (H p.1.val, p.2)) := by
+    exact (hHlift.comp measurable_fst).prodMk measurable_snd
+  have hPair0 : AEMeasurable (fun omega => (H0 omega, Z omega)) P := by
+    exact hH0.aemeasurable.prodMk hZ
+  have hMapMap :
+      @Measure.map (HistoryPoint Omega × Beta) (Alpha × Beta) inferInstance inferInstance
+        (fun p => (H p.1.val, p.2))
+        (@Measure.map Omega (HistoryPoint Omega × Beta) mOmega inferInstance
+          (fun omega => (H0 omega, Z omega)) P) =
+      @Measure.map Omega (Alpha × Beta) mOmega inferInstance
+        (fun omega => (H omega, Z omega)) P := by
+    simpa [H0, Function.comp] using
+      AEMeasurable.map_map_of_aemeasurable hLift.aemeasurable hPair0
+  have hIntLift : Integrable (fun p : Alpha × Beta => F p.1 p.2)
+      (@Measure.map (HistoryPoint Omega × Beta) (Alpha × Beta) inferInstance inferInstance
+        (fun p => (H p.1.val, p.2))
+        (@Measure.map Omega (HistoryPoint Omega × Beta) mOmega inferInstance
+          (fun omega => (H0 omega, Z omega)) P)) := by
+    simpa [hMapMap] using hInt
+  have hInt0 : Integrable (fun p : HistoryPoint Omega × Beta => F0 p.1 p.2)
+      (@Measure.map Omega (HistoryPoint Omega × Beta) mOmega inferInstance
+        (fun omega => (H0 omega, Z omega)) P) := by
+    simpa [F0, Function.comp] using
+      MeasureTheory.Integrable.comp_aemeasurable hIntLift hLift.aemeasurable
+  have hCore : Filter.EventuallyLE (MeasureTheory.ae P)
+      (@HighDimProb.historyCondExp Omega (HistoryPoint Omega) Beta mOmega inferInstance inferInstance P H0 Z F0)
+      (fun omega => B0 (H0 omega)) := by
+    exact @historyCondExp_le_of_indepFun_under_uniform_bound_explicitMap
+      Omega (HistoryPoint Omega) Beta mOmega inferInstance inferInstance
+      inferInstance inferInstance inferInstance P inferInstance H0 Z F0 B0 hH0
+      hZ hIndepFun0 hInt0 (fun hp => hBound (H hp.val))
+  simpa [HighDimProb.historyCondExp, H0, F0, B0, hComapEq] using hCore
 
 end HighDimProb
