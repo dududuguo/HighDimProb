@@ -465,21 +465,44 @@ overlap-weight spectral expansions, and the full finite-dimensional real matrix
 Klein theorem under Hermitian strictly-positive hypotheses:
 `RelativeEntropy.fullMatrixKlein_nonneg_of_isHermitian_of_strictlyPositive`,
 `RelativeEntropy.kleinInequality_relativeEntropy_nonneg`, and the root alias
-`kleinInequality_relativeEntropy_nonneg`. The bridge layer also exposes
+`kleinInequality_relativeEntropy_nonneg`. It also exposes the left/right
+inverse-perspective leaf
+`RelativeEntropy.leftRightRelativeEntropyIntegrand_jointConvex` through the
+supporting denominator and trace-paired integrand APIs
+`RelativeEntropy.leftRightDenominatorMatrix`,
+`RelativeEntropy.leftRightDenominatorMatrix_posDef`,
+`RelativeEntropy.leftRightDenominatorMatrix_affine`,
+`RelativeEntropy.tracePairedInversePerspectiveIntegrand_jointConvex`, and
+`trace_inversePerspective_jointConvex`. The new route assembly layer exposes
+`RelativeEntropy.traceMatrixRelativeEntropyPlain`,
+`TraceMatrixRelativeEntropyPlainJointConvexity`,
+`LeftRightRelativeEntropyIntegrandDensityIntegrable`,
+`TraceMatrixRelativeEntropyPlainLeftRightIntegralRepresentation`,
+`traceMatrixRelativeEntropyPlain_jointConvex_of_leftRight_density_integral_representation`,
+`relativeEntropyJointConvexity_of_leftRight_density_integral_representation`,
+and density/integral-premise facades to
+`liebTraceExpConcavity_statement` and `EpsteinAffineLineConcavity`. The bridge layer also exposes
 `RelativeEntropyJointConvexity`, `GibbsKleinPremise`,
 `gibbsVariationalUpperBoundPremise_of_fullMatrixKlein`, and the short facades
 `RelativeEntropy.fullKlein_liebCarrierConcavity`, `RelativeEntropy.fullKlein_liebConcavity`, and
 `RelativeEntropy.fullKlein_epsteinConcavity`.
-This discharges the Gibbs upper-bound premise from full matrix Klein, but still
-does not prove relative-entropy joint convexity, Epstein, Lieb, or Tropp.
+This discharges the Gibbs upper-bound premise from full matrix Klein, proves
+the fixed-`t` left/right integrand convexity leaf, and proves the conditional
+assembly from density/integral premises to joint convexity and Lieb/Epstein
+facades. It still does not prove the density integrability premise, the
+left/right integral representation, unconditional relative-entropy joint
+convexity, unconditional Epstein/Lieb, or Tropp.
 
 Interface audit: these migrations give downstream proof agents concrete
 finite-dimensional spectral, CFC-log, cutoff-resolvent, inverse-convexity
-segment/`MatrixLE`, and full-matrix-Klein relative-entropy handles inside
-the main repository. They still do not prove a weighted `CFCLog.lineDeriv` /
-`CFCLog.derivSAAt` resolvent-kernel adapter, arbitrary-weight plain cutoff
-removal without scalar-log renormalization, relative-entropy joint convexity,
-the Epstein second-derivative sign, full Epstein/Lieb, Golden-Thompson,
+segment/`MatrixLE`, left/right inverse-perspective integrand,
+density/integral-premise route assembly, and full-matrix-Klein relative-entropy
+handles inside the main repository. They
+still do not prove a weighted `CFCLog.lineDeriv` / `CFCLog.derivSAAt`
+resolvent-kernel adapter, arbitrary-weight plain cutoff removal without
+scalar-log renormalization, the density integrability premise, the left/right
+integral representation, unconditional relative-entropy joint convexity, the
+Epstein second-derivative sign, unconditional full Epstein/Lieb, Golden-Thompson,
 conditional expectation, variance proxy, tail-event domination, or full
 Matrix Bernstein.
 

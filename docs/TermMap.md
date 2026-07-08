@@ -39,7 +39,16 @@ inverse-convexity quadratic-form and segment identities
 `inv_quadraticForm_affine_le_of_posDef`,
 `inv_quadraticForm_iSup_affine_of_posDef`, and
 `inv_matrixLE_convex_combo_le_of_posDef`, plus the relative-entropy route
-APIs `RelativeEntropy.scalarTerm_nonneg`,
+APIs `RelativeEntropy.leftRightDenominatorMatrix`,
+`RelativeEntropy.leftRightRelativeEntropyIntegrand`,
+`RelativeEntropy.leftRightRelativeEntropyIntegrand_jointConvex`,
+`RelativeEntropy.traceMatrixRelativeEntropyPlain`,
+`LeftRightRelativeEntropyIntegrandDensityIntegrable`,
+`TraceMatrixRelativeEntropyPlainLeftRightIntegralRepresentation`,
+`relativeEntropyJointConvexity_of_leftRight_density_integral_representation`,
+`liebTraceExpConcavity_statement_of_leftRight_density_integral_representation`,
+`epsteinAffineLineConcavity_of_leftRight_density_integral_representation`,
+`RelativeEntropy.scalarTerm_nonneg`,
 `RelativeEntropy.diagonalTerm_nonneg`,
 `RelativeEntropy.fullMatrixKlein_nonneg_of_isHermitian_of_strictlyPositive`,
 `RelativeEntropy.logShift`, `RelativeEntropy.expLogMatrix`,
@@ -56,13 +65,17 @@ strengthened history/current-step independence. Long natural-history theorem
 names remain compatibility surfaces.
 
 `CFCLog.DerivOp` is bookkeeping only. The provider layer now includes
-positive-definite inverse-convexity segment/`MatrixLE` APIs, full matrix Klein,
-finite-cutoff CFC-log resolvent-kernel bridges with explicit remainders, the
-`SameEigenbasisDiagonal` predicate, same-eigenbasis diagonal remainder cutoff
-removal, and self-adjoint tail-event subset discharge wrappers, but still
+positive-definite inverse-convexity segment/`MatrixLE` APIs, the fixed-`t`
+left/right inverse-perspective integrand joint-convexity leaf,
+density/integral-premise route wrappers to joint convexity and Lieb/Epstein,
+full matrix Klein, finite-cutoff CFC-log resolvent-kernel bridges with explicit
+remainders, the `SameEigenbasisDiagonal` predicate, same-eigenbasis diagonal
+remainder cutoff removal, and self-adjoint tail-event subset discharge wrappers,
+but still
 stops short of
-relative-entropy joint convexity, arbitrary-weight plain cutoff removal, the
-Epstein second-derivative sign, full Lieb/Tropp, the weaker independence
+the density integrability premise, the left/right integral representation,
+unconditional relative-entropy joint convexity, arbitrary-weight plain cutoff
+removal, the Epstein second-derivative sign, unconditional full Lieb/Tropp, the weaker independence
 statement without explicit summand measurability, the exact conditioning
 expectation chain for arbitrary larger history sigma-algebras, variance-proxy
 normalization, or full Matrix Bernstein. Keep this separate from reader-facing

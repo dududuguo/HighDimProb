@@ -466,7 +466,9 @@ This import exposes the upstream provider facade: ambient and self-adjoint
 matrix-exp derivatives, first-order strictly-positive `CFC.log` affine-line
 APIs, short inverse/trace-resolvent derivatives, finite-cutoff log-resolvent
 identities, inverse-convexity segment/`MatrixLE` identities, full-matrix-Klein
-relative-entropy APIs, conditional relative-entropy/Gibbs bridges,
+relative-entropy APIs, the fixed-`t` left/right relative-entropy integrand
+joint-convexity leaf, the density/integral-premise route to relative-entropy
+joint convexity and Lieb/Epstein facades, conditional relative-entropy/Gibbs bridges,
 derivative-level Epstein consumers, conditional Tropp/Lieb bridges, CFC-log resolvent cutoff/remainder bridges, conditioning-kernel reductions over `MeasurableSpace.comap H`, fixed-numerator trace-resolvent convexity, support-to-excess compression, and tail-event subset-discharge wrappers.
 
 Matrix-exp and divided-difference API:
@@ -566,6 +568,29 @@ prove full operator convexity of inverse or relative-entropy joint convexity.
 
 Relative-entropy route API:
 
+- `inversePerspectiveBlock_posSemidef`
+- `inversePerspective_jointConvex`
+- `trace_inversePerspective_jointConvex`
+- `RelativeEntropy.tracePairedInversePerspectiveIntegrand`
+- `RelativeEntropy.tracePairedInversePerspectiveIntegrand_jointConvex`
+- `RelativeEntropy.leftRightDenominatorMatrix`
+- `RelativeEntropy.leftRightDenominatorMatrix_posDef`
+- `RelativeEntropy.leftRightDenominatorMatrix_affine`
+- `RelativeEntropy.leftRightRelativeEntropyIntegrand`
+- `RelativeEntropy.leftRightRelativeEntropyIntegrand_jointConvex`
+- `RelativeEntropy.traceMatrixRelativeEntropyPlain`
+- `RelativeEntropy.relativeEntropyUnnormalized_eq_traceMatrixRelativeEntropyPlain`
+- `TraceMatrixRelativeEntropyPlainJointConvexity`
+- `relativeEntropyJointConvexity_of_traceMatrixRelativeEntropyPlain_jointConvex`
+- `LeftRightRelativeEntropyIntegrandDensityIntegrable`
+- `TraceMatrixRelativeEntropyPlainLeftRightIntegralRepresentation`
+- `traceMatrixRelativeEntropyPlain_jointConvex_of_leftRight_density_integral_representation`
+- `relativeEntropyJointConvexity_of_leftRight_density_integral_representation`
+- `RelativeEntropy.fullKlein_liebCarrierConcavity_of_leftRight_density_integral_representation`
+- `RelativeEntropy.fullKlein_liebConcavity_of_leftRight_density_integral_representation`
+- `RelativeEntropy.fullKlein_epsteinConcavity_of_leftRight_density_integral_representation`
+- `liebTraceExpConcavity_statement_of_leftRight_density_integral_representation`
+- `epsteinAffineLineConcavity_of_leftRight_density_integral_representation`
 - `RelativeEntropy.scalarTerm`
 - `RelativeEntropy.diagonalTerm`
 - `RelativeEntropy.diagonalMatrixTerm`
@@ -586,10 +611,15 @@ Relative-entropy route API:
 - `RelativeEntropy.fullKlein_epsteinConcavity`
 - `epsteinAffineLineConcavity_of_liebTraceExpConcavity_selfAdjointCarrier`
 
-These expose scalar/diagonal Klein nonnegativity, full finite-dimensional matrix
-Klein under Hermitian strictly-positive hypotheses, Gibbs/full-Klein bridge
-adapters, and conditional strictly-positive carrier-to-Epstein wrappers. They
-still do not prove relative-entropy joint convexity, Epstein, Lieb, or Tropp.
+These expose the finite-dimensional inverse-perspective leaf behind the
+fixed-`t` left/right relative-entropy integrand, scalar/diagonal Klein
+nonnegativity, full finite-dimensional matrix Klein under Hermitian
+strictly-positive hypotheses, Gibbs/full-Klein bridge adapters, conditional
+density/integral-premise route facades to relative-entropy joint convexity and
+Lieb/Epstein, and conditional strictly-positive carrier-to-Epstein wrappers.
+They still do not prove the density integrability premise, the left/right
+integral representation, unconditional relative-entropy joint convexity,
+unconditional Epstein/Lieb, or Tropp.
 
 Epstein/Tropp conditional consumers and support APIs:
 
@@ -631,12 +661,16 @@ Epstein/Tropp conditional consumers and support APIs:
 Interface audit: `CFCLog.DerivOp` is pointwise derivative bookkeeping only, not a
 stable second-level Frechet codomain. The inverse-convexity API now includes
 positive-definite segment and `MatrixLE` packaging, and the relative-entropy
-route includes full matrix Klein plus conditional carrier-wrapper MVPs. The
+route includes fixed-`t` left/right integrand joint convexity, full matrix
+Klein, density/integral-premise route wrappers, and conditional carrier-wrapper
+MVPs. The
 `LogResolvent` layer gives spectral sum, CFC-log cutoff, and renormalized
 cutoff-limit handles; it does not yet give a weighted `CFCLog.lineDeriv` /
 `CFCLog.derivSAAt` resolvent-kernel adapter or an Epstein sign proof. The
-provider layer remains conditional and stops short of relative-entropy joint
-convexity, full Epstein/Lieb, Golden-Thompson, exact conditioning expectation,
+provider layer remains conditional and stops short of the left/right integral
+representation, unconditional relative-entropy joint convexity,
+unconditional full Epstein/Lieb,
+Golden-Thompson, exact conditioning expectation,
 variance-proxy normalization or full Matrix Bernstein. Self-adjoint quadratic-form tail subset discharge is now available through the TailEvent provider wrappers.
 It is intentionally separate from reader-facing examples and the core
 `HighDimProb.RandomMatrix` aggregate.

@@ -143,10 +143,13 @@ bundle `MatrixBernsteinConditioningTraceMGFTailAssumptions` and thin wrapper
 package the same tail/conditioning assumptions without proving new hard facts;
 this is not a full Matrix Bernstein theorem. The provider-facing
 `HighDimProb.RandomMatrix.LiebProvider` facade also exposes the ambient
-matrix-exp Frechet derivative layer, spectral endpoint monotonicity, and
-trace-MGF-to-Laplace contracts as bridge infrastructure; these do not close the
-weaker independence statement, conditional expectation, log-resolvent, or
-Lieb/Tropp analytic blockers.
+matrix-exp Frechet derivative layer, log-resolvent bridge infrastructure, the
+fixed-`t` left/right relative-entropy integrand joint-convexity leaf, the
+density/integral-premise route to relative-entropy joint convexity and
+Lieb/Epstein facades, spectral endpoint monotonicity, and trace-MGF-to-Laplace
+contracts; these do not close the weaker independence statement, conditional
+expectation, density integrability, left/right integral representation,
+unconditional relative-entropy joint convexity, or Lieb/Tropp analytic blockers.
 
 ## Not Yet Proved
 
