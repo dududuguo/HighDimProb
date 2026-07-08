@@ -45,9 +45,14 @@ APIs `RelativeEntropy.leftRightDenominatorMatrix`,
 `RelativeEntropy.traceMatrixRelativeEntropyPlain`,
 `LeftRightRelativeEntropyIntegrandDensityIntegrable`,
 `TraceMatrixRelativeEntropyPlainLeftRightIntegralRepresentation`,
+`leftRightRelativeEntropyIntegrandDensityIntegrable`,
+`traceMatrixRelativeEntropyPlainLeftRightIntegralRepresentation`,
 `relativeEntropyJointConvexity_of_leftRight_density_integral_representation`,
+`relativeEntropyJointConvexity_of_leftRight`,
 `liebTraceExpConcavity_statement_of_leftRight_density_integral_representation`,
+`liebTraceExpConcavity_statement_of_leftRight`,
 `epsteinAffineLineConcavity_of_leftRight_density_integral_representation`,
+`epsteinAffineLineConcavity_of_leftRight`,
 `RelativeEntropy.scalarTerm_nonneg`,
 `RelativeEntropy.diagonalTerm_nonneg`,
 `RelativeEntropy.fullMatrixKlein_nonneg_of_isHermitian_of_strictlyPositive`,
@@ -56,7 +61,7 @@ APIs `RelativeEntropy.leftRightDenominatorMatrix`,
 `RelativeEntropy.fullKlein_epsteinConcavity`.
 
 The same import also exposes the Epstein consumer namespace `EpsteinLine`,
-conditional Epstein/Lieb/Tropp provider bridges, spectral endpoint monotonicity,
+conditional and left/right Epstein/Lieb/Tropp provider bridges, spectral endpoint monotonicity,
 trace-MGF-to-Laplace contracts, provider-compressed natural-state tail helpers,
 CFC-log resolvent cutoff/remainder bridges, conditioning-kernel reductions,
 fixed-numerator trace-resolvent convexity, support-to-excess compression, and
@@ -67,15 +72,15 @@ names remain compatibility surfaces.
 `CFCLog.DerivOp` is bookkeeping only. The provider layer now includes
 positive-definite inverse-convexity segment/`MatrixLE` APIs, the fixed-`t`
 left/right inverse-perspective integrand joint-convexity leaf,
-density/integral-premise route wrappers to joint convexity and Lieb/Epstein,
+density/integral witnesses and route wrappers to joint convexity and Lieb/Epstein,
 full matrix Klein, finite-cutoff CFC-log resolvent-kernel bridges with explicit
 remainders, the `SameEigenbasisDiagonal` predicate, same-eigenbasis diagonal
 remainder cutoff removal, and self-adjoint tail-event subset discharge wrappers,
 but still
 stops short of
-the density integrability premise, the left/right integral representation,
-unconditional relative-entropy joint convexity, arbitrary-weight plain cutoff
-removal, the Epstein second-derivative sign, unconditional full Lieb/Tropp, the weaker independence
+arbitrary-weight plain cutoff
+removal, the Epstein second-derivative sign, Golden-Thompson, the full
+finite-family Tropp/Matrix Bernstein chain, the weaker independence
 statement without explicit summand measurability, the exact conditioning
 expectation chain for arbitrary larger history sigma-algebras, variance-proxy
 normalization, or full Matrix Bernstein. Keep this separate from reader-facing

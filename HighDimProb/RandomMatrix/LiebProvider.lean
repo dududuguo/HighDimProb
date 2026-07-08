@@ -9,6 +9,7 @@ import HighDimProb.RandomMatrix.RelativeEntropyLeftRightIntegrandProvider
 import HighDimProb.RandomMatrix.GibbsProvider
 import HighDimProb.RandomMatrix.RelativeEntropyBridgeProvider
 import HighDimProb.RandomMatrix.RelativeEntropyJointConvexityRouteProvider
+import HighDimProb.RandomMatrix.RelativeEntropyLeftRightRepresentationProvider
 import HighDimProb.RandomMatrix.EpsteinDerivativeProvider
 import HighDimProb.RandomMatrix.TraceExpTroppStepProvider
 import HighDimProb.RandomMatrix.IntegrabilityProvider
@@ -42,8 +43,9 @@ first-order `CFC.log` affine-line derivatives, short inverse/trace-resolvent
 derivatives, finite-cutoff trace/CFC log-resolvent identities,
 inverse-convexity quadratic-form variational identities, the left/right
 relative-entropy integrand joint-convexity leaf, the density/integral premise
-route to relative-entropy joint convexity, relative-entropy scalar/diagonal and
-Gibbs bridge MVPs, derivative-level Epstein consumer
+route and proved left/right density/integral representation to relative-entropy
+joint convexity, relative-entropy scalar/diagonal and Gibbs bridge MVPs,
+derivative-level Epstein consumer
 reductions, deterministic
 log/order and trace-exp monotonicity, conditional Epstein-to-Lieb/Tropp
 wrappers, bounded finite-measure integrability providers, natural-history

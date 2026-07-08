@@ -115,6 +115,11 @@ open scoped MatrixOrder Matrix.Norms.Operator Matrix.Norms.L2Operator
 #check RelativeEntropy.fullKlein_liebCarrierConcavity
 #check RelativeEntropy.fullKlein_liebConcavity
 #check RelativeEntropy.fullKlein_epsteinConcavity
+#check RelativeEntropy.fullKlein_liebCarrierConcavity_of_leftRight
+#check RelativeEntropy.fullKlein_liebConcavity_of_leftRight
+#check RelativeEntropy.fullKlein_epsteinConcavity_of_leftRight
+#check liebTraceExpConcavity_statement_of_leftRight
+#check epsteinAffineLineConcavity_of_leftRight
 
 example : GibbsKleinPremise :=
   gibbsKleinPremise_of_fullMatrixKlein
@@ -143,6 +148,8 @@ example (hRE : RelativeEntropyJointConvexity) : EpsteinAffineLineConcavity :=
 #check liebJensenTraceExp_statement_of_epsteinAffineLine
 #check troppMasterTraceMGFStep_of_epsteinAffineLine
 #check troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder
+#check troppMasterTraceMGFStep_of_leftRight
+#check troppMasterTraceMGFStep_trace_bound_of_leftRight_and_providerLogOrder
 #check troppNaturalHistoryMeasurable_of_suffix_entry_measurable
 #check troppHistoryStepIndependent_of_iIndepFun_of_measurable
 #check TroppNaturalHistory.suffixMeasurable

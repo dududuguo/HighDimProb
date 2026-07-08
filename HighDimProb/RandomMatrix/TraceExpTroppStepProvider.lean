@@ -1,4 +1,5 @@
 import HighDimProb.RandomMatrix.EpsteinProvider
+import HighDimProb.RandomMatrix.RelativeEntropyLeftRightRepresentationProvider
 import HighDimProb.RandomMatrix.TraceExpLogOrderProvider
 import HighDimProb.RandomMatrix.TraceExpJensenProvider
 import HighDimProb.RandomMatrix.TraceExpMonotonicityProvider
@@ -147,6 +148,52 @@ theorem troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLog
     HighDimProb.troppMasterTraceMGFStep_trace_bound_of_logExpComparisonToK
       H K Z hStep hBridge hH hZ hTraceInt hExpInt hExpMeanSA hExpMeanPos
       hKSA hMGF
+
+/-- Tropp one-step bound from the proved left/right relative-entropy route.
+
+This wrapper exists for downstream users that want the provider's finished
+Lieb/Epstein route without manually passing
+`epsteinAffineLineConcavity_of_leftRight`. It still only proves the one-step
+statement, not Golden-Thompson, Matrix Bernstein, or the finite-family
+conditioning chain. -/
+theorem troppMasterTraceMGFStep_of_leftRight
+    {Omega : Type*} [MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {n : Nat}
+    (H : Matrix (Fin n) (Fin n) Real)
+    (Z : RandomMatrix Omega n n) :
+    HighDimProb.troppMasterTraceMGFStep_statement (P := P) H Z :=
+  troppMasterTraceMGFStep_of_epsteinAffineLine
+    (P := P) epsteinAffineLineConcavity_of_leftRight H Z
+
+/-- Tropp one-step-to-`K` trace bound from the proved left/right
+relative-entropy route plus the provider log-order bridge. -/
+theorem troppMasterTraceMGFStep_trace_bound_of_leftRight_and_providerLogOrder
+    {Omega : Type*} [MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {n : Nat}
+    (H K : Matrix (Fin n) (Fin n) Real)
+    (Z : HighDimProb.RandomMatrix Omega n n)
+    (hH : HighDimProb.IsSelfAdjointMatrix H)
+    (hZ : HighDimProb.RandomSelfAdjointMatrix P Z)
+    (hTraceInt : HighDimProb.IntegrableRealRandomVariable P
+      (fun omega => HighDimProb.traceMatrixExp (H + Z omega)))
+    (hExpInt : HighDimProb.IntegrableRandomMatrix P
+      (fun omega => HighDimProb.matrixExp (Z omega)))
+    (hExpMeanSA : HighDimProb.IsSelfAdjointMatrix
+      (HighDimProb.matrixExpect P (fun omega => HighDimProb.matrixExp (Z omega))))
+    (hExpMeanPos : IsStrictlyPositive
+      (HighDimProb.matrixExpect P (fun omega => HighDimProb.matrixExp (Z omega))))
+    (hKSA : HighDimProb.IsSelfAdjointMatrix K)
+    (hMGF : HighDimProb.MatrixLE
+      (HighDimProb.matrixExpect P (fun omega => HighDimProb.matrixExp (Z omega)))
+      (HighDimProb.matrixExp K)) :
+    HighDimProb.expect P (fun omega => HighDimProb.traceMatrixExp (H + Z omega)) <=
+      HighDimProb.traceMatrixExp (H + K) :=
+  troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder
+    (P := P) epsteinAffineLineConcavity_of_leftRight H K Z hH hZ hTraceInt
+    hExpInt hExpMeanSA hExpMeanPos hKSA hMGF
+
 /-- Thin Tropp one-step-to-`K` composition from the provider Jensen and
 log-order bridges.
 

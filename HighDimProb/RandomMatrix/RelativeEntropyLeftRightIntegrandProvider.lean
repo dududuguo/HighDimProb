@@ -229,7 +229,8 @@ theorem leftRightDenominatorMatrix_affine
   simp [leftRightDenominatorMatrix, Matrix.kroneckerMap_apply]
   ring
 
-private def rowMatrixOfVec {ι : Type*} (v : ι -> Real) : Matrix Unit ι Real :=
+/-- A one-row matrix whose unique row is the vector `v`. -/
+def rowMatrixOfVec {ι : Type*} (v : ι -> Real) : Matrix Unit ι Real :=
   fun _ j => v j
 
 /--

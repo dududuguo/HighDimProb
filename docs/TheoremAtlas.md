@@ -145,16 +145,15 @@ this is not a full Matrix Bernstein theorem. The provider-facing
 `HighDimProb.RandomMatrix.LiebProvider` facade also exposes the ambient
 matrix-exp Frechet derivative layer, log-resolvent bridge infrastructure, the
 fixed-`t` left/right relative-entropy integrand joint-convexity leaf, the
-density/integral-premise route to relative-entropy joint convexity and
-Lieb/Epstein facades, spectral endpoint monotonicity, and trace-MGF-to-Laplace
-contracts; these do not close the weaker independence statement, conditional
-expectation, density integrability, left/right integral representation,
-unconditional relative-entropy joint convexity, or Lieb/Tropp analytic blockers.
+density/integral representation route to relative-entropy joint convexity,
+Lieb/Epstein facades, and left/right Tropp one-step wrappers, plus spectral
+endpoint monotonicity and trace-MGF-to-Laplace contracts; these do not close the
+weaker independence statement, conditional expectation, Golden-Thompson,
+variance-proxy normalization, tail-event domination, or full Matrix Bernstein.
 
 ## Not Yet Proved
 
-- Full Tropp/Lieb machinery.
-- Golden-Thompson route.
+- Golden-Thompson and the full finite-family Tropp/Matrix Bernstein chain.
 - Full unconditional Matrix Bernstein theorem.
 - The weaker natural-history independence statement without explicit summand
   measurability, conditional-expectation reduction, and trace-exp integrability

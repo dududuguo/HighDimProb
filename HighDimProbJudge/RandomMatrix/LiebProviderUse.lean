@@ -110,6 +110,11 @@ import HighDimProb.RandomMatrix.ConcentrationStatements
 #check HighDimProb.RelativeEntropy.fullKlein_liebCarrierConcavity
 #check HighDimProb.RelativeEntropy.fullKlein_liebConcavity
 #check HighDimProb.RelativeEntropy.fullKlein_epsteinConcavity
+#check HighDimProb.RelativeEntropy.fullKlein_liebCarrierConcavity_of_leftRight
+#check HighDimProb.RelativeEntropy.fullKlein_liebConcavity_of_leftRight
+#check HighDimProb.RelativeEntropy.fullKlein_epsteinConcavity_of_leftRight
+#check HighDimProb.liebTraceExpConcavity_statement_of_leftRight
+#check HighDimProb.epsteinAffineLineConcavity_of_leftRight
 
 example : HighDimProb.GibbsKleinPremise :=
   HighDimProb.gibbsKleinPremise_of_fullMatrixKlein
@@ -131,6 +136,8 @@ example (hRE : HighDimProb.RelativeEntropyJointConvexity) :
 #check HighDimProb.EpsteinAffineLineConcavity
 #check HighDimProb.troppMasterTraceMGFStep_of_epsteinAffineLine
 #check HighDimProb.troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder
+#check HighDimProb.troppMasterTraceMGFStep_of_leftRight
+#check HighDimProb.troppMasterTraceMGFStep_trace_bound_of_leftRight_and_providerLogOrder
 #check HighDimProb.troppNaturalHistoryMeasurable_of_suffix_entry_measurable
 #check HighDimProb.troppHistoryStepIndependent_of_iIndepFun_of_measurable
 #check HighDimProb.TroppNaturalHistory.suffixMeasurable
