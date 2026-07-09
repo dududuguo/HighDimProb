@@ -101,6 +101,7 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check selfAdjointOperatorNormLaplaceLIntegralStatement
 #check matrixBernsteinStatement
 #check matrixBernsteinSelfAdjointStatement
+#check matrixBernsteinSelfAdjointOptimizedStatement
 #check matrixBernsteinLaplacePrerequisitesStatement
 #check matrixExpScaledFamily
 #check matrixExpScaledFamily_apply
@@ -134,6 +135,8 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check matrixBernsteinQuadTail_opt_under_tropp
 #check matrixBernsteinOptimizedScalarTailRHS
 #check matrixBernsteinTwoSidedOptimizedScalarTailRHS
+#check matrixBernsteinTwoSidedOptimizedScalarTailRHS_sameParameters
+#check one_le_matrixBernsteinTwoSidedOptimizedScalarTailRHS_zero
 #check matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions
 #check matrixBernsteinQuadTail_opt_of_tropp
 #check matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives

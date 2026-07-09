@@ -22,6 +22,8 @@ This is the current compact API index. Old historical notes were collapsed into
 
 - `matrixBernsteinOptimizedScalarTailRHS`
 - `matrixBernsteinTwoSidedOptimizedScalarTailRHS`
+- `matrixBernsteinTwoSidedOptimizedScalarTailRHS_sameParameters`
+- `one_le_matrixBernsteinTwoSidedOptimizedScalarTailRHS_zero`
 - `MatrixBernsteinPositiveSideTroppAssumptions`
 - `MatrixBernsteinNegativeSideTroppAssumptions`
 - `sampleCovarianceCenteredRankOneRadius`
@@ -91,8 +93,24 @@ reuse Mathlib CStar functional-calculus order results. Strict positivity,
 Loewner-order, and strictly-positive self-adjoint `CFC.log` transport are now
 proved in the main repository; `realMatrixToCStar_log` is intentionally restricted to that domain.
 
+## Zero-Variance Surface
+
+- `matrixVarianceProxy_eq_zero_of_normBound_zero`
+- `randomMatrixFamily_ae_eq_zero_of_matrixVarianceProxy_eq_zero`
+- `randomMatrixFamily_ae_eq_zero_of_matrixVarianceProxyNormBound_zero`
+- `randomMatrixSum_ae_eq_zero_of_family_ae_eq_zero`
+- `upperTailProb_operatorNorm_randomMatrixSum_eq_zero_of_ae_eq_zero`
+- `upperTailProb_operatorNorm_randomMatrixSum_eq_zero_of_varianceNormBound_zero`
+
+These declarations live in `HighDimProb.RandomMatrix.VarianceZero`. They prove
+the degenerate variance branch exactly: a zero variance-proxy norm bound for
+self-adjoint square-integrable summands forces each summand and their finite
+sum to vanish almost everywhere, hence every positive operator-norm upper tail
+has probability zero. They do not supply the positive-variance Tropp branch.
+
 ## Matrix Bernstein Surface
 
+- `matrixBernsteinSelfAdjointOptimizedStatement`
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
 - `troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives`
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_generatedHistory_of_bernsteinPrimitives`
@@ -123,8 +141,11 @@ proved in the main repository; `realMatrixToCStar_log` is intentionally restrict
 These are under explicit primitive assumptions. The pointwise Bernstein CFC
 primitive is now proved by `bernsteinMatrixExp_le_quadratic`; the
 `under_troppPrimitive` trace-MGF wrapper uses that proof so callers no longer
-pass pointwise CFC at the trace-MGF provider layer. The preferred optimized
-public surface is the `*_of_troppAssumptions` family, which uses
+pass pointwise CFC at the trace-MGF provider layer. The
+`matrixBernsteinSelfAdjointOptimizedStatement` fixes the canonical two-sided
+RHS and the `Fin m` generated-history shape; it is the exact statement target
+for the provider witness. The preferred public consumer surface is the
+`*_of_troppAssumptions` family, which uses
 `MatrixBernsteinPositiveSideTroppAssumptions` and
 `MatrixBernsteinNegativeSideTroppAssumptions` to expose Tropp/Lieb and
 bookkeeping assumptions without a user-supplied CFC field. The older

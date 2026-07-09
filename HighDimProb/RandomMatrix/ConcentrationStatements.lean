@@ -747,6 +747,70 @@ abbrev matrixBernsteinTwoSidedOptimizedScalarTailRHS
   matrixBernsteinOptimizedScalarTailRHS dim R t sigmaSq +
     matrixBernsteinOptimizedScalarTailRHS dim Rneg t sigmaSqNeg
 
+/-- When the positive and negative parameters agree, the two-sided optimized
+RHS has the standard factor-two dimension prefactor. -/
+theorem matrixBernsteinTwoSidedOptimizedScalarTailRHS_sameParameters
+    (dim : Nat) (R t sigmaSq : Real) :
+    matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        dim R R t sigmaSq sigmaSq =
+      ENNReal.ofReal
+        (2 * (dim : Real) *
+          Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t)))) := by
+  have hterm :
+      0 <= (dim : Real) *
+        Real.exp (-(t ^ 2 / (2 * sigmaSq + (2 / 3) * R * t))) := by
+    positivity
+  simp only [matrixBernsteinTwoSidedOptimizedScalarTailRHS,
+    matrixBernsteinOptimizedScalarTailRHS]
+  rw [← ENNReal.ofReal_add hterm hterm]
+  congr 1
+  ring
+
+/-- At zero threshold, the two-sided optimized RHS dominates one in every
+positive matrix dimension. -/
+theorem one_le_matrixBernsteinTwoSidedOptimizedScalarTailRHS_zero
+    {dim : Nat} (R sigmaSq : Real) (hdim : 0 < dim) :
+    1 <= matrixBernsteinTwoSidedOptimizedScalarTailRHS
+      dim R R 0 sigmaSq sigmaSq := by
+  have hdimReal : (1 : Real) <= (dim : Real) := by
+    exact_mod_cast hdim
+  have hdimENN : (1 : ENNReal) <= ENNReal.ofReal (dim : Real) := by
+    rw [← ENNReal.ofReal_one]
+    exact ENNReal.ofReal_le_ofReal hdimReal
+  calc
+    (1 : ENNReal) <= ENNReal.ofReal (dim : Real) := hdimENN
+    _ <= ENNReal.ofReal (dim : Real) + ENNReal.ofReal (dim : Real) :=
+      le_add_of_nonneg_right bot_le
+    _ = matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        dim R R 0 sigmaSq sigmaSq := by
+      simp [matrixBernsteinTwoSidedOptimizedScalarTailRHS,
+        matrixBernsteinOptimizedScalarTailRHS]
+
+/-- Canonical optimized self-adjoint Matrix Bernstein target.
+
+Unlike `matrixBernsteinSelfAdjointStatement`, this contract fixes the
+currently proved two-sided optimized RHS and does not expose arbitrary
+denominator constants. Its `Fin m` index shape matches the generated-history
+conditioning route. -/
+abbrev matrixBernsteinSelfAdjointOptimizedStatement
+    {Omega : Type*} [MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (A : Fin m -> RandomMatrix Omega n n) (sigmaSq R t : Real) : Prop :=
+  0 < n ->
+    (forall i, IntegrableRandomMatrix P (A i)) ->
+      (forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i))) ->
+        CenteredSelfAdjointRandomMatrixFamily P A ->
+          IndependentSelfAdjointRandomMatrices P A ->
+            PointwiseOperatorNormBound A R ->
+              MatrixVarianceProxyNormBound P A sigmaSq ->
+                0 <= sigmaSq ->
+                  0 <= R ->
+                    0 <= t ->
+                      upperTailProb P (operatorNorm (randomMatrixSum A)) t <=
+                        matrixBernsteinTwoSidedOptimizedScalarTailRHS
+                          n R R t sigmaSq sigmaSq
+
 /-- Thin high-level bounded Matrix Bernstein trace-mgf wrapper from the
 finite-family Tropp typed primitive.
 

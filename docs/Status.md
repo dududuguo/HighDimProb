@@ -309,6 +309,12 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   self-adjointness and strict positivity from centered self-adjoint bounded
   summands. Tail-side measurability remains explicit; the subset premise can be
   discharged by the self-adjoint TailEvent provider wrappers.
+- The zero-variance operator-norm branch is proved in
+  `HighDimProb.RandomMatrix.VarianceZero`: a zero variance-proxy norm bound
+  forces each self-adjoint square-integrable summand and the finite sum to
+  vanish almost everywhere, so every positive operator-norm upper tail is
+  zero. The optimized scalar API also records the equal-parameter two-sided
+  normalization and its positive-dimension zero-threshold lower bound.
 - Tropp/Lieb, Golden-Thompson, trace-exp integrability, variance-proxy control,
   and full Matrix Bernstein are not claimed as complete unless a referenced
   theorem says so directly.
