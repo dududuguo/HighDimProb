@@ -202,7 +202,8 @@ Reader-facing example routes:
 - `RandomFeatureKernelUsage`
 - `NTKGramUsage`
 - `GradientCovarianceUsage`
-- `NaturalTroppPipelineUsage`
+- `NaturalTroppPipelineUsage`, including arbitrary-history TailEvent consumer
+  usage that does not require a product-space coordinate model
 
 Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact adapter, and statement-atlas APIs remain covered by source, tests, and judge files; they are not all exposed as separate examples.
 ## Current Caveats

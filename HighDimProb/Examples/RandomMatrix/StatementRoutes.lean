@@ -71,6 +71,7 @@ Bernstein.
 -/
 
 #check naturalTropp_traceState_zero_usage
+#check arbitraryHistory_quadraticForm_tail_usage
 
 
 end HighDimProb.Examples.RandomMatrix.StatementRoutes
