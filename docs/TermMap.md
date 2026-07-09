@@ -63,7 +63,9 @@ APIs `RelativeEntropy.leftRightDenominatorMatrix`,
 The same import also exposes the Epstein consumer namespace `EpsteinLine`,
 conditional and left/right Epstein/Lieb/Tropp provider bridges, spectral endpoint monotonicity,
 trace-MGF-to-Laplace contracts, provider-compressed natural-state tail helpers,
-CFC-log resolvent cutoff/remainder bridges, conditioning-kernel reductions,
+generated-history Bernstein finite-family/trace-MGF/tail wrappers,
+trace-exp domain positivity, CFC-log resolvent cutoff/remainder bridges,
+conditioning-kernel reductions,
 fixed-numerator trace-resolvent convexity, support-to-excess compression, and
 the `TroppNaturalHistory.*` short aliases for suffix measurability and
 strengthened history/current-step independence. Long natural-history theorem

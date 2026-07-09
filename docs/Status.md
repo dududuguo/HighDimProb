@@ -67,6 +67,9 @@ Core Matrix Bernstein helpers:
 - `MatrixBernsteinPositiveSideTroppAssumptions`
 - `MatrixBernsteinNegativeSideTroppAssumptions`
 - `matrixBernsteinTraceMGF_under_tropp`
+- `troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives`
+- `matrixBernsteinTraceMGFWithBernsteinCoeff_generatedHistory_of_bernsteinPrimitives`
+- `matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives`
 - `matrixBernsteinQuadTail_trace_under_tropp`
 - `matrixBernsteinQuadTail_scalar_under_tropp`
 - `matrixBernsteinQuadTail_opt_under_tropp`
@@ -92,6 +95,10 @@ TraceExp / Tropp bookkeeping helpers:
 - `troppTraceExpFiniteFamilyIterationSkeleton_of_naturalStateConditionalSteps`
 - `troppMasterTraceMGFFiniteFamily_of_naturalStateConditionalSteps`
 - `traceMGFBernsteinVarianceProxyBound_of_naturalStateConditionalSteps`
+- `matrixExp_isStrictlyPositive_of_selfAdjoint`
+- `isStrictlyPositive_matrixExpect_matrixExp_of_randomSelfAdjoint`
+- `isSelfAdjointMatrix_matrixExpect_matrixExp_troppCurrentRandomStep_of_centeredSelfAdjoint`
+- `isStrictlyPositive_matrixExpect_matrixExp_troppCurrentRandomStep_of_centeredSelfAdjoint`
 - `traceMatrixExp_randomMatrixPrefixSum_last`
 - `traceMatrixExp_comparisonMatrixPrefixSum_last`
 
@@ -286,7 +293,11 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   assumption bundles are now `MatrixBernsteinPositiveSideTroppAssumptions` and
   `MatrixBernsteinNegativeSideTroppAssumptions`, which expose Tropp/Lieb
   primitives but not pointwise CFC fields. The older explicit-CFC bundles and
-  `_under_primitives` wrappers remain compatibility surfaces.
+  `_under_primitives` wrappers remain compatibility surfaces. The
+  generated-history Bernstein wrappers exposed through
+  `HighDimProb.RandomMatrix.LiebProvider` derive current-step exponential-mean
+  self-adjointness and strict positivity from centered self-adjoint bounded
+  summands, while tail-side measurability/subset assumptions remain explicit.
 - Tropp/Lieb, Golden-Thompson, trace-exp integrability, variance-proxy control,
   and full Matrix Bernstein are not claimed as complete unless a referenced
   theorem says so directly.

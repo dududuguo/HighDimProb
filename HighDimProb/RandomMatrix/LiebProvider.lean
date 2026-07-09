@@ -30,6 +30,8 @@ import HighDimProb.RandomMatrix.ExcessSupportCompressionProvider
 import HighDimProb.RandomMatrix.ConditioningKernelProvider
 import HighDimProb.RandomMatrix.ConditioningExpectationProvider
 import HighDimProb.RandomMatrix.ConditioningTraceExpProvider
+import HighDimProb.RandomMatrix.TraceExpDomainProvider
+import HighDimProb.RandomMatrix.ConditioningBernsteinTraceExpProvider
 import HighDimProb.RandomMatrix.CFCLogResolventRemainderProvider
 import HighDimProb.RandomMatrix.CFCLogResolventRemainderLimitProvider
 import HighDimProb.RandomMatrix.CFCLogResolventKernelProvider
@@ -52,5 +54,10 @@ log/order and trace-exp monotonicity, conditional Epstein-to-Lieb/Tropp
 wrappers, bounded finite-measure integrability providers, natural-history
 measurability and strengthened independence under the `TroppNaturalHistory.*`
 alias layer, identity support domination, spectral endpoint monotonicity, and
-thin trace-MGF-to-Laplace contracts, CFC-log resolvent cutoff bridges, conditioning-kernel reductions, trace-resolvent convexity, support-to-excess compression, and tail-event subset discharge wrappers. These imports do not prove full Lieb, full Tropp, Golden-Thompson, Bernstein CFC, or Matrix Bernstein.
+thin trace-MGF-to-Laplace contracts, generated-history Bernstein
+finite-family/trace-MGF/tail wrappers, trace-exp domain positivity,
+CFC-log resolvent cutoff bridges, conditioning-kernel reductions, trace-resolvent convexity,
+support-to-excess compression, and tail-event subset discharge wrappers. These
+imports do not prove full Lieb, full Tropp, Golden-Thompson, Bernstein CFC, or
+Matrix Bernstein.
 -/

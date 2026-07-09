@@ -222,6 +222,84 @@ example {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsFiniteMea
 #check traceMGFBernsteinVarianceProxyBoundLIntegral_of_real
 #check matrixBernsteinTraceMGFToLaplaceContract
 #check matrixBernsteinTraceMGFToLaplaceContract_under_primitives
+#check matrixQuadraticForm_integrable_of_integrableRandomMatrix
+#check matrixQuadraticForm_eq_star_dotProduct_mulVec
+#check matrixExp_isStrictlyPositive_of_selfAdjoint
+#check isStrictlyPositive_matrixExpect_matrixExp_of_randomSelfAdjoint
+#check isSelfAdjointMatrix_matrixExpect_matrixExp_troppCurrentRandomStep_of_centeredSelfAdjoint
+#check isStrictlyPositive_matrixExpect_matrixExp_troppCurrentRandomStep_of_centeredSelfAdjoint
+#check troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives
+#check matrixBernsteinTraceMGFWithBernsteinCoeff_generatedHistory_of_bernsteinPrimitives
+#check matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives
+
+example {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (theta R : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (V : Matrix (Fin n) (Fin n) Real)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P X)
+    (hIntX : forall j, IntegrableRandomMatrix P (X j))
+    (hIntSq : forall j, IntegrableRandomMatrix P (randomMatrixSquare (X j)))
+    (hBound : PointwiseOperatorNormBound X R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hIndep : ProbabilityTheory.iIndepFun X P) :
+    troppMasterTraceMGFFiniteFamily_statement (P := P) X
+      (bernsteinSecondMomentComparisonFamily P X theta R) V theta R := by
+  exact
+    troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives
+      (mOmega := mOmega) (P := P) theta R X V
+      hCentered hIntX hIntSq hBound hR hRange hIndep
+
+example {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (theta R : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P X)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P X)
+    (hIntX : forall j, IntegrableRandomMatrix P (X j))
+    (hIntSq : forall j, IntegrableRandomMatrix P (randomMatrixSquare (X j)))
+    (hBound : PointwiseOperatorNormBound X R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3) :
+    matrixBernsteinTraceMGFWithBernsteinCoeff_statement P X theta R := by
+  exact
+    matrixBernsteinTraceMGFWithBernsteinCoeff_generatedHistory_of_bernsteinPrimitives
+      (mOmega := mOmega) (P := P) theta R X
+      hCentered hIndepSA hIntX hIntSq hBound hR hRange
+
+example {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (theta t R : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P X)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P X)
+    (hIntX : forall j, IntegrableRandomMatrix P (X j))
+    (hIntSq : forall j, IntegrableRandomMatrix P (randomMatrixSquare (X j)))
+    (hBound : PointwiseOperatorNormBound X R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hTailMeas :
+      AEMeasurable
+        (fun omega => ENNReal.ofReal
+          (traceExpIntegrand (randomMatrixSum X) theta omega)) P)
+    (hTailSubset :
+      quadraticFormUpperTailEvent (randomMatrixSum X) t ⊆
+        traceExpThresholdEvent (randomMatrixSum X) theta t) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum X) t) <=
+      ENNReal.ofReal (Real.exp (-(theta * t))) *
+        ENNReal.ofReal
+          (traceMatrixExp
+            (SMul.smul (bernsteinMGFCoeff theta R) (matrixVarianceProxy P X))) := by
+  exact
+    matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives
+      (mOmega := mOmega) (P := P) theta t R X
+      hCentered hIndepSA hIntX hIntSq hBound hR hRange
+      hTailMeas hTailSubset
+
 #check MatrixBernsteinConditioningTraceMGFProviderAssumptions
 #check MatrixBernsteinConditioningTraceMGFProviderAssumptions.toTailAssumptions
 #check matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions

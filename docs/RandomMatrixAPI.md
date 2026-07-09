@@ -94,6 +94,9 @@ proved in the main repository; `realMatrixToCStar_log` is intentionally restrict
 ## Matrix Bernstein Surface
 
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
+- `troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives`
+- `matrixBernsteinTraceMGFWithBernsteinCoeff_generatedHistory_of_bernsteinPrimitives`
+- `matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives`
 - `matrixBernsteinTraceMGF_under_tropp`
 - `matrixBernsteinQuadTail_trace_under_tropp`
 - `matrixBernsteinQuadTail_scalar_under_tropp`
@@ -118,6 +121,11 @@ public surface is the `*_of_troppAssumptions` family, which uses
 `MatrixBernsteinNegativeSideTroppAssumptions` to expose Tropp/Lieb and
 bookkeeping assumptions without a user-supplied CFC field. The older
 `*_of_assumptions` and `_under_primitives` names remain compatibility surfaces.
+The generated-history Bernstein wrappers live behind
+`HighDimProb.RandomMatrix.LiebProvider`; they derive current-step
+exponential-mean self-adjointness and strict positivity from centered
+self-adjoint bounded summands; for the tail wrapper the tail
+measurability/subset bridge remains explicit.
 The S10 conditioning-to-tail route also records the developer-facing scaffold
 `MatrixBernsteinConditioningTraceMGFTailAssumptions` and the thin
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions`
@@ -484,10 +492,11 @@ joint-convexity leaf, the left/right scalar, quadratic, spectral-overlap,
 density, and integral-representation route to relative-entropy joint convexity
 and Lieb/Epstein facades, conditional relative-entropy/Gibbs bridges,
 derivative-level Epstein consumers, conditional and left/right Tropp/Lieb
-bridges, CFC-log resolvent cutoff/remainder bridges, conditioning-kernel
-reductions over `MeasurableSpace.comap H`, fixed-numerator trace-resolvent
-convexity, support-to-excess compression, and tail-event subset-discharge
-wrappers.
+bridges, generated-history Bernstein finite-family/trace-MGF/tail wrappers,
+trace-exp domain positivity, CFC-log resolvent cutoff/remainder bridges,
+conditioning-kernel reductions over
+`MeasurableSpace.comap H`, fixed-numerator trace-resolvent convexity,
+support-to-excess compression, and tail-event subset-discharge wrappers.
 
 Matrix-exp and divided-difference API:
 
@@ -503,6 +512,10 @@ Matrix-exp and divided-difference API:
 - `matrixExpDividedDifferenceSeries`
 - `matrixExpDividedDifferenceSeries_pos`
 - `matrixExpDividedDifferenceSeries_ne_zero`
+- `matrixQuadraticForm_integrable_of_integrableRandomMatrix`
+- `matrixQuadraticForm_eq_star_dotProduct_mulVec`
+- `matrixExp_isStrictlyPositive_of_selfAdjoint`
+- `isStrictlyPositive_matrixExpect_matrixExp_of_randomSelfAdjoint`
 
 Preferred spectral adapter aliases:
 
@@ -682,6 +695,8 @@ Epstein/Tropp conditional consumers and support APIs:
 - `troppNaturalHistoryMeasurable_of_suffix_entry_measurable`
 - `troppHistoryStepIndependent_of_iIndepFun_of_measurable`
 - `matrixExpScaledIntegrable_of_provider_finiteMeasure`
+- `isSelfAdjointMatrix_matrixExpect_matrixExp_troppCurrentRandomStep_of_centeredSelfAdjoint`
+- `isStrictlyPositive_matrixExpect_matrixExp_troppCurrentRandomStep_of_centeredSelfAdjoint`
 - `traceExpIntegrable_troppStateHistory_add_step_of_operatorNormBounds_finiteMeasure`
 - `traceExpIntegrable_troppStateHistory_add_K_of_operatorNormBounds_finiteMeasure`
 - `troppCurrentRandomStep_operatorNorm_le_of_summand_bound`
