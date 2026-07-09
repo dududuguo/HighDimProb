@@ -97,6 +97,7 @@ proved in the main repository; `realMatrixToCStar_log` is intentionally restrict
 - `troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives`
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_generatedHistory_of_bernsteinPrimitives`
 - `matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives`
+- `matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives_tailSubsetDischarged_of_randomSelfAdjoint`
 - `matrixBernsteinTraceMGF_under_tropp`
 - `matrixBernsteinQuadTail_trace_under_tropp`
 - `matrixBernsteinQuadTail_scalar_under_tropp`
@@ -132,8 +133,8 @@ The generated-history Bernstein wrappers live behind
 `HighDimProb.RandomMatrix.LiebProvider`; they derive current-step
 exponential-mean self-adjointness and strict positivity from centered
 self-adjoint bounded summands. For the generated-history tail wrapper, tail
-measurability remains explicit; the subset premise can be discharged by the
-TailEvent provider wrappers under random self-adjointness.
+measurability remains explicit; the discharged variant removes only the
+subset premise under random self-adjointness and `0 <= theta`.
 The S10 conditioning-to-tail route also records the developer-facing scaffold
 `MatrixBernsteinConditioningTraceMGFTailAssumptions` and the thin
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions`

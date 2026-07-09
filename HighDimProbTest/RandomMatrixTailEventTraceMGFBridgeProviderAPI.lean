@@ -6,6 +6,8 @@ open scoped BigOperators Matrix.Norms.L2Operator MatrixOrder
 
 #check
   matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge_tailSubsetDischarged_of_randomSelfAdjoint
+#check
+  matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives_tailSubsetDischarged_of_randomSelfAdjoint
 
 example {Omega : Type*} [mOmega : MeasurableSpace Omega]
     {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
@@ -109,3 +111,30 @@ example {Omega : Type*} [mOmega : MeasurableSpace Omega]
       hChain hHist hHistIndep hCondExp hHistSub hHistRand hZRand hHistSA hZSA
       hCondTraceInt hExpIntStep hExpMeanSA hExpMeanPos hSigma hRhsInt hRand hSA
       hIndep hExpInt hTraceInt hKSA hVSA hR hRange hMGF hNorm hTailMeas hTheta
+
+example {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (theta t R : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P X)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P X)
+    (hIntX : forall j, IntegrableRandomMatrix P (X j))
+    (hIntSq : forall j, IntegrableRandomMatrix P (randomMatrixSquare (X j)))
+    (hBound : PointwiseOperatorNormBound X R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hTailMeas :
+      AEMeasurable
+        (fun omega => ENNReal.ofReal
+          (traceExpIntegrand (randomMatrixSum X) theta omega)) P)
+    (hTheta : 0 <= theta) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum X) t) <=
+      ENNReal.ofReal (Real.exp (-(theta * t))) *
+        ENNReal.ofReal
+          (traceMatrixExp
+            (SMul.smul (bernsteinMGFCoeff theta R) (matrixVarianceProxy P X))) := by
+  exact
+    matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives_tailSubsetDischarged_of_randomSelfAdjoint
+      (mOmega := mOmega) (P := P) theta t R X
+      hCentered hIndepSA hIntX hIntSq hBound hR hRange hTailMeas hTheta

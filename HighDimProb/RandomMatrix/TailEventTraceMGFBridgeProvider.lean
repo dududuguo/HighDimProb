@@ -1,4 +1,5 @@
 import HighDimProb.RandomMatrix.ConcentrationStatements
+import HighDimProb.RandomMatrix.ConditioningBernsteinTraceExpProvider
 import HighDimProb.RandomMatrix.TailEventDominationProvider
 
 /-!
@@ -144,6 +145,54 @@ theorem
       hCondTraceInt hExpIntStep hExpMeanSA hExpMeanPos hSigma hRhsInt hRand hSA
       hIndep hExpInt hTraceInt hKSA hVSA hR hRange hMGF hNorm hTailMeas
       hTailSubset
+
+/-- Quadratic-form upper-tail Laplace bound from Bernstein primitives with the
+tail-event subset bridge discharged by self-adjointness.
+
+This is a thin wrapper around
+`matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives`.
+It still leaves tail-side measurability explicit, but no longer asks callers to
+provide the event-subset bridge separately. -/
+theorem matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives_tailSubsetDischarged_of_randomSelfAdjoint
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (theta t R : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P X)
+    (hIndepSA : IndependentSelfAdjointRandomMatrices P X)
+    (hIntX : forall j, IntegrableRandomMatrix P (X j))
+    (hIntSq : forall j, IntegrableRandomMatrix P (randomMatrixSquare (X j)))
+    (hBound : PointwiseOperatorNormBound X R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    (hTailMeas :
+      AEMeasurable
+        (fun omega => ENNReal.ofReal
+          (traceExpIntegrand (randomMatrixSum X) theta omega)) P)
+    (hTheta : 0 <= theta) :
+    P (quadraticFormUpperTailEvent (randomMatrixSum X) t) <=
+      ENNReal.ofReal (Real.exp (-(theta * t))) *
+        ENNReal.ofReal
+          (traceMatrixExp
+            (SMul.smul (bernsteinMGFCoeff theta R) (matrixVarianceProxy P X))) := by
+  have hSA : forall j, RandomSelfAdjointMatrix P (X j) := hCentered.1.2
+  have hTailSubset :
+      quadraticFormUpperTailEvent (randomMatrixSum X) t ⊆
+        traceExpThresholdEvent (randomMatrixSum X) theta t := by
+    cases n with
+    | zero =>
+        rw [quadraticFormUpperTailEvent_empty_of_zero_dim (randomMatrixSum X) t]
+        intro omega hEvent
+        cases hEvent
+    | succ n =>
+        simpa using
+          quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_randomSelfAdjoint
+            (Y := randomMatrixSum X) theta t (randomSelfAdjointMatrix_sum hSA) hTheta
+  exact
+    matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives
+      (mOmega := mOmega) (P := P) theta t R X
+      hCentered hIndepSA hIntX hIntSq hBound hR hRange hTailMeas hTailSubset
 
 end
 

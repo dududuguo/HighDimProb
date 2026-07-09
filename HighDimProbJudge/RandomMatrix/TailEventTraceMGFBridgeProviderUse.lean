@@ -5,6 +5,8 @@ open scoped BigOperators Matrix.Norms.L2Operator MatrixOrder
 
 #check
   HighDimProb.matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge_tailSubsetDischarged_of_randomSelfAdjoint
+#check
+  HighDimProb.matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives_tailSubsetDischarged_of_randomSelfAdjoint
 
 example {Omega : Type*} [mOmega : MeasurableSpace Omega]
     {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
