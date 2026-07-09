@@ -105,6 +105,13 @@ proved in the main repository; `realMatrixToCStar_log` is intentionally restrict
 - `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge`
 - `MatrixBernsteinConditioningTraceMGFTailAssumptions`
 - `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions`
+- `MatrixBernsteinConditioningTraceMGFProviderAssumptions`
+- `MatrixBernsteinConditioningTraceMGFProviderAssumptions.toTailAssumptions`
+- `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions`
+- `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
+- `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge_tailSubsetDischarged_of_randomSelfAdjoint`
+- `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions_tailSubsetDischarged_of_randomSelfAdjoint`
+- `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions_tailSubsetDischarged_of_randomSelfAdjoint`
 - `matrixBernsteinQuadraticFormUpperTailOptimizedScalarRHSWithBernsteinCoeff_of_assumptions`
 - `matrixBernsteinQuadTail_opt_of_tropp`
 - `matrixBernsteinTwoSidedQuadraticFormTailOptimizedScalarRHSWithBernsteinCoeff_under_primitives`
@@ -124,15 +131,22 @@ bookkeeping assumptions without a user-supplied CFC field. The older
 The generated-history Bernstein wrappers live behind
 `HighDimProb.RandomMatrix.LiebProvider`; they derive current-step
 exponential-mean self-adjointness and strict positivity from centered
-self-adjoint bounded summands; for the tail wrapper the tail
-measurability/subset bridge remains explicit.
+self-adjoint bounded summands. For the generated-history tail wrapper, tail
+measurability remains explicit; the subset premise can be discharged by the
+TailEvent provider wrappers under random self-adjointness.
 The S10 conditioning-to-tail route also records the developer-facing scaffold
 `MatrixBernsteinConditioningTraceMGFTailAssumptions` and the thin
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions`
-wrapper for provider-target bookkeeping. These names are not the preferred
-reader-facing Matrix Bernstein API. The route still does not prove
+wrapper for provider-target bookkeeping. The compressed provider-assumption
+and natural-state wrappers are
+`MatrixBernsteinConditioningTraceMGFProviderAssumptions`,
+`matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions`,
+and `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`;
+their TailEvent variants discharge only the subset premise. These names are not
+the preferred reader-facing Matrix Bernstein API. The route still does not prove
 Tropp/Lieb, Golden-Thompson, trace-exp integrability, variance-proxy control,
-tail event domination, or a full unconditional Matrix Bernstein theorem. The conditioning-to-tail wrapper
+tail measurability, operator-norm endpoint assembly, or a full unconditional
+Matrix Bernstein theorem. The raw conditioning-to-tail wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge` is a thin
 composition from the S9 conditioning trace-MGF consumer to the existing
 quadratic-form Laplace route under an explicit tail-event subset assumption.

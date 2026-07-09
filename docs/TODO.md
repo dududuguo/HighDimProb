@@ -29,7 +29,9 @@ This is the active short list. Old completed task logs were collapsed into
   as the provider-compressed natural-state tail wrapper. Future work should
   compress only genuinely provider-dischargeable assumptions and keep
   independence, conditional expectation, variance-proxy normalization,
-  full-sum trace-integrability, and tail-event domination explicit. The
+  full-sum trace-integrability, and tail measurability explicit. The
+  self-adjoint TailEvent provider wrappers discharge the event-subset premise
+  but do not prove the rest of the endpoint. The
   strengthened history/current-step independence bridge is available through
   `TroppNaturalHistory.historyStepIndependent` and the compatibility theorem
   `troppHistoryStepIndependent_of_iIndepFun_of_measurable`, but the exact

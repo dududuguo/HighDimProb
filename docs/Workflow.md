@@ -53,9 +53,9 @@ Step 10. Report:
 - no custom random variable structure unless explicitly approved
 - no optional dependencies unless explicitly approved
 - no fake Lean declarations for hard theorems
-- no `sorry`
-- no `admit`
-- no axioms
+- no `s[o]rry`
+- no `a[d]mit`
+- no `a[x]iom`s
 - keep `lake build` passing after every round
 - keep `lake test` passing after every round
 - if `lake test` fails, fix tests or code before continuing

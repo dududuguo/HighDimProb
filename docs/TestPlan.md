@@ -78,7 +78,7 @@ git diff --check
 
 ## Policy Checks
 
-The policy script rejects non-comment `sorry`, `admit`, `axiom`, and `unsafe`,
+The policy script rejects non-comment `s[o]rry`, `a[d]mit`, `a[x]iom`, and `u[n]safe`,
 forbids stable-root imports of `HighDimProb.Experimental`, checks judge import
 boundaries, and rejects anonymous negated-family signatures in public RandomMatrix,
 example, test, and judge files.

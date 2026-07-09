@@ -70,6 +70,13 @@ Core Matrix Bernstein helpers:
 - `troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives`
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_generatedHistory_of_bernsteinPrimitives`
 - `matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives`
+- `MatrixBernsteinConditioningTraceMGFProviderAssumptions`
+- `MatrixBernsteinConditioningTraceMGFProviderAssumptions.toTailAssumptions`
+- `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions`
+- `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
+- `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge_tailSubsetDischarged_of_randomSelfAdjoint`
+- `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions_tailSubsetDischarged_of_randomSelfAdjoint`
+- `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions_tailSubsetDischarged_of_randomSelfAdjoint`
 - `matrixBernsteinQuadTail_trace_under_tropp`
 - `matrixBernsteinQuadTail_scalar_under_tropp`
 - `matrixBernsteinQuadTail_opt_under_tropp`
@@ -289,7 +296,8 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   measurability or independence. The S10 wrapper
   `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge` threads
   the S9 trace-MGF consumer into the quadratic-form Laplace/tail route under an
-  explicit tail-event subset assumption. The preferred optimized Matrix Bernstein
+  explicit tail-event subset assumption, while the TailEvent provider wrappers
+  discharge that subset premise under random self-adjointness. The preferred optimized Matrix Bernstein
   assumption bundles are now `MatrixBernsteinPositiveSideTroppAssumptions` and
   `MatrixBernsteinNegativeSideTroppAssumptions`, which expose Tropp/Lieb
   primitives but not pointwise CFC fields. The older explicit-CFC bundles and
@@ -297,7 +305,8 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   generated-history Bernstein wrappers exposed through
   `HighDimProb.RandomMatrix.LiebProvider` derive current-step exponential-mean
   self-adjointness and strict positivity from centered self-adjoint bounded
-  summands, while tail-side measurability/subset assumptions remain explicit.
+  summands. Tail-side measurability remains explicit; the subset premise can be
+  discharged by the self-adjoint TailEvent provider wrappers.
 - Tropp/Lieb, Golden-Thompson, trace-exp integrability, variance-proxy control,
   and full Matrix Bernstein are not claimed as complete unless a referenced
   theorem says so directly.
@@ -513,8 +522,8 @@ the fixed-`t` left/right integrand convexity leaf, proves the density
 integrability and left/right integral representation witnesses, and closes the
 left/right route to relative-entropy joint convexity, Lieb/Epstein, and the
 Tropp one-step provider wrappers. It still does not prove Golden-Thompson, the
-conditional-expectation step, variance-proxy normalization, tail-event
-domination, or full Matrix Bernstein.
+conditional-expectation step, variance-proxy normalization, tail-side
+measurability, operator-norm endpoint assembly, or full Matrix Bernstein.
 
 Interface audit: these migrations give downstream proof agents concrete
 finite-dimensional spectral, CFC-log, cutoff-resolvent, inverse-convexity
@@ -524,8 +533,8 @@ handles inside the main repository. They
 still do not prove a weighted `CFCLog.lineDeriv` / `CFCLog.derivSAAt`
 resolvent-kernel adapter, arbitrary-weight plain cutoff removal without
 scalar-log renormalization, the Epstein second-derivative sign, Golden-Thompson,
-conditional expectation, variance proxy, tail-event domination, or full
-Matrix Bernstein.
+conditional expectation, variance proxy, tail-side measurability,
+operator-norm endpoint assembly, or full Matrix Bernstein.
 
 The layer also continues to expose derivative-level Epstein consumer reductions,
 the explicit `EpsteinAffineLineConcavity` conditional route, bounded

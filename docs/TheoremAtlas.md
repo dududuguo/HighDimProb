@@ -137,11 +137,16 @@ natural-state, integrability, MGF, and variance-proxy assumptions recorded in
 `docs/STATEMENTS.md`. The S10 wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge` threads
 that trace-MGF conclusion into the quadratic-form Laplace/tail route under an
-explicit trace-exp threshold event subset assumption. Its reusable assumption
+explicit trace-exp threshold event subset assumption, and the TailEvent provider
+wrappers discharge that subset premise under random self-adjointness. Its reusable assumption
 bundle `MatrixBernsteinConditioningTraceMGFTailAssumptions` and thin wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions`
 package the same tail/conditioning assumptions without proving new hard facts;
-this is not a full Matrix Bernstein theorem. The provider-facing
+this is not a full Matrix Bernstein theorem. The newer provider-compressed
+names `MatrixBernsteinConditioningTraceMGFProviderAssumptions`,
+`matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions`,
+and `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
+package the same route with less repeated bookkeeping. The provider-facing
 `HighDimProb.RandomMatrix.LiebProvider` facade also exposes the ambient
 matrix-exp Frechet derivative layer, log-resolvent bridge infrastructure, the
 fixed-`t` left/right relative-entropy integrand joint-convexity leaf, the
@@ -149,7 +154,8 @@ density/integral representation route to relative-entropy joint convexity,
 Lieb/Epstein facades, and left/right Tropp one-step wrappers, plus spectral
 endpoint monotonicity and trace-MGF-to-Laplace contracts; these do not close the
 weaker independence statement, conditional expectation, Golden-Thompson,
-variance-proxy normalization, tail-event domination, or full Matrix Bernstein.
+variance-proxy normalization, tail measurability, operator-norm endpoint
+assembly, or full Matrix Bernstein.
 
 ## Not Yet Proved
 

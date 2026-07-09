@@ -71,6 +71,12 @@ the `TroppNaturalHistory.*` short aliases for suffix measurability and
 strengthened history/current-step independence. Long natural-history theorem
 names remain compatibility surfaces.
 
+Matrix Bernstein provider-compressed tail names include
+`MatrixBernsteinConditioningTraceMGFProviderAssumptions`,
+`matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions`,
+`matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`, and
+their `*_tailSubsetDischarged_of_randomSelfAdjoint` TailEvent wrappers.
+
 `CFCLog.DerivOp` is bookkeeping only. The provider layer now includes
 positive-definite inverse-convexity segment/`MatrixLE` APIs, the fixed-`t`
 left/right inverse-perspective integrand joint-convexity leaf,
