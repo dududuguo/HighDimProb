@@ -143,8 +143,9 @@ primitive is now proved by `bernsteinMatrixExp_le_quadratic`; the
 `under_troppPrimitive` trace-MGF wrapper uses that proof so callers no longer
 pass pointwise CFC at the trace-MGF provider layer. The
 `matrixBernsteinSelfAdjointOptimizedStatement` fixes the canonical two-sided
-RHS and the `Fin m` generated-history shape; it is the exact statement target
-for the provider witness. The preferred public consumer surface is the
+RHS over an arbitrary finite index type; the generated-history provider proves
+it by reindexing through `Fin (Fintype.card I)`. The preferred public
+consumer surface is the
 `*_of_troppAssumptions` family, which uses
 `MatrixBernsteinPositiveSideTroppAssumptions` and
 `MatrixBernsteinNegativeSideTroppAssumptions` to expose Tropp/Lieb and

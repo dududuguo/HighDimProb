@@ -6,6 +6,15 @@ open HighDimProb
 #check HighDimProb.matrixBernsteinStatement
 #check HighDimProb.matrixBernsteinSelfAdjointStatement
 #check HighDimProb.matrixBernsteinSelfAdjointOptimizedStatement
+
+example
+    {Omega I : Type*} [MeasurableSpace Omega] [Nonempty Omega] [Fintype I]
+    {P : Measure Omega} [IsProbabilityMeasure P] {n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (A : I -> RandomMatrix Omega n n) (sigmaSq R t : Real) : Prop :=
+  HighDimProb.matrixBernsteinSelfAdjointOptimizedStatement
+    (P := P) A sigmaSq R t
+
 #check HighDimProb.matrixBernsteinLaplacePrerequisitesStatement
 #check HighDimProb.matrixBernsteinTraceMGF_statement
 #check HighDimProb.matrixBernsteinTraceMGFWithBernsteinCoeff_statement

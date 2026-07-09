@@ -102,6 +102,14 @@ variable (R theta sigma2 c c1 c2 t bound K : Real)
 #check matrixBernsteinStatement
 #check matrixBernsteinSelfAdjointStatement
 #check matrixBernsteinSelfAdjointOptimizedStatement
+
+example
+    {Omega I : Type*} [MeasurableSpace Omega] [Nonempty Omega] [Fintype I]
+    {P : Measure Omega} [IsProbabilityMeasure P] {n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (A : I -> RandomMatrix Omega n n) (sigmaSq R t : Real) : Prop :=
+  matrixBernsteinSelfAdjointOptimizedStatement (P := P) A sigmaSq R t
+
 #check matrixBernsteinLaplacePrerequisitesStatement
 #check matrixExpScaledFamily
 #check matrixExpScaledFamily_apply

@@ -790,13 +790,13 @@ theorem one_le_matrixBernsteinTwoSidedOptimizedScalarTailRHS_zero
 
 Unlike `matrixBernsteinSelfAdjointStatement`, this contract fixes the
 currently proved two-sided optimized RHS and does not expose arbitrary
-denominator constants. Its `Fin m` index shape matches the generated-history
-conditioning route. -/
+denominator constants. -/
 abbrev matrixBernsteinSelfAdjointOptimizedStatement
     {Omega : Type*} [MeasurableSpace Omega] [Nonempty Omega]
-    {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
     [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
-    (A : Fin m -> RandomMatrix Omega n n) (sigmaSq R t : Real) : Prop :=
+    (A : I -> RandomMatrix Omega n n) (sigmaSq R t : Real) : Prop :=
   0 < n ->
     (forall i, IntegrableRandomMatrix P (A i)) ->
       (forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i))) ->
