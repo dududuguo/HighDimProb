@@ -10,6 +10,7 @@ import HighDimProb.RandomMatrix.IntegrabilityProvider
 import HighDimProb.RandomMatrix.NaturalHistoryProvider
 import HighDimProb.RandomMatrix.TraceExpIntegrabilityProvider
 import HighDimProb.Tail
+import HighDimProb.RandomMatrix.VarianceZero
 import Mathlib.Analysis.Normed.Algebra.Spectrum
 
 /-!
