@@ -5687,10 +5687,11 @@ structure MatrixBernsteinConditioningTraceMGFTailAssumptions
 /-- Provider-compressed assumption bundle for the natural-state S10 route.
 
 This sits one layer upstream of `MatrixBernsteinConditioningTraceMGFTailAssumptions`.
-It keeps the hard independence, conditional-expectation, variance-proxy, full-sum
-trace-integrability, and tail-side assumptions explicit, but lets provider
-lemmas synthesize natural-history measurability and bounded finite-measure
-integrability fields. -/
+It keeps summand independence, conditional-expectation, variance-proxy, full-sum
+trace-integrability, and tail-side assumptions explicit. Provider lemmas
+synthesize natural-history measurability, the exact history/current-step
+contract from random-matrix data, and bounded finite-measure integrability
+fields. -/
 structure MatrixBernsteinConditioningTraceMGFProviderAssumptions
     {Omega : Type*} [mOmega : MeasurableSpace Omega]
     {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
@@ -5709,9 +5710,6 @@ structure MatrixBernsteinConditioningTraceMGFProviderAssumptions
           forall r c,
             @Measurable Omega Real (mHist i) inferInstance
               (fun omega => X j omega r c)
-  historyStepIndependent :
-    @troppHistoryStepIndependent_of_iIndepFun_statement Omega mOmega P m n
-      theta X K
   conditionalExpectation :
     forall i,
       @condExp_traceExp_history_add_independent_step_statement
@@ -5788,9 +5786,10 @@ structure MatrixBernsteinConditioningTraceMGFProviderAssumptions
 /-- Convert the bounded provider-compressed bundle into the existing explicit
 conditioning trace-MGF tail bundle.
 
-Only provider-backed fields are synthesized here.  The hard independence,
+Only provider-backed fields are synthesized here. The exact history/current-step
+contract is derived from the bundle's random-matrix data; summand independence,
 conditional-expectation, variance-proxy, full-sum trace-integrability, and
-tail-side assumptions remain fields of the provider bundle. -/
+tail-side assumptions remain explicit fields. -/
 def MatrixBernsteinConditioningTraceMGFProviderAssumptions.toTailAssumptions
     {Omega : Type*} [mOmega : MeasurableSpace Omega]
     {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
@@ -5807,7 +5806,8 @@ def MatrixBernsteinConditioningTraceMGFProviderAssumptions.toTailAssumptions
   refine
     { chain := h.chain
       historyMeasurable := ?historyMeasurable
-      historyStepIndependent := h.historyStepIndependent
+      historyStepIndependent :=
+        TroppNaturalHistory.historyStepContractOfIsRandomMatrix theta X K h.randomMatrix
       conditionalExpectation := h.conditionalExpectation
       historySub := h.historySub
       historyRandom := h.historyRandom
@@ -6041,7 +6041,7 @@ assumption route.
 This exposes the assumptions that remain hard while routing only provider-backed
 natural-history and bounded finite-measure integrability fields through
 `MatrixBernsteinConditioningTraceMGFProviderAssumptions.toTailAssumptions`.
-It does not compress history/current independence, conditional expectation,
+It does not compress summand independence, conditional expectation,
 variance-proxy normalization, full-sum trace integrability, or tail-side
 measurability/subset assumptions. -/
 theorem matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions
@@ -6062,9 +6062,6 @@ theorem matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions
             forall r c,
               @Measurable Omega Real (mHist i) inferInstance
                 (fun omega => X j omega r c))
-    (hHistoryStepIndependent :
-      @troppHistoryStepIndependent_of_iIndepFun_statement Omega mOmega P m n
-        theta X K)
     (hConditionalExpectation :
       forall i,
         @condExp_traceExp_history_add_independent_step_statement
@@ -6146,7 +6143,6 @@ theorem matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions
       X K V theta R t RH RZ RK RX mHist
       { chain := hChain
         suffixEntryMeasurable := hSuffix
-        historyStepIndependent := hHistoryStepIndependent
         conditionalExpectation := hConditionalExpectation
         historySub := hHistorySub
         historyRandom := hHistoryRandom

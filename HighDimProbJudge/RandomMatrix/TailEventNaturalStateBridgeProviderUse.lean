@@ -23,9 +23,6 @@ example {Omega : Type*} [mOmega : MeasurableSpace Omega]
             forall r c,
               @Measurable Omega Real (mHist i) inferInstance
                 (fun omega => X j omega r c))
-    (hHistoryStepIndependent :
-      @HighDimProb.troppHistoryStepIndependent_of_iIndepFun_statement Omega mOmega P m n
-        theta X K)
     (hConditionalExpectation :
       forall i,
         @HighDimProb.condExp_traceExp_history_add_independent_step_statement
@@ -105,7 +102,7 @@ example {Omega : Type*} [mOmega : MeasurableSpace Omega]
   exact
     HighDimProb.matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions_tailSubsetDischarged_of_randomSelfAdjoint
       X K V theta R t RH RZ RK RX mHist
-      hChain hSuffix hHistoryStepIndependent hConditionalExpectation
+      hChain hSuffix hConditionalExpectation
       hHistorySub hHistoryRandom hStepRandom hHistorySelfAdjoint hStepSelfAdjoint
       hFiniteMeasure hHistoryOperatorNormBound hStepOperatorNormBound
       hKOperatorNormBound hSummandOperatorNormBound hSummandRadiusNonneg

@@ -45,9 +45,6 @@ theorem
             forall r c,
               @Measurable Omega Real (mHist i) inferInstance
                 (fun omega => X j omega r c))
-    (hHistoryStepIndependent :
-      @troppHistoryStepIndependent_of_iIndepFun_statement Omega mOmega P m n
-        theta X K)
     (hConditionalExpectation :
       forall i,
         @condExp_traceExp_history_add_independent_step_statement
@@ -139,7 +136,6 @@ theorem
       X K V theta R t RH RZ RK RX mHist
       { chain := hChain
         suffixEntryMeasurable := hSuffix
-        historyStepIndependent := hHistoryStepIndependent
         conditionalExpectation := hConditionalExpectation
         historySub := hHistorySub
         historyRandom := hHistoryRandom

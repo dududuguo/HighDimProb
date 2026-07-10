@@ -161,7 +161,9 @@ this is not a full Matrix Bernstein theorem. The newer provider-compressed
 names `MatrixBernsteinConditioningTraceMGFProviderAssumptions`,
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions`,
 and `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
-package the same route with less repeated bookkeeping. The provider-facing
+package the same route with less repeated bookkeeping. The provider bundle
+derives its exact history/current-step independence contract from explicit
+random-matrix data while retaining finite-family independence. The provider-facing
 `HighDimProb.RandomMatrix.LiebProvider` facade also exposes the ambient
 matrix-exp Frechet derivative layer, log-resolvent bridge infrastructure, the
 fixed-`t` left/right relative-entropy integrand joint-convexity leaf, the

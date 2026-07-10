@@ -1,4 +1,5 @@
 import HighDimProb.RandomMatrix.ConcentrationStatements
+import HighDimProb.RandomMatrix.ConditioningBernsteinTraceExpProvider
 
 /-!
 # Gradient covariance concentration usage example
@@ -204,8 +205,8 @@ covariance or empirical Fisher style matrices.
 
 The `gradientAdapter` field is semantic glue connecting the abstract summand
 family `A` to centered rank-one gradient covariance contributions. The
-remaining fields are exactly the Matrix Bernstein assumptions consumed by the
-library theorem. -/
+remaining fields are the Bernstein primitive hypotheses from which the
+generated-history Tropp witness is derived. -/
 structure GradientCovarianceMatrixBernsteinAssumptions {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
     {batch n : Nat}
@@ -228,16 +229,13 @@ structure GradientCovarianceMatrixBernsteinAssumptions {Omega : Type*}
   thetaRange : abs theta * R < 3
   thetaPositive : 0 < theta
   varianceProxyNormBound : MatrixVarianceProxyNormBound P A sigmaSq
-  troppPrimitive :
-    troppMasterTraceMGFFiniteFamily_statement
-      (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
-      (matrixVarianceProxy P A) theta R
 
 /-- Gradient covariance quadratic-form upper-tail bound with the normalized
 scalar Matrix Bernstein RHS. -/
 theorem gradientCovariance_quadTail_scalar_under_tropp
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {batch n : Nat}
+    [StandardBorelSpace (Matrix (Fin (n + 1)) (Fin (n + 1)) Real)]
     (G : RandomGradientTable Omega batch n)
     (A : Fin batch -> RandomMatrix Omega (n + 1) (n + 1))
     (theta R t sigmaSq : Real)
@@ -247,18 +245,28 @@ theorem gradientCovariance_quadTail_scalar_under_tropp
       ENNReal.ofReal
         ((n + 1 : Real) *
           Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq)) := by
+  letI : Nonempty Omega := MeasureTheory.nonempty_of_isProbabilityMeasure P
+  have hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
+        (matrixVarianceProxy P A) theta R :=
+    troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives
+      (mOmega := inferInstance) (P := P) theta R A (matrixVarianceProxy P A)
+      h.centered h.integrable h.squareIntegrable h.operatorNormBound
+      h.radiusNonneg h.thetaRange h.independentSelfAdjoint.2
   exact
     matrixBernsteinQuadTail_scalar_under_tropp
       A theta R t sigmaSq h.centered h.independentSelfAdjoint h.integrable
       h.squareIntegrable h.expIntegrable h.traceExpIntegrable
       h.operatorNormBound h.radiusNonneg h.thetaRange h.thetaPositive
-      h.varianceProxyNormBound h.troppPrimitive
+      h.varianceProxyNormBound hTropp
 
 /-- Gradient covariance quadratic-form upper-tail bound retaining the
 trace-exponential Matrix Bernstein RHS. -/
 theorem gradientCovariance_quadTail_trace_under_tropp
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {batch n : Nat}
+    [StandardBorelSpace (Matrix (Fin (n + 1)) (Fin (n + 1)) Real)]
     (G : RandomGradientTable Omega batch n)
     (A : Fin batch -> RandomMatrix Omega (n + 1) (n + 1))
     (theta R t sigmaSq : Real)
@@ -270,12 +278,21 @@ theorem gradientCovariance_quadTail_trace_under_tropp
           (traceMatrixExp
             (SMul.smul (bernsteinMGFCoeff theta R)
               (matrixVarianceProxy P A))) := by
+  letI : Nonempty Omega := MeasureTheory.nonempty_of_isProbabilityMeasure P
+  have hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
+        (matrixVarianceProxy P A) theta R :=
+    troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives
+      (mOmega := inferInstance) (P := P) theta R A (matrixVarianceProxy P A)
+      h.centered h.integrable h.squareIntegrable h.operatorNormBound
+      h.radiusNonneg h.thetaRange h.independentSelfAdjoint.2
   exact
     matrixBernsteinQuadTail_trace_under_tropp
       A theta R t h.centered h.independentSelfAdjoint h.integrable
       h.squareIntegrable h.expIntegrable h.traceExpIntegrable
       h.operatorNormBound h.radiusNonneg h.thetaRange h.thetaPositive
-      h.troppPrimitive
+      hTropp
 
 /-- Optimized-theta assumptions needed to use Matrix Bernstein for empirical
 gradient covariance or empirical Fisher style matrices.

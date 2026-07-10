@@ -384,6 +384,48 @@ theorem lambdaMaxOrdered_spectralUpperBound
   simpa [SpectralUpperBound, Algebra.algebraMap_eq_smul_one] using
     (Matrix.le_iff.mp hle)
 
+/-- An operator-norm bound on a real self-adjoint matrix gives the canonical
+two-sided Loewner bound by scalar identity matrices. -/
+theorem matrixLESandwich_of_selfAdjoint_operatorNorm_le
+    {n : Nat} {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}
+    (hA : IsSelfAdjointMatrix A) {epsilon : Real}
+    (hNorm : deterministicOperatorNorm A <= epsilon) :
+    MatrixLE
+        ((-epsilon) •
+          (1 : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)) A /\
+      MatrixLE A
+        (epsilon •
+          (1 : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)) := by
+  have upperBound
+      (B : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)
+      (hB : IsSelfAdjointMatrix B)
+      (hBNorm : deterministicOperatorNorm B <= epsilon) :
+      MatrixLE B
+        (epsilon •
+          (1 : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)) := by
+    have hLambda : lambdaMaxOrdered B hB <= epsilon :=
+      (lambdaMaxOrdered_le_deterministicOperatorNorm hB).trans hBNorm
+    have hBLambda :
+        MatrixLE B
+          (lambdaMaxOrdered B hB •
+            (1 : Matrix (Fin (n + 1)) (Fin (n + 1)) Real)) := by
+      exact isPSDMatrix_of_posSemidef
+        (lambdaMaxOrdered_spectralUpperBound hB)
+    exact matrixLE_trans hBLambda
+      (by
+        apply matrixLE_of_mathlib_le
+        exact smul_le_smul_of_nonneg_right hLambda
+          Matrix.PosSemidef.one.nonneg)
+  have hUpper := upperBound A hA hNorm
+  refine ⟨?_, hUpper⟩
+  have hNegUpper := upperBound (-A) hA.neg (by
+    simpa [deterministicOperatorNorm] using hNorm)
+  rw [MatrixLE] at hNegUpper ⊢
+  convert hNegUpper using 1
+  ext i j
+  simp [Matrix.sub_apply]
+  ring
+
 /-- The ordered lambda-max endpoint satisfies the named provider predicate. -/
 theorem lambdaMaxOrderedPSDUpperBound
     {n : Nat} {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real}

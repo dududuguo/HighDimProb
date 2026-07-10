@@ -126,6 +126,8 @@ has probability zero. They do not supply the positive-variance Tropp branch.
 - `MatrixBernstein.operatorNormTail_of_primitives_nonneg`
 - `MatrixBernstein.operatorNormUpperTail_of_primitives`
 - `MatrixBernstein.optimized_of_primitives`
+- `MatrixBernstein.CenteredRankOneInputs`
+- `MatrixBernstein.centeredRankOne`
 - `MatrixBernstein.highProbability_of_primitives`
 - `matrixBernsteinSelfAdjointOptimizedStatement`
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
@@ -206,9 +208,12 @@ wrapper for provider-target bookkeeping. The compressed provider-assumption
 and natural-state wrappers are
 `MatrixBernsteinConditioningTraceMGFProviderAssumptions`,
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions`,
-and `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`;
-their TailEvent variants discharge only the subset premise. These names are not
-the preferred reader-facing Matrix Bernstein API. The route still does not prove
+and `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`.
+Their provider bundle derives the exact history/current-step independence
+contract from explicit random-matrix data while retaining finite-family
+independence as an input; their TailEvent variants discharge only the subset
+premise. These names are not the preferred reader-facing Matrix Bernstein API.
+The route still does not prove
 Tropp/Lieb, Golden-Thompson, trace-exp integrability, variance-proxy control,
 tail measurability, operator-norm endpoint assembly, or a full unconditional
 Matrix Bernstein theorem. The raw conditioning-to-tail wrapper
@@ -555,6 +560,33 @@ and they are not tail wrappers by themselves.
 - `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two`
 - `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound`
 - `sampleCovarianceCenteredRankOneVarianceProxyBound`
+
+## LoRA Covariance Application Surface
+
+The focused import
+`HighDimProb.Examples.RandomMatrix.LoRAAdapterSubspaceCovarianceUsage` exposes:
+
+- `loraEmpiricalCovariance`
+- `loraMeanCovariance`
+- `loraCovarianceDeviation`
+- `loraEmpiricalCovariance`_sub_mean
+- `loraCovariance_normalizedTail`
+- `loraCovarianceRadius`
+- `loraCovariance_highProbability`
+- `loraCovariance_matrixLESandwich`
+
+For a positive batch size m, adapter dimension r + 1, squared-norm radius R,
+and epsilon >= 0, the normalized tail wrapper states
+
+    P(||SigmaHat_Q - SigmaBar_Q|| >= epsilon)
+      <= 2 (r + 1) exp(-m epsilon^2 / (8 R^2 + (4/3) R epsilon)).
+
+This is the exact consequence of the current generic centered rank-one variance
+proxy `4 m R^2`. It gives the expected
+R * (sqrt(log((r + 1)/delta) / m) + log((r + 1)/delta) / m) rate and the
+Loewner sandwich around `loraMeanCovariance`. It does not claim the sharper
+`m R^2` rank-one proxy; that separate improvement is required to match the
+smaller square-root constant.
 
 ## Example Style
 

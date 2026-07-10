@@ -359,6 +359,92 @@ theorem matrixBernsteinSelfAdjointHighProbabilityStatement_generatedHistory_of_b
 
 namespace MatrixBernstein
 
+/-- Minimal inputs for optimized Matrix Bernstein on a centered rank-one
+random-vector family.
+
+The coordinate second moments and pointwise squared-norm bound generate
+summand integrability, square integrability, the centered radius `2 * R`, and
+the canonical centered rank-one variance proxy. Only independence of the
+resulting self-adjoint matrix family remains explicit. -/
+structure CenteredRankOneInputs
+    {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    (X : I -> RandomVector Omega n) (R : Real) : Prop where
+  randomVector : forall i, IsRandomVector P (X i)
+  coordinateMemLpTwo :
+    forall i, forall j : Fin n,
+      MemLpRealRandomVariable P (coord (X i) j) 2
+  sqNormBound : forall i omega, vectorSqNorm (X i omega) <= R
+  independentSelfAdjoint :
+    IndependentSelfAdjointRandomMatrices P
+      (centeredRankOneRandomMatrixFamily P X)
+  radiusNonneg : 0 <= R
+
+/-- Optimized operator-norm tail for centered rank-one random-vector sums.
+
+This is the reusable application endpoint behind covariance, NTK Gram, and
+fixed-subspace LoRA examples. It generates every analytic Matrix Bernstein
+premise except independence from `CenteredRankOneInputs`. -/
+theorem centeredRankOne
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (X : I -> RandomVector Omega n) (R t : Real)
+    (hn : 0 < n) (h : CenteredRankOneInputs (P := P) X R)
+    (ht : 0 <= t) :
+    upperTailProb P
+        (operatorNorm
+          (randomMatrixSum (centeredRankOneRandomMatrixFamily P X))) t <=
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        n (2 * R) (2 * R) t
+        (centeredRankOneVarianceProxyNormRHS (I := I) R)
+        (centeredRankOneVarianceProxyNormRHS (I := I) R) := by
+  have hCentered :
+      CenteredSelfAdjointRandomMatrixFamily P
+        (centeredRankOneRandomMatrixFamily P X) :=
+    centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two
+      (P := P) (X := X) h.randomVector h.coordinateMemLpTwo
+  have hInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (centeredRankOneRandomMatrixFamily P X i) := by
+    intro i
+    exact centeredRankOneRandomMatrix_integrable_of_memLp_two
+      (P := P) (X := X i) (h.coordinateMemLpTwo i)
+  have hIntSq :
+      forall i,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare (centeredRankOneRandomMatrixFamily P X i)) :=
+    integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two
+      (P := P) (X := X) (R := R) h.coordinateMemLpTwo h.sqNormBound
+  have hBound :
+      PointwiseOperatorNormBound
+        (centeredRankOneRandomMatrixFamily P X) (2 * R) :=
+    PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound
+      (P := P) (X := X) h.randomVector h.coordinateMemLpTwo h.sqNormBound
+        h.radiusNonneg
+  have hNorm :
+      MatrixVarianceProxyNormBound P
+        (centeredRankOneRandomMatrixFamily P X)
+        (centeredRankOneVarianceProxyNormRHS (I := I) R) :=
+    MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two
+      (P := P) (X := X) (R := R) h.randomVector h.coordinateMemLpTwo
+        h.sqNormBound h.radiusNonneg
+  have hSigma :
+      0 <= centeredRankOneVarianceProxyNormRHS (I := I) R := by
+    positivity
+  have hRadius : 0 <= 2 * R := by
+    nlinarith [h.radiusNonneg]
+  exact
+    matrixBernsteinSelfAdjointOptimizedStatement_generatedHistory_of_bernsteinPrimitives
+      (mOmega := mOmega) (P := P)
+      (centeredRankOneRandomMatrixFamily P X)
+      (centeredRankOneVarianceProxyNormRHS (I := I) R) (2 * R) t hn
+      hInt hIntSq hCentered h.independentSelfAdjoint hBound hNorm
+      hSigma hRadius ht
+
 /-- Short public alias for the positive-variance operator-norm tail bridge. -/
 abbrev operatorNormTail_of_primitives :=
   @matrixBernsteinSelfAdjointOperatorNormTailOptimized_generatedHistory_of_bernsteinPrimitives

@@ -38,6 +38,15 @@ H2, and Theorem 1 paper-tail statement boundaries. These entries do not prove
 paper concentration bounds, deterministic equivalents, H1/H2 discharge, or
 PrecisionDA Theorem 1.
 
+## Current LoRA Covariance Example Entry Names
+
+The examples-only LoRA covariance route now exposes the normalized empirical
+and mean covariance matrices, their centered deviation, the explicit normalized
+Matrix Bernstein tail, the canonical high-probability radius, and the Loewner
+sandwich. The result uses the current generic centered rank-one variance proxy
+`4 m R^2`; the sharper `m R^2` paper constant remains a separate variance-proxy
+leaf and is not claimed by these wrappers.
+
 ## Current Process / Random Object Entry Names
 
 Random-family helpers:
@@ -109,6 +118,8 @@ High-probability inversion and contract:
 - `MatrixBernstein.operatorNormTail_of_primitives_nonneg`
 - `MatrixBernstein.operatorNormUpperTail_of_primitives`
 - `MatrixBernstein.optimized_of_primitives`
+- `MatrixBernstein.CenteredRankOneInputs`
+- `MatrixBernstein.centeredRankOne`
 - `MatrixBernstein.highProbability_of_primitives`
 
 TraceExp / Tropp bookkeeping helpers:
@@ -225,11 +236,13 @@ Reader-facing example routes:
 - `StatementRoutes`
 - `SampleCovarianceTailUsage`
 - `RankOneMatrixBernsteinPipelineUsage`
-- `RandomFeatureKernelUsage`
-- `NTKGramUsage`
-- `GradientCovarianceUsage`
+- `RandomFeatureKernelUsage`, `NTKGramUsage`, and
+  `GradientCovarianceUsage`, whose finite-index application bundles derive
+  generated-history Tropp witnesses from Bernstein primitives instead of
+  storing a `troppPrimitive` field
 - `NaturalTroppPipelineUsage`, including arbitrary-history TailEvent consumer
-  usage that does not require a product-space coordinate model
+  usage that derives the combinator and history/current-step contract from
+  stable APIs without assuming a product-space coordinate model
 
 Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact adapter, and statement-atlas APIs remain covered by source, tests, and judge files; they are not all exposed as separate examples.
 ## Current Caveats
@@ -612,7 +625,8 @@ suffix-entry measurability, the `TroppNaturalHistory.*` short aliases,
 strengthened history/current-step independence from `iIndepFun` plus summand
 measurability, the exact-contract wrapper
 `TroppNaturalHistory.historyStepContractOfIsRandomMatrix` under explicit
-random-matrix data, identity support domination, spectral endpoint monotonicity,
+random-matrix data, its use inside the provider-compressed Matrix Bernstein
+bundle, identity support domination, spectral endpoint monotonicity,
 thin trace-MGF-to-Laplace contracts, and the S16 natural-state tail wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`.
 `CFCLog.DerivOp` remains pointwise derivative bookkeeping only; it is not a
@@ -631,7 +645,7 @@ lake test
 lake build HighDimProbJudge
 ```
 
-Last verified locally on 2026-07-05 with the commands above.
+Last verified locally on 2026-07-10 with the commands above.
 
 ## Archive
 

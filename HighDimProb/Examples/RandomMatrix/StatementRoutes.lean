@@ -50,14 +50,17 @@ the shared Matrix Bernstein wrappers. Example-specific names stay in examples;
 reusable matrix facts stay in core.
 -/
 
-#check RankOneMatrixBernsteinPipelineUsage.rankOnePipeline_quadTail_opt_under_tropp
+#check RankOneMatrixBernsteinPipelineUsage.rankOne_operatorNormTail
+#check loraCovariance_normalizedTail
+#check loraCovariance_highProbability
+#check loraCovariance_matrixLESandwich
 
 /-!
 ## Structured covariance operator-norm routes
 
-These wrappers use the same core positive- and negative-side Matrix Bernstein
-assumptions. The example-specific vocabulary remains in examples until repeated
-proof obligations justify a core abstraction.
+These wrappers specialize the shared covariance and Matrix Bernstein APIs.
+Generated rank-one routes expose natural input bundles; legacy examples keep
+their remaining positive- and negative-side assumptions explicit.
 -/
 
 #check empiricalFisher_operatorNorm_tail_usage

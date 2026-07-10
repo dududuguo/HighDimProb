@@ -1,14 +1,16 @@
-import HighDimProb.RandomMatrix.ConcentrationStatements
+import HighDimProb.RandomMatrix.MatrixBernsteinProvider
 import HighDimProb.RandomVector
 
 /-!
 # NTK-style Gram matrix concentration usage example
 
-This file is an application-style example. It does not prove neural tangent
-kernel initialization, random-feature subGaussianity, training stability, or
-the Matrix Bernstein primitives. It only shows how an NTK/random-feature Gram
-matrix concentration statement can be expressed using the existing RandomMatrix
-Matrix Bernstein API under explicit assumptions.
+This application specializes the centered rank-one Matrix Bernstein endpoint to
+finite-width NTK/random-feature Gram summands. Random-vector measurability,
+coordinate second moments, a uniform squared-vector-norm bound, and independence
+of the centered self-adjoint summands are the only retained hypotheses.
+
+This file does not prove NTK initialization, feature-tail assumptions, or
+training stability.
 -/
 
 namespace HighDimProb.Examples.RandomMatrix.NTKGramUsage
@@ -49,148 +51,47 @@ theorem ntkGramContribution_apply {Omega : Type*} [MeasurableSpace Omega]
     ntkGramContribution J omega i j = J omega i * J omega j := by
   rfl
 
-/-- Centered rank-one Gram contribution for one feature.
-
-This is the NTK-facing name for the core centered rank-one random-matrix API;
-the expectation is still entrywise through `matrixExpect`. -/
-def centeredNTKGramContribution {Omega : Type*} [MeasurableSpace Omega]
+/-- Centered rank-one Gram contribution for one feature. -/
+abbrev centeredNTKGramContribution {Omega : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} {n : Nat} (J : RandomNTKFeatureVector Omega n) :
     RandomMatrix Omega (n + 1) (n + 1) :=
   centeredRankOneRandomMatrix P J
 
 /-- The centered NTK Gram summand family indexed by finite random features. -/
-def centeredNTKGramSummands {Omega : Type*} [MeasurableSpace Omega]
+abbrev centeredNTKGramSummands {Omega : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} {n width : Nat}
     (J : Fin width -> RandomNTKFeatureVector Omega n) :
     Fin width -> RandomMatrix Omega (n + 1) (n + 1) :=
   centeredRankOneRandomMatrixFamily P J
 
-/-- Example-local adapter tying an arbitrary Matrix Bernstein summand family to
-centered NTK/random-feature Gram contributions.
-
-This is intentionally an assumption-level adapter. The structural centered
-rank-one object is now shared with the core API; this example still keeps the
-feature-level analytic hypotheses explicit. -/
-def IsCenteredNTKGramSummandFamily {Omega : Type*} [MeasurableSpace Omega]
-    {P : Measure Omega} {n width : Nat}
-    (J : Fin width -> RandomNTKFeatureVector Omega n)
-    (A : Fin width -> RandomMatrix Omega (n + 1) (n + 1)) : Prop :=
-  A = centeredNTKGramSummands (P := P) J
-
-/-- Assumptions needed to use the existing Matrix Bernstein API for an
-NTK/random-feature Gram matrix.
-
-The `ntkAdapter` field is semantic glue only. It records that the summands are
-the centered NTK Gram contributions. The remaining fields are exactly the
-Matrix Bernstein assumptions consumed by the existing theorem. -/
-structure NTKGramMatrixBernsteinAssumptions {Omega : Type*}
+/-- NTK-facing alias for the reusable centered rank-one inputs. -/
+abbrev NTKGramInputs {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
     {n width : Nat}
+    (J : Fin width -> RandomNTKFeatureVector Omega n) (R : Real) : Prop :=
+  MatrixBernstein.CenteredRankOneInputs (P := P) J R
+
+/-- Operator-norm upper tail for the centered finite-width NTK Gram deviation.
+
+The centered summand radius is `2 * R`; the variance parameter is the automatic
+`centeredRankOneVarianceProxyNormRHS` for the feature family.
+-/
+theorem ntkGram_operatorNormTail
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P] {n width : Nat}
+    [StandardBorelSpace (Matrix (Fin (n + 1)) (Fin (n + 1)) Real)]
     (J : Fin width -> RandomNTKFeatureVector Omega n)
-    (A : Fin width -> RandomMatrix Omega (n + 1) (n + 1))
-    (theta R sigmaSq : Real) : Prop where
-  ntkAdapter : IsCenteredNTKGramSummandFamily (P := P) J A
-  centered : CenteredSelfAdjointRandomMatrixFamily P A
-  independentSelfAdjoint : IndependentSelfAdjointRandomMatrices P A
-  integrable : forall a, IntegrableRandomMatrix P (A a)
-  squareIntegrable : forall a, IntegrableRandomMatrix P (randomMatrixSquare (A a))
-  expIntegrable :
-    forall a,
-      IntegrableRandomMatrix P (matrixExpScaledFamily A theta a)
-  traceExpIntegrable :
-    IntegrableRealRandomVariable P
-      (traceExpIntegrand (randomMatrixSum A) theta)
-  operatorNormBound : PointwiseOperatorNormBound A R
-  radiusNonneg : 0 <= R
-  thetaRange : abs theta * R < 3
-  thetaPositive : 0 < theta
-  varianceProxyNormBound : MatrixVarianceProxyNormBound P A sigmaSq
-  troppPrimitive :
-    troppMasterTraceMGFFiniteFamily_statement
-      (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
-      (matrixVarianceProxy P A) theta R
-
-/-- NTK-style quadratic-form upper-tail bound with the normalized scalar RHS.
-
-The conclusion is stated for the centered NTK Gram deviation
-`randomMatrixSum A`; the adapter field records that `A` is the centered
-rank-one NTK/random-feature Gram summand family. -/
-theorem ntkGram_quadTail_scalar_under_tropp
-    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
-    [IsProbabilityMeasure P] {n width : Nat}
-    (J : Fin width -> RandomNTKFeatureVector Omega n)
-    (A : Fin width -> RandomMatrix Omega (n + 1) (n + 1))
-    (theta R t sigmaSq : Real)
-    (h : NTKGramMatrixBernsteinAssumptions
-      (P := P) J A theta R sigmaSq) :
-    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
-      ENNReal.ofReal
-        ((n + 1 : Real) *
-          Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq)) := by
-  exact
-    matrixBernsteinQuadTail_scalar_under_tropp
-      A theta R t sigmaSq h.centered h.independentSelfAdjoint h.integrable
-      h.squareIntegrable h.expIntegrable h.traceExpIntegrable
-      h.operatorNormBound h.radiusNonneg h.thetaRange h.thetaPositive
-      h.varianceProxyNormBound h.troppPrimitive
-
-/-- Same NTK-style route, retaining the trace-exponential RHS. -/
-theorem ntkGram_quadTail_trace_under_tropp
-    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
-    [IsProbabilityMeasure P] {n width : Nat}
-    (J : Fin width -> RandomNTKFeatureVector Omega n)
-    (A : Fin width -> RandomMatrix Omega (n + 1) (n + 1))
-    (theta R t sigmaSq : Real)
-    (h : NTKGramMatrixBernsteinAssumptions
-      (P := P) J A theta R sigmaSq) :
-    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
-      ENNReal.ofReal (Real.exp (-(theta * t))) *
-        ENNReal.ofReal
-          (traceMatrixExp
-            (SMul.smul (bernsteinMGFCoeff theta R)
-              (matrixVarianceProxy P A))) := by
-  exact
-    matrixBernsteinQuadTail_trace_under_tropp
-      A theta R t h.centered h.independentSelfAdjoint h.integrable
-      h.squareIntegrable h.expIntegrable h.traceExpIntegrable
-      h.operatorNormBound h.radiusNonneg h.thetaRange h.thetaPositive
-      h.troppPrimitive
-
-/-- Optimized-theta assumptions needed to use Matrix Bernstein for an
-NTK/random-feature Gram matrix.
-
-The analytic assumptions involving exponentials and Tropp are specialized at
-the canonical Bernstein choice `bernsteinThetaChoice t sigmaSq R`. The
-pointwise Bernstein CFC primitive is supplied by the core hardbone theorem, so
-this optimized usage surface no longer exposes a CFC field. -/
-structure NTKGramOptimizedMatrixBernsteinAssumptions {Omega : Type*}
-    [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
-    {n width : Nat}
-    (J : Fin width -> RandomNTKFeatureVector Omega n)
-    (A : Fin width -> RandomMatrix Omega (n + 1) (n + 1))
-    (R t sigmaSq : Real) : Prop where
-  ntkAdapter : IsCenteredNTKGramSummandFamily (P := P) J A
-  matrixBernsteinSide :
-    MatrixBernsteinPositiveSideTroppAssumptions (P := P) A R t sigmaSq
-
-/-- NTK-style quadratic-form upper-tail bound with the optimized scalar
-Matrix Bernstein RHS.
-
-This usage theorem has no explicit theta parameter. The theta choice and scalar
-optimization are supplied by the existing Matrix Bernstein theorem. -/
-theorem ntkGram_quadTail_opt_of_tropp
-    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
-    [IsProbabilityMeasure P] {n width : Nat}
-    (J : Fin width -> RandomNTKFeatureVector Omega n)
-    (A : Fin width -> RandomMatrix Omega (n + 1) (n + 1))
-    (R t sigmaSq : Real)
-    (h : NTKGramOptimizedMatrixBernsteinAssumptions
-      (P := P) J A R t sigmaSq) :
-    P (quadraticFormUpperTailEvent (randomMatrixSum A) t) <=
-      matrixBernsteinOptimizedScalarTailRHS (n + 1) R t sigmaSq := by
-  exact
-    matrixBernsteinQuadTail_opt_of_tropp
-      (P := P) A R t sigmaSq h.matrixBernsteinSide
+    (R t : Real) (h : NTKGramInputs (P := P) J R) (ht : 0 <= t) :
+    upperTailProb P
+        (operatorNorm
+          (randomMatrixSum (centeredNTKGramSummands (P := P) J))) t <=
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        (n + 1) (2 * R) (2 * R) t
+        (centeredRankOneVarianceProxyNormRHS (I := Fin width) R)
+        (centeredRankOneVarianceProxyNormRHS (I := Fin width) R) := by
+  simpa using
+    MatrixBernstein.centeredRankOne
+      (mOmega := mOmega) (P := P) J R t (Nat.succ_pos n) h ht
 
 end
 

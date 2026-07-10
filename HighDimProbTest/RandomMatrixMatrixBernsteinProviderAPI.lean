@@ -8,6 +8,8 @@ open MeasureTheory
 #check HighDimProb.MatrixBernstein.operatorNormTail_of_primitives_nonneg
 #check HighDimProb.MatrixBernstein.operatorNormUpperTail_of_primitives
 #check HighDimProb.MatrixBernstein.optimized_of_primitives
+#check HighDimProb.MatrixBernstein.CenteredRankOneInputs
+#check HighDimProb.MatrixBernstein.centeredRankOne
 #check HighDimProb.MatrixBernstein.highProbability_of_primitives
 
 example

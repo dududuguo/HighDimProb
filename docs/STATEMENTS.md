@@ -154,8 +154,10 @@ Provider theorem surfaces:
   remain available for consumers that already carry an explicit Epstein premise.
 - `MatrixBernsteinConditioningTraceMGFProviderAssumptions` and
   `MatrixBernsteinConditioningTraceMGFProviderAssumptions.toTailAssumptions`,
-  which synthesize natural-history measurability and bounded finite-measure
-  trace-exp integrability fields only.
+  which synthesize natural-history measurability, the exact
+  history/current-step independence contract from explicit random-matrix data,
+  and bounded finite-measure trace-exp integrability fields. Finite-family
+  independence remains an explicit input.
 - `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`,
   which exposes the S10 tail bound through the provider-compressed bundle.
 

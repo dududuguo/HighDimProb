@@ -3,10 +3,11 @@ import HighDimProb.Examples.RandomMatrix.NTKGramUsage
 /-!
 # Random feature kernel concentration usage example
 
-This examples-only file shows how a finite random-feature kernel approximation
-can be connected to the existing RandomMatrix Matrix Bernstein API. It does not
-prove feature-level centeredness, boundedness, neural-network training
-dynamics, or the Tropp/Bernstein primitive assumptions.
+This examples-only file specializes the centered rank-one Matrix Bernstein
+endpoint to a finite random-feature kernel approximation. Random-vector
+measurability, coordinate second moments, a uniform squared-vector-norm bound,
+and independence of the centered summands remain explicit assumptions. It does
+not claim feature-distribution properties or neural-network training dynamics.
 -/
 
 namespace HighDimProb.Examples.RandomMatrix.RandomFeatureKernelUsage
@@ -89,7 +90,7 @@ theorem normalizedEmpiricalFeatureKernel_apply {numFeatures n : Nat}
   change (1 / (numFeatures : Real)) * empiricalFeatureKernel Phi i j = _
   rw [empiricalFeatureKernel_apply]
 
-/-! ## Random feature table and centered summand adapter -/
+/-! ## Random feature table and centered summands -/
 
 /-- A random finite table of random-feature vectors. -/
 abbrev RandomFeatureTable (Omega : Type*) [MeasurableSpace Omega]
@@ -157,7 +158,7 @@ theorem randomEmpiricalFeatureKernel_apply {Omega : Type*}
 /-- Centered rank-one random-feature kernel contribution for one coordinate.
 
 This reuses the NTK-facing centered rank-one adapter; feature-level analytic
-hypotheses remain explicit in the Matrix Bernstein assumptions below. -/
+hypotheses remain explicit in `RandomFeatureKernelInputs` below. -/
 def centeredRandomFeatureKernelContribution {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} {numFeatures n : Nat}
     (Phi : RandomFeatureTable Omega numFeatures n) (a : Fin numFeatures) :
@@ -188,8 +189,8 @@ def IsCenteredRandomFeatureKernelSummandFamily {Omega : Type*}
 
 The `featureAdapter` field is semantic glue connecting the abstract summand
 family `A` to centered rank-one random-feature kernel contributions. The
-remaining fields are the existing Matrix Bernstein assumptions consumed by the
-library theorem. -/
+remaining fields are the Bernstein primitive hypotheses from which the
+generated-history Tropp witness is derived. -/
 structure RandomFeatureKernelMatrixBernsteinAssumptions {Omega : Type*}
     [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
     {numFeatures n : Nat}
@@ -212,16 +213,13 @@ structure RandomFeatureKernelMatrixBernsteinAssumptions {Omega : Type*}
   thetaRange : abs theta * R < 3
   thetaPositive : 0 < theta
   varianceProxyNormBound : MatrixVarianceProxyNormBound P A sigmaSq
-  troppPrimitive :
-    troppMasterTraceMGFFiniteFamily_statement
-      (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
-      (matrixVarianceProxy P A) theta R
 
 /-- Random-feature kernel quadratic-form upper-tail bound with the normalized
 scalar Matrix Bernstein RHS. -/
 theorem randomFeatureKernel_quadTail_scalar_under_tropp
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {numFeatures n : Nat}
+    [StandardBorelSpace (Matrix (Fin (n + 1)) (Fin (n + 1)) Real)]
     (Phi : RandomFeatureTable Omega numFeatures n)
     (A : Fin numFeatures -> RandomMatrix Omega (n + 1) (n + 1))
     (theta R t sigmaSq : Real)
@@ -231,18 +229,28 @@ theorem randomFeatureKernel_quadTail_scalar_under_tropp
       ENNReal.ofReal
         ((n + 1 : Real) *
           Real.exp (-(theta * t) + bernsteinMGFCoeff theta R * sigmaSq)) := by
+  letI : Nonempty Omega := MeasureTheory.nonempty_of_isProbabilityMeasure P
+  have hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
+        (matrixVarianceProxy P A) theta R :=
+    troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives
+      (mOmega := inferInstance) (P := P) theta R A (matrixVarianceProxy P A)
+      h.centered h.integrable h.squareIntegrable h.operatorNormBound
+      h.radiusNonneg h.thetaRange h.independentSelfAdjoint.2
   exact
     matrixBernsteinQuadTail_scalar_under_tropp
       A theta R t sigmaSq h.centered h.independentSelfAdjoint h.integrable
       h.squareIntegrable h.expIntegrable h.traceExpIntegrable
       h.operatorNormBound h.radiusNonneg h.thetaRange h.thetaPositive
-      h.varianceProxyNormBound h.troppPrimitive
+      h.varianceProxyNormBound hTropp
 
 /-- Random-feature kernel quadratic-form upper-tail bound retaining the
 trace-exponential Matrix Bernstein RHS. -/
 theorem randomFeatureKernel_quadTail_trace_under_tropp
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
     [IsProbabilityMeasure P] {numFeatures n : Nat}
+    [StandardBorelSpace (Matrix (Fin (n + 1)) (Fin (n + 1)) Real)]
     (Phi : RandomFeatureTable Omega numFeatures n)
     (A : Fin numFeatures -> RandomMatrix Omega (n + 1) (n + 1))
     (theta R t sigmaSq : Real)
@@ -254,12 +262,21 @@ theorem randomFeatureKernel_quadTail_trace_under_tropp
           (traceMatrixExp
             (SMul.smul (bernsteinMGFCoeff theta R)
               (matrixVarianceProxy P A))) := by
+  letI : Nonempty Omega := MeasureTheory.nonempty_of_isProbabilityMeasure P
+  have hTropp :
+      troppMasterTraceMGFFiniteFamily_statement
+        (P := P) A (bernsteinSecondMomentComparisonFamily P A theta R)
+        (matrixVarianceProxy P A) theta R :=
+    troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives
+      (mOmega := inferInstance) (P := P) theta R A (matrixVarianceProxy P A)
+      h.centered h.integrable h.squareIntegrable h.operatorNormBound
+      h.radiusNonneg h.thetaRange h.independentSelfAdjoint.2
   exact
     matrixBernsteinQuadTail_trace_under_tropp
       A theta R t h.centered h.independentSelfAdjoint h.integrable
       h.squareIntegrable h.expIntegrable h.traceExpIntegrable
       h.operatorNormBound h.radiusNonneg h.thetaRange h.thetaPositive
-      h.troppPrimitive
+      hTropp
 
 /-- Optimized-theta assumptions needed to use Matrix Bernstein for a
 random-feature kernel.

@@ -72,9 +72,11 @@ theorem naturalTropp_traceState_right_usage {Omega : Type*}
 
 This example is intentionally not a product-space coordinate model. The history
 family `mHist` is supplied by the user. Once the user provides the explicit
-conditioning, measurability, independence, integrability, and comparison
-premises for that history, the same TailEvent bridge discharges the final
-quadratic-form-to-trace-exp subset premise under random self-adjointness. -/
+conditioning, measurability, integrability, and comparison premises for that
+history, random-matrix measurability and finite-family independence supply the
+natural history/current-step independence contract. The same TailEvent bridge
+then discharges the final quadratic-form-to-trace-exp subset premise under
+random self-adjointness. -/
 theorem arbitraryHistory_quadraticForm_tail_usage
     {Omega : Type*} [mOmega : MeasurableSpace Omega]
     {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
@@ -83,15 +85,10 @@ theorem arbitraryHistory_quadraticForm_tail_usage
     (V : Matrix (Fin n) (Fin n) Real)
     (theta R t : Real)
     (mHist : Fin m -> MeasurableSpace Omega)
-    (hChain :
-      @troppConditionalStep_of_iIndepFun_statement Omega mOmega P m n
-        theta X K mHist)
+
     (hHist :
       @troppNaturalHistoryMeasurable_statement Omega mOmega m n
         theta X K mHist)
-    (hHistIndep :
-      @troppHistoryStepIndependent_of_iIndepFun_statement Omega mOmega P m n
-        theta X K)
     (hCondExp :
       forall i,
         @condExp_traceExp_history_add_independent_step_statement
@@ -103,16 +100,10 @@ theorem arbitraryHistory_quadraticForm_tail_usage
       forall i,
         @IsRandomMatrix Omega mOmega n n P
           (troppStateHistory theta X K i))
-    (hZRand :
-      forall i,
-        @IsRandomMatrix Omega mOmega n n P
-          (troppCurrentRandomStep theta X i))
+
     (hHistSA :
       forall i omega, IsSelfAdjointMatrix (troppStateHistory theta X K i omega))
-    (hZSA :
-      forall i,
-        @RandomSelfAdjointMatrix Omega mOmega n P
-          (troppCurrentRandomStep theta X i))
+
     (hCondTraceInt :
       forall i,
         @IntegrableRealRandomVariable Omega mOmega P
@@ -120,20 +111,7 @@ theorem arbitraryHistory_quadraticForm_tail_usage
             traceMatrixExp
               (troppStateHistory theta X K i omega +
                 troppCurrentRandomStep theta X i omega)))
-    (hExpIntStep :
-      forall i,
-        @IntegrableRandomMatrix Omega mOmega n n P
-          (fun omega => matrixExp (troppCurrentRandomStep theta X i omega)))
-    (hExpMeanSA :
-      forall i,
-        IsSelfAdjointMatrix
-          (@matrixExpect Omega mOmega n n P
-            (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))))
-    (hExpMeanPos :
-      forall i,
-        IsStrictlyPositive
-          (@matrixExpect Omega mOmega n n P
-            (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))))
+
     (hSigma : forall i, SigmaFinite (P.trim (hHistSub i)))
     (hRhsInt :
       forall i,
@@ -172,6 +150,51 @@ theorem arbitraryHistory_quadraticForm_tail_usage
       ENNReal.ofReal (Real.exp (-(theta * t))) *
         ENNReal.ofReal
           (traceMatrixExp (SMul.smul (bernsteinMGFCoeff theta R) V)) := by
+  have hChain :
+      @troppConditionalStep_of_iIndepFun_statement Omega mOmega P m n
+        theta X K mHist :=
+    troppConditionalStep_of_iIndepFun theta X K mHist
+  have hZRand :
+      forall i,
+        @IsRandomMatrix Omega mOmega n n P
+          (troppCurrentRandomStep theta X i) := by
+    intro i
+    simpa [troppCurrentRandomStep, scaledRandomMatrixFamily, scaledRandomMatrix] using
+      (isRandomMatrix_scaledRandomMatrixFamily (P := P) theta hRand i)
+  have hZSA :
+      forall i,
+        @RandomSelfAdjointMatrix Omega mOmega n P
+          (troppCurrentRandomStep theta X i) := by
+    intro i
+    simpa [troppCurrentRandomStep, scaledRandomMatrixFamily, scaledRandomMatrix] using
+      (randomSelfAdjointMatrix_scaledRandomMatrix (P := P) theta (hSA i))
+  have hExpIntStep :
+      forall i,
+        @IntegrableRandomMatrix Omega mOmega n n P
+          (fun omega => matrixExp (troppCurrentRandomStep theta X i omega)) := by
+    intro i
+    simpa [troppCurrentRandomStep, scaledRandomMatrixFamily, scaledRandomMatrix] using
+      hExpInt i
+  have hHistIndep :
+      @troppHistoryStepIndependent_of_iIndepFun_statement Omega mOmega P m n
+        theta X K :=
+    TroppNaturalHistory.historyStepContractOfIsRandomMatrix theta X K hRand
+  have hExpMeanPos :
+      forall i,
+        IsStrictlyPositive
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))) := by
+    intro i
+    exact
+      isStrictlyPositive_matrixExpect_matrixExp_of_randomSelfAdjoint
+        (hZSA i) (hExpIntStep i)
+  have hExpMeanSA :
+      forall i,
+        IsSelfAdjointMatrix
+          (@matrixExpect Omega mOmega n n P
+            (fun omega => matrixExp (troppCurrentRandomStep theta X i omega))) := by
+    intro i
+    exact (hExpMeanPos i).isSelfAdjoint
   exact
     matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge_tailSubsetDischarged_of_randomSelfAdjoint
       X K V theta R t mHist
