@@ -166,6 +166,21 @@ theorem troppMasterTraceMGFStep_of_leftRight
   troppMasterTraceMGFStep_of_epsteinAffineLine
     (P := P) epsteinAffineLineConcavity_of_leftRight H Z
 
+/-- Compatibility witness for the legacy Lieb/Jensen decomposition contract.
+
+The preferred proof-facing API is `troppMasterTraceMGFStep_of_leftRight`.
+The Jensen and normalization arguments remain in the statement only for
+backward compatibility. -/
+theorem troppLiebJensenChain_of_leftRight
+    {Omega : Type*} [MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {n : Nat}
+    (H : Matrix (Fin n) (Fin n) Real)
+    (Z : RandomMatrix Omega n n) :
+    HighDimProb.troppMasterTraceMGFStep_of_liebJensen_statement (P := P) H Z := by
+  intro _hJensen _hNormalize
+  exact troppMasterTraceMGFStep_of_leftRight (P := P) H Z
+
 /-- Tropp one-step-to-`K` trace bound from the proved left/right
 relative-entropy route plus the provider log-order bridge. -/
 theorem troppMasterTraceMGFStep_trace_bound_of_leftRight_and_providerLogOrder

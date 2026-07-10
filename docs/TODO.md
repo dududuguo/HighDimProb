@@ -65,10 +65,10 @@ This is the active short list. Old completed task logs were collapsed into
   / `traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure`.
 - Current strategy is progress-first: if a hard analytic ingredient is missing,
   consume it as an explicit assumption and register it in `docs/STATEMENTS.md`.
-  The left/right relative-entropy, Lieb/Epstein, and Golden--Thompson endpoints
-  are closed; do not conflate them with arbitrary-history conditional
-  expectation, automatic variance-proxy control, or unconditional full Matrix
-  Bernstein.
+  The left/right relative-entropy, Lieb/Epstein, Golden--Thompson, and legacy
+  Lieb/Jensen Tropp one-step contract are closed; do not conflate them with
+  arbitrary-history conditional expectation, automatic variance-proxy control,
+  or unconditional full Matrix Bernstein.
 
 ## Active PrecisionDA Application Work
 

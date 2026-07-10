@@ -335,7 +335,7 @@ Hardbone status table:
 | Matrix log/order bridge | `matrixLog_le_of_le_matrixExp_statement` | proven by `matrixLog_le_of_le_matrixExp`; operator-log premise can now be supplied by `operatorLogMonotoneOnPositiveMatrices` | turns log-monotonicity and `matrixExp` log-domain premises into `log M <= K` | `matrixExp` log-domain is supplied by `matrixExpLogDomainForSelfAdjoint`; the wrapper intentionally keeps premises explicit |
 | Real-to-CStar bridge | `realMatrixToCStarMatrix` and transport lemmas | representation map, add/sub, self-adjoint, strict positivity, order, log-back, and reflected order transport proved | supplies the CStar representation route used by `operatorLogMonotoneOnPositiveMatrices` | log-back is restricted to strictly positive self-adjoint real matrices |
 | Log/order-to-`K` | `troppLogExpComparisonToK_statement` | proven by `troppLogExpComparisonToK` | direct deterministic comparison from `M <= matrixExp K` | still deterministic only; Lieb/Jensen, Golden-Thompson, conditioning, integrability, and variance-proxy inputs remain separate |
-| Tropp/Lieb one-step | `troppMasterTraceMGFStep_of_liebJensen_statement` | typed-prop | `troppMasterTraceMGFStep_of_liebJensen` | compatibility decomposition; the left/right one-step facade is proved separately |
+| Tropp/Lieb one-step compatibility | `troppMasterTraceMGFStep_of_liebJensen_statement` | proven by `troppLiebJensenChain_of_leftRight` | `troppMasterTraceMGFStep_of_liebJensen`; prefer `troppMasterTraceMGFStep_of_leftRight` for new proofs | none for this legacy contract |
 | Golden--Thompson | `goldenThompsonTraceExp_statement` | proven by `goldenThompsonTraceExp` | exact finite-dimensional real self-adjoint endpoint | closed from the proved Epstein/Lieb concavity tangent at the identity |
 | Conditioning / independence | `troppConditionalStep_of_iIndepFun_statement` | proven by `troppConditionalStep_of_iIndepFun` | `troppMasterTraceMGFConditionalStep_of_conditioningBridge`; `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge` composes this route into the finite-family trace-MGF bound | thin forwarder/composer only; generated histories, history/current-step independence, finite-family independence, conditional expectation reduction, integrability, and variance-proxy inputs remain explicit premises |
 | Trace-exp integrability | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement` | typed-prop with proved thin consumer | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider` | an application-specific product domination or boundedness provider; Golden--Thompson alone does not supply integrability |
@@ -791,6 +791,7 @@ Epstein/Tropp conditional consumers and support APIs:
 - `troppMasterTraceMGFStep_of_epsteinAffineLine`
 - `troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder`
 - `troppMasterTraceMGFStep_of_leftRight`
+- `troppLiebJensenChain_of_leftRight` (legacy compatibility)
 - `troppMasterTraceMGFStep_trace_bound_of_leftRight_and_providerLogOrder`
 - `TroppNaturalHistory.suffixMeasurable`
 - `TroppNaturalHistory.historyStepIndependent`

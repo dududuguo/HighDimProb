@@ -149,6 +149,7 @@ example (hRE : RelativeEntropyJointConvexity) : EpsteinAffineLineConcavity :=
 #check troppMasterTraceMGFStep_of_epsteinAffineLine
 #check troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder
 #check troppMasterTraceMGFStep_of_leftRight
+#check troppLiebJensenChain_of_leftRight
 #check troppMasterTraceMGFStep_trace_bound_of_leftRight_and_providerLogOrder
 #check troppNaturalHistoryMeasurable_of_suffix_entry_measurable
 #check troppHistoryStepIndependent_of_iIndepFun_of_measurable
@@ -161,6 +162,13 @@ example (hRE : RelativeEntropyJointConvexity) : EpsteinAffineLineConcavity :=
 #check troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds
 #check traceExpIntegrable_troppStateHistory_add_step_of_summand_and_comparison_bounds_finiteMeasure
 #check traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P] {n : Nat}
+    (H : Matrix (Fin n) (Fin n) Real)
+    (Z : RandomMatrix Omega n n) :
+    troppMasterTraceMGFStep_of_liebJensen_statement (P := P) H Z :=
+  troppLiebJensenChain_of_leftRight (P := P) H Z
 
 example {Omega : Type*} [MeasurableSpace Omega] {m n : Nat}
     (theta RX : Real)

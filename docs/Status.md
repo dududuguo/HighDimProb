@@ -575,7 +575,9 @@ unconditional facades
 `goldenThompsonTraceExp`, together with the left/right Tropp wrappers
 `troppMasterTraceMGFStep_of_leftRight` and
 `troppMasterTraceMGFStep_trace_bound_of_leftRight_and_providerLogOrder`. The
-conditional density/integral-premise facades to
+legacy Lieb/Jensen decomposition contract is closed for compatibility by
+`troppLiebJensenChain_of_leftRight`; it is not the preferred proof-facing
+route. The conditional density/integral-premise facades to
 `liebTraceExpConcavity_statement` and `EpsteinAffineLineConcavity` remain
 available. The bridge layer also exposes
 `RelativeEntropyJointConvexity`, `GibbsKleinPremise`,

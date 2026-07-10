@@ -141,6 +141,10 @@ Provider theorem surfaces:
 - `CFCLog.lineDeriv_one_zero` and `goldenThompsonTraceExp`, which
   apply the identity tangent of the proved Epstein/Lieb concavity theorem and
   discharge the exact `goldenThompsonTraceExp_statement`.
+- `troppMasterTraceMGFStep_of_leftRight` and
+  `troppMasterTraceMGFStep_trace_bound_of_leftRight_and_providerLogOrder` expose
+  the preferred proved one-step route; `troppLiebJensenChain_of_leftRight`
+  separately closes the exact legacy Lieb/Jensen decomposition contract.
 - The compatibility wrappers `liebTraceExpConcavity_of_epsteinAffineLine`,
   `liebJensenTraceExp_statement_of_epsteinAffineLine`,
   `troppMasterTraceMGFStep_of_epsteinAffineLine`, and

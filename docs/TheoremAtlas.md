@@ -164,8 +164,9 @@ package the same route with less repeated bookkeeping. The provider-facing
 matrix-exp Frechet derivative layer, log-resolvent bridge infrastructure, the
 fixed-`t` left/right relative-entropy integrand joint-convexity leaf, the
 density/integral representation route to relative-entropy joint convexity,
-Lieb/Epstein facades, the exact `goldenThompsonTraceExp` endpoint, and
-left/right Tropp one-step wrappers, plus spectral endpoint monotonicity and
+Lieb/Epstein facades, the exact `goldenThompsonTraceExp` endpoint, left/right
+Tropp one-step wrappers, and the legacy compatibility closure
+`troppLiebJensenChain_of_leftRight`, plus spectral endpoint monotonicity and
 trace-MGF-to-Laplace contracts. The restricted
 conditional-step route `mHist <= MeasurableSpace.comap H _` is closed by
 `TraceExpConditioning.troppStep_of_history_le`. The Bernstein facade
@@ -184,8 +185,8 @@ open.
   measurability, conditional-expectation reduction for arbitrary larger history
   sigma-algebras, and trace-exp integrability propagation for the conditional-step
   Tropp route. The restricted `mHist <= MeasurableSpace.comap H _` route is proved.
-- Proofs of the remaining hardbone statement targets for Tropp/Lieb,
-  automatic trace-exp domination/integrability, automatic
+- Proofs of the remaining downstream Tropp conditioning targets, automatic
+  trace-exp domination/integrability, automatic
   variance-proxy sharpening beyond centered-square expectation expansion,
   support-domination providers, support-construction certificates, true
   effective-rank/support trace certificates, and dimension/rank refinements
