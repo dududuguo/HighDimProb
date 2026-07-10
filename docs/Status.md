@@ -610,7 +610,9 @@ the explicit `EpsteinAffineLineConcavity` conditional route, bounded
 finite-measure integrability providers, natural-history measurability from
 suffix-entry measurability, the `TroppNaturalHistory.*` short aliases,
 strengthened history/current-step independence from `iIndepFun` plus summand
-measurability, identity support domination, spectral endpoint monotonicity,
+measurability, the exact-contract wrapper
+`TroppNaturalHistory.historyStepContractOfIsRandomMatrix` under explicit
+random-matrix data, identity support domination, spectral endpoint monotonicity,
 thin trace-MGF-to-Laplace contracts, and the S16 natural-state tail wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`.
 `CFCLog.DerivOp` remains pointwise derivative bookkeeping only; it is not a

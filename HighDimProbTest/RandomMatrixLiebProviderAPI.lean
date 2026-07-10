@@ -155,6 +155,7 @@ example (hRE : RelativeEntropyJointConvexity) : EpsteinAffineLineConcavity :=
 #check troppHistoryStepIndependent_of_iIndepFun_of_measurable
 #check TroppNaturalHistory.suffixMeasurable
 #check TroppNaturalHistory.historyStepIndependent
+#check TroppNaturalHistory.historyStepContractOfIsRandomMatrix
 #check matrixExpScaledIntegrable_of_provider_finiteMeasure
 #check traceExpIntegrable_troppStateHistory_add_step_of_operatorNormBounds_finiteMeasure
 #check traceExpIntegrable_troppStateHistory_add_K_of_operatorNormBounds_finiteMeasure
@@ -162,6 +163,14 @@ example (hRE : RelativeEntropyJointConvexity) : EpsteinAffineLineConcavity :=
 #check troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds
 #check traceExpIntegrable_troppStateHistory_add_step_of_summand_and_comparison_bounds_finiteMeasure
 #check traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure
+
+example {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {m n : Nat} (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (hX : forall i, IsRandomMatrix P (X i)) :
+    troppHistoryStepIndependent_of_iIndepFun_statement (P := P) theta X K :=
+  TroppNaturalHistory.historyStepContractOfIsRandomMatrix theta X K hX
 
 example {Omega : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} [IsProbabilityMeasure P] {n : Nat}

@@ -28,6 +28,8 @@ premises:
   `hHistSub` to supply natural-state history measurability.
 - `troppHistoryStepIndependent_of_iIndepFun_statement theta X K`, used with
   finite-family `iIndepFun X P` to supply history/current-step independence.
+  `TroppNaturalHistory.historyStepContractOfIsRandomMatrix` supplies this exact
+  contract when every summand is explicitly an `IsRandomMatrix`.
 - Per-index `condExp_traceExp_history_add_independent_step_statement`, the
   conditional-expectation reduction from a history-measurable matrix and an
   independent current step. `TraceExpConditioning.troppStep_of_history_le`

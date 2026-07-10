@@ -46,9 +46,10 @@ This is the active short list. Old completed task logs were collapsed into
   self-adjoint TailEvent provider wrappers discharge the event-subset premise
   but do not prove the rest of the endpoint. The
   strengthened history/current-step independence bridge is available through
-  `TroppNaturalHistory.historyStepIndependent` and the compatibility theorem
-  `troppHistoryStepIndependent_of_iIndepFun_of_measurable`, but the exact
-  weaker hardbone statement and conditional expectation remain separate.
+  `TroppNaturalHistory.historyStepIndependent` and
+  `TroppNaturalHistory.historyStepContractOfIsRandomMatrix`. The latter returns
+  the exact legacy contract under explicit random-matrix data; the weaker bare
+  hardbone statement and conditional expectation remain separate.
 - Short resolvent derivative provider layer is now upstream as
   `HighDimProb.RandomMatrix.ResolventDerivativeProvider`, including
   `hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle` and

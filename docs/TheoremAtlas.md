@@ -142,7 +142,9 @@ The finite-family conditioning chain now has the thin witness
 conditional-expectation provider and does not prove the history,
 weaker-independence, or conditional-expectation inputs themselves. The
 provider facade separately exposes strengthened history/current-step
-independence from `iIndepFun` plus explicit summand measurability. The
+independence from `iIndepFun` plus explicit summand measurability, together
+with `TroppNaturalHistory.historyStepContractOfIsRandomMatrix`, which returns
+the exact legacy contract under explicit random-matrix data. The
 conditional route is now also
 composed into the finite-family Bernstein trace-MGF conclusion by
 `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge`, under explicit
@@ -182,7 +184,8 @@ open.
 - The older arbitrary-denominator Matrix Bernstein chain.
 - Full unconditional Matrix Bernstein theorem.
 - The weaker natural-history independence statement without explicit summand
-  measurability, conditional-expectation reduction for arbitrary larger history
+  measurability; the explicit-random-matrix compatibility contract is proved.
+  Conditional-expectation reduction for arbitrary larger history
   sigma-algebras, and trace-exp integrability propagation for the conditional-step
   Tropp route. The restricted `mHist <= MeasurableSpace.comap H _` route is proved.
 - Proofs of the remaining downstream Tropp conditioning targets, automatic

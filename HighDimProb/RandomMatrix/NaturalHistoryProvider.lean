@@ -204,6 +204,24 @@ theorem historyStepIndependent
         (@troppCurrentRandomStep Omega mOmega m n theta X i) P :=
   troppHistoryStepIndependent_of_iIndepFun_of_measurable theta X K hIndep hMeas
 
+/-- The exact legacy history/current-step independence contract, under the
+explicit random-matrix premise that supplies the missing measurability.
+
+This does not claim that `iIndepFun` alone implies measurability. -/
+theorem historyStepContractOfIsRandomMatrix
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} {m n : Nat}
+    (theta : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (K : Fin m -> Matrix (Fin n) (Fin n) Real)
+    (hX : forall i, IsRandomMatrix P (X i)) :
+    troppHistoryStepIndependent_of_iIndepFun_statement
+      (P := P) theta X K := by
+  intro hIndep
+  exact
+    troppHistoryStepIndependent_of_iIndepFun_of_measurable theta X K hIndep
+      (fun i => measurable_randomMatrix_of_isRandomMatrix (hX i))
+
 end TroppNaturalHistory
 
 end
