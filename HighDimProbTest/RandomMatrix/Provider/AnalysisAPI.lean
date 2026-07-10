@@ -1,0 +1,8 @@
+import HighDimProb.RandomMatrix.Provider.Analysis
+
+open HighDimProb
+
+#check operatorLogMonotoneOnPositiveMatrices
+#check RelativeEntropy.fullKlein_liebConcavity_of_leftRight
+#check goldenThompsonTraceExp
+#check trace_mul_inv_add_const_convex_combo_le

@@ -93,9 +93,14 @@ Non-goals for this consumer:
 
 ## RM-LIEB-S11-S16: provider-facing Lieb/Tropp and natural-state route
 
-Provider-facing import:
+Provider-facing imports:
 
-- `HighDimProb.RandomMatrix.LiebProvider`
+- `HighDimProb.RandomMatrix.Provider.Analysis`
+- `HighDimProb.RandomMatrix.Provider.Conditioning`
+- `HighDimProb.RandomMatrix.Provider.Concentration`
+- `HighDimProb.RandomMatrix.Provider` for the broad facade
+
+`HighDimProb.RandomMatrix.LiebProvider` remains a legacy compatibility import.
 
 Provider theorem surfaces:
 

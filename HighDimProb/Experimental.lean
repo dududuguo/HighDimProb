@@ -30,8 +30,11 @@ right mathematical boundary.
 
 Supported APIs should be imported through `HighDimProb` or a documented
 focused module such as `HighDimProb.RandomMatrix`,
-`HighDimProb.RandomMatrix.MatrixBernsteinProvider`, or
-`HighDimProb.RandomMatrix.LiebProvider`. Use this aggregate when broad
-work-in-progress access beyond those supported scopes is intended.
+`HighDimProb.RandomMatrix.Provider.Analysis`,
+`HighDimProb.RandomMatrix.Provider.Conditioning`, or
+`HighDimProb.RandomMatrix.Provider.Concentration`. This development aggregate
+does not re-export the provider hierarchy; import
+`HighDimProb.RandomMatrix.Provider` explicitly when all provider layers are
+required.
 
 -/

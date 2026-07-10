@@ -14,8 +14,11 @@ surfaces are tracked in the focused reference docs linked below.
 - Stable import surface: [`HighDimProb`](../HighDimProb.lean).
 - Supported focused import surfaces:
   [`HighDimProb.RandomMatrix`](../HighDimProb/RandomMatrix.lean),
-  [`HighDimProb.RandomMatrix.MatrixBernsteinProvider`](../HighDimProb/RandomMatrix/MatrixBernsteinProvider.lean), and
-  [`HighDimProb.RandomMatrix.LiebProvider`](../HighDimProb/RandomMatrix/LiebProvider.lean).
+  [`Provider.Analysis`](../HighDimProb/RandomMatrix/Provider/Analysis.lean),
+  [`Provider.Conditioning`](../HighDimProb/RandomMatrix/Provider/Conditioning.lean), and
+  [`Provider.Concentration`](../HighDimProb/RandomMatrix/Provider/Concentration.lean).
+- Broad provider facade: [`HighDimProb.RandomMatrix.Provider`](../HighDimProb/RandomMatrix/Provider.lean).
+  `LiebProvider` remains a compatibility import, not an ownership layer.
 - Experimental import surface: [`HighDimProb.Experimental`](../HighDimProb/Experimental.lean) and [`HighDimProb.Examples`](../HighDimProb/Examples.lean).
 - Main active RandomMatrix files:
   [`TraceExp.lean`](../HighDimProb/RandomMatrix/TraceExp.lean),
@@ -25,6 +28,7 @@ surfaces are tracked in the focused reference docs linked below.
 ## Active API Pointers
 
 - API overview: [`APIOverview.md`](APIOverview.md)
+- RandomMatrix architecture: [`RandomMatrixArchitecture.md`](RandomMatrixArchitecture.md)
 - RandomMatrix API index: [`RandomMatrixAPI.md`](RandomMatrixAPI.md)
 - Term map / symbol index: [`TermMap.md`](TermMap.md)
 - Theorem atlas: [`TheoremAtlas.md`](TheoremAtlas.md)
@@ -357,7 +361,7 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   primitives but not pointwise CFC fields. The older explicit-CFC bundles and
   `_under_primitives` wrappers remain compatibility surfaces. The
   generated-history Bernstein wrappers exposed through
-  `HighDimProb.RandomMatrix.LiebProvider` derive current-step exponential-mean
+  `HighDimProb.RandomMatrix.Provider.Concentration` derive current-step exponential-mean
   self-adjointness and strict positivity from centered self-adjoint bounded
   summands. Tail-side measurability remains explicit; the subset premise can be
   discharged by the self-adjoint TailEvent provider wrappers.
@@ -391,10 +395,16 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   hypotheses.
 - `StatementRoutes` is an examples-only route index; it groups representative example-level statement families without adding core API. Lower-level bridge and frontier checks belong in source, tests, and judge files rather than separate reader-facing examples.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
-- Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The positive-side quadratic-form route now has an exact-row variance-proxy wrapper, but two-sided and operator-norm exact-row wrappers still need a negative-side exact-row variance-proxy provider contract. The preferred sample-covariance and reader-facing Matrix Bernstein example routes now use Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
-- Negative-side provider-transfer adapters only move explicit opposite-parameter
-  assumptions onto the named negative sample-covariance family; they do not
-  prove exponential integrability, trace-exponential integrability, or CFC.
+- `MatrixBernstein.sampleCovarianceExactRow` now closes the normalized two-sided
+  operator-norm route with row-specific variance control. It derives positive and
+  negative generated-history Bernstein inputs and all exponential-integrability
+  obligations from explicit matrix measurability, coordinate `MemLp 2`, uniform and
+  row-specific squared-norm bounds, independence, and nonnegative parameters.
+  Older Tropp/CFC assumption bundles remain compatibility surfaces; this is not
+  an unconditional sample-covariance theorem.
+- Direct positive and negative exact-row variance providers no longer require the
+  abstract sharp-chain premise. Legacy negative-side transfer adapters still only
+  transport their explicit assumptions and remain available for compatibility.
 - Completed hardbone wrapper task: `RM-HB-sample-covariance-cfc-free-wrapper-contract`.
 - Completed hardbone proof leaf:
   `RM-HB12-matrix-exp-log-selfadjoint-normalization-leaf`.
@@ -511,10 +521,15 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   high-probability statements from the standard finite-dimensional Bernstein
   primitives, including zero-threshold and zero-variance branches.
 
-## Provider-Facing Lieb/Tropp Layer
+## Provider-Facing RandomMatrix Layers
 
-Integrated `HighDimProb.RandomMatrix.LiebProvider` as a separate provider-facing
-import layer. It now exposes the ambient matrix-exp Frechet derivative
+The supported provider surface is split into `Provider.Analysis`,
+`Provider.Conditioning`, and `Provider.Concentration`, with
+`HighDimProb.RandomMatrix.Provider` as the broad facade. `LiebProvider` remains
+a compatibility import. +
++Frechet derivative+
++primitives
+Frechet derivative
 primitives, the self-adjoint carrier restriction, and the reusable scalar
 matrix-exp divided-difference coefficient layer:
 `matrixExpDividedDifferenceSeries`, `matrixExpDividedDifferenceSeries_pos`,

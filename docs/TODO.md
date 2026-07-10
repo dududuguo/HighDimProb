@@ -34,10 +34,10 @@ This is the active short list. Old completed task logs were collapsed into
   target axes and assumption records when possible; bridge-layer declarations may
   be public infrastructure, but they should not become the preferred user route
   merely because a proof leaf exposed them.
-- Exact-row centered-square sample-covariance wrappers, negative-side exact-row
-  transfer, and PSD Loewner norm monotonicity are bridge-layer infrastructure for
-  future provider compression; the compact bounded-row sample-covariance route
-  remains the reader-facing surface.
+- `MatrixBernstein.centeredRankOneExactRow` and
+  `MatrixBernstein.sampleCovarianceExactRow` now close the generated-history
+  exact-row tail route. Next add only a thin high-probability specialization or
+  application consumer; keep the older Tropp bundles as compatibility surfaces.
 - S16 now has `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
   as the provider-compressed natural-state tail wrapper. Future work should
   compress only genuinely provider-dischargeable assumptions and keep

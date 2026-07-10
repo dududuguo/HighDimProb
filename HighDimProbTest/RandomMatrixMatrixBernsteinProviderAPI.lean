@@ -9,7 +9,10 @@ open MeasureTheory
 #check HighDimProb.MatrixBernstein.operatorNormUpperTail_of_primitives
 #check HighDimProb.MatrixBernstein.optimized_of_primitives
 #check HighDimProb.MatrixBernstein.CenteredRankOneInputs
+#check HighDimProb.MatrixBernstein.CenteredRankOneExactRowInputs
 #check HighDimProb.MatrixBernstein.centeredRankOne
+#check HighDimProb.MatrixBernstein.centeredRankOneExactRow
+#check HighDimProb.MatrixBernstein.sampleCovarianceExactRow
 #check HighDimProb.MatrixBernstein.highProbability_of_primitives
 
 example

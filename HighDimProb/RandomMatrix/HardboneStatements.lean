@@ -716,6 +716,91 @@ theorem deterministicMatrixVarianceProxyNorm_mono_of_matrixLE {n : Nat}
           simpa [deterministicMatrixVarianceProxyNorm] using
             matrixQuadraticForm_le_deterministicOperatorNorm V hx
 
+/-- Row-specific centered rank-one variance-proxy bound.
+
+Unlike the older sharp-chain consumers, this theorem directly combines the
+centered-square Loewner comparison, positivity of the centered variance proxy,
+and the exact row second-moment norm bound. No abstract variance-proxy chain is
+left to the caller. -/
+theorem MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_rowSqNorm_bound_memLp_two
+    {Omega : Type*} [mOmega : MeasurableSpace Omega]
+    {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    (X : I -> RandomVector Omega n)
+    (R : I -> Real)
+    (hLp : forall i, forall j : Fin n,
+      MemLpRealRandomVariable P (coord (X i) j) 2)
+    (hSq : forall i omega, vectorSqNorm (X i omega) <= R i)
+    (hR : forall i, 0 <= R i) :
+    MatrixVarianceProxyNormBound P
+      (centeredRankOneRandomMatrixFamily P X)
+      (rowSqNormVarianceProxyNormRHS R) := by
+  have hRankInt :
+      forall i, IntegrableRandomMatrix P (rankOneRandomMatrix (X i)) := by
+    intro i
+    exact integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
+      (P := P) (X := X i) (hLp i)
+  have hRankSq :
+      forall i,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare (rankOneRandomMatrix (X i))) := by
+    intro i
+    exact
+      integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two
+        (P := P) (X := X i) (R := R i) (hLp i) (hSq i)
+  have hCenteredSq :
+      forall i,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare ((centeredRankOneRandomMatrixFamily P X) i)) := by
+    intro i
+    rw [centeredRankOneRandomMatrixFamily_apply]
+    exact integrableRandomMatrix_randomMatrixSquare_centeredRandomMatrix
+      (P := P) (A := rankOneRandomMatrix (X i))
+      (hRankInt i) (hRankSq i)
+  have hCenteredSA :
+      forall i,
+        RandomSelfAdjointMatrix P
+          ((centeredRankOneRandomMatrixFamily P X) i) := by
+    intro i
+    rw [centeredRankOneRandomMatrixFamily_apply]
+    exact randomSelfAdjointMatrix_centeredRandomMatrix
+      (P := P) (A := rankOneRandomMatrix (X i))
+      (randomSelfAdjointMatrix_rankOneRandomMatrix (P := P) (X := X i))
+  have hPSD :
+      IsPSDMatrix
+        (matrixVarianceProxy P (centeredRankOneRandomMatrixFamily P X)) :=
+    isPSD_matrixVarianceProxy_of_selfAdjoint
+      (P := P) hCenteredSA hCenteredSq
+  have hLE :
+      MatrixLE
+        (matrixVarianceProxy P (centeredRankOneRandomMatrixFamily P X))
+        (Finset.univ.sum fun i =>
+          matrixSecondMoment P (rankOneRandomMatrix (X i))) := by
+    unfold matrixVarianceProxy
+    apply matrixLE_sum
+    intro i
+    rw [centeredRankOneRandomMatrixFamily_apply]
+    exact matrixSecondMoment_centeredRandomMatrix_le_matrixSecondMoment
+      (P := P) (A := rankOneRandomMatrix (X i))
+      (hRankInt i) (hRankSq i)
+      (randomSelfAdjointMatrix_rankOneRandomMatrix (P := P) (X := X i))
+  have hMono :
+      deterministicMatrixVarianceProxyNorm
+          (matrixVarianceProxy P (centeredRankOneRandomMatrixFamily P X)) <=
+        deterministicMatrixVarianceProxyNorm
+          (Finset.univ.sum fun i =>
+            matrixSecondMoment P (rankOneRandomMatrix (X i))) :=
+    deterministicMatrixVarianceProxyNorm_mono_of_matrixLE
+      _ _ hPSD hLE
+  have hExact :
+      deterministicMatrixVarianceProxyNorm
+          (Finset.univ.sum fun i =>
+            matrixSecondMoment P (rankOneRandomMatrix (X i))) <=
+        rowSqNormVarianceProxyNormRHS R :=
+    deterministicMatrixVarianceProxyNorm_sum_matrixSecondMoment_rankOneRandomMatrix_le_sum_sq_of_sqNorm_bound
+      (P := P) (X := X) (R := R) hRankSq hSq hR
+  exact hMono.trans hExact
+
 /-- Centered-square variance-proxy provider under an explicit norm-monotonicity
 contract.
 

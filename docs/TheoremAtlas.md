@@ -27,8 +27,10 @@ not add filtrations, adaptedness, martingales, or conditioning providers.
 
 ## RandomMatrix
 
-The RandomMatrix layer is experimental. The current Matrix Bernstein route has
-proved useful wrappers under explicit primitive assumptions, including
+The RandomMatrix layer has a supported finite-dimensional base and scoped
+provider facades. The theorem contracts remain explicit; support does not mean
+that arbitrary-history or unconditional extensions are proved. The current
+Matrix Bernstein route includes proved wrappers under explicit assumptions:
 trace-MGF, quadratic-form, optimized scalar RHS, positive-threshold
 operator-norm, sample-covariance, crude variance-proxy routes, and
 prefix/state endpoint bookkeeping wrappers for the Tropp conditional-step
@@ -91,7 +93,7 @@ supplies it from coordinate `MemLp 4` assumptions via Mathlib Holder product
 APIs. The bounded-row provider
 `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two`
 supplies it from coordinate `MemLp 2` plus pointwise `vectorSqNorm <= R`.
-Centered rank-one square-integrability providers are proved for coordinate `MemLp 4` and bounded-row `MemLp 2` routes. The row-specific exact-row consumer `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two` now supplies a `rowSqNormVarianceProxyNormRHS R` variance-proxy bound from coordinate `MemLp 2`, pointwise `vectorSqNorm <= R_i`, nonnegative radii, and the explicit hardbone sharp-chain premise. The bridge layer connects generic centered-square chains to exact-row sample-covariance variance-proxy consumers, transfers exact-row control to the negative family, and exposes positive/two-sided exact-row centered-square wrappers and bundles. The deterministic PSD Loewner-to-operator-norm bridge is proved as `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE`. These are infrastructure routes; full generic centered-square providers, Tropp/Lieb, trace-MGF integrability, and full Matrix Bernstein remain explicit or open.
+Centered rank-one square-integrability providers are proved for coordinate `MemLp 4` and bounded-row `MemLp 2` routes. The direct row-specific provider `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_rowSqNorm_bound_memLp_two` supplies `rowSqNormVarianceProxyNormRHS R` without an abstract sharp-chain premise. Positive and negative sample-covariance adapters expose the same bound, and `MatrixBernstein.centeredRankOneExactRow` / `MatrixBernstein.sampleCovarianceExactRow` compose it with generated-history Matrix Bernstein. The deterministic PSD Loewner-to-operator-norm bridge remains `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE`. Generic variance sharpening outside the centered rank-one setting and unconditional Matrix Bernstein remain open.
 The rank/support trace-bound bridge is proved by
 `traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination`,
 with rank/support consumers for the hardbone targets. Deterministic trace/rank
@@ -163,15 +165,14 @@ names `MatrixBernsteinConditioningTraceMGFProviderAssumptions`,
 and `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
 package the same route with less repeated bookkeeping. The provider bundle
 derives its exact history/current-step independence contract from explicit
-random-matrix data while retaining finite-family independence. The provider-facing
-`HighDimProb.RandomMatrix.LiebProvider` facade also exposes the ambient
-matrix-exp Frechet derivative layer, log-resolvent bridge infrastructure, the
-fixed-`t` left/right relative-entropy integrand joint-convexity leaf, the
-density/integral representation route to relative-entropy joint convexity,
-Lieb/Epstein facades, the exact `goldenThompsonTraceExp` endpoint, left/right
-Tropp one-step wrappers, and the legacy compatibility closure
-`troppLiebJensenChain_of_leftRight`, plus spectral endpoint monotonicity and
-trace-MGF-to-Laplace contracts. The restricted
+random-matrix data while retaining finite-family independence.
+`HighDimProb.RandomMatrix.Provider.Analysis` exposes the ambient matrix-exp
+Frechet derivative layer, log-resolvent infrastructure, the left/right
+relative-entropy route, Lieb/Epstein facades, Golden--Thompson, and spectral
+endpoint monotonicity. `HighDimProb.RandomMatrix.Provider.Concentration` owns
+the left/right Tropp one-step wrappers, the compatibility closure
+`troppLiebJensenChain_of_leftRight`, and trace-MGF-to-Laplace
+contracts. The restricted
 conditional-step route `mHist <= MeasurableSpace.comap H _` is closed by
 `TraceExpConditioning.troppStep_of_history_le`. The Bernstein facade
 `TraceExpConditioning.bernsteinStep_of_history_le` constructs the frozen-bound
@@ -196,9 +197,8 @@ open.
   support-domination providers, support-construction certificates, true
   effective-rank/support trace certificates, and dimension/rank refinements
   beyond explicit star-projection rank consumers.
-- A negative-side exact-row variance-proxy provider for two-sided/operator-norm sample-covariance wrappers.
-- A public-friendly sample-covariance specialization that discharges its
-  remaining variance-proxy assumptions from domain hypotheses.
+- A high-probability convenience corollary specialized to the exact-row
+  sample-covariance endpoint.
 
 ## Maintenance Rule
 

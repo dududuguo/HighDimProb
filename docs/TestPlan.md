@@ -89,9 +89,21 @@ Keep this file short. Add new details only when they change what contributors
 must run or what CI enforces. Archive old stage-by-stage test history in
 `archive.md`.
 
-## Provider-focused RandomMatrix Check
+## Provider Architecture Check
 
-Run this after changing the provider-facing Lieb/Tropp layer, including the
+Run the facade and import tests after changing provider ownership or imports:
+
+```bash
+lake build HighDimProb.RandomMatrix.Provider.Analysis HighDimProb.RandomMatrix.Provider.Conditioning HighDimProb.RandomMatrix.Provider.Concentration HighDimProb.RandomMatrix.Provider
+lake build HighDimProbTest.RandomMatrix.Provider.AnalysisAPI HighDimProbTest.RandomMatrix.Provider.ConditioningAPI HighDimProbTest.RandomMatrix.Provider.ConcentrationAPI
+```
+
+Run the low-level provider check below after changing provider leaf declarations.
+
+## Provider Leaf Check
+
++
++ambient or self-adjoint carrier matrix-exp derivative surface
 ambient or self-adjoint carrier matrix-exp derivative surface, the
 first-order `CFC.log` affine-line provider layer and its diagonal/trace-paired
 spectral adapters, the finite-cutoff log-resolvent provider layer, the

@@ -61,26 +61,33 @@ Supported finite-dimensional RandomMatrix APIs use focused imports:
 
 ```lean
 import HighDimProb.RandomMatrix
-import HighDimProb.RandomMatrix.MatrixBernsteinProvider
-import HighDimProb.RandomMatrix.LiebProvider
+import HighDimProb.RandomMatrix.Provider.Analysis
+import HighDimProb.RandomMatrix.Provider.Conditioning
+import HighDimProb.RandomMatrix.Provider.Concentration
 ```
 
 `HighDimProb.RandomMatrix` is the base object, algebra, spectral, trace-exp,
-and statement layer. `MatrixBernsteinProvider` exposes the proved
-generated-history operator-norm and high-probability endpoints under their
-explicit primitive assumptions. `LiebProvider` exposes the finite-dimensional
-matrix-analysis provider facade, including the proved left/right
-Lieb/Epstein route and Golden--Thompson.
+and statement layer. The provider facades separate deterministic matrix
+analysis, conditioning/natural-history infrastructure, and downstream
+trace-MGF/Matrix Bernstein assembly. Import
+`HighDimProb.RandomMatrix.Provider` only when all three layers are needed.
+`HighDimProb.RandomMatrix.MatrixBernsteinProvider` remains the narrow endpoint
+import, while `HighDimProb.RandomMatrix.LiebProvider` is retained as a legacy
+broad compatibility import.
 
 These focused modules remain outside `import HighDimProb` to keep the root
 import conservative; that import decision does not make their documented
-theorem contracts experimental. Use `HighDimProb.Experimental` for the broad
-unfinished surface beyond these supported scopes.
+theorem contracts experimental. `HighDimProb.Experimental` is an opt-in
+development aggregate, not the provider umbrella. See
+[`docs/RandomMatrixArchitecture.md`](docs/RandomMatrixArchitecture.md) for
+ownership and dependency rules.
 
-For sample-covariance Matrix Bernstein examples, start from the compact
-bounded-row route in `HighDimProb/Examples/RandomMatrix/SampleCovarianceTailUsage.lean`.
-Longer exact-row centered-square declarations are bridge-layer infrastructure
-for proof development, not the default reader-facing API.
+For row-specific sample-covariance bounds, use
+`MatrixBernstein.sampleCovarianceExactRow`; it generates the finite-history
+Bernstein and integrability layers from measurability, moment, boundedness, and
+independence hypotheses. The compact bounded-row example remains the shortest
+introductory route, while the older exact-row Tropp bundles are compatibility
+surfaces.
 
 ## What Is In The Repo
 

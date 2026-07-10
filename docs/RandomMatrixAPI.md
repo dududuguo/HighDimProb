@@ -3,6 +3,10 @@
 This is the current compact API index. Old historical notes were collapsed into
 [`archive.md`](archive.md); use git history for exact old wording.
 
+The provider import hierarchy and dependency rules are defined in
+[`RandomMatrixArchitecture.md`](RandomMatrixArchitecture.md). Existing leaf
+imports remain supported.
+
 ## Core Modules
 
 - [`Basic.lean`](../HighDimProb/RandomMatrix/Basic.lean)
@@ -194,7 +198,7 @@ consumer surface is the
 bookkeeping assumptions without a user-supplied CFC field. The older
 `*_of_assumptions` and `_under_primitives` names remain compatibility surfaces.
 The generated-history Bernstein wrappers live behind
-`HighDimProb.RandomMatrix.LiebProvider`; they derive current-step
+`HighDimProb.RandomMatrix.Provider.Concentration`; they derive current-step
 exponential-mean self-adjointness and strict positivity from centered
 self-adjoint bounded summands. The base quadratic-form tail wrapper keeps tail
 measurability explicit, while `MatrixBernstein.operatorNormUpperTail_of_primitives`,
@@ -287,6 +291,9 @@ Variance-proxy / centered-square chain:
 - `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two`
 - `sampleCovarianceVarianceProxy_sharp_statement_of_centeredSquareChain_exactRowSqNorm_bound_memLp_two`
 - `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two_of_centeredSquareChain`
+- `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_rowSqNorm_bound_memLp_two`
+- `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_exactRowSqNorm_bound_memLp_two`
+- `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_direct_of_exactRowSqNorm_bound_memLp_two`
 - `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_of_exactRowSqNorm_bound_memLp_two`
 - `varianceProxyNormBound_of_centeredSquareChain_statement`
 - `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement`
@@ -310,6 +317,12 @@ Deterministic trace / rank bridges:
 - `traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le`
 - `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le`
 - `matrixTrace_eq_rank_of_isStarProjection`
+
+Generated-history centered rank-one consumers:
+
+- `MatrixBernstein.CenteredRankOneExactRowInputs`
+- `MatrixBernstein.centeredRankOneExactRow`
+- `MatrixBernstein.sampleCovarianceExactRow`
 
 Thin hardbone consumers:
 
@@ -609,15 +622,22 @@ smaller square-root constant.
   API, not as separate theorem machinery.
 - Use `StatementRoutes` first. Low-level prefix/state, reindex, and negative-family bridge APIs are covered by source, tests, and judge files rather than separate reader-facing examples.
 
-## Provider-Facing Lieb/Tropp Layer
+## Provider-Facing Layers
 
-Use this layer explicitly, not through the core `HighDimProb.RandomMatrix` aggregate:
+Use these layers explicitly, not through the core `HighDimProb.RandomMatrix`
+aggregate:
 
 ```lean
-import HighDimProb.RandomMatrix.LiebProvider
+import HighDimProb.RandomMatrix.Provider.Analysis
+import HighDimProb.RandomMatrix.Provider.Conditioning
+import HighDimProb.RandomMatrix.Provider.Concentration
 ```
 
-This import exposes the upstream provider facade: ambient and self-adjoint
+Import the narrowest layer needed by the consumer. The broad
+`HighDimProb.RandomMatrix.Provider` facade imports all three;
+`HighDimProb.RandomMatrix.LiebProvider` remains a compatibility import.
+
+The analysis layer exposes ambient and self-adjoint
 matrix-exp derivatives, first-order strictly-positive `CFC.log` affine-line
 APIs, short inverse/trace-resolvent derivatives, finite-cutoff log-resolvent
 identities, inverse-convexity segment/`MatrixLE` identities, full-matrix-Klein

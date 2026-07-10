@@ -1,67 +1,15 @@
-import HighDimProb.RandomMatrix.MatrixLogProvider
-import HighDimProb.RandomMatrix.MatrixExpDerivativeProvider
-import HighDimProb.RandomMatrix.CFCLogDerivativeProvider
-import HighDimProb.RandomMatrix.ResolventDerivativeProvider
-import HighDimProb.RandomMatrix.LogResolventProvider
-import HighDimProb.RandomMatrix.InverseConvexityProvider
-import HighDimProb.RandomMatrix.RelativeEntropyProvider
-import HighDimProb.RandomMatrix.RelativeEntropyLeftRightIntegrandProvider
-import HighDimProb.RandomMatrix.GibbsProvider
-import HighDimProb.RandomMatrix.RelativeEntropyBridgeProvider
-import HighDimProb.RandomMatrix.RelativeEntropyJointConvexityRouteProvider
-import HighDimProb.RandomMatrix.RelativeEntropyLeftRightRepresentationProvider
-import HighDimProb.RandomMatrix.EpsteinDerivativeProvider
-import HighDimProb.RandomMatrix.GoldenThompsonProvider
-import HighDimProb.RandomMatrix.TraceExpTroppStepProvider
-import HighDimProb.RandomMatrix.IntegrabilityProvider
-import HighDimProb.RandomMatrix.TraceExpIntegrabilityProvider
-import HighDimProb.RandomMatrix.NaturalHistoryProvider
-import HighDimProb.RandomMatrix.SupportProvider
-import HighDimProb.RandomMatrix.SpectralMonotonicityProvider
-import HighDimProb.RandomMatrix.TraceExpLaplaceProvider
-import HighDimProb.RandomMatrix.TraceResolventConvexProvider
-import HighDimProb.RandomMatrix.TraceResolventPerspectiveProvider
-import HighDimProb.RandomMatrix.TraceExpIntegrabilityCompressionProvider
-import HighDimProb.RandomMatrix.TailEventNaturalStateBridgeProvider
-import HighDimProb.RandomMatrix.TailEventProviderAssumptionBridgeProvider
-import HighDimProb.RandomMatrix.TailEventTraceMGFBridgeProvider
-import HighDimProb.RandomMatrix.TailEventDominationProvider
-import HighDimProb.RandomMatrix.ExcessSupportDominationProvider
-import HighDimProb.RandomMatrix.ExcessSupportCompressionProvider
-import HighDimProb.RandomMatrix.ConditioningKernelProvider
-import HighDimProb.RandomMatrix.ConditioningExpectationProvider
-import HighDimProb.RandomMatrix.ConditioningTraceExpProvider
-import HighDimProb.RandomMatrix.TraceExpDomainProvider
-import HighDimProb.RandomMatrix.ConditioningBernsteinTraceExpProvider
-import HighDimProb.RandomMatrix.MatrixBernsteinProvider
-import HighDimProb.RandomMatrix.CFCLogResolventRemainderProvider
-import HighDimProb.RandomMatrix.CFCLogResolventRemainderLimitProvider
-import HighDimProb.RandomMatrix.CFCLogResolventKernelProvider
+import HighDimProb.RandomMatrix.Provider
 
 /-!
-# Provider-backed Lieb/Tropp theorem-push wrappers
+# Legacy provider umbrella
 
-This aggregate module exposes the provider-proof leaves ported into the main
-HighDimProb namespace. The imported modules keep the theorem boundaries
-explicit: ambient and self-adjoint carrier matrix-exp Frechet derivatives,
-first-order `CFC.log` affine-line derivatives, short inverse/trace-resolvent
-derivatives, finite-cutoff trace/CFC log-resolvent identities,
-inverse-convexity quadratic-form variational identities, the left/right
-relative-entropy integrand joint-convexity leaf, the density/integral premise
-route and proved left/right density/integral representation to relative-entropy
-joint convexity, relative-entropy scalar/diagonal and Gibbs bridge MVPs,
-derivative-level Epstein consumer
-reductions, deterministic
-log/order and trace-exp monotonicity, conditional Epstein-to-Lieb/Tropp
-wrappers, bounded finite-measure integrability providers, natural-history
-measurability and strengthened independence under the `TroppNaturalHistory.*`
-alias layer, identity support domination, spectral endpoint monotonicity, and
-thin trace-MGF-to-Laplace contracts, generated-history Bernstein
-finite-family/trace-MGF/tail wrappers, trace-exp domain positivity,
-CFC-log resolvent cutoff bridges, conditioning-kernel reductions,
-trace-resolvent convexity, support-to-excess compression, tail-event subset
-discharge wrappers, and the exact Golden--Thompson tangent consequence. These
-imports close the finite-dimensional left/right Lieb/Epstein and
-Golden--Thompson endpoints, but not arbitrary-history conditioning or an
-unconditional full Matrix Bernstein theorem.
+This broad import is retained for compatibility with existing provider-era
+consumers. New code should import `HighDimProb.RandomMatrix.Provider.Analysis`,
+`HighDimProb.RandomMatrix.Provider.Conditioning`, or
+`HighDimProb.RandomMatrix.Provider.Concentration` according to ownership, and
+use `HighDimProb.RandomMatrix.Provider` only when all layers are required.
+
+This compatibility module re-exports `HighDimProb.RandomMatrix.Provider` and
+therefore preserves the previous analysis, conditioning, and concentration
+surface. It owns no declarations and does not widen any theorem contract.
 -/

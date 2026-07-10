@@ -381,6 +381,20 @@ structure CenteredRankOneInputs
       (centeredRankOneRandomMatrixFamily P X)
   radiusNonneg : 0 <= R
 
+/-- Row-specific inputs for optimized Matrix Bernstein on centered rank-one
+random-vector families.
+
+The uniform radius controls summand norms, while `Rvar` gives the sharper
+row-specific variance proxy. -/
+structure CenteredRankOneExactRowInputs
+    {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    (X : I -> RandomVector Omega n) (R : Real) (Rvar : I -> Real)
+    extends CenteredRankOneInputs (P := P) X R where
+  varianceSqNormBound : forall i omega, vectorSqNorm (X i omega) <= Rvar i
+  varianceRadiiNonneg : forall i, 0 <= Rvar i
+
 /-- Optimized operator-norm tail for centered rank-one random-vector sums.
 
 This is the reusable application endpoint behind covariance, NTK Gram, and
@@ -444,6 +458,136 @@ theorem centeredRankOne
       (centeredRankOneVarianceProxyNormRHS (I := I) R) (2 * R) t hn
       hInt hIntSq hCentered h.independentSelfAdjoint hBound hNorm
       hSigma hRadius ht
+
+/-- Optimized centered rank-one tail with a row-specific variance proxy.
+
+This closes the generated-history, integrability, boundedness, and variance-proxy
+composition from `CenteredRankOneExactRowInputs`. -/
+theorem centeredRankOneExactRow
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (X : I -> RandomVector Omega n) (R t : Real) (Rvar : I -> Real)
+    (hn : 0 < n)
+    (h : CenteredRankOneExactRowInputs (P := P) X R Rvar)
+    (ht : 0 <= t) :
+    upperTailProb P
+        (operatorNorm
+          (randomMatrixSum (centeredRankOneRandomMatrixFamily P X))) t <=
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        n (2 * R) (2 * R) t
+        (rowSqNormVarianceProxyNormRHS Rvar)
+        (rowSqNormVarianceProxyNormRHS Rvar) := by
+  have hCentered :
+      CenteredSelfAdjointRandomMatrixFamily P
+        (centeredRankOneRandomMatrixFamily P X) :=
+    centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two
+      (P := P) (X := X) h.randomVector h.coordinateMemLpTwo
+  have hInt :
+      forall i,
+        IntegrableRandomMatrix P
+          (centeredRankOneRandomMatrixFamily P X i) := by
+    intro i
+    exact centeredRankOneRandomMatrix_integrable_of_memLp_two
+      (P := P) (X := X i) (h.coordinateMemLpTwo i)
+  have hIntSq :
+      forall i,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare (centeredRankOneRandomMatrixFamily P X i)) :=
+    integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two
+      (P := P) (X := X) (R := R) h.coordinateMemLpTwo h.sqNormBound
+  have hBound :
+      PointwiseOperatorNormBound
+        (centeredRankOneRandomMatrixFamily P X) (2 * R) :=
+    PointwiseOperatorNormBound_centeredRankOneRandomMatrix_of_sqNorm_bound
+      (P := P) (X := X) h.randomVector h.coordinateMemLpTwo h.sqNormBound
+        h.radiusNonneg
+  have hNorm :
+      MatrixVarianceProxyNormBound P
+        (centeredRankOneRandomMatrixFamily P X)
+        (rowSqNormVarianceProxyNormRHS Rvar) :=
+    MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_rowSqNorm_bound_memLp_two
+      (P := P) (X := X) (R := Rvar) h.coordinateMemLpTwo
+        h.varianceSqNormBound h.varianceRadiiNonneg
+  have hSigma : 0 <= rowSqNormVarianceProxyNormRHS Rvar := by
+    positivity
+  have hRadius : 0 <= 2 * R := by
+    nlinarith [h.radiusNonneg]
+  exact
+    matrixBernsteinSelfAdjointOptimizedStatement_generatedHistory_of_bernsteinPrimitives
+      (mOmega := mOmega) (P := P)
+      (centeredRankOneRandomMatrixFamily P X)
+      (rowSqNormVarianceProxyNormRHS Rvar) (2 * R) t hn
+      hInt hIntSq hCentered h.independentSelfAdjoint hBound hNorm
+      hSigma hRadius ht
+
+/-- Optimized operator-norm tail for centered sample covariance with exact-row
+variance control.
+
+The conclusion is normalized through the row count. Tropp primitives and
+exponential integrability are generated internally. -/
+theorem sampleCovarianceExactRow
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {m n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (A : RandomMatrix Omega m n) (R t : Real) (Rvar : Fin m -> Real)
+    (hm : 0 < m) (hn : 0 < n)
+    (hMeas : IsRandomMatrix P A)
+    (hLp : forall k : Fin m, forall j : Fin n,
+      MemLpRealRandomVariable P (matrixEntry A k j) 2)
+    (hSq : forall k omega, vectorSqNorm (rowVector A k omega) <= R)
+    (hSqVar : forall k omega, vectorSqNorm (rowVector A k omega) <= Rvar k)
+    (hIndep : IndependentRandomMatrices P
+      (centeredSampleCovarianceRowRankOneFamily (P := P) A))
+    (hR : 0 <= R) (hRvar : forall k, 0 <= Rvar k)
+    (ht : 0 <= t) :
+    P (SelfAdjointOperatorNormTailEvent
+        (centeredRandomMatrix P (sampleCovariance A)) t) <=
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        n (2 * R) (2 * R) ((m : Real) * t)
+        (rowSqNormVarianceProxyNormRHS Rvar)
+        (rowSqNormVarianceProxyNormRHS Rvar) := by
+  have hRowsRandom : forall k, IsRandomVector P (rowVector A k) := by
+    intro k
+    exact isRandomVector_rowVector hMeas k
+  have hRowsLp : forall k, forall j : Fin n,
+      MemLpRealRandomVariable P (coord (rowVector A k) j) 2 := by
+    intro k j
+    change MemLpRealRandomVariable P (matrixEntry A k j) 2
+    exact hLp k j
+  have hCentered : CenteredSelfAdjointRandomMatrixFamily P
+      (centeredSampleCovarianceRowRankOneFamily (P := P) A) := by
+    simpa [centeredSampleCovarianceRowRankOneFamily] using
+      centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two
+        (P := P) (X := rowVector A) hRowsRandom hRowsLp
+  have hInputs : CenteredRankOneExactRowInputs (P := P)
+      (rowVector A) R Rvar := by
+    refine {
+      randomVector := hRowsRandom
+      coordinateMemLpTwo := hRowsLp
+      sqNormBound := hSq
+      varianceSqNormBound := hSqVar
+      independentSelfAdjoint := And.intro hCentered.1 hIndep
+      radiusNonneg := hR
+      varianceRadiiNonneg := hRvar }
+  have hRows := centeredRankOneExactRow
+    (mOmega := mOmega) (P := P) (X := rowVector A)
+    (R := R) (t := (m : Real) * t) (Rvar := Rvar) hn hInputs
+    (mul_nonneg (Nat.cast_nonneg m) ht)
+  have hRankInt : forall k,
+      IntegrableRandomMatrix P (rankOneRandomMatrix (rowVector A k)) := by
+    intro k
+    exact integrableRandomMatrix_rankOneRandomMatrix_of_memLp_two
+      (P := P) (X := rowVector A k) (hRowsLp k)
+  have hSubset :=
+    sampleCovariance_selfAdjointOperatorNormTailEvent_subset_centeredRowRankOneSum
+      (P := P) A t hm hRankInt
+  apply (measure_mono hSubset).trans
+  simpa [upperTailProb, upperTailEvent,
+    centeredSampleCovarianceRowRankOneSum,
+    centeredSampleCovarianceRowRankOneFamily] using hRows
 
 /-- Short public alias for the positive-variance operator-norm tail bridge. -/
 abbrev operatorNormTail_of_primitives :=

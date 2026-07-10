@@ -2768,6 +2768,67 @@ theorem MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of
     centeredRankOneVarianceProxyNormRHS,
     pointwiseOperatorNormVarianceProxyNormRHS] using hGeneric
 
+/-- Exact-row variance-proxy bound for the positive centered
+sample-covariance row family, with no abstract sharp-chain premise. -/
+theorem MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_exactRowSqNorm_bound_memLp_two
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m n)
+    (R : Fin m -> Real)
+    (hLp :
+      forall k : Fin m, forall j : Fin n,
+        MemLpRealRandomVariable P (matrixEntry A k j) 2)
+    (hSq :
+      forall k : Fin m, forall omega,
+        vectorSqNorm (rowVector A k omega) <= R k)
+    (hR : forall k : Fin m, 0 <= R k) :
+    MatrixVarianceProxyNormBound P
+      (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+      (rowSqNormVarianceProxyNormRHS R) := by
+  have hRowsLp :
+      forall k : Fin m, forall j : Fin n,
+        MemLpRealRandomVariable P (coord (rowVector A k) j) 2 := by
+    intro k j
+    change MemLpRealRandomVariable P (matrixEntry A k j) 2
+    exact hLp k j
+  change MatrixVarianceProxyNormBound P
+    (centeredRankOneRandomMatrixFamily P (rowVector A))
+    (rowSqNormVarianceProxyNormRHS R)
+  exact
+    MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_rowSqNorm_bound_memLp_two
+      (P := P) (X := rowVector A) (R := R) hRowsLp hSq hR
+
+/-- Exact-row variance-proxy bound for the negative centered
+sample-covariance row family, with no abstract sharp-chain premise. -/
+theorem MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_direct_of_exactRowSqNorm_bound_memLp_two
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega}
+    [IsProbabilityMeasure P] {m n : Nat}
+    (A : RandomMatrix Omega m n)
+    (R : Fin m -> Real)
+    (hLp :
+      forall k : Fin m, forall j : Fin n,
+        MemLpRealRandomVariable P (matrixEntry A k j) 2)
+    (hSq :
+      forall k : Fin m, forall omega,
+        vectorSqNorm (rowVector A k omega) <= R k)
+    (hR : forall k : Fin m, 0 <= R k) :
+    MatrixVarianceProxyNormBound P
+      (centeredSampleCovarianceRowRankOneFamilyNeg (P := P) A)
+      (rowSqNormVarianceProxyNormRHS R) := by
+  have hPos :
+      MatrixVarianceProxyNormBound P
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A)
+        (rowSqNormVarianceProxyNormRHS R) :=
+    MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_exactRowSqNorm_bound_memLp_two
+      (P := P) A R hLp hSq hR
+  change
+    matrixVarianceProxyNorm P
+      (negRandomMatrixFamily
+        (centeredSampleCovarianceRowRankOneFamily (P := P) A)) <=
+      rowSqNormVarianceProxyNormRHS R
+  rw [matrixVarianceProxyNorm, matrixVarianceProxy_negRandomMatrixFamily]
+  simpa [MatrixVarianceProxyNormBound, matrixVarianceProxyNorm] using hPos
+
 /-- Negative sample-covariance row-rank-one variance-proxy norm bound from
 row-specific squared-norm bounds.
 

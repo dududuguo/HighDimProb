@@ -3,6 +3,8 @@
 ## Root Modules
 
 - `HighDimProb`: stable root API for reviewed scalar probability infrastructure and typed statement specifications.
+- `HighDimProb.RandomMatrix`: supported finite-dimensional base API outside the conservative root import.
+- `HighDimProb.RandomMatrix.Provider`: broad provider facade with analysis, conditioning, and concentration sublayers.
 - `HighDimProb.Experimental`: aggregate API for v0.2+ high-dimensional and scaffold modules.
 - `HighDimProbTest`: root test module for import and API regression checks.
 
@@ -22,12 +24,15 @@ The documentation build is broader than the stable import root. The
 - `HighDimProb`
 - `HighDimProb.Experimental`
 - `HighDimProb.Examples`
+- `HighDimProb.RandomMatrix.Provider`
 
-This makes the generated Library show the stable API, the explicitly
++
++experimental API directory, and public examples, without making+
++`import HighDimProb` import experimental declarations.
 experimental API directory, and public examples, without making
 `import HighDimProb` import experimental declarations.
 
-## Experimental API
+## Broad Opt-In Aggregate
 
 `import HighDimProb.Experimental` imports:
 
@@ -40,7 +45,11 @@ experimental API directory, and public examples, without making
 - `HighDimProb.SignalRecovery`
 - `HighDimProb.Tactic`
 
-These modules remain experimental until they pass the promotion checklist: tests, docs, `docs/Status.md` update, and stable-root import audit.
+This aggregate combines mature and experimental branches for development
+convenience. Membership does not determine support status. In particular,
+`HighDimProb.RandomMatrix` has a supported finite-dimensional base, while
+provider theorem surfaces use focused imports and are not re-exported by
+`HighDimProb.Experimental`.
 
 Declarations that still expose proof-route assumptions belong here until their
 mathematical boundary is settled. Examples include wrappers under explicit
@@ -53,7 +62,10 @@ variance-proxy bounds, and operator-norm bridge assumptions.
 - `HighDimProb.Concentration`: experimental scalar concentration proof spine, including `Basic`, `Markov`, `Chebyshev`, `LayerCake`, `OrliczToTail`, `TailToOrlicz`, `MomentImplications`, `MGF`, `Implications`, `SubGaussianSums`, `RademacherSums`, `Hoeffding`, `MaxScale`, `SubExponentialSums`, and `Bernstein`.
 - `HighDimProb.Vector`: finite-dimensional random-vector infrastructure.
 - `HighDimProb.Geometry`: nets, metric entropy, covering/packing statements, and Gaussian-width vocabulary.
-- `HighDimProb.RandomMatrix`: random-matrix object, algebra helper, and vocabulary submodules.
+- `HighDimProb.RandomMatrix`: supported finite-dimensional random-matrix base.
+- `HighDimProb.RandomMatrix.Provider.Analysis`: deterministic analytic providers.
+- `HighDimProb.RandomMatrix.Provider.Conditioning`: conditioning and natural-history providers.
+- `HighDimProb.RandomMatrix.Provider.Concentration`: trace-MGF, tail, and Matrix Bernstein providers.
 - `HighDimProb.LimitTheorems`: experimental weak-law scaffold with sample means, weak-law typed statements, and assumption vocabulary.
 - `HighDimProb.Process`: random-process and empirical-process vocabulary.
 - `HighDimProb.Statements`: typed theorem statement specifications and theorem-atlas bridge modules.
@@ -68,7 +80,10 @@ HighDimProb
 - Concentration (experimental)
 - Vector (experimental)
 - Geometry (experimental)
-- RandomMatrix (experimental physical branch)
+- RandomMatrix (supported finite-dimensional focused branch)
+  - Provider.Analysis
+  - Provider.Conditioning
+  - Provider.Concentration
 - LimitTheorems (experimental / reserved)
 - Process (experimental / reserved)
 - Statements (stable for typed specs)
@@ -101,4 +116,8 @@ Each new public declaration needs at least one `#check` or tiny example test. Ea
 
 Logical aggregate modules are introduced first. Existing flat files are not physically moved in Stage I3 or Stage I4.
 
-Physical folder migration may happen later only after APIs stabilize and after import tests show the logical branch boundaries are correct. Migration rounds must preserve names where possible, update imports, and keep `lake build` and `lake test` passing. Keep migration policy in `docs/Workflow.md` and current status notes rather than a separate planning log.
+The first RandomMatrix provider facades are documented in
+[`RandomMatrixArchitecture.md`](RandomMatrixArchitecture.md). Physical folder
+migration may happen only after those boundaries stabilize and import tests
+show the dependency direction is correct. Migration rounds must preserve old
+imports where practical and keep `lake build` and `lake test` passing.
