@@ -30,7 +30,10 @@ premises:
   finite-family `iIndepFun X P` to supply history/current-step independence.
 - Per-index `condExp_traceExp_history_add_independent_step_statement`, the
   conditional-expectation reduction from a history-measurable matrix and an
-  independent current step.
+  independent current step. `TraceExpConditioning.troppStep_of_history_le`
+  supplies this exact contract when `mHist <= MeasurableSpace.comap H _` and a
+  `TraceExpTroppFrozenBoundInputs` packet is available; arbitrary larger
+  histories still require separate sigma-level independence.
 - Natural-state side conditions for each index: history sub-sigma algebra,
   history/current random-matrix measurability, self-adjoint history/current
   steps, trace-exponential integrability of `H_i + Z_i`, matrix-exponential

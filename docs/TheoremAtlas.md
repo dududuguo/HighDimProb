@@ -165,18 +165,20 @@ matrix-exp Frechet derivative layer, log-resolvent bridge infrastructure, the
 fixed-`t` left/right relative-entropy integrand joint-convexity leaf, the
 density/integral representation route to relative-entropy joint convexity,
 Lieb/Epstein facades, and left/right Tropp one-step wrappers, plus spectral
-endpoint monotonicity and trace-MGF-to-Laplace contracts; these do not close the
-weaker arbitrary-history independence statement, conditional expectation,
-Golden-Thompson, automatic variance-proxy normalization, or unconditional full
-Matrix Bernstein.
+endpoint monotonicity and trace-MGF-to-Laplace contracts. The restricted
+conditional-step route `mHist <= MeasurableSpace.comap H _` is closed by
+`TraceExpConditioning.troppStep_of_history_le`; arbitrary larger-history
+independence, Golden-Thompson, automatic variance-proxy normalization, and
+unconditional full Matrix Bernstein remain open.
 
 ## Not Yet Proved
 
 - Golden-Thompson and the older arbitrary-denominator Matrix Bernstein chain.
 - Full unconditional Matrix Bernstein theorem.
 - The weaker natural-history independence statement without explicit summand
-  measurability, conditional-expectation reduction, and trace-exp integrability
-  propagation for the conditional-step Tropp route.
+  measurability, conditional-expectation reduction for arbitrary larger history
+  sigma-algebras, and trace-exp integrability propagation for the conditional-step
+  Tropp route. The restricted `mHist <= MeasurableSpace.comap H _` route is proved.
 - Proofs of the remaining hardbone statement targets for Tropp/Lieb,
   automatic trace-exp domination/integrability, automatic
   variance-proxy sharpening beyond centered-square expectation expansion,

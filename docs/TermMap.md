@@ -94,9 +94,11 @@ remainder cutoff removal, and self-adjoint tail-event subset discharge wrappers,
 but still
 stops short of
 arbitrary-weight plain cutoff
-removal, the Epstein second-derivative sign, Golden-Thompson, the full
+removal, the Epstein second-derivative sign, Golden-Thompson, the unconditional
 finite-family Tropp/Matrix Bernstein chain, the weaker independence
 statement without explicit summand measurability, the exact conditioning
 expectation chain for arbitrary larger history sigma-algebras, variance-proxy
-normalization, or full Matrix Bernstein. Keep this separate from reader-facing
-examples and the core `HighDimProb.RandomMatrix` aggregate.
+normalization, or full Matrix Bernstein. The restricted route
+`mHist <= MeasurableSpace.comap H _` is closed by
+`TraceExpConditioning.troppStep_of_history_le`. Keep this separate from
+reader-facing examples and the core `HighDimProb.RandomMatrix` aggregate.

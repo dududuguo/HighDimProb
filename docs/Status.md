@@ -120,6 +120,9 @@ TraceExp / Tropp bookkeeping helpers:
 - `troppNaturalState_left`
 - `troppNaturalState_right`
 - `troppHistoryStepIndependent_of_iIndepFun_of_measurable`
+- `TraceExpTroppFrozenBoundInputs`
+- `TraceExpConditioning.troppStep_of_history_le`
+- `TraceExpConditioning.condExpStep_of_history_le`
 - `troppTraceExpFiniteFamilyIterationSkeleton_of_naturalStateConditionalSteps`
 - `troppMasterTraceMGFFiniteFamily_of_naturalStateConditionalSteps`
 - `traceMGFBernsteinVarianceProxyBound_of_naturalStateConditionalSteps`
@@ -316,7 +319,10 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   conditioning chain now has the thin theorem witness
   `troppConditionalStep_of_iIndepFun`, which only forwards the explicit
   per-index conditional-expectation provider and does not prove history
-  measurability or independence. The S10 wrapper
+  measurability or independence. The restricted-history facade
+  `TraceExpConditioning.troppStep_of_history_le` now supplies that exact
+  per-step conditional contract when `mHist <= MeasurableSpace.comap H _` and
+  `TraceExpTroppFrozenBoundInputs` is available. The S10 wrapper
   `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge` threads
   the S9 trace-MGF consumer into the quadratic-form Laplace/tail route under an
   explicit tail-event subset assumption, while the TailEvent provider wrappers
@@ -349,10 +355,12 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   the statement still exposes centeredness, self-adjointness, independence,
   integrability, norm, and variance-proxy assumptions.
 - Prefix/suffix/state bookkeeping now includes a natural `Fin m` trace-state
-  route through the finite-family Tropp and trace-MGF provider surfaces. This
-  does not discharge the analytic conditional-step, history measurability,
-  independence, trace-exp integrability, log/K, CFC, or variance-proxy
-  hypotheses.
+  route through the finite-family Tropp and trace-MGF provider surfaces.
+  `TraceExpConditioning.troppStep_of_history_le` separately closes the exact
+  conditional-step contract under `mHist <= MeasurableSpace.comap H _` and an
+  explicit frozen-bound packet. It does not discharge history measurability,
+  independence for arbitrary larger histories, trace-exp integrability, log/K,
+  CFC, or variance-proxy hypotheses.
 - `StatementRoutes` is an examples-only route index; it groups representative example-level statement families without adding core API. Lower-level bridge and frontier checks belong in source, tests, and judge files rather than separate reader-facing examples.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
 - Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The positive-side quadratic-form route now has an exact-row variance-proxy wrapper, but two-sided and operator-norm exact-row wrappers still need a negative-side exact-row variance-proxy provider contract. The preferred sample-covariance and reader-facing Matrix Bernstein example routes now use Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.
@@ -368,6 +376,8 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   `RM-HB12-trace-exp-rank-support-bound-leaf`.
 - Completed hardbone proof leaf:
   `RM-HB12-tropp-conditional-step-of-iindepfun-bridge-leaf`.
+- Completed restricted-history closure leaf:
+  `TraceExpConditioning.troppStep_of_history_le`.
 - Completed hardbone proof leaf:
   `CG-B17-star-projection-rank-support-consumer-contract`.
 - Completed hardbone proof leaf:

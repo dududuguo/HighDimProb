@@ -21,6 +21,9 @@ This is the active short list. Old completed task logs were collapsed into
   `0 <= sigmaSq`, `0 <= R`, and `0 < sigmaSq or 0 < R`; keep this finite-family
   route separate from the older arbitrary-denominator and unconditional
   contracts.
+- Use `TraceExpConditioning.troppStep_of_history_le` when a consumer can prove
+  `mHist <= MeasurableSpace.comap H _`; do not use it to claim independence for
+  an arbitrary larger history sigma-algebra.
 - Prefer shared RandomMatrix APIs over unfolded formulas in examples, tests,
   judge files, and docs.
 - Keep new Matrix Bernstein/sample-covariance route variants behind named

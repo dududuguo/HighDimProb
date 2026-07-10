@@ -403,9 +403,12 @@ an arbitrary finite index type; it does not prove that primitive.
 
 The natural-state route fixes the `Fin m` state, history, and current-step
 objects to the prefix/suffix construction and discharges the raw endpoint
-equalities. It remains a TraceExp-level bridge: conditional-step analytic,
-history measurability, independence, trace-exp integrability, log/K, CFC, and
-variance-proxy assumptions remain explicit.
+equalities. Separately, `TraceExpConditioning.troppStep_of_history_le` closes
+the exact conditional-step contract whenever
+`mHist <= MeasurableSpace.comap H _`, using the contract's own `IndepFun H Z`
+premise and an explicit `TraceExpTroppFrozenBoundInputs` packet. History
+measurability, arbitrary-larger-history independence, trace-exp integrability,
+log/K, CFC, and variance-proxy obligations remain separate.
 
 Use the core wrappers from:
 
@@ -439,6 +442,9 @@ Recent provider-compression APIs:
 - `historyCondExp_le_of_indepFun_under_uniform_bound`
 - `condExp_le_of_indep_sigma_under_frozen_bound`
 - `condExp_traceExp_history_add_independent_step_of_indep_sigma`
+- `TraceExpTroppFrozenBoundInputs`
+- `TraceExpConditioning.troppStep_of_history_le`
+- `TraceExpConditioning.condExpStep_of_history_le`
 - `trace_mul_mono_right_of_matrixLE_of_isPSDMatrix`
 - `trace_mul_inv_add_const_convex_combo_le`
 - `matrixExpExcessSupportDomination_of_supportDomination_of_support_le_one`
@@ -772,6 +778,9 @@ Epstein/Tropp conditional consumers and support APIs:
 - `TroppNaturalHistory.historyStepIndependent`
 - `troppNaturalHistoryMeasurable_of_suffix_entry_measurable`
 - `troppHistoryStepIndependent_of_iIndepFun_of_measurable`
+- `TraceExpTroppFrozenBoundInputs`
+- `TraceExpConditioning.troppStep_of_history_le`
+- `TraceExpConditioning.condExpStep_of_history_le`
 - `matrixExpScaledIntegrable_of_provider_finiteMeasure`
 - `isSelfAdjointMatrix_matrixExpect_matrixExp_troppCurrentRandomStep_of_centeredSelfAdjoint`
 - `isStrictlyPositive_matrixExpect_matrixExp_troppCurrentRandomStep_of_centeredSelfAdjoint`
