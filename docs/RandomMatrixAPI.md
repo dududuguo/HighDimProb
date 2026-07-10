@@ -249,6 +249,7 @@ Tropp/Lieb/Golden-Thompson chain:
 - `liebTraceExpConcavity_statement`
 - `liebJensenTraceExp_statement`
 - `goldenThompsonTraceExp_statement`
+- `goldenThompsonTraceExp`
 - `matrixExpLogSelfAdjointNormalization_statement`
 - `matrixExpLogSelfAdjointNormalization`
 - `troppMasterTraceMGFStep_of_liebJensen_statement`
@@ -334,9 +335,10 @@ Hardbone status table:
 | Matrix log/order bridge | `matrixLog_le_of_le_matrixExp_statement` | proven by `matrixLog_le_of_le_matrixExp`; operator-log premise can now be supplied by `operatorLogMonotoneOnPositiveMatrices` | turns log-monotonicity and `matrixExp` log-domain premises into `log M <= K` | `matrixExp` log-domain is supplied by `matrixExpLogDomainForSelfAdjoint`; the wrapper intentionally keeps premises explicit |
 | Real-to-CStar bridge | `realMatrixToCStarMatrix` and transport lemmas | representation map, add/sub, self-adjoint, strict positivity, order, log-back, and reflected order transport proved | supplies the CStar representation route used by `operatorLogMonotoneOnPositiveMatrices` | log-back is restricted to strictly positive self-adjoint real matrices |
 | Log/order-to-`K` | `troppLogExpComparisonToK_statement` | proven by `troppLogExpComparisonToK` | direct deterministic comparison from `M <= matrixExp K` | still deterministic only; Lieb/Jensen, Golden-Thompson, conditioning, integrability, and variance-proxy inputs remain separate |
-| Tropp/Lieb/GT one-step | `troppMasterTraceMGFStep_of_liebJensen_statement` | typed-prop | `troppMasterTraceMGFStep_of_liebJensen` | Lieb concavity, probability-measure Jensen, log-exp normalization; Golden-Thompson is separate |
+| Tropp/Lieb one-step | `troppMasterTraceMGFStep_of_liebJensen_statement` | typed-prop | `troppMasterTraceMGFStep_of_liebJensen` | compatibility decomposition; the left/right one-step facade is proved separately |
+| Golden--Thompson | `goldenThompsonTraceExp_statement` | proven by `goldenThompsonTraceExp` | exact finite-dimensional real self-adjoint endpoint | closed from the proved Epstein/Lieb concavity tangent at the identity |
 | Conditioning / independence | `troppConditionalStep_of_iIndepFun_statement` | proven by `troppConditionalStep_of_iIndepFun` | `troppMasterTraceMGFConditionalStep_of_conditioningBridge`; `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge` composes this route into the finite-family trace-MGF bound | thin forwarder/composer only; generated histories, history/current-step independence, finite-family independence, conditional expectation reduction, integrability, and variance-proxy inputs remain explicit premises |
-| Trace-exp integrability | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement` | typed-prop with proved thin consumer | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider` | automatic absolute domination, Golden-Thompson/product, or boundedness provider |
+| Trace-exp integrability | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider_statement` | typed-prop with proved thin consumer | `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider` | an application-specific product domination or boundedness provider; Golden--Thompson alone does not supply integrability |
 | Variance proxy / centered square | `varianceProxyNormBound_of_centeredSquareChain_statement`, `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE_statement`, `matrixSquare_centeredRandomMatrix_expectation_expansion_statement`, `centeredRankOneSquare_le_rankOneSecondMoment_statement` | centered-square expectation expansion, finite-sum MatrixLE bookkeeping, PSD Loewner-to-operator-norm monotonicity, and centered rank-one second-moment comparison proved; typed-prop chain has proved thin consumers | `matrixSquare_centeredRandomMatrix_expectation_expansion`, `matrixSecondMoment_centeredRandomMatrix_le_matrixSecondMoment`, `centeredRankOneSquare_le_rankOneSecondMoment`, `varianceProxyNormBound_of_centeredSquareChain`, `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE`, `varianceProxyNormBound_of_centeredSquareChain_of_normMono`, `varianceProxyNormBound_of_centeredSquareChain_expansion`, `sampleCovarianceVarianceProxy_sharp_of_rankOneSecondMoment`, `sampleCovarianceVarianceProxy_sharp_of_exactRowSecondMoment`, `deterministicMatrixVarianceProxyNorm_sum_le_sum`, `deterministicMatrixVarianceProxyNorm_matrixSecondMoment_rankOneRandomMatrix_le_sq_of_sqNorm_bound`, `deterministicMatrixVarianceProxyNorm_sum_matrixSecondMoment_rankOneRandomMatrix_le_sum_sq_of_sqNorm_bound`, `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two`, `sampleCovarianceVarianceProxy_sharp_statement_of_centeredSquareChain_exactRowSqNorm_bound_memLp_two`, `sampleCovarianceVarianceProxy_sharp_of_exactRowSqNorm_bound_memLp_two_of_centeredSquareChain`, `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamilyNeg_of_exactRowSqNorm_bound_memLp_two`, exact-row centered-square sample-covariance wrappers and bundles, `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_integrable_four_products`, `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_memLp_four`, `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two`, `integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_memLp_four`, `integrableRandomMatrix_randomMatrixSquare_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two`, `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_sqNorm_bound_memLp_two` | full generic centered-square-chain providers, Tropp/Lieb, trace-MGF integrability, and full Matrix Bernstein remain explicit or open |
 | Dimension / support / effective rank | `traceMatrixExp_le_rank_exp_lambdaMax_statement`, `traceMatrixExp_le_supportDim_exp_lambdaMax_statement`, `traceMatrixExp_effectiveRank_bound_statement`, `matrixExpSupportDomination_identity_statement`, `traceMatrixExp_excess_supportDim_exp_lambdaMax_statement` | rank/support targets and effective-rank consumer proved under explicit support, PSD, lambda-max, and trace-certificate assumptions; ambient trace certificate and star-projection rank/PSD consumer proved; identity support provider target named only; excess trace bridge and supportDim consumer proved under explicit excess certificate | `traceMatrixExp_le_rank_exp_lambdaMax`, `traceMatrixExp_le_rank_exp_lambdaMax_of_isStarProjection`, `traceMatrixExp_le_supportDim_exp_lambdaMax`, `traceMatrixExp_excess_supportDim_exp_lambdaMax`, `traceMatrixExp_effectiveRank_bound`, `traceMatrixExp_effectiveRank_bound_of_ambientTraceCertificate`; deterministic helpers include `MatrixExpSupportDomination`, `MatrixExpExcessSupportDomination`, `traceMatrixExp_le_card_add_trace_support_mul_exp_sub_one_of_excessSupportDomination`, `traceMatrixExp_eq_sum_exp_eigenvalues`, `traceMatrixExp_smul_le_card_add_trace_div_mul_exp_sub_one_of_psd_lambdaMax_le`, `matrixTrace_le_card_mul_of_isPSD_lambdaMaxOrdered_le`, `matrixTrace_eq_rank_of_isStarProjection`, `isPSDMatrix_of_isStarProjection` | identity/excess support-domination providers and support-construction certificates; true effective-rank trace certificate provider beyond ambient dimension |
 | Thin consumers | `troppMasterTraceMGFConditionalStep_of_conditioningBridge`, `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge` | proven | source/test/judge checks | thin developer-facing wrappers only; no hard fact is discharged |
@@ -581,9 +583,10 @@ identities, inverse-convexity segment/`MatrixLE` identities, full-matrix-Klein
 relative-entropy APIs, the fixed-`t` left/right relative-entropy integrand
 joint-convexity leaf, the left/right scalar, quadratic, spectral-overlap,
 density, and integral-representation route to relative-entropy joint convexity
-and Lieb/Epstein facades, conditional relative-entropy/Gibbs bridges,
-derivative-level Epstein consumers, conditional and left/right Tropp/Lieb
-bridges, generated-history Bernstein finite-family/trace-MGF/tail wrappers and
+and Lieb/Epstein facades, the exact `goldenThompsonTraceExp` endpoint,
+conditional relative-entropy/Gibbs bridges, derivative-level Epstein consumers,
+conditional and left/right Tropp/Lieb bridges, generated-history Bernstein
+finite-family/trace-MGF/tail wrappers and
 canonical operator-norm/high-probability facades,
 trace-exp domain positivity, CFC-log resolvent cutoff/remainder bridges,
 conditioning-kernel reductions over
@@ -626,6 +629,7 @@ Strictly-positive `CFC.log` derivative API:
 - `CFCLog.derivSAAt`
 - `CFCLog.hasStrictFDerivAt_derivSAAt`
 - `CFCLog.lineDeriv`
+- `CFCLog.lineDeriv_one_zero`
 - `CFCLog.hasDerivAt_line`
 - `exists_hasDerivAt_cfcLog_affineLine_of_strictlyPositive`
 - `hasDerivAt_cfcLog_affineLine_of_strictlyPositive`
@@ -760,9 +764,15 @@ nonnegativity, full finite-dimensional matrix Klein under Hermitian
 strictly-positive hypotheses, Gibbs/full-Klein bridge adapters, the proved
 left/right density/integral representation, unconditional relative-entropy
 joint convexity, and the resulting Lieb/Epstein facades. Tropp one-step
-wrappers are exposed below. This layer still does not prove Golden-Thompson,
-the conditional-expectation step, variance-proxy normalization, tail-event
-domination, or full Matrix Bernstein.
+wrappers are exposed below. The separate identity-tangent consumer now proves
+Golden--Thompson; the conditional-expectation step for arbitrary larger
+histories, automatic variance-proxy normalization, tail-event domination, and
+unconditional full Matrix Bernstein remain separate.
+
+Golden--Thompson endpoint:
+
+- `CFCLog.lineDeriv_one_zero`
+- `goldenThompsonTraceExp`
 
 Epstein/Tropp conditional consumers and support APIs:
 
@@ -820,8 +830,11 @@ relative-entropy joint convexity, unconditional Lieb/Epstein facades, and the
 left/right Tropp one-step wrappers. The
 `LogResolvent` layer gives spectral sum, CFC-log cutoff, and renormalized
 cutoff-limit handles; it does not yet give a weighted `CFCLog.lineDeriv` /
-`CFCLog.derivSAAt` resolvent-kernel adapter or an Epstein sign proof. The
-provider layer still stops short of Golden-Thompson, exact conditioning expectation,
-variance-proxy normalization or full Matrix Bernstein. Self-adjoint quadratic-form tail subset discharge is now available through the TailEvent provider wrappers.
+`CFCLog.derivSAAt` resolvent-kernel adapter or the alternative Epstein sign
+proof. The provider layer now closes Golden--Thompson through
+`goldenThompsonTraceExp`; exact conditioning expectation for arbitrary
+larger histories, automatic variance-proxy normalization, and unconditional
+full Matrix Bernstein remain open. Self-adjoint quadratic-form tail subset
+discharge is available through the TailEvent provider wrappers.
 It is intentionally separate from reader-facing examples and the core
 `HighDimProb.RandomMatrix` aggregate.

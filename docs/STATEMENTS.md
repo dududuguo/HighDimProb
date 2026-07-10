@@ -106,11 +106,11 @@ Provider theorem surfaces:
   carrier finite-dimensional matrix-exponential Frechet derivative layers plus
   the self-adjoint spectral-equivalence primitive.
 - `cfcLogSelfAdjoint`, `CFCLog.derivSAAt`, `CFCLog.lineDeriv`,
-  `CFCLog.hasDerivAt_line`,
+  `CFCLog.lineDeriv_one_zero`, `CFCLog.hasDerivAt_line`,
   `exists_hasDerivAt_cfcLog_affineLine_of_strictlyPositive`, and
   `hasDerivAt_cfcLog_affineLine_of_strictlyPositive`, the strictly-positive
-  self-adjoint carrier first-order `CFC.log` derivative layer. This is not a
-  second-order sign theorem.
+  self-adjoint carrier first-order `CFC.log` derivative layer and its
+  identity-base specialization. This is not a second-order sign theorem.
 - `hasDerivAt_inverse_affineLine`,
   `hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle`, and their
   strict-positive / identity-line specializations, the short inverse and
@@ -134,15 +134,18 @@ Provider theorem surfaces:
   `troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds`, and the
   summand/comparison-bound finite-measure trace-exp wrappers, bounded
   replacements that do not discharge weaker unbounded hardbone statements.
-- `EpsteinAffineLineConcavity`, an explicit analytic assumption. It is not
-  proved here.
-- `liebTraceExpConcavity_of_epsteinAffineLine` and
-  `liebJensenTraceExp_statement_of_epsteinAffineLine`, which route the explicit
-  Epstein affine-line assumption into the existing Lieb/Jensen statement shape.
-- `troppMasterTraceMGFStep_of_epsteinAffineLine` and
-  `troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder`,
-  which compose the conditional Lieb/Jensen route with the proved deterministic
-  log/order-to-`K` bridge.
+- `relativeEntropyJointConvexity_of_leftRight`,
+  `liebTraceExpConcavity_statement_of_leftRight`, and
+  `epsteinAffineLineConcavity_of_leftRight`, the proved finite-dimensional
+  left/right relative-entropy route to Lieb/Epstein.
+- `CFCLog.lineDeriv_one_zero` and `goldenThompsonTraceExp`, which
+  apply the identity tangent of the proved Epstein/Lieb concavity theorem and
+  discharge the exact `goldenThompsonTraceExp_statement`.
+- The compatibility wrappers `liebTraceExpConcavity_of_epsteinAffineLine`,
+  `liebJensenTraceExp_statement_of_epsteinAffineLine`,
+  `troppMasterTraceMGFStep_of_epsteinAffineLine`, and
+  `troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder`
+  remain available for consumers that already carry an explicit Epstein premise.
 - `MatrixBernsteinConditioningTraceMGFProviderAssumptions` and
   `MatrixBernsteinConditioningTraceMGFProviderAssumptions.toTailAssumptions`,
   which synthesize natural-history measurability and bounded finite-measure
@@ -152,12 +155,11 @@ Provider theorem surfaces:
 
 Non-goals for this provider layer:
 
-- It does not prove a log-resolvent representation, the Epstein trace-second
-  sign theorem, the unconditional Epstein affine-line theorem, full Lieb
-  concavity, Golden-Thompson, the weaker exact history/current independence
-  statement without explicit summand measurability, conditional expectation,
-  variance-proxy normalization, full-sum trace-integrability, tail-event
-  domination, or full Matrix Bernstein.
+- It does not prove the alternative Epstein trace-second sign route, the weaker
+  exact history/current independence statement without explicit summand
+  measurability, conditional expectation for arbitrary larger histories,
+  automatic variance-proxy normalization, full-sum trace-integrability,
+  tail-event domination, or unconditional full Matrix Bernstein.
 
 ## PrecisionDA application statement/provider boundary
 

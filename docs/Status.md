@@ -347,9 +347,10 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   vanish almost everywhere, so every positive operator-norm upper tail is
   zero. The optimized scalar API also records the equal-parameter two-sided
   normalization and its positive-dimension zero-threshold lower bound.
-- Arbitrary-history conditioning, Golden-Thompson, automatic trace-exp
-  integrability, automatic variance-proxy control, and unconditional full
-  Matrix Bernstein remain open unless a referenced theorem says otherwise.
+- Arbitrary-history conditioning, automatic trace-exp integrability, automatic
+  variance-proxy control, and unconditional full Matrix Bernstein remain open
+  unless a referenced theorem says otherwise. Golden--Thompson is closed by
+  `goldenThompsonTraceExp`.
 - The main layer now owns the reusable scalar inversion and the generated-history
   proof composition. `MatrixBernstein.optimized_of_primitives` proves the
   canonical optimized statement over every finite index type, and
@@ -504,8 +505,9 @@ alias `MatrixExpFDeriv.conjDiagonalSymmTraceSum`. The longer theorem names
 as precise backing APIs for low-level proof work.
 
 The strictly-positive carrier `CFC.log` first-derivative layer remains exposed
-through `cfcLogSelfAdjoint`, `CFCLog.derivSAAt`, `CFCLog.lineDeriv`, and
-`CFCLog.hasDerivAt_line`. The preferred spectral adapter aliases are
+through `cfcLogSelfAdjoint`, `CFCLog.derivSAAt`, `CFCLog.lineDeriv`,
+`CFCLog.lineDeriv_one_zero`, and `CFCLog.hasDerivAt_line`. The preferred
+spectral adapter aliases are
 `CFCLog.diagonalDerivEntryMul`, `CFCLog.diagonalLineDerivEntryMul`, and
 `CFCLog.diagonalLineDerivTraceSum`; the longer descriptive theorem names remain
 available for exact proof matching. These are diagonal and trace-paired spectral
@@ -568,8 +570,9 @@ the proved witnesses
 unconditional facades
 `traceMatrixRelativeEntropyPlain_jointConvex_of_leftRight`,
 `relativeEntropyJointConvexity_of_leftRight`,
-`liebTraceExpConcavity_statement_of_leftRight`, and
-`epsteinAffineLineConcavity_of_leftRight`, and the left/right Tropp wrappers
+`liebTraceExpConcavity_statement_of_leftRight`,
+`epsteinAffineLineConcavity_of_leftRight`, and the exact tangent consequence
+`goldenThompsonTraceExp`, together with the left/right Tropp wrappers
 `troppMasterTraceMGFStep_of_leftRight` and
 `troppMasterTraceMGFStep_trace_bound_of_leftRight_and_providerLogOrder`. The
 conditional density/integral-premise facades to
@@ -582,10 +585,11 @@ available. The bridge layer also exposes
 This discharges the Gibbs upper-bound premise from full matrix Klein, proves
 the fixed-`t` left/right integrand convexity leaf, proves the density
 integrability and left/right integral representation witnesses, and closes the
-left/right route to relative-entropy joint convexity, Lieb/Epstein, and the
-Tropp one-step provider wrappers. It still does not prove Golden-Thompson, the
-conditional-expectation step, automatic variance-proxy normalization, or an
-unconditional full Matrix Bernstein theorem.
+left/right route to relative-entropy joint convexity, Lieb/Epstein,
+Golden--Thompson, and the Tropp one-step provider wrappers. It still does not
+prove the conditional-expectation step for arbitrary larger histories,
+automatic variance-proxy normalization, or an unconditional full Matrix
+Bernstein theorem.
 
 Interface audit: these migrations give downstream proof agents concrete
 finite-dimensional spectral, CFC-log, cutoff-resolvent, inverse-convexity
@@ -594,9 +598,10 @@ density/integral route assembly, and full-matrix-Klein relative-entropy
 handles inside the main repository. They
 still do not prove a weighted `CFCLog.lineDeriv` / `CFCLog.derivSAAt`
 resolvent-kernel adapter, arbitrary-weight plain cutoff removal without
-scalar-log renormalization, the Epstein second-derivative sign, Golden-Thompson,
+scalar-log renormalization, or the alternative Epstein second-derivative sign
+route. Golden--Thompson is closed independently by the identity tangent;
 arbitrary-history conditional expectation, automatic variance-proxy control,
-or an unconditional full Matrix Bernstein theorem.
+and unconditional full Matrix Bernstein remain open.
 
 The layer also continues to expose derivative-level Epstein consumer reductions,
 the explicit `EpsteinAffineLineConcavity` conditional route, bounded

@@ -164,19 +164,21 @@ package the same route with less repeated bookkeeping. The provider-facing
 matrix-exp Frechet derivative layer, log-resolvent bridge infrastructure, the
 fixed-`t` left/right relative-entropy integrand joint-convexity leaf, the
 density/integral representation route to relative-entropy joint convexity,
-Lieb/Epstein facades, and left/right Tropp one-step wrappers, plus spectral
-endpoint monotonicity and trace-MGF-to-Laplace contracts. The restricted
+Lieb/Epstein facades, the exact `goldenThompsonTraceExp` endpoint, and
+left/right Tropp one-step wrappers, plus spectral endpoint monotonicity and
+trace-MGF-to-Laplace contracts. The restricted
 conditional-step route `mHist <= MeasurableSpace.comap H _` is closed by
 `TraceExpConditioning.troppStep_of_history_le`. The Bernstein facade
 `TraceExpConditioning.bernsteinStep_of_history_le` constructs the frozen-bound
 packet from standard single-summand primitives but leaves the exact statement's
-`IndepFun` premise visible. Arbitrary larger-history independence,
-Golden-Thompson, automatic variance-proxy normalization, and unconditional full
-Matrix Bernstein remain open.
+`IndepFun` premise visible. Golden--Thompson is now proved by
+`goldenThompsonTraceExp`. Arbitrary larger-history independence, automatic
+variance-proxy normalization, and unconditional full Matrix Bernstein remain
+open.
 
 ## Not Yet Proved
 
-- Golden-Thompson and the older arbitrary-denominator Matrix Bernstein chain.
+- The older arbitrary-denominator Matrix Bernstein chain.
 - Full unconditional Matrix Bernstein theorem.
 - The weaker natural-history independence statement without explicit summand
   measurability, conditional-expectation reduction for arbitrary larger history

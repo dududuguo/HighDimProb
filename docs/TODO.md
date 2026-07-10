@@ -13,9 +13,10 @@ This is the active short list. Old completed task logs were collapsed into
 
 - Keep the Matrix Bernstein API boundary honest: the generated-history
   `MatrixBernstein.*_of_primitives` facades close the canonical optimized and
-  high-probability statements, but do not prove Golden-Thompson, automatic
-  variance-proxy bounds, the older arbitrary-denominator statement, or an
-  unconditional full Matrix Bernstein theorem.
+  high-probability statements, but do not provide automatic variance-proxy
+  bounds, the older arbitrary-denominator statement, or an unconditional full
+  Matrix Bernstein theorem. Golden--Thompson is now proved separately by
+  `goldenThompsonTraceExp`.
 - Use `MatrixBernstein.highProbability_of_primitives` for the closed
   generated-history `1 - delta` route. Preserve `0 < n`, `0 < delta <= 1`,
   `0 <= sigmaSq`, `0 <= R`, and `0 < sigmaSq or 0 < R`; keep this finite-family
@@ -63,11 +64,11 @@ This is the active short list. Old completed task logs were collapsed into
   `traceExpIntegrable_troppStateHistory_add_step_of_summand_and_comparison_bounds_finiteMeasure`
   / `traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure`.
 - Current strategy is progress-first: if a hard analytic ingredient is missing,
-  consume it as an explicit assumption, register it in `docs/STATEMENTS.md`, and
-  keep moving the high-level Tropp/Lieb trace-MGF route forward. Do not claim
-  Lieb/Jensen, Golden-Thompson, relative-entropy joint convexity, the Epstein
-  sign theorem, conditional expectation, or full Matrix Bernstein unless a
-  separate provider theorem proves it.
+  consume it as an explicit assumption and register it in `docs/STATEMENTS.md`.
+  The left/right relative-entropy, Lieb/Epstein, and Golden--Thompson endpoints
+  are closed; do not conflate them with arbitrary-history conditional
+  expectation, automatic variance-proxy control, or unconditional full Matrix
+  Bernstein.
 
 ## Active PrecisionDA Application Work
 

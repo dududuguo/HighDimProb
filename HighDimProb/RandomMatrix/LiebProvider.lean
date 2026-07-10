@@ -11,6 +11,7 @@ import HighDimProb.RandomMatrix.RelativeEntropyBridgeProvider
 import HighDimProb.RandomMatrix.RelativeEntropyJointConvexityRouteProvider
 import HighDimProb.RandomMatrix.RelativeEntropyLeftRightRepresentationProvider
 import HighDimProb.RandomMatrix.EpsteinDerivativeProvider
+import HighDimProb.RandomMatrix.GoldenThompsonProvider
 import HighDimProb.RandomMatrix.TraceExpTroppStepProvider
 import HighDimProb.RandomMatrix.IntegrabilityProvider
 import HighDimProb.RandomMatrix.TraceExpIntegrabilityProvider
@@ -57,8 +58,10 @@ measurability and strengthened independence under the `TroppNaturalHistory.*`
 alias layer, identity support domination, spectral endpoint monotonicity, and
 thin trace-MGF-to-Laplace contracts, generated-history Bernstein
 finite-family/trace-MGF/tail wrappers, trace-exp domain positivity,
-CFC-log resolvent cutoff bridges, conditioning-kernel reductions, trace-resolvent convexity,
-support-to-excess compression, and tail-event subset discharge wrappers. These
-imports do not prove full Lieb, full Tropp, Golden-Thompson, Bernstein CFC, or
-Matrix Bernstein.
+CFC-log resolvent cutoff bridges, conditioning-kernel reductions,
+trace-resolvent convexity, support-to-excess compression, tail-event subset
+discharge wrappers, and the exact Golden--Thompson tangent consequence. These
+imports close the finite-dimensional left/right Lieb/Epstein and
+Golden--Thompson endpoints, but not arbitrary-history conditioning or an
+unconditional full Matrix Bernstein theorem.
 -/

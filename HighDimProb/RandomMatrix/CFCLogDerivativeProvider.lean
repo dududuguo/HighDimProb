@@ -5,13 +5,11 @@ import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
 /-!
 # Local-inverse prerequisites for the CFC logarithm
 
-This module records the part of the `CFC.log` affine-line derivative route that
-is currently available from provider and Mathlib APIs. It does not prove a
-derivative of `CFC.log`; instead, it packages continuity, the local
-`exp (log M) = M` right-inverse identity on the strictly positive self-adjoint
-carrier, the carrier `log (exp X) = X` left-inverse identity, and the
-conditional inverse-function-theorem bridge from a supplied exponential-derivative
-equivalence to strict differentiability of carrier `CFC.log`.
+This module packages the finite-dimensional `CFC.log` derivative on the
+strictly positive self-adjoint carrier. It combines continuity, the local
+`exp (log M) = M` right-inverse identity, the carrier `log (exp X) = X`
+left-inverse identity, the invertible self-adjoint exponential derivative, and
+the resulting affine-line derivative API.
 -/
 
 namespace HighDimProb
@@ -519,6 +517,27 @@ noncomputable def lineDeriv
     ({ val := A, property := hA } : Carrier n)
     ({ val := C, property := hC } : Carrier n)
     t : Carrier n)
+
+/-- The derivative of CFC.log at the identity is the identity on
+self-adjoint directions. -/
+theorem lineDeriv_one_zero
+    {n : Nat} (C : Matrix (Fin n) (Fin n) Real)
+    (hOne : IsSelfAdjointMatrix (1 : Matrix (Fin n) (Fin n) Real))
+    (hC : IsSelfAdjointMatrix C) :
+    lineDeriv (1 : Matrix (Fin n) (Fin n) Real) C hOne hC 0 = C := by
+  let Csa : Carrier n := { val := C, property := hC }
+  have hcarrier :
+      lineDerivSA (matrixExpSelfAdjoint (0 : Carrier n)) Csa 0 = Csa := by
+    apply Subtype.ext
+    funext p q
+    have h := lineDerivSA_matrixExpSelfAdjoint_diagonal_entry_mul
+      (0 : Carrier n) Csa (fun _ => 0) (by simp) p q
+    simpa [matrixExpDividedDifferenceSeries_self] using h
+  apply Matrix.ext
+  intro p q
+  have hentry := congrArg
+    (fun X : Carrier n => (X : Matrix (Fin n) (Fin n) Real) p q) hcarrier
+  simpa [lineDeriv, lineDerivSA, Csa, matrixExpSelfAdjoint] using hentry
 
 /-- Coerce a carrier-valued derivative of `CFCLog.lineDerivSA` to the ambient
 matrix space. Use this when the next analytic input is already stated with the

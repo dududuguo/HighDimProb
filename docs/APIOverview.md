@@ -124,16 +124,19 @@ variance-proxy proof spine, not as the default user surface.
 
 The current Matrix Bernstein surface does not claim:
 
-- a proof of Tropp/Lieb;
-- a proof of Golden-Thompson;
+- an automatic arbitrary-history or unconditional finite-family Tropp chain;
 - automatic trace-exp integrability;
 - automatic hardbone sharp-variance-chain providers;
 - full unconditional Matrix Bernstein;
 - full sample-covariance operator-norm concentration without explicit
   primitive assumptions.
 
-When these facts appear in theorem statements, they should be visible as named
-premises or named assumption bundles.
+Golden--Thompson is a separate closed deterministic endpoint:
+`HighDimProb.goldenThompsonTraceExp` proves the exact
+`goldenThompsonTraceExp_statement` under its self-adjoint hypotheses.
+
+When the remaining facts appear in theorem statements, they should be visible
+as named premises or named assumption bundles.
 
 ## Documentation Rules
 
