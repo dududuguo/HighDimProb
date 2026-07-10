@@ -16,17 +16,28 @@ import HighDimProb
   stable scalar probability object layer and typed statement specifications
 
 import HighDimProb.Concentration
-  experimental scalar concentration theorem families
+  scalar concentration theorem families
 
 import HighDimProb.RandomMatrix
-  experimental random-matrix and Matrix Bernstein surface
+  supported finite-dimensional random-matrix base and statement surface
+
+import HighDimProb.RandomMatrix.MatrixBernsteinProvider
+  generated-history Matrix Bernstein endpoints under explicit primitives
+
+import HighDimProb.RandomMatrix.LiebProvider
+  finite-dimensional matrix-analysis provider facade
+
+import HighDimProb.Experimental
+  broad work-in-progress aggregate beyond the supported focused scopes
 
 import HighDimProb.Examples
   usage examples and smoke tests, not part of the stable root import
 ```
 
-The root import is intentionally narrow. Experimental theorem routes may be
-well tested and documented while still staying outside `import HighDimProb`.
+The root import is intentionally narrow. A focused module may have a supported
+theorem contract while remaining outside `import HighDimProb`. Experimental
+status is reserved for unfinished surfaces beyond the documented assumptions
+and module boundaries.
 
 ## Route Diagram
 
@@ -70,13 +81,14 @@ conceptual, while exact declarations are checked by the Lean compiler.
 | Stable scalar objects | `HighDimProb` | [`ModuleTree.md`](ModuleTree.md) | smoke/API tests |
 | Scalar concentration | `HighDimProb.Concentration` | source modules, tests, and judge files | concentration tests/judge |
 | Random matrices | `HighDimProb.RandomMatrix` | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | `HighDimProb/Examples/RandomMatrix` |
-| Matrix Bernstein hardbone | `HighDimProb.RandomMatrix` | [`TheoremAtlas.md`](TheoremAtlas.md) and [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | tests and judge files |
+| Matrix Bernstein endpoints | `HighDimProb.RandomMatrix.MatrixBernsteinProvider` | [`TheoremAtlas.md`](TheoremAtlas.md) and [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | tests and judge files |
 | Sample covariance routes | `HighDimProb.RandomMatrix` | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | `SampleCovarianceTailUsage` |
 | External-facing checks | `HighDimProbJudge` | [`JudgeSystem.md`](JudgeSystem.md) | judge files |
 
 ## RandomMatrix Route Map
 
-The RandomMatrix layer is experimental but has a stable internal organization.
+The RandomMatrix layer has a supported finite-dimensional core and explicit
+provider boundaries.
 
 ```text
 Basic / Algebra / MatrixOrder

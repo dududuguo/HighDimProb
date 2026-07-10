@@ -19,7 +19,7 @@ surface:
 
 * vector, geometry, process, limit-theorem, and signal-recovery scaffolds;
 * scalar concentration branches that are still outside the stable root;
-* random-matrix APIs whose mathematical boundary is still being refined.
+* random-matrix APIs beyond the supported finite-dimensional focused surfaces.
 
 The experimental boundary is especially important for theorem wrappers that
 still carry proof-route assumptions such as explicit primitive hypotheses,
@@ -28,7 +28,10 @@ operator-norm bridge assumptions. Those declarations can be documented and
 tested here while the assumptions are gradually removed or identified as the
 right mathematical boundary.
 
-Stable APIs should be imported through `HighDimProb`. Experimental APIs should
-be imported through a focused branch, such as `HighDimProb.RandomMatrix`, or
-through this aggregate when broad work-in-progress access is intended.
+Supported APIs should be imported through `HighDimProb` or a documented
+focused module such as `HighDimProb.RandomMatrix`,
+`HighDimProb.RandomMatrix.MatrixBernsteinProvider`, or
+`HighDimProb.RandomMatrix.LiebProvider`. Use this aggregate when broad
+work-in-progress access beyond those supported scopes is intended.
+
 -/

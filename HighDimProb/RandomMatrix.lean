@@ -26,7 +26,7 @@ import HighDimProb.RandomMatrix.ConcentrationStatements
 /-!
 # Random matrices
 
-Aggregate module for the experimental random matrix object layer.
+Aggregate module for the supported finite-dimensional random-matrix base layer.
 
 Verified Wikipedia reference:
 * Random matrix: https://en.wikipedia.org/wiki/Random_matrix

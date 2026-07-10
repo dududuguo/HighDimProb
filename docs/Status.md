@@ -8,9 +8,14 @@ surfaces are tracked in the focused reference docs linked below.
 
 ## Current Focus
 
-- Active branch: RandomMatrix / Matrix Bernstein experimental API.
+- Active branch: supported finite-dimensional RandomMatrix APIs and scoped
+  Matrix Bernstein providers.
 - Active process/random-object API leaf: small `RandomFamily` vocabulary for process and sample surfaces.
 - Stable import surface: [`HighDimProb`](../HighDimProb.lean).
+- Supported focused import surfaces:
+  [`HighDimProb.RandomMatrix`](../HighDimProb/RandomMatrix.lean),
+  [`HighDimProb.RandomMatrix.MatrixBernsteinProvider`](../HighDimProb/RandomMatrix/MatrixBernsteinProvider.lean), and
+  [`HighDimProb.RandomMatrix.LiebProvider`](../HighDimProb/RandomMatrix/LiebProvider.lean).
 - Experimental import surface: [`HighDimProb.Experimental`](../HighDimProb/Experimental.lean) and [`HighDimProb.Examples`](../HighDimProb/Examples.lean).
 - Main active RandomMatrix files:
   [`TraceExp.lean`](../HighDimProb/RandomMatrix/TraceExp.lean),
@@ -249,7 +254,9 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
 
 - The random-family layer is vocabulary only: it adds indexed aliases, endpoint/map wrappers, and pointwise measurability lemmas, but no filtrations, adaptedness, martingales, or conditioning providers.
 
-- RandomMatrix / Matrix Bernstein remains experimental.
+- RandomMatrix is supported on its documented finite-dimensional focused
+  imports; unconditional or assumption-weaker extensions remain experimental
+  or open.
 - The hardbone statement atlas names CFC, log/order, Tropp/Lieb,
   conditioning, integrability, variance-proxy, and dimension/rank blockers as
   typed statement targets. The trace-exp domination-provider consumer is proved as
@@ -645,7 +652,7 @@ lake test
 lake build HighDimProbJudge
 ```
 
-Last verified locally on 2026-07-10 with the commands above.
+Last verified locally on 2026-07-11 with the commands above.
 
 ## Archive
 

@@ -6,14 +6,19 @@ The goal is modest: reuse Mathlib wherever possible, then add a thin layer of
 names, wrappers, examples, and theorem interfaces that make probability and
 random-matrix formalization easier to build on.
 
-The scalar concentration side is the most stable part right now. Random vectors,
-random matrices, and Matrix Bernstein material are under active development.
-The experimental RandomMatrix layer currently includes under-primitives
-quadratic-form, self-adjoint operator-norm, and sample-covariance Matrix
-Bernstein wrappers. Its provider surface now proves Bernstein CFC, the
-finite-dimensional left/right Lieb/Epstein route, and Golden--Thompson. Larger
-arbitrary histories, automatic variance-proxy control, and unconditional full
-Matrix Bernstein remain open.
+The scalar probability and concentration API remains the conservative stable
+root surface. The finite-dimensional RandomMatrix line now also has a supported
+scoped surface. It includes real matrix objects and sums, self-adjoint/PSD and
+Loewner-order bridges, trace-exponential calculus, Bernstein CFC, the
+finite-dimensional left/right route to Lieb/Epstein and Golden--Thompson, and
+generated-history Matrix Bernstein endpoints.
+
+Support is theorem-contract specific. Positivity, measurability, integrability,
+independence, radius, variance-proxy, and nondegeneracy hypotheses remain
+explicit where mathematically required. Arbitrary external histories,
+integrability without finite-measure or boundedness hypotheses, automatic
+application-specific variance proxies, the alternative Epstein second-derivative
+sign route, and unconditional full Matrix Bernstein remain outside this scope.
 
 ## Quick Start
 
@@ -46,18 +51,31 @@ Scalar concentration results are available through:
 import HighDimProb.Concentration
 ```
 
-Experimental and fast-moving modules are kept under:
+The broad work-in-progress aggregate remains available through:
 
 ```lean
 import HighDimProb.Experimental
 ```
 
-The active RandomMatrix / Matrix Bernstein surface can also be imported
-directly when you are working on that experimental branch:
+Supported finite-dimensional RandomMatrix APIs use focused imports:
 
 ```lean
 import HighDimProb.RandomMatrix
+import HighDimProb.RandomMatrix.MatrixBernsteinProvider
+import HighDimProb.RandomMatrix.LiebProvider
 ```
+
+`HighDimProb.RandomMatrix` is the base object, algebra, spectral, trace-exp,
+and statement layer. `MatrixBernsteinProvider` exposes the proved
+generated-history operator-norm and high-probability endpoints under their
+explicit primitive assumptions. `LiebProvider` exposes the finite-dimensional
+matrix-analysis provider facade, including the proved left/right
+Lieb/Epstein route and Golden--Thompson.
+
+These focused modules remain outside `import HighDimProb` to keep the root
+import conservative; that import decision does not make their documented
+theorem contracts experimental. Use `HighDimProb.Experimental` for the broad
+unfinished surface beyond these supported scopes.
 
 For sample-covariance Matrix Bernstein examples, start from the compact
 bounded-row route in `HighDimProb/Examples/RandomMatrix/SampleCovarianceTailUsage.lean`.

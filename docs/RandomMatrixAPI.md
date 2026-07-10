@@ -469,7 +469,14 @@ Recent provider-compression APIs:
 - `quadraticFormUpperTailEvent_subset_traceExpThresholdEvent_of_randomSelfAdjoint`
 - `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions_tailSubsetDischarged_of_randomSelfAdjoint`
 
-These are proof-provider APIs. They remove local bookkeeping and selected tail/support/conditioning premises, but they do not prove full Lieb, full Tropp, Golden-Thompson, variance-proxy normalization, or full Matrix Bernstein.
+These are provider-compression APIs. They remove local bookkeeping and selected
+tail, support, and conditioning premises. The focused `LiebProvider` facade
+separately closes the finite-dimensional left/right Lieb/Epstein route and
+Golden--Thompson; `MatrixBernsteinProvider` closes generated-history endpoints
+under explicit primitives. These compression names do not by themselves remove
+arbitrary-history conditional expectation, automatic variance-proxy
+normalization, or produce unconditional full Matrix Bernstein.
+
 ## Sample Covariance Surface
 
 Preferred compact bounded-row route:
