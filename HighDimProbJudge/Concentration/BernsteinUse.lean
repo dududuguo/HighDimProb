@@ -4,6 +4,8 @@ open scoped BigOperators
 
 #check HighDimProb.bernstein_sum_subExponential
 #check HighDimProb.bernstein_weighted_sum_subExponential
+#check HighDimProb.bernsteinAdditiveTailThreshold
+#check HighDimProb.bernsteinAdditiveTailThreshold_exponent_eq
 
 example {Omega I : Type*} [MeasurableSpace Omega] [Fintype I]
     {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]

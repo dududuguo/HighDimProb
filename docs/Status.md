@@ -91,6 +91,21 @@ Core Matrix Bernstein helpers:
 - `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_assumptions`
 - `matrixBernsteinOpNormTail_opt_of_tropp`
 
+High-probability inversion and contract:
+
+- `bernsteinAdditiveTailThreshold`
+- `bernsteinAdditiveTailThreshold_nonneg`
+- `bernsteinAdditiveTailThreshold_sq`
+- `bernsteinAdditiveTailThreshold_pos`
+- `bernsteinAdditiveTailThreshold_exponent_eq`
+- `matrixBernsteinLogFactor`
+- `matrixBernsteinLogFactor_pos`
+- `matrixBernsteinHighProbabilityThreshold`
+- `matrixBernsteinHighProbabilityThreshold_nonneg`
+- `matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold`
+- `matrixBernsteinSelfAdjointHighProbabilityStatement`
+- `matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement`
+
 TraceExp / Tropp bookkeeping helpers:
 
 - `troppTraceState`
@@ -318,6 +333,12 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
 - Tropp/Lieb, Golden-Thompson, trace-exp integrability, variance-proxy control,
   and full Matrix Bernstein are not claimed as complete unless a referenced
   theorem says so directly.
+- The main layer now owns the reusable scalar inversion and the public
+  high-probability contract/consumer. Its exact nondegenerate boundary is
+  `0 < n`, `0 < delta <= 1`, `0 <= sigmaSq`, `0 <= R`, and
+  `0 < sigmaSq or 0 < R`. The optimized tail premise remains explicit; this
+  layer does not construct a generated-history witness or prove unconditional
+  Matrix Bernstein.
 - Prefix/suffix/state bookkeeping now includes a natural `Fin m` trace-state
   route through the finite-family Tropp and trace-MGF provider surfaces. This
   does not discharge the analytic conditional-step, history measurability,
@@ -435,6 +456,9 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   trace-MGF-to-tail consumer under explicit tail-side assumptions. The hard
   assumptions consumed by the theorem are recorded in `docs/STATEMENTS.md`;
   this does not prove those assumptions or a full Matrix Bernstein theorem.
+- Completed public API leaf: the scalar threshold helpers and the
+  `matrixBernsteinSelfAdjointHighProbabilityStatement` consumer now expose the
+  canonical `1 - delta` contract under the exact nondegenerate boundary above.
 
 ## Provider-Facing Lieb/Tropp Layer
 

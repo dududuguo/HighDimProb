@@ -15,6 +15,11 @@ This is the active short list. Old completed task logs were collapsed into
   Tropp/provider assumptions explicitly, but must not claim missing Tropp/Lieb,
   Golden-Thompson, trace-MGF, variance-proxy sharp-chain providers, or full
   Matrix Bernstein proofs.
+- Use the new `bernsteinAdditiveTailThreshold` inversion and
+  `matrixBernsteinSelfAdjointHighProbabilityStatement` consumer for the public
+  `1 - delta` contract. Preserve `0 < n`, `0 < delta <= 1`,
+  `0 <= sigmaSq`, `0 <= R`, and `0 < sigmaSq or 0 < R`; keep the optimized tail
+  premise, generated-history witness, and unconditional proof separate.
 - Prefer shared RandomMatrix APIs over unfolded formulas in examples, tests,
   judge files, and docs.
 - Keep new Matrix Bernstein/sample-covariance route variants behind named

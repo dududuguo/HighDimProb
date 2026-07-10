@@ -249,7 +249,16 @@
   wrappers/bundles, negative-side exact-row variance-proxy transfer, and
   deterministic PSD Loewner variance-proxy norm monotonicity. These are proof
   infrastructure, not a replacement for the compact bounded-row public route.
-- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+- Follow-up completed API leaf:
+  `RM-API-matrix-bernstein-high-probability-threshold-contract`, adding the
+  scalar `bernsteinAdditiveTailThreshold` inversion lemmas and the public
+  `matrixBernsteinSelfAdjointHighProbabilityStatement` consumer surface.
+- Boundary preserved: the main layer owns scalar inversion and the public
+  contract/consumer under `0 < n`, `0 < delta <= 1`, `0 <= sigmaSq`,
+  `0 <= R`, and `0 < sigmaSq or 0 < R`; it does not construct the
+  generated-history witness or prove unconditional Matrix Bernstein.
+- Next safe leaf: supply or audit a separate optimized-tail provider while
+  keeping this public consumer boundary explicit.
 
 ## Process
 

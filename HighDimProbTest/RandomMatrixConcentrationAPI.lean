@@ -218,6 +218,13 @@ example
 #check operatorNorm_eq_spectralRadius_of_selfAdjointStatement
 #check HighProbabilityBound
 #check highProbabilityBound
+#check matrixBernsteinLogFactor
+#check matrixBernsteinHighProbabilityThreshold
+#check matrixBernsteinLogFactor_pos
+#check matrixBernsteinHighProbabilityThreshold_nonneg
+#check matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold
+#check matrixBernsteinSelfAdjointHighProbabilityStatement
+#check matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement
 #check matrixHoeffdingStatement
 #check matrixChernoffStatement
 #check covarianceEstimationStatement

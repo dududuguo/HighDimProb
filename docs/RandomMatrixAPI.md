@@ -110,6 +110,18 @@ has probability zero. They do not supply the positive-variance Tropp branch.
 
 ## Matrix Bernstein Surface
 
+- `bernsteinAdditiveTailThreshold`
+- `bernsteinAdditiveTailThreshold_nonneg`
+- `bernsteinAdditiveTailThreshold_sq`
+- `bernsteinAdditiveTailThreshold_pos`
+- `bernsteinAdditiveTailThreshold_exponent_eq`
+- `matrixBernsteinLogFactor`
+- `matrixBernsteinLogFactor_pos`
+- `matrixBernsteinHighProbabilityThreshold`
+- `matrixBernsteinHighProbabilityThreshold_nonneg`
+- `matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold`
+- `matrixBernsteinSelfAdjointHighProbabilityStatement`
+- `matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement`
 - `matrixBernsteinSelfAdjointOptimizedStatement`
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
 - `troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives`
@@ -137,6 +149,25 @@ has probability zero. They do not supply the positive-variance Tropp branch.
 - `matrixBernsteinQuadTail_twoSided_opt_of_tropp`
 - `matrixBernsteinSelfAdjointOperatorNormTailOptimizedScalarRHSWithBernsteinCoeff_arbitrary_of_pos_under_primitives`
 - `matrixBernsteinOpNormTail_opt_of_tropp`
+
+The scalar threshold API is the exact positive-root inversion for the
+additive-denominator exponent
+`t^2 / (2 * varianceProxy + (2 / 3) * maxScale * t)`. Its nonnegativity,
+square identity, positivity, and exponent-equality lemmas expose the sign
+boundary explicitly. The matrix
+surface sets `logFactor = log (2 * n / delta)`. `matrixBernsteinLogFactor_pos`
+requires `0 < n` and `0 < delta <= 1`; the exact RHS equality and the public
+self-adjoint contract additionally require `0 <= sigmaSq`, `0 <= R`, and
+`0 < sigmaSq or 0 < R`. The contract keeps integrability,
+centered self-adjointness, independence, norm, and variance-proxy assumptions
+explicit.
+
+`matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement`
+is the thin public consumer: it evaluates an existing optimized tail contract
+at the canonical threshold and converts its RHS to `ENNReal.ofReal delta`.
+These declarations own scalar inversion and the public contract/consumer;
+they do not construct a generated-history witness or prove unconditional Matrix
+Bernstein.
 
 These are under explicit primitive assumptions. The pointwise Bernstein CFC
 primitive is now proved by `bernsteinMatrixExp_le_quadratic`; the

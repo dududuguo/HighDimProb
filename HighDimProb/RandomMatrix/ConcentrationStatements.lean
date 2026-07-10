@@ -9,6 +9,7 @@ import HighDimProb.RandomMatrix.HardboneStatements
 import HighDimProb.RandomMatrix.IntegrabilityProvider
 import HighDimProb.RandomMatrix.NaturalHistoryProvider
 import HighDimProb.RandomMatrix.TraceExpIntegrabilityProvider
+import HighDimProb.Concentration.Bernstein
 import HighDimProb.Tail
 import HighDimProb.RandomMatrix.VarianceZero
 import Mathlib.Analysis.Normed.Algebra.Spectrum
@@ -22,10 +23,10 @@ Verified Wikipedia references:
 * Concentration inequality: https://en.wikipedia.org/wiki/Concentration_inequality
 * Random matrix: https://en.wikipedia.org/wiki/Random_matrix
 
-This file contains assumption vocabulary and theorem-target `Prop`
-specifications for future matrix concentration work. It intentionally does not
-prove matrix Bernstein, matrix Hoeffding, matrix Chernoff, Hanson-Wright, or
-covariance estimation.
+This file contains assumption vocabulary, theorem-target `Prop`
+specifications, and thin consumers for matrix concentration work. It does not
+itself supply unconditional proofs of matrix Bernstein, matrix Hoeffding,
+matrix Chernoff, Hanson-Wright, or covariance estimation.
 -/
 
 namespace HighDimProb
@@ -6194,6 +6195,135 @@ def HighProbabilityBound {Omega : Type*} [MeasurableSpace Omega]
 abbrev highProbabilityBound {Omega : Type*} [MeasurableSpace Omega]
     (P : Measure Omega) (event : Set Omega) (rhs : ENNReal) : Prop :=
   HighProbabilityBound P event rhs
+
+/-! ## High-probability Matrix Bernstein form -/
+
+/-- Logarithmic factor that inverts the canonical two-sided Matrix Bernstein
+prefactor `2 * dim` at failure probability `delta`. -/
+def matrixBernsteinLogFactor (dim : Nat) (delta : Real) : Real :=
+  Real.log (2 * (dim : Real) / delta)
+
+/-- Exact positive-root threshold for the canonical optimized two-sided Matrix
+Bernstein bound. -/
+def matrixBernsteinHighProbabilityThreshold
+    (dim : Nat) (sigmaSq R delta : Real) : Real :=
+  bernsteinAdditiveTailThreshold sigmaSq R
+    (matrixBernsteinLogFactor dim delta)
+
+/-- The Matrix Bernstein logarithmic factor is positive for positive dimension
+and a failure probability in `(0, 1]`. -/
+theorem matrixBernsteinLogFactor_pos
+    {dim : Nat} {delta : Real}
+    (hDim : 0 < dim) (hDelta : 0 < delta) (hDeltaOne : delta <= 1) :
+    0 < matrixBernsteinLogFactor dim delta := by
+  have hDimReal : (1 : Real) <= (dim : Real) := by
+    exact_mod_cast hDim
+  have hRatio : 1 < 2 * (dim : Real) / delta := by
+    rw [lt_div_iff₀ hDelta]
+    nlinarith
+  exact Real.log_pos hRatio
+
+/-- The canonical Matrix Bernstein high-probability threshold is nonnegative. -/
+theorem matrixBernsteinHighProbabilityThreshold_nonneg
+    {dim : Nat} {sigmaSq R delta : Real}
+    (hDim : 0 < dim) (hR : 0 <= R)
+    (hDelta : 0 < delta) (hDeltaOne : delta <= 1) :
+    0 <= matrixBernsteinHighProbabilityThreshold dim sigmaSq R delta := by
+  apply bernsteinAdditiveTailThreshold_nonneg hR
+  exact (matrixBernsteinLogFactor_pos hDim hDelta hDeltaOne).le
+
+/-- Evaluating the canonical two-sided optimized RHS at its logarithmic
+threshold gives exactly the requested failure probability. -/
+theorem
+    matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold
+    {dim : Nat} {sigmaSq R delta : Real}
+    (hDim : 0 < dim) (hSigma : 0 <= sigmaSq) (hR : 0 <= R)
+    (hNondegenerate : 0 < sigmaSq ∨ 0 < R)
+    (hDelta : 0 < delta) (hDeltaOne : delta <= 1) :
+    matrixBernsteinTwoSidedOptimizedScalarTailRHS
+        dim R R
+        (matrixBernsteinHighProbabilityThreshold dim sigmaSq R delta)
+        sigmaSq sigmaSq =
+      ENNReal.ofReal delta := by
+  have hExponent :
+      matrixBernsteinHighProbabilityThreshold dim sigmaSq R delta ^ 2 /
+          (2 * sigmaSq +
+            (2 / 3) * R *
+              matrixBernsteinHighProbabilityThreshold dim sigmaSq R delta) =
+        matrixBernsteinLogFactor dim delta := by
+    exact
+      bernsteinAdditiveTailThreshold_exponent_eq
+        hSigma hR (matrixBernsteinLogFactor_pos hDim hDelta hDeltaOne)
+        hNondegenerate
+  rw [matrixBernsteinTwoSidedOptimizedScalarTailRHS_sameParameters]
+  rw [hExponent]
+  congr 1
+  have hDimReal : 0 < (dim : Real) := by
+    exact_mod_cast hDim
+  have hRatio : 0 < 2 * (dim : Real) / delta := by
+    positivity
+  unfold matrixBernsteinLogFactor
+  rw [Real.exp_neg, Real.exp_log hRatio]
+  field_simp
+
+/-- Canonical `1 - delta` self-adjoint Matrix Bernstein contract over an
+arbitrary finite index type. The variance and radius cannot both vanish because
+the upper-tail event is inclusive at the resulting zero threshold. -/
+abbrev matrixBernsteinSelfAdjointHighProbabilityStatement
+    {Omega : Type*} [MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (A : I -> RandomMatrix Omega n n) (sigmaSq R delta : Real) : Prop :=
+  0 < n ->
+    (forall i, IntegrableRandomMatrix P (A i)) ->
+      (forall i, IntegrableRandomMatrix P (randomMatrixSquare (A i))) ->
+        CenteredSelfAdjointRandomMatrixFamily P A ->
+          IndependentSelfAdjointRandomMatrices P A ->
+            PointwiseOperatorNormBound A R ->
+              MatrixVarianceProxyNormBound P A sigmaSq ->
+                0 <= sigmaSq ->
+                  0 <= R ->
+                    (0 < sigmaSq ∨ 0 < R) ->
+                      0 < delta ->
+                        delta <= 1 ->
+                          HighProbabilityBound P
+                          (upperTailEvent
+                            (operatorNorm (randomMatrixSum A))
+                            (matrixBernsteinHighProbabilityThreshold
+                              n sigmaSq R delta))
+                          (ENNReal.ofReal delta)
+
+/-- Convert the canonical optimized tail contract at the logarithmic threshold
+into its `1 - delta` high-probability form. -/
+theorem matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement
+    {Omega : Type*} [MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (A : I -> RandomMatrix Omega n n) (sigmaSq R delta : Real)
+    (hBernstein :
+      matrixBernsteinSelfAdjointOptimizedStatement (P := P) A sigmaSq R
+        (matrixBernsteinHighProbabilityThreshold n sigmaSq R delta)) :
+    matrixBernsteinSelfAdjointHighProbabilityStatement
+      (P := P) A sigmaSq R delta := by
+  intro hDim hIntX hIntSq hCentered hIndepSA hBound hNorm
+    hSigma hR hNondegenerate hDelta hDeltaOne
+  have hThreshold :
+      0 <= matrixBernsteinHighProbabilityThreshold n sigmaSq R delta :=
+    matrixBernsteinHighProbabilityThreshold_nonneg
+      hDim hR hDelta hDeltaOne
+  have hTail :=
+    hBernstein hDim hIntX hIntSq hCentered hIndepSA hBound hNorm
+      hSigma hR hThreshold
+  have hRhs :=
+    matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold
+      hDim hSigma hR hNondegenerate hDelta hDeltaOne
+  change
+    upperTailProb P (operatorNorm (randomMatrixSum A))
+        (matrixBernsteinHighProbabilityThreshold n sigmaSq R delta) <=
+      ENNReal.ofReal delta
+  exact hTail.trans_eq hRhs
 
 /-- Typed target for a future matrix Hoeffding theorem. -/
 abbrev matrixHoeffdingStatement {Omega : Type*} [MeasurableSpace Omega]

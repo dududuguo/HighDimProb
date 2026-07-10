@@ -3,6 +3,11 @@ import HighDimProb.Concentration.Bernstein
 open HighDimProb
 
 #check subExponentialBernsteinRate
+#check bernsteinAdditiveTailThreshold
+#check bernsteinAdditiveTailThreshold_nonneg
+#check bernsteinAdditiveTailThreshold_sq
+#check bernsteinAdditiveTailThreshold_pos
+#check bernsteinAdditiveTailThreshold_exponent_eq
 #check bernstein_subExponential_sum_statement
 #check bernstein_subExponential_weighted_sum_statement
 #check upperTailProb_le_exp_neg_sq_div_varianceProxy_of_mgf_bound_of_le

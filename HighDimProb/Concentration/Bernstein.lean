@@ -31,6 +31,124 @@ https://en.wikipedia.org/wiki/Bernstein_inequalities_(probability_theory)
 def subExponentialBernsteinRate (t varianceProxy maxScale : Real) : Real :=
   min (t ^ 2 / varianceProxy) (t / maxScale)
 
+/-! ## Additive-denominator Bernstein threshold -/
+
+/-- Positive-root threshold for a Bernstein exponent with denominator
+`2 * varianceProxy + (2 / 3) * maxScale * t`.
+
+The parameter `logFactor` is kept abstract so the same scalar threshold can be
+used with dimension, confidence, or covering-number prefactors. -/
+def bernsteinAdditiveTailThreshold
+    (varianceProxy maxScale logFactor : Real) : Real :=
+  maxScale * logFactor / 3 +
+    Real.sqrt
+      (2 * varianceProxy * logFactor +
+        (maxScale * logFactor / 3) ^ 2)
+
+/-- The additive-denominator Bernstein threshold is nonnegative when its
+scale and logarithmic factor are nonnegative. -/
+theorem bernsteinAdditiveTailThreshold_nonneg
+    {varianceProxy maxScale logFactor : Real}
+    (hScale : 0 <= maxScale) (hLog : 0 <= logFactor) :
+    0 <= bernsteinAdditiveTailThreshold
+      varianceProxy maxScale logFactor := by
+  unfold bernsteinAdditiveTailThreshold
+  exact add_nonneg
+    (div_nonneg (mul_nonneg hScale hLog) (by norm_num))
+    (Real.sqrt_nonneg _)
+
+/-- Squaring the additive-denominator threshold gives its defining quadratic
+identity. -/
+theorem bernsteinAdditiveTailThreshold_sq
+    {varianceProxy maxScale logFactor : Real}
+    (hVariance : 0 <= varianceProxy) (hLog : 0 <= logFactor) :
+    bernsteinAdditiveTailThreshold varianceProxy maxScale logFactor ^ 2 =
+      logFactor *
+        (2 * varianceProxy +
+          (2 / 3) * maxScale *
+            bernsteinAdditiveTailThreshold
+              varianceProxy maxScale logFactor) := by
+  have hRadicand :
+      0 <=
+        2 * varianceProxy * logFactor +
+          (maxScale * logFactor / 3) ^ 2 := by
+    positivity
+  have hSqrtSq :
+      Real.sqrt
+          (2 * varianceProxy * logFactor +
+            (maxScale * logFactor / 3) ^ 2) ^ 2 =
+        2 * varianceProxy * logFactor +
+          (maxScale * logFactor / 3) ^ 2 :=
+    Real.sq_sqrt hRadicand
+  unfold bernsteinAdditiveTailThreshold
+  nlinarith
+
+/-- The additive-denominator threshold is positive whenever its logarithmic
+factor is positive and at least one scale parameter is nonzero. -/
+theorem bernsteinAdditiveTailThreshold_pos
+    {varianceProxy maxScale logFactor : Real}
+    (hScale : 0 <= maxScale) (hLog : 0 < logFactor)
+    (hNondegenerate : 0 < varianceProxy ∨ 0 < maxScale) :
+    0 < bernsteinAdditiveTailThreshold
+      varianceProxy maxScale logFactor := by
+  unfold bernsteinAdditiveTailThreshold
+  rcases hNondegenerate with hVariancePos | hScalePos
+  · have hRadicand :
+        0 <
+          2 * varianceProxy * logFactor +
+            (maxScale * logFactor / 3) ^ 2 := by
+      have hLeading : 0 < 2 * varianceProxy * logFactor := by
+        positivity
+      nlinarith [sq_nonneg (maxScale * logFactor / 3)]
+    exact add_pos_of_nonneg_of_pos
+      (div_nonneg (mul_nonneg hScale hLog.le) (by norm_num))
+      (Real.sqrt_pos.2 hRadicand)
+  · exact add_pos_of_pos_of_nonneg
+      (div_pos (mul_pos hScalePos hLog) (by norm_num))
+      (Real.sqrt_nonneg _)
+
+/-- At the additive-denominator threshold, the Bernstein exponent is exactly
+the requested logarithmic factor. -/
+theorem bernsteinAdditiveTailThreshold_exponent_eq
+    {varianceProxy maxScale logFactor : Real}
+    (hVariance : 0 <= varianceProxy) (hScale : 0 <= maxScale)
+    (hLog : 0 < logFactor)
+    (hNondegenerate : 0 < varianceProxy ∨ 0 < maxScale) :
+    bernsteinAdditiveTailThreshold varianceProxy maxScale logFactor ^ 2 /
+        (2 * varianceProxy +
+          (2 / 3) * maxScale *
+            bernsteinAdditiveTailThreshold
+              varianceProxy maxScale logFactor) =
+      logFactor := by
+  have hThreshold :
+      0 < bernsteinAdditiveTailThreshold
+        varianceProxy maxScale logFactor :=
+    bernsteinAdditiveTailThreshold_pos hScale hLog hNondegenerate
+  have hDenom :
+      0 <
+        2 * varianceProxy +
+          (2 / 3) * maxScale *
+            bernsteinAdditiveTailThreshold
+              varianceProxy maxScale logFactor := by
+    have hFirst : 0 <= 2 * varianceProxy := by positivity
+    have hSecond :
+        0 <=
+          (2 / 3) * maxScale *
+            bernsteinAdditiveTailThreshold
+              varianceProxy maxScale logFactor := by
+      positivity
+    rcases hNondegenerate with hVariancePos | hScalePos
+    · nlinarith
+    · have hSecondPos :
+          0 <
+            (2 / 3) * maxScale *
+              bernsteinAdditiveTailThreshold
+                varianceProxy maxScale logFactor := by
+        positivity
+      nlinarith
+  rw [div_eq_iff hDenom.ne']
+  exact bernsteinAdditiveTailThreshold_sq hVariance hLog.le
+
 /--
 Typed statement for the scalar Bernstein inequality for a finite sum of
 centered subExponential variables.

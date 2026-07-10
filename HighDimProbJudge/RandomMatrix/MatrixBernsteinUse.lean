@@ -6,6 +6,12 @@ open HighDimProb
 #check HighDimProb.matrixBernsteinStatement
 #check HighDimProb.matrixBernsteinSelfAdjointStatement
 #check HighDimProb.matrixBernsteinSelfAdjointOptimizedStatement
+#check HighDimProb.matrixBernsteinLogFactor
+#check HighDimProb.matrixBernsteinHighProbabilityThreshold
+#check HighDimProb.matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold
+#check HighDimProb.matrixBernsteinSelfAdjointHighProbabilityStatement
+#check
+  HighDimProb.matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement
 
 example
     {Omega I : Type*} [MeasurableSpace Omega] [Nonempty Omega] [Fintype I]
@@ -14,6 +20,22 @@ example
     (A : I -> RandomMatrix Omega n n) (sigmaSq R t : Real) : Prop :=
   HighDimProb.matrixBernsteinSelfAdjointOptimizedStatement
     (P := P) A sigmaSq R t
+
+example
+    {Omega I : Type*} [MeasurableSpace Omega] [Nonempty Omega] [Fintype I]
+    {P : Measure Omega} [IsProbabilityMeasure P] {n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (A : I -> RandomMatrix Omega n n) (sigmaSq R delta : Real)
+    (hBernstein :
+      HighDimProb.matrixBernsteinSelfAdjointOptimizedStatement
+        (P := P) A sigmaSq R
+          (HighDimProb.matrixBernsteinHighProbabilityThreshold
+            n sigmaSq R delta)) :
+    HighDimProb.matrixBernsteinSelfAdjointHighProbabilityStatement
+      (P := P) A sigmaSq R delta := by
+  exact
+    HighDimProb.matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement
+      (P := P) A sigmaSq R delta hBernstein
 
 #check HighDimProb.matrixBernsteinLaplacePrerequisitesStatement
 #check HighDimProb.matrixBernsteinTraceMGF_statement

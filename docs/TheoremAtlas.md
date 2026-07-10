@@ -38,6 +38,17 @@ natural conditional-step data. The sample-covariance surface includes named
 negative-side provider-transfer adapters for opposite-parameter exp/trace/CFC
 assumptions; these are adapter lemmas, not unconditional provider proofs.
 
+The main layer now has a proven scalar inversion surface:
+`bernsteinAdditiveTailThreshold` with its nonnegativity, square, positivity,
+and exponent-equality lemmas, plus the matrix `matrixBernsteinLogFactor`,
+`matrixBernsteinHighProbabilityThreshold`, and
+`matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold`. The
+`matrixBernsteinSelfAdjointHighProbabilityStatement` is a typed public
+contract, and `matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement`
+is its proven thin consumer. These APIs preserve `0 < n`, `0 < delta <= 1`,
+`0 <= sigmaSq`, `0 <= R`, and `0 < sigmaSq or 0 < R`; they do not construct a
+generated-history witness or prove unconditional Matrix Bernstein.
+
 Important current names are listed in [`RandomMatrixAPI.md`](RandomMatrixAPI.md).
 The hardbone statement atlas in
 [`HardboneStatements.lean`](../HighDimProb/RandomMatrix/HardboneStatements.lean)
@@ -161,6 +172,8 @@ assembly, or full Matrix Bernstein.
 
 - Golden-Thompson and the full finite-family Tropp/Matrix Bernstein chain.
 - Full unconditional Matrix Bernstein theorem.
+- A generated-history witness for the optimized tail premise; the main-layer
+  high-probability consumer keeps that premise explicit.
 - The weaker natural-history independence statement without explicit summand
   measurability, conditional-expectation reduction, and trace-exp integrability
   propagation for the conditional-step Tropp route.
