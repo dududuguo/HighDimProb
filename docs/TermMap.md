@@ -15,7 +15,7 @@ This is the active term index. The old detailed map was collapsed into
 | Geometry | nets, metric entropy, Gaussian width vocabulary | [`HighDimProb/Geometry.lean`](../HighDimProb/Geometry.lean) |
 | Random matrices | random matrix families, self-adjointness, sums, operator norm, spectral events, ordered spectral endpoints (`lambdaMaxOrdered`, `lambdaMinOrdered`) | [`HighDimProb/RandomMatrix`](../HighDimProb/RandomMatrix) |
 | Matrix zero variance | zero variance proxy, almost-everywhere zero summands and sums, null positive operator-norm tails | [`HighDimProb/RandomMatrix/VarianceZero.lean`](../HighDimProb/RandomMatrix/VarianceZero.lean) |
-| Matrix Bernstein | trace-MGF/Tropp bundles, scalar additive-denominator threshold inversion, `matrixBernsteinLogFactor` / high-probability threshold and `1 - delta` contract consumers, Bernstein CFC hardbone, variance-proxy bridge chain, PSD Loewner norm monotonicity, centered-square exact-row adapters, support/effective-rank trace bridges, prefix/reindex/negative adapters, optimized RHS helpers, compact sample-covariance target/assumption records, and short `QuadTail` / `OpNormTail` wrappers | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) |
+| Matrix Bernstein | trace-MGF/Tropp bundles, scalar threshold inversion, `MatrixBernstein.*_of_primitives` optimized/operator-norm/high-probability facades, Bernstein CFC hardbone, variance-proxy bridges, centered-square exact-row adapters, support/effective-rank trace bridges, prefix/reindex/negative adapters, and compact sample-covariance contracts | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) |
 | PrecisionDA applications | deterministic column-sample covariance, leave-one-out covariance, shrinkage resolvents, rank-one/Woodbury identities, Frobenius trace-expansion wrappers, and H1/H2/Theorem 1 provider-contract vocabulary | [`HighDimProb/Applications/PrecisionDA`](../HighDimProb/Applications/PrecisionDA.lean) |
 | Examples | compact statement-route index plus representative sample covariance, random-feature, gradient, NTK, LoRA, attention, Fisher, natural-Tropp, and PrecisionDA routes | [`HighDimProb/Examples`](../HighDimProb/Examples.lean) |
 
@@ -78,10 +78,11 @@ Matrix Bernstein provider-compressed tail names include
 `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`, and
 their `*_tailSubsetDischarged_of_randomSelfAdjoint` TailEvent wrappers.
 
-The main-layer high-probability names perform scalar inversion and consume an
-optimized tail contract. They do not construct the generated-history witness
-or prove unconditional Matrix Bernstein; the exact boundary is recorded in
-`RandomMatrixAPI.md`.
+The main-layer `MatrixBernstein.optimized_of_primitives` and
+`MatrixBernstein.highProbability_of_primitives` facades construct the
+finite-family generated-history witness and consume the scalar inversion layer.
+They do not prove unconditional Matrix Bernstein; the exact boundary is recorded
+in `RandomMatrixAPI.md`.
 
 `CFCLog.DerivOp` is bookkeeping only. The provider layer now includes
 positive-definite inverse-convexity segment/`MatrixLE` APIs, the fixed-`t`

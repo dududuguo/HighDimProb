@@ -1,4 +1,5 @@
 import HighDimProb.RandomMatrix
+import HighDimProb.RandomMatrix.MatrixBernsteinProvider
 
 open MeasureTheory
 open HighDimProb
@@ -12,6 +13,11 @@ open HighDimProb
 #check HighDimProb.matrixBernsteinSelfAdjointHighProbabilityStatement
 #check
   HighDimProb.matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement
+#check HighDimProb.MatrixBernstein.operatorNormTail_of_primitives
+#check HighDimProb.MatrixBernstein.operatorNormTail_of_primitives_nonneg
+#check HighDimProb.MatrixBernstein.operatorNormUpperTail_of_primitives
+#check HighDimProb.MatrixBernstein.optimized_of_primitives
+#check HighDimProb.MatrixBernstein.highProbability_of_primitives
 
 example
     {Omega I : Type*} [MeasurableSpace Omega] [Nonempty Omega] [Fintype I]

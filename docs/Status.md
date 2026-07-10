@@ -105,6 +105,11 @@ High-probability inversion and contract:
 - `matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold`
 - `matrixBernsteinSelfAdjointHighProbabilityStatement`
 - `matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement`
+- `MatrixBernstein.operatorNormTail_of_primitives`
+- `MatrixBernstein.operatorNormTail_of_primitives_nonneg`
+- `MatrixBernstein.operatorNormUpperTail_of_primitives`
+- `MatrixBernstein.optimized_of_primitives`
+- `MatrixBernstein.highProbability_of_primitives`
 
 TraceExp / Tropp bookkeeping helpers:
 
@@ -158,6 +163,7 @@ Hardbone proved leaves, deterministic bridges, statement targets, and thin consu
 - `bernsteinMatrixExp_le_quadratic_of_cfcLeaves`
 - `bernsteinMatrixExp_le_quadratic`
 - `traceExpIntegrable_randomMatrixSum_of_traceExpDominatingProvider`
+- `traceExpIntegrable_randomMatrixSum_of_operatorNormBounds_finiteMeasure`
 - `varianceProxyNormBound_of_centeredSquareChain`
 - `matrixSquare_centeredRandomMatrix_expectation_expansion`
 - `varianceProxyNormBound_of_centeredSquareChain_expansion`
@@ -330,15 +336,18 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   vanish almost everywhere, so every positive operator-norm upper tail is
   zero. The optimized scalar API also records the equal-parameter two-sided
   normalization and its positive-dimension zero-threshold lower bound.
-- Tropp/Lieb, Golden-Thompson, trace-exp integrability, variance-proxy control,
-  and full Matrix Bernstein are not claimed as complete unless a referenced
-  theorem says so directly.
-- The main layer now owns the reusable scalar inversion and the public
-  high-probability contract/consumer. Its exact nondegenerate boundary is
-  `0 < n`, `0 < delta <= 1`, `0 <= sigmaSq`, `0 <= R`, and
-  `0 < sigmaSq or 0 < R`. The optimized tail premise remains explicit; this
-  layer does not construct a generated-history witness or prove unconditional
-  Matrix Bernstein.
+- Arbitrary-history conditioning, Golden-Thompson, automatic trace-exp
+  integrability, automatic variance-proxy control, and unconditional full
+  Matrix Bernstein remain open unless a referenced theorem says otherwise.
+- The main layer now owns the reusable scalar inversion and the generated-history
+  proof composition. `MatrixBernstein.optimized_of_primitives` proves the
+  canonical optimized statement over every finite index type, and
+  `MatrixBernstein.highProbability_of_primitives` closes the public `1 - delta`
+  contract. The exact nondegenerate boundary remains `0 < n`,
+  `0 < delta <= 1`, `0 <= sigmaSq`, `0 <= R`, and
+  `0 < sigmaSq or 0 < R`. This is not an unconditional Matrix Bernstein theorem:
+  the statement still exposes centeredness, self-adjointness, independence,
+  integrability, norm, and variance-proxy assumptions.
 - Prefix/suffix/state bookkeeping now includes a natural `Fin m` trace-state
   route through the finite-family Tropp and trace-MGF provider surfaces. This
   does not discharge the analytic conditional-step, history measurability,
@@ -457,8 +466,12 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   assumptions consumed by the theorem are recorded in `docs/STATEMENTS.md`;
   this does not prove those assumptions or a full Matrix Bernstein theorem.
 - Completed public API leaf: the scalar threshold helpers and the
-  `matrixBernsteinSelfAdjointHighProbabilityStatement` consumer now expose the
+  `matrixBernsteinSelfAdjointHighProbabilityStatement` consumer expose the
   canonical `1 - delta` contract under the exact nondegenerate boundary above.
+- Completed generated-history closure: `MatrixBernstein.optimized_of_primitives`
+  and `MatrixBernstein.highProbability_of_primitives` derive the optimized and
+  high-probability statements from the standard finite-dimensional Bernstein
+  primitives, including zero-threshold and zero-variance branches.
 
 ## Provider-Facing Lieb/Tropp Layer
 
@@ -554,8 +567,8 @@ the fixed-`t` left/right integrand convexity leaf, proves the density
 integrability and left/right integral representation witnesses, and closes the
 left/right route to relative-entropy joint convexity, Lieb/Epstein, and the
 Tropp one-step provider wrappers. It still does not prove Golden-Thompson, the
-conditional-expectation step, variance-proxy normalization, tail-side
-measurability, operator-norm endpoint assembly, or full Matrix Bernstein.
+conditional-expectation step, automatic variance-proxy normalization, or an
+unconditional full Matrix Bernstein theorem.
 
 Interface audit: these migrations give downstream proof agents concrete
 finite-dimensional spectral, CFC-log, cutoff-resolvent, inverse-convexity
@@ -565,8 +578,8 @@ handles inside the main repository. They
 still do not prove a weighted `CFCLog.lineDeriv` / `CFCLog.derivSAAt`
 resolvent-kernel adapter, arbitrary-weight plain cutoff removal without
 scalar-log renormalization, the Epstein second-derivative sign, Golden-Thompson,
-conditional expectation, variance proxy, tail-side measurability,
-operator-norm endpoint assembly, or full Matrix Bernstein.
+arbitrary-history conditional expectation, automatic variance-proxy control,
+or an unconditional full Matrix Bernstein theorem.
 
 The layer also continues to expose derivative-level Epstein consumer reductions,
 the explicit `EpsteinAffineLineConcavity` conditional route, bounded

@@ -122,6 +122,11 @@ has probability zero. They do not supply the positive-variance Tropp branch.
 - `matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold`
 - `matrixBernsteinSelfAdjointHighProbabilityStatement`
 - `matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement`
+- `MatrixBernstein.operatorNormTail_of_primitives`
+- `MatrixBernstein.operatorNormTail_of_primitives_nonneg`
+- `MatrixBernstein.operatorNormUpperTail_of_primitives`
+- `MatrixBernstein.optimized_of_primitives`
+- `MatrixBernstein.highProbability_of_primitives`
 - `matrixBernsteinSelfAdjointOptimizedStatement`
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
 - `troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives`
@@ -163,10 +168,12 @@ centered self-adjointness, independence, norm, and variance-proxy assumptions
 explicit.
 
 `matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement`
-is the thin public consumer: it evaluates an existing optimized tail contract
-at the canonical threshold and converts its RHS to `ENNReal.ofReal delta`.
-These declarations own scalar inversion and the public contract/consumer;
-they do not construct a generated-history witness or prove unconditional Matrix
+is the scalar-threshold consumer: it evaluates an optimized tail contract at the
+canonical threshold and converts its RHS to `ENNReal.ofReal delta`.
+`MatrixBernstein.optimized_of_primitives` constructs that optimized contract
+from the standard finite-dimensional Bernstein primitives, and
+`MatrixBernstein.highProbability_of_primitives` exposes the closed
+high-probability route. These theorems do not prove unconditional Matrix
 Bernstein.
 
 These are under explicit primitive assumptions. The pointwise Bernstein CFC
@@ -174,8 +181,8 @@ primitive is now proved by `bernsteinMatrixExp_le_quadratic`; the
 `under_troppPrimitive` trace-MGF wrapper uses that proof so callers no longer
 pass pointwise CFC at the trace-MGF provider layer. The
 `matrixBernsteinSelfAdjointOptimizedStatement` fixes the canonical two-sided
-RHS over an arbitrary finite index type; the generated-history provider proves
-it by reindexing through `Fin (Fintype.card I)`. The preferred public
+RHS over an arbitrary finite index type; `MatrixBernstein.optimized_of_primitives`
+proves it by reindexing through `Fin (Fintype.card I)`. The preferred public
 consumer surface is the
 `*_of_troppAssumptions` family, which uses
 `MatrixBernsteinPositiveSideTroppAssumptions` and
@@ -185,9 +192,11 @@ bookkeeping assumptions without a user-supplied CFC field. The older
 The generated-history Bernstein wrappers live behind
 `HighDimProb.RandomMatrix.LiebProvider`; they derive current-step
 exponential-mean self-adjointness and strict positivity from centered
-self-adjoint bounded summands. For the generated-history tail wrapper, tail
-measurability remains explicit; the discharged variant removes only the
-subset premise under random self-adjointness and `0 <= theta`.
+self-adjoint bounded summands. The base quadratic-form tail wrapper keeps tail
+measurability explicit, while `MatrixBernstein.operatorNormUpperTail_of_primitives`,
+`MatrixBernstein.optimized_of_primitives`, and
+`MatrixBernstein.highProbability_of_primitives` perform the finite-family
+operator-norm and threshold assembly.
 The S10 conditioning-to-tail route also records the developer-facing scaffold
 `MatrixBernsteinConditioningTraceMGFTailAssumptions` and the thin
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFTailAssumptions`
@@ -560,7 +569,8 @@ joint-convexity leaf, the left/right scalar, quadratic, spectral-overlap,
 density, and integral-representation route to relative-entropy joint convexity
 and Lieb/Epstein facades, conditional relative-entropy/Gibbs bridges,
 derivative-level Epstein consumers, conditional and left/right Tropp/Lieb
-bridges, generated-history Bernstein finite-family/trace-MGF/tail wrappers,
+bridges, generated-history Bernstein finite-family/trace-MGF/tail wrappers and
+canonical operator-norm/high-probability facades,
 trace-exp domain positivity, CFC-log resolvent cutoff/remainder bridges,
 conditioning-kernel reductions over
 `MeasurableSpace.comap H`, fixed-numerator trace-resolvent convexity,
@@ -771,6 +781,7 @@ Epstein/Tropp conditional consumers and support APIs:
 - `troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds`
 - `traceExpIntegrable_troppStateHistory_add_step_of_summand_and_comparison_bounds_finiteMeasure`
 - `traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure`
+- `traceExpIntegrable_randomMatrixSum_of_operatorNormBounds_finiteMeasure`
 - `lambdaMaxOrdered_le_of_matrixLE_selfAdjoint`
 - `lambdaMinOrdered_le_of_matrixLE_selfAdjoint`
 - `traceMGFBernsteinVarianceProxyBoundLIntegral_of_real`

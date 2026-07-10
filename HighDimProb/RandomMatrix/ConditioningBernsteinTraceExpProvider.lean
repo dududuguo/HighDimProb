@@ -852,7 +852,7 @@ private theorem comparisonMatrixPrefixSum_deterministicOperatorNorm_le_for_trace
 
 This is the bounded finite-family bridge for the exact `hTraceIntegrable`-shaped
 consumer conclusion used downstream by the Tropp / Matrix Bernstein route. -/
-private theorem traceExpIntegrable_randomMatrixSum_of_operatorNormBounds_finiteMeasure
+theorem traceExpIntegrable_randomMatrixSum_of_operatorNormBounds_finiteMeasure
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsFiniteMeasure P]
     {m n : Nat} (theta RX : Real)
     (X : Fin m -> RandomMatrix Omega n n)

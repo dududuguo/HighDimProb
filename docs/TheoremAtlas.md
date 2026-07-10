@@ -45,9 +45,11 @@ and exponent-equality lemmas, plus the matrix `matrixBernsteinLogFactor`,
 `matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold`. The
 `matrixBernsteinSelfAdjointHighProbabilityStatement` is a typed public
 contract, and `matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement`
-is its proven thin consumer. These APIs preserve `0 < n`, `0 < delta <= 1`,
-`0 <= sigmaSq`, `0 <= R`, and `0 < sigmaSq or 0 < R`; they do not construct a
-generated-history witness or prove unconditional Matrix Bernstein.
+is its scalar-threshold consumer. The generated-history proof is now exposed by
+`MatrixBernstein.optimized_of_primitives` and
+`MatrixBernstein.highProbability_of_primitives`. These APIs preserve
+`0 < n`, `0 < delta <= 1`, `0 <= sigmaSq`, `0 <= R`, and
+`0 < sigmaSq or 0 < R`; they do not prove unconditional Matrix Bernstein.
 
 Important current names are listed in [`RandomMatrixAPI.md`](RandomMatrixAPI.md).
 The hardbone statement atlas in
@@ -164,16 +166,14 @@ fixed-`t` left/right relative-entropy integrand joint-convexity leaf, the
 density/integral representation route to relative-entropy joint convexity,
 Lieb/Epstein facades, and left/right Tropp one-step wrappers, plus spectral
 endpoint monotonicity and trace-MGF-to-Laplace contracts; these do not close the
-weaker independence statement, conditional expectation, Golden-Thompson,
-variance-proxy normalization, tail measurability, operator-norm endpoint
-assembly, or full Matrix Bernstein.
+weaker arbitrary-history independence statement, conditional expectation,
+Golden-Thompson, automatic variance-proxy normalization, or unconditional full
+Matrix Bernstein.
 
 ## Not Yet Proved
 
-- Golden-Thompson and the full finite-family Tropp/Matrix Bernstein chain.
+- Golden-Thompson and the older arbitrary-denominator Matrix Bernstein chain.
 - Full unconditional Matrix Bernstein theorem.
-- A generated-history witness for the optimized tail premise; the main-layer
-  high-probability consumer keeps that premise explicit.
 - The weaker natural-history independence statement without explicit summand
   measurability, conditional-expectation reduction, and trace-exp integrability
   propagation for the conditional-step Tropp route.
@@ -184,8 +184,8 @@ assembly, or full Matrix Bernstein.
   effective-rank/support trace certificates, and dimension/rank refinements
   beyond explicit star-projection rank consumers.
 - A negative-side exact-row variance-proxy provider for two-sided/operator-norm sample-covariance wrappers.
-- A public-friendly Matrix Bernstein wrapper directly over the natural-state
-  route.
+- A public-friendly sample-covariance specialization that discharges its
+  remaining variance-proxy assumptions from domain hypotheses.
 
 ## Maintenance Rule
 
