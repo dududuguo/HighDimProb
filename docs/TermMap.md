@@ -64,8 +64,10 @@ APIs `RelativeEntropy.leftRightDenominatorMatrix`,
 The same import also exposes the Epstein consumer namespace `EpsteinLine`,
 conditional and left/right Epstein/Lieb/Tropp provider bridges, spectral endpoint monotonicity,
 trace-MGF-to-Laplace contracts, provider-compressed natural-state tail helpers,
-generated-history Bernstein finite-family/trace-MGF/tail wrappers,
-trace-exp domain positivity, CFC-log resolvent cutoff/remainder bridges,
+generated-history Bernstein finite-family/trace-MGF/tail wrappers, the
+restricted-history `TraceExpConditioning.bernsteinInputs_of_primitives` and
+`TraceExpConditioning.bernsteinStep_of_history_le` facades, trace-exp domain
+positivity, CFC-log resolvent cutoff/remainder bridges,
 conditioning-kernel reductions,
 fixed-numerator trace-resolvent convexity, support-to-excess compression, and
 the `TroppNaturalHistory.*` short aliases for suffix measurability and
@@ -100,5 +102,6 @@ statement without explicit summand measurability, the exact conditioning
 expectation chain for arbitrary larger history sigma-algebras, variance-proxy
 normalization, or full Matrix Bernstein. The restricted route
 `mHist <= MeasurableSpace.comap H _` is closed by
-`TraceExpConditioning.troppStep_of_history_le`. Keep this separate from
+`TraceExpConditioning.troppStep_of_history_le`; the Bernstein facade removes
+only separate frozen-bound packet construction. Keep this separate from
 reader-facing examples and the core `HighDimProb.RandomMatrix` aggregate.

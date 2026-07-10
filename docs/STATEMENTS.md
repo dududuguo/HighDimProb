@@ -32,8 +32,11 @@ premises:
   conditional-expectation reduction from a history-measurable matrix and an
   independent current step. `TraceExpConditioning.troppStep_of_history_le`
   supplies this exact contract when `mHist <= MeasurableSpace.comap H _` and a
-  `TraceExpTroppFrozenBoundInputs` packet is available; arbitrary larger
-  histories still require separate sigma-level independence.
+  `TraceExpTroppFrozenBoundInputs` packet is available.
+  `TraceExpConditioning.bernsteinStep_of_history_le` constructs that packet
+  from the standard Bernstein single-summand primitives. Both routes leave the
+  exact statement's own `IndepFun` premise visible; arbitrary larger histories
+  still require separate sigma-level independence.
 - Natural-state side conditions for each index: history sub-sigma algebra,
   history/current random-matrix measurability, self-adjoint history/current
   steps, trace-exponential integrability of `H_i + Z_i`, matrix-exponential

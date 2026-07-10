@@ -504,6 +504,48 @@ private theorem bernsteinTroppFrozenBoundInputs_of_primitives
         (isPSD_matrixSecondMoment_of_selfAdjoint (hSA i) (hIntSq i))
         (matrixLE_refl (matrixSecondMoment P (X i))))
 
+namespace TraceExpConditioning
+
+/-- Build the frozen-bound current-step packet from the standard Bernstein
+single-summand primitives. -/
+abbrev bernsteinInputs_of_primitives :=
+  @bernsteinTroppFrozenBoundInputs_of_primitives
+
+/-- Close a restricted-history conditional step directly from the standard
+Bernstein single-summand primitives.
+
+The exact conditional-step statement still supplies its own history/current-step
+`IndepFun` premise. This theorem removes only the separate frozen-bound packet
+construction; it does not control an arbitrary larger history sigma-algebra. -/
+theorem bernsteinStep_of_history_le
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (theta R : Real)
+    (X : Fin m -> RandomMatrix Omega n n)
+    (i : Fin m)
+    (hCentered : CenteredSelfAdjointRandomMatrixFamily P X)
+    (hIntX : forall j, IntegrableRandomMatrix P (X j))
+    (hIntSq : forall j, IntegrableRandomMatrix P (randomMatrixSquare (X j)))
+    (hBound : PointwiseOperatorNormBound X R)
+    (hR : 0 <= R)
+    (hRange : abs theta * R < 3)
+    {mHist : MeasurableSpace Omega}
+    {H : @RandomMatrix Omega mOmega n n}
+    (hHistoryLe : mHist <= MeasurableSpace.comap H inferInstance) :
+    @troppMasterTraceMGFConditionalStep_statement
+      Omega mOmega P n mHist H
+      (@troppCurrentRandomStep Omega mOmega m n theta X i)
+      (@bernsteinSecondMomentComparisonFamily
+        Omega mOmega (Fin m) n P X theta R i) :=
+  troppStep_of_history_le
+    (mOmega := mOmega) (P := P) hHistoryLe
+    (bernsteinInputs_of_primitives
+      (mOmega := mOmega) (P := P) theta R X i
+      hCentered hIntX hIntSq hBound hR hRange)
+
+end TraceExpConditioning
+
 private theorem troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives_and_sideConditions
     {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
     {P : Measure Omega} [IsProbabilityMeasure P] {m n : Nat}

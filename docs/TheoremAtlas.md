@@ -167,9 +167,12 @@ density/integral representation route to relative-entropy joint convexity,
 Lieb/Epstein facades, and left/right Tropp one-step wrappers, plus spectral
 endpoint monotonicity and trace-MGF-to-Laplace contracts. The restricted
 conditional-step route `mHist <= MeasurableSpace.comap H _` is closed by
-`TraceExpConditioning.troppStep_of_history_le`; arbitrary larger-history
-independence, Golden-Thompson, automatic variance-proxy normalization, and
-unconditional full Matrix Bernstein remain open.
+`TraceExpConditioning.troppStep_of_history_le`. The Bernstein facade
+`TraceExpConditioning.bernsteinStep_of_history_le` constructs the frozen-bound
+packet from standard single-summand primitives but leaves the exact statement's
+`IndepFun` premise visible. Arbitrary larger-history independence,
+Golden-Thompson, automatic variance-proxy normalization, and unconditional full
+Matrix Bernstein remain open.
 
 ## Not Yet Proved
 

@@ -129,6 +129,8 @@ has probability zero. They do not supply the positive-variance Tropp branch.
 - `MatrixBernstein.highProbability_of_primitives`
 - `matrixBernsteinSelfAdjointOptimizedStatement`
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
+- `TraceExpConditioning.bernsteinInputs_of_primitives`
+- `TraceExpConditioning.bernsteinStep_of_history_le`
 - `troppMasterTraceMGFFiniteFamily_generatedHistory_of_bernsteinPrimitives`
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_generatedHistory_of_bernsteinPrimitives`
 - `matrixBernsteinQuadraticFormUpperTail_generatedHistory_of_bernsteinPrimitives`
@@ -406,9 +408,13 @@ objects to the prefix/suffix construction and discharges the raw endpoint
 equalities. Separately, `TraceExpConditioning.troppStep_of_history_le` closes
 the exact conditional-step contract whenever
 `mHist <= MeasurableSpace.comap H _`, using the contract's own `IndepFun H Z`
-premise and an explicit `TraceExpTroppFrozenBoundInputs` packet. History
-measurability, arbitrary-larger-history independence, trace-exp integrability,
-log/K, CFC, and variance-proxy obligations remain separate.
+premise and an explicit `TraceExpTroppFrozenBoundInputs` packet. For the
+standard Bernstein current step,
+`TraceExpConditioning.bernsteinStep_of_history_le` constructs that packet from
+centeredness, integrability, the pointwise operator-norm bound, and the Bernstein
+parameter range. It does not remove the exact statement's `IndepFun` premise.
+History measurability, arbitrary-larger-history independence, trace-exp
+integrability, log/K, CFC, and variance-proxy obligations remain separate.
 
 Use the core wrappers from:
 
@@ -445,6 +451,8 @@ Recent provider-compression APIs:
 - `TraceExpTroppFrozenBoundInputs`
 - `TraceExpConditioning.troppStep_of_history_le`
 - `TraceExpConditioning.condExpStep_of_history_le`
+- `TraceExpConditioning.bernsteinInputs_of_primitives`
+- `TraceExpConditioning.bernsteinStep_of_history_le`
 - `trace_mul_mono_right_of_matrixLE_of_isPSDMatrix`
 - `trace_mul_inv_add_const_convex_combo_le`
 - `matrixExpExcessSupportDomination_of_supportDomination_of_support_le_one`
@@ -781,6 +789,8 @@ Epstein/Tropp conditional consumers and support APIs:
 - `TraceExpTroppFrozenBoundInputs`
 - `TraceExpConditioning.troppStep_of_history_le`
 - `TraceExpConditioning.condExpStep_of_history_le`
+- `TraceExpConditioning.bernsteinInputs_of_primitives`
+- `TraceExpConditioning.bernsteinStep_of_history_le`
 - `matrixExpScaledIntegrable_of_provider_finiteMeasure`
 - `isSelfAdjointMatrix_matrixExpect_matrixExp_troppCurrentRandomStep_of_centeredSelfAdjoint`
 - `isStrictlyPositive_matrixExpect_matrixExp_troppCurrentRandomStep_of_centeredSelfAdjoint`

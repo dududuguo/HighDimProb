@@ -6,6 +6,8 @@ import HighDimProb.RandomMatrix.ConcentrationStatements
 #check HighDimProb.TraceExpTroppFrozenBoundInputs
 #check HighDimProb.TraceExpConditioning.troppStep_of_history_le
 #check HighDimProb.TraceExpConditioning.condExpStep_of_history_le
+#check HighDimProb.TraceExpConditioning.bernsteinInputs_of_primitives
+#check HighDimProb.TraceExpConditioning.bernsteinStep_of_history_le
 #check HighDimProb.matrixExpFDeriv
 #check HighDimProb.hasFDerivAt_matrix_exp
 #check HighDimProb.hasStrictFDerivAt_matrix_exp

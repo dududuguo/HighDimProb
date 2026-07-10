@@ -123,6 +123,8 @@ TraceExp / Tropp bookkeeping helpers:
 - `TraceExpTroppFrozenBoundInputs`
 - `TraceExpConditioning.troppStep_of_history_le`
 - `TraceExpConditioning.condExpStep_of_history_le`
+- `TraceExpConditioning.bernsteinInputs_of_primitives`
+- `TraceExpConditioning.bernsteinStep_of_history_le`
 - `troppTraceExpFiniteFamilyIterationSkeleton_of_naturalStateConditionalSteps`
 - `troppMasterTraceMGFFiniteFamily_of_naturalStateConditionalSteps`
 - `traceMGFBernsteinVarianceProxyBound_of_naturalStateConditionalSteps`
@@ -322,7 +324,10 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   measurability or independence. The restricted-history facade
   `TraceExpConditioning.troppStep_of_history_le` now supplies that exact
   per-step conditional contract when `mHist <= MeasurableSpace.comap H _` and
-  `TraceExpTroppFrozenBoundInputs` is available. The S10 wrapper
+  `TraceExpTroppFrozenBoundInputs` is available. For a standard Bernstein
+  current step, `TraceExpConditioning.bernsteinStep_of_history_le` constructs
+  that packet directly from the single-summand primitives while leaving the
+  contract's `IndepFun` premise explicit. The S10 wrapper
   `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge` threads
   the S9 trace-MGF consumer into the quadratic-form Laplace/tail route under an
   explicit tail-event subset assumption, while the TailEvent provider wrappers
@@ -358,9 +363,11 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   route through the finite-family Tropp and trace-MGF provider surfaces.
   `TraceExpConditioning.troppStep_of_history_le` separately closes the exact
   conditional-step contract under `mHist <= MeasurableSpace.comap H _` and an
-  explicit frozen-bound packet. It does not discharge history measurability,
-  independence for arbitrary larger histories, trace-exp integrability, log/K,
-  CFC, or variance-proxy hypotheses.
+  explicit frozen-bound packet. The Bernstein facade constructs that packet from
+  the standard single-summand primitives. Neither theorem discharges the exact
+  statement's `IndepFun`, history measurability, independence for arbitrary
+  larger histories, trace-exp integrability, log/K, CFC, or variance-proxy
+  hypotheses.
 - `StatementRoutes` is an examples-only route index; it groups representative example-level statement families without adding core API. Lower-level bridge and frontier checks belong in source, tests, and judge files rather than separate reader-facing examples.
 - Positive-threshold operator-norm routes use `0 < t`; the zero-dimensional `t = 0` endpoint is not part of that route.
 - Sample covariance wrappers remain conditional APIs, not unconditional concentration theorems. The positive-side quadratic-form route now has an exact-row variance-proxy wrapper, but two-sided and operator-norm exact-row wrappers still need a negative-side exact-row variance-proxy provider contract. The preferred sample-covariance and reader-facing Matrix Bernstein example routes now use Tropp-only wrappers that fill pointwise Bernstein CFC fields with `bernsteinMatrixExp_le_quadratic`; explicit-CFC wrappers remain compatibility surfaces.

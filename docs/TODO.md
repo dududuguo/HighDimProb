@@ -22,8 +22,11 @@ This is the active short list. Old completed task logs were collapsed into
   route separate from the older arbitrary-denominator and unconditional
   contracts.
 - Use `TraceExpConditioning.troppStep_of_history_le` when a consumer can prove
-  `mHist <= MeasurableSpace.comap H _`; do not use it to claim independence for
-  an arbitrary larger history sigma-algebra.
+  `mHist <= MeasurableSpace.comap H _`; use
+  `TraceExpConditioning.bernsteinStep_of_history_le` when the current step has
+  the standard Bernstein primitives and packet construction is the only missing
+  adapter. Do not use either theorem to claim independence for an arbitrary
+  larger history sigma-algebra.
 - Prefer shared RandomMatrix APIs over unfolded formulas in examples, tests,
   judge files, and docs.
 - Keep new Matrix Bernstein/sample-covariance route variants behind named
