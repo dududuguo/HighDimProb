@@ -1,0 +1,7 @@
+import HighDimProb.RandomMatrix.Concentration
+
+#check HighDimProb.MatrixBernstein.optimized_of_primitives
+#check HighDimProb.MatrixBernstein.highProbability_of_primitives
+#check HighDimProb.MatrixBernstein.centeredRankOneExactRow
+#check HighDimProb.MatrixBernstein.centeredRankOneExactRowHighProbability
+#check HighDimProb.MatrixBernstein.sampleCovarianceExactRowHighProbability

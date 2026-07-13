@@ -1,13 +1,16 @@
 import HighDimProb.RandomMatrix.Provider
 
 /-!
-# Legacy provider umbrella
+# Legacy provider compatibility umbrella
 
 This broad import is retained for compatibility with existing provider-era
-consumers. New code should import `HighDimProb.RandomMatrix.Provider.Analysis`,
+consumers. Ordinary matrix-concentration applications and downstream users
+should import `HighDimProb.RandomMatrix.Concentration`. New provider-proof
+development should import `HighDimProb.RandomMatrix.Provider.Analysis`,
 `HighDimProb.RandomMatrix.Provider.Conditioning`, or
 `HighDimProb.RandomMatrix.Provider.Concentration` according to ownership, and
-use `HighDimProb.RandomMatrix.Provider` only when all layers are required.
+use `HighDimProb.RandomMatrix.Provider` only when all expert layers are
+required.
 
 This compatibility module re-exports `HighDimProb.RandomMatrix.Provider` and
 therefore preserves the previous analysis, conditioning, and concentration

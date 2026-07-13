@@ -1,5 +1,5 @@
 import HighDimProb.RandomMatrix.Algebra
-import HighDimProb.RandomMatrix.ConcentrationStatements
+import HighDimProb.RandomMatrix.MatrixOrder
 
 /-!
 # Sample covariance usage example

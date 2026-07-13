@@ -12,12 +12,14 @@ surfaces are tracked in the focused reference docs linked below.
   Matrix Bernstein providers.
 - Active process/random-object API leaf: small `RandomFamily` vocabulary for process and sample surfaces.
 - Stable import surface: [`HighDimProb`](../HighDimProb.lean).
-- Supported focused import surfaces:
-  [`HighDimProb.RandomMatrix`](../HighDimProb/RandomMatrix.lean),
+- Supported focused user import surfaces:
+  [`HighDimProb.RandomMatrix`](../HighDimProb/RandomMatrix.lean) and
+  [`HighDimProb.RandomMatrix.Concentration`](../HighDimProb/RandomMatrix/Concentration.lean).
+- Internal/expert provider boundaries:
   [`Provider.Analysis`](../HighDimProb/RandomMatrix/Provider/Analysis.lean),
   [`Provider.Conditioning`](../HighDimProb/RandomMatrix/Provider/Conditioning.lean), and
   [`Provider.Concentration`](../HighDimProb/RandomMatrix/Provider/Concentration.lean).
-- Broad provider facade: [`HighDimProb.RandomMatrix.Provider`](../HighDimProb/RandomMatrix/Provider.lean).
+- Broad expert provider facade: [`HighDimProb.RandomMatrix.Provider`](../HighDimProb/RandomMatrix/Provider.lean).
   `LiebProvider` remains a compatibility import, not an ownership layer.
 - Experimental import surface: [`HighDimProb.Experimental`](../HighDimProb/Experimental.lean) and [`HighDimProb.Examples`](../HighDimProb/Examples.lean).
 - Main active RandomMatrix files:
@@ -366,8 +368,9 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   primitives but not pointwise CFC fields. The older explicit-CFC bundles and
   `_under_primitives` wrappers remain compatibility surfaces. The
   generated-history Bernstein wrappers exposed through
-  `HighDimProb.RandomMatrix.Provider.Concentration` derive current-step exponential-mean
-  self-adjointness and strict positivity from centered self-adjoint bounded
+  the public `HighDimProb.RandomMatrix.Concentration` facade and implemented by
+  `HighDimProb.RandomMatrix.Provider.Concentration` derive current-step
+  exponential-mean self-adjointness and strict positivity from centered self-adjoint bounded
   summands. Tail-side measurability remains explicit; the subset premise can be
   discharged by the self-adjoint TailEvent provider wrappers.
 - The zero-variance operator-norm branch is proved in
@@ -530,12 +533,15 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   high-probability statements from the standard finite-dimensional Bernstein
   primitives, including zero-threshold and zero-variance branches.
 
-## Provider-Facing RandomMatrix Layers
+## Expert/Internal Provider-Facing RandomMatrix Layers
 
-The supported provider surface is split into `Provider.Analysis`,
-`Provider.Conditioning`, and `Provider.Concentration`, with
-`HighDimProb.RandomMatrix.Provider` as the broad facade. `LiebProvider` remains
-a compatibility import. +
+The user-facing matrix-concentration surface is
+`HighDimProb.RandomMatrix.Concentration`. The internal/expert provider boundary
+is split into `Provider.Analysis`, `Provider.Conditioning`, and
+`Provider.Concentration`, with `HighDimProb.RandomMatrix.Provider` as the broad
+expert facade. These facades retain explicit theorem primitives and assumptions;
+they are not an unconditional Matrix Bernstein result. `LiebProvider` remains a
+compatibility import. +
 +Frechet derivative+
 +primitives
 Frechet derivative

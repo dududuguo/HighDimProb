@@ -4,7 +4,8 @@
 
 - `HighDimProb`: stable root API for reviewed scalar probability infrastructure and typed statement specifications.
 - `HighDimProb.RandomMatrix`: supported finite-dimensional base API outside the conservative root import.
-- `HighDimProb.RandomMatrix.Provider`: broad provider facade with analysis, conditioning, and concentration sublayers.
+- `HighDimProb.RandomMatrix.Concentration`: public downstream facade for documented matrix-concentration APIs.
+- `HighDimProb.RandomMatrix.Provider`: internal/expert maintenance facade with analysis, conditioning, and concentration sublayers.
 - `HighDimProb.Experimental`: aggregate API for v0.2+ high-dimensional and scaffold modules.
 - `HighDimProbTest`: root test module for import and API regression checks.
 
@@ -26,11 +27,11 @@ The documentation build is broader than the stable import root. The
 - `HighDimProb.Examples`
 - `HighDimProb.RandomMatrix.Provider`
 
-+
-+experimental API directory, and public examples, without making+
-+`import HighDimProb` import experimental declarations.
-experimental API directory, and public examples, without making
-`import HighDimProb` import experimental declarations.
+These roots document the experimental API directory, provider maintenance
+imports, and public examples without making `import HighDimProb` import
+experimental declarations. The public concentration facade remains a separate
+focused build target (`lake build HighDimProb.RandomMatrix.Concentration`), not
+an additional `lean_lib HighDimProb` root.
 
 ## Broad Opt-In Aggregate
 
@@ -48,8 +49,9 @@ experimental API directory, and public examples, without making
 This aggregate combines mature and experimental branches for development
 convenience. Membership does not determine support status. In particular,
 `HighDimProb.RandomMatrix` has a supported finite-dimensional base, while
-provider theorem surfaces use focused imports and are not re-exported by
-`HighDimProb.Experimental`.
+`HighDimProb.RandomMatrix.Concentration` is its ordinary downstream theorem
+facade. The `Provider.*` routes remain internal/expert maintenance imports;
+neither surface is re-exported by `HighDimProb.Experimental`.
 
 Declarations that still expose proof-route assumptions belong here until their
 mathematical boundary is settled. Examples include wrappers under explicit
@@ -63,9 +65,10 @@ variance-proxy bounds, and operator-norm bridge assumptions.
 - `HighDimProb.Vector`: finite-dimensional random-vector infrastructure.
 - `HighDimProb.Geometry`: nets, metric entropy, covering/packing statements, and Gaussian-width vocabulary.
 - `HighDimProb.RandomMatrix`: supported finite-dimensional random-matrix base.
-- `HighDimProb.RandomMatrix.Provider.Analysis`: deterministic analytic providers.
-- `HighDimProb.RandomMatrix.Provider.Conditioning`: conditioning and natural-history providers.
-- `HighDimProb.RandomMatrix.Provider.Concentration`: trace-MGF, tail, and Matrix Bernstein providers.
+- `HighDimProb.RandomMatrix.Concentration`: public downstream facade for trace-MGF, tail, Matrix Bernstein, and sample-covariance APIs.
+- `HighDimProb.RandomMatrix.Provider.Analysis`: internal/expert maintenance import for deterministic analytic providers.
+- `HighDimProb.RandomMatrix.Provider.Conditioning`: internal/expert maintenance import for conditioning and natural-history providers.
+- `HighDimProb.RandomMatrix.Provider.Concentration`: internal/expert maintenance import for trace-MGF, tail, and Matrix Bernstein providers.
 - `HighDimProb.LimitTheorems`: experimental weak-law scaffold with sample means, weak-law typed statements, and assumption vocabulary.
 - `HighDimProb.Process`: random-process and empirical-process vocabulary.
 - `HighDimProb.Statements`: typed theorem statement specifications and theorem-atlas bridge modules.
@@ -81,9 +84,11 @@ HighDimProb
 - Vector (experimental)
 - Geometry (experimental)
 - RandomMatrix (supported finite-dimensional focused branch)
-  - Provider.Analysis
-  - Provider.Conditioning
-  - Provider.Concentration
+  - Concentration (public downstream facade)
+  - Provider (internal/expert maintenance)
+    - Analysis
+    - Conditioning
+    - Concentration
 - LimitTheorems (experimental / reserved)
 - Process (experimental / reserved)
 - Statements (stable for typed specs)

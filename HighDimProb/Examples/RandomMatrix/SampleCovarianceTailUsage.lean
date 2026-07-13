@@ -1,4 +1,4 @@
-import HighDimProb.RandomMatrix.ConcentrationStatements
+import HighDimProb.RandomMatrix.Concentration
 
 /-!
 # Sample covariance tail wrapper usage examples

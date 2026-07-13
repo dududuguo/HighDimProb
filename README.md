@@ -63,28 +63,27 @@ The broad work-in-progress aggregate remains available through:
 import HighDimProb.Experimental
 ```
 
-Supported finite-dimensional RandomMatrix APIs use focused imports:
+Supported finite-dimensional RandomMatrix APIs use these reader-facing imports:
 
 ```lean
 import HighDimProb.RandomMatrix
-import HighDimProb.RandomMatrix.Provider.Analysis
-import HighDimProb.RandomMatrix.Provider.Conditioning
-import HighDimProb.RandomMatrix.Provider.Concentration
+import HighDimProb.RandomMatrix.Concentration
 ```
 
-`HighDimProb.RandomMatrix` is the base object, algebra, spectral, trace-exp,
-and statement layer. The provider facades separate deterministic matrix
-analysis, conditioning/natural-history infrastructure, and downstream
-trace-MGF/Matrix Bernstein assembly. Import
-`HighDimProb.RandomMatrix.Provider` only when all three layers are needed.
-`HighDimProb.RandomMatrix.MatrixBernsteinProvider` remains the narrow endpoint
-import, while `HighDimProb.RandomMatrix.LiebProvider` is retained as a legacy
-broad compatibility import.
+`HighDimProb.RandomMatrix` is the base object, algebra, spectral, trace-exp, and
+statement layer. `HighDimProb.RandomMatrix.Concentration` is the public entry
+point for trace-MGF, tail, Matrix Bernstein, and sample-covariance consumers.
+The `HighDimProb.RandomMatrix.Provider.*` hierarchy is an internal/expert proof
+boundary; import its narrow layers only when developing or reusing provider
+infrastructure. `HighDimProb.RandomMatrix.Provider` is the broad expert facade,
+`HighDimProb.RandomMatrix.MatrixBernsteinProvider` is an implementation leaf,
+and `HighDimProb.RandomMatrix.LiebProvider` is retained as a legacy broad
+compatibility import.
 
 These focused modules remain outside `import HighDimProb` to keep the root
 import conservative; that import decision does not make their documented
 theorem contracts experimental. `HighDimProb.Experimental` is an opt-in
-development aggregate, not the provider umbrella. See
+development aggregate, not the matrix-concentration facade. See
 [`docs/RandomMatrixArchitecture.md`](docs/RandomMatrixArchitecture.md) for
 ownership and dependency rules.
 

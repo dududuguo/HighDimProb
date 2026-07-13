@@ -21,17 +21,20 @@ import HighDimProb.Concentration
 import HighDimProb.RandomMatrix
   supported finite-dimensional random-matrix base and statement surface
 
+import HighDimProb.RandomMatrix.Concentration
+  public trace-MGF, tail, Matrix Bernstein, and sample-covariance surface
+
 import HighDimProb.RandomMatrix.Provider.Analysis
-  deterministic matrix analysis, Lieb/Epstein, and Golden--Thompson
+  expert deterministic matrix analysis and Lieb/Epstein proof infrastructure
 
 import HighDimProb.RandomMatrix.Provider.Conditioning
-  conditional expectation and natural-history bridges
+  expert conditional-expectation and natural-history proof infrastructure
 
 import HighDimProb.RandomMatrix.Provider.Concentration
-  trace-MGF, tail, and scoped Matrix Bernstein assembly
+  internal concentration assembly re-exported by RandomMatrix.Concentration
 
 import HighDimProb.RandomMatrix.Provider
-  broad provider facade; prefer a narrower layer when possible
+  broad expert provider facade; prefer a narrower layer when possible
 
 import HighDimProb.Experimental
   broad work-in-progress aggregate beyond the supported focused scopes
@@ -41,9 +44,14 @@ import HighDimProb.Examples
 ```
 
 The root import is intentionally narrow. A focused module may have a supported
-theorem contract while remaining outside `import HighDimProb`. Experimental
-status is reserved for unfinished surfaces beyond the documented assumptions
-and module boundaries.
+theorem contract while remaining outside `import HighDimProb`. Downstream
+matrix-concentration users should normally import
+`HighDimProb.RandomMatrix.Concentration`; the `Provider.*` imports expose
+internal/expert proof boundaries. Experimental status is reserved for unfinished
+surfaces beyond the documented assumptions and module boundaries. The public
+facade does not erase hypotheses: primitive, measurability, integrability,
+independence, radius, variance-proxy, and parameter-domain assumptions remain
+explicit where required by each theorem.
 
 ## Route Diagram
 
@@ -58,13 +66,14 @@ flowchart TD
 
   RM["RandomMatrix"] --> RMObj["Random matrix objects, sums, algebra"]
   RMObj --> Det["Deterministic order / spectral / trace helpers"]
-  Det --> Analytic["Provider.Analysis"]
-  RMObj --> Cond["Provider.Conditioning"]
+  Det --> Analytic["Provider.Analysis (expert)"]
+  RMObj --> Cond["Provider.Conditioning (expert)"]
   Det --> VP["Variance-proxy bridge chain"]
-  Analytic --> MB["Provider.Concentration"]
+  Analytic --> MB["Provider.Concentration (implementation)"]
   Cond --> MB
   VP --> MB
-  MB --> SCov["Sample covariance wrappers"]
+  MB --> PublicConc["RandomMatrix.Concentration (public facade)"]
+  PublicConc --> SCov["Sample covariance wrappers"]
   SCov --> Ex["Examples and downstream-style judge files"]
 ```
 
@@ -89,9 +98,9 @@ conceptual, while exact declarations are checked by the Lean compiler.
 | Stable scalar objects | `HighDimProb` | [`ModuleTree.md`](ModuleTree.md) | smoke/API tests |
 | Scalar concentration | `HighDimProb.Concentration` | source modules, tests, and judge files | concentration tests/judge |
 | Random matrices | `HighDimProb.RandomMatrix` | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | `HighDimProb/Examples/RandomMatrix` |
-| Matrix analysis providers | `HighDimProb.RandomMatrix.Provider.Analysis` | [`RandomMatrixArchitecture.md`](RandomMatrixArchitecture.md) | provider API tests |
-| Matrix concentration providers | `HighDimProb.RandomMatrix.Provider.Concentration` | [`TheoremAtlas.md`](TheoremAtlas.md) and [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | tests and judge files |
-| Sample covariance routes | `HighDimProb.RandomMatrix` | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | `SampleCovarianceTailUsage` |
+| Matrix concentration | `HighDimProb.RandomMatrix.Concentration` | [`TheoremAtlas.md`](TheoremAtlas.md) and [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | tests and judge files |
+| Sample covariance routes | `HighDimProb.RandomMatrix.Concentration` | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | `SampleCovarianceTailUsage` |
+| Expert provider development | narrow `HighDimProb.RandomMatrix.Provider.*` import | [`RandomMatrixArchitecture.md`](RandomMatrixArchitecture.md) | provider API tests |
 | External-facing checks | `HighDimProbJudge` | [`JudgeSystem.md`](JudgeSystem.md) | judge files |
 
 ## RandomMatrix Route Map
@@ -121,20 +130,26 @@ HardboneStatements
 ConcentrationStatements
   Matrix Bernstein and sample-covariance wrappers under explicit primitives
 
-Provider.Analysis
+Provider.Analysis (expert/internal)
   deterministic calculus, resolvents, relative entropy, Lieb/Epstein, Golden--Thompson
 
-Provider.Conditioning
+Provider.Conditioning (expert/internal)
   kernels, conditional expectation, and natural-history bridges
 
-Provider.Concentration
+Provider.Concentration (expert/internal implementation)
   integrability, trace-MGF, tail, and Matrix Bernstein assembly
+
+RandomMatrix.Concentration
+  public facade over the documented matrix-concentration theorem surface
 ```
 
 Use the named helpers in [`RandomMatrixAPI.md`](RandomMatrixAPI.md) instead of
 copying unfolded right-hand sides into examples or tests.
 
 ## Recommended RandomMatrix Entry Points
+
+For downstream matrix-concentration use, begin with
+`import HighDimProb.RandomMatrix.Concentration`.
 
 | Use case | Start here | What remains explicit |
 |---|---|---|

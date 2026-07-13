@@ -28,13 +28,13 @@ operator-norm bridge assumptions. Those declarations can be documented and
 tested here while the assumptions are gradually removed or identified as the
 right mathematical boundary.
 
-Supported APIs should be imported through `HighDimProb` or a documented
-focused module such as `HighDimProb.RandomMatrix`,
-`HighDimProb.RandomMatrix.Provider.Analysis`,
-`HighDimProb.RandomMatrix.Provider.Conditioning`, or
-`HighDimProb.RandomMatrix.Provider.Concentration`. This development aggregate
-does not re-export the provider hierarchy; import
-`HighDimProb.RandomMatrix.Provider` explicitly when all provider layers are
-required.
+Supported APIs should be imported through `HighDimProb` or a documented focused
+module such as `HighDimProb.RandomMatrix` or
+`HighDimProb.RandomMatrix.Concentration`. This development aggregate does not
+re-export the matrix-concentration facade or the provider hierarchy. The
+`HighDimProb.RandomMatrix.Provider.*` imports are internal/expert proof
+boundaries; use them only when working directly with provider infrastructure,
+and import `HighDimProb.RandomMatrix.Provider` explicitly only when all provider
+layers are required.
 
 -/

@@ -37,6 +37,13 @@ git diff --check
 - RandomMatrix API tests: variance proxy, spectral, trace-exp, hardbone
   statement targets, thin consumers, rank/support trace bridge, excess-support trace bridge, centered-square expectation expansion, PSD Loewner variance-proxy norm monotonicity, `MatrixExpSupportDomination`, `MatrixExpExcessSupportDomination`, trace-exp eigenvalue-sum bridge, effective-rank consumer, ambient trace certificate, ambient effective-rank wrapper, star-projection trace/rank/PSD certificate and rank consumer, Laplace, concentration, and example API
   checks.
+- Focused RandomMatrix public concentration facade/API checks: run
+  `lake build HighDimProb.RandomMatrix.Concentration` and
+  `lake build HighDimProbTest.RandomMatrixPublicConcentrationAPI`.
+  `HighDimProbTest/RandomMatrixPublicConcentrationAPI.lean` imports only the
+  public facade `HighDimProb.RandomMatrix.Concentration`, so it detects public
+  visibility regressions without relying on implementation-oriented provider
+  imports.
 - RandomMatrix bookkeeping checks: trace-exp endpoint wrappers and the
   natural-state TraceExp route are covered in
   `HighDimProbTest/RandomMatrixTraceExpAPI.lean` and

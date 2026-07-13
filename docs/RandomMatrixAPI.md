@@ -3,9 +3,16 @@
 This is the current compact API index. Old historical notes were collapsed into
 [`archive.md`](archive.md); use git history for exact old wording.
 
-The provider import hierarchy and dependency rules are defined in
-[`RandomMatrixArchitecture.md`](RandomMatrixArchitecture.md). Existing leaf
-imports remain supported.
+Downstream users of the matrix-concentration results documented here should
+normally use:
+
+```lean
+import HighDimProb.RandomMatrix.Concentration
+```
+
+The provider hierarchy is an internal/expert proof boundary; its dependency
+rules and supported expert leaf imports are defined in
+[`RandomMatrixArchitecture.md`](RandomMatrixArchitecture.md).
 
 ## Core Modules
 
@@ -211,7 +218,8 @@ consumer surface is the
 bookkeeping assumptions without a user-supplied CFC field. The older
 `*_of_assumptions` and `_under_primitives` names remain compatibility surfaces.
 The generated-history Bernstein wrappers live behind
-`HighDimProb.RandomMatrix.Provider.Concentration`; they derive current-step
+`HighDimProb.RandomMatrix.Provider.Concentration` and are re-exported by the
+public `HighDimProb.RandomMatrix.Concentration` facade; they derive current-step
 exponential-mean self-adjointness and strict positivity from centered
 self-adjoint bounded summands. The base quadratic-form tail wrapper keeps tail
 measurability explicit, while `MatrixBernstein.operatorNormUpperTail_of_primitives`,
@@ -637,10 +645,16 @@ smaller square-root constant.
   API, not as separate theorem machinery.
 - Use `StatementRoutes` first. Low-level prefix/state, reindex, and negative-family bridge APIs are covered by source, tests, and judge files rather than separate reader-facing examples.
 
-## Provider-Facing Layers
+## Expert And Internal Provider Layers
 
-Use these layers explicitly, not through the core `HighDimProb.RandomMatrix`
-aggregate:
+Normal applications and downstream theorem consumers should use the public
+facade:
+
+```lean
+import HighDimProb.RandomMatrix.Concentration
+```
+
+Import the following implementation layers only for provider-proof development:
 
 ```lean
 import HighDimProb.RandomMatrix.Provider.Analysis
@@ -648,7 +662,7 @@ import HighDimProb.RandomMatrix.Provider.Conditioning
 import HighDimProb.RandomMatrix.Provider.Concentration
 ```
 
-Import the narrowest layer needed by the consumer. The broad
+Import the narrowest provider layer needed by the proof. The broad
 `HighDimProb.RandomMatrix.Provider` facade imports all three;
 `HighDimProb.RandomMatrix.LiebProvider` remains a compatibility import.
 

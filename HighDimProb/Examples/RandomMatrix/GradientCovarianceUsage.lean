@@ -1,4 +1,3 @@
-import HighDimProb.RandomMatrix.ConcentrationStatements
 import HighDimProb.RandomMatrix.Concentration
 
 /-!

@@ -27,10 +27,12 @@ not add filtrations, adaptedness, martingales, or conditioning providers.
 
 ## RandomMatrix
 
-The RandomMatrix layer has a supported finite-dimensional base and scoped
-provider facades. The theorem contracts remain explicit; support does not mean
-that arbitrary-history or unconditional extensions are proved. The current
-Matrix Bernstein route includes proved wrappers under explicit assumptions:
+The RandomMatrix layer has a supported finite-dimensional base and the public
+downstream facade `HighDimProb.RandomMatrix.Concentration`; scoped `Provider.*`
+facades remain internal/expert maintenance imports. The theorem contracts
+remain explicit; support does not mean that arbitrary-history or unconditional
+extensions are proved. The current Matrix Bernstein route includes proved
+wrappers under explicit assumptions:
 trace-MGF, quadratic-form, optimized scalar RHS, positive-threshold
 operator-norm, sample-covariance, crude variance-proxy routes, and
 prefix/state endpoint bookkeeping wrappers for the Tropp conditional-step
@@ -93,7 +95,7 @@ supplies it from coordinate `MemLp 4` assumptions via Mathlib Holder product
 APIs. The bounded-row provider
 `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two`
 supplies it from coordinate `MemLp 2` plus pointwise `vectorSqNorm <= R`.
-Centered rank-one square-integrability providers are proved for coordinate `MemLp 4` and bounded-row `MemLp 2` routes. The direct row-specific provider `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_rowSqNorm_bound_memLp_two` supplies `rowSqNormVarianceProxyNormRHS R` without an abstract sharp-chain premise. Positive and negative sample-covariance adapters expose the same bound, and `MatrixBernstein.centeredRankOneExactRow` / `MatrixBernstein.sampleCovarianceExactRow` compose it with generated-history Matrix Bernstein. `MatrixBernstein.sampleCovarianceExactRowHighProbability` closes the normalized scalar-threshold specialization, and `iIndepFun_centeredRankOne` transports raw vector-family independence. The deterministic PSD Loewner-to-operator-norm bridge remains `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE`. Generic variance sharpening outside the centered rank-one setting and unconditional Matrix Bernstein remain open.
+Centered rank-one square-integrability providers are proved for coordinate `MemLp 4` and bounded-row `MemLp 2` routes. The direct row-specific provider `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_rowSqNorm_bound_memLp_two` supplies `rowSqNormVarianceProxyNormRHS R` without an abstract sharp-chain premise. Positive and negative sample-covariance adapters expose the same bound, and `MatrixBernstein.centeredRankOneExactRow` / `MatrixBernstein.sampleCovarianceExactRow` compose it with generated-history Matrix Bernstein. `MatrixBernstein.centeredRankOneExactRowHighProbability` closes the centered rank-one scalar-threshold specialization, while `MatrixBernstein.sampleCovarianceExactRowHighProbability` closes the normalized sample-covariance endpoint. Both high-probability endpoints are exported through the public import `HighDimProb.RandomMatrix.Concentration`; their input bundles and scalar-side conditions remain explicit, so these are not unconditional Matrix Bernstein results. `iIndepFun_centeredRankOne` transports raw vector-family independence. The deterministic PSD Loewner-to-operator-norm bridge remains `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE`. Generic variance sharpening outside the centered rank-one setting and unconditional Matrix Bernstein remain open.
 The rank/support trace-bound bridge is proved by
 `traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination`,
 with rank/support consumers for the hardbone targets. Deterministic trace/rank
@@ -197,8 +199,6 @@ open.
   support-domination providers, support-construction certificates, true
   effective-rank/support trace certificates, and dimension/rank refinements
   beyond explicit star-projection rank consumers.
-- A high-probability convenience corollary specialized to the exact-row
-  sample-covariance endpoint.
 
 ## Maintenance Rule
 

@@ -5,20 +5,31 @@ finite-dimensional RandomMatrix surface. It is an architecture contract, not
 a theorem index; use [`RandomMatrixAPI.md`](RandomMatrixAPI.md) for theorem
 families and exact import guidance.
 
-## Public Import Layers
+## User-Facing Public Imports
 
 | Layer | Preferred import | Ownership |
 |---|---|---|
 | Base | `HighDimProb.RandomMatrix` | objects, algebra, order, spectra, trace-exp vocabulary, statements |
-| Analysis | `HighDimProb.RandomMatrix.Provider.Analysis` | deterministic matrix calculus, resolvents, relative entropy, Lieb/Epstein, Golden--Thompson |
-| Conditioning | `HighDimProb.RandomMatrix.Provider.Conditioning` | kernels, frozen-parameter conditional expectation, natural histories |
-| Concentration | `HighDimProb.RandomMatrix.Provider.Concentration` | integrability compression, trace-MGF, tail assembly, scoped Matrix Bernstein |
-| Broad provider facade | `HighDimProb.RandomMatrix.Provider` | all three provider layers |
+| Concentration | `HighDimProb.RandomMatrix.Concentration` | public trace-MGF, tail, Matrix Bernstein, and sample-covariance theorem surface |
+
+The concentration facade preserves explicit primitive, measurability,
+integrability, independence, radius, variance-proxy, and parameter-domain
+hypotheses where the exported theorem requires them. It is not an unconditional
+Matrix Bernstein theorem.
+
+## Expert And Internal Provider Boundaries
+
+| Layer | Import | Ownership |
+|---|---|---|
+| Analysis provider | `HighDimProb.RandomMatrix.Provider.Analysis` | deterministic matrix calculus, resolvents, relative entropy, Lieb/Epstein, Golden--Thompson |
+| Conditioning provider | `HighDimProb.RandomMatrix.Provider.Conditioning` | kernels, frozen-parameter conditional expectation, natural histories |
+| Concentration provider | `HighDimProb.RandomMatrix.Provider.Concentration` | implementation assembly re-exported by the public concentration facade |
+| Broad provider facade | `HighDimProb.RandomMatrix.Provider` | all three expert provider layers |
 | Compatibility | `HighDimProb.RandomMatrix.LiebProvider` | historical broad provider import; no new ownership |
 
-`HighDimProb.RandomMatrix.MatrixBernsteinProvider` remains the narrow endpoint
-import for generated-history operator-norm and high-probability Matrix
-Bernstein results.
+`HighDimProb.RandomMatrix.MatrixBernsteinProvider` is the implementation leaf
+for generated-history operator-norm and high-probability Matrix Bernstein
+results. Normal downstream consumers should use the public concentration facade.
 
 ## Dependency Direction
 
@@ -28,8 +39,9 @@ HighDimProb.RandomMatrix
         +--> Provider.Analysis ---------+
         |                               |
         +--> Provider.Conditioning -----+--> Provider.Concentration
+                                                +--> RandomMatrix.Concentration
                                                 |
-                                                +--> Provider
+                                                +--> Provider (expert facade)
 ```
 
 The intended dependency rules are:
@@ -38,8 +50,11 @@ The intended dependency rules are:
 2. Deterministic analysis does not import conditioning or concentration.
 3. Conditioning may use base statements but does not own Bernstein assembly.
 4. Concentration may depend on analysis and conditioning.
-5. Applications and examples import the narrowest layer they consume.
-6. `LiebProvider` remains compatible but is not an ownership boundary.
+5. The public concentration facade re-exports concentration assembly without
+   owning declarations.
+6. Applications and downstream examples use the public facade; provider-proof
+   development imports the narrowest expert layer it consumes.
+7. `LiebProvider` remains compatible but is not an ownership boundary.
 
 ## File Ownership
 
@@ -71,9 +86,10 @@ contract-driven split, but it is not moved as part of the facade refactor.
 
 ## Mathematical Scope
 
-Support is theorem-contract specific. The finite-dimensional left/right
-Lieb/Epstein route, Golden--Thompson, Bernstein CFC, and generated-history
-Matrix Bernstein endpoints are proved under their stated hypotheses. Arbitrary
-external histories, automatic application-specific variance proxies,
-assumption-weaker integrability, and unconditional full Matrix Bernstein are
-outside this supported scope unless a referenced theorem states otherwise.
+Support remains theorem-contract specific on both the public facade and expert
+provider imports. The finite-dimensional left/right Lieb/Epstein route,
+Golden--Thompson, Bernstein CFC, and generated-history Matrix Bernstein
+endpoints are proved under their stated hypotheses. Arbitrary external
+histories, automatic application-specific variance proxies, assumption-weaker
+integrability, and unconditional full Matrix Bernstein are outside this
+supported scope unless a referenced theorem states otherwise.
