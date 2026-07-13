@@ -95,6 +95,10 @@ finite-family generated-history witness and consume the scalar inversion layer.
 `MatrixBernstein.centeredRankOneExactRow` and
 `MatrixBernstein.sampleCovarianceExactRow` additionally close the row-specific
 variance and normalized sample-covariance tail composition.
+`MatrixBernstein.sampleCovarianceExactRowHighProbability` evaluates that route
+at the canonical threshold divided by the row count, while
+`iIndepFun_centeredRankOne` transfers raw vector-family independence to the
+centered outer-product family.
 They do not prove unconditional Matrix Bernstein; the exact boundary is recorded
 in `RandomMatrixAPI.md`.
 

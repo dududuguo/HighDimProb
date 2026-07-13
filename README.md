@@ -1,24 +1,30 @@
 # HighDimProb
 
-HighDimProb is an early Lean 4 library for high-dimensional probability.
+HighDimProb is a Lean 4 library for high-dimensional probability and
+finite-dimensional random-matrix analysis.
 
-The goal is modest: reuse Mathlib wherever possible, then add a thin layer of
-names, wrappers, examples, and theorem interfaces that make probability and
-random-matrix formalization easier to build on.
+It reuses Mathlib wherever possible, then adds theorem interfaces, provider
+bridges, and examples for concentration arguments that are otherwise difficult
+to consume downstream.
 
 The scalar probability and concentration API remains the conservative stable
 root surface. The finite-dimensional RandomMatrix line now also has a supported
 scoped surface. It includes real matrix objects and sums, self-adjoint/PSD and
 Loewner-order bridges, trace-exponential calculus, Bernstein CFC, the
 finite-dimensional left/right route to Lieb/Epstein and Golden--Thompson, and
-generated-history Matrix Bernstein endpoints.
+a canonical finite-family self-adjoint Matrix Bernstein theorem with optimized
+and `1 - delta` endpoints.
 
 Support is theorem-contract specific. Positivity, measurability, integrability,
 independence, radius, variance-proxy, and nondegeneracy hypotheses remain
-explicit where mathematically required. Arbitrary external histories,
-integrability without finite-measure or boundedness hypotheses, automatic
-application-specific variance proxies, the alternative Epstein second-derivative
-sign route, and unconditional full Matrix Bernstein remain outside this scope.
+explicit where mathematically required. In particular,
+`MatrixBernstein.optimized_of_primitives` and
+`MatrixBernstein.highProbability_of_primitives` are proved finite-family
+Matrix Bernstein consumers, rather than statement-only contracts. What remains
+outside this scope is automatic derivation of application-specific variance
+proxies or other hypotheses from weaker domain assumptions, arbitrary external
+histories, integrability without finite-measure or boundedness hypotheses, and
+the alternative Epstein second-derivative sign route.
 
 ## Quick Start
 
@@ -82,12 +88,17 @@ development aggregate, not the provider umbrella. See
 [`docs/RandomMatrixArchitecture.md`](docs/RandomMatrixArchitecture.md) for
 ownership and dependency rules.
 
-For row-specific sample-covariance bounds, use
-`MatrixBernstein.sampleCovarianceExactRow`; it generates the finite-history
-Bernstein and integrability layers from measurability, moment, boundedness, and
-independence hypotheses. The compact bounded-row example remains the shortest
-introductory route, while the older exact-row Tropp bundles are compatibility
-surfaces.
+For row-specific centered rank-one bounds on any finite random-vector family,
+use `MatrixBernstein.centeredRankOneExactRow`; its normalized `1 - delta`
+endpoint is `MatrixBernstein.centeredRankOneExactRowHighProbability`.
+The sample-covariance specialization is
+`MatrixBernstein.sampleCovarianceExactRow` and its normalized endpoint is
+`MatrixBernstein.sampleCovarianceExactRowHighProbability`. These APIs generate
+the finite-history Bernstein and integrability layers from measurability,
+moment, boundedness, and independence hypotheses. When independence is known
+for the original random vectors, use `iIndepFun_centeredRankOne` to transfer it
+to the centered outer-product family. The older exact-row Tropp bundles are
+compatibility surfaces.
 
 ## What Is In The Repo
 

@@ -13,6 +13,7 @@ open MeasureTheory
 #check HighDimProb.MatrixBernstein.centeredRankOne
 #check HighDimProb.MatrixBernstein.centeredRankOneExactRow
 #check HighDimProb.MatrixBernstein.sampleCovarianceExactRow
+#check HighDimProb.MatrixBernstein.sampleCovarianceExactRowHighProbability
 #check HighDimProb.MatrixBernstein.highProbability_of_primitives
 
 example

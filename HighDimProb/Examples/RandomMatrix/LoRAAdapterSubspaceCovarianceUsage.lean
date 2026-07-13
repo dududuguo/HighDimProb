@@ -1,5 +1,5 @@
 import HighDimProb.Examples.RandomMatrix.GradientCovarianceUsage
-import HighDimProb.RandomMatrix.MatrixBernsteinProvider
+import HighDimProb.RandomMatrix.Concentration
 
 /-!
 # LoRA adapter-subspace covariance concentration

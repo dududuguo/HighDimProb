@@ -77,6 +77,38 @@ abbrev IndependentRandomMatrices {Omega : Type*} [MeasurableSpace Omega]
     (A : I -> RandomMatrix Omega m n) : Prop :=
   ProbabilityTheory.iIndepFun A P
 
+/-- Independence is preserved when a random-vector family is mapped to its
+centered rank-one matrix family.
+
+The centering matrix may depend on the family index but is deterministic in
+the sample variable. This is the reusable independence adapter for covariance,
+NTK, and fixed-subspace LoRA applications. -/
+theorem iIndepFun_centeredRankOne
+    {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {I : Type*} {n : Nat}
+    (X : I -> RandomVector Omega n)
+    (hIndep : ProbabilityTheory.iIndepFun X P) :
+    IndependentRandomMatrices P (centeredRankOneRandomMatrixFamily P X) := by
+  let g : I -> (Fin n -> Real) -> Matrix (Fin n) (Fin n) Real :=
+    fun i x r c =>
+      x r * x c - matrixExpect P (rankOneRandomMatrix (X i)) r c
+  have hg : forall i, Measurable (g i) := by
+    intro i
+    apply measurable_pi_lambda
+    intro r
+    apply measurable_pi_lambda
+    intro c
+    exact ((measurable_pi_apply r).mul (measurable_pi_apply c)).sub
+      measurable_const
+  have hComp := hIndep.comp g hg
+  have hEq :
+      (fun i => Function.comp (g i) (X i)) =
+        centeredRankOneRandomMatrixFamily P X := by
+    funext i omega r c
+    rfl
+  rw [hEq] at hComp
+  exact hComp
+
 /-- A finite or indexed family of random self-adjoint square matrices. -/
 def SelfAdjointRandomMatrixFamily {Omega : Type*} [MeasurableSpace Omega]
     {I : Type*} {n : Nat} (P : Measure Omega)

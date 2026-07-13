@@ -31,13 +31,18 @@ scoped by explicit primitive assumptions. The useful surface is:
 - Arbitrary-history conditioning and unconditional full Matrix Bernstein are not proved.
 - Positive-threshold operator-norm wrappers are the honest arbitrary-dimension route; the nonnegative zero-dimensional endpoint is intentionally not claimed.
 - `MatrixBernstein.sampleCovarianceExactRow` closes the row-specific normalized
-  tail under explicit measurability, `MemLp 2`, boundedness, independence, and
-  parameter-domain hypotheses; older wrappers retain explicit primitives only as
-  compatibility surfaces.
+  tail, and `MatrixBernstein.sampleCovarianceExactRowHighProbability` supplies
+  its canonical `1 - delta` specialization. The reusable
+  `iIndepFun_centeredRankOne` bridge transfers raw vector-family independence.
+  Measurability, `MemLp 2`, boundedness, and parameter-domain hypotheses remain
+  explicit; older wrappers retain explicit primitives only as compatibility
+  surfaces.
 - New promotions must preserve the provider layer boundaries and explicit contracts.
 
 ## Next Safe Work
 
-- Add a thin high-probability corollary for `sampleCovarianceExactRow`.
-- Migrate reader-facing examples only when the exact-row rate is materially used.
+- Add a reader-facing exact-row example only where its sharper rate is materially
+  used.
+- Derive Loewner and spectral high-probability corollaries from the normalized
+  operator-norm event without duplicating the Bernstein proof.
 - Keep legacy Tropp bundles documented as compatibility surfaces.

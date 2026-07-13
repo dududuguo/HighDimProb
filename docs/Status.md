@@ -128,8 +128,13 @@ High-probability inversion and contract:
 - `MatrixBernstein.operatorNormUpperTail_of_primitives`
 - `MatrixBernstein.optimized_of_primitives`
 - `MatrixBernstein.CenteredRankOneInputs`
+- `MatrixBernstein.CenteredRankOneExactRowInputs`
 - `MatrixBernstein.centeredRankOne`
+- `MatrixBernstein.centeredRankOneExactRow`
+- `MatrixBernstein.sampleCovarianceExactRow`
+- `MatrixBernstein.sampleCovarianceExactRowHighProbability`
 - `MatrixBernstein.highProbability_of_primitives`
+- `iIndepFun_centeredRankOne`
 
 TraceExp / Tropp bookkeeping helpers:
 
@@ -400,7 +405,11 @@ Low-level prefix/state, reindex, negative-family, nullspace/decomposition, exact
   negative generated-history Bernstein inputs and all exponential-integrability
   obligations from explicit matrix measurability, coordinate `MemLp 2`, uniform and
   row-specific squared-norm bounds, independence, and nonnegative parameters.
-  Older Tropp/CFC assumption bundles remain compatibility surfaces; this is not
+  `MatrixBernstein.sampleCovarianceExactRowHighProbability` supplies the
+  canonical `1 - delta` specialization at threshold divided by the row count,
+  and `iIndepFun_centeredRankOne` transfers independence from the original
+  random-vector family. Older Tropp/CFC assumption bundles remain compatibility
+  surfaces; this is not
   an unconditional sample-covariance theorem.
 - Direct positive and negative exact-row variance providers no longer require the
   abstract sharp-chain premise. Legacy negative-side transfer adapters still only

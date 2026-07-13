@@ -1,5 +1,5 @@
 import HighDimProb.RandomMatrix
-import HighDimProb.RandomMatrix.MatrixBernsteinProvider
+import HighDimProb.RandomMatrix.Concentration
 
 open MeasureTheory
 open HighDimProb
@@ -22,7 +22,9 @@ open HighDimProb
 #check HighDimProb.MatrixBernstein.centeredRankOne
 #check HighDimProb.MatrixBernstein.centeredRankOneExactRow
 #check HighDimProb.MatrixBernstein.sampleCovarianceExactRow
+#check HighDimProb.MatrixBernstein.sampleCovarianceExactRowHighProbability
 #check HighDimProb.MatrixBernstein.highProbability_of_primitives
+#check HighDimProb.iIndepFun_centeredRankOne
 
 example
     {Omega I : Type*} [MeasurableSpace Omega] [Nonempty Omega] [Fintype I]

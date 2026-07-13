@@ -1,5 +1,5 @@
 import HighDimProb.RandomMatrix.ConcentrationStatements
-import HighDimProb.RandomMatrix.ConditioningBernsteinTraceExpProvider
+import HighDimProb.RandomMatrix.Concentration
 
 /-!
 # Gradient covariance concentration usage example

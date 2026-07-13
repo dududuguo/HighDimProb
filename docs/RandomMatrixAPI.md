@@ -131,7 +131,11 @@ has probability zero. They do not supply the positive-variance Tropp branch.
 - `MatrixBernstein.operatorNormUpperTail_of_primitives`
 - `MatrixBernstein.optimized_of_primitives`
 - `MatrixBernstein.CenteredRankOneInputs`
+- `MatrixBernstein.CenteredRankOneExactRowInputs`
 - `MatrixBernstein.centeredRankOne`
+- `MatrixBernstein.centeredRankOneExactRow`
+- `MatrixBernstein.sampleCovarianceExactRow`
+- `MatrixBernstein.sampleCovarianceExactRowHighProbability`
 - `MatrixBernstein.highProbability_of_primitives`
 - `matrixBernsteinSelfAdjointOptimizedStatement`
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
@@ -183,6 +187,15 @@ from the standard finite-dimensional Bernstein primitives, and
 `MatrixBernstein.highProbability_of_primitives` exposes the closed
 high-probability route. These theorems do not prove unconditional Matrix
 Bernstein.
+
+`MatrixBernstein.sampleCovarianceExactRowHighProbability` specializes the
+row-specific sample-covariance tail at
+`matrixBernsteinHighProbabilityThreshold / m`, matching the normalization in
+`sampleCovariance`. Its nondegeneracy and `delta` hypotheses are exactly the
+ones used by the scalar inversion theorem. If a caller has
+`ProbabilityTheory.iIndepFun X P` for the original row vectors,
+`iIndepFun_centeredRankOne` supplies independence of their centered rank-one
+matrix family.
 
 These are under explicit primitive assumptions. The pointwise Bernstein CFC
 primitive is now proved by `bernsteinMatrixExp_le_quadratic`; the
@@ -323,6 +336,8 @@ Generated-history centered rank-one consumers:
 - `MatrixBernstein.CenteredRankOneExactRowInputs`
 - `MatrixBernstein.centeredRankOneExactRow`
 - `MatrixBernstein.sampleCovarianceExactRow`
+- `MatrixBernstein.sampleCovarianceExactRowHighProbability`
+- `iIndepFun_centeredRankOne`
 
 Thin hardbone consumers:
 

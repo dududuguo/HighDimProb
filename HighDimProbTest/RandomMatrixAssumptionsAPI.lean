@@ -42,6 +42,7 @@ variable (K R : Real)
 #check integrableRandomMatrix_centeredRandomMatrix
 #check centeredRankOneRandomMatrix
 #check centeredRankOneRandomMatrixFamily
+#check iIndepFun_centeredRankOne
 #check isSelfAdjointMatrix_matrixExpect_of_randomSelfAdjoint
 #check randomSelfAdjointMatrix_centeredRandomMatrix
 #check matrixExpect_centeredRandomMatrix

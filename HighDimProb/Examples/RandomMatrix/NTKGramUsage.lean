@@ -1,4 +1,4 @@
-import HighDimProb.RandomMatrix.MatrixBernsteinProvider
+import HighDimProb.RandomMatrix.Concentration
 import HighDimProb.RandomVector
 
 /-!

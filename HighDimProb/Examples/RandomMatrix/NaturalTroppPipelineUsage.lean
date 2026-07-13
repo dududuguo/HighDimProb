@@ -1,5 +1,5 @@
 import HighDimProb.RandomMatrix.TraceExp
-import HighDimProb.RandomMatrix.TailEventTraceMGFBridgeProvider
+import HighDimProb.RandomMatrix.Concentration
 
 /-!
 # Natural Tropp pipeline usage

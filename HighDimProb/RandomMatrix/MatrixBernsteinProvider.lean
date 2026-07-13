@@ -522,6 +522,44 @@ theorem centeredRankOneExactRow
       hInt hIntSq hCentered h.independentSelfAdjoint hBound hNorm
       hSigma hRadius ht
 
+/-- High-probability optimized tail for centered rank-one random-vector sums
+with a row-specific variance proxy. -/
+theorem centeredRankOneExactRowHighProbability
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (X : I -> RandomVector Omega n) (R delta : Real) (Rvar : I -> Real)
+    (hn : 0 < n)
+    (h : CenteredRankOneExactRowInputs (P := P) X R Rvar)
+    (hNondegenerate :
+      Or (0 < rowSqNormVarianceProxyNormRHS Rvar) (0 < 2 * R))
+    (hDelta : 0 < delta) (hDeltaOne : delta <= 1) :
+    upperTailProb P
+        (operatorNorm
+          (randomMatrixSum (centeredRankOneRandomMatrixFamily P X)))
+        (matrixBernsteinHighProbabilityThreshold n
+          (rowSqNormVarianceProxyNormRHS Rvar) (2 * R) delta) <=
+      ENNReal.ofReal delta := by
+  have hSigma : 0 <= rowSqNormVarianceProxyNormRHS Rvar := by
+    positivity
+  have hRadius : 0 <= 2 * R := by
+    nlinarith [h.radiusNonneg]
+  have hThreshold :
+      0 <= matrixBernsteinHighProbabilityThreshold n
+        (rowSqNormVarianceProxyNormRHS Rvar) (2 * R) delta :=
+    matrixBernsteinHighProbabilityThreshold_nonneg
+      hn hRadius hDelta hDeltaOne
+  have hTail :=
+    centeredRankOneExactRow
+      (mOmega := mOmega) (P := P) (X := X) (R := R)
+      (t := matrixBernsteinHighProbabilityThreshold n
+        (rowSqNormVarianceProxyNormRHS Rvar) (2 * R) delta)
+      (Rvar := Rvar) hn h hThreshold
+  refine hTail.trans_eq ?_
+  exact matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold
+    hn hSigma hRadius hNondegenerate hDelta hDeltaOne
+
 /-- Optimized operator-norm tail for centered sample covariance with exact-row
 variance control.
 
@@ -588,6 +626,72 @@ theorem sampleCovarianceExactRow
   simpa [upperTailProb, upperTailEvent,
     centeredSampleCovarianceRowRankOneSum,
     centeredSampleCovarianceRowRankOneFamily] using hRows
+
+/-- High-probability centered sample-covariance bound with exact-row variance
+control.
+
+The canonical Bernstein threshold is divided by the row count because
+`sampleCovariance` is normalized by `m`. The nondegeneracy assumption is the
+exact boundary required by the inclusive upper-tail event at threshold zero. -/
+theorem sampleCovarianceExactRowHighProbability
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {m n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (A : RandomMatrix Omega m n) (R delta : Real) (Rvar : Fin m -> Real)
+    (hm : 0 < m) (hn : 0 < n)
+    (hMeas : IsRandomMatrix P A)
+    (hLp : forall k : Fin m, forall j : Fin n,
+      MemLpRealRandomVariable P (matrixEntry A k j) 2)
+    (hSq : forall k omega, vectorSqNorm (rowVector A k omega) <= R)
+    (hSqVar : forall k omega, vectorSqNorm (rowVector A k omega) <= Rvar k)
+    (hIndep : IndependentRandomMatrices P
+      (centeredSampleCovarianceRowRankOneFamily (P := P) A))
+    (hR : 0 <= R) (hRvar : forall k, 0 <= Rvar k)
+    (hNondegenerate :
+      0 < rowSqNormVarianceProxyNormRHS Rvar ∨ 0 < 2 * R)
+    (hDelta : 0 < delta) (hDeltaOne : delta <= 1) :
+    HighProbabilityBound P
+      (SelfAdjointOperatorNormTailEvent
+        (centeredRandomMatrix P (sampleCovariance A))
+        (matrixBernsteinHighProbabilityThreshold n
+          (rowSqNormVarianceProxyNormRHS Rvar) (2 * R) delta / (m : Real)))
+      (ENNReal.ofReal delta) := by
+  have hmReal : 0 < (m : Real) := by
+    exact_mod_cast hm
+  have hSigma : 0 <= rowSqNormVarianceProxyNormRHS Rvar := by
+    positivity
+  have hRadius : 0 <= 2 * R := by
+    positivity
+  have hThreshold :
+      0 <= matrixBernsteinHighProbabilityThreshold n
+        (rowSqNormVarianceProxyNormRHS Rvar) (2 * R) delta :=
+    matrixBernsteinHighProbabilityThreshold_nonneg
+      hn hRadius hDelta hDeltaOne
+  have hTail :=
+    sampleCovarianceExactRow
+      (mOmega := mOmega) (P := P) (A := A) (R := R)
+      (t := matrixBernsteinHighProbabilityThreshold n
+        (rowSqNormVarianceProxyNormRHS Rvar) (2 * R) delta / (m : Real))
+      (Rvar := Rvar) hm hn hMeas hLp hSq hSqVar hIndep hR hRvar
+      (div_nonneg hThreshold hmReal.le)
+  have hScale :
+      (m : Real) *
+          (matrixBernsteinHighProbabilityThreshold n
+            (rowSqNormVarianceProxyNormRHS Rvar) (2 * R) delta / (m : Real)) =
+        matrixBernsteinHighProbabilityThreshold n
+          (rowSqNormVarianceProxyNormRHS Rvar) (2 * R) delta := by
+    field_simp
+  have hRhs :=
+    matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold
+      hn hSigma hRadius hNondegenerate hDelta hDeltaOne
+  change
+    P (SelfAdjointOperatorNormTailEvent
+      (centeredRandomMatrix P (sampleCovariance A))
+      (matrixBernsteinHighProbabilityThreshold n
+        (rowSqNormVarianceProxyNormRHS Rvar) (2 * R) delta / (m : Real))) <=
+      ENNReal.ofReal delta
+  exact hTail.trans_eq (by simpa [hScale] using hRhs)
 
 /-- Short public alias for the positive-variance operator-norm tail bridge. -/
 abbrev operatorNormTail_of_primitives :=

@@ -36,8 +36,12 @@ This is the active short list. Old completed task logs were collapsed into
   merely because a proof leaf exposed them.
 - `MatrixBernstein.centeredRankOneExactRow` and
   `MatrixBernstein.sampleCovarianceExactRow` now close the generated-history
-  exact-row tail route. Next add only a thin high-probability specialization or
-  application consumer; keep the older Tropp bundles as compatibility surfaces.
+  exact-row tail route, while
+  `MatrixBernstein.sampleCovarianceExactRowHighProbability` closes its
+  normalized `1 - delta` specialization. Use `iIndepFun_centeredRankOne`
+  when raw random-vector independence is available. The next safe task is a
+  reader-facing exact-row application or a Loewner/spectral corollary; keep the
+  older Tropp bundles as compatibility surfaces.
 - S16 now has `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
   as the provider-compressed natural-state tail wrapper. Future work should
   compress only genuinely provider-dischargeable assumptions and keep
