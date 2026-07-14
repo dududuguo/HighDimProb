@@ -29,6 +29,7 @@ import HighDimProbTest.RademacherSumsAPI
 import HighDimProbTest.RandomFamilyAPI
 import HighDimProbTest.ChainingAPI
 import HighDimProbTest.FiniteMaxAPI
+import HighDimProbTest.SubGaussianMaxAPI
 import HighDimProbTest.RandomVectorAPI
 import HighDimProbTest.CovarianceAPI
 import HighDimProbTest.CovarianceProofsAPI

@@ -106,6 +106,7 @@ open HighDimProb
 #check integrable_processSup
 #check expect_le_log_mgf
 #check expect_processSup_le_of_cgf_bound_at
+#check expect_processSup_le_of_centeredSubGaussianMGF
 #check RandomFamily
 #check RealRandomFamily
 #check IsRandomFamily
