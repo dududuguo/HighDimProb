@@ -118,6 +118,21 @@ theorem coveringNumber_le_card_of_isInternalEpsilonNet {α : Type*}
   simpa [hN_fin.cast_ncard_eq] using
     coveringNumber_le_encard_of_isInternalEpsilonNet hN
 
+/-- A finite internal epsilon-net makes the covering number a finite natural
+number, bounded by the cardinality of the net. -/
+theorem exists_nat_eq_coveringNumber_of_isInternalEpsilonNet {α : Type*}
+    [PseudoMetricSpace α] {K N : Set α} {ε : ℝ}
+    (hN : IsInternalEpsilonNet K N ε) (hN_fin : N.Finite) :
+    ∃ m : Nat, coveringNumber K ε = (m : ENat) ∧ m ≤ N.ncard := by
+  have hle := coveringNumber_le_card_of_isInternalEpsilonNet hN hN_fin
+  have hfinite : coveringNumber K ε ≠ ⊤ :=
+    ne_top_of_le_ne_top (ENat.coe_ne_top N.ncard) hle
+  refine ⟨(coveringNumber K ε).toNat, ?_, ?_⟩
+  · exact (ENat.coe_toNat hfinite).symm
+  · apply ENat.coe_le_coe.mp
+    rw [ENat.coe_toNat hfinite]
+    exact hle
+
 end
 
 end HighDimProb

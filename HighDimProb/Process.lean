@@ -1,5 +1,6 @@
 import HighDimProb.RandomFamily
 import HighDimProb.RandomProcess
+import HighDimProb.Chaining
 import HighDimProb.EmpiricalProcess
 
 /-!

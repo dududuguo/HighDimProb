@@ -99,6 +99,9 @@ open HighDimProb
 #check RandomProcess
 #check IsRandomProcess
 #check processAt
+#check processSup
+#check isRandomVariable_processSup
+#check integrable_processSup
 #check RandomFamily
 #check RealRandomFamily
 #check IsRandomFamily

@@ -21,6 +21,7 @@ variable (ε : ℝ)
 #check coveringNumber_le_encard_of_isInternalEpsilonNet
 #check externalCoveringNumber_le_card_of_isEpsilonNet
 #check coveringNumber_le_card_of_isInternalEpsilonNet
+#check exists_nat_eq_coveringNumber_of_isInternalEpsilonNet
 #check packingCoveringInequality
 
 example :
@@ -52,6 +53,10 @@ example :
 
 #check fun (hN : IsInternalEpsilonNet K N ε) =>
   coveringNumber_le_encard_of_isInternalEpsilonNet hN
+
+example (hN : IsInternalEpsilonNet K N ε) (hN_fin : N.Finite) :
+    ∃ m : Nat, coveringNumber K ε = (m : ENat) ∧ m ≤ N.ncard :=
+  exists_nat_eq_coveringNumber_of_isInternalEpsilonNet hN hN_fin
 
 example :
     packingNumber K (2 * ε) ≤ coveringNumber K ε ∧
