@@ -17,6 +17,20 @@ variable (X : RandomProcess Ω T ℝ)
 #check isRandomVariable_processSup
 #check integrable_processSup
 #check chain_sub_eq_sum_range
+#check norm_sub_chain_le_sum_of_step_bound
+
+example {α E : Type*} [SeminormedAddCommGroup E]
+    (gamma : ℕ → α) (f : α → E) (b : ℕ → ℝ) :
+    ‖f (gamma 0) - f (gamma 0)‖ ≤
+      Finset.sum (Finset.range 0) b := by
+  apply norm_sub_chain_le_sum_of_step_bound gamma f 0 b
+  simp
+
+example {α : Type*} (gamma : ℕ → α) (c : ℝ) (L : ℕ) :
+    ‖c - c‖ ≤ Finset.sum (Finset.range L) (fun _ => (1 : ℝ)) := by
+  apply norm_sub_chain_le_sum_of_step_bound gamma (fun _ => c) L (fun _ => 1)
+  intro k hk
+  simp
 
 example {α E : Type*} [AddCommGroup E]
     (gamma : ℕ → α) (f : α → E) :
