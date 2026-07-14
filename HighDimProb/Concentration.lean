@@ -13,6 +13,7 @@ import HighDimProb.Concentration.SubExponentialSums
 import HighDimProb.Concentration.Bernstein
 import HighDimProb.Concentration.RademacherSums
 import HighDimProb.Concentration.Hoeffding
+import HighDimProb.Concentration.FiniteMax
 
 /-!
 # Concentration branch

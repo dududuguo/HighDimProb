@@ -19,6 +19,8 @@ open HighDimProb
 #check centered
 #check variance
 #check pow_le_two_sqrt_mul_exp_sq
+#check sup'_le_log_sum_exp_div
+#check log_sum_exp_le_log_card_add
 #check upperTailProb
 #check SubGaussianTail
 #check markov_inequality
@@ -102,6 +104,8 @@ open HighDimProb
 #check processSup
 #check isRandomVariable_processSup
 #check integrable_processSup
+#check expect_le_log_mgf
+#check expect_processSup_le_of_cgf_bound_at
 #check RandomFamily
 #check RealRandomFamily
 #check IsRandomFamily

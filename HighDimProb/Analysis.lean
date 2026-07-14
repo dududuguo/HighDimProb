@@ -1,4 +1,5 @@
 import HighDimProb.Analysis.RealInequalities
+import HighDimProb.Analysis.LogSumExp
 
 /-!
 # Analysis helper branch

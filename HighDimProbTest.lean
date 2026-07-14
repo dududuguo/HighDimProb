@@ -7,6 +7,7 @@ import HighDimProbTest.TailAPI
 import HighDimProbTest.TailProofsAPI
 import HighDimProbTest.LpMomentAPI
 import HighDimProbTest.RealInequalitiesAPI
+import HighDimProbTest.LogSumExpAPI
 import HighDimProbTest.OrliczAPI
 import HighDimProbTest.SubGaussianAPI
 import HighDimProbTest.SubExponentialAPI
@@ -27,6 +28,7 @@ import HighDimProbTest.RademacherFamilyAPI
 import HighDimProbTest.RademacherSumsAPI
 import HighDimProbTest.RandomFamilyAPI
 import HighDimProbTest.ChainingAPI
+import HighDimProbTest.FiniteMaxAPI
 import HighDimProbTest.RandomVectorAPI
 import HighDimProbTest.CovarianceAPI
 import HighDimProbTest.CovarianceProofsAPI
