@@ -18,6 +18,38 @@ variable (X : RandomProcess Ω T ℝ)
 #check integrable_processSup
 #check chain_sub_eq_sum_range
 #check norm_sub_chain_le_sum_of_step_bound
+#check norm_sub_chain_le_sum_of_level_sup
+
+example {α E : Type*} [SeminormedAddCommGroup E]
+    (gamma : ℕ → α) (f : α → E)
+    (nextLevel : Fin 0 → Finset α) (parent : Fin 0 → α → α) :
+    ‖f (gamma 0) - f (gamma 0)‖ ≤ 0 := by
+  have h := norm_sub_chain_le_sum_of_level_sup gamma f 0 nextLevel parent
+    (fun k => Fin.elim0 k) (fun k => Fin.elim0 k)
+  exact h
+
+example :
+    ‖(1 : ℝ) - 0‖ ≤
+      Finset.univ.sum (fun _k : Fin 1 =>
+        Finset.sup' ({1} : Finset ℝ) ⟨1, by simp⟩
+          (fun x => ‖x - 0‖)) := by
+  let gamma : ℕ → ℝ := fun n => n
+  have hmem : ∀ k : Fin 1,
+      gamma ((k : ℕ) + 1) ∈ ({1} : Finset ℝ) := by
+    intro k
+    have hk : k = 0 := Fin.eq_zero k
+    subst k
+    simp [gamma]
+  have hparent : ∀ k : Fin 1,
+      gamma (k : ℕ) = (0 : ℝ) := by
+    intro k
+    have hk : k = 0 := Fin.eq_zero k
+    subst k
+    simp [gamma]
+  convert
+      (norm_sub_chain_le_sum_of_level_sup gamma (fun x => x) 1
+        (fun _ => {1}) (fun _ _ => 0) hmem hparent) using 1
+  simp [gamma]
 
 example {α E : Type*} [SeminormedAddCommGroup E]
     (gamma : ℕ → α) (f : α → E) (b : ℕ → ℝ) :
