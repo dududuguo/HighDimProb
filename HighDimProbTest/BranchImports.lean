@@ -103,6 +103,7 @@ open HighDimProb
 #check processAt
 #check chain_sub_eq_sum_range
 #check norm_sub_chain_le_sum_of_step_bound
+#check norm_sub_chain_le_sum_of_level_sup
 #check processSup
 #check isRandomVariable_processSup
 #check integrable_processSup
