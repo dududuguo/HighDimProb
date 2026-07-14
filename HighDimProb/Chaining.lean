@@ -13,6 +13,18 @@ open MeasureTheory
 
 noncomputable section
 
+/-- The endpoint difference of a chain telescopes into its consecutive increments. -/
+theorem chain_sub_eq_sum_range
+    {α E : Type*} [AddCommGroup E]
+    (gamma : ℕ → α) (f : α → E) (L : ℕ) :
+    f (gamma L) - f (gamma 0) =
+      Finset.sum (Finset.range L) (fun k => f (gamma (k + 1)) - f (gamma k)) := by
+  induction L with
+  | zero => simp
+  | succ L ih =>
+      rw [Finset.sum_range_succ, ← ih]
+      abel
+
 /-- Pointwise supremum of a real-valued random process over a nonempty finite set. -/
 def processSup {Ω T : Type*} [MeasurableSpace Ω]
     (X : RandomProcess Ω T ℝ) (s : Finset T) (hs : s.Nonempty) :

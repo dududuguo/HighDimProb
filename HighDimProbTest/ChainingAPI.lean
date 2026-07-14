@@ -16,6 +16,19 @@ variable (X : RandomProcess Ω T ℝ)
 #check processSup
 #check isRandomVariable_processSup
 #check integrable_processSup
+#check chain_sub_eq_sum_range
+
+example {α E : Type*} [AddCommGroup E]
+    (gamma : ℕ → α) (f : α → E) :
+    f (gamma 0) - f (gamma 0) =
+      Finset.sum (Finset.range 0) (fun k => f (gamma (k + 1)) - f (gamma k)) := by
+  exact chain_sub_eq_sum_range gamma f 0
+
+example {α E : Type*} [AddCommGroup E]
+    (gamma : ℕ → α) (f : α → E) :
+    f (gamma 3) - f (gamma 0) =
+      Finset.sum (Finset.range 3) (fun k => f (gamma (k + 1)) - f (gamma k)) := by
+  simpa using chain_sub_eq_sum_range gamma f 3
 
 example (hX : IsRandomProcess P X) :
     IsRandomVariable P (processSup X s hs) := by
