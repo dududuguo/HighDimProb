@@ -3,6 +3,7 @@ import HighDimProb.Tail
 namespace HighDimProbTest
 
 open MeasureTheory
+open scoped BigOperators
 
 section TailAPI
 
@@ -18,6 +19,7 @@ variable (hX : HighDimProb.IsRealRandomVariable P X)
 #check HighDimProb.upperTailProb P X t
 #check HighDimProb.lowerTailProb P X t
 #check HighDimProb.absTailProb P X t
+#check HighDimProb.upperTailProb_biUnion_le
 #check HighDimProb.measurableSet_upperTailEvent hX t
 #check HighDimProb.measurableSet_lowerTailEvent hX t
 #check HighDimProb.measurableSet_absTailEvent hX t
@@ -30,6 +32,11 @@ example : HighDimProb.lowerTailProb P X t = P (HighDimProb.lowerTailEvent X t) :
 
 example : HighDimProb.absTailProb P X t = P (HighDimProb.absTailEvent X t) :=
   rfl
+
+example {ι : Type*} (s : Finset ι) (Xs : ι → Ω → ℝ) (u : ℝ) :
+    P (⋃ i ∈ s, HighDimProb.upperTailEvent (Xs i) u) ≤
+      ∑ i ∈ s, HighDimProb.upperTailProb P (Xs i) u :=
+  HighDimProb.upperTailProb_biUnion_le P s Xs u
 
 example : MeasurableSet (HighDimProb.upperTailEvent X t) :=
   HighDimProb.measurableSet_upperTailEvent hX t

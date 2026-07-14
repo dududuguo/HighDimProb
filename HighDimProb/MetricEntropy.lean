@@ -68,6 +68,26 @@ theorem packingNumber_def {α : Type*} [PseudoMetricSpace α]
     packingNumber K ε = Metric.packingNumber (epsilonRadius ε) K :=
   rfl
 
+/-- The standard packing-covering comparison at scales `ε` and `2 * ε`. -/
+theorem packingCoveringInequality {α : Type*} [PseudoMetricSpace α]
+    (K : Set α) (ε : ℝ) :
+    packingNumber K (2 * ε) ≤ coveringNumber K ε ∧
+      coveringNumber K ε ≤ packingNumber K ε := by
+  have hscale : epsilonRadius (2 * ε) = 2 * epsilonRadius ε := by
+    change Real.toNNReal (2 * ε) = 2 * Real.toNNReal ε
+    rw [Real.toNNReal_mul (by norm_num : (0 : ℝ) ≤ 2)]
+    norm_num [epsilonRadius, Real.toNNReal_of_nonneg]
+  constructor
+  · change Metric.packingNumber (epsilonRadius (2 * ε)) K ≤
+      Metric.coveringNumber (epsilonRadius ε) K
+    rw [hscale]
+    exact le_trans
+      (Metric.packingNumber_two_mul_le_externalCoveringNumber (epsilonRadius ε) K)
+      (Metric.externalCoveringNumber_le_coveringNumber (epsilonRadius ε) K)
+  · change Metric.coveringNumber (epsilonRadius ε) K ≤
+      Metric.packingNumber (epsilonRadius ε) K
+    exact Metric.coveringNumber_le_packingNumber (epsilonRadius ε) K
+
 /-- An explicit external epsilon-net bounds the external covering number. -/
 theorem externalCoveringNumber_le_encard_of_isEpsilonNet {α : Type*}
     [PseudoMetricSpace α] {K N : Set α} {ε : ℝ}

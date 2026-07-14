@@ -144,6 +144,14 @@ theorem absTailProb_def {Ω : Type*} [MeasurableSpace Ω]
     absTailProb P X t = P (absTailEvent X t) :=
   rfl
 
+/-- A finite union of upper-tail events is bounded by the sum of their probabilities. -/
+theorem upperTailProb_biUnion_le {Ω ι : Type*} [MeasurableSpace Ω]
+    (P : Measure Ω) (s : Finset ι) (X : ι → RealRandomVariable Ω) (t : ℝ) :
+    P (⋃ i ∈ s, upperTailEvent (X i) t) ≤
+      ∑ i ∈ s, upperTailProb P (X i) t := by
+  simpa only [upperTailProb_def] using
+    measure_biUnion_le P s (fun i => upperTailEvent (X i) t)
+
 theorem upperTailProb_antitone {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (X : RealRandomVariable Ω) {s t : ℝ} (hst : s ≤ t) :
     upperTailProb P X t ≤ upperTailProb P X s :=

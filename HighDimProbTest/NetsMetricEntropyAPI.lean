@@ -21,6 +21,7 @@ variable (ε : ℝ)
 #check coveringNumber_le_encard_of_isInternalEpsilonNet
 #check externalCoveringNumber_le_card_of_isEpsilonNet
 #check coveringNumber_le_card_of_isInternalEpsilonNet
+#check packingCoveringInequality
 
 example :
     IsEpsilonNet K N ε = Metric.IsCover (epsilonRadius ε) K N :=
@@ -51,5 +52,10 @@ example :
 
 #check fun (hN : IsInternalEpsilonNet K N ε) =>
   coveringNumber_le_encard_of_isInternalEpsilonNet hN
+
+example :
+    packingNumber K (2 * ε) ≤ coveringNumber K ε ∧
+      coveringNumber K ε ≤ packingNumber K ε :=
+  packingCoveringInequality K ε
 
 end
