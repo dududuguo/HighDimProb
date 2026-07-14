@@ -87,8 +87,10 @@ Random-family helpers:
 - The finite internal-net bridge
   `exists_nat_eq_coveringNumber_of_isInternalEpsilonNet` converts the finite
   covering number from ENat to Nat.
-- Boundary: no telescoping chain, dyadic Dudley sum, entropy integral, or
-  compact extension yet.
+- Deterministic finite chaining foundations now include `chain_sub_eq_sum_range`
+  and `norm_sub_chain_le_sum_of_step_bound`. The finite-level supremum/net chain
+  theorem, expected dyadic chaining sum, entropy integral, and compact/infinite
+  extension remain unproved.
 
 ## Current RandomMatrix Entry Names
 
