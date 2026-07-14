@@ -75,6 +75,21 @@ Random-family helpers:
 - `IsRandomSample`
 - `sampleEvaluation`
 
+## Current Finite Chaining Foundation
+
+- Finite process suprema now have measurability and integrability bridges:
+  `isRandomVariable_processSup` and `integrable_processSup`.
+- Deterministic finite LogSumExp bounds are available in
+  `HighDimProb.Analysis.LogSumExp`; the fixed-CGF finite-maximum bound is
+  `expect_processSup_le_of_cgf_bound_at`.
+- The optimized centered-subGaussian maximum bound is
+  `expect_processSup_le_of_centeredSubGaussianMGF`.
+- The finite internal-net bridge
+  `exists_nat_eq_coveringNumber_of_isInternalEpsilonNet` converts the finite
+  covering number from ENat to Nat.
+- Boundary: no telescoping chain, dyadic Dudley sum, entropy integral, or
+  compact extension yet.
+
 ## Current RandomMatrix Entry Names
 
 Core Matrix Bernstein helpers:
