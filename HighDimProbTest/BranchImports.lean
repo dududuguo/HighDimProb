@@ -105,6 +105,7 @@ open HighDimProb
 #check chain_sub_eq_sum_range
 #check norm_sub_chain_le_sum_of_step_bound
 #check norm_sub_chain_le_sum_of_level_sup
+#check expect_abs_sub_chain_le_sum_of_level_sup
 #check processSup
 #check isRandomVariable_processSup
 #check integrable_processSup
@@ -112,6 +113,7 @@ open HighDimProb
 #check expect_processSup_le_of_cgf_bound_at
 #check expect_processSup_le_of_centeredSubGaussianMGF
 #check expect_finset_sup'_abs_le_of_centeredSubGaussianMGF
+#check expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF
 #check RandomFamily
 #check RealRandomFamily
 #check IsRandomFamily
