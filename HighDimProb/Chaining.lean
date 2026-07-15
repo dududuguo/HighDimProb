@@ -1,5 +1,6 @@
 import HighDimProb.RandomProcess
 import HighDimProb.Lp
+import HighDimProb.Expectation
 
 /-!
 # Finite process suprema
@@ -107,6 +108,67 @@ theorem integrable_processSup {Ω T : Type*} [MeasurableSpace Ω]
     exact hf.sup hg
   · intro t ht
     exact hX t ht
+
+/-- The expected endpoint difference is bounded by the expected sum of level suprema. -/
+theorem expect_abs_sub_chain_le_sum_of_level_sup
+    {Ω α : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω}
+    {X : RandomProcess Ω α ℝ}
+    (gamma : ℕ → α) (L : ℕ)
+    (nextLevel : Fin L → Finset α)
+    (parent : Fin L → α → α)
+    (hmem : ∀ k : Fin L,
+      gamma ((k : ℕ) + 1) ∈ nextLevel k)
+    (hparent : ∀ k : Fin L,
+      gamma (k : ℕ) =
+        parent k (gamma ((k : ℕ) + 1)))
+    (hLevelIntegrable :
+      ∀ k : Fin L,
+        IntegrableRealRandomVariable P
+          (fun ω =>
+            Finset.sup' (nextLevel k)
+              ⟨gamma ((k : ℕ) + 1), hmem k⟩
+              (fun x => |X x ω - X (parent k x) ω|))) :
+    expect P (fun ω => |X (gamma L) ω - X (gamma 0) ω|) ≤
+      Finset.univ.sum (fun k : Fin L =>
+        expect P
+          (fun ω =>
+            Finset.sup' (nextLevel k)
+              ⟨gamma ((k : ℕ) + 1), hmem k⟩
+              (fun x => |X x ω - X (parent k x) ω|))) := by
+  let upper : Fin L → Ω → ℝ := fun k ω =>
+    Finset.sup' (nextLevel k)
+      ⟨gamma ((k : ℕ) + 1), hmem k⟩
+      (fun x => |X x ω - X (parent k x) ω|)
+  have hUpper : IntegrableRealRandomVariable P (fun ω => ∑ k : Fin L, upper k ω) := by
+    unfold IntegrableRealRandomVariable IntegrableRandomVariable
+    exact MeasureTheory.integrable_finset_sum Finset.univ
+      (fun k _hk => hLevelIntegrable k)
+  have hPointwise : ∀ ω, |X (gamma L) ω - X (gamma 0) ω| ≤ ∑ k : Fin L, upper k ω := by
+    intro ω
+    simpa only [upper, Real.norm_eq_abs] using
+      (norm_sub_chain_le_sum_of_level_sup gamma (fun t => X t ω) L
+        nextLevel parent hmem hparent)
+  have hIntegral :
+      expect P (fun ω => |X (gamma L) ω - X (gamma 0) ω|) ≤
+        expect P (fun ω => ∑ k : Fin L, upper k ω) := by
+    rw [expect_def]
+    exact MeasureTheory.integral_mono_of_nonneg
+      (Filter.Eventually.of_forall (fun ω => abs_nonneg _))
+      hUpper
+      (Filter.Eventually.of_forall hPointwise)
+  calc
+    expect P (fun ω => |X (gamma L) ω - X (gamma 0) ω|)
+        ≤ expect P (fun ω => ∑ k : Fin L, upper k ω) := hIntegral
+    _ = ∑ k : Fin L, expect P (upper k) := by
+      exact expect_finset_sum (fun k _hk => hLevelIntegrable k)
+    _ = Finset.univ.sum (fun k : Fin L =>
+        expect P
+          (fun ω =>
+            Finset.sup' (nextLevel k)
+              ⟨gamma ((k : ℕ) + 1), hmem k⟩
+              (fun x => |X x ω - X (parent k x) ω|))) := by
+      rfl
 
 end
 

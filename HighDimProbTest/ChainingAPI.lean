@@ -16,9 +16,28 @@ variable (X : RandomProcess Ω T ℝ)
 #check processSup
 #check isRandomVariable_processSup
 #check integrable_processSup
+#check expect_abs_sub_chain_le_sum_of_level_sup
 #check chain_sub_eq_sum_range
 #check norm_sub_chain_le_sum_of_step_bound
 #check norm_sub_chain_le_sum_of_level_sup
+
+example {Ω α : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω}
+    {X : RandomProcess Ω α ℝ}
+    (gamma : ℕ → α)
+    (nextLevel : Fin 0 → Finset α)
+    (parent : Fin 0 → α → α) :
+    expect P (fun ω => |X (gamma 0) ω - X (gamma 0) ω|) ≤
+      Finset.univ.sum (fun k : Fin 0 =>
+        expect P
+          (fun ω =>
+            Finset.sup' (nextLevel k)
+              ⟨gamma ((k : ℕ) + 1), Fin.elim0 k⟩
+              (fun x => |X x ω - X (parent k x) ω|))) := by
+  exact expect_abs_sub_chain_le_sum_of_level_sup gamma 0 nextLevel parent
+    (fun k => Fin.elim0 k)
+    (fun k => Fin.elim0 k)
+    (fun k => Fin.elim0 k)
 
 example {α E : Type*} [SeminormedAddCommGroup E]
     (gamma : ℕ → α) (f : α → E)
