@@ -102,6 +102,8 @@ open HighDimProb
 #check RandomProcess
 #check IsRandomProcess
 #check processAt
+#check HasSubGaussianMGFIncrements
+#check HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le
 #check chain_sub_eq_sum_range
 #check norm_sub_chain_le_sum_of_step_bound
 #check norm_sub_chain_le_sum_of_level_sup
