@@ -84,13 +84,17 @@ Random-family helpers:
   `expect_processSup_le_of_cgf_bound_at`.
 - The optimized centered-subGaussian maximum bound is
   `expect_processSup_le_of_centeredSubGaussianMGF`.
+- `CenteredSubGaussianMGF.neg` and the public finite absolute maximum bound
+  `expect_finset_sup'_abs_le_of_centeredSubGaussianMGF` are now proved; the
+  latter has bound `K * sqrt (2 * log (2 * card))`, while the ordinary finite
+  maximum theorem remains available.
 - The finite internal-net bridge
   `exists_nat_eq_coveringNumber_of_isInternalEpsilonNet` converts the finite
   covering number from ENat to Nat.
 - Deterministic finite chaining foundations now include `chain_sub_eq_sum_range`,
   `norm_sub_chain_le_sum_of_step_bound`, and the public
-  `norm_sub_chain_le_sum_of_level_sup` bridge over finite levels. The finite
-  absolute subGaussian maximum bridge, expected dyadic chaining sum, entropy
+  `norm_sub_chain_le_sum_of_level_sup` bridge over finite levels. The expected
+  finite-level chain inequality, subGaussian dyadic chaining sum, entropy
   integral, and compact/infinite extension remain unproved.
 
 ## Current RandomMatrix Entry Names

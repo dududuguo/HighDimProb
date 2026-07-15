@@ -8,7 +8,7 @@ This is the active short list. Old completed task logs were collapsed into
 - Keep `RandomFamily` as a vocabulary layer only; defer filtrations,
   adaptedness, martingales, and independence conditioning to later contracts.
 - Next random-object task: `RP-API-random-family-downstream-consumer-contract`.
-- Next finite-chaining task: finite absolute subGaussian maximum / expected dyadic increment bridge.
+- Next finite-chaining task: expected finite-level chain inequality / subGaussian dyadic sum.
 
 ## Active RandomMatrix Work
 
