@@ -6,6 +6,7 @@ This is the active term index. The old detailed map was collapsed into
 | Area | Main terms | Source |
 |---|---|---|
 | Probability basics | `Event`, `ProbabilityMeasure`, `RandomVariable`, `law`, `expect` | [`HighDimProb`](../HighDimProb) |
+| Finite expectation sums | `expect_finset_sum` | [`HighDimProb/Expectation.lean`](../HighDimProb/Expectation.lean) |
 | Tail vocabulary | `upperTailEvent`, `lowerTailEvent`, `absTailEvent`, tail probabilities | [`HighDimProb/Tail.lean`](../HighDimProb/Tail.lean) |
 | Scalar size | `realLpNorm`, `HasFiniteMoment`, `SubGaussianTail`, `SubExponentialTail`, `Psi2Bound`, `Psi1Bound` | [`HighDimProb/Scalar`](../HighDimProb/Scalar) and concentration files |
 | Scalar concentration | Markov, Chebyshev, Orlicz/tail, moment, MGF, Rademacher, Hoeffding, Bernstein routes | [`HighDimProb/Concentration`](../HighDimProb/Concentration) |
@@ -14,10 +15,11 @@ This is the active term index. The old detailed map was collapsed into
 | Random vectors | random-vector, covariance, isotropic, subGaussian-vector vocabulary | [`HighDimProb/Vector.lean`](../HighDimProb/Vector.lean) |
 | Geometry | nets, metric entropy, Gaussian width vocabulary | [`HighDimProb/Geometry.lean`](../HighDimProb/Geometry.lean) |
 | Finite process supremum | `processSup`, `isRandomVariable_processSup`, `integrable_processSup` | [`HighDimProb/Chaining.lean`](../HighDimProb/Chaining.lean) |
-| Finite chaining | `chain_sub_eq_sum_range`, `norm_sub_chain_le_sum_of_step_bound`, `norm_sub_chain_le_sum_of_level_sup` | [`HighDimProb/Chaining.lean`](../HighDimProb/Chaining.lean) |
+| Finite chaining | `chain_sub_eq_sum_range`, `norm_sub_chain_le_sum_of_step_bound`, `norm_sub_chain_le_sum_of_level_sup`, `expect_abs_sub_chain_le_sum_of_level_sup` | [`HighDimProb/Chaining.lean`](../HighDimProb/Chaining.lean) |
 | Deterministic finite LogSumExp | `sum_exp_pos`, `exp_mul_sup'_le_sum_exp`, `sup'_le_log_sum_exp_div`, `log_sum_exp_le_log_card_add` | [`HighDimProb/Analysis/LogSumExp.lean`](../HighDimProb/Analysis/LogSumExp.lean) |
 | Fixed-CGF finite maximum | `expect_processSup_le_of_cgf_bound_at` | [`HighDimProb/Concentration/FiniteMax.lean`](../HighDimProb/Concentration/FiniteMax.lean) |
 | Optimized subGaussian maxima | `CenteredSubGaussianMGF.neg`, `expect_processSup_le_of_centeredSubGaussianMGF`, `expect_finset_sup'_abs_le_of_centeredSubGaussianMGF` | [`HighDimProb/SubGaussian.lean`](../HighDimProb/SubGaussian.lean) and [`HighDimProb/Concentration/SubGaussianMax.lean`](../HighDimProb/Concentration/SubGaussianMax.lean) |
+| Finite subGaussian chaining | `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF` | [`HighDimProb/Concentration/SubGaussianMax.lean`](../HighDimProb/Concentration/SubGaussianMax.lean) |
 | ENat covering-number bridge | `coveringNumber_le_card_of_isInternalEpsilonNet`, `exists_nat_eq_coveringNumber_of_isInternalEpsilonNet` | [`HighDimProb/MetricEntropy.lean`](../HighDimProb/MetricEntropy.lean) |
 | Random matrices | random matrix families, self-adjointness, sums, operator norm, spectral events, ordered spectral endpoints (`lambdaMaxOrdered`, `lambdaMinOrdered`) | [`HighDimProb/RandomMatrix`](../HighDimProb/RandomMatrix) |
 | Matrix concentration | public trace-MGF, tail, Matrix Bernstein, and sample-covariance facade | [`HighDimProb.RandomMatrix.Concentration`](../HighDimProb/RandomMatrix/Concentration.lean) |

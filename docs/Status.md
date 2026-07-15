@@ -79,6 +79,8 @@ Random-family helpers:
 
 - Finite process suprema now have measurability and integrability bridges:
   `isRandomVariable_processSup` and `integrable_processSup`.
+- Finite sums of expectations are owned by `HighDimProb.Expectation` through
+  `expect_finset_sum`.
 - Deterministic finite LogSumExp bounds are available in
   `HighDimProb.Analysis.LogSumExp`; the fixed-CGF finite-maximum bound is
   `expect_processSup_le_of_cgf_bound_at`.
@@ -94,7 +96,13 @@ Random-family helpers:
 - Deterministic finite chaining foundations now include `chain_sub_eq_sum_range`,
   `norm_sub_chain_le_sum_of_step_bound`, and the public
   `norm_sub_chain_le_sum_of_level_sup` bridge over finite levels. The expected
-  finite-level chain inequality, subGaussian dyadic chaining sum, entropy
+  finite-level chain inequality
+  `expect_abs_sub_chain_le_sum_of_level_sup` and its centered-subGaussian
+  specialization
+  `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF` are
+  proved; the latter yields the sum of
+  `K k * sqrt (2 * log (2 * card (nextLevel k)))`. The
+  net/covering-cardinality specialization, dyadic entropy sum, entropy
   integral, and compact/infinite extension remain unproved.
 
 ## Current RandomMatrix Entry Names
