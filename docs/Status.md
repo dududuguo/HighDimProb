@@ -101,9 +101,13 @@ Random-family helpers:
   specialization
   `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF` are
   proved; the latter yields the sum of
-  `K k * sqrt (2 * log (2 * card (nextLevel k)))`. The
-  net/covering-cardinality specialization, dyadic entropy sum, entropy
-  integral, and compact/infinite extension remain unproved.
+  `K k * sqrt (2 * log (2 * card (nextLevel k)))`. The cardinality-bounded
+  corollary
+  `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le`
+  replaces each actual level card by any Nat upper certificate `N k`; it does
+  not yet connect `N` to `coveringNumber`. The next task is a zero-distance-safe
+  metric subGaussian increment abstraction. The net/covering adapter, dyadic
+  radii, entropy integral, and compact/infinite extension remain unproved.
 
 ## Current RandomMatrix Entry Names
 
