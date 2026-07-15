@@ -19,13 +19,14 @@ This is the active short list. Old completed task logs were collapsed into
    `exists_finset_isInternalEpsilonNet_of_totallyBounded` now connects
    `TotallyBounded K` and `0 < ε` to a finite internal epsilon-net with exact
    `coveringNumber K ε` cardinality relations.
-3. [ ] **dyadic entropy sum.** The single-layer and finite-level parent bridges
-   `exists_parentMap_of_subset_of_isInternalEpsilonNet` and
-   `exists_finset_parentMap_of_internalLevels`, plus the finite path bridge
-   `exists_finset_path_of_parentMap`, are proved. Add compatible dyadic nets
-   and entropy sums only after fixing the
-   cover-radius convention and the `dist` bound needed by
-   `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le`.
+3. [x] **dyadic entropy sum.**
+   `exists_finset_internalNetFamily_parentMap_path_of_totallyBounded` now
+   constructs finite internal nets for any supplied positive radius schedule,
+   exact covering-number/card/toNat certificates, adjacent parent maps, and
+   endpoint paths. `dyadicRadius` supplies the standard `R / 2^i` schedule,
+   `finiteDyadicEntropySum` is the finite covering-number sum, and
+   `expect_abs_sub_chain_le_finiteDyadicEntropySum` consumes it for finite
+   subGaussian chaining.
 4. [ ] **entropy integral.** Add the dyadic-to-integral comparison with an
    explicit positive scale range and finiteness hypothesis. No integral
    declaration exists yet.
@@ -37,7 +38,8 @@ Boundary reminder: `HasSubGaussianMGFIncrements` itself does not require
 `0 < σ`; its radius adapter requires `0 < σ`, `0 < r`, and `dist s t ≤ r`.
 The current measurable supremum API is finite `Finset`-only. The completed
 minimal-cover adapter does not provide an infinite-process or separability
-theorem; no dyadic sum, entropy integral, or Dudley endpoint exists yet.
+theorem; the finite dyadic sum is now closed, while no entropy integral or
+Dudley endpoint exists yet.
 
 ## Active RandomMatrix Work
 

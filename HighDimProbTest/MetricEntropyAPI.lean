@@ -14,6 +14,14 @@ open scoped NNReal ENNReal
 #check HighDimProb.exists_parentMap_of_subset_of_isInternalEpsilonNet
 #check HighDimProb.exists_finset_parentMap_of_internalLevels
 #check HighDimProb.exists_finset_path_of_parentMap
+#check HighDimProb.exists_finset_parentMap_of_internalRadiusLevels
+#check HighDimProb.exists_finset_internalNetFamily_of_totallyBounded
+#check HighDimProb.exists_finset_internalNetFamily_parentMap_of_totallyBounded
+#check HighDimProb.exists_finset_internalNetFamily_parentMap_path_of_totallyBounded
+#check HighDimProb.finiteDyadicEntropySum
+#check HighDimProb.finiteDyadicEntropySum_eq_of_internalNetFamily
+#check HighDimProb.dyadicRadius
+#check HighDimProb.dyadicRadius_pos
 
 -- A nonpositive real radius is represented by the zero NNReal radius.
 example : epsilonRadius (-1) = 0 := by
@@ -88,6 +96,29 @@ example {alpha : Type*} [PseudoMetricSpace alpha]
         dist (path (Fin.succ k))
           (parent k (path (Fin.succ k))) ≤ radius k) := by
   exact exists_finset_path_of_parentMap hmem hdist hx
+
+example {alpha : Type*} [PseudoMetricSpace alpha]
+    {K : Set alpha} {L : Nat} {rho : Fin (L + 1) → Real}
+    (hrho : ∀ i, 0 < rho i) (hK : TotallyBounded K) :
+    ∃ levels : Fin (L + 1) → Finset alpha,
+      (∀ i, IsInternalEpsilonNet K (levels i : Set alpha) (rho i)) ∧
+      (∀ i, coveringNumber K (rho i) = (levels i).card) ∧
+      (∀ i, (levels i).card = (coveringNumber K (rho i)).toNat) := by
+  exact exists_finset_internalNetFamily_of_totallyBounded hrho hK
+
+example {alpha : Type*} [PseudoMetricSpace alpha]
+    {K : Set alpha} {L : Nat} {rho : Fin (L + 1) → Real}
+    {levels : Fin (L + 1) → Finset alpha} {sigma : Real}
+    (hcard : ∀ i, coveringNumber K (rho i) = (levels i).card) :
+    finiteDyadicEntropySum K rho sigma =
+      ∑ k : Fin L,
+        (sigma * rho (Fin.castSucc k)) * Real.sqrt
+          (2 * Real.log (2 * ((levels (Fin.succ k)).card : Real))) := by
+  exact finiteDyadicEntropySum_eq_of_internalNetFamily hcard
+
+example {R : Real} (hR : 0 < R) (i : Nat) :
+    0 < dyadicRadius R i := by
+  exact dyadicRadius_pos hR i
 
 -- Mathlib's minimal-cover primitives remain available for lower-level audits;
 -- the HighDimProb Finset/internal-net adapter is checked above.

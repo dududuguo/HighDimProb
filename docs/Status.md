@@ -80,14 +80,14 @@ Random-family helpers:
 
 ## Finite Chaining Roadmap
 
-The roadmap is deliberately split into five proof-facing stages. The first two
-stages are complete in the current source tree; the remaining three are not.
+The roadmap is deliberately split into five proof-facing stages. The first
+three stages are complete in the current source tree; the final two are not.
 
 | Stage | Status | Current boundary |
 | --- | --- | --- |
 | finite chaining | complete | Supplied finite levels, parent maps, and a finite chain are handled by `chain_sub_eq_sum_range`, `norm_sub_chain_le_sum_of_level_sup`, `expect_abs_sub_chain_le_sum_of_level_sup`, and the centered-subGaussian cardinality corollary; the metric increment adapter is `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`. |
 | minimal-cover adapter | complete | `exists_finset_isInternalEpsilonNet_of_totallyBounded` turns `0 < ε` and `TotallyBounded K` into a finite internal net with exact `coveringNumber` / `ENat` / `toNat` cardinality relations. |
-| dyadic entropy sum | not proved | The single-layer `exists_parentMap_of_subset_of_isInternalEpsilonNet`, finite-level `exists_finset_parentMap_of_internalLevels`, and finite path `exists_finset_path_of_parentMap` bridges are available; no declaration constructs compatible dyadic nets or a finite-level entropy sum from covering numbers. |
+| dyadic entropy sum | complete | `exists_finset_internalNetFamily_parentMap_path_of_totallyBounded` constructs finite internal nets at any supplied positive radius schedule, exact covering-number/card/toNat certificates, adjacent parent maps, and endpoint paths; `dyadicRadius` supplies the standard `R / 2^i` schedule, `finiteDyadicEntropySum` records the finite covering-number sum, and `expect_abs_sub_chain_le_finiteDyadicEntropySum` consumes the certificate for finite subGaussian chaining. |
 | entropy integral | not proved | No entropy-integral definition, dyadic-to-integral comparison, or finiteness theorem is present. |
 | Dudley | not proved | No infinite-index supremum, limiting argument, or Dudley endpoint is present. |
 

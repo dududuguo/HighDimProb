@@ -197,6 +197,47 @@ theorem exists_finset_path_of_parentMap {α : Type*} [PseudoMetricSpace α]
     exact ⟨hpath_parent k,
       hdist k (path (Fin.succ k)) (hpath_mem (Fin.succ k))⟩
 
+/-- Extend finite parent selection to a level-dependent positive radius family. -/
+theorem exists_finset_parentMap_of_internalRadiusLevels {α : Type*}
+    [PseudoMetricSpace α] {K : Set α} {L : Nat}
+    {levels : Fin (L + 1) → Finset α} {rho : Fin (L + 1) → ℝ}
+    (hPrev : ∀ k : Fin L,
+      IsInternalEpsilonNet K (levels (Fin.castSucc k) : Set α)
+        (rho (Fin.castSucc k)))
+    (hNext : ∀ k : Fin L,
+      (levels (Fin.succ k) : Set α) ⊆ K)
+    (hρ : ∀ k : Fin L, 0 < rho (Fin.castSucc k)) :
+    ∃ parent : Fin L → α → α,
+      (∀ k x, x ∈ levels (Fin.succ k) →
+        parent k x ∈ levels (Fin.castSucc k)) ∧
+      (∀ k x, x ∈ levels (Fin.succ k) →
+        dist x (parent k x) ≤ rho (Fin.castSucc k)) := by
+  classical
+  have hParents : ∀ k : Fin L,
+      ∃ p : (levels (Fin.succ k) : Set α) → K,
+        ∀ x, (p x : α) ∈ (levels (Fin.castSucc k) : Set α) ∧
+          dist (x : α) (p x : α) ≤ rho (Fin.castSucc k) := by
+    intro k
+    exact exists_parentMap_of_subset_of_isInternalEpsilonNet
+      (hNext k) (hPrev k) (hρ k)
+  let parents : ∀ k : Fin L,
+      (levels (Fin.succ k) : Set α) → K :=
+    fun k => Classical.choose (hParents k)
+  have hParents_spec : ∀ k x, (parents k x : α) ∈
+      (levels (Fin.castSucc k) : Set α) ∧
+        dist (x : α) (parents k x : α) ≤ rho (Fin.castSucc k) := by
+    intro k x
+    exact Classical.choose_spec (hParents k) x
+  let parent : Fin L → α → α := fun k x =>
+    if hx : x ∈ (levels (Fin.succ k) : Set α) then
+      (parents k ⟨x, hx⟩ : α)
+    else x
+  refine ⟨parent, ?_, ?_⟩
+  · intro k x hx
+    simpa [parent, hx] using (hParents_spec k ⟨x, hx⟩).1
+  · intro k x hx
+    simpa [parent, hx] using (hParents_spec k ⟨x, hx⟩).2
+
 /-- A finite explicit external epsilon-net bounds the external covering number by its cardinality. -/
 theorem externalCoveringNumber_le_card_of_isEpsilonNet {α : Type*}
     [PseudoMetricSpace α] {K N : Set α} {ε : ℝ}
@@ -271,6 +312,114 @@ theorem exists_finset_isInternalEpsilonNet_of_totallyBounded {α : Type*}
   refine ⟨N, hN_internal, hcover_eq, ?_⟩
   apply ENat.coe_inj.mp
   exact hcover_eq.symm.trans htoNat.symm
+
+/-- Choose finite internal nets independently at finitely many positive radii. -/
+theorem exists_finset_internalNetFamily_of_totallyBounded {α : Type*}
+    [PseudoMetricSpace α] {K : Set α} {L : Nat}
+    {rho : Fin (L + 1) → ℝ}
+    (hρ : ∀ i, 0 < rho i) (hK : TotallyBounded K) :
+    ∃ levels : Fin (L + 1) → Finset α,
+      (∀ i, IsInternalEpsilonNet K (levels i : Set α) (rho i)) ∧
+      (∀ i, coveringNumber K (rho i) = (levels i).card) ∧
+      (∀ i, (levels i).card = (coveringNumber K (rho i)).toNat) := by
+  have hex : ∀ i : Fin (L + 1), ∃ N : Finset α,
+      IsInternalEpsilonNet K (N : Set α) (rho i) ∧
+        coveringNumber K (rho i) = (N.card : ENat) ∧
+        N.card = (coveringNumber K (rho i)).toNat := by
+    intro i
+    exact exists_finset_isInternalEpsilonNet_of_totallyBounded (hρ i) hK
+  choose levels hlevels using hex
+  refine ⟨levels, ?_, ?_, ?_⟩
+  · intro i
+    exact (hlevels i).1
+  · intro i
+    exact (hlevels i).2.1
+  · intro i
+    exact (hlevels i).2.2
+
+/-- Package a finite positive-radius net family with its adjacent parent maps. -/
+theorem exists_finset_internalNetFamily_parentMap_of_totallyBounded
+    {α : Type*} [PseudoMetricSpace α] {K : Set α} {L : Nat}
+    {rho : Fin (L + 1) → ℝ}
+    (hρ : ∀ i, 0 < rho i) (hK : TotallyBounded K) :
+    ∃ levels : Fin (L + 1) → Finset α,
+      ∃ parent : Fin L → α → α,
+        (∀ i, IsInternalEpsilonNet K (levels i : Set α) (rho i)) ∧
+        (∀ i, coveringNumber K (rho i) = (levels i).card) ∧
+        (∀ i, (levels i).card = (coveringNumber K (rho i)).toNat) ∧
+        (∀ k x, x ∈ levels (Fin.succ k) →
+          parent k x ∈ levels (Fin.castSucc k)) ∧
+        (∀ k x, x ∈ levels (Fin.succ k) →
+          dist x (parent k x) ≤ rho (Fin.castSucc k)) := by
+  obtain ⟨levels, hlevels, hcard, htoNat⟩ :=
+    exists_finset_internalNetFamily_of_totallyBounded hρ hK
+  obtain ⟨parent, hparent_mem, hparent_dist⟩ :=
+    exists_finset_parentMap_of_internalRadiusLevels
+      (fun k => hlevels (Fin.castSucc k))
+      (fun k => (hlevels (Fin.succ k)).1)
+      (fun k => hρ (Fin.castSucc k))
+  exact ⟨levels, parent, hlevels, hcard, htoNat, hparent_mem, hparent_dist⟩
+
+/-- Add a finite compatible path for every endpoint in the terminal net. -/
+theorem exists_finset_internalNetFamily_parentMap_path_of_totallyBounded
+    {α : Type*} [PseudoMetricSpace α] {K : Set α} {L : Nat}
+    {rho : Fin (L + 1) → ℝ}
+    (hρ : ∀ i, 0 < rho i) (hK : TotallyBounded K) :
+    ∃ levels : Fin (L + 1) → Finset α,
+      ∃ parent : Fin L → α → α,
+        (∀ i, IsInternalEpsilonNet K (levels i : Set α) (rho i)) ∧
+        (∀ i, coveringNumber K (rho i) = (levels i).card) ∧
+        (∀ i, (levels i).card = (coveringNumber K (rho i)).toNat) ∧
+        (∀ k x, x ∈ levels (Fin.succ k) →
+          parent k x ∈ levels (Fin.castSucc k)) ∧
+        (∀ k x, x ∈ levels (Fin.succ k) →
+          dist x (parent k x) ≤ rho (Fin.castSucc k)) ∧
+        (∀ x, x ∈ levels (Fin.last L) →
+          ∃ path : Fin (L + 1) → α,
+            path (Fin.last L) = x ∧
+            (∀ j, path j ∈ levels j) ∧
+            (∀ k : Fin L,
+              path (Fin.castSucc k) = parent k (path (Fin.succ k)) ∧
+              dist (path (Fin.succ k))
+                (parent k (path (Fin.succ k))) ≤ rho (Fin.castSucc k))) := by
+  obtain ⟨levels, parent, hlevels, hcard, htoNat, hparent_mem, hparent_dist⟩ :=
+    exists_finset_internalNetFamily_parentMap_of_totallyBounded hρ hK
+  refine ⟨levels, parent, hlevels, hcard, htoNat, hparent_mem, hparent_dist, ?_⟩
+  intro x hx
+  exact exists_finset_path_of_parentMap hparent_mem
+    (fun k y hy => hparent_dist k y hy) hx
+
+/-- The standard positive dyadic radius schedule at base scale `R`. -/
+def dyadicRadius (R : ℝ) (i : Nat) : ℝ := R / (2 : ℝ) ^ i
+
+theorem dyadicRadius_pos {R : ℝ} (hR : 0 < R) (i : Nat) :
+    0 < dyadicRadius R i := by
+  dsimp [dyadicRadius]
+  positivity
+
+/-- The finite entropy sum associated with a positive finite radius family. -/
+def finiteDyadicEntropySum {α : Type*} [PseudoMetricSpace α]
+    (K : Set α) {L : Nat} (rho : Fin (L + 1) → ℝ) (sigma : ℝ) : ℝ :=
+  ∑ k : Fin L,
+    (sigma * rho (Fin.castSucc k)) * Real.sqrt
+      (2 * Real.log
+        (2 * ((coveringNumber K (rho (Fin.succ k))).toNat : ℝ)))
+
+/-- Replace covering-number cardinalities in the finite entropy sum by net cards. -/
+theorem finiteDyadicEntropySum_eq_of_internalNetFamily
+    {α : Type*} [PseudoMetricSpace α] {K : Set α} {L : Nat}
+    {rho : Fin (L + 1) → ℝ} {sigma : ℝ}
+    {levels : Fin (L + 1) → Finset α}
+    (hcard : ∀ i, coveringNumber K (rho i) = (levels i).card) :
+    finiteDyadicEntropySum K rho sigma =
+      ∑ k : Fin L,
+        (sigma * rho (Fin.castSucc k)) * Real.sqrt
+          (2 * Real.log (2 * ((levels (Fin.succ k)).card : ℝ))) := by
+  unfold finiteDyadicEntropySum
+  apply Finset.sum_congr rfl
+  intro k hk
+  rw [hcard (Fin.succ k)]
+  simp
 
 end
 

@@ -26,6 +26,7 @@ example {Omega T : Type*} [MeasurableSpace Omega]
 #check expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF
 
 #check expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le
+#check expect_abs_sub_chain_le_finiteDyadicEntropySum
 
 example
     {Ω α : Type*} [MeasurableSpace Ω]
@@ -78,6 +79,33 @@ example
           (2 * Real.log (2 * (N k : ℝ)))) := by
   exact expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le
     gamma L nextLevel parent K N hmem hparent hXMeas hXSG hcard
+
+example
+    {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RandomProcess Ω α ℝ} {Kset : Set α}
+    (gamma : ℕ → α) (L : ℕ)
+    (nextLevel : Fin L → Finset α)
+    (parent : Fin L → α → α)
+    (σ : ℝ) (rho : Fin (L + 1) → ℝ)
+    (hmem : ∀ k : Fin L,
+      gamma ((k : ℕ) + 1) ∈ nextLevel k)
+    (hparent : ∀ k : Fin L,
+      gamma (k : ℕ) = parent k (gamma ((k : ℕ) + 1)))
+    (hXMeas : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      Measurable (fun ω => X x ω - X (parent k x) ω))
+    (hX : HasSubGaussianMGFIncrements P X σ)
+    (hσ : 0 < σ)
+    (hρ : ∀ j : Fin (L + 1), 0 < rho j)
+    (hdist : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      dist x (parent k x) ≤ rho (Fin.castSucc k))
+    (hcard : ∀ k : Fin L,
+      (nextLevel k).card =
+        (coveringNumber Kset (rho (Fin.succ k))).toNat) :
+    expect P (fun ω => |X (gamma L) ω - X (gamma 0) ω|) ≤
+      finiteDyadicEntropySum Kset rho σ := by
+  exact expect_abs_sub_chain_le_finiteDyadicEntropySum
+    gamma L nextLevel parent σ rho hmem hparent hXMeas hX hσ hρ hdist hcard
 
 example {Omega T : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} [IsProbabilityMeasure P]

@@ -1,4 +1,5 @@
 import HighDimProb.Concentration.FiniteMax
+import HighDimProb.MetricEntropy
 import HighDimProb.SubGaussian
 import HighDimProb.SubGaussianProcess
 
@@ -321,6 +322,38 @@ theorem expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_ca
             Real.sqrt (2 * Real.log (2 * (N k : ℝ))) :=
         Real.sqrt_le_sqrt (mul_le_mul_of_nonneg_left hLog (by norm_num))
       exact mul_le_mul_of_nonneg_left hSqrt (le_of_lt hK)
+
+/-- Finite chaining bound written directly as a covering-number entropy sum. -/
+theorem expect_abs_sub_chain_le_finiteDyadicEntropySum
+    {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RandomProcess Ω α ℝ} {Kset : Set α}
+    (gamma : ℕ → α) (L : ℕ)
+    (nextLevel : Fin L → Finset α)
+    (parent : Fin L → α → α)
+    (σ : ℝ) (rho : Fin (L + 1) → ℝ)
+    (hmem : ∀ k : Fin L,
+      gamma ((k : ℕ) + 1) ∈ nextLevel k)
+    (hparent : ∀ k : Fin L,
+      gamma (k : ℕ) = parent k (gamma ((k : ℕ) + 1)))
+    (hXMeas : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      Measurable (fun ω => X x ω - X (parent k x) ω))
+    (hX : HasSubGaussianMGFIncrements P X σ)
+    (hσ : 0 < σ)
+    (hρ : ∀ j : Fin (L + 1), 0 < rho j)
+    (hdist : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      dist x (parent k x) ≤ rho (Fin.castSucc k))
+    (hcard : ∀ k : Fin L,
+      (nextLevel k).card =
+        (coveringNumber Kset (rho (Fin.succ k))).toNat) :
+    expect P (fun ω => |X (gamma L) ω - X (gamma 0) ω|) ≤
+      finiteDyadicEntropySum Kset rho σ := by
+  have hBound :=
+    expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements
+      gamma L nextLevel parent σ (fun k => rho (Fin.castSucc k))
+      hmem hparent hXMeas hX hσ
+      (fun k => hρ (Fin.castSucc k)) hdist
+  simpa [finiteDyadicEntropySum, hcard] using hBound
 
 end
 
