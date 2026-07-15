@@ -1,4 +1,5 @@
 import HighDimProb.Concentration.SubGaussianSums
+import HighDimProb.Expectation
 
 /-!
 # Hoeffding bounds for bounded variables
@@ -35,16 +36,6 @@ private lemma add_two_ofReal_exp_local (a : ℝ) :
   rw [← ENNReal.ofReal_add (Real.exp_pos a).le (Real.exp_pos a).le]
   congr 1
   ring
-
-/-- Expectation commutes with finite sums of integrable real random variables. -/
-theorem expect_finset_sum {Ω ι : Type*} [MeasurableSpace Ω]
-    {P : Measure Ω} {s : Finset ι} {X : ι → RealRandomVariable Ω}
-    (hX : ∀ i, i ∈ s → IntegrableRealRandomVariable P (X i)) :
-    expect P (fun ω => ∑ i ∈ s, X i ω) =
-      ∑ i ∈ s, expect P (X i) := by
-  change (∫ ω, ∑ i ∈ s, X i ω ∂P) =
-    ∑ i ∈ s, ∫ ω, X i ω ∂P
-  exact MeasureTheory.integral_finset_sum s hX
 
 /-- Independent real variables remain independent after subtracting their means. -/
 theorem iIndepFun_centered_of_iIndepFun {Ω ι : Type*}

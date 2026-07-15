@@ -1,4 +1,5 @@
 import HighDimProb.RandomVariable
+import HighDimProb.Lp
 
 /-!
 # Expectation
@@ -32,6 +33,16 @@ theorem expect_def {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (X : RealRandomVariable Ω) :
     expect P X = ∫ ω, X ω ∂P :=
   rfl
+
+/-- Expectation commutes with finite sums of integrable real random variables. -/
+theorem expect_finset_sum {Ω ι : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω} {s : Finset ι} {X : ι → RealRandomVariable Ω}
+    (hX : ∀ i, i ∈ s → IntegrableRealRandomVariable P (X i)) :
+    expect P (fun ω => ∑ i ∈ s, X i ω) =
+      ∑ i ∈ s, expect P (X i) := by
+  change (∫ ω, ∑ i ∈ s, X i ω ∂P) =
+    ∑ i ∈ s, ∫ ω, X i ω ∂P
+  exact MeasureTheory.integral_finset_sum s hX
 
 end
 
