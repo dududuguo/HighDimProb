@@ -12,8 +12,15 @@ variable (X : Ω → ℝ) (K : ℝ)
 #check SubGaussianTail
 #check SubGaussianMoment
 #check CenteredSubGaussianMGF
+#check CenteredSubGaussianMGF.neg
 #check SubGaussianOrlicz
 #check HasSubGaussianOrlicz
+
+example {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {X : RealRandomVariable Ω} {K : ℝ}
+    (h : CenteredSubGaussianMGF P X K) :
+    CenteredSubGaussianMGF P (-X) K :=
+  h.neg
 
 example :
     SubGaussianTail P X K =

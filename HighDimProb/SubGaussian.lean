@@ -64,6 +64,14 @@ def CenteredSubGaussianMGF {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (X : RealRandomVariable Ω) (K : ℝ) : Prop :=
   0 < K ∧ ProbabilityTheory.HasSubgaussianMGF X (⟨K ^ 2, sq_nonneg K⟩ : ℝ≥0) P
 
+/-- Negation preserves the centered sub-Gaussian MGF bound with the same scale. -/
+theorem CenteredSubGaussianMGF.neg
+    {Ω : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω} {X : RealRandomVariable Ω} {K : ℝ}
+    (h : CenteredSubGaussianMGF P X K) :
+    CenteredSubGaussianMGF P (-X) K :=
+  ⟨h.1, h.2.neg⟩
+
 /--
 Orlicz `psi_2` formulation, as a thin wrapper around `Psi2Bound`.
 
