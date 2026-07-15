@@ -64,6 +64,19 @@ def CenteredSubGaussianMGF {Ω : Type*} [MeasurableSpace Ω]
     (P : Measure Ω) (X : RealRandomVariable Ω) (K : ℝ) : Prop :=
   0 < K ∧ ProbabilityTheory.HasSubgaussianMGF X (⟨K ^ 2, sq_nonneg K⟩ : ℝ≥0) P
 
+/- A subGaussian MGF bound remains valid for any larger NNReal variance proxy. -/
+theorem hasSubgaussianMGF_mono
+    {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {X : RealRandomVariable Ω} {c d : ℝ≥0}
+    (hcd : c ≤ d)
+    (hMGF : ProbabilityTheory.HasSubgaussianMGF X c P) :
+    ProbabilityTheory.HasSubgaussianMGF X d P := by
+  refine ⟨hMGF.integrable_exp_mul, fun t => ?_⟩
+  exact (hMGF.mgf_le t).trans (Real.exp_le_exp.mpr (by
+    apply div_le_div_of_nonneg_right
+    · exact mul_le_mul_of_nonneg_right (NNReal.coe_le_coe.mpr hcd) (sq_nonneg t)
+    · norm_num))
+
 /-- Negation preserves the centered sub-Gaussian MGF bound with the same scale. -/
 theorem CenteredSubGaussianMGF.neg
     {Ω : Type*} [MeasurableSpace Ω]

@@ -15,6 +15,14 @@ variable (X : Ω → ℝ) (K : ℝ)
 #check CenteredSubGaussianMGF.neg
 #check SubGaussianOrlicz
 #check HasSubGaussianOrlicz
+#check HighDimProb.hasSubgaussianMGF_mono
+
+example {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
+    {X : RealRandomVariable Ω} {c d : ℝ≥0}
+    (hcd : c ≤ d)
+    (hMGF : ProbabilityTheory.HasSubgaussianMGF X c P) :
+    ProbabilityTheory.HasSubgaussianMGF X d P :=
+  HighDimProb.hasSubgaussianMGF_mono hcd hMGF
 
 example {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω}
     {X : RealRandomVariable Ω} {K : ℝ}
