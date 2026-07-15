@@ -158,6 +158,80 @@ theorem expect_finset_sup'_abs_le_of_centeredSubGaussianMGF
     _ = K * Real.sqrt (2 * Real.log (2 * (s.card : ℝ))) := by
       simp [hss_card_eq, Nat.cast_mul]
 
+/-- Expected finite chaining bound for centered subGaussian increments. -/
+theorem expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF
+    {Ω α : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RandomProcess Ω α ℝ}
+    (gamma : ℕ → α) (L : ℕ)
+    (nextLevel : Fin L → Finset α)
+    (parent : Fin L → α → α)
+    (K : Fin L → ℝ)
+    (hmem : ∀ k : Fin L,
+      gamma ((k : ℕ) + 1) ∈ nextLevel k)
+    (hparent : ∀ k : Fin L,
+      gamma (k : ℕ) =
+        parent k (gamma ((k : ℕ) + 1)))
+    (hXMeas : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      Measurable (fun ω => X x ω - X (parent k x) ω))
+    (hXSG : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      CenteredSubGaussianMGF P
+        (fun ω => X x ω - X (parent k x) ω) (K k)) :
+    expect P (fun ω => |X (gamma L) ω - X (gamma 0) ω|) ≤
+      Finset.univ.sum (fun k : Fin L =>
+        (K k) * Real.sqrt
+          (2 * Real.log (2 * ((nextLevel k).card : ℝ)))) := by
+  have hNextLevel : ∀ k : Fin L, (nextLevel k).Nonempty := by
+    intro k
+    exact ⟨gamma ((k : ℕ) + 1), hmem k⟩
+  have hLevelIntegrable : ∀ k : Fin L,
+      IntegrableRealRandomVariable P
+        (fun ω =>
+          Finset.sup' (nextLevel k)
+            ⟨gamma ((k : ℕ) + 1), hmem k⟩
+            (fun x => |X x ω - X (parent k x) ω|)) := by
+    intro k
+    let Y : RandomProcess Ω α ℝ :=
+      fun x ω => |X x ω - X (parent k x) ω|
+    have hYIntegrable : ∀ x ∈ nextLevel k,
+        IntegrableRealRandomVariable P (Y x) := by
+      intro x hx
+      simpa only [Y] using (hXSG k x hx).2.integrable.abs
+    have hSup := integrable_processSup
+      (P := P) (X := Y) (s := nextLevel k) (hNextLevel k) hYIntegrable
+    convert hSup using 1
+    funext ω
+    simp only [processSup, Finset.sup'_apply, Y]
+  have hLevelBound : ∀ k : Fin L,
+      expect P
+          (fun ω =>
+            Finset.sup' (nextLevel k)
+              ⟨gamma ((k : ℕ) + 1), hmem k⟩
+              (fun x => |X x ω - X (parent k x) ω|)) ≤
+        (K k) * Real.sqrt
+          (2 * Real.log (2 * ((nextLevel k).card : ℝ))) := by
+    intro k
+    exact
+      expect_finset_sup'_abs_le_of_centeredSubGaussianMGF
+        (P := P) (X := fun x ω => X x ω - X (parent k x) ω)
+        (s := nextLevel k) (hNextLevel k)
+        (fun x hx => hXMeas k x hx)
+        (fun x hx => hXSG k x hx)
+  have hChain := expect_abs_sub_chain_le_sum_of_level_sup
+    (P := P) (X := X) gamma L nextLevel parent hmem hparent hLevelIntegrable
+  calc
+    expect P (fun ω => |X (gamma L) ω - X (gamma 0) ω|) ≤
+        Finset.univ.sum (fun k : Fin L =>
+          expect P
+            (fun ω =>
+              Finset.sup' (nextLevel k)
+                ⟨gamma ((k : ℕ) + 1), hmem k⟩
+                (fun x => |X x ω - X (parent k x) ω|))) := hChain
+    _ ≤ Finset.univ.sum (fun k : Fin L =>
+        (K k) * Real.sqrt
+          (2 * Real.log (2 * ((nextLevel k).card : ℝ)))) := by
+      exact Finset.sum_le_sum (fun k _hk => hLevelBound k)
+
 end
 
 end HighDimProb
