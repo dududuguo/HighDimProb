@@ -232,6 +232,61 @@ theorem expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF
           (2 * Real.log (2 * ((nextLevel k).card : ℝ)))) := by
       exact Finset.sum_le_sum (fun k _hk => hLevelBound k)
 
+/-- Expected finite chaining bound with cardinality upper bounds. -/
+theorem expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le
+    {Ω α : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RandomProcess Ω α ℝ}
+    (gamma : ℕ → α) (L : ℕ)
+    (nextLevel : Fin L → Finset α)
+    (parent : Fin L → α → α)
+    (K : Fin L → ℝ)
+    (N : Fin L → ℕ)
+    (hmem : ∀ k : Fin L,
+      gamma ((k : ℕ) + 1) ∈ nextLevel k)
+    (hparent : ∀ k : Fin L,
+      gamma (k : ℕ) = parent k (gamma ((k : ℕ) + 1)))
+    (hXMeas : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      Measurable (fun ω => X x ω - X (parent k x) ω))
+    (hXSG : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      CenteredSubGaussianMGF P
+        (fun ω => X x ω - X (parent k x) ω) (K k))
+    (hcard : ∀ k : Fin L, (nextLevel k).card ≤ N k) :
+    expect P (fun ω => |X (gamma L) ω - X (gamma 0) ω|) ≤
+      Finset.univ.sum (fun k : Fin L =>
+        (K k) * Real.sqrt (2 * Real.log (2 * (N k : ℝ)))) := by
+  have hBound :=
+    expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF
+      gamma L nextLevel parent K hmem hparent hXMeas hXSG
+  calc
+    expect P (fun ω => |X (gamma L) ω - X (gamma 0) ω|) ≤
+        Finset.univ.sum (fun k : Fin L =>
+          (K k) * Real.sqrt
+            (2 * Real.log (2 * ((nextLevel k).card : ℝ)))) := hBound
+    _ ≤ Finset.univ.sum (fun k : Fin L =>
+        (K k) * Real.sqrt (2 * Real.log (2 * (N k : ℝ)))) := by
+      apply Finset.sum_le_sum
+      intro k _hk
+      have hK : 0 < K k :=
+        (hXSG k (gamma ((k : ℕ) + 1)) (hmem k)).1
+      have hCardPosNat : 0 < (nextLevel k).card :=
+        Finset.card_pos.mpr ⟨gamma ((k : ℕ) + 1), hmem k⟩
+      have hCardPos : 0 < ((nextLevel k).card : ℝ) := by
+        exact_mod_cast hCardPosNat
+      have hCardLe : ((nextLevel k).card : ℝ) ≤ (N k : ℝ) := by
+        exact_mod_cast hcard k
+      have hLog :
+          Real.log (2 * ((nextLevel k).card : ℝ)) ≤
+            Real.log (2 * (N k : ℝ)) := by
+        apply Real.log_le_log
+        · positivity
+        · exact mul_le_mul_of_nonneg_left hCardLe (by norm_num)
+      have hSqrt :
+          Real.sqrt (2 * Real.log (2 * ((nextLevel k).card : ℝ))) ≤
+            Real.sqrt (2 * Real.log (2 * (N k : ℝ))) :=
+        Real.sqrt_le_sqrt (mul_le_mul_of_nonneg_left hLog (by norm_num))
+      exact mul_le_mul_of_nonneg_left hSqrt (le_of_lt hK)
+
 end
 
 end HighDimProb
