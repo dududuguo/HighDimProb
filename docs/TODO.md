@@ -21,8 +21,9 @@ This is the active short list. Old completed task logs were collapsed into
    `coveringNumber K ε` cardinality relations.
 3. [ ] **dyadic entropy sum.** The single-layer and finite-level parent bridges
    `exists_parentMap_of_subset_of_isInternalEpsilonNet` and
-   `exists_finset_parentMap_of_internalLevels` are proved. Add compatible
-   dyadic nets, endpoint paths, and entropy sums only after fixing the
+   `exists_finset_parentMap_of_internalLevels`, plus the finite path bridge
+   `exists_finset_path_of_parentMap`, are proved. Add compatible dyadic nets
+   and entropy sums only after fixing the
    cover-radius convention and the `dist` bound needed by
    `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le`.
 4. [ ] **entropy integral.** Add the dyadic-to-integral comparison with an

@@ -48,9 +48,9 @@ The metric-entropy roadmap has five explicit stages:
    `coveringNumber` / `ENat` / `toNat` cardinality relations.
 3. **dyadic entropy sum - not proved.** The single-layer and finite-level
    parent-selection bridges `exists_parentMap_of_subset_of_isInternalEpsilonNet`
-   and `exists_finset_parentMap_of_internalLevels` are proven, but no
-   compatible dyadic net family, endpoint path, or finite entropy sum has been
-   declared.
+   and `exists_finset_parentMap_of_internalLevels`, together with the finite
+   endpoint path bridge `exists_finset_path_of_parentMap`, are proven, but no
+   compatible dyadic net family or finite entropy sum has been declared.
 4. **entropy integral - not proved.** No entropy-integral definition or
    dyadic-to-integral comparison has been declared.
 5. **Dudley - not proved.** No limiting supremum, separable-process version,

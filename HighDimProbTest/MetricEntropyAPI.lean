@@ -13,6 +13,7 @@ open scoped NNReal ENNReal
 #check HighDimProb.exists_finset_isInternalEpsilonNet_of_totallyBounded
 #check HighDimProb.exists_parentMap_of_subset_of_isInternalEpsilonNet
 #check HighDimProb.exists_finset_parentMap_of_internalLevels
+#check HighDimProb.exists_finset_path_of_parentMap
 
 -- A nonpositive real radius is represented by the zero NNReal radius.
 example : epsilonRadius (-1) = 0 := by
@@ -70,6 +71,23 @@ example {alpha : Type*} [PseudoMetricSpace alpha]
       (∀ k x, x ∈ levels (Fin.succ k) →
         dist x (parent k x) ≤ eps) := by
   exact exists_finset_parentMap_of_internalLevels hPrev hNext heps
+
+example {alpha : Type*} [PseudoMetricSpace alpha]
+    {L : Nat} {levels : Fin (L + 1) → Finset alpha}
+    {parent : Fin L → alpha → alpha} {radius : Fin L → Real}
+    (hmem : ∀ k x, x ∈ levels (Fin.succ k) →
+      parent k x ∈ levels (Fin.castSucc k))
+    (hdist : ∀ k x, x ∈ levels (Fin.succ k) →
+      dist x (parent k x) ≤ radius k)
+    {x : alpha} (hx : x ∈ levels (Fin.last L)) :
+    ∃ path : Fin (L + 1) → alpha,
+      path (Fin.last L) = x ∧
+      (∀ j, path j ∈ levels j) ∧
+      (∀ k : Fin L,
+        path (Fin.castSucc k) = parent k (path (Fin.succ k)) ∧
+        dist (path (Fin.succ k))
+          (parent k (path (Fin.succ k))) ≤ radius k) := by
+  exact exists_finset_path_of_parentMap hmem hdist hx
 
 -- Mathlib's minimal-cover primitives remain available for lower-level audits;
 -- the HighDimProb Finset/internal-net adapter is checked above.

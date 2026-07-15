@@ -163,6 +163,40 @@ theorem exists_finset_parentMap_of_internalLevels {α : Type*}
   · intro k x hx
     simpa [parent, hx] using (hParents_spec k ⟨x, hx⟩).2
 
+/-- A terminal point in finite levels has a compatible path to the base level. -/
+theorem exists_finset_path_of_parentMap {α : Type*} [PseudoMetricSpace α]
+    {L : Nat} {levels : Fin (L + 1) → Finset α}
+    {parent : Fin L → α → α} {r : Fin L → ℝ}
+    (hmem : ∀ k x, x ∈ levels (Fin.succ k) →
+      parent k x ∈ levels (Fin.castSucc k))
+    (hdist : ∀ k x, x ∈ levels (Fin.succ k) →
+      dist x (parent k x) ≤ r k)
+    {x : α} (hx : x ∈ levels (Fin.last L)) :
+    ∃ path : Fin (L + 1) → α,
+      path (Fin.last L) = x ∧
+      (∀ j, path j ∈ levels j) ∧
+      (∀ k : Fin L,
+        path (Fin.castSucc k) = parent k (path (Fin.succ k)) ∧
+        dist (path (Fin.succ k))
+          (parent k (path (Fin.succ k))) ≤ r k) := by
+  let path : Fin (L + 1) → α :=
+    Fin.reverseInduction x (fun i yi => parent i yi)
+  have hpath_mem : ∀ i : Fin (L + 1), path i ∈ levels i := by
+    intro i
+    induction i using Fin.reverseInduction with
+    | last => simpa [path] using hx
+    | cast i ih =>
+        simpa [path] using hmem i (path i.succ) ih
+  have hpath_parent : ∀ k : Fin L,
+      path (Fin.castSucc k) = parent k (path (Fin.succ k)) := by
+    intro k
+    simp [path]
+  refine ⟨path, ?_, hpath_mem, ?_⟩
+  · simp [path]
+  · intro k
+    exact ⟨hpath_parent k,
+      hdist k (path (Fin.succ k)) (hpath_mem (Fin.succ k))⟩
+
 /-- A finite explicit external epsilon-net bounds the external covering number by its cardinality. -/
 theorem externalCoveringNumber_le_card_of_isEpsilonNet {α : Type*}
     [PseudoMetricSpace α] {K N : Set α} {ε : ℝ}
