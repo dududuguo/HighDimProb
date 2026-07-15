@@ -12,6 +12,7 @@ This is the active term index. The old detailed map was collapsed into
 | Scalar concentration | Markov, Chebyshev, Orlicz/tail, moment, MGF, Rademacher, Hoeffding, Bernstein routes | [`HighDimProb/Concentration`](../HighDimProb/Concentration) |
 | Analysis helpers | real inequalities including `exp_mul_le_chord_exp_of_nonneg_of_le` | [`HighDimProb/Analysis/RealInequalities.lean`](../HighDimProb/Analysis/RealInequalities.lean) |
 | Random families/processes | `RandomFamily`, `RealRandomFamily`, `IsRandomFamily`, `familyAt`, `mapRandomFamily`, `RandomProcess`, `IsRandomProcess`, `processAt`, `RandomSample`, `IsRandomSample`, `sampleEvaluation` | [`HighDimProb/Process.lean`](../HighDimProb/Process.lean) |
+| SubGaussian process increments | `HasSubGaussianMGFIncrements`, `hasSubgaussianMGF_mono`, `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le` | [`HighDimProb/SubGaussianProcess.lean`](../HighDimProb/SubGaussianProcess.lean) and [`HighDimProb/SubGaussian.lean`](../HighDimProb/SubGaussian.lean) |
 | Random vectors | random-vector, covariance, isotropic, subGaussian-vector vocabulary | [`HighDimProb/Vector.lean`](../HighDimProb/Vector.lean) |
 | Geometry | nets, metric entropy, Gaussian width vocabulary | [`HighDimProb/Geometry.lean`](../HighDimProb/Geometry.lean) |
 | Finite process supremum | `processSup`, `isRandomVariable_processSup`, `integrable_processSup` | [`HighDimProb/Chaining.lean`](../HighDimProb/Chaining.lean) |
@@ -30,6 +31,11 @@ This is the active term index. The old detailed map was collapsed into
 | Matrix Bernstein | trace-MGF/Tropp bundles, scalar threshold inversion, `MatrixBernstein.*_of_primitives` optimized/operator-norm/high-probability facades, Bernstein CFC hardbone, variance-proxy bridges, centered-square exact-row adapters, support/effective-rank trace bridges, prefix/reindex/negative adapters, and compact sample-covariance contracts | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) |
 | PrecisionDA applications | deterministic column-sample covariance, leave-one-out covariance, shrinkage resolvents, rank-one/Woodbury identities, Frobenius trace-expansion wrappers, and H1/H2/Theorem 1 provider-contract vocabulary | [`HighDimProb/Applications/PrecisionDA`](../HighDimProb/Applications/PrecisionDA.lean) |
 | Examples | compact statement-route index plus representative sample covariance, random-feature, gradient, NTK, LoRA, attention, Fisher, natural-Tropp, and PrecisionDA routes | [`HighDimProb/Examples`](../HighDimProb/Examples.lean) |
+
+`HasSubGaussianMGFIncrements` permits the zero `NNReal` proxy at equal indices
+and does not assume `0 < σ`. Conversion to `CenteredSubGaussianMGF` at radius
+`r` requires `0 < σ`, `0 < r`, and `dist s t ≤ r`; the later minimal-cover and
+Finset adapter is not yet packaged in HighDimProb.
 
 ## Lookup Rule
 

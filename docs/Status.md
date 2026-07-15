@@ -10,7 +10,8 @@ surfaces are tracked in the focused reference docs linked below.
 
 - Active branch: supported finite-dimensional RandomMatrix APIs and scoped
   Matrix Bernstein providers.
-- Active process/random-object API leaf: small `RandomFamily` vocabulary for process and sample surfaces.
+- Active process/random-object API leaf: finite `SubGaussianProcess` increment
+  vocabulary over the existing `RandomProcess` and finite-chaining surfaces.
 - Stable import surface: [`HighDimProb`](../HighDimProb.lean).
 - Supported focused user import surfaces:
   [`HighDimProb.RandomMatrix`](../HighDimProb/RandomMatrix.lean) and
@@ -74,6 +75,8 @@ Random-family helpers:
 - `isRandomVariable_processAt`
 - `IsRandomSample`
 - `sampleEvaluation`
+- `HasSubGaussianMGFIncrements`
+- `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le`
 
 ## Current Finite Chaining Foundation
 
@@ -93,6 +96,13 @@ Random-family helpers:
 - The finite internal-net bridge
   `exists_nat_eq_coveringNumber_of_isInternalEpsilonNet` converts the finite
   covering number from ENat to Nat.
+- `HighDimProb.SubGaussianProcess` defines the increment predicate
+  `HasSubGaussianMGFIncrements` and proves its radius adapter
+  `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le`. The
+  predicate allows the zero `NNReal` proxy at equal indices and does not assume
+  `0 < σ`; conversion to `CenteredSubGaussianMGF` at radius `r` requires
+  `0 < σ`, `0 < r`, and `dist s t ≤ r`. The adapter uses
+  `hasSubgaussianMGF_mono` from `HighDimProb.SubGaussian`.
 - Deterministic finite chaining foundations now include `chain_sub_eq_sum_range`,
   `norm_sub_chain_le_sum_of_step_bound`, and the public
   `norm_sub_chain_le_sum_of_level_sup` bridge over finite levels. The expected
@@ -105,9 +115,14 @@ Random-family helpers:
   corollary
   `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le`
   replaces each actual level card by any Nat upper certificate `N k`; it does
-  not yet connect `N` to `coveringNumber`. The next task is a zero-distance-safe
-  metric subGaussian increment abstraction. The net/covering adapter, dyadic
-  radii, entropy integral, and compact/infinite extension remain unproved.
+  not yet obtain `N` from a minimal cover. The single next finite-chaining task
+  is to discharge the levelwise `hXSG` premises via radius bounds. Mathlib's
+  `Metric.minimalCover`, `finite_minimalCover`, `isCover_minimalCover`, and
+  `encard_minimalCover` provide later minimal-cover attainment ingredients, but
+  HighDimProb does not yet package
+  `exists_finset_isInternalEpsilonNet_card_eq_coveringNumber_toNat` under
+  `0 < ε` and `TotallyBounded K`. Dyadic entropy sums, entropy integrals, and
+  compact/infinite or full Dudley theorems remain unproved.
 
 ## Current RandomMatrix Entry Names
 

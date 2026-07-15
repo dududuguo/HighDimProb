@@ -57,6 +57,19 @@ Scalar concentration results are available through:
 import HighDimProb.Concentration
 ```
 
+Metric subGaussian increment vocabulary is available through:
+
+```lean
+import HighDimProb.SubGaussianProcess
+```
+
+This module provides `HasSubGaussianMGFIncrements` and
+`HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le`; the latter
+uses `hasSubgaussianMGF_mono` to enlarge a proxy to a level radius. The
+increment predicate itself allows the zero `NNReal` proxy at equal indices and
+does not assume `0 < σ`. Conversion to `CenteredSubGaussianMGF` at radius `r`
+requires `0 < σ`, `0 < r`, and `dist s t ≤ r`.
+
 The broad work-in-progress aggregate remains available through:
 
 ```lean

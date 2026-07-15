@@ -8,7 +8,16 @@ This is the active short list. Old completed task logs were collapsed into
 - Keep `RandomFamily` as a vocabulary layer only; defer filtrations,
   adaptedness, martingales, and independence conditioning to later contracts.
 - Next random-object task: `RP-API-random-family-downstream-consumer-contract`.
-- Next finite-chaining task: zero-distance-safe metric subGaussian increment abstraction.
+- Next finite-chaining task: discharge the levelwise `hXSG` premises via radius
+  bounds using `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le`.
+  The predicate permits the zero `NNReal` proxy at equal indices and does not
+  assume `0 < σ`; conversion to `CenteredSubGaussianMGF` at radius `r`
+  requires `0 < σ`, `0 < r`, and `dist s t ≤ r`.
+  Minimal-cover attainment and the Finset covering adapter remain later:
+  Mathlib has `Metric.minimalCover`, `finite_minimalCover`,
+  `isCover_minimalCover`, and `encard_minimalCover`, but HighDimProb does not
+  yet package `exists_finset_isInternalEpsilonNet_card_eq_coveringNumber_toNat`
+  under `0 < ε` and `TotallyBounded K`.
 
 ## Active RandomMatrix Work
 
