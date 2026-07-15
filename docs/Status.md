@@ -87,7 +87,7 @@ stages are complete in the current source tree; the remaining three are not.
 | --- | --- | --- |
 | finite chaining | complete | Supplied finite levels, parent maps, and a finite chain are handled by `chain_sub_eq_sum_range`, `norm_sub_chain_le_sum_of_level_sup`, `expect_abs_sub_chain_le_sum_of_level_sup`, and the centered-subGaussian cardinality corollary; the metric increment adapter is `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`. |
 | minimal-cover adapter | complete | `exists_finset_isInternalEpsilonNet_of_totallyBounded` turns `0 < ε` and `TotallyBounded K` into a finite internal net with exact `coveringNumber` / `ENat` / `toNat` cardinality relations. |
-| dyadic entropy sum | not proved | No declaration constructs compatible dyadic nets, parent maps, or a finite-level sum from covering numbers. |
+| dyadic entropy sum | not proved | The single-layer `exists_parentMap_of_subset_of_isInternalEpsilonNet` and finite-level `exists_finset_parentMap_of_internalLevels` bridges are available; no declaration constructs compatible dyadic nets, endpoint paths, or a finite-level entropy sum from covering numbers. |
 | entropy integral | not proved | No entropy-integral definition, dyadic-to-integral comparison, or finiteness theorem is present. |
 | Dudley | not proved | No infinite-index supremum, limiting argument, or Dudley endpoint is present. |
 

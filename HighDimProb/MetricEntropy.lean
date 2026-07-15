@@ -102,6 +102,67 @@ theorem coveringNumber_le_encard_of_isInternalEpsilonNet {α : Type*}
     coveringNumber K ε <= N.encard := by
   exact Metric.IsCover.coveringNumber_le_encard hN.1 hN.2
 
+/-- Select, for each point of a subset, a nearby center from an internal net. -/
+theorem exists_parentMap_of_subset_of_isInternalEpsilonNet {α : Type*}
+    [PseudoMetricSpace α] {A K B : Set α} {ε : ℝ}
+    (hA : A ⊆ K) (hB : IsInternalEpsilonNet K B ε) (hε : 0 < ε) :
+    ∃ parent : A → K,
+      ∀ x : A, (parent x : α) ∈ B ∧ dist (x : α) (parent x : α) ≤ ε := by
+  classical
+  have hcover : ∀ x : A, ∃ y : K,
+      (y : α) ∈ B ∧ dist (x : α) (y : α) ≤ ε := by
+    intro x
+    obtain ⟨y, hyB, hxy⟩ := hB.2 (hA x.2)
+    refine ⟨⟨y, hB.1 hyB⟩, hyB, ?_⟩
+    have hxy' : nndist (x : α) y ≤ epsilonRadius ε :=
+      (edist_le_coe).mp hxy
+    have hxy'' : (nndist (x : α) y : ℝ) ≤ (epsilonRadius ε : ℝ) :=
+      NNReal.coe_le_coe.mpr hxy'
+    simpa [epsilonRadius, Real.toNNReal_of_nonneg hε.le] using hxy''
+  refine ⟨fun x => Classical.choose (hcover x), ?_⟩
+  intro x
+  exact Classical.choose_spec (hcover x)
+
+/-- Extend the layerwise parent maps to total ambient functions. -/
+theorem exists_finset_parentMap_of_internalLevels {α : Type*}
+    [PseudoMetricSpace α] {K : Set α} {L : Nat}
+    {levels : Fin (L + 1) → Finset α} {ε : ℝ}
+    (hPrev : ∀ k : Fin L,
+      IsInternalEpsilonNet K (levels (Fin.castSucc k) : Set α) ε)
+    (hNext : ∀ k : Fin L,
+      (levels (Fin.succ k) : Set α) ⊆ K)
+    (hε : 0 < ε) :
+    ∃ parent : Fin L → α → α,
+      (∀ k x, x ∈ levels (Fin.succ k) →
+        parent k x ∈ levels (Fin.castSucc k)) ∧
+      (∀ k x, x ∈ levels (Fin.succ k) →
+        dist x (parent k x) ≤ ε) := by
+  classical
+  have hParents : ∀ k : Fin L,
+      ∃ p : (levels (Fin.succ k) : Set α) → K,
+        ∀ x, (p x : α) ∈ (levels (Fin.castSucc k) : Set α) ∧
+          dist (x : α) (p x : α) ≤ ε := by
+    intro k
+    exact exists_parentMap_of_subset_of_isInternalEpsilonNet
+      (hNext k) (hPrev k) hε
+  let parents : ∀ k : Fin L,
+      (levels (Fin.succ k) : Set α) → K :=
+    fun k => Classical.choose (hParents k)
+  have hParents_spec : ∀ k x, (parents k x : α) ∈
+      (levels (Fin.castSucc k) : Set α) ∧
+        dist (x : α) (parents k x : α) ≤ ε := by
+    intro k x
+    exact Classical.choose_spec (hParents k) x
+  let parent : Fin L → α → α := fun k x =>
+    if hx : x ∈ (levels (Fin.succ k) : Set α) then
+      (parents k ⟨x, hx⟩ : α)
+    else x
+  refine ⟨parent, ?_, ?_⟩
+  · intro k x hx
+    simpa [parent, hx] using (hParents_spec k ⟨x, hx⟩).1
+  · intro k x hx
+    simpa [parent, hx] using (hParents_spec k ⟨x, hx⟩).2
+
 /-- A finite explicit external epsilon-net bounds the external covering number by its cardinality. -/
 theorem externalCoveringNumber_le_card_of_isEpsilonNet {α : Type*}
     [PseudoMetricSpace α] {K N : Set α} {ε : ℝ}

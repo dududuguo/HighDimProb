@@ -81,8 +81,11 @@
   `TotallyBounded K` and positive cover radii to finite internal nets and
   exact `coveringNumber` cardinality data. The `dist` versus `epsilonRadius`
   conversion remains explicit.
-- [ ] **dyadic entropy sum:** construct compatible finite dyadic nets and
-  parent maps; require the positive `σ`/`r` hypotheses of the radius adapter.
+- [ ] **dyadic entropy sum:** the single-layer and finite-level parent bridges
+  `exists_parentMap_of_subset_of_isInternalEpsilonNet` and
+  `exists_finset_parentMap_of_internalLevels` are proved; construct compatible
+  finite dyadic nets and endpoint paths next, retaining the positive `σ`/`r`
+  hypotheses of the radius adapter.
 - [ ] **entropy integral:** prove the finite-sum comparison with an explicitly
   finite entropy integral; no such definition is present yet.
 - [ ] **Dudley:** add the separability, measurable-supremum, and limiting

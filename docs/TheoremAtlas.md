@@ -46,8 +46,11 @@ The metric-entropy roadmap has five explicit stages:
    `exists_finset_isInternalEpsilonNet_of_totallyBounded` uses `0 < ε` and
    `TotallyBounded K` to construct a finite internal net with exact
    `coveringNumber` / `ENat` / `toNat` cardinality relations.
-3. **dyadic entropy sum - not proved.** No compatible dyadic net, parent map,
-   or finite entropy sum has been declared.
+3. **dyadic entropy sum - not proved.** The single-layer and finite-level
+   parent-selection bridges `exists_parentMap_of_subset_of_isInternalEpsilonNet`
+   and `exists_finset_parentMap_of_internalLevels` are proven, but no
+   compatible dyadic net family, endpoint path, or finite entropy sum has been
+   declared.
 4. **entropy integral - not proved.** No entropy-integral definition or
    dyadic-to-integral comparison has been declared.
 5. **Dudley - not proved.** No limiting supremum, separable-process version,
