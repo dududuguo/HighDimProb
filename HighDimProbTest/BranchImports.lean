@@ -43,6 +43,7 @@ open HighDimProb
 #check subExponentialMoment_of_psi1Bound
 #check subExponentialMoment_of_subExponentialTail
 #check CenteredSubGaussianMGFLIntegral
+#check CenteredSubGaussianMGF.neg
 #check subGaussianTail_of_centeredSubGaussianMGF
 #check psi2Bound_of_centeredSubGaussianMGF
 #check centeredSubGaussianMGF_sum_of_iIndepFun_of_pos
@@ -110,6 +111,7 @@ open HighDimProb
 #check expect_le_log_mgf
 #check expect_processSup_le_of_cgf_bound_at
 #check expect_processSup_le_of_centeredSubGaussianMGF
+#check expect_finset_sup'_abs_le_of_centeredSubGaussianMGF
 #check RandomFamily
 #check RealRandomFamily
 #check IsRandomFamily
