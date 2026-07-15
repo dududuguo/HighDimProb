@@ -78,51 +78,38 @@ Random-family helpers:
 - `HasSubGaussianMGFIncrements`
 - `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le`
 
-## Current Finite Chaining Foundation
+## Finite Chaining Roadmap
 
-- Finite process suprema now have measurability and integrability bridges:
-  `isRandomVariable_processSup` and `integrable_processSup`.
-- Finite sums of expectations are owned by `HighDimProb.Expectation` through
-  `expect_finset_sum`.
-- Deterministic finite LogSumExp bounds are available in
-  `HighDimProb.Analysis.LogSumExp`; the fixed-CGF finite-maximum bound is
-  `expect_processSup_le_of_cgf_bound_at`.
-- The optimized centered-subGaussian maximum bound is
-  `expect_processSup_le_of_centeredSubGaussianMGF`.
-- `CenteredSubGaussianMGF.neg` and the public finite absolute maximum bound
-  `expect_finset_sup'_abs_le_of_centeredSubGaussianMGF` are now proved; the
-  latter has bound `K * sqrt (2 * log (2 * card))`, while the ordinary finite
-  maximum theorem remains available.
-- The finite internal-net bridge
-  `exists_nat_eq_coveringNumber_of_isInternalEpsilonNet` converts the finite
-  covering number from ENat to Nat.
-- `HighDimProb.SubGaussianProcess` defines the increment predicate
-  `HasSubGaussianMGFIncrements` and proves its radius adapter
-  `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le`. The
-  predicate allows the zero `NNReal` proxy at equal indices and does not assume
-  `0 < σ`; conversion to `CenteredSubGaussianMGF` at radius `r` requires
-  `0 < σ`, `0 < r`, and `dist s t ≤ r`. The adapter uses
-  `hasSubgaussianMGF_mono` from `HighDimProb.SubGaussian`.
-- Deterministic finite chaining foundations now include `chain_sub_eq_sum_range`,
-  `norm_sub_chain_le_sum_of_step_bound`, and the public
-  `norm_sub_chain_le_sum_of_level_sup` bridge over finite levels. The expected
-  finite-level chain inequality
-  `expect_abs_sub_chain_le_sum_of_level_sup` and its centered-subGaussian
-  specialization
-  `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF` are
-  proved; the latter yields the sum of
-  `K k * sqrt (2 * log (2 * card (nextLevel k)))`. The cardinality-bounded
-  corollary
-  `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le`
-  replaces each actual level card by any Nat upper certificate `N k`; it does
-  not yet obtain `N` from a minimal cover. The single next finite-chaining task
-  is to discharge the levelwise `hXSG` premises via radius bounds. Mathlib's
-  `Metric.minimalCover`, `finite_minimalCover`, `isCover_minimalCover`, and
-  `encard_minimalCover` provide later minimal-cover attainment ingredients, but
-  HighDimProb does not yet package
-  `exists_finset_isInternalEpsilonNet_card_eq_coveringNumber_toNat` under
-  `0 < ε` and `TotallyBounded K`. Dyadic entropy sums, entropy integrals, and
-  compact/infinite or full Dudley theorems remain unproved.
+The roadmap is deliberately split into five proof-facing stages. The first two
+stages are complete in the current source tree; the remaining three are not.
+
+| Stage | Status | Current boundary |
+| --- | --- | --- |
+| finite chaining | complete | Supplied finite levels, parent maps, and a finite chain are handled by `chain_sub_eq_sum_range`, `norm_sub_chain_le_sum_of_level_sup`, `expect_abs_sub_chain_le_sum_of_level_sup`, and the centered-subGaussian cardinality corollary; the metric increment adapter is `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`. |
+| minimal-cover adapter | complete | `exists_finset_isInternalEpsilonNet_of_totallyBounded` turns `0 < ε` and `TotallyBounded K` into a finite internal net with exact `coveringNumber` / `ENat` / `toNat` cardinality relations. |
+| dyadic entropy sum | not proved | No declaration constructs compatible dyadic nets, parent maps, or a finite-level sum from covering numbers. |
+| entropy integral | not proved | No entropy-integral definition, dyadic-to-integral comparison, or finiteness theorem is present. |
+| Dudley | not proved | No infinite-index supremum, limiting argument, or Dudley endpoint is present. |
+
+The finite stage is genuinely finite: `processSup`,
+`isRandomVariable_processSup`, and `integrable_processSup` concern a nonempty
+`Finset`; they do not provide measurability or integrability of a supremum over
+an arbitrary index set. The increment predicate
+`HasSubGaussianMGFIncrements` uses `[PseudoMetricSpace T]`, permits the zero
+`NNReal` proxy at equal indices, and does not require `0 < σ`. Its radius
+adapter requires `0 < σ`, `0 < r`, and `dist s t ≤ r`, and returns scale `σ * r`.
+
+The completed minimal-cover adapter keeps the `dist`/cover-radius conversion
+explicit (`epsilonRadius` is the existing real-to-`NNReal` boundary) and
+requires `TotallyBounded K` plus `0 < ε`. It does not upgrade total
+boundedness to compactness or separability. No current declaration supplies a
+`SeparableSpace` process version or a measurable supremum over an infinite
+`K`; those are later obligations, not hidden consequences of the finite API.
+
+These process/metric-entropy stages do not strengthen the RandomMatrix route.
+The existing `MatrixBernstein.*_of_primitives` facades remain scoped by their
+explicit assumptions; no full Tropp theorem or unconditional Matrix Bernstein
+theorem is recorded here.
 
 ## Current RandomMatrix Entry Names
 
@@ -723,15 +710,16 @@ stable second-level Frechet codomain.
 Run before pushing API or docs changes:
 
 ```bash
-python .github/scripts/check_text_quality.py
-python scripts/judge_policy_check.py
+python3 .github/scripts/check_text_quality.py
+python3 scripts/judge_policy_check.py
 lake build
 lake build HighDimProb.Examples
 lake test
 lake build HighDimProbJudge
 ```
 
-Last verified locally on 2026-07-11 with the commands above.
+The docs-only checks in `TestPlan.md` are the minimum verification for this
+documentation lane; a full build is not implied by a docs-only update.
 
 ## Archive
 

@@ -31,20 +31,34 @@ not add filtrations, adaptedness, martingales, or conditioning providers.
 `HasSubGaussianMGFIncrements` and proves the radius adapter
 `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le`. The predicate
 allows the zero `NNReal` proxy at equal indices and does not assume `0 < σ`;
-conversion to `CenteredSubGaussianMGF` at radius `r` requires `0 < σ`, `0 < r`,
-and `dist s t ≤ r`. It uses the proved monotonicity bridge
-`hasSubgaussianMGF_mono` from `HighDimProb.SubGaussian`.
+the adapter requires `0 < σ`, `0 < r`, and `dist s t ≤ r`. It uses the proved
+monotonicity bridge `hasSubgaussianMGF_mono` from `HighDimProb.SubGaussian`.
 
-The finite chaining layer is `proven` through level-sum bounds and the
-cardinality-bounded centered-subGaussian corollary, which accepts an arbitrary
-Nat upper certificate. The single next finite-chaining task is to discharge
-the levelwise `hXSG` premises via radius bounds. Mathlib's
-`Metric.minimalCover`, `finite_minimalCover`, `isCover_minimalCover`, and
-`encard_minimalCover` are later minimal-cover attainment ingredients, but
-HighDimProb does not yet package
-`exists_finset_isInternalEpsilonNet_card_eq_coveringNumber_toNat` under
-`0 < ε` and `TotallyBounded K`. No dyadic entropy sum, entropy integral, or
-compact/infinite or full Dudley theorem is claimed.
+The metric-entropy roadmap has five explicit stages:
+
+1. **finite chaining - proven.** `chain_sub_eq_sum_range`,
+   `norm_sub_chain_le_sum_of_level_sup`,
+   `expect_abs_sub_chain_le_sum_of_level_sup`, and the centered-subGaussian
+   cardinality corollary handle supplied finite levels, parent maps, and Nat
+   cardinality certificates. The metric increment adapter is
+   `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`.
+2. **minimal-cover adapter - proven.**
+   `exists_finset_isInternalEpsilonNet_of_totallyBounded` uses `0 < ε` and
+   `TotallyBounded K` to construct a finite internal net with exact
+   `coveringNumber` / `ENat` / `toNat` cardinality relations.
+3. **dyadic entropy sum - not proved.** No compatible dyadic net, parent map,
+   or finite entropy sum has been declared.
+4. **entropy integral - not proved.** No entropy-integral definition or
+   dyadic-to-integral comparison has been declared.
+5. **Dudley - not proved.** No limiting supremum, separable-process version,
+   or Dudley endpoint has been declared.
+
+The existing measurable and integrable supremum facts are for finite
+`Finset`s. The minimal-cover result does not silently upgrade
+`TotallyBounded K` to compactness or a separability/measurable-supremum
+theorem; those assumptions and bridges remain future contracts. No full
+Dudley, full Tropp, or unconditional Matrix Bernstein theorem is claimed by
+this atlas.
 
 ## RandomMatrix
 

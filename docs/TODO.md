@@ -8,16 +8,32 @@ This is the active short list. Old completed task logs were collapsed into
 - Keep `RandomFamily` as a vocabulary layer only; defer filtrations,
   adaptedness, martingales, and independence conditioning to later contracts.
 - Next random-object task: `RP-API-random-family-downstream-consumer-contract`.
-- Next finite-chaining task: discharge the levelwise `hXSG` premises via radius
-  bounds using `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le`.
-  The predicate permits the zero `NNReal` proxy at equal indices and does not
-  assume `0 < σ`; conversion to `CenteredSubGaussianMGF` at radius `r`
-  requires `0 < σ`, `0 < r`, and `dist s t ≤ r`.
-  Minimal-cover attainment and the Finset covering adapter remain later:
-  Mathlib has `Metric.minimalCover`, `finite_minimalCover`,
-  `isCover_minimalCover`, and `encard_minimalCover`, but HighDimProb does not
-  yet package `exists_finset_isInternalEpsilonNet_card_eq_coveringNumber_toNat`
-  under `0 < ε` and `TotallyBounded K`.
+
+### Five-Stage Chaining Roadmap
+
+1. [x] **finite chaining.** Keep the existing finite chain and
+   centered-subGaussian level-supremum theorems limited to supplied finite
+   levels, parents, and cardinality certificates. The metric increment
+   adapter is now `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`.
+2. [x] **minimal-cover adapter.**
+   `exists_finset_isInternalEpsilonNet_of_totallyBounded` now connects
+   `TotallyBounded K` and `0 < ε` to a finite internal epsilon-net with exact
+   `coveringNumber K ε` cardinality relations.
+3. [ ] **dyadic entropy sum.** Add finite dyadic nets and parent maps only
+   after stage 2 fixes the cover-radius convention and the `dist` bound needed
+   by `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le`.
+4. [ ] **entropy integral.** Add the dyadic-to-integral comparison with an
+   explicit positive scale range and finiteness hypothesis. No integral
+   declaration exists yet.
+5. [ ] **Dudley.** Add a limiting supremum theorem only after the finite stages,
+   separability/measurable-version contract, and entropy-integral finiteness
+   are proved. This stage is not currently available.
+
+Boundary reminder: `HasSubGaussianMGFIncrements` itself does not require
+`0 < σ`; its radius adapter requires `0 < σ`, `0 < r`, and `dist s t ≤ r`.
+The current measurable supremum API is finite `Finset`-only. The completed
+minimal-cover adapter does not provide an infinite-process or separability
+theorem; no dyadic sum, entropy integral, or Dudley endpoint exists yet.
 
 ## Active RandomMatrix Work
 
@@ -109,8 +125,8 @@ This is the active short list. Old completed task logs were collapsed into
 ## Verification Before Commit
 
 ```bash
-python .github/scripts/check_text_quality.py
-python scripts/judge_policy_check.py
+python3 .github/scripts/check_text_quality.py
+python3 scripts/judge_policy_check.py
 lake build
 lake build HighDimProbJudge
 lake test

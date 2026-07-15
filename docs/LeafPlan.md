@@ -70,6 +70,30 @@
 - StableDimension
 - ChainingStatements
 
+### Current Five-Stage Process Roadmap
+
+- [x] **finite chaining:** finite chains, level suprema, finite measurability /
+  integrability, and centered-subGaussian cardinality bounds are proved for
+  supplied finite data; the metric increment adapter is
+  `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`.
+- [x] **minimal-cover adapter:**
+  `exists_finset_isInternalEpsilonNet_of_totallyBounded` connects
+  `TotallyBounded K` and positive cover radii to finite internal nets and
+  exact `coveringNumber` cardinality data. The `dist` versus `epsilonRadius`
+  conversion remains explicit.
+- [ ] **dyadic entropy sum:** construct compatible finite dyadic nets and
+  parent maps; require the positive `σ`/`r` hypotheses of the radius adapter.
+- [ ] **entropy integral:** prove the finite-sum comparison with an explicitly
+  finite entropy integral; no such definition is present yet.
+- [ ] **Dudley:** add the separability, measurable-supremum, and limiting
+  contract only after the preceding stages are real declarations.
+
+The current supremum API is finite `Finset`-only. The increment predicate does
+not require `0 < σ`, but its radius adapter does; `TotallyBounded K` does not by
+itself supply compactness, separability, or an infinite measurable supremum.
+Full Dudley, full Tropp, and unconditional Matrix Bernstein remain outside this
+leaf plan.
+
 ## RandomMatrix
 
 - SelfAdjoint

@@ -1,5 +1,6 @@
 import HighDimProb.Concentration.FiniteMax
 import HighDimProb.SubGaussian
+import HighDimProb.SubGaussianProcess
 
 /-!
 # Finite maxima of centered subGaussian processes
@@ -231,6 +232,40 @@ theorem expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF
         (K k) * Real.sqrt
           (2 * Real.log (2 * ((nextLevel k).card : ℝ)))) := by
       exact Finset.sum_le_sum (fun k _hk => hLevelBound k)
+
+/-- Expected finite chaining bound from metric subGaussian increments and level radii. -/
+theorem expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements
+    {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RandomProcess Ω α ℝ}
+    (gamma : ℕ → α) (L : ℕ)
+    (nextLevel : Fin L → Finset α)
+    (parent : Fin L → α → α)
+    (σ : ℝ) (r : Fin L → ℝ)
+    (hmem : ∀ k : Fin L,
+      gamma ((k : ℕ) + 1) ∈ nextLevel k)
+    (hparent : ∀ k : Fin L,
+      gamma (k : ℕ) = parent k (gamma ((k : ℕ) + 1)))
+    (hXMeas : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      Measurable (fun ω => X x ω - X (parent k x) ω))
+    (hX : HasSubGaussianMGFIncrements P X σ)
+    (hσ : 0 < σ)
+    (hr : ∀ k : Fin L, 0 < r k)
+    (hdist : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      dist x (parent k x) ≤ r k) :
+    expect P (fun ω => |X (gamma L) ω - X (gamma 0) ω|) ≤
+      Finset.univ.sum (fun k : Fin L =>
+        (σ * r k) * Real.sqrt
+          (2 * Real.log (2 * ((nextLevel k).card : ℝ)))) := by
+  have hXSG : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      CenteredSubGaussianMGF P
+        (fun ω => X x ω - X (parent k x) ω) (σ * r k) := by
+    intro k x hx
+    exact HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le
+      hX hσ (hr k) (hdist k x hx)
+  exact expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF
+    gamma L nextLevel parent (fun k => σ * r k)
+    hmem hparent hXMeas hXSG
 
 /-- Expected finite chaining bound with cardinality upper bounds. -/
 theorem expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le

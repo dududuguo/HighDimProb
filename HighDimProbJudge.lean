@@ -39,3 +39,4 @@ import HighDimProbJudge.RandomMatrix.CFCLogResolventRemainderLimitProviderUse
 import HighDimProbJudge.RandomMatrix.CFCLogResolventKernelProviderUse
 import HighDimProbJudge.PrecisionDA.CovarianceTraceExpansionUse
 import HighDimProbJudge.Concentration.SubGaussianProcessUse
+import HighDimProbJudge.Concentration.MetricEntropyUse

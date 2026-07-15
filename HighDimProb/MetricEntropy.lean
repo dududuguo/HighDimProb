@@ -133,6 +133,50 @@ theorem exists_nat_eq_coveringNumber_of_isInternalEpsilonNet {α : Type*}
     rw [ENat.coe_toNat hfinite]
     exact hle
 
+/-- A totally bounded set has a finite internal epsilon-net obtained from
+Mathlib's minimal cover, with exact `ENNReal` and `toNat` cardinalities. -/
+theorem exists_finset_isInternalEpsilonNet_of_totallyBounded {α : Type*}
+    [PseudoMetricSpace α] {K : Set α} {ε : ℝ}
+    (hε : 0 < ε) (hK : TotallyBounded K) :
+    ∃ N : Finset α,
+      IsInternalEpsilonNet K (N : Set α) ε ∧
+        coveringNumber K ε = (N.card : ENat) ∧
+        N.card = (coveringNumber K ε).toNat := by
+  have hε_pos : 0 < epsilonRadius ε := (Real.toNNReal_pos).2 hε
+  have hε_ne : epsilonRadius ε ≠ 0 := ne_of_gt hε_pos
+  obtain ⟨C, hCK, hCfin, hCcover⟩ :=
+    Metric.exists_finite_isCover_of_totallyBounded hε_ne hK
+  have hcover_le : Metric.coveringNumber (epsilonRadius ε) K ≤ C.encard :=
+    Metric.IsCover.coveringNumber_le_encard hCK hCcover
+  have hcover_ne_top : Metric.coveringNumber (epsilonRadius ε) K ≠ ⊤ :=
+    ne_top_of_le_ne_top (ne_top_of_lt hCfin.encard_lt_top) hcover_le
+  let N : Finset α :=
+    (Metric.finite_minimalCover (A := K) (ε := epsilonRadius ε)).toFinset
+  have hN_coe :
+      (N : Set α) = Metric.minimalCover (epsilonRadius ε) K := by
+    dsimp [N]
+    exact Set.Finite.coe_toFinset
+      (Metric.finite_minimalCover (A := K) (ε := epsilonRadius ε))
+  have hN_internal : IsInternalEpsilonNet K (N : Set α) ε := by
+    refine ⟨?_, ?_⟩
+    · rw [hN_coe]
+      exact Metric.minimalCover_subset
+    · rw [hN_coe]
+      exact Metric.isCover_minimalCover hcover_ne_top
+  have hcard :
+      (Metric.minimalCover (epsilonRadius ε) K).encard = (N.card : ENat) := by
+    dsimp [N]
+    exact Set.Finite.encard_eq_coe_toFinset_card
+      (Metric.finite_minimalCover (A := K) (ε := epsilonRadius ε))
+  have hcover_eq : coveringNumber K ε = (N.card : ENat) := by
+    change Metric.coveringNumber (epsilonRadius ε) K = (N.card : ENat)
+    exact (Metric.encard_minimalCover hcover_ne_top).symm.trans hcard
+  have htoNat : ((coveringNumber K ε).toNat : ENat) = coveringNumber K ε := by
+    exact ENat.coe_toNat hcover_ne_top
+  refine ⟨N, hN_internal, hcover_eq, ?_⟩
+  apply ENat.coe_inj.mp
+  exact hcover_eq.symm.trans htoNat.symm
+
 end
 
 end HighDimProb

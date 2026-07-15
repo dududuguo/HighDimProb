@@ -85,3 +85,5 @@ import HighDimProbTest.NoDeepMathYet
 import HighDimProbTest.ExperimentalImports
 import HighDimProbTest.ExamplesAPI
 import HighDimProbTest.PrecisionDAAPI
+import HighDimProbTest.SubGaussianProcessAPI
+import HighDimProbTest.MetricEntropyAPI

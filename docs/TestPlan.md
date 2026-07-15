@@ -6,8 +6,8 @@ policy violations, and text encoding damage.
 ## Main Commands
 
 ```bash
-python .github/scripts/check_text_quality.py
-python scripts/judge_policy_check.py
+python3 .github/scripts/check_text_quality.py
+python3 scripts/judge_policy_check.py
 lake build
 lake build HighDimProb.Examples
 lake build HighDimProbJudge
@@ -17,8 +17,8 @@ lake test
 For docs-only edits, run at least:
 
 ```bash
-python .github/scripts/check_text_quality.py
-python scripts/judge_policy_check.py
+python3 .github/scripts/check_text_quality.py
+python3 scripts/judge_policy_check.py
 git diff --check
 ```
 
@@ -28,6 +28,7 @@ git diff --check
 - Scalar API tests: probability, tail, Lp/moment, Orlicz, subGaussian, subExponential, real-inequality helpers, and scalar concentration files under `HighDimProbTest`.
 - Random-family and process API checks: `HighDimProbTest/RandomFamilyAPI.lean` plus `BranchImports.lean` and `ExperimentalImports.lean`.
 - Focused subGaussian-process API check: `HighDimProbTest/SubGaussianProcessAPI.lean`; run `lake build HighDimProbTest.SubGaussianProcessAPI` when changing `HighDimProb.SubGaussianProcess` or its public names.
+- Focused finite-chaining and metric-entropy API checks: `HighDimProbTest/ChainingAPI.lean`, `HighDimProbTest/NetsMetricEntropyAPI.lean`, `HighDimProbTest/MetricEntropyAPI.lean`, and `HighDimProbTest/SubGaussianProcessAPI.lean`; run `lake build HighDimProbTest.ChainingAPI HighDimProbTest.NetsMetricEntropyAPI HighDimProbTest.MetricEntropyAPI HighDimProbTest.SubGaussianProcessAPI` after changing these public surfaces. The corresponding consumer checks are `HighDimProbJudge/Concentration/SubGaussianProcessUse.lean` and `HighDimProbJudge/Concentration/MetricEntropyUse.lean`. No test surface exists yet for dyadic sums, entropy integrals, or a Dudley endpoint.
 - PrecisionDA application checks: `HighDimProbTest/PrecisionDAAPI.lean` covers
   the deterministic PrecisionDA object/provider surface, `HighDimProbTest/ExamplesAPI.lean`
   covers the reader-facing example import, and
@@ -110,8 +111,6 @@ Run the low-level provider check below after changing provider leaf declarations
 
 ## Provider Leaf Check
 
-+
-+ambient or self-adjoint carrier matrix-exp derivative surface
 ambient or self-adjoint carrier matrix-exp derivative surface, the
 first-order `CFC.log` affine-line provider layer and its diagonal/trace-paired
 spectral adapters, the finite-cutoff log-resolvent provider layer, the
