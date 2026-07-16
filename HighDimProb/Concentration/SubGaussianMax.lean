@@ -323,15 +323,16 @@ theorem expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_ca
         Real.sqrt_le_sqrt (mul_le_mul_of_nonneg_left hLog (by norm_num))
       exact mul_le_mul_of_nonneg_left hSqrt (le_of_lt hK)
 
-/-- Finite chaining bound written directly as a covering-number entropy sum. -/
-theorem expect_abs_sub_chain_le_finiteDyadicEntropySum
+/-- Finite chaining bound written with an explicit natural cardinality family. -/
+theorem expect_abs_sub_chain_le_finiteEntropySum
     {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
     {P : Measure Ω} [IsProbabilityMeasure P]
-    {X : RandomProcess Ω α ℝ} {Kset : Set α}
+    {X : RandomProcess Ω α ℝ}
     (gamma : ℕ → α) (L : ℕ)
     (nextLevel : Fin L → Finset α)
     (parent : Fin L → α → α)
     (σ : ℝ) (rho : Fin (L + 1) → ℝ)
+    (N : Fin L → ℕ)
     (hmem : ∀ k : Fin L,
       gamma ((k : ℕ) + 1) ∈ nextLevel k)
     (hparent : ∀ k : Fin L,
@@ -343,17 +344,67 @@ theorem expect_abs_sub_chain_le_finiteDyadicEntropySum
     (hρ : ∀ j : Fin (L + 1), 0 < rho j)
     (hdist : ∀ k : Fin L, ∀ x ∈ nextLevel k,
       dist x (parent k x) ≤ rho (Fin.castSucc k))
-    (hcard : ∀ k : Fin L,
-      (nextLevel k).card =
-        (coveringNumber Kset (rho (Fin.succ k))).toNat) :
+    (hcard : ∀ k : Fin L, (nextLevel k).card = N k) :
     expect P (fun ω => |X (gamma L) ω - X (gamma 0) ω|) ≤
-      finiteDyadicEntropySum Kset rho σ := by
+      finiteEntropySum rho N σ := by
   have hBound :=
     expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements
       gamma L nextLevel parent σ (fun k => rho (Fin.castSucc k))
       hmem hparent hXMeas hX hσ
       (fun k => hρ (Fin.castSucc k)) hdist
-  simpa [finiteDyadicEntropySum, hcard] using hBound
+  simpa [finiteEntropySum, hcard] using hBound
+
+/-- Finite chaining bound for a path indexed by `Fin (L + 1)`. -/
+theorem expect_abs_sub_chain_le_finiteEntropySum_of_path
+    {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RandomProcess Ω α ℝ}
+    {L : Nat}
+    (path : Fin (L + 1) → α)
+    (nextLevel : Fin L → Finset α)
+    (parent : Fin L → α → α)
+    (σ : ℝ) (rho : Fin (L + 1) → ℝ) (N : Fin L → ℕ)
+    (hmem : ∀ k : Fin L, path (Fin.succ k) ∈ nextLevel k)
+    (hparent : ∀ k : Fin L,
+      path (Fin.castSucc k) = parent k (path (Fin.succ k)))
+    (hXMeas : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      Measurable (fun ω => X x ω - X (parent k x) ω))
+    (hX : HasSubGaussianMGFIncrements P X σ)
+    (hσ : 0 < σ)
+    (hρ : ∀ j : Fin (L + 1), 0 < rho j)
+    (hdist : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      dist x (parent k x) ≤ rho (Fin.castSucc k))
+    (hcard : ∀ k : Fin L, (nextLevel k).card = N k) :
+    expect P (fun ω =>
+        |X (path (Fin.last L)) ω - X (path 0) ω|) ≤
+      finiteEntropySum rho N σ := by
+  let gamma : ℕ → α := fun n =>
+    if h : n ≤ L then path ⟨n, Nat.lt_succ_of_le h⟩ else path (Fin.last L)
+  have hgamma (n : ℕ) (hn : n ≤ L) :
+      gamma n = path ⟨n, Nat.lt_succ_of_le hn⟩ := by
+    simp [gamma, hn]
+  have hgamma_zero : gamma 0 = path 0 := by
+    simpa using hgamma 0 (by omega)
+  have hgamma_last : gamma L = path (Fin.last L) := by
+    simpa using hgamma L (by omega)
+  have hgamma_mem : ∀ k : Fin L,
+      gamma ((k : ℕ) + 1) ∈ nextLevel k := by
+    intro k
+    rw [show gamma ((k : ℕ) + 1) = path (Fin.succ k) by
+      simpa using hgamma ((k : ℕ) + 1) (by omega)]
+    exact hmem k
+  have hgamma_parent : ∀ k : Fin L,
+      gamma (k : ℕ) = parent k (gamma ((k : ℕ) + 1)) := by
+    intro k
+    rw [show gamma (k : ℕ) = path (Fin.castSucc k) by
+        simpa using hgamma (k : ℕ) (Nat.le_of_lt k.isLt),
+      show gamma ((k : ℕ) + 1) = path (Fin.succ k) by
+        simpa using hgamma ((k : ℕ) + 1) (by omega)]
+    exact hparent k
+  have hBound := expect_abs_sub_chain_le_finiteEntropySum
+    gamma L nextLevel parent σ rho N hgamma_mem hgamma_parent
+    hXMeas hX hσ hρ hdist hcard
+  simpa [hgamma_zero, hgamma_last] using hBound
 
 end
 

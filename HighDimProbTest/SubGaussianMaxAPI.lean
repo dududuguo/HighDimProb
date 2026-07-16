@@ -26,7 +26,8 @@ example {Omega T : Type*} [MeasurableSpace Omega]
 #check expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF
 
 #check expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le
-#check expect_abs_sub_chain_le_finiteDyadicEntropySum
+#check expect_abs_sub_chain_le_finiteEntropySum
+#check expect_abs_sub_chain_le_finiteEntropySum_of_path
 
 example
     {Ω α : Type*} [MeasurableSpace Ω]
@@ -83,11 +84,12 @@ example
 example
     {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
     {P : Measure Ω} [IsProbabilityMeasure P]
-    {X : RandomProcess Ω α ℝ} {Kset : Set α}
+    {X : RandomProcess Ω α ℝ}
     (gamma : ℕ → α) (L : ℕ)
     (nextLevel : Fin L → Finset α)
     (parent : Fin L → α → α)
     (σ : ℝ) (rho : Fin (L + 1) → ℝ)
+    (N : Fin L → ℕ)
     (hmem : ∀ k : Fin L,
       gamma ((k : ℕ) + 1) ∈ nextLevel k)
     (hparent : ∀ k : Fin L,
@@ -99,13 +101,45 @@ example
     (hρ : ∀ j : Fin (L + 1), 0 < rho j)
     (hdist : ∀ k : Fin L, ∀ x ∈ nextLevel k,
       dist x (parent k x) ≤ rho (Fin.castSucc k))
-    (hcard : ∀ k : Fin L,
-      (nextLevel k).card =
-        (coveringNumber Kset (rho (Fin.succ k))).toNat) :
+    (hcard : ∀ k : Fin L, (nextLevel k).card = N k) :
     expect P (fun ω => |X (gamma L) ω - X (gamma 0) ω|) ≤
-      finiteDyadicEntropySum Kset rho σ := by
-  exact expect_abs_sub_chain_le_finiteDyadicEntropySum
-    gamma L nextLevel parent σ rho hmem hparent hXMeas hX hσ hρ hdist hcard
+      finiteEntropySum rho N σ := by
+  exact expect_abs_sub_chain_le_finiteEntropySum
+    gamma L nextLevel parent σ rho N hmem hparent hXMeas hX hσ hρ hdist hcard
+
+-- These fields are the geometry path package consumed by the Fin-indexed API.
+example
+    {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RandomProcess Ω α ℝ}
+    {L : Nat}
+    (levels : Fin (L + 1) → Finset α)
+    (parent : Fin L → α → α)
+    (path : Fin (L + 1) → α) (x : α)
+    (σ : ℝ) (rho : Fin (L + 1) → ℝ)
+    (hpath : path (Fin.last L) = x ∧
+      (∀ j, path j ∈ levels j) ∧
+      (∀ k : Fin L,
+        path (Fin.castSucc k) = parent k (path (Fin.succ k)) ∧
+        dist (path (Fin.succ k))
+          (parent k (path (Fin.succ k))) ≤ rho (Fin.castSucc k)))
+    (hXMeas : ∀ k : Fin L, ∀ y ∈ levels (Fin.succ k),
+      Measurable (fun ω => X y ω - X (parent k y) ω))
+    (hX : HasSubGaussianMGFIncrements P X σ)
+    (hσ : 0 < σ)
+    (hρ : ∀ j : Fin (L + 1), 0 < rho j)
+    (hdist : ∀ k : Fin L, ∀ y ∈ levels (Fin.succ k),
+      dist y (parent k y) ≤ rho (Fin.castSucc k)) :
+    expect P (fun ω => |X x ω - X (path 0) ω|) ≤
+      finiteEntropySum rho (fun k : Fin L => (levels (Fin.succ k)).card) σ := by
+  have hBound := expect_abs_sub_chain_le_finiteEntropySum_of_path
+    (path := path) (nextLevel := fun k : Fin L => levels (Fin.succ k))
+    (parent := parent) (σ := σ) (rho := rho)
+    (N := fun k : Fin L => (levels (Fin.succ k)).card)
+    (fun k => hpath.2.1 (Fin.succ k))
+    (fun k => (hpath.2.2 k).1)
+    hXMeas hX hσ hρ hdist (fun _ => rfl)
+  simpa [hpath.1] using hBound
 
 example {Omega T : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} [IsProbabilityMeasure P]

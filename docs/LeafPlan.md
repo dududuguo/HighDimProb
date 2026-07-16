@@ -81,22 +81,23 @@
   `TotallyBounded K` and positive cover radii to finite internal nets and
   exact `coveringNumber` cardinality data. The `dist` versus `epsilonRadius`
   conversion remains explicit.
-- [x] **dyadic entropy sum:**
-  `exists_finset_internalNetFamily_parentMap_path_of_totallyBounded` constructs
-  finite internal nets at a supplied positive radius schedule, exact
-  covering-number/card/toNat certificates, adjacent parent maps, and endpoint
-  paths. `dyadicRadius` supplies the standard `R / 2^i` schedule and
-  `finiteDyadicEntropySum` records the corresponding finite sum, and
-  `expect_abs_sub_chain_le_finiteDyadicEntropySum` consumes it for finite
-  subGaussian chaining.
-- [ ] **entropy integral:** prove the finite-sum comparison with an explicitly
-  finite entropy integral; no such definition is present yet.
-- [ ] **Dudley:** add the separability, measurable-supremum, and limiting
-  contract only after the preceding stages are real declarations.
+- [x] **finite entropy sum:** `finiteEntropySum rho N sigma` uses explicit
+  `N : Fin L → Nat` cardinalities and contains no `coveringNumber.toNat`.
+  `expect_abs_sub_chain_le_finiteEntropySum` gives the direct finite-chain
+  bound; the `Fin`-indexed `expect_abs_sub_chain_le_finiteEntropySum_of_path`
+  and focused composition example close the finite Stage 3 API contract.
+- [ ] **entropy integral:** Mathlib supplies unit-grid sum/integral and
+  adjacent-interval APIs. Prove the missing arbitrary decreasing-partition /
+  dyadic rectangle comparison, then specialize it to finite covers.
+- [ ] **Dudley:** use set-level `IsSeparable K`, already obtained from total
+  boundedness, or an explicit separable-modification/process contract, plus
+  measurable full-supremum equality and the limiting argument after Stage 4.
 
 The current supremum API is finite `Finset`-only. The increment predicate does
 not require `0 < σ`, but its radius adapter does; `TotallyBounded K` does not by
-itself supply compactness, separability, or an infinite measurable supremum.
+itself provide compactness without completeness, a global `SeparableSpace α`,
+measurable equality of the full-process supremum, or the limiting argument.
+Mathlib's `TotallyBounded.isSeparable` supplies set-level separability of `K`.
 Full Dudley, full Tropp, and unconditional Matrix Bernstein remain outside this
 leaf plan.
 

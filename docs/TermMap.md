@@ -21,8 +21,8 @@ This is the active term index. The old detailed map was collapsed into
 | Deterministic finite LogSumExp | `sum_exp_pos`, `exp_mul_sup'_le_sum_exp`, `sup'_le_log_sum_exp_div`, `log_sum_exp_le_log_card_add` | [`HighDimProb/Analysis/LogSumExp.lean`](../HighDimProb/Analysis/LogSumExp.lean) |
 | Fixed-CGF finite maximum | `expect_processSup_le_of_cgf_bound_at` | [`HighDimProb/Concentration/FiniteMax.lean`](../HighDimProb/Concentration/FiniteMax.lean) |
 | Optimized subGaussian maxima | `CenteredSubGaussianMGF.neg`, `expect_processSup_le_of_centeredSubGaussianMGF`, `expect_finset_sup'_abs_le_of_centeredSubGaussianMGF` | [`HighDimProb/SubGaussian.lean`](../HighDimProb/SubGaussian.lean) and [`HighDimProb/Concentration/SubGaussianMax.lean`](../HighDimProb/Concentration/SubGaussianMax.lean) |
-| Finite subGaussian chaining | `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF`, `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le`, `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`, `expect_abs_sub_chain_le_finiteDyadicEntropySum` | [`HighDimProb/Concentration/SubGaussianMax.lean`](../HighDimProb/Concentration/SubGaussianMax.lean) |
-| ENat covering-number bridge | `coveringNumber_le_card_of_isInternalEpsilonNet`, `exists_nat_eq_coveringNumber_of_isInternalEpsilonNet`, `exists_finset_isInternalEpsilonNet_of_totallyBounded`, `exists_parentMap_of_subset_of_isInternalEpsilonNet`, `exists_finset_parentMap_of_internalLevels`, `exists_finset_parentMap_of_internalRadiusLevels`, `exists_finset_path_of_parentMap`, `exists_finset_internalNetFamily_parentMap_path_of_totallyBounded`, `dyadicRadius`, `finiteDyadicEntropySum` | [`HighDimProb/MetricEntropy.lean`](../HighDimProb/MetricEntropy.lean) |
+| Finite subGaussian chaining | `finiteEntropySum`, `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF`, `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le`, `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`, `expect_abs_sub_chain_le_finiteEntropySum`, `expect_abs_sub_chain_le_finiteEntropySum_of_path` | [`HighDimProb/MetricEntropy.lean`](../HighDimProb/MetricEntropy.lean) and [`HighDimProb/Concentration/SubGaussianMax.lean`](../HighDimProb/Concentration/SubGaussianMax.lean) |
+| ENat covering-number bridge | `coveringNumber_le_card_of_isInternalEpsilonNet`, `exists_nat_eq_coveringNumber_of_isInternalEpsilonNet`, `exists_finset_isInternalEpsilonNet_of_totallyBounded`, `exists_parentMap_of_subset_of_isInternalEpsilonNet`, `exists_finset_parentMap_of_internalLevels`, `exists_finset_parentMap_of_internalRadiusLevels`, `exists_finset_path_of_parentMap`, `exists_finset_internalNetFamily_parentMap_path_of_totallyBounded`, `dyadicRadius` | [`HighDimProb/MetricEntropy.lean`](../HighDimProb/MetricEntropy.lean) |
 | Random matrices | random matrix families, self-adjointness, sums, operator norm, spectral events, ordered spectral endpoints (`lambdaMaxOrdered`, `lambdaMinOrdered`) | [`HighDimProb/RandomMatrix`](../HighDimProb/RandomMatrix) |
 | Matrix concentration | public trace-MGF, tail, Matrix Bernstein, and sample-covariance facade | [`HighDimProb.RandomMatrix.Concentration`](../HighDimProb/RandomMatrix/Concentration.lean) |
 | Matrix analysis providers | matrix exponential/logarithm calculus, resolvents, relative entropy, Lieb/Epstein, Golden--Thompson | [`Provider.Analysis`](../HighDimProb/RandomMatrix/Provider/Analysis.lean) |
@@ -37,8 +37,13 @@ This is the active term index. The old detailed map was collapsed into
 and does not assume `0 < σ`. Conversion to `CenteredSubGaussianMGF` at radius
 `r` requires `0 < σ`, `0 < r`, and `dist s t ≤ r`. The finite supremum
 declarations are `Finset`-only. The minimal-cover adapter now supplies the
-finite internal-net/cardinality data for `TotallyBounded K` and `0 < ε`; no
-current declaration provides a separable or measurable infinite supremum.
+finite internal-net/cardinality data for `TotallyBounded K` and `0 < ε`;
+`TotallyBounded.isSeparable` supplies set-level separability of `K`, but no
+current declaration provides compactness without completeness, a global
+`SeparableSpace α`, measurable equality of the full-process supremum, or the
+limiting argument. `finiteEntropySum` keeps its `Nat` cardinality family
+explicit; the `Fin`-indexed path adapter and focused composition example close
+only the finite Stage 3 API contract.
 
 ## Lookup Rule
 

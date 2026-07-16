@@ -46,25 +46,27 @@ The metric-entropy roadmap has five explicit stages:
    `exists_finset_isInternalEpsilonNet_of_totallyBounded` uses `0 < ε` and
    `TotallyBounded K` to construct a finite internal net with exact
    `coveringNumber` / `ENat` / `toNat` cardinality relations.
-3. **dyadic entropy sum - proven.**
-   `exists_finset_internalNetFamily_parentMap_path_of_totallyBounded` constructs
-   finite internal nets for any supplied positive radius schedule, exact
-   covering-number/card/toNat certificates, adjacent parent maps, and endpoint
-   paths. `dyadicRadius` supplies the standard `R / 2^i` schedule,
-   `finiteDyadicEntropySum` records the finite covering-number sum, and
-   `expect_abs_sub_chain_le_finiteDyadicEntropySum` consumes the certificate
-   for finite subGaussian chaining.
-4. **entropy integral - not proved.** No entropy-integral definition or
-   dyadic-to-integral comparison has been declared.
-5. **Dudley - not proved.** No limiting supremum, separable-process version,
-   or Dudley endpoint has been declared.
+3. **finite entropy sum - proven.** `finiteEntropySum rho N sigma` uses an
+   explicit `N : Fin L → Nat` and contains no `coveringNumber.toNat`.
+   `expect_abs_sub_chain_le_finiteEntropySum` gives the direct bound; the
+   `Fin`-indexed `expect_abs_sub_chain_le_finiteEntropySum_of_path` and focused
+   composition example close the finite Stage 3 API contract.
+4. **entropy integral - not proved.** Mathlib supplies unit-grid sum/integral
+   and adjacent-interval APIs. The missing custom analysis leaf is an arbitrary
+   decreasing-partition/dyadic rectangle comparison, followed by a finite-cover
+   specialization.
+5. **Dudley - not proved.** The route should use set-level `IsSeparable K`,
+   already obtained from total boundedness, or an explicit
+   separable-modification/process contract, plus measurable full-supremum
+   equality and the limiting argument. No Dudley endpoint has been declared.
 
 The existing measurable and integrable supremum facts are for finite
 `Finset`s. The minimal-cover result does not silently upgrade
-`TotallyBounded K` to compactness or a separability/measurable-supremum
-theorem; those assumptions and bridges remain future contracts. No full
-Dudley, full Tropp, or unconditional Matrix Bernstein theorem is claimed by
-this atlas.
+`TotallyBounded K` to compactness without completeness or a global
+`SeparableSpace α`; `TotallyBounded.isSeparable` supplies set-level
+separability of `K`, but measurable equality of the full-process supremum and
+the limiting argument remain future contracts. No full Dudley, full Tropp, or
+unconditional Matrix Bernstein theorem is claimed by this atlas.
 
 ## RandomMatrix
 

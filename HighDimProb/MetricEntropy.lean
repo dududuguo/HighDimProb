@@ -397,29 +397,13 @@ theorem dyadicRadius_pos {R : ℝ} (hR : 0 < R) (i : Nat) :
   dsimp [dyadicRadius]
   positivity
 
-/-- The finite entropy sum associated with a positive finite radius family. -/
-def finiteDyadicEntropySum {α : Type*} [PseudoMetricSpace α]
-    (K : Set α) {L : Nat} (rho : Fin (L + 1) → ℝ) (sigma : ℝ) : ℝ :=
+/-- The finite entropy sum for an explicit natural cardinality family. -/
+def finiteEntropySum {L : Nat}
+    (rho : Fin (L + 1) → ℝ) (N : Fin L → Nat) (sigma : ℝ) : ℝ :=
   ∑ k : Fin L,
     (sigma * rho (Fin.castSucc k)) * Real.sqrt
       (2 * Real.log
-        (2 * ((coveringNumber K (rho (Fin.succ k))).toNat : ℝ)))
-
-/-- Replace covering-number cardinalities in the finite entropy sum by net cards. -/
-theorem finiteDyadicEntropySum_eq_of_internalNetFamily
-    {α : Type*} [PseudoMetricSpace α] {K : Set α} {L : Nat}
-    {rho : Fin (L + 1) → ℝ} {sigma : ℝ}
-    {levels : Fin (L + 1) → Finset α}
-    (hcard : ∀ i, coveringNumber K (rho i) = (levels i).card) :
-    finiteDyadicEntropySum K rho sigma =
-      ∑ k : Fin L,
-        (sigma * rho (Fin.castSucc k)) * Real.sqrt
-          (2 * Real.log (2 * ((levels (Fin.succ k)).card : ℝ))) := by
-  unfold finiteDyadicEntropySum
-  apply Finset.sum_congr rfl
-  intro k hk
-  rw [hcard (Fin.succ k)]
-  simp
+        (2 * (N k : ℝ)))
 
 end
 

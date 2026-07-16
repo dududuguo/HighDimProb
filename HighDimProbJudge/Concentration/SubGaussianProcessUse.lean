@@ -9,7 +9,9 @@ open HighDimProb
 #check HighDimProb.expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF
 #check HighDimProb.expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le
 #check HighDimProb.expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements
-#check HighDimProb.expect_abs_sub_chain_le_finiteDyadicEntropySum
+#check HighDimProb.finiteEntropySum
+#check HighDimProb.expect_abs_sub_chain_le_finiteEntropySum
+#check HighDimProb.expect_abs_sub_chain_le_finiteEntropySum_of_path
 
 example {Ω T : Type*} [MeasurableSpace Ω] [PseudoMetricSpace T]
     {P : Measure Ω} {X : RandomProcess Ω T ℝ} {σ r : ℝ} {s t : T}

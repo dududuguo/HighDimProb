@@ -19,27 +19,27 @@ This is the active short list. Old completed task logs were collapsed into
    `exists_finset_isInternalEpsilonNet_of_totallyBounded` now connects
    `TotallyBounded K` and `0 < ε` to a finite internal epsilon-net with exact
    `coveringNumber K ε` cardinality relations.
-3. [x] **dyadic entropy sum.**
-   `exists_finset_internalNetFamily_parentMap_path_of_totallyBounded` now
-   constructs finite internal nets for any supplied positive radius schedule,
-   exact covering-number/card/toNat certificates, adjacent parent maps, and
-   endpoint paths. `dyadicRadius` supplies the standard `R / 2^i` schedule,
-   `finiteDyadicEntropySum` is the finite covering-number sum, and
-   `expect_abs_sub_chain_le_finiteDyadicEntropySum` consumes it for finite
-   subGaussian chaining.
-4. [ ] **entropy integral.** Add the dyadic-to-integral comparison with an
-   explicit positive scale range and finiteness hypothesis. No integral
-   declaration exists yet.
-5. [ ] **Dudley.** Add a limiting supremum theorem only after the finite stages,
-   separability/measurable-version contract, and entropy-integral finiteness
-   are proved. This stage is not currently available.
+3. [x] **finite entropy sum.** `finiteEntropySum rho N sigma` uses explicit
+   `N : Fin L → Nat` cardinalities and contains no `coveringNumber.toNat`.
+   `expect_abs_sub_chain_le_finiteEntropySum` gives the direct finite-chain
+   bound; the `Fin`-indexed `expect_abs_sub_chain_le_finiteEntropySum_of_path`
+   and focused composition example close the finite Stage 3 API contract.
+4. [ ] **entropy integral.** Mathlib supplies unit-grid sum/integral and
+   adjacent-interval APIs. Prove the missing arbitrary decreasing-partition /
+   dyadic rectangle comparison, then specialize it to finite covers.
+5. [ ] **Dudley.** Use set-level `IsSeparable K`, already obtained from total
+   boundedness, or an explicit separable-modification/process contract, plus
+   measurable full-supremum equality and the limiting argument after Stage 4.
 
 Boundary reminder: `HasSubGaussianMGFIncrements` itself does not require
 `0 < σ`; its radius adapter requires `0 < σ`, `0 < r`, and `dist s t ≤ r`.
 The current measurable supremum API is finite `Finset`-only. The completed
-minimal-cover adapter does not provide an infinite-process or separability
-theorem; the finite dyadic sum is now closed, while no entropy integral or
-Dudley endpoint exists yet.
+minimal-cover adapter supplies set-level separability via
+`TotallyBounded.isSeparable`, but does not provide compactness without
+completeness, a global `SeparableSpace α`, measurable equality of the
+full-process supremum, or the limiting argument. The finite Stage 3 API
+contract is closed, while no entropy-integral comparison or Dudley endpoint
+exists yet.
 
 ## Active RandomMatrix Work
 

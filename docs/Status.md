@@ -87,8 +87,8 @@ three stages are complete in the current source tree; the final two are not.
 | --- | --- | --- |
 | finite chaining | complete | Supplied finite levels, parent maps, and a finite chain are handled by `chain_sub_eq_sum_range`, `norm_sub_chain_le_sum_of_level_sup`, `expect_abs_sub_chain_le_sum_of_level_sup`, and the centered-subGaussian cardinality corollary; the metric increment adapter is `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`. |
 | minimal-cover adapter | complete | `exists_finset_isInternalEpsilonNet_of_totallyBounded` turns `0 < ε` and `TotallyBounded K` into a finite internal net with exact `coveringNumber` / `ENat` / `toNat` cardinality relations. |
-| dyadic entropy sum | complete | `exists_finset_internalNetFamily_parentMap_path_of_totallyBounded` constructs finite internal nets at any supplied positive radius schedule, exact covering-number/card/toNat certificates, adjacent parent maps, and endpoint paths; `dyadicRadius` supplies the standard `R / 2^i` schedule, `finiteDyadicEntropySum` records the finite covering-number sum, and `expect_abs_sub_chain_le_finiteDyadicEntropySum` consumes the certificate for finite subGaussian chaining. |
-| entropy integral | not proved | No entropy-integral definition, dyadic-to-integral comparison, or finiteness theorem is present. |
+| finite entropy sum | complete | `finiteEntropySum rho N sigma` uses explicit `Nat` cardinalities and contains no `coveringNumber.toNat`; `expect_abs_sub_chain_le_finiteEntropySum` is the direct finite-chain bound, and the `Fin`-indexed `expect_abs_sub_chain_le_finiteEntropySum_of_path` plus the focused composition example close the finite Stage 3 API contract. |
+| entropy integral | not proved | Mathlib supplies unit-grid sum/integral and adjacent-interval APIs. The missing custom analysis leaf is an arbitrary decreasing-partition/dyadic rectangle comparison, followed by a finite-cover specialization; neither is proved. |
 | Dudley | not proved | No infinite-index supremum, limiting argument, or Dudley endpoint is present. |
 
 The finite stage is genuinely finite: `processSup`,
@@ -101,10 +101,10 @@ adapter requires `0 < σ`, `0 < r`, and `dist s t ≤ r`, and returns scale `σ 
 
 The completed minimal-cover adapter keeps the `dist`/cover-radius conversion
 explicit (`epsilonRadius` is the existing real-to-`NNReal` boundary) and
-requires `TotallyBounded K` plus `0 < ε`. It does not upgrade total
-boundedness to compactness or separability. No current declaration supplies a
-`SeparableSpace` process version or a measurable supremum over an infinite
-`K`; those are later obligations, not hidden consequences of the finite API.
+requires `TotallyBounded K` plus `0 < ε`. Mathlib's
+`TotallyBounded.isSeparable` supplies set-level separability of `K`. It does
+not provide compactness without completeness, a global `SeparableSpace α`,
+measurable equality of the full-process supremum, or the limiting argument.
 
 These process/metric-entropy stages do not strengthen the RandomMatrix route.
 The existing `MatrixBernstein.*_of_primitives` facades remain scoped by their
@@ -577,10 +577,7 @@ is split into `Provider.Analysis`, `Provider.Conditioning`, and
 `Provider.Concentration`, with `HighDimProb.RandomMatrix.Provider` as the broad
 expert facade. These facades retain explicit theorem primitives and assumptions;
 they are not an unconditional Matrix Bernstein result. `LiebProvider` remains a
-compatibility import. +
-+Frechet derivative+
-+primitives
-Frechet derivative
+compatibility import. Frechet derivative
 primitives, the self-adjoint carrier restriction, and the reusable scalar
 matrix-exp divided-difference coefficient layer:
 `matrixExpDividedDifferenceSeries`, `matrixExpDividedDifferenceSeries_pos`,

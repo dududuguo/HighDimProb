@@ -18,8 +18,7 @@ open scoped NNReal ENNReal
 #check HighDimProb.exists_finset_internalNetFamily_of_totallyBounded
 #check HighDimProb.exists_finset_internalNetFamily_parentMap_of_totallyBounded
 #check HighDimProb.exists_finset_internalNetFamily_parentMap_path_of_totallyBounded
-#check HighDimProb.finiteDyadicEntropySum
-#check HighDimProb.finiteDyadicEntropySum_eq_of_internalNetFamily
+#check HighDimProb.finiteEntropySum
 #check HighDimProb.dyadicRadius
 #check HighDimProb.dyadicRadius_pos
 
@@ -105,16 +104,6 @@ example {alpha : Type*} [PseudoMetricSpace alpha]
       (∀ i, coveringNumber K (rho i) = (levels i).card) ∧
       (∀ i, (levels i).card = (coveringNumber K (rho i)).toNat) := by
   exact exists_finset_internalNetFamily_of_totallyBounded hrho hK
-
-example {alpha : Type*} [PseudoMetricSpace alpha]
-    {K : Set alpha} {L : Nat} {rho : Fin (L + 1) → Real}
-    {levels : Fin (L + 1) → Finset alpha} {sigma : Real}
-    (hcard : ∀ i, coveringNumber K (rho i) = (levels i).card) :
-    finiteDyadicEntropySum K rho sigma =
-      ∑ k : Fin L,
-        (sigma * rho (Fin.castSucc k)) * Real.sqrt
-          (2 * Real.log (2 * ((levels (Fin.succ k)).card : Real))) := by
-  exact finiteDyadicEntropySum_eq_of_internalNetFamily hcard
 
 example {R : Real} (hR : 0 < R) (i : Nat) :
     0 < dyadicRadius R i := by
