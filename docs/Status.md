@@ -81,14 +81,15 @@ Random-family helpers:
 ## Finite Chaining Roadmap
 
 The roadmap is deliberately split into five proof-facing stages. The first
-three stages are complete in the current source tree; the final two are not.
+three stages and the truncated Stage 4 comparison leaf are complete in the
+current source tree; the full Stage 4 endpoint and Stage 5 are not.
 
 | Stage | Status | Current boundary |
 | --- | --- | --- |
 | finite chaining | complete | Supplied finite levels, parent maps, and a finite chain are handled by `chain_sub_eq_sum_range`, `norm_sub_chain_le_sum_of_level_sup`, `expect_abs_sub_chain_le_sum_of_level_sup`, and the centered-subGaussian cardinality corollary; the metric increment adapter is `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`. |
 | minimal-cover adapter | complete | `exists_finset_isInternalEpsilonNet_of_totallyBounded` turns `0 < ε` and `TotallyBounded K` into a finite internal net with exact `coveringNumber` / `ENat` / `toNat` cardinality relations. |
 | finite entropy sum | complete | `finiteEntropySum rho N sigma` uses explicit `Nat` cardinalities and contains no `coveringNumber.toNat`; `expect_abs_sub_chain_le_finiteEntropySum` is the direct finite-chain bound, and the `Fin`-indexed `expect_abs_sub_chain_le_finiteEntropySum_of_path` plus the focused composition example close the finite Stage 3 API contract. |
-| entropy integral | not proved | Mathlib supplies unit-grid sum/integral and adjacent-interval APIs. The missing custom analysis leaf is an arbitrary decreasing-partition/dyadic rectangle comparison, followed by a finite-cover specialization; neither is proved. |
+| entropy integral | truncated comparison proved; full endpoint open | Mathlib supplies the unit-grid sum/integral and adjacent-interval machinery. The custom arbitrary-partition adapter `sum_mul_sub_le_intervalIntegral_of_antitoneOn` and the finite dyadic specialization `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber` are proved. The specialization bounds the finite dyadic entropy sum by `4 * sigma` times the real interval integral on `[dyadicRadius R (L + 1), R]`, with exact `ENat` level-cardinality equalities and only a non-top certificate at the smallest radius. |
 | Dudley | not proved | No infinite-index supremum, limiting argument, or Dudley endpoint is present. |
 
 The finite stage is genuinely finite: `processSup`,
@@ -104,7 +105,8 @@ explicit (`epsilonRadius` is the existing real-to-`NNReal` boundary) and
 requires `TotallyBounded K` plus `0 < ε`. Mathlib's
 `TotallyBounded.isSeparable` supplies set-level separability of `K`. It does
 not provide compactness without completeness, a global `SeparableSpace α`,
-measurable equality of the full-process supremum, or the limiting argument.
+measurable equality of the full-process supremum, a 0-scale/small-radius tail
+limit, or the limiting passage to the full entropy integral.
 
 These process/metric-entropy stages do not strengthen the RandomMatrix route.
 The existing `MatrixBernstein.*_of_primitives` facades remain scoped by their

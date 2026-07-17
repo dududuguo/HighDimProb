@@ -86,20 +86,27 @@
   `expect_abs_sub_chain_le_finiteEntropySum` gives the direct finite-chain
   bound; the `Fin`-indexed `expect_abs_sub_chain_le_finiteEntropySum_of_path`
   and focused composition example close the finite Stage 3 API contract.
-- [ ] **entropy integral:** Mathlib supplies unit-grid sum/integral and
-  adjacent-interval APIs. Prove the missing arbitrary decreasing-partition /
-  dyadic rectangle comparison, then specialize it to finite covers.
+- [ ] **entropy integral:** the truncated Stage 4 comparison leaf is proved.
+  Mathlib supplies the unit-grid sum/integral and adjacent-interval machinery;
+  the custom generic adapter `sum_mul_sub_le_intervalIntegral_of_antitoneOn`
+  proves the arbitrary decreasing-partition rectangle comparison, and
+  `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber`
+  bounds the finite dyadic entropy sum by `4 * sigma` times the real interval
+  integral on `[dyadicRadius R (L + 1), R]`, using exact `ENat` level-cardinality
+  equalities and only a non-top certificate at the smallest radius. The full
+  Stage 4 endpoint remains open: prove the 0-scale/small-radius tail limit and
+  the limiting passage to the full entropy integral.
 - [ ] **Dudley:** use set-level `IsSeparable K`, already obtained from total
   boundedness, or an explicit separable-modification/process contract, plus
-  measurable full-supremum equality and the limiting argument after Stage 4.
+  measurable full-supremum equality after the full Stage 4 endpoint.
 
 The current supremum API is finite `Finset`-only. The increment predicate does
 not require `0 < σ`, but its radius adapter does; `TotallyBounded K` does not by
 itself provide compactness without completeness, a global `SeparableSpace α`,
-measurable equality of the full-process supremum, or the limiting argument.
-Mathlib's `TotallyBounded.isSeparable` supplies set-level separability of `K`.
-Full Dudley, full Tropp, and unconditional Matrix Bernstein remain outside this
-leaf plan.
+measurable equality of the full-process supremum, or the 0-scale limiting
+argument. Mathlib's `TotallyBounded.isSeparable` supplies set-level
+separability of `K`. Full entropy-integral/Dudley, full Tropp, and unconditional
+Matrix Bernstein remain outside this leaf plan.
 
 ## RandomMatrix
 

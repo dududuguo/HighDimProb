@@ -1,7 +1,9 @@
 import HighDimProb.MetricEntropy
 
 open HighDimProb
+open MeasureTheory Set
 open scoped NNReal ENNReal
+open scoped BigOperators Interval
 
 #check HighDimProb.epsilonRadius
 #check HighDimProb.IsEpsilonNet
@@ -21,6 +23,7 @@ open scoped NNReal ENNReal
 #check HighDimProb.finiteEntropySum
 #check HighDimProb.dyadicRadius
 #check HighDimProb.dyadicRadius_pos
+#check HighDimProb.finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber
 
 -- A nonpositive real radius is represented by the zero NNReal radius.
 example : epsilonRadius (-1) = 0 := by
@@ -108,6 +111,44 @@ example {alpha : Type*} [PseudoMetricSpace alpha]
 example {R : Real} (hR : 0 < R) (i : Nat) :
     0 < dyadicRadius R i := by
   exact dyadicRadius_pos hR i
+
+example {alpha : Type*} [PseudoMetricSpace alpha]
+    {K : Set alpha} {L : Nat} {R sigma : Real}
+    (hR : 0 < R) (hsigma : 0 <= sigma) (N : Fin L -> Nat)
+    (hN : forall k : Fin L,
+      coveringNumber K (dyadicRadius R ((k : Nat) + 1)) = (N k : ENat))
+    (hfinite : coveringNumber K (dyadicRadius R (L + 1)) ≠ ⊤) :
+    finiteEntropySum (fun i : Fin (L + 1) => dyadicRadius R (i : Nat)) N sigma <=
+      4 * sigma *
+        (∫ t in dyadicRadius R (L + 1)..R,
+          Real.sqrt (2 * Real.log
+            (2 * ((coveringNumber K t).toNat : Real)))) := by
+  exact finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber
+    hR hsigma N hN hfinite
+
+example {alpha : Type*} [PseudoMetricSpace alpha]
+    {K : Set alpha} {R sigma : Real}
+    (hR : 0 < R) (hsigma : 0 <= sigma)
+    (hfinite : coveringNumber K (dyadicRadius R 1) ≠ ⊤) :
+    finiteEntropySum (fun i : Fin 1 => dyadicRadius R (i : Nat))
+        (fun i : Fin 0 => i.elim0) sigma <=
+      4 * sigma *
+        (∫ t in dyadicRadius R 1..R,
+          Real.sqrt (2 * Real.log
+            (2 * ((coveringNumber K t).toNat : Real)))) := by
+  exact finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber
+    hR hsigma (fun i : Fin 0 => i.elim0) (by simp) hfinite
+
+example {alpha : Type*} [PseudoMetricSpace alpha] {L : Nat} {R : Real}
+    (hR : 0 < R) :
+    finiteEntropySum (fun i : Fin (L + 1) => dyadicRadius R (i : Nat))
+        (fun _ => 0) 0 ≤
+      4 * 0 *
+        (∫ t in dyadicRadius R (L + 1)..R,
+          Real.sqrt (2 * Real.log
+            (2 * ((coveringNumber (∅ : Set alpha) t).toNat : Real)))) := by
+  exact finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber
+    hR (by norm_num) (fun _ => 0) (by simp) (by simp)
 
 -- Mathlib's minimal-cover primitives remain available for lower-level audits;
 -- the HighDimProb Finset/internal-net adapter is checked above.

@@ -51,10 +51,18 @@ The metric-entropy roadmap has five explicit stages:
    `expect_abs_sub_chain_le_finiteEntropySum` gives the direct bound; the
    `Fin`-indexed `expect_abs_sub_chain_le_finiteEntropySum_of_path` and focused
    composition example close the finite Stage 3 API contract.
-4. **entropy integral - not proved.** Mathlib supplies unit-grid sum/integral
-   and adjacent-interval APIs. The missing custom analysis leaf is an arbitrary
-   decreasing-partition/dyadic rectangle comparison, followed by a finite-cover
-   specialization.
+4. **truncated entropy-integral comparison - proven; full endpoint open.**
+   Mathlib supplies the unit-grid sum/integral and adjacent-interval machinery.
+   The custom generic adapter
+   `sum_mul_sub_le_intervalIntegral_of_antitoneOn` proves the arbitrary
+   decreasing-partition rectangle comparison, and
+   `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber` gives
+   the finite dyadic bound by `4 * sigma` times the real interval integral on
+   the truncated range `[dyadicRadius R (L + 1), R]`. It uses exact `ENat`
+   level-cardinality equalities and only a non-top certificate at the smallest
+   radius.
+   The 0-scale/small-radius tail limit and limiting passage to the full
+   entropy integral remain open.
 5. **Dudley - not proved.** The route should use set-level `IsSeparable K`,
    already obtained from total boundedness, or an explicit
    separable-modification/process contract, plus measurable full-supremum
@@ -64,8 +72,9 @@ The existing measurable and integrable supremum facts are for finite
 `Finset`s. The minimal-cover result does not silently upgrade
 `TotallyBounded K` to compactness without completeness or a global
 `SeparableSpace α`; `TotallyBounded.isSeparable` supplies set-level
-separability of `K`, but measurable equality of the full-process supremum and
-the limiting argument remain future contracts. No full Dudley, full Tropp, or
+separability of `K`, but measurable equality of the full-process supremum, the
+0-scale/small-radius tail limit, and the limiting passage remain future
+contracts. No full entropy-integral endpoint, full Dudley, full Tropp, or
 unconditional Matrix Bernstein theorem is claimed by this atlas.
 
 ## RandomMatrix

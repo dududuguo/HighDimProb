@@ -24,12 +24,19 @@ This is the active short list. Old completed task logs were collapsed into
    `expect_abs_sub_chain_le_finiteEntropySum` gives the direct finite-chain
    bound; the `Fin`-indexed `expect_abs_sub_chain_le_finiteEntropySum_of_path`
    and focused composition example close the finite Stage 3 API contract.
-4. [ ] **entropy integral.** Mathlib supplies unit-grid sum/integral and
-   adjacent-interval APIs. Prove the missing arbitrary decreasing-partition /
-   dyadic rectangle comparison, then specialize it to finite covers.
+4. [ ] **entropy integral.** The truncated Stage 4 comparison leaf is proved.
+   The custom generic adapter `sum_mul_sub_le_intervalIntegral_of_antitoneOn`
+   handles arbitrary decreasing partitions, and
+   `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber`
+   bounds the finite dyadic entropy sum by `4 * sigma` times the real interval
+   integral on `[dyadicRadius R (L + 1), R]`. Mathlib supplies the unit-grid
+   sum/integral and adjacent-interval machinery; exact `ENat` level-cardinality
+   equalities and only a non-top certificate at the smallest radius are used.
+   The full Stage 4 endpoint remains open: prove the 0-scale/small-radius tail
+   limit and the limiting passage to the full entropy integral.
 5. [ ] **Dudley.** Use set-level `IsSeparable K`, already obtained from total
    boundedness, or an explicit separable-modification/process contract, plus
-   measurable full-supremum equality and the limiting argument after Stage 4.
+   measurable full-supremum equality after the full Stage 4 endpoint.
 
 Boundary reminder: `HasSubGaussianMGFIncrements` itself does not require
 `0 < σ`; its radius adapter requires `0 < σ`, `0 < r`, and `dist s t ≤ r`.
@@ -37,9 +44,9 @@ The current measurable supremum API is finite `Finset`-only. The completed
 minimal-cover adapter supplies set-level separability via
 `TotallyBounded.isSeparable`, but does not provide compactness without
 completeness, a global `SeparableSpace α`, measurable equality of the
-full-process supremum, or the limiting argument. The finite Stage 3 API
-contract is closed, while no entropy-integral comparison or Dudley endpoint
-exists yet.
+full-process supremum, or the 0-scale limiting passage. The finite Stage 3 API
+contract and truncated Stage 4 comparison are closed, while no full
+entropy-integral or Dudley endpoint exists yet.
 
 ## Active RandomMatrix Work
 

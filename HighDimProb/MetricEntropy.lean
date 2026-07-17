@@ -1,4 +1,5 @@
 import HighDimProb.Nets
+import HighDimProb.Analysis.SumIntegral
 
 /-!
 # Metric entropy vocabulary
@@ -404,6 +405,183 @@ def finiteEntropySum {L : Nat}
     (sigma * rho (Fin.castSucc k)) * Real.sqrt
       (2 * Real.log
         (2 * (N k : ℝ)))
+
+/-- The dyadic finite entropy sum is bounded by the covering-number entropy
+integral, with the first dyadic interval retained in the integral. -/
+theorem finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber
+    {α : Type*} [PseudoMetricSpace α]
+    {K : Set α} {L : Nat} {R sigma : ℝ}
+    (hR : 0 < R) (hsigma : 0 ≤ sigma) (N : Fin L → Nat)
+    (hN : ∀ k : Fin L,
+      coveringNumber K (dyadicRadius R ((k : Nat) + 1)) = (N k : ENat))
+    (hfinite : coveringNumber K (dyadicRadius R (L + 1)) ≠ ⊤) :
+    finiteEntropySum (fun i : Fin (L + 1) => dyadicRadius R (i : Nat)) N sigma ≤
+      4 * sigma *
+        (∫ t in dyadicRadius R (L + 1)..R,
+          Real.sqrt (2 * Real.log
+            (2 * ((coveringNumber K t).toNat : ℝ)))) := by
+  classical
+  let f : ℝ → ℝ := fun t =>
+    Real.sqrt (2 * Real.log
+      (2 * ((coveringNumber K t).toNat : ℝ)))
+  let a : Nat → ℝ := fun k => dyadicRadius R (k + 1)
+  have hRadius : ∀ {i j : Nat}, i ≤ j →
+      dyadicRadius R j ≤ dyadicRadius R i := by
+    intro i j hij
+    rw [dyadicRadius, dyadicRadius]
+    apply (div_le_div_iff_of_pos_left hR (by positivity) (by positivity)).2
+    exact pow_le_pow_right₀ (by norm_num) hij
+  have hdyadic : ∀ k : Nat,
+      dyadicRadius R k = 4 *
+        (dyadicRadius R (k + 1) - dyadicRadius R ((k + 1) + 1)) := by
+    intro k
+    rw [dyadicRadius, dyadicRadius, dyadicRadius]
+    field_simp
+    simp [pow_succ]
+    ring
+  have haL0 : a L ≤ a 0 := by
+    dsimp [a]
+    apply hRadius
+    omega
+  have ha0R : a 0 ≤ R := by
+    dsimp [a]
+    have h := hRadius (i := 0) (j := 1) (by omega)
+    simpa [dyadicRadius] using h
+  have haLR : a L ≤ R := haL0.trans ha0R
+  have hfinite_on : ∀ t ∈ Set.Icc (dyadicRadius R (L + 1)) R,
+      coveringNumber K t ≠ ⊤ := by
+    intro t ht
+    apply ne_top_of_le_ne_top hfinite
+    change Metric.coveringNumber (epsilonRadius t) K ≤
+      Metric.coveringNumber (epsilonRadius (dyadicRadius R (L + 1))) K
+    exact Metric.coveringNumber_anti (Real.toNNReal_mono ht.1)
+  have hf_anti : AntitoneOn f
+      (Set.Icc (dyadicRadius R (L + 1)) R) := by
+    intro x hx y hy hxy
+    dsimp [f]
+    have hcx := hfinite_on x hx
+    have hcy := hfinite_on y hy
+    have hcover : coveringNumber K y ≤ coveringNumber K x := by
+      change Metric.coveringNumber (epsilonRadius y) K ≤
+        Metric.coveringNumber (epsilonRadius x) K
+      exact Metric.coveringNumber_anti (Real.toNNReal_mono hxy)
+    have hnat : (coveringNumber K y).toNat ≤
+        (coveringNumber K x).toNat :=
+      ENat.toNat_le_toNat hcover hcx
+    have hreal : ((coveringNumber K y).toNat : ℝ) ≤
+        ((coveringNumber K x).toNat : ℝ) :=
+      Nat.cast_le.mpr hnat
+    by_cases hyzero : coveringNumber K y = 0
+    · have hytoNat : (coveringNumber K y).toNat = 0 := by
+        simp [hyzero]
+      rw [hytoNat]
+      simp
+    · have hytoNat_ne : (coveringNumber K y).toNat ≠ 0 := by
+        intro hytoNat
+        apply hyzero
+        rw [← ENat.coe_toNat hcy, hytoNat]
+        simp
+      have hypos : 0 < ((coveringNumber K y).toNat : ℝ) :=
+        Nat.cast_pos.mpr (Nat.pos_of_ne_zero hytoNat_ne)
+      apply Real.sqrt_le_sqrt
+      apply mul_le_mul_of_nonneg_left
+        (Real.log_le_log (by positivity) (by nlinarith : 2 *
+          ((coveringNumber K y).toNat : ℝ) ≤
+          2 * ((coveringNumber K x).toNat : ℝ)))
+        (by norm_num)
+  have hf_anti_u : AntitoneOn f
+      (Set.uIcc (dyadicRadius R (L + 1)) R) := by
+    rw [Set.uIcc_of_le haLR]
+    exact hf_anti
+  have hf_int : IntervalIntegrable f MeasureTheory.volume
+      (dyadicRadius R (L + 1)) R :=
+    hf_anti_u.intervalIntegrable
+  have hanti_short : AntitoneOn f (Set.Icc (a L) (a 0)) := by
+    apply hf_anti.mono
+    intro x hx
+    exact ⟨hx.1, hx.2.trans ha0R⟩
+  have hrect := sum_mul_sub_le_intervalIntegral_of_antitoneOn
+      (f := f) (a := a) (m := 0) (n := L)
+      (by omega)
+      (by
+        intro k hk
+        dsimp [a]
+        apply hRadius
+        omega)
+      (by simpa [a] using hanti_short)
+  have hfi_short : IntervalIntegrable f MeasureTheory.volume (a L) (a 0) :=
+    hf_int.mono_set (by
+      rw [Set.uIcc_of_le haL0, Set.uIcc_of_le haLR]
+      exact Set.Icc_subset_Icc le_rfl ha0R)
+  have hfi_first : IntervalIntegrable f MeasureTheory.volume (a 0) R :=
+    hf_int.mono_set (by
+      rw [Set.uIcc_of_le ha0R, Set.uIcc_of_le haLR]
+      exact Set.Icc_subset_Icc haL0 le_rfl)
+  have hfirst_nonneg : 0 ≤ ∫ x in a 0..R, f x :=
+    intervalIntegral.integral_nonneg ha0R (fun x hx => Real.sqrt_nonneg _)
+  have hrect_full : (∫ x in a L..a 0, f x) ≤
+      ∫ x in a L..R, f x := by
+    rw [← intervalIntegral.integral_add_adjacent_intervals hfi_short hfi_first]
+    exact le_add_of_nonneg_right hfirst_nonneg
+  have hindex {g : Nat → ℝ} :
+      (∑ k : Fin L, g (k : Nat)) =
+        ∑ k ∈ Finset.Ico 0 L, g k := by
+    rw [Finset.sum_fin_eq_sum_range, Nat.Ico_zero_eq_range]
+    apply Finset.sum_congr rfl
+    intro k hk
+    have hk' : k < L := Finset.mem_range.mp hk
+    simp [hk']
+  have hterm (k : Fin L) :
+      (sigma * dyadicRadius R (k : Nat)) *
+          Real.sqrt (2 * Real.log (2 * (N k : ℝ))) =
+        (4 * sigma) *
+          ((a (k : Nat) - a ((k : Nat) + 1)) * f (a (k : Nat))) := by
+    have htoNat : (coveringNumber K (dyadicRadius R ((k : Nat) + 1))).toNat =
+        N k := by
+      have := congrArg ENat.toNat (hN k)
+      simpa using this
+    dsimp [a, f]
+    rw [htoNat]
+    rw [hdyadic]
+    ring
+  calc
+    finiteEntropySum (fun i : Fin (L + 1) => dyadicRadius R (i : Nat)) N sigma =
+        ∑ k : Fin L,
+          (sigma * dyadicRadius R (k : Nat)) *
+            Real.sqrt (2 * Real.log (2 * (N k : ℝ))) := by
+      simp [finiteEntropySum]
+    _ = ∑ k : Fin L,
+          (4 * sigma) *
+            ((a (k : Nat) - a ((k : Nat) + 1)) * f (a (k : Nat))) := by
+      apply Finset.sum_congr rfl
+      intro k hk
+      exact hterm k
+    _ = (4 * sigma) *
+          (∑ k ∈ Finset.Ico 0 L,
+            (a k - a (k + 1)) * f (a k)) := by
+      calc
+        (∑ k : Fin L,
+            (4 * sigma) *
+              ((a (k : Nat) - a ((k : Nat) + 1)) * f (a (k : Nat)))) =
+            (4 * sigma) *
+              (∑ k : Fin L,
+                (a (k : Nat) - a ((k : Nat) + 1)) * f (a (k : Nat))) := by
+          rw [Finset.mul_sum]
+        _ = (4 * sigma) *
+              (∑ k ∈ Finset.Ico 0 L,
+                (a k - a (k + 1)) * f (a k)) := by
+          exact congrArg (fun z : ℝ => (4 * sigma) * z)
+            (hindex (g := fun k =>
+              (a k - a (k + 1)) * f (a k)))
+    _ ≤ (4 * sigma) * (∫ x in a L..a 0, f x) := by
+      exact mul_le_mul_of_nonneg_left hrect (by positivity)
+    _ ≤ (4 * sigma) * (∫ x in a L..R, f x) := by
+      exact mul_le_mul_of_nonneg_left hrect_full (by positivity)
+    _ = 4 * sigma *
+          (∫ t in dyadicRadius R (L + 1)..R,
+            Real.sqrt (2 * Real.log
+              (2 * ((coveringNumber K t).toNat : ℝ)))) := by
+      simp [a, f]
 
 end
 

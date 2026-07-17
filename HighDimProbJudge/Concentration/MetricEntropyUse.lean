@@ -18,6 +18,8 @@ open scoped NNReal ENNReal
 #check HighDimProb.finiteEntropySum
 #check HighDimProb.dyadicRadius
 #check HighDimProb.dyadicRadius_pos
+#check HighDimProb.sum_mul_sub_le_intervalIntegral_of_antitoneOn
+#check HighDimProb.finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber
 #check Metric.minimalCover
 #check Metric.minimalCover_subset
 #check Metric.finite_minimalCover
@@ -29,6 +31,20 @@ example {alpha : Type*} [PseudoMetricSpace alpha]
     (hN : IsInternalEpsilonNet K N eps) (hNfinite : N.Finite) :
     ∃ m : Nat, coveringNumber K eps = (m : ENat) ∧ m <= N.ncard := by
   exact exists_nat_eq_coveringNumber_of_isInternalEpsilonNet hN hNfinite
+
+example {alpha : Type*} [PseudoMetricSpace alpha]
+    {K : Set alpha} {L : Nat} {R sigma : Real}
+    (hR : 0 < R) (hsigma : 0 ≤ sigma) (N : Fin L → Nat)
+    (hN : ∀ k : Fin L,
+      coveringNumber K (dyadicRadius R ((k : Nat) + 1)) = (N k : ENat))
+    (hfinite : coveringNumber K (dyadicRadius R (L + 1)) ≠ ⊤) :
+    finiteEntropySum (fun i : Fin (L + 1) => dyadicRadius R (i : Nat)) N sigma ≤
+      4 * sigma *
+        (∫ t in dyadicRadius R (L + 1)..R,
+          Real.sqrt (2 * Real.log
+            (2 * ((coveringNumber K t).toNat : Real)))) := by
+  exact finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber
+    hR hsigma N hN hfinite
 
 example {alpha : Type*} [PseudoMetricSpace alpha]
     (eps : NNReal) (K : Set alpha)
