@@ -77,43 +77,14 @@ Random-family helpers:
 - `sampleEvaluation`
 - `HasSubGaussianMGFIncrements`
 - `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le`
-- `HighDimProb.ciSup_eq_ciSup_of_denseRange`: a deterministic
-  topological equality for a supplied dense sequence, continuous real-valued
-  function, and explicit `BddAbove` premise; it has no measurability,
-  integrability, or limit/interchange conclusion.
+## Process / Dudley Snapshot
 
-## Finite Chaining Roadmap
-
-The roadmap is deliberately split into five proof-facing stages. The first
-three stages, the truncated Stage 4 comparison leaf, and the first deterministic
-Stage 5 bridge are complete in the current source tree. The full Stage 4
-endpoint and the probabilistic Stage 5 route are not.
-
-| Stage | Status | Current boundary |
-| --- | --- | --- |
-| finite chaining | complete | Supplied finite levels, parent maps, and a finite chain are handled by `chain_sub_eq_sum_range`, `norm_sub_chain_le_sum_of_level_sup`, `expect_abs_sub_chain_le_sum_of_level_sup`, and the centered-subGaussian cardinality corollary; the metric increment adapter is `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`. |
-| minimal-cover adapter | complete | `exists_finset_isInternalEpsilonNet_of_totallyBounded` turns `0 < ε` and `TotallyBounded K` into a finite internal net with exact `coveringNumber` / `ENat` / `toNat` cardinality relations. |
-| finite entropy sum | complete | `finiteEntropySum rho N sigma` uses explicit `Nat` cardinalities and contains no `coveringNumber.toNat`; `expect_abs_sub_chain_le_finiteEntropySum` is the direct finite-chain bound, and the `Fin`-indexed `expect_abs_sub_chain_le_finiteEntropySum_of_path` plus the focused composition example close the finite Stage 3 API contract. |
-| entropy integral | truncated comparison proved; full endpoint open | Mathlib supplies the unit-grid sum/integral and adjacent-interval machinery. The custom arbitrary-partition adapter `sum_mul_sub_le_intervalIntegral_of_antitoneOn`, the finite dyadic specialization `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber`, and the supplied-path composition `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral` are proved. The path theorem keeps next-level finsets, parent maps, increment measurability, exact `ENat` level-cardinality equalities, and a terminal non-top certificate explicit; it does not generate geometry or prove the full integral. |
-| Stage 5 deterministic dense-sup bridge | first bridge proved; full route open | `HighDimProb.ciSup_eq_ciSup_of_denseRange` is generic over a supplied dense sequence, continuous real-valued `f`, and explicit `BddAbove`. It is deterministic only and has no measurability, integrability, or limit/interchange conclusion. |
-| Stage 5 probabilistic/Dudley endpoint | not proved | Countable/full supremum measurability, expectation limit/interchange, the small-scale tail limit, the full entropy integral, and Dudley remain open. |
-
-The finite stage is genuinely finite: `processSup`,
-`isRandomVariable_processSup`, and `integrable_processSup` concern a nonempty
-`Finset`; they do not provide measurability or integrability of a supremum over
-an arbitrary index set. The dense-sup bridge is deterministic and does not
-provide those missing countable/full supremum facts. The increment predicate
-`HasSubGaussianMGFIncrements` uses `[PseudoMetricSpace T]`, permits the zero
-`NNReal` proxy at equal indices, and does not require `0 < σ`. Its radius
-adapter requires `0 < σ`, `0 < r`, and `dist s t ≤ r`, and returns scale `σ * r`.
-
-The completed minimal-cover adapter keeps the `dist`/cover-radius conversion
-explicit (`epsilonRadius` is the existing real-to-`NNReal` boundary) and
-requires `TotallyBounded K` plus `0 < ε`. Mathlib's
-`TotallyBounded.isSeparable` supplies set-level separability of `K`. It does
-not provide compactness without completeness, a global `SeparableSpace α`,
-countable/full supremum measurability, expectation limit/interchange, the
-small-scale tail limit, or the limiting passage to the full entropy integral.
+The proved baseline covers finite chaining, the truncated entropy-integral
+comparison via `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`, and the
+deterministic dense-sup bridge `HighDimProb.ciSup_eq_ciSup_of_denseRange`.
+Countable/full supremum measurability, expectation limit/interchange, the
+small-scale residual, the full entropy integral, and Dudley remain open. The
+canonical active plan is [`TODO.md`](TODO.md).
 
 These process/metric-entropy stages do not strengthen the RandomMatrix route.
 The existing `MatrixBernstein.*_of_primitives` facades remain scoped by their

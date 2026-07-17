@@ -81,12 +81,13 @@ flowchart TD
 
 For a first pass through the repository:
 
-1. Read [`Status.md`](Status.md) for the current state and next task.
-2. Use [`TermMap.md`](TermMap.md) to find the relevant area.
-3. Read the focused API page, such as
+1. Read [`Status.md`](Status.md) for the current state.
+2. Read [`TODO.md`](TODO.md) for active next work.
+3. Use [`TermMap.md`](TermMap.md) to find the relevant area.
+4. Read the focused API page, such as
    [`RandomMatrixAPI.md`](RandomMatrixAPI.md), for public names and caveats.
-4. Open the corresponding example under `HighDimProb/Examples`.
-5. Use generated docs, [`LeanTooling.md`](LeanTooling.md), or `#check` for exact Lean signatures.
+5. Open the corresponding example under `HighDimProb/Examples`.
+6. Use generated docs, [`LeanTooling.md`](LeanTooling.md), or `#check` for exact Lean signatures.
 
 This is deliberately close to Mathlib practice: route documentation is
 conceptual, while exact declarations are checked by the Lean compiler.

@@ -1,7 +1,8 @@
 # TODO
 
-This is the active short list. Old completed task logs were collapsed into
-[`archive.md`](archive.md); use git history for exact old wording.
+This is the canonical active execution roadmap. Old completed task logs were
+collapsed into [`archive.md`](archive.md); use git history for exact old
+wording.
 
 ## Active Random Object Work
 
@@ -9,48 +10,50 @@ This is the active short list. Old completed task logs were collapsed into
   adaptedness, martingales, and independence conditioning to later contracts.
 - Next random-object task: `RP-API-random-family-downstream-consumer-contract`.
 
-### Five-Stage Chaining Roadmap
+### Dudley Closure Roadmap
 
-1. [x] **finite chaining.** Keep the existing finite chain and
-   centered-subGaussian level-supremum theorems limited to supplied finite
-   levels, parents, and cardinality certificates. The metric increment
-   adapter is now `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`.
-2. [x] **minimal-cover adapter.**
-   `exists_finset_isInternalEpsilonNet_of_totallyBounded` now connects
-   `TotallyBounded K` and `0 < ε` to a finite internal epsilon-net with exact
-   `coveringNumber K ε` cardinality relations.
-3. [x] **finite entropy sum.** `finiteEntropySum rho N sigma` uses explicit
-   `N : Fin L → Nat` cardinalities and contains no `coveringNumber.toNat`.
-   `expect_abs_sub_chain_le_finiteEntropySum` gives the direct finite-chain
-   bound; the `Fin`-indexed `expect_abs_sub_chain_le_finiteEntropySum_of_path`
-   and focused composition example close the finite Stage 3 API contract.
-4. [ ] **entropy integral.** The truncated Stage 4 comparison leaf is proved.
-   The custom generic adapter `sum_mul_sub_le_intervalIntegral_of_antitoneOn`
-   handles arbitrary decreasing partitions, and
-   `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber` and
-   `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral` bound supplied
-   finite path/certificate data on `[dyadicRadius R (L + 1), R]`. They retain
-   exact `coveringNumber`/cardinality equalities and a terminal non-top
-   certificate; they do not generate geometry or prove the full integral.
-   The full Stage 4 endpoint remains open: prove the small-scale tail limit and
-   the limiting passage to the full entropy integral.
-5. [ ] **Stage 5 dense-sup/Dudley route.** Checked deterministic subleaf
-   `HighDimProb.ciSup_eq_ciSup_of_denseRange` is proved for a supplied dense
-   sequence, continuous real-valued function, and explicit `BddAbove` premise.
-   The probabilistic endpoint remains open: countable/full supremum
-   measurability, expectation limit/interchange, the small-scale tail limit,
-   the full entropy integral, and Dudley are not proved.
+Proved baseline: finite chaining/net/cardinality/finite entropy sum,
+`expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`, and
+`ciSup_eq_ciSup_of_denseRange`.
+No full entropy-integral or Dudley endpoint is proved.
 
-Boundary reminder: `HasSubGaussianMGFIncrements` itself does not require
-`0 < σ`; its radius adapter requires `0 < σ`, `0 < r`, and `dist s t ≤ r`.
-The current measurable supremum API is finite `Finset`-only. The completed
-minimal-cover adapter supplies set-level separability via
-`TotallyBounded.isSeparable`, but does not provide compactness without
-completeness, a global `SeparableSpace α`, countable/full supremum
-measurability, expectation limit/interchange, or the small-scale limiting
-passage. The finite Stage 3 API contract, truncated Stage 4 comparison, and
-first deterministic Stage 5 bridge are closed, while no full entropy-integral
-or Dudley endpoint exists yet.
+After D1, D2 and D3 may proceed in parallel.
+
+- [ ] **D1 finite anchored supremum.** Fix a common anchor, a compatible path
+  family, and an explicit terminal residual. Done criterion: prove that the
+  finite anchored process supremum is bounded by the truncated entropy
+  integral plus that residual. Reuse existing net/cardinality/single-path
+  APIs.
+- [ ] **D2 small-scale/full-integral passage.** Show the small-scale residual
+  tends to `0` under an explicit compact-index/continuous-sample-path,
+  uniform-continuity, or separable-modification contract. Show the lower
+  endpoints tend to `0` and the interval integrals converge to the interval
+  integral over `[0, R]`. Reuse Mathlib integral convergence.
+- [ ] **D3 countable/full supremum passage.** Instantiate Mathlib's existing
+  set-level separability and dense-sequence APIs, then use `Measurable.iSup`
+  and monotone convergence.
+  Use `ENNReal` internally for the nonnegative supremum, then recover real
+  expectation under finiteness/integrability. Add only thin HighDimProb
+  `expect` wrappers.
+- [ ] **D4 exact full Dudley facade.** Assemble the anchored expected-supremum
+  conclusion under explicit probability, geometry, increment, regularity, and
+  entropy-finiteness assumptions; make no claim until the facade compiles.
+
+Do not build:
+
+- duplicate net constructors, cardinality conversions, or a single-path theorem;
+- custom dense-sequence, `Measurable.iSup`, monotone convergence, or
+  adjacent-interval machinery;
+- convenience aliases before two consumers exist.
+
+Risk gates:
+
+- Total boundedness plus continuity is insufficient to guarantee boundedness on
+  nonclosed `K`.
+- The same anchor/base term must be used throughout the comparison.
+- Entropy at `t = 0` must be handled by an explicit limiting/integral contract.
+- An increment MGF does not imply sample-path regularity.
+- The abstract endpoint must have no coordinate/product-space restriction.
 
 ## Active RandomMatrix Work
 

@@ -35,21 +35,8 @@ This is the active term index. The old detailed map was collapsed into
 | PrecisionDA applications | deterministic column-sample covariance, leave-one-out covariance, shrinkage resolvents, rank-one/Woodbury identities, Frobenius trace-expansion wrappers, and H1/H2/Theorem 1 provider-contract vocabulary | [`HighDimProb/Applications/PrecisionDA`](../HighDimProb/Applications/PrecisionDA.lean) |
 | Examples | compact statement-route index plus representative sample covariance, random-feature, gradient, NTK, LoRA, attention, Fisher, natural-Tropp, and PrecisionDA routes | [`HighDimProb/Examples`](../HighDimProb/Examples.lean) |
 
-`HasSubGaussianMGFIncrements` permits the zero `NNReal` proxy at equal indices
-and does not assume `0 < σ`. Conversion to `CenteredSubGaussianMGF` at radius
-`r` requires `0 < σ`, `0 < r`, and `dist s t ≤ r`. The finite supremum
-declarations are `Finset`-only. The minimal-cover adapter now supplies the
-finite internal-net/cardinality data for `TotallyBounded K` and `0 < ε`;
-`TotallyBounded.isSeparable` supplies set-level separability of `K`, but no
-current declaration provides compactness without completeness, a global
-`SeparableSpace α`, measurable equality of the full-process supremum, or the
-limiting argument. `finiteEntropySum` keeps its `Nat` cardinality family
-explicit; the `Fin`-indexed path adapter and focused composition example close
-the finite Stage 3 API contract. The truncated Stage 4 comparison is proved on
-`[dyadicRadius R (L + 1), R]`. The deterministic dense-sup bridge
-`ciSup_eq_ciSup_of_denseRange` is proved, but countable/full supremum
-measurability, expectation limit/interchange, the 0-scale/small-radius tail
-limit, the full entropy integral, and Dudley remain open.
+For the current process/metric-entropy state, see [`Status.md`](Status.md). Active roadmap
+work is tracked in [`TODO.md`](TODO.md).
 
 ## Lookup Rule
 

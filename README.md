@@ -124,6 +124,7 @@ compatibility surfaces.
 Good starting points:
 
 - `docs/Status.md` for the shortest current project state.
+- `docs/TODO.md` for the canonical active execution roadmap.
 - `docs/APIOverview.md` for a stable route map of the public API.
 - `docs/RandomMatrixAPI.md` for the current RandomMatrix / Matrix Bernstein API.
 - `docs/TermMap.md` for a compact concept-to-source map.

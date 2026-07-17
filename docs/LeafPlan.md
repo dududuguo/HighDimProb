@@ -70,49 +70,12 @@
 - StableDimension
 - ChainingStatements
 
-### Current Five-Stage Process Roadmap
+### Process Roadmap
 
-- [x] **finite chaining:** finite chains, level suprema, finite measurability /
-  integrability, and centered-subGaussian cardinality bounds are proved for
-  supplied finite data; the metric increment adapter is
-  `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`.
-- [x] **minimal-cover adapter:**
-  `exists_finset_isInternalEpsilonNet_of_totallyBounded` connects
-  `TotallyBounded K` and positive cover radii to finite internal nets and
-  exact `coveringNumber` cardinality data. The `dist` versus `epsilonRadius`
-  conversion remains explicit.
-- [x] **finite entropy sum:** `finiteEntropySum rho N sigma` uses explicit
-  `N : Fin L → Nat` cardinalities and contains no `coveringNumber.toNat`.
-  `expect_abs_sub_chain_le_finiteEntropySum` gives the direct finite-chain
-  bound; the `Fin`-indexed `expect_abs_sub_chain_le_finiteEntropySum_of_path`
-  and focused composition example close the finite Stage 3 API contract.
-- [ ] **entropy integral:** the truncated Stage 4 comparison leaf is proved.
-  Mathlib supplies the unit-grid sum/integral and adjacent-interval machinery;
-  the custom generic adapter `sum_mul_sub_le_intervalIntegral_of_antitoneOn`
-  proves the arbitrary decreasing-partition rectangle comparison, and
-  `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber` and
-  `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral` bound a supplied
-  finite path by `4 * sigma` times the real interval integral on
-  `[dyadicRadius R (L + 1), R]`. The composition theorem keeps the path,
-  next-level finsets, parent map, increment measurability, exact
-  `coveringNumber`/cardinality equalities, and terminal non-top certificate
-  explicit; it does not generate geometry or prove the full integral. The
-  full Stage 4 endpoint remains open: prove the small-scale tail limit and the
-  limiting passage to the full entropy integral.
-- [ ] **Stage 5 dense-sup/Dudley route:** checked deterministic subleaf
-  `HighDimProb.ciSup_eq_ciSup_of_denseRange` proves the equality for a supplied
-  dense sequence and continuous real-valued function under an explicit
-  `BddAbove` premise. The probabilistic endpoint remains open: countable/full
-  supremum measurability, expectation limit/interchange, the small-scale tail
-  limit, the full entropy integral, and Dudley are not proved.
-
-The current supremum API is finite `Finset`-only. The increment predicate does
-not require `0 < σ`, but its radius adapter does; `TotallyBounded K` does not by
-itself provide compactness without completeness, a global `SeparableSpace α`,
-measurable equality of the full-process supremum, or the 0-scale limiting
-argument. Mathlib's `TotallyBounded.isSeparable` supplies set-level
-separability of `K`. Full entropy-integral/Dudley, full Tropp, and unconditional
-Matrix Bernstein remain outside this leaf plan.
+The proved baseline includes
+`expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral` and
+`HighDimProb.ciSup_eq_ciSup_of_denseRange`. Full Dudley is not proved. The
+canonical active plan is [`TODO.md`](TODO.md).
 
 ## RandomMatrix
 

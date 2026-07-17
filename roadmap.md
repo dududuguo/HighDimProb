@@ -1,3 +1,5 @@
+> Scope: this is the ProofRoadmap research/benchmark proposal, not the active Lean proof roadmap; see [`docs/TODO.md`](docs/TODO.md).
+
  **我们提出一套 proof-roadmap engineering 方法：用声明依赖图定量分析大定理如何被拆分、抽象、复用、闭合，并构造一个工具 + benchmark 来评测 LLM 是否真的能参与研究级 Lean 库建设。**
 
 ---

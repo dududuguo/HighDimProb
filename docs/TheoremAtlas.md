@@ -34,54 +34,27 @@ allows the zero `NNReal` proxy at equal indices and does not assume `0 < σ`;
 the adapter requires `0 < σ`, `0 < r`, and `dist s t ≤ r`. It uses the proved
 monotonicity bridge `hasSubgaussianMGF_mono` from `HighDimProb.SubGaussian`.
 
-The metric-entropy roadmap has five explicit stages:
+## Proved Metric-Entropy Surface
 
-1. **finite chaining - proven.** `chain_sub_eq_sum_range`,
-   `norm_sub_chain_le_sum_of_level_sup`,
-   `expect_abs_sub_chain_le_sum_of_level_sup`, and the centered-subGaussian
-   cardinality corollary handle supplied finite levels, parent maps, and Nat
-   cardinality certificates. The metric increment adapter is
-   `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`.
-2. **minimal-cover adapter - proven.**
-   `exists_finset_isInternalEpsilonNet_of_totallyBounded` uses `0 < ε` and
-   `TotallyBounded K` to construct a finite internal net with exact
-   `coveringNumber` / `ENat` / `toNat` cardinality relations.
-3. **finite entropy sum - proven.** `finiteEntropySum rho N sigma` uses an
-   explicit `N : Fin L → Nat` and contains no `coveringNumber.toNat`.
-   `expect_abs_sub_chain_le_finiteEntropySum` gives the direct bound; the
-   `Fin`-indexed `expect_abs_sub_chain_le_finiteEntropySum_of_path` and focused
-   composition example close the finite Stage 3 API contract.
-4. **truncated entropy-integral comparison - proven; full endpoint open.**
-   Mathlib supplies the unit-grid sum/integral and adjacent-interval machinery.
-   The custom generic adapter
-   `sum_mul_sub_le_intervalIntegral_of_antitoneOn` proves the arbitrary
-   decreasing-partition rectangle comparison, and
-   `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber` and
-   `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral` give the finite
-   dyadic bound by `4 * sigma` times the real interval integral on the
-   truncated range `[dyadicRadius R (L + 1), R]`. The path theorem accepts only
-   supplied finite path/certificate data, exact `ENat` level-cardinality
-   equalities, and a terminal non-top certificate; it does not generate
-   geometry, prove the full integral, or prove Dudley.
-   The small-scale tail limit and limiting passage to the full entropy integral
-   remain open.
-5. **Stage 5 deterministic dense-sup bridge - first leaf proven.**
-   `HighDimProb.ciSup_eq_ciSup_of_denseRange` is a generic
-   deterministic topological theorem for a supplied dense sequence, a
-   continuous real-valued function, and an explicit `BddAbove` premise. It has
-   no measurability, integrability, or limit/interchange premise or conclusion.
-   Countable/full supremum measurability, expectation limit/interchange, the
-   small-scale tail limit, the full entropy integral, and the Dudley endpoint
-   remain open.
+The proved surface consists of:
 
-The existing measurable and integrable supremum facts are for finite
-`Finset`s. The minimal-cover result does not silently upgrade
-`TotallyBounded K` to compactness without completeness or a global
-`SeparableSpace α`; `TotallyBounded.isSeparable` supplies set-level
-separability of `K`, but countable/full supremum measurability, expectation
-limit/interchange, the small-scale tail limit, and the limiting passage remain
-future contracts. No full entropy-integral endpoint, full Dudley, full Tropp,
-or unconditional Matrix Bernstein theorem is claimed by this atlas.
+- finite chaining: `chain_sub_eq_sum_range`,
+  `expect_abs_sub_chain_le_sum_of_level_sup`, and
+  `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`;
+- minimal-cover adapter: `exists_finset_isInternalEpsilonNet_of_totallyBounded`;
+- finite entropy sums: `finiteEntropySum`,
+  `expect_abs_sub_chain_le_finiteEntropySum`, and
+  `expect_abs_sub_chain_le_finiteEntropySum_of_path`;
+- truncated entropy-integral comparison:
+  `sum_mul_sub_le_intervalIntegral_of_antitoneOn`,
+  `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber`, and
+  `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`;
+- deterministic dense-sup bridge: `HighDimProb.ciSup_eq_ciSup_of_denseRange`.
+
+No full entropy-integral endpoint or full Dudley theorem is proved.
+Countable/full supremum measurability, expectation limit/interchange, and the
+small-scale residual remain open dependencies; see [`TODO.md`](TODO.md) for the
+canonical active plan.
 
 ## RandomMatrix
 
