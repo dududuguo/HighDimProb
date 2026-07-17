@@ -90,15 +90,21 @@
   Mathlib supplies the unit-grid sum/integral and adjacent-interval machinery;
   the custom generic adapter `sum_mul_sub_le_intervalIntegral_of_antitoneOn`
   proves the arbitrary decreasing-partition rectangle comparison, and
-  `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber`
-  bounds the finite dyadic entropy sum by `4 * sigma` times the real interval
-  integral on `[dyadicRadius R (L + 1), R]`, using exact `ENat` level-cardinality
-  equalities and only a non-top certificate at the smallest radius. The full
-  Stage 4 endpoint remains open: prove the 0-scale/small-radius tail limit and
-  the limiting passage to the full entropy integral.
-- [ ] **Dudley:** use set-level `IsSeparable K`, already obtained from total
-  boundedness, or an explicit separable-modification/process contract, plus
-  measurable full-supremum equality after the full Stage 4 endpoint.
+  `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber` and
+  `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral` bound a supplied
+  finite path by `4 * sigma` times the real interval integral on
+  `[dyadicRadius R (L + 1), R]`. The composition theorem keeps the path,
+  next-level finsets, parent map, increment measurability, exact
+  `coveringNumber`/cardinality equalities, and terminal non-top certificate
+  explicit; it does not generate geometry or prove the full integral. The
+  full Stage 4 endpoint remains open: prove the small-scale tail limit and the
+  limiting passage to the full entropy integral.
+- [ ] **Stage 5 dense-sup/Dudley route:** checked deterministic subleaf
+  `HighDimProb.ciSup_eq_ciSup_of_denseRange` proves the equality for a supplied
+  dense sequence and continuous real-valued function under an explicit
+  `BddAbove` premise. The probabilistic endpoint remains open: countable/full
+  supremum measurability, expectation limit/interchange, the small-scale tail
+  limit, the full entropy integral, and Dudley are not proved.
 
 The current supremum API is finite `Finset`-only. The increment predicate does
 not require `0 < σ`, but its radius adapter does; `TotallyBounded K` does not by

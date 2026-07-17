@@ -28,6 +28,7 @@ example {Omega T : Type*} [MeasurableSpace Omega]
 #check expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le
 #check expect_abs_sub_chain_le_finiteEntropySum
 #check expect_abs_sub_chain_le_finiteEntropySum_of_path
+#check expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral
 
 example
     {Ω α : Type*} [MeasurableSpace Ω]
@@ -140,6 +141,37 @@ example
     (fun k => (hpath.2.2 k).1)
     hXMeas hX hσ hρ hdist (fun _ => rfl)
   simpa [hpath.1] using hBound
+
+example
+    {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RandomProcess Ω α ℝ}
+    {K : Set α} {L : Nat} {R σ : ℝ}
+    (path : Fin (L + 1) → α)
+    (nextLevel : Fin L → Finset α)
+    (parent : Fin L → α → α)
+    (hmem : ∀ k : Fin L, path (Fin.succ k) ∈ nextLevel k)
+    (hparent : ∀ k : Fin L,
+      path (Fin.castSucc k) = parent k (path (Fin.succ k)))
+    (hXMeas : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      Measurable (fun ω => X x ω - X (parent k x) ω))
+    (hX : HasSubGaussianMGFIncrements P X σ)
+    (hσ : 0 < σ)
+    (hR : 0 < R)
+    (hdist : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      dist x (parent k x) ≤ dyadicRadius R (Fin.castSucc k : Nat))
+    (hN : ∀ k : Fin L,
+      coveringNumber K (dyadicRadius R ((k : Nat) + 1)) =
+        ((nextLevel k).card : ENat))
+    (hfinite : coveringNumber K (dyadicRadius R (L + 1)) ≠ ⊤) :
+    expect P (fun ω =>
+        |X (path (Fin.last L)) ω - X (path 0) ω|) ≤
+      4 * σ *
+        (∫ t in dyadicRadius R (L + 1)..R,
+          Real.sqrt (2 * Real.log
+            (2 * ((coveringNumber K t).toNat : ℝ)))) := by
+  exact expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral
+    path nextLevel parent hmem hparent hXMeas hX hσ hR hdist hN hfinite
 
 example {Omega T : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} [IsProbabilityMeasure P]

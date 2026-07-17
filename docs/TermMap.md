@@ -11,6 +11,7 @@ This is the active term index. The old detailed map was collapsed into
 | Scalar size | `realLpNorm`, `HasFiniteMoment`, `SubGaussianTail`, `SubExponentialTail`, `Psi2Bound`, `Psi1Bound` | [`HighDimProb/Scalar`](../HighDimProb/Scalar) and concentration files |
 | Scalar concentration | Markov, Chebyshev, Orlicz/tail, moment, MGF, Rademacher, Hoeffding, Bernstein routes | [`HighDimProb/Concentration`](../HighDimProb/Concentration) |
 | Analysis helpers | real inequalities including `exp_mul_le_chord_exp_of_nonneg_of_le` | [`HighDimProb/Analysis/RealInequalities.lean`](../HighDimProb/Analysis/RealInequalities.lean) |
+| Analysis dense-sup bridge | `ciSup_eq_ciSup_of_denseRange` | [`HighDimProb/Analysis/DenseSup.lean`](../HighDimProb/Analysis/DenseSup.lean) |
 | Sum/integral comparison | `sum_mul_sub_le_intervalIntegral_of_antitoneOn` | [`HighDimProb/Analysis/SumIntegral.lean`](../HighDimProb/Analysis/SumIntegral.lean) |
 | Random families/processes | `RandomFamily`, `RealRandomFamily`, `IsRandomFamily`, `familyAt`, `mapRandomFamily`, `RandomProcess`, `IsRandomProcess`, `processAt`, `RandomSample`, `IsRandomSample`, `sampleEvaluation` | [`HighDimProb/Process.lean`](../HighDimProb/Process.lean) |
 | SubGaussian process increments | `HasSubGaussianMGFIncrements`, `hasSubgaussianMGF_mono`, `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le` | [`HighDimProb/SubGaussianProcess.lean`](../HighDimProb/SubGaussianProcess.lean) and [`HighDimProb/SubGaussian.lean`](../HighDimProb/SubGaussian.lean) |
@@ -22,7 +23,7 @@ This is the active term index. The old detailed map was collapsed into
 | Deterministic finite LogSumExp | `sum_exp_pos`, `exp_mul_sup'_le_sum_exp`, `sup'_le_log_sum_exp_div`, `log_sum_exp_le_log_card_add` | [`HighDimProb/Analysis/LogSumExp.lean`](../HighDimProb/Analysis/LogSumExp.lean) |
 | Fixed-CGF finite maximum | `expect_processSup_le_of_cgf_bound_at` | [`HighDimProb/Concentration/FiniteMax.lean`](../HighDimProb/Concentration/FiniteMax.lean) |
 | Optimized subGaussian maxima | `CenteredSubGaussianMGF.neg`, `expect_processSup_le_of_centeredSubGaussianMGF`, `expect_finset_sup'_abs_le_of_centeredSubGaussianMGF` | [`HighDimProb/SubGaussian.lean`](../HighDimProb/SubGaussian.lean) and [`HighDimProb/Concentration/SubGaussianMax.lean`](../HighDimProb/Concentration/SubGaussianMax.lean) |
-| Finite subGaussian chaining | `finiteEntropySum`, `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF`, `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le`, `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`, `expect_abs_sub_chain_le_finiteEntropySum`, `expect_abs_sub_chain_le_finiteEntropySum_of_path`, `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber` | [`HighDimProb/MetricEntropy.lean`](../HighDimProb/MetricEntropy.lean) and [`HighDimProb/Concentration/SubGaussianMax.lean`](../HighDimProb/Concentration/SubGaussianMax.lean) |
+| Finite subGaussian chaining | `finiteEntropySum`, `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF`, `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le`, `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`, `expect_abs_sub_chain_le_finiteEntropySum`, `expect_abs_sub_chain_le_finiteEntropySum_of_path`, `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`, `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber` | [`HighDimProb/MetricEntropy.lean`](../HighDimProb/MetricEntropy.lean) and [`HighDimProb/Concentration/SubGaussianMax.lean`](../HighDimProb/Concentration/SubGaussianMax.lean) |
 | ENat covering-number bridge | `coveringNumber_le_card_of_isInternalEpsilonNet`, `exists_nat_eq_coveringNumber_of_isInternalEpsilonNet`, `exists_finset_isInternalEpsilonNet_of_totallyBounded`, `exists_parentMap_of_subset_of_isInternalEpsilonNet`, `exists_finset_parentMap_of_internalLevels`, `exists_finset_parentMap_of_internalRadiusLevels`, `exists_finset_path_of_parentMap`, `exists_finset_internalNetFamily_parentMap_path_of_totallyBounded`, `dyadicRadius` | [`HighDimProb/MetricEntropy.lean`](../HighDimProb/MetricEntropy.lean) |
 | Random matrices | random matrix families, self-adjointness, sums, operator norm, spectral events, ordered spectral endpoints (`lambdaMaxOrdered`, `lambdaMinOrdered`) | [`HighDimProb/RandomMatrix`](../HighDimProb/RandomMatrix) |
 | Matrix concentration | public trace-MGF, tail, Matrix Bernstein, and sample-covariance facade | [`HighDimProb.RandomMatrix.Concentration`](../HighDimProb/RandomMatrix/Concentration.lean) |
@@ -45,9 +46,10 @@ current declaration provides compactness without completeness, a global
 limiting argument. `finiteEntropySum` keeps its `Nat` cardinality family
 explicit; the `Fin`-indexed path adapter and focused composition example close
 the finite Stage 3 API contract. The truncated Stage 4 comparison is proved on
-`[dyadicRadius R (L + 1), R]`; the 0-scale/small-radius tail limit, full-process
-measurable supremum equality, and limiting passage to the full entropy integral
-remain open.
+`[dyadicRadius R (L + 1), R]`. The deterministic dense-sup bridge
+`ciSup_eq_ciSup_of_denseRange` is proved, but countable/full supremum
+measurability, expectation limit/interchange, the 0-scale/small-radius tail
+limit, the full entropy integral, and Dudley remain open.
 
 ## Lookup Rule
 

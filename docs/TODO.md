@@ -27,26 +27,30 @@ This is the active short list. Old completed task logs were collapsed into
 4. [ ] **entropy integral.** The truncated Stage 4 comparison leaf is proved.
    The custom generic adapter `sum_mul_sub_le_intervalIntegral_of_antitoneOn`
    handles arbitrary decreasing partitions, and
-   `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber`
-   bounds the finite dyadic entropy sum by `4 * sigma` times the real interval
-   integral on `[dyadicRadius R (L + 1), R]`. Mathlib supplies the unit-grid
-   sum/integral and adjacent-interval machinery; exact `ENat` level-cardinality
-   equalities and only a non-top certificate at the smallest radius are used.
-   The full Stage 4 endpoint remains open: prove the 0-scale/small-radius tail
-   limit and the limiting passage to the full entropy integral.
-5. [ ] **Dudley.** Use set-level `IsSeparable K`, already obtained from total
-   boundedness, or an explicit separable-modification/process contract, plus
-   measurable full-supremum equality after the full Stage 4 endpoint.
+   `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber` and
+   `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral` bound supplied
+   finite path/certificate data on `[dyadicRadius R (L + 1), R]`. They retain
+   exact `coveringNumber`/cardinality equalities and a terminal non-top
+   certificate; they do not generate geometry or prove the full integral.
+   The full Stage 4 endpoint remains open: prove the small-scale tail limit and
+   the limiting passage to the full entropy integral.
+5. [ ] **Stage 5 dense-sup/Dudley route.** Checked deterministic subleaf
+   `HighDimProb.ciSup_eq_ciSup_of_denseRange` is proved for a supplied dense
+   sequence, continuous real-valued function, and explicit `BddAbove` premise.
+   The probabilistic endpoint remains open: countable/full supremum
+   measurability, expectation limit/interchange, the small-scale tail limit,
+   the full entropy integral, and Dudley are not proved.
 
 Boundary reminder: `HasSubGaussianMGFIncrements` itself does not require
 `0 < σ`; its radius adapter requires `0 < σ`, `0 < r`, and `dist s t ≤ r`.
 The current measurable supremum API is finite `Finset`-only. The completed
 minimal-cover adapter supplies set-level separability via
 `TotallyBounded.isSeparable`, but does not provide compactness without
-completeness, a global `SeparableSpace α`, measurable equality of the
-full-process supremum, or the 0-scale limiting passage. The finite Stage 3 API
-contract and truncated Stage 4 comparison are closed, while no full
-entropy-integral or Dudley endpoint exists yet.
+completeness, a global `SeparableSpace α`, countable/full supremum
+measurability, expectation limit/interchange, or the small-scale limiting
+passage. The finite Stage 3 API contract, truncated Stage 4 comparison, and
+first deterministic Stage 5 bridge are closed, while no full entropy-integral
+or Dudley endpoint exists yet.
 
 ## Active RandomMatrix Work
 

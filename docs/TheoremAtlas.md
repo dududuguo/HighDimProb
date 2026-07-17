@@ -56,26 +56,32 @@ The metric-entropy roadmap has five explicit stages:
    The custom generic adapter
    `sum_mul_sub_le_intervalIntegral_of_antitoneOn` proves the arbitrary
    decreasing-partition rectangle comparison, and
-   `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber` gives
-   the finite dyadic bound by `4 * sigma` times the real interval integral on
-   the truncated range `[dyadicRadius R (L + 1), R]`. It uses exact `ENat`
-   level-cardinality equalities and only a non-top certificate at the smallest
-   radius.
-   The 0-scale/small-radius tail limit and limiting passage to the full
-   entropy integral remain open.
-5. **Dudley - not proved.** The route should use set-level `IsSeparable K`,
-   already obtained from total boundedness, or an explicit
-   separable-modification/process contract, plus measurable full-supremum
-   equality and the limiting argument. No Dudley endpoint has been declared.
+   `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber` and
+   `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral` give the finite
+   dyadic bound by `4 * sigma` times the real interval integral on the
+   truncated range `[dyadicRadius R (L + 1), R]`. The path theorem accepts only
+   supplied finite path/certificate data, exact `ENat` level-cardinality
+   equalities, and a terminal non-top certificate; it does not generate
+   geometry, prove the full integral, or prove Dudley.
+   The small-scale tail limit and limiting passage to the full entropy integral
+   remain open.
+5. **Stage 5 deterministic dense-sup bridge - first leaf proven.**
+   `HighDimProb.ciSup_eq_ciSup_of_denseRange` is a generic
+   deterministic topological theorem for a supplied dense sequence, a
+   continuous real-valued function, and an explicit `BddAbove` premise. It has
+   no measurability, integrability, or limit/interchange premise or conclusion.
+   Countable/full supremum measurability, expectation limit/interchange, the
+   small-scale tail limit, the full entropy integral, and the Dudley endpoint
+   remain open.
 
 The existing measurable and integrable supremum facts are for finite
 `Finset`s. The minimal-cover result does not silently upgrade
 `TotallyBounded K` to compactness without completeness or a global
 `SeparableSpace α`; `TotallyBounded.isSeparable` supplies set-level
-separability of `K`, but measurable equality of the full-process supremum, the
-0-scale/small-radius tail limit, and the limiting passage remain future
-contracts. No full entropy-integral endpoint, full Dudley, full Tropp, or
-unconditional Matrix Bernstein theorem is claimed by this atlas.
+separability of `K`, but countable/full supremum measurability, expectation
+limit/interchange, the small-scale tail limit, and the limiting passage remain
+future contracts. No full entropy-integral endpoint, full Dudley, full Tropp,
+or unconditional Matrix Bernstein theorem is claimed by this atlas.
 
 ## RandomMatrix
 

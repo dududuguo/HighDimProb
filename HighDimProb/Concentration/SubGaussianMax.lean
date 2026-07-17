@@ -406,6 +406,48 @@ theorem expect_abs_sub_chain_le_finiteEntropySum_of_path
     hXMeas hX hσ hρ hdist hcard
   simpa [hgamma_zero, hgamma_last] using hBound
 
+/-- Finite dyadic chaining bound by the truncated covering-number entropy integral. -/
+theorem expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral
+    {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RandomProcess Ω α ℝ}
+    {K : Set α} {L : Nat} {R σ : ℝ}
+    (path : Fin (L + 1) → α)
+    (nextLevel : Fin L → Finset α)
+    (parent : Fin L → α → α)
+    (hmem : ∀ k : Fin L, path (Fin.succ k) ∈ nextLevel k)
+    (hparent : ∀ k : Fin L,
+      path (Fin.castSucc k) = parent k (path (Fin.succ k)))
+    (hXMeas : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      Measurable (fun ω => X x ω - X (parent k x) ω))
+    (hX : HasSubGaussianMGFIncrements P X σ)
+    (hσ : 0 < σ)
+    (hR : 0 < R)
+    (hdist : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      dist x (parent k x) ≤ dyadicRadius R (Fin.castSucc k : Nat))
+    (hN : ∀ k : Fin L,
+      coveringNumber K (dyadicRadius R ((k : Nat) + 1)) =
+        ((nextLevel k).card : ENat))
+    (hfinite : coveringNumber K (dyadicRadius R (L + 1)) ≠ ⊤) :
+    expect P (fun ω =>
+        |X (path (Fin.last L)) ω - X (path 0) ω|) ≤
+      4 * σ *
+        (∫ t in dyadicRadius R (L + 1)..R,
+          Real.sqrt (2 * Real.log
+            (2 * ((coveringNumber K t).toNat : ℝ)))) := by
+  have hPath :=
+    expect_abs_sub_chain_le_finiteEntropySum_of_path
+      (path := path) (nextLevel := nextLevel) (parent := parent)
+      (σ := σ)
+      (rho := fun i : Fin (L + 1) => dyadicRadius R (i : Nat))
+      (N := fun k : Fin L => (nextLevel k).card)
+      hmem hparent hXMeas hX hσ
+      (fun i => dyadicRadius_pos hR i) hdist (fun _ => rfl)
+  exact hPath.trans
+    (finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber
+      (K := K) (R := R) (sigma := σ) hR (le_of_lt hσ)
+      (fun k : Fin L => (nextLevel k).card) hN hfinite)
+
 end
 
 end HighDimProb

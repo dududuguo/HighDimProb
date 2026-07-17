@@ -12,6 +12,7 @@ open HighDimProb
 #check HighDimProb.finiteEntropySum
 #check HighDimProb.expect_abs_sub_chain_le_finiteEntropySum
 #check HighDimProb.expect_abs_sub_chain_le_finiteEntropySum_of_path
+#check HighDimProb.expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral
 
 example {Ω T : Type*} [MeasurableSpace Ω] [PseudoMetricSpace T]
     {P : Measure Ω} {X : RandomProcess Ω T ℝ} {σ r : ℝ} {s t : T}
