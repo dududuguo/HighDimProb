@@ -61,6 +61,11 @@ The proved surface consists of:
   `sum_mul_sub_le_intervalIntegral_of_antitoneOn`,
   `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber`, and
   `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`;
+- D2 deterministic integral passage:
+  `tendsto_intervalIntegral_of_leftEndpoint_tendsto`,
+  `tendsto_dyadicRadius_atTop`, and
+  `tendsto_intervalIntegral_dyadicRadius_atTop`; the last theorem retains an
+  explicit `IntervalIntegrable` hypothesis on `[0, R]`;
 - deterministic dense-sup bridge: `HighDimProb.ciSup_eq_ciSup_of_denseRange`;
 - supplied dense-sequence/full anchored supremum passage (D3):
   `expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound` transfers a
@@ -68,9 +73,9 @@ The proved surface consists of:
   integral convergence, retaining explicit continuity, boundedness,
   measurability, and full-supremum integrability assumptions.
 
-No full entropy-integral endpoint or full Dudley theorem is proved. D2 and D4
-remain open: the small-scale residual/full-integral passage and assembly of the
-exact facade. D1 does not provide total-bounded geometry or an automatic
+No full Dudley theorem is proved. The integral half of D2 is closed, but D2 and
+D4 remain open: the small-scale residual passage and assembly of the exact
+facade. D1 does not provide total-bounded geometry or an automatic
 residual limit; D3 requires a supplied dense sequence and explicit sample-path
 regularity and integrability.
 Current prioritization is tracked in [`TODO.md`](../maintainers/TODO.md).

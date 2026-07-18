@@ -2,6 +2,7 @@
   "schema_version": 1,
   "files": {
     "HighDimProbJudge/Analysis/DenseSupUse.lean": "0c9fbf9f5e6592be3c4e97e984fa7cd301cac47751931a1512df0597cdf421ac",
+    "HighDimProbJudge/Analysis/SumIntegralD2Use.lean": "9994d1aba6142eec78fcc1c857cdc0d22c8a5d2bf1bce249297d7ab322a48e97",
     "HighDimProbJudge/Concentration/BasicUse.lean": "083fcf982f26e0de661ca39b7585029e208df74f58388e93baad8872a74fda23",
     "HighDimProbJudge/Concentration/BernsteinUse.lean": "b4952718d235d420bb37ac438c23a12702a1e1ccfc8a3381a87b4aabe3864a75",
     "HighDimProbJudge/Concentration/HoeffdingUse.lean": "3758f9f07c03ee2602782389ec08e58a8c04d5180b6ac7e886cf2bfb58429f61",

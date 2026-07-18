@@ -19,11 +19,13 @@ Proved baseline: finite chaining/net/cardinality/finite entropy sum, the D1
 finite anchored supremum bound with a supplied common-anchor path family and
 explicit integrable terminal-residual envelope, the truncated entropy bound,
 the deterministic dense-sup bridge, and the D3 finite-prefix/full-supremum
-expectation passage. D1 reaches the truncated entropy integral; D3 transfers a
+expectation passage. The D2 integral subleaf now proves that dyadic lower
+endpoints tend to zero and that interval-integrable truncations converge to the
+full integral over `[0, R]`. D1 reaches the truncated entropy integral; D3 transfers a
 uniform finite-prefix bound along a supplied dense sequence under explicit
 sample continuity, pointwise boundedness, measurability, and full-supremum
-integrability. Neither stage constructs the geometry or makes the residual
-vanish. No full entropy-integral or Dudley endpoint is proved.
+integrability. No stage constructs the geometry or makes the residual vanish.
+No full D2 passage or Dudley endpoint is proved.
 
 - [x] **D1 finite anchored supremum.** The finite anchored process supremum is
   bounded by the truncated entropy integral plus an explicit integrable
@@ -31,9 +33,12 @@ vanish. No full entropy-integral or Dudley endpoint is proved.
   family and shared finite level data.
 - [ ] **D2 small-scale/full-integral passage.** Show the small-scale residual
   tends to `0` under an explicit compact-index/continuous-sample-path,
-  uniform-continuity, or separable-modification contract. Show the lower
-  endpoints tend to `0` and the interval integrals converge to the interval
-  integral over `[0, R]`. Reuse Mathlib integral convergence.
+  uniform-continuity, or separable-modification contract. The integral half is
+  proved by `tendsto_intervalIntegral_of_leftEndpoint_tendsto`,
+  `tendsto_dyadicRadius_atTop`, and
+  `tendsto_intervalIntegral_dyadicRadius_atTop`, reusing Mathlib primitive
+  continuity under an explicit `IntervalIntegrable` hypothesis. The residual
+  family, its domination, and convergence to zero remain open.
 - [x] **D3 supplied dense-sequence/full supremum passage.**
   `expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound` transfers a
   uniform expected bound on finite prefix maxima to the full anchored

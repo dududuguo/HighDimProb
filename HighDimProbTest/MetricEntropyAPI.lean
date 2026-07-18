@@ -1,8 +1,9 @@
 import HighDimProb.MetricEntropy
 
 open HighDimProb
+open Filter
 open MeasureTheory Set
-open scoped NNReal ENNReal
+open scoped NNReal ENNReal Topology
 open scoped BigOperators Interval
 
 #check HighDimProb.epsilonRadius
@@ -23,6 +24,8 @@ open scoped BigOperators Interval
 #check HighDimProb.finiteEntropySum
 #check HighDimProb.dyadicRadius
 #check HighDimProb.dyadicRadius_pos
+#check HighDimProb.tendsto_dyadicRadius_atTop
+#check HighDimProb.tendsto_intervalIntegral_dyadicRadius_atTop
 #check HighDimProb.finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber
 
 -- A nonpositive real radius is represented by the zero NNReal radius.
@@ -111,6 +114,16 @@ example {alpha : Type*} [PseudoMetricSpace alpha]
 example {R : Real} (hR : 0 < R) (i : Nat) :
     0 < dyadicRadius R i := by
   exact dyadicRadius_pos hR i
+
+example (R : Real) :
+    Tendsto (dyadicRadius R) atTop (𝓝 0) := by
+  exact tendsto_dyadicRadius_atTop R
+
+example {f : Real → Real} {R : Real} (hR : 0 ≤ R)
+    (hf : IntervalIntegrable f volume 0 R) :
+    Tendsto (fun L : Nat => ∫ t in dyadicRadius R (L + 1)..R, f t)
+      atTop (𝓝 (∫ t in (0 : Real)..R, f t)) := by
+  exact tendsto_intervalIntegral_dyadicRadius_atTop hR hf
 
 example {alpha : Type*} [PseudoMetricSpace alpha]
     {K : Set alpha} {L : Nat} {R sigma : Real}

@@ -1,9 +1,22 @@
 import HighDimProb.Analysis.SumIntegral
 
 open MeasureTheory Set
-open scoped BigOperators Interval
+open scoped BigOperators Interval Topology
 
 namespace HighDimProbTest
+
+#check HighDimProb.tendsto_intervalIntegral_of_leftEndpoint_tendsto
+
+example {f : ℝ → ℝ} {a : Nat → ℝ} {R : ℝ}
+    (hR : 0 ≤ R)
+    (ha_nonneg : ∀ n : Nat, 0 ≤ a n)
+    (ha_le : ∀ n : Nat, a n ≤ R)
+    (ha_tendsto : Filter.Tendsto a Filter.atTop (𝓝 0))
+    (hf : IntervalIntegrable f volume 0 R) :
+    Filter.Tendsto (fun n : Nat => ∫ t in a n..R, f t)
+      Filter.atTop (𝓝 (∫ t in (0 : ℝ)..R, f t)) := by
+  exact HighDimProb.tendsto_intervalIntegral_of_leftEndpoint_tendsto
+    hR ha_nonneg ha_le ha_tendsto hf
 
 example :
     (∑ k ∈ (Finset.Ico 2 2 : Finset ℕ), ((k : ℝ) - k) * (0 : ℝ)) ≤

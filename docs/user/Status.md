@@ -90,9 +90,11 @@ finite level data, and an explicit integrable terminal-residual envelope. The
 D3 bridge `expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound` also
 passes a uniform finite-prefix expectation bound to the full anchored supremum
 along a supplied dense sequence, under explicit sample continuity, pointwise
-boundedness, measurability, and full-supremum integrability. The route does not
-construct total-bounded geometry, make the residual vanish, prove the
-small-scale/full-integral limit, or prove a full Dudley theorem.
+boundedness, measurability, and full-supremum integrability. The D2 integral
+subleaf proves dyadic radii tend to zero and interval-integrable truncated
+integrals converge to the full integral over `[0, R]`. The route still does not
+construct total-bounded geometry, make the residual vanish, close full D2, or
+prove a full Dudley theorem.
 
 ## Canonical References
 

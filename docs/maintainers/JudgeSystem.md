@@ -53,6 +53,9 @@ whose exact import set is validated against the ledger.
   Bernstein min-form public theorem applications.
 - `HighDimProbJudge/Concentration/SubGaussianUse.lean`: subGaussian moment and
   MGF-to-tail public theorem applications.
+- `HighDimProbJudge/Analysis/SumIntegralD2Use.lean`: generic left-endpoint and
+  dyadic lower-endpoint convergence from truncated interval integrals to the
+  full integral under explicit interval integrability.
 - `HighDimProbJudge/RandomMatrix/OperatorNormUse.lean`: operator-norm
   measurability.
 - `HighDimProbJudge/RandomMatrix/StatementUse.lean`: matrix Bernstein typed

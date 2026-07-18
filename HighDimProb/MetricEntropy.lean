@@ -17,7 +17,7 @@ therefore linked to the verified covering-number page.
 
 namespace HighDimProb
 
-open scoped NNReal ENNReal
+open scoped NNReal ENNReal Topology
 
 noncomputable section
 
@@ -397,6 +397,32 @@ theorem dyadicRadius_pos {R : ℝ} (hR : 0 < R) (i : Nat) :
     0 < dyadicRadius R i := by
   dsimp [dyadicRadius]
   positivity
+
+/-- The dyadic radius schedule converges to zero at arbitrarily fine levels. -/
+theorem tendsto_dyadicRadius_atTop (R : ℝ) :
+    Filter.Tendsto (dyadicRadius R) Filter.atTop (𝓝 0) := by
+  rw [show dyadicRadius R = fun n : Nat => R / (2 : ℝ) ^ n by rfl]
+  exact
+    (tendsto_pow_atTop_atTop_of_one_lt (by norm_num : (1 : ℝ) < 2)).const_div_atTop R
+
+/-- An interval integral truncated at the dyadic radius converges to the full
+integral from zero. This is the deterministic integral half of the small-scale
+passage in Dudley's entropy bound. -/
+theorem tendsto_intervalIntegral_dyadicRadius_atTop
+    {f : ℝ → ℝ} {R : ℝ} (hR : 0 ≤ R)
+    (hf : IntervalIntegrable f MeasureTheory.volume 0 R) :
+    Filter.Tendsto
+      (fun L : Nat => ∫ t in dyadicRadius R (L + 1)..R, f t)
+      Filter.atTop (𝓝 (∫ t in (0 : ℝ)..R, f t)) := by
+  apply tendsto_intervalIntegral_of_leftEndpoint_tendsto hR
+  · intro L
+    unfold dyadicRadius
+    positivity
+  · intro L
+    unfold dyadicRadius
+    exact div_le_self hR (one_le_pow₀ (by norm_num : (1 : ℝ) ≤ 2))
+  · exact (tendsto_dyadicRadius_atTop R).comp (Filter.tendsto_add_atTop_nat 1)
+  · exact hf
 
 /-- The finite entropy sum for an explicit natural cardinality family. -/
 def finiteEntropySum {L : Nat}
