@@ -15,18 +15,20 @@ history for exact old wording.
 
 ### Dudley Closure Roadmap
 
-Proved baseline: finite chaining/net/cardinality/finite entropy sum,
+Proved baseline: finite chaining/net/cardinality/finite entropy sum, the D1
+finite anchored supremum bound with a supplied common-anchor path family and
+explicit integrable terminal-residual envelope,
 `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`, and
-`ciSup_eq_ciSup_of_denseRange`.
+`ciSup_eq_ciSup_of_denseRange`. The D1 bound reaches the truncated entropy
+integral; it does not construct the geometry or make the residual vanish.
 No full entropy-integral or Dudley endpoint is proved.
 
-After D1, D2 and D3 may proceed in parallel.
+With D1 complete, D2 and D3 may proceed in parallel.
 
-- [ ] **D1 finite anchored supremum.** Fix a common anchor, a compatible path
-  family, and an explicit terminal residual. Done criterion: prove that the
-  finite anchored process supremum is bounded by the truncated entropy
-  integral plus that residual. Reuse existing net/cardinality/single-path
-  APIs.
+- [x] **D1 finite anchored supremum.** The finite anchored process supremum is
+  bounded by the truncated entropy integral plus an explicit integrable
+  terminal-residual envelope, under a supplied common-anchor compatible path
+  family and shared finite level data.
 - [ ] **D2 small-scale/full-integral passage.** Show the small-scale residual
   tends to `0` under an explicit compact-index/continuous-sample-path,
   uniform-continuity, or separable-modification contract. Show the lower

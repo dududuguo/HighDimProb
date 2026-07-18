@@ -84,9 +84,11 @@ The current supported surface does not claim:
   targets remain specifications until backed by a theorem.
 
 Outside RandomMatrix, the random-family layer remains vocabulary rather than a
-filtration/martingale framework, and the metric-entropy route proves finite
-chaining and a truncated entropy-integral comparison, not a full Dudley
-theorem.
+filtration/martingale framework. The metric-entropy route now proves the finite
+D1 anchored supremum bound under a supplied common-anchor path family, shared
+finite level data, and an explicit integrable terminal-residual envelope. It
+does not construct total-bounded geometry, make the residual vanish, pass to a
+countable/full supremum, or prove a full Dudley theorem.
 
 ## Canonical References
 

@@ -52,16 +52,22 @@ The proved surface consists of:
 - finite entropy sums: `finiteEntropySum`,
   `expect_abs_sub_chain_le_finiteEntropySum`, and
   `expect_abs_sub_chain_le_finiteEntropySum_of_path`;
+- finite anchored supremum (D1):
+  `expect_finset_sup'_abs_sub_anchor_le_finiteEntropySum` and
+  `expect_finset_sup'_abs_sub_anchor_le_truncatedEntropyIntegral` retain a
+  supplied common-anchor path family, shared finite levels, and an explicit
+  integrable terminal-residual envelope;
 - truncated entropy-integral comparison:
   `sum_mul_sub_le_intervalIntegral_of_antitoneOn`,
   `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber`, and
   `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`;
 - deterministic dense-sup bridge: `HighDimProb.ciSup_eq_ciSup_of_denseRange`.
 
-No full entropy-integral endpoint or full Dudley theorem is proved.
-Countable/full supremum measurability, expectation limit/interchange, and the
-small-scale residual remain open dependencies. Current prioritization is tracked
-in [`TODO.md`](../maintainers/TODO.md).
+No full entropy-integral endpoint or full Dudley theorem is proved. D2-D4 remain
+open: the small-scale residual/full-integral passage, countable/full supremum
+measurability and expectation interchange, and assembly of the exact facade.
+D1 does not provide total-bounded geometry or an automatic residual limit.
+Current prioritization is tracked in [`TODO.md`](../maintainers/TODO.md).
 
 ## RandomMatrix
 
