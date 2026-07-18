@@ -61,12 +61,18 @@ The proved surface consists of:
   `sum_mul_sub_le_intervalIntegral_of_antitoneOn`,
   `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber`, and
   `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`;
-- deterministic dense-sup bridge: `HighDimProb.ciSup_eq_ciSup_of_denseRange`.
+- deterministic dense-sup bridge: `HighDimProb.ciSup_eq_ciSup_of_denseRange`;
+- supplied dense-sequence/full anchored supremum passage (D3):
+  `expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound` transfers a
+  uniform expected finite-prefix bound by Mathlib partial-supremum and monotone
+  integral convergence, retaining explicit continuity, boundedness,
+  measurability, and full-supremum integrability assumptions.
 
-No full entropy-integral endpoint or full Dudley theorem is proved. D2-D4 remain
-open: the small-scale residual/full-integral passage, countable/full supremum
-measurability and expectation interchange, and assembly of the exact facade.
-D1 does not provide total-bounded geometry or an automatic residual limit.
+No full entropy-integral endpoint or full Dudley theorem is proved. D2 and D4
+remain open: the small-scale residual/full-integral passage and assembly of the
+exact facade. D1 does not provide total-bounded geometry or an automatic
+residual limit; D3 requires a supplied dense sequence and explicit sample-path
+regularity and integrability.
 Current prioritization is tracked in [`TODO.md`](../maintainers/TODO.md).
 
 ## RandomMatrix

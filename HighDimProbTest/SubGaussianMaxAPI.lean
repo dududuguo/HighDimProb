@@ -23,6 +23,8 @@ example {Omega T : Type*} [MeasurableSpace Omega]
 
 #check expect_finset_sup'_abs_le_of_centeredSubGaussianMGF
 
+#check expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound
+
 #check expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF
 
 #check expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le
@@ -229,6 +231,27 @@ example {Omega T : Type*} [MeasurableSpace Omega]
       K * Real.sqrt (2 * Real.log (2 * (s.card : Real))) := by
   exact expect_finset_sup'_abs_le_of_centeredSubGaussianMGF
     hs hXMeas hXSG
+
+example {Ω α : Type*} [MeasurableSpace Ω] [TopologicalSpace α]
+    {P : Measure Ω}
+    {X : RandomProcess Ω α ℝ}
+    (u : ℕ → α) (hu : DenseRange u) (anchor : α) (C : ℝ)
+    (hAnchorMeas : Measurable (X anchor))
+    (hUmeas : ∀ n : ℕ, Measurable (X (u n)))
+    (hPathCont : ∀ ω : Ω, Continuous
+      (fun x => |X x ω - X anchor ω|))
+    (hPathBdd : ∀ ω : Ω, BddAbove
+      (Set.range (fun x => |X x ω - X anchor ω|)))
+    (hFullIntegrable : IntegrableRealRandomVariable P
+      (fun ω => ⨆ x : α, |X x ω - X anchor ω|))
+    (hPrefixBound : ∀ n : ℕ,
+      expect P (fun ω =>
+        (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+          (fun k => |X (u k) ω - X anchor ω|)) ≤ C) :
+    expect P (fun ω => ⨆ x : α, |X x ω - X anchor ω|) ≤ C := by
+  exact expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound
+    u hu anchor C hAnchorMeas hUmeas hPathCont hPathBdd
+    hFullIntegrable hPrefixBound
 
 end
 

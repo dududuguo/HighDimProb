@@ -17,13 +17,13 @@ history for exact old wording.
 
 Proved baseline: finite chaining/net/cardinality/finite entropy sum, the D1
 finite anchored supremum bound with a supplied common-anchor path family and
-explicit integrable terminal-residual envelope,
-`expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`, and
-`ciSup_eq_ciSup_of_denseRange`. The D1 bound reaches the truncated entropy
-integral; it does not construct the geometry or make the residual vanish.
-No full entropy-integral or Dudley endpoint is proved.
-
-With D1 complete, D2 and D3 may proceed in parallel.
+explicit integrable terminal-residual envelope, the truncated entropy bound,
+the deterministic dense-sup bridge, and the D3 finite-prefix/full-supremum
+expectation passage. D1 reaches the truncated entropy integral; D3 transfers a
+uniform finite-prefix bound along a supplied dense sequence under explicit
+sample continuity, pointwise boundedness, measurability, and full-supremum
+integrability. Neither stage constructs the geometry or makes the residual
+vanish. No full entropy-integral or Dudley endpoint is proved.
 
 - [x] **D1 finite anchored supremum.** The finite anchored process supremum is
   bounded by the truncated entropy integral plus an explicit integrable
@@ -34,12 +34,13 @@ With D1 complete, D2 and D3 may proceed in parallel.
   uniform-continuity, or separable-modification contract. Show the lower
   endpoints tend to `0` and the interval integrals converge to the interval
   integral over `[0, R]`. Reuse Mathlib integral convergence.
-- [ ] **D3 countable/full supremum passage.** Instantiate Mathlib's existing
-  set-level separability and dense-sequence APIs, then use `Measurable.iSup`
-  and monotone convergence.
-  Use `ENNReal` internally for the nonnegative supremum, then recover real
-  expectation under finiteness/integrability. Add only thin HighDimProb
-  `expect` wrappers.
+- [x] **D3 supplied dense-sequence/full supremum passage.**
+  `expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound` transfers a
+  uniform expected bound on finite prefix maxima to the full anchored
+  supremum. It reuses Mathlib partial suprema and monotone integral convergence
+  plus `ciSup_eq_ciSup_of_denseRange`; its dense sequence, sample continuity,
+  pointwise boundedness, measurability, and full-supremum integrability remain
+  explicit inputs. A separable-space consumer may supply Mathlib's `denseSeq`.
 - [ ] **D4 exact full Dudley facade.** Assemble the anchored expected-supremum
   conclusion under explicit probability, geometry, increment, regularity, and
   entropy-finiteness assumptions; make no claim until the facade compiles.

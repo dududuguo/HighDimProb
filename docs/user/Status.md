@@ -86,9 +86,13 @@ The current supported surface does not claim:
 Outside RandomMatrix, the random-family layer remains vocabulary rather than a
 filtration/martingale framework. The metric-entropy route now proves the finite
 D1 anchored supremum bound under a supplied common-anchor path family, shared
-finite level data, and an explicit integrable terminal-residual envelope. It
-does not construct total-bounded geometry, make the residual vanish, pass to a
-countable/full supremum, or prove a full Dudley theorem.
+finite level data, and an explicit integrable terminal-residual envelope. The
+D3 bridge `expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound` also
+passes a uniform finite-prefix expectation bound to the full anchored supremum
+along a supplied dense sequence, under explicit sample continuity, pointwise
+boundedness, measurability, and full-supremum integrability. The route does not
+construct total-bounded geometry, make the residual vanish, prove the
+small-scale/full-integral limit, or prove a full Dudley theorem.
 
 ## Canonical References
 

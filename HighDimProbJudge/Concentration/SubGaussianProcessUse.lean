@@ -15,6 +15,28 @@ open HighDimProb
 #check HighDimProb.expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral
 #check HighDimProb.expect_finset_sup'_abs_sub_anchor_le_finiteEntropySum
 #check HighDimProb.expect_finset_sup'_abs_sub_anchor_le_truncatedEntropyIntegral
+#check HighDimProb.expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound
+
+example
+    {Ω α : Type*} [MeasurableSpace Ω] [TopologicalSpace α]
+    {P : Measure Ω}
+    {X : RandomProcess Ω α ℝ}
+    (u : ℕ → α) (hu : DenseRange u) (anchor : α) (C : ℝ)
+    (hAnchorMeas : Measurable (X anchor))
+    (hUmeas : ∀ n : ℕ, Measurable (X (u n)))
+    (hPathCont : ∀ ω : Ω, Continuous
+      (fun x => |X x ω - X anchor ω|))
+    (hPathBdd : ∀ ω : Ω, BddAbove
+      (Set.range (fun x => |X x ω - X anchor ω|)))
+    (hFullIntegrable : IntegrableRealRandomVariable P
+      (fun ω => ⨆ x : α, |X x ω - X anchor ω|))
+    (hPrefixBound : ∀ n : ℕ,
+      expect P (fun ω =>
+        (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+          (fun k => |X (u k) ω - X anchor ω|)) ≤ C) :
+    expect P (fun ω => ⨆ x : α, |X x ω - X anchor ω|) ≤ C := by
+  exact HighDimProb.expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound
+    u hu anchor C hAnchorMeas hUmeas hPathCont hPathBdd hFullIntegrable hPrefixBound
 
 example
     {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]

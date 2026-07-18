@@ -1,7 +1,10 @@
 import HighDimProb.Concentration.FiniteMax
+import HighDimProb.Analysis.DenseSup
 import HighDimProb.MetricEntropy
 import HighDimProb.SubGaussian
 import HighDimProb.SubGaussianProcess
+import Mathlib.Order.PartialSups
+import Mathlib.Topology.Order.MonotoneConvergence
 
 /-!
 # Finite maxima of centered subGaussian processes
@@ -646,6 +649,116 @@ theorem expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral
     (finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber
       (K := K) (R := R) (sigma := σ) hR (le_of_lt hσ)
       (fun k : Fin L => (nextLevel k).card) hN hfinite)
+
+/-- Expected full anchored supremum from uniformly bounded finite prefixes.
+Continuity and boundedness identify the dense-sequence supremum, while monotone convergence
+passes the uniform prefix bound to the full expectation. -/
+theorem expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound
+    {Ω α : Type*} [MeasurableSpace Ω] [TopologicalSpace α]
+    {P : Measure Ω}
+    {X : RandomProcess Ω α ℝ}
+    (u : ℕ → α) (hu : DenseRange u) (anchor : α) (C : ℝ)
+    (hAnchorMeas : Measurable (X anchor))
+    (hUmeas : ∀ n : ℕ, Measurable (X (u n)))
+    (hPathCont : ∀ ω : Ω, Continuous
+      (fun x => |X x ω - X anchor ω|))
+    (hPathBdd : ∀ ω : Ω, BddAbove
+      (Set.range (fun x => |X x ω - X anchor ω|)))
+    (hFullIntegrable : IntegrableRealRandomVariable P
+      (fun ω => ⨆ x : α, |X x ω - X anchor ω|))
+    (hPrefixBound : ∀ n : ℕ,
+      expect P (fun ω =>
+        (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+          (fun k => |X (u k) ω - X anchor ω|)) ≤ C) :
+    expect P (fun ω => ⨆ x : α, |X x ω - X anchor ω|) ≤ C := by
+  let f : α → Ω → ℝ := fun x ω => |X x ω - X anchor ω|
+  let a : ℕ → Ω → ℝ := fun n ω => f (u n) ω
+  let g : ℕ → Ω → ℝ := fun n ω => partialSups (fun k => a k ω) n
+  let F : Ω → ℝ := fun ω => ⨆ x : α, f x ω
+  have haMeas : ∀ n : ℕ, Measurable (a n) := by
+    intro n
+    dsimp [a, f]
+    exact ((hUmeas n).sub hAnchorMeas).abs
+  have hgMeas : ∀ n : ℕ, Measurable (g n) := by
+    intro n
+    dsimp [g]
+    simpa only [partialSups_eq_sup'_range] using
+      (Finset.measurable_range_sup'' (f := a) (n := n)
+        (fun k _hk => haMeas k))
+  have hFullInt : IntegrableRealRandomVariable P F := by
+    change IntegrableRealRandomVariable P (fun ω => ⨆ x : α, f x ω)
+    simpa only [f] using hFullIntegrable
+  have hDense : ∀ ω : Ω, F ω = ⨆ n : ℕ, a n ω := by
+    intro ω
+    dsimp [F, a]
+    apply ciSup_eq_ciSup_of_denseRange u hu (fun x => f x ω)
+    · simpa [f] using hPathCont ω
+    · simpa [f] using hPathBdd ω
+  have haBdd : ∀ ω : Ω, BddAbove (Set.range (fun n => a n ω)) := by
+    intro ω
+    have hBdd : BddAbove (Set.range (fun x : α => f x ω)) := by
+      simpa [f] using hPathBdd ω
+    rcases hBdd with ⟨b, hb⟩
+    refine ⟨b, ?_⟩
+    rintro _ ⟨n, rfl⟩
+    exact hb ⟨u n, rfl⟩
+  have hPartialBdd : ∀ ω : Ω, BddAbove (Set.range (fun n => g n ω)) := by
+    intro ω
+    have hBdd := bddAbove_range_partialSups.mpr (haBdd ω)
+    simpa [g] using hBdd
+  have hPrefixLeFull : ∀ n : ℕ, ∀ ω : Ω, g n ω ≤ F ω := by
+    intro n ω
+    change partialSups (fun k => a k ω) n ≤ ⨆ x : α, f x ω
+    rw [partialSups_eq_sup'_range]
+    apply Finset.sup'_le Finset.nonempty_range_add_one
+    intro k hk
+    have hBdd : BddAbove (Set.range (fun x : α => f x ω)) := by
+      simpa [f] using hPathBdd ω
+    change f (u k) ω ≤ ⨆ x : α, f x ω
+    exact le_ciSup hBdd (u k)
+  have hgNonneg : ∀ n : ℕ, ∀ ω : Ω, 0 ≤ g n ω := by
+    intro n ω
+    change 0 ≤ partialSups (fun k => a k ω) n
+    rw [partialSups_eq_sup'_range]
+    calc
+      0 ≤ a 0 ω := by
+        dsimp [a, f]
+        exact abs_nonneg _
+      _ ≤ (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+          (fun k => a k ω) :=
+        Finset.le_sup' (fun k => a k ω) (by simp)
+  have hgInt : ∀ n : ℕ, IntegrableRealRandomVariable P (g n) := by
+    intro n
+    exact hFullInt.mono' (hgMeas n).aestronglyMeasurable
+      (Filter.Eventually.of_forall (fun ω => by
+        rw [Real.norm_eq_abs, abs_of_nonneg (hgNonneg n ω)]
+        exact hPrefixLeFull n ω))
+  have hgPrefix : ∀ n : ℕ, expect P (g n) ≤ C := by
+    intro n
+    simpa [g, a, f, partialSups_eq_sup'_range] using hPrefixBound n
+  have hgMonotone : ∀ ω : Ω, Monotone (fun n : ℕ => g n ω) := by
+    intro ω
+    simpa [g] using partialSups_monotone (fun k => a k ω)
+  have hgTendsto : ∀ ω : Ω,
+      Filter.Tendsto (fun n : ℕ => g n ω) Filter.atTop (nhds (F ω)) := by
+    intro ω
+    have h := tendsto_atTop_ciSup (hgMonotone ω) (hPartialBdd ω)
+    have hSup : (⨆ n : ℕ, g n ω) = F ω := by
+      change (⨆ n : ℕ, partialSups (fun k => a k ω) n) =
+        ⨆ x : α, f x ω
+      rw [ciSup_partialSups_eq (haBdd ω)]
+      exact (hDense ω).symm
+    rw [← hSup]
+    exact h
+  have hIntegralTendsto :=
+    MeasureTheory.integral_tendsto_of_tendsto_of_monotone
+      (μ := P) hgInt hFullInt
+      (Filter.Eventually.of_forall hgMonotone)
+      (Filter.Eventually.of_forall hgTendsto)
+  have hLimit : expect P F ≤ C := by
+    apply le_of_tendsto hIntegralTendsto
+    exact Filter.Eventually.of_forall hgPrefix
+  simpa [F, f] using hLimit
 
 end
 
