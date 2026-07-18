@@ -21,3 +21,21 @@ Lean MCP helps find and probe APIs; it does not validate proofs. Every source ch
 
 Do not rely on `.codebase-memory`; it is intentionally retired for this repository.
 <!-- lean-local-search-mcp:end -->
+
+## Append-Only Judge
+
+Files already recorded in `.github/judge-lock.json` are permanent public
+regressions. Never modify, delete, rename, move, or re-hash one. Preserve an old
+public API with an alias when a newer name is introduced so its existing Judge
+case continues to compile.
+
+Add each new Judge leaf as a new `.lean` file under `HighDimProbJudge/`. After
+the file is complete, register it with:
+
+```bash
+python3 scripts/judge_append_only_check.py --add HighDimProbJudge/<Area>/<Leaf>Use.lean
+```
+
+The command adds the immutable hash and aggregate import. Do not edit existing
+manifest entries by hand. Run the policy checker, `lake build HighDimProbJudge`,
+and `lake test` before committing.

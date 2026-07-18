@@ -19,12 +19,45 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Reject encoding artifacts
         run: python .github/scripts/check_text_quality.py
 
       - name: Repository policy check
         run: python scripts/judge_policy_check.py
+
+      - name: Test Judge lock checker
+        run: python -m unittest scripts.test_judge_append_only_check
+
+      - name: Verify append-only Judge history
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          case "$GITHUB_EVENT_NAME" in
+            pull_request)
+              BASE_SHA="$PR_BASE_SHA"
+              ;;
+            push)
+              if [[ -n "$PUSH_BEFORE_SHA" && "${PUSH_BEFORE_SHA//0/}" != "" ]]; then
+                BASE_SHA="$PUSH_BEFORE_SHA"
+              else
+                BASE_SHA="$(git merge-base "$GITHUB_SHA" "origin/$DEFAULT_BRANCH")"
+              fi
+              ;;
+            workflow_dispatch)
+              BASE_SHA="$GITHUB_SHA^"
+              ;;
+            *)
+              echo "Unsupported event for Judge history check: $GITHUB_EVENT_NAME"
+              exit 1
+              ;;
+          esac
+          git cat-file -e "${BASE_SHA}^{commit}"
+          python scripts/judge_append_only_check.py --base "$BASE_SHA"
 
   build:
     name: Build and test

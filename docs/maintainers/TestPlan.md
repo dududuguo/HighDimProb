@@ -7,6 +7,8 @@ policy violations, and text encoding damage.
 
 ```bash
 python3 .github/scripts/check_text_quality.py
+python3 scripts/judge_append_only_check.py
+python3 -m unittest scripts.test_judge_append_only_check
 python3 scripts/judge_policy_check.py
 lake build
 lake build HighDimProb.Examples
@@ -85,14 +87,19 @@ git diff --check
   `RandomMatrixVarianceProxyAPI`,
   `RandomMatrixHardboneStatementsAPI`, and the corresponding judge/example
   surfaces.
-- Judge tests: `HighDimProbJudge` plus `scripts/judge_policy_check.py`.
+- Judge tests: `HighDimProbJudge`, `scripts/judge_policy_check.py`, and the
+  append-only ledger checker. Existing entries in `.github/judge-lock.json`
+  are immutable; add a new file with
+  `python3 scripts/judge_append_only_check.py --add <new-file>`.
 
 ## Policy Checks
 
 The policy script rejects non-comment `s[o]rry`, `a[d]mit`, `a[x]iom`, and `u[n]safe`,
 forbids stable-root imports of `HighDimProb.Experimental`, checks judge import
 boundaries, and rejects anonymous negated-family signatures in public RandomMatrix,
-example, test, and judge files.
+example, test, and judge files. It also verifies the current append-only ledger;
+CI compares that ledger with the target Git revision to reject removal or mutation
+of any previously merged Judge case.
 
 ## Maintenance Rule
 

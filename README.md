@@ -103,13 +103,19 @@ path. Active status and task files are coordination aids, not API orientation.
 
 ## Judge Checks
 
-The judge suite imports the library the way an outside user would. It is useful
-when changing public theorem names or module boundaries.
+The judge suite imports the library the way an outside user would. Merged Judge
+files are an append-only public regression ledger: existing cases stay byte-for-byte
+fixed, while new coverage is added in new files. Public API changes must keep old
+Judge consumers compiling, usually through a compatibility alias.
 
 ```bash
 lake build HighDimProbJudge
 python scripts/judge_policy_check.py
+python scripts/judge_append_only_check.py
 ```
+
+See [`docs/maintainers/JudgeSystem.md`](docs/maintainers/JudgeSystem.md) for the
+one-file addition workflow.
 
 ## Documentation Site
 
