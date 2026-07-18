@@ -8,10 +8,10 @@ For exact current facts, read the Lean source, tests, generated docs, and the fo
 
 The stable scalar/probability-facing surface is mature enough that this archive does not track its old stage history. Read the source, tests, and judge files instead:
 
-- [`HighDimProb`](../HighDimProb)
-- [`HighDimProbTest`](../HighDimProbTest)
-- [`HighDimProbJudge`](../HighDimProbJudge)
-- [`docs/TestPlan.md`](TestPlan.md)
+- [`HighDimProb`](../../HighDimProb)
+- [`HighDimProbTest`](../../HighDimProbTest)
+- [`HighDimProbJudge`](../../HighDimProbJudge)
+- [`docs/maintainers/TestPlan.md`](../maintainers/TestPlan.md)
 
 ## Current Active Areas
 
@@ -25,17 +25,17 @@ The old long docs were collapsed into short current-facing files:
 
 | Old pressure point | Current file | What remains |
 |---|---|---|
-| Status stage logs | [`Status.md`](Status.md) | Current development status and verification commands. |
-| Abstraction notes | [`AbstractionLog.md`](AbstractionLog.md) | Active abstraction rules only. |
-| TODO logs | [`TODO.md`](TODO.md) | Current short task list. |
+| Status stage logs | [`Status.md`](../user/Status.md) | Current development status and verification commands. |
+| Abstraction notes | [`AbstractionLog.md`](../maintainers/AbstractionLog.md) | Active abstraction rules only. |
+| TODO logs | [`TODO.md`](../maintainers/TODO.md) | Current short task list. |
 | Matrix concentration plan | [`MatrixConcentrationPlan.md`](MatrixConcentrationPlan.md) | Current route and boundaries. |
 | Matrix Bernstein proof plan | [`MatrixBernsteinProofPlan.md`](MatrixBernsteinProofPlan.md) | Current proof boundary. |
 | Book progress | [`BookProgress.md`](BookProgress.md) | Short milestone summary. |
-| Branch registry | [`BranchRegistry.md`](BranchRegistry.md) | Current branch map. |
-| Theorem atlas | [`TheoremAtlas.md`](TheoremAtlas.md) | Compact theorem-family index. |
-| Term map | [`TermMap.md`](TermMap.md) | Compact term/source map. |
-| RandomMatrix API notes | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | Current RandomMatrix API names and caveats. |
-| Test-plan history | [`TestPlan.md`](TestPlan.md) | Current commands and policy surfaces. |
+| Branch registry | [`BranchRegistry.md`](../architecture/BranchRegistry.md) | Current branch map. |
+| Theorem atlas | [`TheoremAtlas.md`](../reference/TheoremAtlas.md) | Compact theorem-family index. |
+| Term map | [`TermMap.md`](../reference/TermMap.md) | Compact term/source map. |
+| RandomMatrix API notes | [`RandomMatrixAPI.md`](../user/RandomMatrixAPI.md) | Current RandomMatrix API names and caveats. |
+| Test-plan history | [`TestPlan.md`](../maintainers/TestPlan.md) | Current commands and policy surfaces. |
 
 ## Removed Long Docs
 
@@ -101,9 +101,9 @@ The scalar concentration history is considered stable background. Old stage deta
 
 ## Where To Look First
 
-- Current status: [`Status.md`](Status.md)
-- Current API route map: [`APIOverview.md`](APIOverview.md)
-- Current RandomMatrix API: [`RandomMatrixAPI.md`](RandomMatrixAPI.md)
-- Current abstraction rules: [`AbstractionLog.md`](AbstractionLog.md)
-- Current term/source map: [`TermMap.md`](TermMap.md)
-- Current test policy: [`TestPlan.md`](TestPlan.md)
+- Current status: [`Status.md`](../user/Status.md)
+- Current API route map: [`APIOverview.md`](../user/APIOverview.md)
+- Current RandomMatrix API: [`RandomMatrixAPI.md`](../user/RandomMatrixAPI.md)
+- Current abstraction rules: [`AbstractionLog.md`](../maintainers/AbstractionLog.md)
+- Current term/source map: [`TermMap.md`](../reference/TermMap.md)
+- Current test policy: [`TestPlan.md`](../maintainers/TestPlan.md)

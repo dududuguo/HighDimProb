@@ -6,8 +6,8 @@ at `external/theory-roadmap/`.
 `external/theory-roadmap/` is a Git submodule. The MAS may read it to identify
 future concepts, but it must not write into it automatically. Status updates
 for the main repository go through the main tracking docs first:
-`docs/Status.md`, `docs/TermMap.md`, `docs/BookProgress.md`,
-`docs/AbstractionLog.md`, and `docs/TODO.md`.
+`docs/user/Status.md`, `docs/reference/TermMap.md`, `docs/archive/BookProgress.md`,
+`docs/maintainers/AbstractionLog.md`, and `docs/maintainers/TODO.md`.
 
 ## Consuming the Roadmap
 
@@ -78,7 +78,7 @@ resolution:
 ## Reporting Roadmap Progress
 
 After a concept reaches `INTEGRATED`, the Orchestrator first updates the main
-repository docs required by `docs/Workflow.md`. A roadmap status update can be
+repository docs required by `docs/maintainers/Workflow.md`. A roadmap status update can be
 prepared as a separate patch for the submodule, but it is not written
 automatically.
 
@@ -126,5 +126,5 @@ theory-roadmap/roadmap/formalization_status.json  <--reviewed patch--  Orchestra
 ```
 
 For the current repository, the required write path is the main documentation
-set, especially `docs/Status.md`; the submodule remains clean unless the user
+set, especially `docs/user/Status.md`; the submodule remains clean unless the user
 explicitly requests and reviews a submodule update.

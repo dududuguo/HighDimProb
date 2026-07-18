@@ -11,7 +11,7 @@ HighDimProb is currently Milestone 1 / v0.1-alpha.
 - RandomMatrix, Matrix Bernstein, and limit-theorem modules are experimental.
 - RandomMatrix theorem work is active, but several Matrix Bernstein results are
   still conditional on explicit primitive assumptions. See
-  `docs/Status.md` and `docs/RandomMatrixAPI.md` before contributing there.
+  `docs/user/Status.md` and `docs/user/RandomMatrixAPI.md` before contributing there.
 
 ## Verification
 
@@ -25,8 +25,8 @@ python scripts/judge_policy_check.py
 
 ## Contribution Workflow
 
-1. Read `docs/Status.md`.
-2. Read `docs/Workflow.md`.
+1. Read `docs/user/Status.md`.
+2. Read `docs/maintainers/Workflow.md`.
 3. Pick exactly one small task.
 4. Search Mathlib first.
 5. Implement only object-level definitions or wrappers unless the task explicitly says theorem proof.
@@ -34,7 +34,7 @@ python scripts/judge_policy_check.py
 7. Update the focused current docs touched by the change.
 8. Run the verification commands above.
 
-For model-assisted contributions, read `docs/Workflow.md` first.
+For model-assisted contributions, read `docs/maintainers/Workflow.md` first.
 
 ## PR Title Categories
 
@@ -89,7 +89,7 @@ import HighDimProb.RandomMatrix
 ```
 
 No module is promoted from experimental to stable without tests, docs, a
-`docs/Status.md` update, and a stable root import audit.
+`docs/user/Status.md` update, and a stable root import audit.
 
 ## Hard Rules
 
@@ -110,4 +110,4 @@ No module is promoted from experimental to stable without tests, docs, a
 
 ## Theorem Policy
 
-Unproved book results belong in `docs/TheoremAtlas.md` or, when all dependencies exist, as typed `Prop` specifications. Unproved book results must never be introduced as Lean `theorem` or `lemma` declarations.
+Unproved book results belong in `docs/reference/TheoremAtlas.md` or, when all dependencies exist, as typed `Prop` specifications. Unproved book results must never be introduced as Lean `theorem` or `lemma` declarations.

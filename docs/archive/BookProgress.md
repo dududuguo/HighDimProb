@@ -1,7 +1,7 @@
 # Book Progress
 
 This file is now a short milestone index. Old detailed stage lists were
-collapsed into [`archive.md`](archive.md); use git history for exact old wording.
+collapsed into [`archive.md`](README.md); use git history for exact old wording.
 
 ## Stable Or Mature Surfaces
 

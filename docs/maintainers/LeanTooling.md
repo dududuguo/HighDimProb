@@ -30,13 +30,17 @@ The expected output root is:
 docbuild\.lake\build\doc\index.html
 ```
 
-The `HighDimProb` Lake library has two documentation roots:
+The `HighDimProb` Lake library has four documentation roots:
 
 - `HighDimProb` for the stable import surface.
 - `HighDimProb.Experimental` for the explicitly experimental API surface.
+- `HighDimProb.Examples` for compiled usage examples and smoke tests.
+- `HighDimProb.RandomMatrix.Provider` for the expert provider implementation surface.
 
 This is a documentation visibility choice only. It does not make
-`import HighDimProb` import experimental declarations.
+`import HighDimProb` import experimental declarations, examples, or provider
+implementation modules. `HighDimProb.RandomMatrix.Concentration` is a public
+focused module target, not an additional Lake/doc root.
 
 On this Windows setup, `doc-gen4` successfully builds the documentation
 database and many module pages, but currently crashes in the final

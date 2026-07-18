@@ -22,7 +22,7 @@
   - 模块/文档: `HighDimProb/Experimental.lean`
 - [x] ✅ **docs-status-indices** — 当前状态索引：Status / TODO / LeafPlan / API 文档保持短链路 (依赖: git-change-audit)
   - 状态: `integrated` / 已完成
-  - 模块/文档: `docs/Status.md; docs/TODO.md; docs/LeafPlan.md; docs/APIOverview.md`
+  - 模块/文档: `docs/user/Status.md; docs/maintainers/TODO.md; docs/archive/LeafPlan.md; docs/user/APIOverview.md`
 - [ ] 🔄 **wiki-concept-index** — Wikipedia 概念对照表用于外部概念索引，不作为证明进度来源 (依赖: git-change-audit)
   - 状态: `in_progress` / 进行中
   - 模块/文档: `wiki_pages_found.md`
@@ -97,7 +97,7 @@
   - 模块/文档: `HighDimProb/LimitTheorems/*.lean`
 - [x] ✅ **signal-recovery-statements** — 信号恢复/陈述层占位与术语索引 (依赖: gaussian-width-geometry, subgaussian-vector)
   - 状态: `integrated` / 已完成
-  - 模块/文档: `HighDimProb/SignalRecovery.lean; HighDimProb/BookStatements.lean; docs/STATEMENTS.md`
+  - 模块/文档: `HighDimProb/SignalRecovery.lean; HighDimProb/BookStatements.lean; docs/maintainers/STATEMENTS.md`
 
 ## Depth 4 (随机矩阵基础层)
 
@@ -136,7 +136,7 @@
   - 模块/文档: `HighDimProb/RandomMatrix/Sums.lean; TraceExpTroppStepProvider.lean`
 - [ ] 🔄 **trace-mgf-consumer** — 有限族 trace-MGF consumer 与条件步骤组合 (依赖: tropp-state-bookkeeping, cstar-log-order-transport)
   - 状态: `in_progress` / 进行中
-  - 模块/文档: `HighDimProb/RandomMatrix/TraceExp.lean; docs/STATEMENTS.md`
+  - 模块/文档: `HighDimProb/RandomMatrix/TraceExp.lean; docs/maintainers/STATEMENTS.md`
 - [ ] 🔄 **provider-facades** — Lieb/Tropp provider-facing import layer (依赖: trace-mgf-consumer)
   - 状态: `in_progress` / 进行中
   - 模块/文档: `HighDimProb/RandomMatrix/LiebProvider.lean; EpsteinProvider.lean; NaturalHistoryProvider.lean`
@@ -199,16 +199,16 @@
   - 模块/文档: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
 - [ ] ⏳ **hanson-wright** — Hanson-Wright statement / proof route (依赖: full-matrix-bernstein, subgaussian-vector)
   - 状态: `pending` / 待开始
-  - 模块/文档: `docs/LeafPlan.md; HighDimProb/RandomMatrix/Statements.lean`
+  - 模块/文档: `docs/archive/LeafPlan.md; HighDimProb/RandomMatrix/Statements.lean`
 - [ ] ⏳ **covariance-estimation** — 协方差估计与 operator-norm deviation theorem family (依赖: sample-covariance-compact-route, full-matrix-bernstein)
   - 状态: `pending` / 待开始
-  - 模块/文档: `docs/LeafPlan.md; HighDimProb/RandomMatrix/SampleCovariance.lean`
+  - 模块/文档: `docs/archive/LeafPlan.md; HighDimProb/RandomMatrix/SampleCovariance.lean`
 - [ ] ⏳ **jl-rip-statements** — Johnson-Lindenstrauss / RIP / signal recovery statements (依赖: gaussian-width-geometry, covariance-estimation)
   - 状态: `pending` / 待开始
-  - 模块/文档: `HighDimProb/SignalRecovery.lean; docs/LeafPlan.md`
+  - 模块/文档: `HighDimProb/SignalRecovery.lean; docs/archive/LeafPlan.md`
 - [ ] ⏳ **strong-law-process-chaining** — SLLN、subGaussian increments 和 chaining/VC 过程族 (依赖: weak-law-scaffold, empirical-process-vocabulary)
   - 状态: `pending` / 待开始
   - 模块/文档: `HighDimProb/LimitTheorems/*.lean; HighDimProb/Process.lean`
 - [ ] ⏳ **stable-promotion-audit** — 实验模块升入稳定根的测试/文档/API 审计 (依赖: full-matrix-bernstein, covariance-estimation, strong-law-process-chaining)
   - 状态: `pending` / 待开始
-  - 模块/文档: `docs/ModuleTree.md; docs/TestPlan.md`
+  - 模块/文档: `docs/architecture/ModuleTree.md; docs/maintainers/TestPlan.md`

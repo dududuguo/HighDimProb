@@ -2,8 +2,10 @@
 
 This page defines module ownership and dependency direction for the supported
 finite-dimensional RandomMatrix surface. It is an architecture contract, not
-a theorem index; use [`RandomMatrixAPI.md`](RandomMatrixAPI.md) for theorem
-families and exact import guidance.
+a theorem index or the repository-wide import map; use
+[`APIOverview.md`](../user/APIOverview.md) for general routing and
+[`RandomMatrixAPI.md`](../user/RandomMatrixAPI.md) for theorem families and exact
+import guidance.
 
 ## User-Facing Public Imports
 
@@ -12,7 +14,10 @@ families and exact import guidance.
 | Base | `HighDimProb.RandomMatrix` | objects, algebra, order, spectra, trace-exp vocabulary, statements |
 | Concentration | `HighDimProb.RandomMatrix.Concentration` | public trace-MGF, tail, Matrix Bernstein, and sample-covariance theorem surface |
 
-The concentration facade preserves explicit primitive, measurability,
+`HighDimProb.RandomMatrix.Concentration` is the default downstream import. The
+`Provider.*` hierarchy is expert implementation infrastructure; use its narrow
+layers for provider development or reuse of those proof boundaries. The public
+concentration facade preserves explicit primitive, measurability,
 integrability, independence, radius, variance-proxy, and parameter-domain
 hypotheses where the exported theorem requires them. It is not an unconditional
 Matrix Bernstein theorem.

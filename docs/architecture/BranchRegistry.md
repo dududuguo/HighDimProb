@@ -1,7 +1,7 @@
 # Branch Registry
 
 This registry is a short current map. Old branch planning text was collapsed
-into [`archive.md`](archive.md); use git history for exact old wording.
+into [`archive.md`](../archive/README.md); use git history for exact old wording.
 
 | Branch | Import path | Status | Purpose |
 |---|---|---|---|

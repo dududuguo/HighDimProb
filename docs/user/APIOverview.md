@@ -1,6 +1,6 @@
 # HighDimProb API Overview
 
-This page is a stable route map for the public API. It follows the same
+This page is the repository's general import and API route map. It follows the same
 principle as Mathlib module documentation: use short module-level explanations,
 name the main entry points, and leave exact theorem signatures to source,
 doc-gen, tests, and `#check`.
@@ -17,6 +17,9 @@ import HighDimProb
 
 import HighDimProb.Concentration
   scalar concentration theorem families
+
+import HighDimProb.SubGaussianProcess
+  metric subGaussian increment vocabulary
 
 import HighDimProb.RandomMatrix
   supported finite-dimensional random-matrix base and statement surface
@@ -45,13 +48,13 @@ import HighDimProb.Examples
 
 The root import is intentionally narrow. A focused module may have a supported
 theorem contract while remaining outside `import HighDimProb`. Downstream
-matrix-concentration users should normally import
-`HighDimProb.RandomMatrix.Concentration`; the `Provider.*` imports expose
-internal/expert proof boundaries. Experimental status is reserved for unfinished
-surfaces beyond the documented assumptions and module boundaries. The public
-facade does not erase hypotheses: primitive, measurability, integrability,
-independence, radius, variance-proxy, and parameter-domain assumptions remain
-explicit where required by each theorem.
+matrix-concentration users should normally import the public facade
+`HighDimProb.RandomMatrix.Concentration`; the `Provider.*` imports are expert
+implementation boundaries for provider development. Experimental status is
+reserved for unfinished surfaces beyond the documented assumptions and module
+boundaries. The public facade does not erase hypotheses: primitive,
+measurability, integrability, independence, radius, variance-proxy, and
+parameter-domain assumptions remain explicit where required by each theorem.
 
 ## Route Diagram
 
@@ -77,17 +80,15 @@ flowchart TD
   SCov --> Ex["Examples and downstream-style judge files"]
 ```
 
-## Stable Reader Path
+## Reader Path
 
-For a first pass through the repository:
+After choosing an import above:
 
-1. Read [`Status.md`](Status.md) for the current state.
-2. Read [`TODO.md`](TODO.md) for active next work.
-3. Use [`TermMap.md`](TermMap.md) to find the relevant area.
-4. Read the focused API page, such as
+1. Use [`TermMap.md`](../reference/TermMap.md) to find the relevant area.
+2. Read the focused API page, such as
    [`RandomMatrixAPI.md`](RandomMatrixAPI.md), for public names and caveats.
-5. Open the corresponding example under `HighDimProb/Examples`.
-6. Use generated docs, [`LeanTooling.md`](LeanTooling.md), or `#check` for exact Lean signatures.
+3. Open the corresponding example under `HighDimProb/Examples`.
+4. Use generated docs, [`LeanTooling.md`](../maintainers/LeanTooling.md), or `#check` for exact Lean signatures.
 
 This is deliberately close to Mathlib practice: route documentation is
 conceptual, while exact declarations are checked by the Lean compiler.
@@ -96,13 +97,13 @@ conceptual, while exact declarations are checked by the Lean compiler.
 
 | Area | Import | Main docs | Example surface |
 |---|---|---|---|
-| Stable scalar objects | `HighDimProb` | [`ModuleTree.md`](ModuleTree.md) | smoke/API tests |
+| Stable scalar objects | `HighDimProb` | [`ModuleTree.md`](../architecture/ModuleTree.md) | smoke/API tests |
 | Scalar concentration | `HighDimProb.Concentration` | source modules, tests, and judge files | concentration tests/judge |
 | Random matrices | `HighDimProb.RandomMatrix` | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | `HighDimProb/Examples/RandomMatrix` |
-| Matrix concentration | `HighDimProb.RandomMatrix.Concentration` | [`TheoremAtlas.md`](TheoremAtlas.md) and [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | tests and judge files |
+| Matrix concentration | `HighDimProb.RandomMatrix.Concentration` | [`TheoremAtlas.md`](../reference/TheoremAtlas.md) and [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | tests and judge files |
 | Sample covariance routes | `HighDimProb.RandomMatrix.Concentration` | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | `SampleCovarianceTailUsage` |
-| Expert provider development | narrow `HighDimProb.RandomMatrix.Provider.*` import | [`RandomMatrixArchitecture.md`](RandomMatrixArchitecture.md) | provider API tests |
-| External-facing checks | `HighDimProbJudge` | [`JudgeSystem.md`](JudgeSystem.md) | judge files |
+| Expert provider development | narrow `HighDimProb.RandomMatrix.Provider.*` import | [`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md) | provider API tests |
+| External-facing checks | `HighDimProbJudge` | [`JudgeSystem.md`](../maintainers/JudgeSystem.md) | judge files |
 
 ## RandomMatrix Route Map
 
@@ -192,9 +193,7 @@ as named premises or named assumption bundles.
 ## Documentation Rules
 
 - Keep this overview stable and route-level.
-- Put exact theorem-family status in [`TheoremAtlas.md`](TheoremAtlas.md).
+- Put exact theorem-family status in [`TheoremAtlas.md`](../reference/TheoremAtlas.md).
 - Put concrete public names and import paths in
   [`RandomMatrixAPI.md`](RandomMatrixAPI.md).
-- Put short active next tasks in [`TODO.md`](TODO.md).
-- Put current branch status in [`Status.md`](Status.md).
 - Put usage demonstrations in examples, not in long prose.

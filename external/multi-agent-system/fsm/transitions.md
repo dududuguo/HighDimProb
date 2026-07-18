@@ -115,7 +115,7 @@ guard:
   - no_admit: no `admit` token in Lean sources
   - no_axiom: no new axioms
   - no_fake_theorem: unproved book results are not declared as theorem/lemma
-  - workflow_docs_checked: docs/Workflow.md and docs/Status.md were read
+  - workflow_docs_checked: docs/maintainers/Workflow.md and docs/user/Status.md were read
   - one_cluster_only: change stays within the selected concept cluster
   - mathlib_first: existing Mathlib and HighDimProb APIs were searched first
   - reuse_source_gate_complete: reports and action classification were recorded before translation
@@ -124,7 +124,7 @@ guard:
 ### INTEGRATING → INTEGRATED
 ```yaml
 guard:
-  - status_updated: docs/Status.md updated with stage/result/next safe task
+  - status_updated: docs/user/Status.md updated with stage/result/next safe task
   - docs_updated: relevant TermMap/BookProgress/AbstractionLog/TODO updates made or explicitly justified as unnecessary
   - tests_added: public declarations have focused #check/example tests
   - build_ok: lake build -> exit 0

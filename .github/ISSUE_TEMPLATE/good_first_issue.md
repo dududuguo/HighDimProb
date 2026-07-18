@@ -8,7 +8,7 @@ assignees: ""
 
 ## Task
 
-Choose one small task: examples, tests, docs cleanup, `docs/TermMap.md` cleanup, or typed statement additions.
+Choose one small task: examples, tests, docs cleanup, `docs/reference/TermMap.md` cleanup, or typed statement additions.
 
 ## Scope
 

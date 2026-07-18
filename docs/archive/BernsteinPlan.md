@@ -143,6 +143,6 @@ lintegral-predicate deterministic weighted theorem
 ## Next Safe Task
 
 This is a historical scalar Bernstein closeout note. Current active branch
-selection is tracked in `docs/Status.md` and `docs/TODO.md`; remaining scalar
+selection is tracked in `docs/user/Status.md` and `docs/maintainers/TODO.md`; remaining scalar
 Bernstein work is the raw-predicate bridge, while matrix Bernstein and
 Hanson-Wright remain separate theorem families.

@@ -1,8 +1,11 @@
 # TODO
 
-This is the canonical active execution roadmap. Old completed task logs were
-collapsed into [`archive.md`](archive.md); use git history for exact old
-wording.
+This file is the sole authority for active tasks and next-task selection.
+No status page, plan, archive, or historical note assigns current work; if
+another document appears to conflict with this file, this file governs. Old
+completed task logs were collapsed into [`archive.md`](../archive/README.md), and
+[`LeafPlan.md`](../archive/LeafPlan.md) is retained only as historical chronology; use git
+history for exact old wording.
 
 ## Active Random Object Work
 
@@ -117,7 +120,7 @@ Risk gates:
   `traceExpIntegrable_troppStateHistory_add_step_of_summand_and_comparison_bounds_finiteMeasure`
   / `traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure`.
 - Current strategy is progress-first: if a hard analytic ingredient is missing,
-  consume it as an explicit assumption and register it in `docs/STATEMENTS.md`.
+  consume it as an explicit assumption and register it in `docs/maintainers/STATEMENTS.md`.
   The left/right relative-entropy, Lieb/Epstein, Golden--Thompson, and legacy
   Lieb/Jensen Tropp one-step contract are closed; do not conflate them with
   arbitrary-history conditional expectation, automatic variance-proxy control,

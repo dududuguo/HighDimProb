@@ -3,7 +3,7 @@
 This workflow runs **after** each successful integration and periodically
 as a batch process. It is the mechanism by which the system improves over time.
 
-Learning is advisory. It cannot relax `docs/Workflow.md`, skip mandatory
+Learning is advisory. It cannot relax `docs/maintainers/Workflow.md`, skip mandatory
 reviews, skip documentation tracking, or replace `lake build` / `lake test`.
 
 ## Trigger

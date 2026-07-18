@@ -1,7 +1,14 @@
 # Theorem Atlas
 
-This is the current theorem-family index. Old atlas detail was collapsed into
-[`archive.md`](archive.md); use git history for exact old wording.
+This page owns family-level proved/open status for the theorem atlas. Use it to
+read route-level theorem coverage and blockers, not to select active tasks or
+caller imports. Old atlas detail was collapsed into [`archive.md`](../archive/README.md);
+use git history for exact old wording.
+
+For supported scope, see [`Status.md`](../user/Status.md); for active work, see
+[`TODO.md`](../maintainers/TODO.md); for module ownership and dependency direction, see
+[`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md); and for caller
+endpoints, imports, and assumptions, see [`RandomMatrixAPI.md`](../user/RandomMatrixAPI.md).
 
 ## Status Vocabulary
 
@@ -53,8 +60,8 @@ The proved surface consists of:
 
 No full entropy-integral endpoint or full Dudley theorem is proved.
 Countable/full supremum measurability, expectation limit/interchange, and the
-small-scale residual remain open dependencies; see [`TODO.md`](TODO.md) for the
-canonical active plan.
+small-scale residual remain open dependencies. Current prioritization is tracked
+in [`TODO.md`](../maintainers/TODO.md).
 
 ## RandomMatrix
 
@@ -86,9 +93,10 @@ is its scalar-threshold consumer. The generated-history proof is now exposed by
 `0 < n`, `0 < delta <= 1`, `0 <= sigmaSq`, `0 <= R`, and
 `0 < sigmaSq or 0 < R`; they do not prove unconditional Matrix Bernstein.
 
-Important current names are listed in [`RandomMatrixAPI.md`](RandomMatrixAPI.md).
+Exact endpoint names and caller assumptions are listed in
+[`RandomMatrixAPI.md`](../user/RandomMatrixAPI.md).
 The hardbone statement atlas in
-[`HardboneStatements.lean`](../HighDimProb/RandomMatrix/HardboneStatements.lean)
+[`HardboneStatements.lean`](../../HighDimProb/RandomMatrix/HardboneStatements.lean)
 names CFC, log/order, Tropp/Lieb, conditioning, integrability,
 variance-proxy, and dimension/rank blockers as `typed-prop` targets. Selected
 consumer wrappers are proven thin applications of those targets; they do not
@@ -176,7 +184,7 @@ The finite-family conditioning chain now has the thin witness
 `troppConditionalStep_of_iIndepFun`; it forwards the explicit per-index
 conditional-expectation provider and does not prove the history,
 weaker-independence, or conditional-expectation inputs themselves. The
-provider facade separately exposes strengthened history/current-step
+`Provider.Conditioning` separately exposes strengthened history/current-step
 independence from `iIndepFun` plus explicit summand measurability, together
 with `TroppNaturalHistory.historyStepContractOfIsRandomMatrix`, which returns
 the exact legacy contract under explicit random-matrix data. The
@@ -184,7 +192,7 @@ conditional route is now also
 composed into the finite-family Bernstein trace-MGF conclusion by
 `traceMGFBernsteinVarianceProxyBound_of_conditioningBridge`, under explicit
 natural-state, integrability, MGF, and variance-proxy assumptions recorded in
-`docs/STATEMENTS.md`. The S10 wrapper
+`docs/maintainers/STATEMENTS.md`. The S10 wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge` threads
 that trace-MGF conclusion into the quadratic-form Laplace/tail route under an
 explicit trace-exp threshold event subset assumption, and the TailEvent provider
@@ -199,13 +207,16 @@ and `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
 package the same route with less repeated bookkeeping. The provider bundle
 derives its exact history/current-step independence contract from explicit
 random-matrix data while retaining finite-family independence.
-`HighDimProb.RandomMatrix.Provider.Analysis` exposes the ambient matrix-exp
-Frechet derivative layer, log-resolvent infrastructure, the left/right
-relative-entropy route, Lieb/Epstein facades, Golden--Thompson, and spectral
-endpoint monotonicity. `HighDimProb.RandomMatrix.Provider.Concentration` owns
-the left/right Tropp one-step wrappers, the compatibility closure
-`troppLiebJensenChain_of_leftRight`, and trace-MGF-to-Laplace
-contracts. The restricted
+`HighDimProb.RandomMatrix.Provider.Analysis` owns the ambient matrix-exp Frechet
+derivative layer, log-resolvent infrastructure, the left/right relative-entropy
+route, Lieb/Epstein facades, Golden--Thompson, and spectral endpoint
+monotonicity. `HighDimProb.RandomMatrix.Provider.Conditioning` owns
+frozen-parameter conditional expectation and natural-history bridges.
+`HighDimProb.RandomMatrix.Provider.Concentration` owns the left/right Tropp
+one-step wrappers, the compatibility closure
+`troppLiebJensenChain_of_leftRight`, trace-MGF-to-Laplace contracts, and Matrix
+Bernstein assembly. Downstream callers use the re-exporting public facade
+`HighDimProb.RandomMatrix.Concentration`. The restricted
 conditional-step route `mHist <= MeasurableSpace.comap H _` is closed by
 `TraceExpConditioning.troppStep_of_history_le`. The Bernstein facade
 `TraceExpConditioning.bernsteinStep_of_history_le` constructs the frozen-bound
@@ -233,5 +244,8 @@ open.
 
 ## Maintenance Rule
 
-Keep this file as a compact index. Put only short historical summaries in
-`archive.md`, and put exact API-name details in the relevant API index.
+Keep this file as the compact family-level proved/open ledger. Put current focus
+in [`Status.md`](../user/Status.md), active task planning in [`TODO.md`](../maintainers/TODO.md), module
+ownership in [`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md), exact
+endpoint details in the relevant API index, and historical summaries in
+[`archive.md`](../archive/README.md).

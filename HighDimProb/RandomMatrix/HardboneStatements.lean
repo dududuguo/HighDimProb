@@ -1635,7 +1635,7 @@ bridge assumptions.
 This theorem composes the Phase 4 conditioning bridge with the natural-state
 finite-family trace-MGF route. It deliberately consumes all hard probabilistic,
 conditional-expectation, integrability, and variance-proxy assumptions
-explicitly; those assumptions are tracked in `docs/STATEMENTS.md`. -/
+explicitly; those assumptions are tracked in `docs/maintainers/STATEMENTS.md`. -/
 theorem traceMGFBernsteinVarianceProxyBound_of_conditioningBridge
     {Omega : Type*} [mOmega : MeasurableSpace Omega]
     {P : MeasureTheory.Measure Omega} [MeasureTheory.IsProbabilityMeasure P]

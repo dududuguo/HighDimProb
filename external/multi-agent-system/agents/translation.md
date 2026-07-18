@@ -16,7 +16,7 @@ not allowed to manufacture unproved theorems or new canonical APIs.
 
 ### Process
 
-1. **Load context**: Read `docs/Workflow.md`, `docs/Status.md`, `README.md`,
+1. **Load context**: Read `docs/maintainers/Workflow.md`, `docs/user/Status.md`, `README.md`,
    `ORGANISATION.md`, and the relevant existing Lean modules before translating
 2. **Prioritize**: Process reusable vocabulary and small bridge lemmas first;
    classify theorem-heavy units as `typed-prop`, `blocked`, or `future` unless

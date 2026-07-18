@@ -65,19 +65,19 @@ Tests live under `HighDimProbTest/`.
 
 ## Documentation
 
-- `docs/APIOverview.md`: current public route map for imports, examples, and main API areas.
-- `docs/Status.md`: current status and active API pointers.
-- `docs/Workflow.md`: mandatory contribution workflow.
-- `docs/TermMap.md`: compact concept-to-source map.
-- `docs/TheoremAtlas.md`: compact theorem-family registry.
-- `docs/RandomMatrixAPI.md`: current RandomMatrix / Matrix Bernstein API index.
-- `docs/TestPlan.md`: import and API regression policy.
-- `docs/Automation.md`: automation and simp policy.
-- `docs/ModuleTree.md`: root-to-branch module layout and migration policy.
-- `docs/BranchRegistry.md`: current branch map and promotion criteria.
-- `docs/LeafPlan.md`: current leaf boundary and next safe RandomMatrix work.
-- `docs/TODO.md`: short active task list.
-- `docs/archive.md`: short archive index only; use git history for exact old
+- `docs/user/APIOverview.md`: current public route map for imports, examples, and main API areas.
+- `docs/user/Status.md`: current status and active API pointers.
+- `docs/maintainers/Workflow.md`: mandatory contribution workflow.
+- `docs/reference/TermMap.md`: compact concept-to-source map.
+- `docs/reference/TheoremAtlas.md`: compact theorem-family registry.
+- `docs/user/RandomMatrixAPI.md`: current RandomMatrix / Matrix Bernstein API index.
+- `docs/maintainers/TestPlan.md`: import and API regression policy.
+- `docs/maintainers/Automation.md`: automation and simp policy.
+- `docs/architecture/ModuleTree.md`: root-to-branch module layout and migration policy.
+- `docs/architecture/BranchRegistry.md`: current branch map and promotion criteria.
+- `docs/archive/LeafPlan.md`: historical leaf chronology; not an active task source.
+- `docs/maintainers/TODO.md`: short active task list.
+- `docs/archive/README.md`: short archive index only; use git history for exact old
   stage logs.
 
 ## Promotion Policy
@@ -86,6 +86,6 @@ No module is promoted from experimental to stable without:
 
 - API tests,
 - documentation updates,
-- `docs/Status.md` update,
+- `docs/user/Status.md` update,
 - stable root import audit,
 - confirmation that the module does not expose unresolved scaffolding as stable API.

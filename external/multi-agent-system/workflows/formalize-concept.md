@@ -3,7 +3,7 @@
 End-to-end workflow for formalizing one concept from the theory roadmap.
 
 This workflow is valid only as a specialization of the main repository
-workflow. Every run must follow `docs/Workflow.md` exactly: read status first,
+workflow. Every run must follow `docs/maintainers/Workflow.md` exactly: read status first,
 process one concept cluster only, search Mathlib before defining anything,
 update project tracking docs, then run `lake build` and `lake test`.
 
@@ -16,7 +16,7 @@ Orchestrator selects a concept from the topological queue.
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │ 1. REPOSITORY WORKFLOW CHECK                                 │
-│    Read docs/Status.md and docs/Workflow.md                  │
+│    Read docs/user/Status.md and docs/maintainers/Workflow.md                  │
 │    Select exactly one concept cluster                        │
 │    Search Mathlib and existing HighDimProb APIs first        │
 │    if scope is too broad → DEFERRED / NEEDS_HUMAN            │
@@ -127,8 +127,8 @@ Orchestrator selects a concept from the topological queue.
 ┌──────────────────────────────────────────────────────────────┐
 │ 8. PROJECT TRACKING AND INTEGRATION                          │
 │    Update required tracking docs:                            │
-│      docs/TermMap.md, docs/BookProgress.md,                  │
-│      docs/AbstractionLog.md, docs/TODO.md, docs/Status.md    │
+│      docs/reference/TermMap.md, docs/archive/BookProgress.md,                  │
+│      docs/maintainers/AbstractionLog.md, docs/maintainers/TODO.md, docs/user/Status.md    │
 │    Add focused API/proof tests for public declarations       │
 │    Run full `lake build` and `lake test`                     │
 │    Refresh lean-local-search index if needed                 │

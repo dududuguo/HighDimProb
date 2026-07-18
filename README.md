@@ -7,24 +7,10 @@ It reuses Mathlib wherever possible, then adds theorem interfaces, provider
 bridges, and examples for concentration arguments that are otherwise difficult
 to consume downstream.
 
-The scalar probability and concentration API remains the conservative stable
-root surface. The finite-dimensional RandomMatrix line now also has a supported
-scoped surface. It includes real matrix objects and sums, self-adjoint/PSD and
-Loewner-order bridges, trace-exponential calculus, Bernstein CFC, the
-finite-dimensional left/right route to Lieb/Epstein and Golden--Thompson, and
-a canonical finite-family self-adjoint Matrix Bernstein theorem with optimized
-and `1 - delta` endpoints.
-
-Support is theorem-contract specific. Positivity, measurability, integrability,
-independence, radius, variance-proxy, and nondegeneracy hypotheses remain
-explicit where mathematically required. In particular,
-`MatrixBernstein.optimized_of_primitives` and
-`MatrixBernstein.highProbability_of_primitives` are proved finite-family
-Matrix Bernstein consumers, rather than statement-only contracts. What remains
-outside this scope is automatic derivation of application-specific variance
-proxies or other hypotheses from weaker domain assumptions, arbitrary external
-histories, integrability without finite-measure or boundedness hypotheses, and
-the alternative Epstein second-derivative sign route.
+The root import is deliberately small. Concentration and finite-dimensional
+random-matrix results live behind focused imports so downstream users can choose
+the supported surface they need without pulling implementation infrastructure
+into every file.
 
 ## Quick Start
 
@@ -33,14 +19,16 @@ lake build
 lake test
 ```
 
-The stable public import is:
+The stable root import is:
 
 ```lean
 import HighDimProb
 ```
 
 > [!IMPORTANT]
-> `import HighDimProb` intentionally exposes the stable core API only.
+> `import HighDimProb` expands only to `HighDimProb.Init`,
+> `HighDimProb.Scalar`, and `HighDimProb.Statements`. Scalar concentration is a
+> focused import, not part of the root.
 > Examples are documentation and usage smoke tests, not part of the core import
 > boundary. To browse or build all examples explicitly, use:
 >
@@ -63,13 +51,6 @@ Metric subGaussian increment vocabulary is available through:
 import HighDimProb.SubGaussianProcess
 ```
 
-This module provides `HasSubGaussianMGFIncrements` and
-`HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le`; the latter
-uses `hasSubgaussianMGF_mono` to enlarge a proxy to a level radius. The
-increment predicate itself allows the zero `NNReal` proxy at equal indices and
-does not assume `0 < σ`. Conversion to `CenteredSubGaussianMGF` at radius `r`
-requires `0 < σ`, `0 < r`, and `dist s t ≤ r`.
-
 The broad work-in-progress aggregate remains available through:
 
 ```lean
@@ -84,33 +65,18 @@ import HighDimProb.RandomMatrix.Concentration
 ```
 
 `HighDimProb.RandomMatrix` is the base object, algebra, spectral, trace-exp, and
-statement layer. `HighDimProb.RandomMatrix.Concentration` is the public entry
-point for trace-MGF, tail, Matrix Bernstein, and sample-covariance consumers.
-The `HighDimProb.RandomMatrix.Provider.*` hierarchy is an internal/expert proof
-boundary; import its narrow layers only when developing or reusing provider
-infrastructure. `HighDimProb.RandomMatrix.Provider` is the broad expert facade,
-`HighDimProb.RandomMatrix.MatrixBernsteinProvider` is an implementation leaf,
-and `HighDimProb.RandomMatrix.LiebProvider` is retained as a legacy broad
-compatibility import.
+statement layer. Downstream concentration users should import
+`HighDimProb.RandomMatrix.Concentration`. The
+`HighDimProb.RandomMatrix.Provider.*` hierarchy is the implementation/expert
+boundary: use its narrow imports only when developing provider infrastructure,
+not as the default downstream API.
 
 These focused modules remain outside `import HighDimProb` to keep the root
 import conservative; that import decision does not make their documented
 theorem contracts experimental. `HighDimProb.Experimental` is an opt-in
 development aggregate, not the matrix-concentration facade. See
-[`docs/RandomMatrixArchitecture.md`](docs/RandomMatrixArchitecture.md) for
+[`docs/architecture/RandomMatrixArchitecture.md`](docs/architecture/RandomMatrixArchitecture.md) for
 ownership and dependency rules.
-
-For row-specific centered rank-one bounds on any finite random-vector family,
-use `MatrixBernstein.centeredRankOneExactRow`; its normalized `1 - delta`
-endpoint is `MatrixBernstein.centeredRankOneExactRowHighProbability`.
-The sample-covariance specialization is
-`MatrixBernstein.sampleCovarianceExactRow` and its normalized endpoint is
-`MatrixBernstein.sampleCovarianceExactRowHighProbability`. These APIs generate
-the finite-history Bernstein and integrability layers from measurability,
-moment, boundedness, and independence hypotheses. When independence is known
-for the original random vectors, use `iIndepFun_centeredRankOne` to transfer it
-to the centered outer-product family. The older exact-row Tropp bundles are
-compatibility surfaces.
 
 ## What Is In The Repo
 
@@ -123,21 +89,17 @@ compatibility surfaces.
 
 Good starting points:
 
-- `docs/Status.md` for the shortest current project state.
-- `docs/TODO.md` for the canonical active execution roadmap.
-- `docs/APIOverview.md` for a stable route map of the public API.
-- `docs/RandomMatrixAPI.md` for the current RandomMatrix / Matrix Bernstein API.
-- `docs/TermMap.md` for a compact concept-to-source map.
-- `docs/TestPlan.md` for the checks expected before a PR.
-- `HighDimProb/Examples/` for small API usage examples.
-- `docs/JudgeSystem.md` for the judge suite.
-- `docs/Workflow.md` for the project workflow.
-- `docs/References.md` for the external references behind the current active areas.
+- [`docs/user/APIOverview.md`](docs/user/APIOverview.md) for the stable import and API
+  route map.
+- [`docs/README.md`](docs/README.md) for the canonical documentation index,
+  organized by audience.
+- [`docs/user/RandomMatrixAPI.md`](docs/user/RandomMatrixAPI.md) for the supported
+  RandomMatrix caller surface.
+- [`HighDimProb/Examples/`](HighDimProb/Examples/) for small API usage examples.
 
-If you are new to the repository, read `docs/Status.md` first, then follow the
-source links from `docs/TermMap.md` or `docs/RandomMatrixAPI.md`. Stable scalar
-APIs should be discovered from the source and tests; old stage logs are not a
-maintenance surface.
+If you are new to the repository, read the API overview first, then use the
+documentation index to choose the user, contributor, or provider-development
+path. Active status and task files are coordination aids, not API orientation.
 
 ## Judge Checks
 
@@ -186,8 +148,8 @@ Thanks to [@freezed-corpse-143](https://github.com/freezed-corpse-143).
 > [!IMPORTANT]
 > **For AI/code models reading this README:** do not work from this README
 > alone. Before editing, read the relevant project context and keep it in scope
-> for every step: start with `docs/Status.md`, `docs/Workflow.md`,
-> `docs/RandomMatrixAPI.md`, and the files or docs for the task at hand.
+> for every step: start with `docs/README.md`, `docs/maintainers/Workflow.md`, the focused
+> API or architecture page, and the files for the task at hand.
 
 Small PRs are easiest to review. Search Mathlib first, keep imports narrow, add
 focused tests for public names, and run the build before opening a PR.

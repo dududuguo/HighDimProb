@@ -15,7 +15,7 @@ Currently recorded dangerous simp lemmas:
 
 ## Proof Failure Feedback
 
-When a proof pilot fails, do not force the proof with brittle automation. Record the blocker in `docs/AbstractionLog.md` and add missing bridge lemmas to `docs/TODO.md`.
+When a proof pilot fails, do not force the proof with brittle automation. Record the blocker in `docs/maintainers/AbstractionLog.md` and add missing bridge lemmas to `docs/maintainers/TODO.md`.
 
 ## Future Tactics
 

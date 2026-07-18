@@ -17,7 +17,7 @@ Before committing new material here:
 - Prefer a short milestone summary over a full scratch directory.
 - Remove local paths, generated caches, and tool transcripts that are not useful
   later.
-- Make sure the corresponding public state is reflected in `docs/Status.md` or
+- Make sure the corresponding public state is reflected in `docs/user/Status.md` or
   the relevant API document.
 
 New validation run directories are ignored by default. Keep scratch runs local,

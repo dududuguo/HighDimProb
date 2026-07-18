@@ -1,7 +1,7 @@
 # Abstraction Rules
 
 This file is the active abstraction checklist. Old notes were collapsed into
-[`archive.md`](archive.md); use git history for exact old wording.
+[`archive.md`](../archive/README.md); use git history for exact old wording.
 
 ## Current Rules
 
@@ -18,9 +18,9 @@ This file is the active abstraction checklist. Old notes were collapsed into
 
 ## Active Links
 
-- Current status: [`Status.md`](Status.md)
-- RandomMatrix API: [`RandomMatrixAPI.md`](RandomMatrixAPI.md)
-- RandomMatrix architecture: [`RandomMatrixArchitecture.md`](RandomMatrixArchitecture.md)
-- Term map: [`TermMap.md`](TermMap.md)
+- Current status: [`Status.md`](../user/Status.md)
+- RandomMatrix API: [`RandomMatrixAPI.md`](../user/RandomMatrixAPI.md)
+- RandomMatrix architecture: [`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md)
+- Term map: [`TermMap.md`](../reference/TermMap.md)
 - Test plan: [`TestPlan.md`](TestPlan.md)
-- Historical notes: [`archive.md`](archive.md)
+- Historical notes: [`archive.md`](../archive/README.md)

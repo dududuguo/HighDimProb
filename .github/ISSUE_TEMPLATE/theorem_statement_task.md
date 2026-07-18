@@ -12,7 +12,7 @@ Name the book result or theorem family.
 
 ## Scope
 
-- Translate the result into `docs/TheoremAtlas.md`.
+- Translate the result into `docs/reference/TheoremAtlas.md`.
 - Add a typed `Prop` specification only if dependencies exist.
 - Identify missing dependencies when the statement is blocked.
 

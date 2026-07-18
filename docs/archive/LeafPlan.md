@@ -1,5 +1,11 @@
 # Leaf Plan
 
+> **Historical record.** This file preserves completed-leaf chronology and old
+> planning snapshots only. It does not assign current work. [`TODO.md`](../maintainers/TODO.md)
+> is the sole active task authority and the only source for selecting the next
+> task. Any next, follow-up, future, or roadmap language below records
+> the view at that time unless `TODO.md` independently lists it now.
+
 ## Scalar
 
 - Centering
@@ -35,10 +41,10 @@
   - Stage M-real-1: real-exponent `SubGaussianMoment` bridge
   - Stage M-real-2: real-exponent `SubExponentialMoment` bridge
   - Stage SC-final-update: scalar closeout refreshed after both moment bridges
-  - Current repository next task:
-    RM-VP-negative-exact-row-variance-proxy-provider-contract. Natural-state
+  - Historical successor note (superseded): the next task recorded at that time
+    was RM-VP-negative-exact-row-variance-proxy-provider-contract. Natural-state
     assumption bundling, negative trace-MGF provider cleanup, Matrix Bernstein,
-    Hanson-Wright, and WLLN/SLLN remain separate future directions.
+    Hanson-Wright, and WLLN/SLLN were recorded as separate future directions.
 - OrliczToTail
 - TailToOrlicz
 - MomentImplications
@@ -70,12 +76,13 @@
 - StableDimension
 - ChainingStatements
 
-### Process Roadmap
+### Historical Process Snapshot
 
 The proved baseline includes
 `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral` and
-`HighDimProb.ciSup_eq_ciSup_of_denseRange`. Full Dudley is not proved. The
-canonical active plan is [`TODO.md`](TODO.md).
+`HighDimProb.ciSup_eq_ciSup_of_denseRange`. Full Dudley is not proved. For
+current work and next-task selection, consult the sole active authority,
+[`TODO.md`](../maintainers/TODO.md).
 
 ## RandomMatrix
 
@@ -102,15 +109,16 @@ canonical active plan is [`TODO.md`](TODO.md).
 - HansonWrightStatements
 - JLStatements
 - CovarianceEstimationStatements
-- Follow-up at the time: Stage MB-S9-trace-mgf-to-laplace-tail-contract. Audit
-  the trace-mgf provider route now that the single-summand MGF provider is
-  proved under explicit pointwise Bernstein CFC assumptions and the bounded
-  Bernstein RHS coefficient is normalized. At that time the Bernstein CFC
-  primitive itself was still typed only; the later hardbone leaf proves it as
-  `bernsteinMatrixExp_le_quadratic`. Do not prove Golden-Thompson, Lieb, the
-  full trace-mgf provider, or Matrix Bernstein in that contract stage.
+- Historical successor note: Stage MB-S9-trace-mgf-to-laplace-tail-contract
+  was recorded as an audit of the trace-mgf provider route after the
+  single-summand MGF provider was proved under explicit pointwise Bernstein CFC
+  assumptions and the bounded Bernstein RHS coefficient was normalized. At
+  that time the Bernstein CFC primitive itself was still typed only; the later
+  hardbone leaf proves it as `bernsteinMatrixExp_le_quadratic`. The recorded
+  boundary for that contract stage excluded Golden-Thompson, Lieb, the full
+  trace-mgf provider, and Matrix Bernstein.
 
-## Current RandomMatrix Leaf
+## RandomMatrix Leaf Chronology
 
 ### Tropp bookkeeping reduction: prefix/suffix partial sums
 
@@ -264,8 +272,9 @@ canonical active plan is [`TODO.md`](TODO.md).
   contract/consumer under `0 < n`, `0 < delta <= 1`, `0 <= sigmaSq`,
   `0 <= R`, and `0 < sigmaSq or 0 < R`; it does not construct the
   generated-history witness or prove unconditional Matrix Bernstein.
-- Next safe leaf: supply or audit a separate optimized-tail provider while
-  keeping this public consumer boundary explicit.
+- Historical successor note (superseded): the recorded next leaf was to supply
+  or audit a separate optimized-tail provider while keeping this public
+  consumer boundary explicit.
 
 ## Process
 
@@ -307,46 +316,53 @@ canonical active plan is [`TODO.md`](TODO.md).
 - Status: partially proved.
 - Added: `matrixExpLogDomainForSelfAdjoint`, proving the `matrixExp` log-domain and normalization provider used by `matrixLog_le_of_le_matrixExp`.
 - Boundary preserved: this does not prove operator-log monotonicity, trace-exp monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, or full Matrix Bernstein.
-- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+- Historical successor note (superseded): later work was expected to continue
+  toward Lieb/Jensen or the finite-family conditioning/integrability providers.
 
 ## RM-LIEB-S3 Operator-Log Monotonicity Representation Bridge
 
 - Status: proved as infrastructure.
 - Added: `isPSDMatrix_of_posSemidef`, `matrixLE_of_mathlib_le`, and `mathlib_le_of_matrixLE` as reusable `MatrixOrder` bridges below `Spectral`.
 - Boundary preserved: this bridge only relates HighDimProb's explicit PSD/order vocabulary to Mathlib's matrix order.
-- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+- Historical successor note (superseded): later work was expected to continue
+  toward Lieb/Jensen or the finite-family conditioning/integrability providers.
 
 ## RM-LIEB-S4 Real Matrix To CStar Log Monotonicity Contract
 
 - Status: consumed by proof.
 - Result: Mathlib `CFC.log_le_log` is available on `CStarMatrix (Fin n) (Fin n) ℂ` and is now used by `operatorLogMonotoneOnPositiveMatrices`.
 - Boundary preserved: this does not prove Lieb concavity, Jensen, Golden-Thompson, conditioning, or full Matrix Bernstein.
-- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+- Historical successor note (superseded): later work was expected to continue
+  toward Lieb/Jensen or the finite-family conditioning/integrability providers.
 
 ## RM-LIEB-S5 Real To CStar Transport API Contract
 
 - Status: proved in main.
 - Result: `CStarBridge` now proves the real-to-`CStarMatrix` star-algebra hom, strict positivity transport, `MatrixLE` transport, strictly-positive self-adjoint `CFC.log` transport, and reflected order transport.
 - Boundary preserved: log-back is intentionally restricted to strictly positive self-adjoint matrices.
-- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+- Historical successor note (superseded): later work was expected to continue
+  toward Lieb/Jensen or the finite-family conditioning/integrability providers.
 
 ## RM-LIEB-S6 Real-To-CStar Transport And Operator-Log Witness
 
 - Status: proved.
 - Added: `realMatrixToCStar_nonneg`, `realMatrixToCStar_strictlyPositive`, `realMatrixToCStar_matrixLE`, `realMatrixToCStar_log`, `matrixLE_of_realMatrixToCStar_matrixLE`, and `operatorLogMonotoneOnPositiveMatrices`.
 - Boundary preserved: this closes the real-matrix operator-log monotonicity leaf only. It does not prove Lieb concavity, Jensen, Golden-Thompson, conditioning, trace-exp integrability propagation, variance-proxy control, or full Matrix Bernstein.
-- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+- Historical successor note (superseded): later work was expected to continue
+  toward Lieb/Jensen or the finite-family conditioning/integrability providers.
 
 ## RM-LIEB-S7 Trace-Exponential Monotonicity Hardbone Witness
 
 - Status: proved.
 - Added: `TraceExpDerivative.lean` for the scalar derivative of `trace (exp (X + t • C))`, `TraceExpMonotonicity.lean` for deterministic Loewner-direction trace-exp monotonicity, and the hardbone witness `traceMatrixExp_mono_add_selfAdjoint`.
 - Boundary preserved: this proves only the deterministic trace-exponential monotonicity leaf. It does not prove operator-log monotonicity, Lieb concavity, Jensen, Golden-Thompson, conditioning, trace-exp integrability propagation, variance-proxy control, or full Matrix Bernstein.
-- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+- Historical successor note (superseded): later work was expected to continue
+  toward Lieb/Jensen or the finite-family conditioning/integrability providers.
 
 ## RM-LIEB-S8 Direct Log/Order-To-K Wrapper
 
 - Status: proved.
 - Added: `troppLogExpComparisonToK`, a deterministic wrapper proving `troppLogExpComparisonToK_statement` from the already proved matrix-exp log-domain, operator-log monotonicity, and trace-exp monotonicity leaves.
 - Boundary preserved: this does not prove Lieb concavity, Jensen, Golden-Thompson, conditioning, trace-exp integrability propagation, variance-proxy control, or full Matrix Bernstein.
-- Next safe leaf: continue toward Lieb/Jensen or the finite-family conditioning/integrability providers.
+- Historical successor note (superseded): later work was expected to continue
+  toward Lieb/Jensen or the finite-family conditioning/integrability providers.

@@ -4,7 +4,7 @@ HighDimProb is a Mathlib-compatible ergonomic layer for high-dimensional probabi
 
 ## Mandatory Round Workflow
 
-Step 1. Read `docs/Status.md`.
+Step 1. Read `docs/user/Status.md`.
 
 Step 2. Read the relevant part of the reference notes.
 
@@ -117,7 +117,7 @@ preparation work.
 
 - Stable v0.1 modules are imported through `import HighDimProb`.
 - Experimental v0.2+ modules are imported through `import HighDimProb.Experimental`.
-- No module is promoted from experimental to stable without tests, docs, a `docs/Status.md` update, and a stable root import audit.
+- No module is promoted from experimental to stable without tests, docs, a `docs/user/Status.md` update, and a stable root import audit.
 
 ## Theorem Atlas Policy
 

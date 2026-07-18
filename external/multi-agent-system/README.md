@@ -8,7 +8,7 @@ HighDimProb Lean package. Treat it as maintainer background material.
 ## Boundary
 
 The main repository wins over anything in this directory. In particular, trust
-the Lean source, `README.md`, `CONTRIBUTING.md`, and `docs/Workflow.md` before
+the Lean source, `README.md`, `CONTRIBUTING.md`, and `docs/maintainers/Workflow.md` before
 these notes.
 
 Hard rules for actual repository changes:

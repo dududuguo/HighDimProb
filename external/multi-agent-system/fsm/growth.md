@@ -11,7 +11,7 @@ formalizing concepts. This document defines how growth happens.
 4. **Project conventions** solidify over time and need encoding as guards
 
 Growth is advisory in this repository. It must not weaken the main workflow:
-`docs/Status.md` and `docs/Workflow.md` are still read first, docs tracking is
+`docs/user/Status.md` and `docs/maintainers/Workflow.md` are still read first, docs tracking is
 still updated, and `lake build` plus `lake test` remain mandatory.
 
 ## Growth Triggers

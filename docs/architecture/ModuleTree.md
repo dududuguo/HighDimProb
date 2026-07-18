@@ -96,7 +96,7 @@ HighDimProb
 - Experimental (experimental aggregate)
 ```
 
-Planned leaves for these branches are tracked in `docs/LeafPlan.md`. Ownership and promotion rules are tracked in `docs/BranchRegistry.md`.
+Planned leaves for these branches are tracked in `docs/archive/LeafPlan.md`. Ownership and promotion rules are tracked in `docs/architecture/BranchRegistry.md`.
 
 Stage V1 adds human/agent-facing diagrams for this tree in
 `docs/visualizations/module_tree.mmd`, and the generated Lean import graph in
