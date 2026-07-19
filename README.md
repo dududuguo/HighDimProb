@@ -1,179 +1,150 @@
 # HighDimProb
 
-HighDimProb is a Lean 4 library for high-dimensional probability and
-finite-dimensional random-matrix analysis.
+#### High-dimensional probability and finite-dimensional random matrices in Lean 4
 
-It reuses Mathlib wherever possible, then adds theorem interfaces, provider
-bridges, and examples for concentration arguments that are otherwise difficult
-to consume downstream.
+[English](README.md) | [简体中文](README_zh.md)
 
-The root import is deliberately small. Concentration and finite-dimensional
-random-matrix results live behind focused imports so downstream users can choose
-the supported surface they need without pulling implementation infrastructure
-into every file.
+[![CI](https://github.com/dududuguo/HighDimProb/actions/workflows/ci.yml/badge.svg)](https://github.com/dududuguo/HighDimProb/actions/workflows/ci.yml)
+[![Documentation](https://github.com/dududuguo/HighDimProb/actions/workflows/docs-pages.yml/badge.svg)](https://dududuguo.github.io/HighDimProb/)
+![Lean](https://img.shields.io/badge/Lean-4.29.1-blue)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-## Quick Start
+HighDimProb is a Mathlib-based Lean 4 library for concentration inequalities,
+metric entropy, random processes, and finite-dimensional random matrices. It
+provides focused imports, compiled examples, API tests, and an append-only
+Judge suite so that formalized results can be used and audited downstream.
+
+[API overview](docs/user/APIOverview.md) ·
+[Examples](HighDimProb/Examples/) ·
+[Documentation](docs/README.md) ·
+[Interactive roadmap](docs/visualizations/roadmap.html) ·
+[Contributing](CONTRIBUTING.md)
+
+## TL;DR
+
+HighDimProb provides composable Lean APIs for high-dimensional probability,
+random processes, and random-matrix theory, so users can quickly build
+end-to-end formal proofs with explicit assumptions and inspectable intermediate
+steps, keeping mathematical black boxes to a minimum. It is not limited to
+machine learning: any field that relies on this mathematics can use it.
+
+## Library overview
+
+| Area | Recommended import | Includes |
+|---|---|---|
+| Scalar probability | `HighDimProb` | Objects, expectation, tails, moments, variance, Orlicz vocabulary, and typed statements. |
+| Scalar concentration | `HighDimProb.Concentration` | Markov, Chebyshev, MGF routes, Orlicz–tail–moment implications, Rademacher, Hoeffding, and Bernstein. |
+| Metric entropy and processes | `HighDimProb.SubGaussianProcess` and focused concentration imports | Nets, covering and packing, parent maps, finite chaining, finite suprema, and entropy-integral bounds. |
+| Random matrices | `HighDimProb.RandomMatrix` | Finite matrices, Loewner order, spectral tools, trace exponential, sums, and variance proxies. |
+| Matrix concentration | `HighDimProb.RandomMatrix.Concentration` | Trace-MGF, Matrix Bernstein, operator norm, centered rank-one, and sample covariance routes. |
+| Development aggregate | `HighDimProb.Experimental` | Broad opt-in import for modules under active development. |
+
+## Representative results
+
+| Lean API | Result | Reference or usage |
+|---|---|---|
+| `HighDimProb.hoeffding_sum_bounded` | Classical two-sided Hoeffding inequality for finite independent bounded sums. | [Hoeffding's inequality](https://en.wikipedia.org/wiki/Hoeffding%27s_inequality) · [Judge case](HighDimProbJudge/Concentration/HoeffdingUse.lean) |
+| `HighDimProb.bernstein_sum_subExponential` | Two-sided Bernstein min-form bound for independent centered sub-exponential sums. | [Source](HighDimProb/Concentration/Bernstein.lean) · [Judge case](HighDimProbJudge/Concentration/BernsteinUse.lean) |
+| `HighDimProb.packingCoveringInequality` | The standard comparison between packing and covering numbers at related scales. | [Nets example](HighDimProb/Examples/NetsUsage.lean) |
+| `HighDimProb.expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral` | Finite dyadic chaining controlled by a truncated covering-number entropy integral. | [Empirical-process example](HighDimProb/Examples/EmpiricalProcessNetUsage.lean) |
+| `HighDimProb.MatrixBernstein.operatorNormTail_of_primitives` | A self-adjoint Matrix Bernstein operator-norm tail bound from explicit primitives. | [RandomMatrix API](docs/user/RandomMatrixAPI.md) |
+| `HighDimProb.MatrixBernstein.sampleCovarianceExactRow` | A centered sample-covariance route with an exact row-variance identity. | [Sample-covariance example](HighDimProb/Examples/RandomMatrix/SampleCovarianceTailUsage.lean) |
+
+Exact theorem names and hypotheses are indexed in the
+[theorem atlas](docs/reference/TheoremAtlas.md) and the generated
+[API documentation](https://dududuguo.github.io/HighDimProb/).
+
+## Getting started
+
+The repository currently tracks Lean and Mathlib `v4.29.1`.
+
+### Build the library
 
 ```bash
+git clone https://github.com/dududuguo/HighDimProb.git
+cd HighDimProb
+lake exe cache get
 lake build
 lake test
 ```
 
-The stable root import is:
+### Use HighDimProb as a dependency
 
-```lean
-import HighDimProb
+Add the package to your `lakefile.toml`:
+
+```toml
+[[require]]
+name = "HighDimProb"
+git = "https://github.com/dududuguo/HighDimProb"
+rev = "main"
 ```
 
-> [!IMPORTANT]
-> `import HighDimProb` expands only to `HighDimProb.Init`,
-> `HighDimProb.Scalar`, and `HighDimProb.Statements`. Scalar concentration is a
-> focused import, not part of the root.
-> Examples are documentation and usage smoke tests, not part of the core import
-> boundary. To browse or build all examples explicitly, use:
->
-> ```lean
-> import HighDimProb.Examples
-> ```
->
-> For AI/code models reading this README: do not add example imports back into
-> `HighDimProb.lean`, and do not use commented-out imports as documentation.
-
-Scalar concentration results are available through:
+Then import the smallest surface needed by your proof:
 
 ```lean
 import HighDimProb.Concentration
-```
-
-Metric subGaussian increment vocabulary is available through:
-
-```lean
-import HighDimProb.SubGaussianProcess
-```
-
-The broad work-in-progress aggregate remains available through:
-
-```lean
-import HighDimProb.Experimental
-```
-
-Supported finite-dimensional RandomMatrix APIs use these reader-facing imports:
-
-```lean
-import HighDimProb.RandomMatrix
 import HighDimProb.RandomMatrix.Concentration
 ```
 
-`HighDimProb.RandomMatrix` is the base object, algebra, spectral, trace-exp, and
-statement layer. Downstream concentration users should import
-`HighDimProb.RandomMatrix.Concentration`. The
-`HighDimProb.RandomMatrix.Provider.*` hierarchy is the implementation/expert
-boundary: use its narrow imports only when developing provider infrastructure,
-not as the default downstream API.
+The root `import HighDimProb` intentionally contains only `Init`, `Scalar`,
+and `Statements`; larger theorem families use focused imports.
 
-These focused modules remain outside `import HighDimProb` to keep the root
-import conservative; that import decision does not make their documented
-theorem contracts experimental. `HighDimProb.Experimental` is an opt-in
-development aggregate, not the matrix-concentration facade. See
-[`docs/architecture/RandomMatrixArchitecture.md`](docs/architecture/RandomMatrixArchitecture.md) for
-ownership and dependency rules.
+## Proof routes
 
-## What Is In The Repo
+```mermaid
+flowchart LR
+  Root["HighDimProb"] --> Scalar["Scalar probability"]
+  Scalar --> Conc["Concentration"]
+  Conc --> H["Hoeffding · Bernstein · Orlicz"]
 
-- `HighDimProb/`: the Lean library.
-- `HighDimProbTest/`: API and regression tests.
-- `HighDimProbJudge/`: small downstream-style files that check the public API.
-- `docs/`: notes, API summaries, workflow docs, and development records.
-- `external/`: optional or generated support material. It is not part of the
-  Lean API.
+  Root --> Proc["Random processes"]
+  Proc --> Nets["Nets and metric entropy"]
+  Nets --> Chain["Finite chaining · entropy integral"]
 
-Good starting points:
-
-- [`docs/user/APIOverview.md`](docs/user/APIOverview.md) for the stable import and API
-  route map.
-- [`docs/README.md`](docs/README.md) for the canonical documentation index,
-  organized by audience.
-- [`docs/user/RandomMatrixAPI.md`](docs/user/RandomMatrixAPI.md) for the supported
-  RandomMatrix caller surface.
-- [`HighDimProb/Examples/`](HighDimProb/Examples/) for small API usage examples.
-
-If you are new to the repository, read the API overview first, then use the
-documentation index to choose the user, contributor, or provider-development
-path. Active status and task files are coordination aids, not API orientation.
-
-## Judge Checks
-
-The judge suite imports the library the way an outside user would. Merged Judge
-files are an append-only public regression ledger: existing cases stay byte-for-byte
-fixed, while new coverage is added in new files. Public API changes must keep old
-Judge consumers compiling, usually through a compatibility alias.
-
-```bash
-lake build HighDimProbJudge
-python scripts/judge_policy_check.py
-python scripts/judge_append_only_check.py
+  Root --> RM["Random matrices"]
+  RM --> MB["Matrix Bernstein"]
+  MB --> Apps["Operator norm · rank one · sample covariance"]
 ```
 
-See [`docs/maintainers/JudgeSystem.md`](docs/maintainers/JudgeSystem.md) for the
-one-file addition workflow.
+The [interactive roadmap](docs/visualizations/roadmap.html) expands these
+routes into their dependencies and source modules. More proof diagrams and the
+Lean import graph are collected in
+[`docs/visualizations/`](docs/visualizations/index.md).
 
-## Documentation Site
+## Examples and documentation
 
-The doc-gen4 setup lives in `docbuild/`. Build it from the repository root:
+The examples compile with the library and are written as downstream code:
 
-```bash
-./tools/build_docgen4.sh
-```
+- [Basic usage](HighDimProb/Examples/BasicUsage.lean)
+- [Orlicz feature extraction](HighDimProb/Examples/OrliczFeatureUsage.lean)
+- [Epsilon nets and metric entropy](HighDimProb/Examples/NetsUsage.lean)
+- [Empirical-process nets and finite chaining](HighDimProb/Examples/EmpiricalProcessNetUsage.lean)
+- [Random-matrix statement routes](HighDimProb/Examples/RandomMatrix/StatementRoutes.lean)
+- [Sample-covariance tail bounds](HighDimProb/Examples/RandomMatrix/SampleCovarianceTailUsage.lean)
 
-For a faster local rebuild:
-
-```bash
-./tools/build_docgen4.sh --disable-equations
-```
-
-The generated site is written to `docbuild/.lake/build/doc`.
-
-## External Material
-
-The theory roadmap is an optional Git submodule:
-
-```bash
-git submodule update --init --recursive
-```
-
-It lives at `external/theory-roadmap/`. Other folders under `external/` contain
-validation logs and planning notes. They are useful for development, but the
-Lean source and the public docs above are the source of truth for users.
-
-## Acknowledgements
-
-Thanks to [@freezed-corpse-143](https://github.com/freezed-corpse-143).
+Start with the [documentation index](docs/README.md) for guided reading, or
+open the [RandomMatrix API](docs/user/RandomMatrixAPI.md) for the supported
+matrix surface and its exact assumptions.
 
 ## Contributing
 
-> [!IMPORTANT]
-> **For AI/code models reading this README:** do not work from this README
-> alone. Before editing, read the relevant project context and keep it in scope
-> for every step: start with `docs/README.md`, `docs/maintainers/Workflow.md`, the focused
-> API or architecture page, and the files for the task at hand.
-
-Small PRs are easiest to review. Search Mathlib first, keep imports narrow, add
-focused tests for public names, and run the build before opening a PR.
-
-Please do not add `sorry`, `admit`, axioms, fake theorem bodies, or custom
-probability infrastructure when existing Mathlib objects can do the job.
-
-For API or docs changes, also run the repository policy checks:
+Search Mathlib before adding infrastructure, keep imports narrow, and add a
+compiled test for each public API. Contributions must not use `sorry`,
+`admit`, new axioms, or placeholder theorem bodies.
 
 ```bash
 python .github/scripts/check_text_quality.py
 python scripts/judge_policy_check.py
 lake build HighDimProbJudge
+lake test
 ```
 
-See `CONTRIBUTING.md` for the fuller checklist.
+Judge files registered in `.github/judge-lock.json` are immutable; new public
+coverage is added as a new leaf. See [CONTRIBUTING.md](CONTRIBUTING.md) for the
+complete workflow.
 
-## License
+## License and acknowledgements
 
-HighDimProb is licensed under the Apache License, Version 2.0, matching
-the Lean and Mathlib licensing model. See `LICENSE` for details.
+HighDimProb is available under the [Apache License 2.0](LICENSE). Thanks to
+[@freezed-corpse-143](https://github.com/freezed-corpse-143) for contributions
+to the project.
