@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "files": {
+    "HighDimProbJudge/Analysis/CompactApproximationUse.lean": "88c4edf34ed1665ff658df27c9cc8d491092bdd79446a87d75c08c1577b91647",
     "HighDimProbJudge/Analysis/DenseSupUse.lean": "0c9fbf9f5e6592be3c4e97e984fa7cd301cac47751931a1512df0597cdf421ac",
     "HighDimProbJudge/Analysis/SumIntegralD2Use.lean": "9994d1aba6142eec78fcc1c857cdc0d22c8a5d2bf1bce249297d7ab322a48e97",
     "HighDimProbJudge/Concentration/BasicUse.lean": "083fcf982f26e0de661ca39b7585029e208df74f58388e93baad8872a74fda23",
@@ -10,6 +11,7 @@
     "HighDimProbJudge/Concentration/MomentUse.lean": "ae5213cda5efd030adc59ed58754ac0c45d5db00167b8016d69b084cd68f1f94",
     "HighDimProbJudge/Concentration/OrliczTailUse.lean": "4e6da6c692b3156c66d80c594be1fb0463d827961b9cc1ef34e128e2d98765fb",
     "HighDimProbJudge/Concentration/RademacherUse.lean": "1bae8b6cde0bf2352eab73baaec774c5d9ad7afa5752707cb17c9276049d5b2c",
+    "HighDimProbJudge/Concentration/SubGaussianMaxD2D3Use.lean": "aeab72465084bf31c030a7a442e101285224821f63f1b3b02ae1f0917d543cb6",
     "HighDimProbJudge/Concentration/SubGaussianProcessUse.lean": "ad9b7a5d215d4c954a40e3668eabb90728ca1f65c5b815a117afb344293386a1",
     "HighDimProbJudge/Concentration/SubGaussianUse.lean": "44a234edd50959ba2f869402872c8a3d95db5db3fc8113cb5c6fbc57423ce761",
     "HighDimProbJudge/Concentration/SumsUse.lean": "9202b7cfb0092401ffd496e84117774873f1ca3207e0cb4eafbfc9fac41eb6d6",

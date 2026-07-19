@@ -131,4 +131,25 @@ theorem tendsto_intervalIntegral_of_leftEndpoint_tendsto
   simpa [Function.comp_def] using
     (hContinuous 0 ⟨le_rfl, hR⟩).tendsto.comp haWithin
 
+/-- A pointwise lower bound by a vanishing residual and lower-endpoint interval
+integrals passes to the full interval integral. -/
+theorem le_intervalIntegral_of_le_residual_add_of_tendsto_zero
+    {f : ℝ → ℝ} {a residual : Nat → ℝ} {B R : ℝ}
+    (hR : 0 ≤ R)
+    (ha_nonneg : ∀ n : Nat, 0 ≤ a n)
+    (ha_le : ∀ n : Nat, a n ≤ R)
+    (ha_tendsto : Filter.Tendsto a Filter.atTop (𝓝 0))
+    (hf : IntervalIntegrable f volume 0 R)
+    (hresidual_tendsto : Filter.Tendsto residual Filter.atTop (𝓝 0))
+    (hbound : ∀ n : Nat, B ≤ residual n + ∫ t in a n..R, f t) :
+    B ≤ ∫ t in (0 : ℝ)..R, f t := by
+  have hIntegral :=
+    tendsto_intervalIntegral_of_leftEndpoint_tendsto
+      hR ha_nonneg ha_le ha_tendsto hf
+  have hSum :
+      Filter.Tendsto (fun n : Nat => residual n + ∫ t in a n..R, f t)
+        Filter.atTop (𝓝 (∫ t in (0 : ℝ)..R, f t)) := by
+    simpa using hresidual_tendsto.add hIntegral
+  exact le_of_tendsto_of_tendsto' tendsto_const_nhds hSum hbound
+
 end HighDimProb

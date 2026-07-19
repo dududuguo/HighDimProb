@@ -18,14 +18,15 @@ history for exact old wording.
 Proved baseline: finite chaining/net/cardinality/finite entropy sum, the D1
 finite anchored supremum bound with a supplied common-anchor path family and
 explicit integrable terminal-residual envelope, the truncated entropy bound,
-the deterministic dense-sup bridge, and the D3 finite-prefix/full-supremum
-expectation passage. The D2 integral subleaf now proves that dyadic lower
-endpoints tend to zero and that interval-integrable truncations converge to the
-full integral over `[0, R]`. D1 reaches the truncated entropy integral; D3 transfers a
-uniform finite-prefix bound along a supplied dense sequence under explicit
-sample continuity, pointwise boundedness, measurability, and full-supremum
-integrability. No stage constructs the geometry or makes the residual vanish.
-No full D2 passage or Dudley endpoint is proved.
+the deterministic dense-sup bridge, compact residual bridges, and the D3
+finite-prefix/full-supremum expectation passage. The D2 integral subleaf now
+also has a residual-plus-integral limit inequality, and the D2-to-D3 assembly
+bridge passes supplied prefix bounds and supplied residual expectation
+convergence to the full interval integral. D1 reaches the truncated entropy
+integral; D3 remains conditional on supplied dense-sequence regularity and
+integrability. No stage constructs the all-level D1 geometry or supplies the
+measurability/domination hookup needed for full D2. No full Dudley endpoint is
+proved.
 
 - [x] **D1 finite anchored supremum.** The finite anchored process supremum is
   bounded by the truncated entropy integral plus an explicit integrable
@@ -33,19 +34,30 @@ No full D2 passage or Dudley endpoint is proved.
   family and shared finite level data.
 - [ ] **D2 small-scale/full-integral passage.** Show the small-scale residual
   tends to `0` under an explicit compact-index/continuous-sample-path,
-  uniform-continuity, or separable-modification contract. The integral half is
-  proved by `tendsto_intervalIntegral_of_leftEndpoint_tendsto`,
+  uniform-continuity, or separable-modification contract. The deterministic
+  compact bridges `tendstoUniformlyOn_abs_sub_of_isCompact`,
+  `tendsto_edist_uniformFun_abs_sub_of_isCompact`, and
+  `tendsto_toReal_edist_uniformFun_abs_sub_of_isCompact` are proved under their
+  explicit compactness, continuity, uniform-approximation, and mapping inputs;
+  they do not connect an actual D1 path/net construction to expectation. The
+  integral half is proved by `tendsto_intervalIntegral_of_leftEndpoint_tendsto`,
   `tendsto_dyadicRadius_atTop`, and
-  `tendsto_intervalIntegral_dyadicRadius_atTop`, reusing Mathlib primitive
-  continuity under an explicit `IntervalIntegrable` hypothesis. The residual
-  family, its domination, and convergence to zero remain open.
+  `tendsto_intervalIntegral_dyadicRadius_atTop`, with
+  `le_intervalIntegral_of_le_residual_add_of_tendsto_zero` handling a supplied
+  residual limit under an explicit `IntervalIntegrable` hypothesis. Full D2
+  remains open: the measurability/domination hookup and the actual all-level D1
+  path/net construction are explicit inputs and are not proved here.
 - [x] **D3 supplied dense-sequence/full supremum passage.**
   `expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound` transfers a
   uniform expected bound on finite prefix maxima to the full anchored
   supremum. It reuses Mathlib partial suprema and monotone integral convergence
   plus `ciSup_eq_ciSup_of_denseRange`; its dense sequence, sample continuity,
   pointwise boundedness, measurability, and full-supremum integrability remain
-  explicit inputs. A separable-space consumer may supply Mathlib's `denseSeq`.
+  explicit inputs. The D2-to-D3 assembly bridge
+  `expect_iSup_abs_sub_anchor_le_mul_intervalIntegral_of_denseRange_of_prefix_bound`
+  is also proved, but only from supplied prefix bounds and supplied residual
+  expectation convergence. A separable-space consumer may supply Mathlib's
+  `denseSeq`.
 - [ ] **D4 exact full Dudley facade.** Assemble the anchored expected-supremum
   conclusion under explicit probability, geometry, increment, regularity, and
   entropy-finiteness assumptions; make no claim until the facade compiles.

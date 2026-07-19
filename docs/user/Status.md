@@ -86,15 +86,18 @@ The current supported surface does not claim:
 Outside RandomMatrix, the random-family layer remains vocabulary rather than a
 filtration/martingale framework. The metric-entropy route now proves the finite
 D1 anchored supremum bound under a supplied common-anchor path family, shared
-finite level data, and an explicit integrable terminal-residual envelope. The
-D3 bridge `expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound` also
-passes a uniform finite-prefix expectation bound to the full anchored supremum
-along a supplied dense sequence, under explicit sample continuity, pointwise
-boundedness, measurability, and full-supremum integrability. The D2 integral
-subleaf proves dyadic radii tend to zero and interval-integrable truncated
-integrals converge to the full integral over `[0, R]`. The route still does not
-construct total-bounded geometry, make the residual vanish, close full D2, or
-prove a full Dudley theorem.
+finite level data, and an explicit integrable terminal-residual envelope. Its
+compact residual bridges and D2 integral limit inequality are proved under
+explicit compactness, mapping, convergence, and interval-integrability inputs.
+The D3 bridge `expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound` and
+the D2-to-D3 assembly bridge
+`expect_iSup_abs_sub_anchor_le_mul_intervalIntegral_of_denseRange_of_prefix_bound`
+use supplied finite-prefix bounds to pass to the full anchored supremum; the
+assembly bridge additionally requires supplied residual expectation convergence.
+Full D2 is not closed: the
+measurability/domination hookup and actual all-level D1 path/net construction
+remain explicit/open. Direct Mathlib dominated-convergence use is tested without
+a duplicate project wrapper. Full Dudley/D4 is not proved.
 
 ## Canonical References
 

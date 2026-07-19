@@ -56,6 +56,16 @@ whose exact import set is validated against the ledger.
 - `HighDimProbJudge/Analysis/SumIntegralD2Use.lean`: generic left-endpoint and
   dyadic lower-endpoint convergence from truncated interval integrals to the
   full integral under explicit interval integrability.
+- `HighDimProbJudge/Analysis/CompactApproximationUse.lean`: compact residual
+  bridge visibility for uniform and `toReal` uniform-function distances.
+- `HighDimProbJudge/Concentration/SubGaussianMaxD2D3Use.lean`: the D2-to-D3
+  assembly bridge under supplied prefix bounds and supplied residual expectation
+  convergence.
+- `HighDimProbJudge/Concentration/SubGaussianProcessUse.lean`: supplied
+  dense-sequence finite-prefix to full-supremum passage. The direct Mathlib
+  dominated-convergence call is covered by a focused `HighDimProbTest` API
+  check without a duplicate project wrapper. These surfaces do not establish
+  full D2 or D4.
 - `HighDimProbJudge/RandomMatrix/OperatorNormUse.lean`: operator-norm
   measurability.
 - `HighDimProbJudge/RandomMatrix/StatementUse.lean`: matrix Bernstein typed

@@ -760,6 +760,92 @@ theorem expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound
     exact Filter.Eventually.of_forall hgPrefix
   simpa [F, f] using hLimit
 
+/-- The full anchored supremum is bounded by the limiting integral when finite
+prefixes have a vanishing residual and a dyadic truncated-integral bound. -/
+theorem expect_iSup_abs_sub_anchor_le_mul_intervalIntegral_of_denseRange_of_prefix_bound
+    {Ω α : Type*} [MeasurableSpace Ω] [TopologicalSpace α]
+    {P : Measure Ω}
+    {X : RandomProcess Ω α ℝ}
+    (u : ℕ → α) (hu : DenseRange u) (anchor : α)
+    (c R : ℝ) (f : ℝ → ℝ) (residual : ℕ → ℕ → ℝ)
+    (hAnchorMeas : Measurable (X anchor))
+    (hUmeas : ∀ n : ℕ, Measurable (X (u n)))
+    (hPathCont : ∀ ω : Ω, Continuous
+      (fun x => |X x ω - X anchor ω|))
+    (hPathBdd : ∀ ω : Ω, BddAbove
+      (Set.range (fun x => |X x ω - X anchor ω|)))
+    (hFullIntegrable : IntegrableRealRandomVariable P
+      (fun ω => ⨆ x : α, |X x ω - X anchor ω|))
+    (hR : 0 ≤ R)
+    (hf : IntervalIntegrable f volume 0 R)
+    (hResidualTendsto : ∀ n : ℕ,
+      Filter.Tendsto (residual n) Filter.atTop (nhds 0))
+    (hPrefixBound : ∀ n m : ℕ,
+      expect P (fun ω =>
+        (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+          (fun k => |X (u k) ω - X anchor ω|)) ≤
+        residual n m + c *
+          (∫ t in dyadicRadius R (m + 1)..R, f t)) :
+    expect P (fun ω => ⨆ x : α, |X x ω - X anchor ω|) ≤
+      c * (∫ t in (0 : ℝ)..R, f t) := by
+  have hScaledIntegrable :
+      IntervalIntegrable (fun t => c * f t) volume 0 R :=
+    hf.const_mul c
+  have hDyadicNonneg : ∀ n : ℕ, 0 ≤ dyadicRadius R (n + 1) := by
+    intro n
+    unfold dyadicRadius
+    exact div_nonneg hR (by positivity)
+  have hDyadicLe : ∀ n : ℕ, dyadicRadius R (n + 1) ≤ R := by
+    intro n
+    unfold dyadicRadius
+    exact div_le_self hR (one_le_pow₀ (by norm_num : (1 : ℝ) ≤ 2))
+  have hDyadicTendsto :
+      Filter.Tendsto (fun n : ℕ => dyadicRadius R (n + 1))
+        Filter.atTop (nhds 0) := by
+    exact (tendsto_dyadicRadius_atTop R).comp
+      (Filter.tendsto_add_atTop_nat 1)
+  have hPrefixUniform : ∀ n : ℕ,
+      expect P (fun ω =>
+        (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+          (fun k => |X (u k) ω - X anchor ω|)) ≤
+        c * (∫ t in (0 : ℝ)..R, f t) := by
+    intro n
+    have hPrefixLimit :
+        expect P (fun ω =>
+          (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+            (fun k => |X (u k) ω - X anchor ω|)) ≤
+          ∫ t in (0 : ℝ)..R, c * f t := by
+      apply le_intervalIntegral_of_le_residual_add_of_tendsto_zero
+        (f := fun t => c * f t)
+        (a := fun m : ℕ => dyadicRadius R (m + 1))
+        (residual := residual n)
+        (B := expect P (fun ω =>
+          (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+            (fun k => |X (u k) ω - X anchor ω|)))
+        hR hDyadicNonneg hDyadicLe hDyadicTendsto hScaledIntegrable
+        (hResidualTendsto n)
+      intro m
+      calc
+        expect P (fun ω =>
+            (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+              (fun k => |X (u k) ω - X anchor ω|)) ≤
+            residual n m + c *
+              (∫ t in dyadicRadius R (m + 1)..R, f t) :=
+          hPrefixBound n m
+        _ = residual n m +
+            ∫ t in dyadicRadius R (m + 1)..R, c * f t := by
+          rw [intervalIntegral.integral_const_mul]
+    calc
+      expect P (fun ω =>
+          (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+            (fun k => |X (u k) ω - X anchor ω|)) ≤
+          ∫ t in (0 : ℝ)..R, c * f t := hPrefixLimit
+      _ = c * (∫ t in (0 : ℝ)..R, f t) := by
+        rw [intervalIntegral.integral_const_mul]
+  exact expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound
+    u hu anchor (c * (∫ t in (0 : ℝ)..R, f t)) hAnchorMeas hUmeas
+    hPathCont hPathBdd hFullIntegrable hPrefixUniform
+
 end
 
 end HighDimProb

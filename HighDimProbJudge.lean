@@ -42,3 +42,5 @@ import HighDimProbJudge.Concentration.SubGaussianProcessUse
 import HighDimProbJudge.Concentration.MetricEntropyUse
 import HighDimProbJudge.Analysis.DenseSupUse
 import HighDimProbJudge.Analysis.SumIntegralD2Use
+import HighDimProbJudge.Concentration.SubGaussianMaxD2D3Use
+import HighDimProbJudge.Analysis.CompactApproximationUse
