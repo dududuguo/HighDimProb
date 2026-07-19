@@ -90,3 +90,4 @@ import HighDimProbTest.MetricEntropyAPI
 import HighDimProbTest.DenseSupAPI
 import HighDimProbTest.CompactApproximationAPI
 import HighDimProbTest.ExpectationConvergenceAPI
+import HighDimProbTest.DudleyAPI
