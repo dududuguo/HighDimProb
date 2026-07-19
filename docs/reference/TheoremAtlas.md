@@ -48,7 +48,17 @@ The proved surface consists of:
 - finite chaining: `chain_sub_eq_sum_range`,
   `expect_abs_sub_chain_le_sum_of_level_sup`, and
   `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`;
-- minimal-cover adapter: `exists_finset_isInternalEpsilonNet_of_totallyBounded`;
+- finite-dimensional volumetric covering bounds: `l1Ball`,
+  `coveringNumber_euclideanBall_le`, and `coveringNumber_l1Ball_le` give the
+  internal `ENat` bounds `ceil((1 + 2R/eps)^card)` and
+  `ceil((1 + 4R/eps)^card)` under `R >= 0`, `eps > 0`, and finite nonempty
+  index assumptions. The l1 bound is obtained volumetrically from
+  `B1 ⊆ B2` (`l1Ball` inside the Euclidean closed ball) plus Mathlib subset
+  comparison, not from the sharper Maurey estimate;
+- minimal-cover adapter: the existing
+  `exists_finset_isInternalEpsilonNet_of_totallyBounded` supplies the
+  totally-bounded-to-exact-finite internal-net facade; no duplicate theorem was
+  added;
 - finite entropy sums: `finiteEntropySum`,
   `expect_abs_sub_chain_le_finiteEntropySum`, and
   `expect_abs_sub_chain_le_finiteEntropySum_of_path`;
@@ -81,14 +91,20 @@ The proved surface consists of:
   D2-to-D3 assembly bridge
   `expect_iSup_abs_sub_anchor_le_mul_intervalIntegral_of_denseRange_of_prefix_bound`
   is proved only under supplied prefix bounds and supplied residual expectation
-  convergence.
+  convergence;
+- full anchored Dudley endpoint:
+  `dudleyEntropyIntegral` constructs dyadic internal nets and compatible paths,
+  makes the finite-prefix residual vanish through the finite subGaussian
+  maximum estimate, and applies the D2-to-D3 assembly theorem. It retains
+  explicit dense-sequence, singleton-anchor-net, total-boundedness,
+  measurability, increment, continuity, boundedness, full-supremum
+  integrability, and entropy `IntervalIntegrable` hypotheses.
 
-No full Dudley theorem is proved. The deterministic integral and compact
-residual subleaves are closed under their explicit hypotheses, but full D2 is
-not closed: the measurability/domination hookup and the actual all-level D1
-path/net construction remain explicit/open. The D3 assembly bridge does not
-provide either input, and D4 remains open. Direct Mathlib dominated-convergence
-use is tested without a duplicate project wrapper.
+Thus the Dudley endpoint is proved under its stated boundary conditions. The
+theorem does not manufacture sample regularity, full-supremum integrability, or
+entropy integrability from the increment MGF assumption alone. Direct Mathlib
+dominated-convergence use remains tested independently without a duplicate
+project wrapper.
 Current prioritization is tracked in [`TODO.md`](../maintainers/TODO.md).
 
 ## RandomMatrix

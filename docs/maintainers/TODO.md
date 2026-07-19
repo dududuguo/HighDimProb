@@ -15,26 +15,21 @@ history for exact old wording.
 
 ### Dudley Closure Roadmap
 
-Proved baseline: finite chaining/net/cardinality/finite entropy sum, the D1
-finite anchored supremum bound with a supplied common-anchor path family and
-explicit integrable terminal-residual envelope, the truncated entropy bound,
-the deterministic dense-sup bridge, compact residual bridges, and the D3
-finite-prefix/full-supremum expectation passage. The D2 integral subleaf now
-also has a residual-plus-integral limit inequality, and the D2-to-D3 assembly
-bridge passes supplied prefix bounds and supplied residual expectation
-convergence to the full interval integral. D1 reaches the truncated entropy
-integral; D3 remains conditional on supplied dense-sequence regularity and
-integrability. No stage constructs the all-level D1 geometry or supplies the
-measurability/domination hookup needed for full D2. No full Dudley endpoint is
-proved.
+The Dudley route is closed under explicit boundary conditions. D1 supplies the
+finite anchored entropy bound, D2/D3 supply the residual/integral and dense-sup
+passages, and `dudleyEntropyIntegral` constructs the dyadic finite geometry and
+controls its terminal residual by the finite subGaussian maximum theorem. The
+endpoint retains explicit dense-sequence, singleton-anchor-net,
+total-boundedness, sample regularity, full-supremum integrability, and entropy
+interval-integrability assumptions.
 
 - [x] **D1 finite anchored supremum.** The finite anchored process supremum is
   bounded by the truncated entropy integral plus an explicit integrable
   terminal-residual envelope, under a supplied common-anchor compatible path
   family and shared finite level data.
-- [ ] **D2 small-scale/full-integral passage.** Show the small-scale residual
-  tends to `0` under an explicit compact-index/continuous-sample-path,
-  uniform-continuity, or separable-modification contract. The deterministic
+- [x] **D2 small-scale/full-integral passage.** The finite-prefix residual in
+  `dudleyEntropyIntegral` tends to `0` by a finite subGaussian maximum estimate;
+  no dominated-convergence adapter is needed for this endpoint. The deterministic
   compact bridges `tendstoUniformlyOn_abs_sub_of_isCompact`,
   `tendsto_edist_uniformFun_abs_sub_of_isCompact`, and
   `tendsto_toReal_edist_uniformFun_abs_sub_of_isCompact` are proved under their
@@ -44,9 +39,7 @@ proved.
   `tendsto_dyadicRadius_atTop`, and
   `tendsto_intervalIntegral_dyadicRadius_atTop`, with
   `le_intervalIntegral_of_le_residual_add_of_tendsto_zero` handling a supplied
-  residual limit under an explicit `IntervalIntegrable` hypothesis. Full D2
-  remains open: the measurability/domination hookup and the actual all-level D1
-  path/net construction are explicit inputs and are not proved here.
+  residual limit under an explicit `IntervalIntegrable` hypothesis.
 - [x] **D3 supplied dense-sequence/full supremum passage.**
   `expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound` transfers a
   uniform expected bound on finite prefix maxima to the full anchored
@@ -58,9 +51,17 @@ proved.
   is also proved, but only from supplied prefix bounds and supplied residual
   expectation convergence. A separable-space consumer may supply Mathlib's
   `denseSeq`.
-- [ ] **D4 exact full Dudley facade.** Assemble the anchored expected-supremum
-  conclusion under explicit probability, geometry, increment, regularity, and
-  entropy-finiteness assumptions; make no claim until the facade compiles.
+- [x] **D4 exact full Dudley facade.** `dudleyEntropyIntegral` proves the
+  anchored expected-supremum entropy-integral bound under explicit probability,
+  geometry, increment, regularity, and entropy-integrability assumptions.
+
+No active Dudley closure leaf remains. A future API refinement may weaken or
+derive the explicit full-supremum integrability assumption, but must not replace
+the current theorem with a stronger unproved claim.
+
+- Optional/nonblocking covering refinement: prove the sharper Maurey l1 bound
+  `(2d + 1)^ceil(R^2 / eps^2)`; the current volumetric covering bounds are
+  proved and supported.
 
 Do not build:
 

@@ -87,6 +87,7 @@ import HighDimProbTest.ExamplesAPI
 import HighDimProbTest.PrecisionDAAPI
 import HighDimProbTest.SubGaussianProcessAPI
 import HighDimProbTest.MetricEntropyAPI
+import HighDimProbTest.CoveringNumberAPI
 import HighDimProbTest.DenseSupAPI
 import HighDimProbTest.CompactApproximationAPI
 import HighDimProbTest.ExpectationConvergenceAPI

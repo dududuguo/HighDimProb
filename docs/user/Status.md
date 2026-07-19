@@ -92,12 +92,25 @@ explicit compactness, mapping, convergence, and interval-integrability inputs.
 The D3 bridge `expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound` and
 the D2-to-D3 assembly bridge
 `expect_iSup_abs_sub_anchor_le_mul_intervalIntegral_of_denseRange_of_prefix_bound`
-use supplied finite-prefix bounds to pass to the full anchored supremum; the
-assembly bridge additionally requires supplied residual expectation convergence.
-Full D2 is not closed: the
-measurability/domination hookup and actual all-level D1 path/net construction
-remain explicit/open. Direct Mathlib dominated-convergence use is tested without
-a duplicate project wrapper. Full Dudley/D4 is not proved.
+remain reusable supplied-bound interfaces. The public
+`dudleyEntropyIntegral` theorem now closes the anchored Dudley endpoint over a
+totally bounded subtype `K`: it constructs the dyadic finite geometry, controls
+the finite-prefix residual by the finite subGaussian maximum bound, and invokes
+the existing D2-to-D3 passage. The theorem explicitly assumes a dense sequence
+in `K`, a singleton anchor `R`-net, measurable subGaussian increments, positive
+parameters, continuous and bounded sample paths on `K`, integrability of the
+full anchored supremum, and interval integrability of the entropy integrand at
+zero. It does not derive those regularity or integrability assumptions.
+
+The finite-dimensional covering surface is also proved and publicly imported by
+`HighDimProb.Geometry`: `l1Ball` and the internal `ENat` bounds
+`coveringNumber_euclideanBall_le` and `coveringNumber_l1Ball_le` give
+`ceil((1 + 2R/eps)^card)` and `ceil((1 + 4R/eps)^card)` under `R >= 0`,
+`eps > 0`, and finite nonempty index assumptions. The l1 result is the
+volumetric route through `B1 ⊆ B2` (`l1Ball` inside the Euclidean closed ball)
+and Mathlib subset comparison, not the sharper Maurey estimate. The existing
+`exists_finset_isInternalEpsilonNet_of_totallyBounded` supplies the exact finite
+internal-net facade; no duplicate constructor was added.
 
 ## Canonical References
 
