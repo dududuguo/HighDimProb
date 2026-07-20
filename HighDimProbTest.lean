@@ -12,6 +12,7 @@ import HighDimProbTest.OrliczAPI
 import HighDimProbTest.SubGaussianAPI
 import HighDimProbTest.SubExponentialAPI
 import HighDimProbTest.ConcentrationAPI
+import HighDimProbTest.HansonWrightAPI
 import HighDimProbTest.LayerCakeAPI
 import HighDimProbTest.OrliczToTailAPI
 import HighDimProbTest.TailToOrliczAPI

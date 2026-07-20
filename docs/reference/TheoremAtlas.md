@@ -107,6 +107,18 @@ dominated-convergence use remains tested independently without a duplicate
 project wrapper.
 Current prioritization is tracked in [`TODO.md`](../maintainers/TODO.md).
 
+## Hanson-Wright
+
+The finite-dimensional Hanson-Wright endpoint is `proven` through
+`HighDimProb.HansonWright.hanson_wright_inequality_hdp`. For a finite real
+matrix `A` and finite coordinate family `X` on a probability space, it assumes
+`K > 0`, `iIndepFun X μ`, and coordinate `HasSubgaussianMGF` bounds at `K^2`.
+It returns a centered quadratic-form two-sided tail with universal `c > 0` and
+the rate `min(t^2 / (K^4 * Frobenius^2), t / (K^2 * operator))`. No matrix
+symmetry premise or infinite-dimensional extension is claimed. The source and
+focused consumer are [`HansonWright.lean`](../../HighDimProb/Concentration/HansonWright.lean)
+and [`HansonWrightAPI.lean`](../../HighDimProbTest/HansonWrightAPI.lean).
+
 ## RandomMatrix
 
 The RandomMatrix layer has a supported finite-dimensional base and the public

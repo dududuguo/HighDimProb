@@ -81,6 +81,10 @@ Risk gates:
 
 ## Active RandomMatrix Work
 
+- Hanson-Wright is closed at the stable finite real-matrix endpoint
+  `HighDimProb.HansonWright.hanson_wright_inequality_hdp`; no Hanson-Wright task
+  remains active. Keep any extension separate from this finite-coordinate,
+  no-symmetry contract.
 - Keep the Matrix Bernstein API boundary honest: the generated-history
   `MatrixBernstein.*_of_primitives` facades close the canonical optimized and
   high-probability statements, but do not provide automatic variance-proxy

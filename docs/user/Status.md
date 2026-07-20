@@ -37,6 +37,11 @@ those hypotheses are discharged automatically.
   including the normalized high-probability specialization. Their contracts
   keep matrix measurability, coordinate moment assumptions, row bounds,
   independence, and parameter-domain conditions explicit.
+- The finite-dimensional Hanson-Wright endpoint
+  `HighDimProb.HansonWright.hanson_wright_inequality_hdp` is proved for finite
+  real matrices and finite coordinate families under explicit `K > 0`,
+  `iIndepFun`, and coordinate `HasSubgaussianMGF` assumptions at `K^2`. It has
+  no matrix symmetry premise and makes no infinite-dimensional claim.
 
 Across these results, theorem statements may require centeredness,
 self-adjointness, independence, measurability, matrix/trace-exponential
@@ -78,6 +83,7 @@ The current supported surface does not claim:
 - automatic application-specific or generally sharp variance-proxy bounds;
 - sample-covariance concentration without the theorem's explicit
   measurability, moment, boundedness, independence, and parameter hypotheses;
+- an infinite-dimensional Hanson-Wright extension;
 - concrete support/effective-rank certificates beyond the proved explicit
   certificate consumers; or
 - proof of every declaration in the hardbone statement atlas: typed statement

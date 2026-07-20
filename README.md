@@ -33,7 +33,7 @@ machine learning: any field that relies on this mathematics can use it.
 | Area | Recommended import | Includes |
 |---|---|---|
 | Scalar probability | `HighDimProb` | Objects, expectation, tails, moments, variance, Orlicz vocabulary, and typed statements. |
-| Scalar concentration | `HighDimProb.Concentration` | Markov, Chebyshev, MGF routes, Orlicz–tail–moment implications, Rademacher, Hoeffding, and Bernstein. |
+| Concentration | `HighDimProb.Concentration` | Markov, Chebyshev, MGF routes, Orlicz–tail–moment implications, Rademacher, Hoeffding, Bernstein, and finite Hanson-Wright. |
 | Metric entropy and processes | `HighDimProb.SubGaussianProcess` and focused concentration imports | Nets, covering and packing, parent maps, finite chaining, finite suprema, and entropy-integral bounds. |
 | Random matrices | `HighDimProb.RandomMatrix` | Finite matrices, Loewner order, spectral tools, trace exponential, sums, and variance proxies. |
 | Matrix concentration | `HighDimProb.RandomMatrix.Concentration` | Trace-MGF, Matrix Bernstein, operator norm, centered rank-one, and sample covariance routes. |
@@ -51,6 +51,7 @@ machine learning: any field that relies on this mathematics can use it.
 | `HighDimProb.l1Ball`, `HighDimProb.coveringNumber_euclideanBall_le`, `HighDimProb.coveringNumber_l1Ball_le` | Volumetric internal covering bounds: `ceil((1 + 2R/eps)^card)` for Euclidean balls and `ceil((1 + 4R/eps)^card)` for l1-balls, with `R >= 0`, `eps > 0`, and a finite nonempty index. The l1 bound uses `B1 ⊆ B2` (`l1Ball` inside the Euclidean closed ball) and Mathlib subset comparison, not the sharper Maurey estimate. | [Source](HighDimProb/Geometry/CoveringNumber.lean) · [API test](HighDimProbTest/CoveringNumberAPI.lean) · [Facade](HighDimProb/Geometry.lean) |
 | `HighDimProb.MatrixBernstein.operatorNormTail_of_primitives` | A self-adjoint Matrix Bernstein operator-norm tail bound from explicit primitives. | [RandomMatrix API](docs/user/RandomMatrixAPI.md) |
 | `HighDimProb.MatrixBernstein.sampleCovarianceExactRow` | A centered sample-covariance route with an exact row-variance identity. | [Sample-covariance example](HighDimProb/Examples/RandomMatrix/SampleCovarianceTailUsage.lean) |
+| `HighDimProb.HansonWright.hanson_wright_inequality_hdp` | Finite real-matrix Hanson-Wright two-sided tail for the centered quadratic form under explicit coordinate sub-Gaussian MGF bounds; no matrix symmetry premise. | [Source](HighDimProb/Concentration/HansonWright.lean) · [API test](HighDimProbTest/HansonWrightAPI.lean) |
 
 Exact theorem names and hypotheses are indexed in the
 [theorem atlas](docs/reference/TheoremAtlas.md) and the generated

@@ -28,6 +28,7 @@ git diff --check
 
 - Root import smoke tests: `HighDimProbTest/Smoke.lean`, `PublicImports.lean`, `BranchImports.lean`, `ExperimentalImports.lean`.
 - Scalar API tests: probability, tail, Lp/moment, Orlicz, subGaussian, subExponential, real-inequality helpers, and scalar concentration files under `HighDimProbTest`.
+- Focused Hanson-Wright API check: `HighDimProbTest/HansonWrightAPI.lean`; run `lake build HighDimProb.Concentration.HansonWright` and `lake build HighDimProbTest.HansonWrightAPI` when changing the finite real-matrix endpoint or its public names.
 - Random-family and process API checks: `HighDimProbTest/RandomFamilyAPI.lean` plus `BranchImports.lean` and `ExperimentalImports.lean`.
 - Focused subGaussian-process API check: `HighDimProbTest/SubGaussianProcessAPI.lean`; run `lake build HighDimProbTest.SubGaussianProcessAPI` when changing `HighDimProb.SubGaussianProcess` or its public names.
 - Focused SubGaussian maximum/chaining API check: `HighDimProbTest/SubGaussianMaxAPI.lean`; it covers `finiteEntropySum`, the `Fin`-indexed single-path bounds, the D1 finite anchored supremum bound with a supplied common-anchor path family and explicit integrable terminal-residual envelope, the D3 supplied dense-sequence/full-supremum expectation passage, and the D2-to-D3 assembly bridge under supplied prefix bounds and supplied residual expectation convergence. Run `lake build HighDimProbTest.SubGaussianMaxAPI` when changing `HighDimProb.Concentration.SubGaussianMax` or its public names.

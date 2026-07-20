@@ -1,7 +1,7 @@
 # Theory Roadmap — Leaf-Level Formalization Tasks
 > 生成于 2026-06-28
 > 共 59 个叶任务（从原 22 个概念桶细化）
-> ✅ 37 已完成 • 🔄 10 进行中 • 🚫 4 阻塞 • ⏳ 8 待开始
+> ✅ 38 已完成 • 🔄 10 进行中 • 🚫 4 阻塞 • ⏳ 7 待开始
 
 ## 粒度口径
 
@@ -197,9 +197,9 @@
 - [ ] ⏳ **full-matrix-bernstein** — 完整 Matrix Bernstein 定理：仅在 provider 缺口关闭后推进 (依赖: epstein-lieb-concavity, conditioning-independence-bridge, trace-exp-integrability-propagation, variance-proxy-sharp-provider, tail-event-domination)
   - 状态: `pending` / 待开始
   - 模块/文档: `HighDimProb/RandomMatrix/ConcentrationStatements.lean`
-- [ ] ⏳ **hanson-wright** — Hanson-Wright statement / proof route (依赖: full-matrix-bernstein, subgaussian-vector)
-  - 状态: `pending` / 待开始
-  - 模块/文档: `docs/archive/LeafPlan.md; HighDimProb/RandomMatrix/Statements.lean`
+- [x] ✅ **hanson-wright** — 有限实矩阵 Hanson-Wright 中心二次型双侧尾界
+  - 状态: `integrated` / 已完成
+  - 模块/文档: `HighDimProb/Concentration/HansonWright.lean; HighDimProbTest/HansonWrightAPI.lean`
 - [ ] ⏳ **covariance-estimation** — 协方差估计与 operator-norm deviation theorem family (依赖: sample-covariance-compact-route, full-matrix-bernstein)
   - 状态: `pending` / 待开始
   - 模块/文档: `docs/archive/LeafPlan.md; HighDimProb/RandomMatrix/SampleCovariance.lean`
