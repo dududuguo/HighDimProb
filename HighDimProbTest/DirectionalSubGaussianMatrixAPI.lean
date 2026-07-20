@@ -14,6 +14,7 @@ open scoped BigOperators
 #check @HighDimProb.centeredMatrixQuadraticForm_smul
 #check @HighDimProb.centeredMatrixQuadraticForm_neg
 #check @HighDimProb.centeredMatrixQuadraticForm_randomMatrixSum
+#check @HighDimProb.matrixQuadraticForm_centeredRandomMatrix
 
 -- Predicate projection / elimination API.
 #check @HighDimProb.DirectionallySubGaussianSelfAdjointMatrix.K_pos
@@ -28,6 +29,15 @@ open scoped BigOperators
 #check @HighDimProb.directionallySubGaussianSelfAdjointMatrix_sum_of_iIndepFun
 #check @HighDimProb.directionallySubGaussianSelfAdjointMatrix_upperTail
 #check @HighDimProb.directionallySubGaussianSelfAdjointMatrix_lowerTail
+
+/-- Consumer: entrywise matrix centering agrees directionwise with the scalar
+centering convention used by the directional predicate. -/
+example {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    {X : RandomMatrix Omega n n} (hInt : IntegrableRandomMatrix P X)
+    (v : Fin n → Real) (omega : Omega) :
+    matrixQuadraticForm ((centeredRandomMatrix P X) omega) v =
+      centeredMatrixQuadraticForm P X v omega :=
+  matrixQuadraticForm_centeredRandomMatrix hInt v omega
 
 /-- Downstream parameter-inferability check: the independent finite-sum closure
 composes with the fixed-direction upper tail, with the proxy scale

@@ -45,6 +45,14 @@ those hypotheses are discharged automatically.
   matrix/trace-exponential integrability premises; the tail endpoint additionally
   retains the aggregate proxy spectral bound and uses those integrability
   premises at `theta = t / sigmaSq`.
+- The separate directional matrix sub-Gaussian surface proves independent-sum
+  closure and an epsilon-net operator-norm tail with prefactor
+  `2 * N.card`. Its public `IsUnitSphereNet` facade uses the explicit finite
+  Euclidean-vector convention of the RandomMatrix layer. The tail endpoint is
+  restricted to positive finite dimension `Fin (n + 1)` and keeps
+  `0 <= eps < 1 / 2`, `0 <= t`, probability, and entrywise integrability
+  explicit. It neither constructs the net nor derives a dimension-only
+  cardinality bound, and it does not imply the Loewner matrix-MGF route.
 - Exact-row centered-rank-one and sample-covariance endpoints are also proved,
   including the normalized high-probability specialization. Their contracts
   keep matrix measurability, coordinate moment assumptions, row bounds,

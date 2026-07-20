@@ -6,7 +6,7 @@ import HighDimProb.Concentration.MGF
 import HighDimProb.Concentration.SubGaussianSums
 
 /-!
-# Directional sub-Gaussian self-adjoint random matrices (phase 1)
+# Directional sub-Gaussian self-adjoint random matrices
 
 This module introduces a **directional** sub-Gaussian predicate for self-adjoint
 random matrices, phrased through the scalar sub-Gaussian moment-generating
@@ -19,9 +19,10 @@ predicate `MatrixSubGaussianMGF`
 the two formulations should not be treated as a direct implication in either
 direction. In particular, directional control does not supply the Loewner
 matrix-MGF bound or its `n`-prefactor trace route. The latter stays with
-`MatrixSubGaussianMGF` and the Tropp primitive; directional operator-norm
-control instead requires a future ε-net argument, with a covering-number
-factor such as `9^n`.
+`MatrixSubGaussianMGF` and the Tropp primitive. The separate module
+`HighDimProb.RandomMatrix.DirectionalOperatorNorm` supplies an ε-net route with
+an explicit finite-net cardinality factor; constructing a net and deriving a
+dimension-only cardinality bound remain separate steps.
 
 The scale arithmetic and the exponential tail constants come verbatim from the
 scalar `CenteredSubGaussianMGF` layer: independent finite sums use the proxy
@@ -134,6 +135,47 @@ theorem centeredMatrixQuadraticForm_randomMatrixSum {Omega : Type*}
   congr 1
   simp only [expect]
   exact integral_finset_sum Finset.univ (fun i _ => hInt i)
+
+/-- Quadratic form of the entrywise matrix mean equals the mean of the quadratic
+form, under entrywise integrability. -/
+private theorem matrixQuadraticForm_matrixExpect_eq_expect {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    {X : RandomMatrix Omega n n} (hInt : IntegrableRandomMatrix P X)
+    (v : Fin n -> Real) :
+    matrixQuadraticForm (matrixExpect P X) v =
+      expect P (fun omega => matrixQuadraticForm (X omega) v) := by
+  have hInt_ij : ∀ i j, Integrable (fun omega => v i * X omega i j * v j) P := by
+    intro i j
+    exact ((hInt i j).const_mul (v i)).mul_const (v j)
+  have hInt_i :
+      ∀ i, Integrable (fun omega => ∑ j : Fin n, v i * X omega i j * v j) P := by
+    intro i
+    exact integrable_finset_sum _ (fun j _ => hInt_ij i j)
+  simp only [matrixQuadraticForm, expect]
+  rw [integral_finset_sum _ (fun i _ => hInt_i i)]
+  refine Finset.sum_congr rfl (fun i _ => ?_)
+  rw [integral_finset_sum _ (fun j _ => hInt_ij i j)]
+  refine Finset.sum_congr rfl (fun j _ => ?_)
+  rw [matrixExpect_apply, expect, integral_mul_const, integral_const_mul]
+  rfl
+
+/-- The fixed-direction quadratic form of the centered random matrix `X - EX`
+equals the centered scalar quadratic form `centeredMatrixQuadraticForm`, under
+entrywise integrability of `X`.
+
+This is the public bridge from entrywise matrix centering to the scalar
+centering convention used by the directional sub-Gaussian predicate. -/
+theorem matrixQuadraticForm_centeredRandomMatrix {Omega : Type*}
+    [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
+    {X : RandomMatrix Omega n n} (hInt : IntegrableRandomMatrix P X)
+    (v : Fin n -> Real) (omega : Omega) :
+    matrixQuadraticForm ((centeredRandomMatrix P X) omega) v =
+      centeredMatrixQuadraticForm P X v omega := by
+  have hcRM : (centeredRandomMatrix P X) omega = X omega - matrixExpect P X := by
+    funext i j
+    simp only [centeredRandomMatrix_apply, Matrix.sub_apply]
+  rw [hcRM, matrixQuadraticForm_sub, centeredMatrixQuadraticForm_apply,
+    matrixQuadraticForm_matrixExpect_eq_expect hInt]
 
 /-- Directional sub-Gaussian self-adjoint random matrix.
 

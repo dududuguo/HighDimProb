@@ -28,7 +28,10 @@ with proxy scale `sqrt (∑ᵢ Kᵢ²)`.
 This module does **not** attempt the (generally false) implication from directional
 quadratic-form sub-Gaussianity to a Loewner matrix-MGF or an `n·exp(λ²K²/2)`
 trace-MGF; the operator-norm control here carries a covering-number `|N|`
-prefactor, not a dimension-`n` trace prefactor.
+prefactor, not a dimension-`n` trace prefactor. It consumes an explicit finite
+net and does not yet construct one or prove a dimension-only cardinality bound.
+The public tail theorems use matrices indexed by `Fin (n + 1)`, deliberately
+excluding the zero-dimensional sphere where no unit-vector net exists.
 
 Verified references:
 * Operator norm: https://en.wikipedia.org/wiki/Operator_norm
@@ -105,23 +108,22 @@ Euclidean metric (`0 ≤ ε < 1/2`), and every net quadratic form obeys
 Formula reference: the standard ε-net bound for the spectral norm of a symmetric
 matrix; see https://en.wikipedia.org/wiki/Operator_norm and
 https://en.wikipedia.org/wiki/Covering_number -/
-theorem deterministicOperatorNorm_le_of_isUnitVectorNet {n : Nat}
+theorem deterministicOperatorNorm_le_of_isUnitSphereNet {n : Nat}
     {A : Matrix (Fin (n + 1)) (Fin (n + 1)) Real} (hA : IsSelfAdjointMatrix A)
     {N : Finset (Fin (n + 1) -> Real)} {eps M : Real}
     (heps0 : 0 <= eps) (heps : eps < 1 / 2)
-    (hNunit : ∀ v ∈ N, IsUnitVector v)
-    (hNcover : ∀ x, IsUnitVector x → ∃ v ∈ N, vectorSqNorm (x - v) <= eps ^ 2)
+    (hN : IsUnitSphereNet N eps)
     (hM : ∀ v ∈ N, |matrixQuadraticForm A v| <= M) :
     deterministicOperatorNorm A <= (1 - 2 * eps)⁻¹ * M := by
   obtain ⟨x, hxU, hxEq⟩ :=
     exists_unitVector_abs_matrixQuadraticForm_eq_deterministicOperatorNorm hA
-  obtain ⟨v, hvN, hvcov⟩ := hNcover x hxU
+  obtain ⟨v, hvN, hvcov⟩ := hN.cover x hxU
   have h12 : (0 : Real) < 1 - 2 * eps := by linarith
   have hAnn : (0 : Real) <= deterministicOperatorNorm A := norm_nonneg A
   have hnx : norm (WithLp.toLp 2 x : EuclideanSpace Real (Fin (n + 1))) = 1 :=
     norm_toLp_eq_one_of_isUnitVector hxU
   have hnv : norm (WithLp.toLp 2 v : EuclideanSpace Real (Fin (n + 1))) = 1 :=
-    norm_toLp_eq_one_of_isUnitVector (hNunit v hvN)
+    norm_toLp_eq_one_of_isUnitVector (hN.unit v hvN)
   have hnxv :
       norm (WithLp.toLp 2 (x - v) : EuclideanSpace Real (Fin (n + 1))) <= eps := by
     have h1 :
@@ -174,46 +176,6 @@ theorem deterministicOperatorNorm_le_of_isUnitVectorNet {n : Nat}
     _ <= (1 - 2 * eps)⁻¹ * M :=
           mul_le_mul_of_nonneg_left key (le_of_lt (inv_pos.mpr h12))
 
-/-- Quadratic form of the entrywise matrix mean equals the mean of the quadratic
-form, under entrywise integrability. -/
-private theorem matrixQuadraticForm_matrixExpect_eq_expect {Omega : Type*}
-    [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
-    {X : RandomMatrix Omega n n} (hInt : IntegrableRandomMatrix P X)
-    (v : Fin n -> Real) :
-    matrixQuadraticForm (matrixExpect P X) v =
-      expect P (fun omega => matrixQuadraticForm (X omega) v) := by
-  have hInt_ij : ∀ i j, Integrable (fun omega => v i * X omega i j * v j) P := by
-    intro i j
-    exact ((hInt i j).const_mul (v i)).mul_const (v j)
-  have hInt_i :
-      ∀ i, Integrable (fun omega => ∑ j : Fin n, v i * X omega i j * v j) P := by
-    intro i
-    exact integrable_finset_sum _ (fun j _ => hInt_ij i j)
-  simp only [matrixQuadraticForm, expect]
-  rw [integral_finset_sum _ (fun i _ => hInt_i i)]
-  refine Finset.sum_congr rfl (fun i _ => ?_)
-  rw [integral_finset_sum _ (fun j _ => hInt_ij i j)]
-  refine Finset.sum_congr rfl (fun j _ => ?_)
-  rw [matrixExpect_apply, expect, integral_mul_const, integral_const_mul]
-  rfl
-
-/-- The fixed-direction quadratic form of the centered random matrix `X - EX`
-equals the centered scalar quadratic form `centeredMatrixQuadraticForm`, under
-entrywise integrability of `X`. This bridges the entrywise-centering convention
-of `centeredRandomMatrix` to the scalar-centering convention controlled by the
-directional predicate. -/
-theorem matrixQuadraticForm_centeredRandomMatrix {Omega : Type*}
-    [MeasurableSpace Omega] {P : Measure Omega} {n : Nat}
-    {X : RandomMatrix Omega n n} (hInt : IntegrableRandomMatrix P X)
-    (v : Fin n -> Real) (omega : Omega) :
-    matrixQuadraticForm ((centeredRandomMatrix P X) omega) v =
-      centeredMatrixQuadraticForm P X v omega := by
-  have hcRM : (centeredRandomMatrix P X) omega = X omega - matrixExpect P X := by
-    funext i j
-    simp only [centeredRandomMatrix_apply, Matrix.sub_apply]
-  rw [hcRM, matrixQuadraticForm_sub, centeredMatrixQuadraticForm_apply,
-    matrixQuadraticForm_matrixExpect_eq_expect hInt]
-
 /-- Event inclusion: the operator-norm upper-tail event of a pointwise
 self-adjoint random matrix is covered by the finite union, over the net, of the
 absolute-tail events of its fixed-direction quadratic forms at threshold
@@ -224,8 +186,7 @@ private theorem operatorNorm_upperTailEvent_subset_biUnion {Omega : Type*}
     (hYSA : ∀ omega, IsSelfAdjointMatrix (Y omega))
     {N : Finset (Fin (n + 1) -> Real)} {eps t : Real}
     (heps0 : 0 <= eps) (heps : eps < 1 / 2)
-    (hNunit : ∀ v ∈ N, IsUnitVector v)
-    (hNcover : ∀ x, IsUnitVector x → ∃ v ∈ N, vectorSqNorm (x - v) <= eps ^ 2) :
+    (hN : IsUnitSphereNet N eps) :
     upperTailEvent (operatorNorm Y) t ⊆
       ⋃ v ∈ N, absTailEvent (fun omega => matrixQuadraticForm (Y omega) v)
         ((1 - 2 * eps) * t) := by
@@ -235,12 +196,12 @@ private theorem operatorNorm_upperTailEvent_subset_biUnion {Omega : Type*}
   have h12 : (0 : Real) < 1 - 2 * eps := by linarith
   obtain ⟨x0, hx0U, _⟩ :=
     exists_unitVector_abs_matrixQuadraticForm_eq_deterministicOperatorNorm (hYSA omega)
-  obtain ⟨v0, hv0N, _⟩ := hNcover x0 hx0U
+  obtain ⟨v0, hv0N, _⟩ := hN.cover x0 hx0U
   have hNe : N.Nonempty := ⟨v0, hv0N⟩
   obtain ⟨vmax, hvmaxN, hvmax⟩ :=
     Finset.exists_max_image N (fun v => |matrixQuadraticForm (Y omega) v|) hNe
   have hdet :=
-    deterministicOperatorNorm_le_of_isUnitVectorNet (hYSA omega) heps0 heps hNunit hNcover
+    deterministicOperatorNorm_le_of_isUnitSphereNet (hYSA omega) heps0 heps hN
       (M := |matrixQuadraticForm (Y omega) vmax|) (fun w hw => hvmax w hw)
   have hprod :
       (1 - 2 * eps) * deterministicOperatorNorm (Y omega) <=
@@ -288,6 +249,8 @@ finite `ε`-net `N` of unit vectors (`0 ≤ ε < 1/2`), the operator norm of the
 centered matrix `X - EX` obeys
 `P(‖X - EX‖op ≥ t) ≤ 2·|N|·exp(-((1-2ε)²·t²)/(4K²))`.
 
+Entrywise integrability is an explicit premise: the directional predicate
+currently controls fixed-direction quadratic forms, not matrix entries.
 The exponential constant `4K²` is exactly the one from the scalar
 `CenteredSubGaussianMGF` tails; the prefactor is the net cardinality `|N|`, not a
 dimension factor. -/
@@ -298,8 +261,7 @@ theorem directionallySubGaussianSelfAdjointMatrix_operatorNorm_netTail {Omega : 
     (hInt : IntegrableRandomMatrix P X)
     {N : Finset (Fin (n + 1) -> Real)} {eps t : Real}
     (heps0 : 0 <= eps) (heps : eps < 1 / 2)
-    (hNunit : ∀ v ∈ N, IsUnitVector v)
-    (hNcover : ∀ x, IsUnitVector x → ∃ v ∈ N, vectorSqNorm (x - v) <= eps ^ 2)
+    (hN : IsUnitSphereNet N eps)
     (ht : 0 <= t) :
     P (upperTailEvent (operatorNorm (centeredRandomMatrix P X)) t) <=
       ENNReal.ofReal
@@ -311,7 +273,7 @@ theorem directionallySubGaussianSelfAdjointMatrix_operatorNorm_netTail {Omega : 
     mul_nonneg (by linarith) ht
   have hsub :=
     operatorNorm_upperTailEvent_subset_biUnion (Y := centeredRandomMatrix P X) (t := t)
-      hYSA heps0 heps hNunit hNcover
+      hYSA heps0 heps hN
   have hbridge : ∀ v : Fin (n + 1) -> Real,
       (fun omega => matrixQuadraticForm ((centeredRandomMatrix P X) omega) v) =
         centeredMatrixQuadraticForm P X v := by
@@ -332,7 +294,7 @@ theorem directionallySubGaussianSelfAdjointMatrix_operatorNorm_netTail {Omega : 
     _ <= ∑ _v ∈ N, ENNReal.ofReal
             (2 * Real.exp (-(((1 - 2 * eps) * t) ^ 2 / (4 * K ^ 2)))) :=
           Finset.sum_le_sum (fun v hv =>
-            absTailProb_centeredMatrixQuadraticForm_le hX (hNunit v hv) hs0)
+            absTailProb_centeredMatrixQuadraticForm_le hX (hN.unit v hv) hs0)
     _ = (N.card : ENNReal) *
           ENNReal.ofReal (2 * Real.exp (-(((1 - 2 * eps) * t) ^ 2 / (4 * K ^ 2)))) := by
           rw [Finset.sum_const, nsmul_eq_mul]
@@ -353,7 +315,8 @@ matrices `Xᵢ` with scales `Kᵢ`, whose sum is entrywise integrable, the opera
 norm of the centered sum `∑ Xᵢ - E(∑ Xᵢ)` obeys the net tail with proxy scale
 `sqrt (∑ᵢ Kᵢ²)`, i.e. exponential constant `4·(∑ᵢ Kᵢ²)`. This just composes
 `directionallySubGaussianSelfAdjointMatrix_sum_of_iIndepFun` with the
-single-matrix net tail. -/
+single-matrix net tail. Integrability of the matrix sum remains explicit for
+the same reason as in the single-matrix theorem. -/
 theorem directionallySubGaussianSelfAdjointMatrix_operatorNorm_netTail_sum_of_iIndepFun
     {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} [IsProbabilityMeasure P]
     {I : Type*} [Fintype I] {n : Nat}
@@ -364,8 +327,7 @@ theorem directionallySubGaussianSelfAdjointMatrix_operatorNorm_netTail_sum_of_iI
     (hIntSum : IntegrableRandomMatrix P (randomMatrixSum X))
     {N : Finset (Fin (n + 1) -> Real)} {eps t : Real}
     (heps0 : 0 <= eps) (heps : eps < 1 / 2)
-    (hNunit : ∀ v ∈ N, IsUnitVector v)
-    (hNcover : ∀ x, IsUnitVector x → ∃ v ∈ N, vectorSqNorm (x - v) <= eps ^ 2)
+    (hN : IsUnitSphereNet N eps)
     (ht : 0 <= t) :
     P (upperTailEvent (operatorNorm (centeredRandomMatrix P (randomMatrixSum X))) t) <=
       ENNReal.ofReal
@@ -375,7 +337,7 @@ theorem directionallySubGaussianSelfAdjointMatrix_operatorNorm_netTail_sum_of_iI
     directionallySubGaussianSelfAdjointMatrix_sum_of_iIndepFun hKsum hIndep hSG
   have hmain :=
     directionallySubGaussianSelfAdjointMatrix_operatorNorm_netTail hclosure hIntSum
-      heps0 heps hNunit hNcover ht
+      heps0 heps hN ht
   rwa [Real.sq_sqrt (le_of_lt hKsum)] at hmain
 
 end

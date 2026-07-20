@@ -104,6 +104,11 @@ Risk gates:
   larger history sigma-algebra.
 - Prefer shared RandomMatrix APIs over unfolded formulas in examples, tests,
   judge files, and docs.
+- The directional matrix sub-Gaussian route now closes the explicit finite-net
+  operator-norm tail. Its next safe refinement is a thin Euclidean unit-sphere
+  net construction/cardinality consumer that reuses the geometry APIs and
+  specializes `N.card`; do not replace it with a false directional-to-Loewner
+  MGF bridge.
 - Keep new Matrix Bernstein/sample-covariance route variants behind named
   target axes and assumption records when possible; bridge-layer declarations may
   be public infrastructure, but they should not become the preferred user route

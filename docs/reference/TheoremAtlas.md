@@ -168,6 +168,19 @@ spectral bound, with its integrability premises required at the optimizer.
 This is not unconditional Matrix Chernoff or full Tropp, and there is no
 infinite-dimensional result.
 
+### Directional Matrix Sub-Gaussian Route
+
+`DirectionallySubGaussianSelfAdjointMatrix` controls every fixed unit-vector
+quadratic form by the scalar centered sub-Gaussian MGF contract and is closed
+under independent finite sums with scale `sqrt (sum_i K_i^2)`. The separate
+epsilon-net layer exposes `IsUnitSphereNet`,
+`deterministicOperatorNorm_le_of_isUnitSphereNet`, and single-matrix and
+independent-sum operator-norm tails with prefactor `2 * N.card` and the scalar
+layer's `4 * K^2` denominator. The tail theorems are positive-dimensional and
+retain explicit net, radius, threshold, probability, and entrywise-integrability
+premises. No finite-net construction, dimension-only cardinality estimate,
+Loewner matrix-MGF implication, or trace-prefactor theorem is claimed.
+
 The hardbone statement atlas in
 [`HardboneStatements.lean`](../../HighDimProb/RandomMatrix/HardboneStatements.lean)
 names CFC, log/order, Tropp/Lieb, conditioning, integrability,

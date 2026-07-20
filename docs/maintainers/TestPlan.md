@@ -62,6 +62,14 @@ git diff --check
   unbounded exponential-integrability premises explicit. The append-only
   downstream consumer is
   `HighDimProbJudge/RandomMatrix/SubGaussianUse.lean`.
+- Focused directional matrix sub-Gaussian checks:
+  `HighDimProbTest/DirectionalSubGaussianMatrixAPI.lean` and
+  `HighDimProbTest/DirectionalOperatorNormMatrixAPI.lean`; run
+  `lake build HighDimProb.RandomMatrix.DirectionalSubGaussian`,
+  `lake build HighDimProb.RandomMatrix.DirectionalOperatorNorm`, and the two
+  test modules. They consume only `HighDimProb.RandomMatrix.Concentration` and
+  keep the explicit finite-net, positive-dimension, radius, threshold,
+  probability, and entrywise-integrability boundaries visible.
 - RandomMatrix bookkeeping checks: trace-exp endpoint wrappers and the
   natural-state TraceExp route are covered in
   `HighDimProbTest/RandomMatrixTraceExpAPI.lean` and

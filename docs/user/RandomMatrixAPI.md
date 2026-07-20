@@ -36,6 +36,8 @@ are defined in [`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchi
 - [`HardboneStatements.lean`](../../HighDimProb/RandomMatrix/HardboneStatements.lean)
 - [`CStarBridge.lean`](../../HighDimProb/RandomMatrix/CStarBridge.lean)
 - [`VarianceProxy.lean`](../../HighDimProb/RandomMatrix/VarianceProxy.lean)
+- [`DirectionalSubGaussian.lean`](../../HighDimProb/RandomMatrix/DirectionalSubGaussian.lean)
+- [`DirectionalOperatorNorm.lean`](../../HighDimProb/RandomMatrix/DirectionalOperatorNorm.lean)
 - [`ConcentrationStatements.lean`](../../HighDimProb/RandomMatrix/ConcentrationStatements.lean)
 
 ## Shared Helpers
@@ -89,6 +91,26 @@ Spectral endpoints:
 
 These wrappers keep the legacy `lambdaMax` / `lambdaMin` names while exposing
 the canonical ordered `eigenvalues₀` endpoints.
+
+## Directional Sub-Gaussian Surface
+
+- `DirectionallySubGaussianSelfAdjointMatrix`
+- `matrixQuadraticForm_centeredRandomMatrix`
+- `directionallySubGaussianSelfAdjointMatrix_sum_of_iIndepFun`
+- `IsUnitSphereNet`
+- `deterministicOperatorNorm_le_of_isUnitSphereNet`
+- `directionallySubGaussianSelfAdjointMatrix_operatorNorm_netTail`
+- `directionallySubGaussianSelfAdjointMatrix_operatorNorm_netTail_sum_of_iIndepFun`
+
+This is the finite-dimensional fixed-direction route. It packages scalar
+sub-Gaussian control of every fixed unit-vector quadratic form, closes the
+predicate under independent finite sums, and converts it to an operator-norm
+tail using an explicit finite unit-sphere net. The tail prefactor is
+`2 * N.card`; the API does not yet construct `N` or replace its cardinality by
+a dimension-only bound. The tail theorems use `Fin (n + 1)`, require
+`0 <= eps < 1 / 2`, `0 <= t`, a probability measure, and explicit entrywise
+integrability. This route does not imply `MatrixSubGaussianMGF`, a Loewner MGF
+bound, or an `n`-prefactor trace-MGF theorem.
 
 
 CStar representation bridge:

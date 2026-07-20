@@ -143,6 +143,16 @@ theorem isUnitVector_of_norm_toLp_eq_one {n : Nat} {x : Fin n -> Real}
   rw [IsUnitVector, vectorSqNorm_eq_norm_sq_toLp, hx]
   norm_num
 
+/-- A finite `eps`-net of the Euclidean unit sphere in the explicit
+`vectorSqNorm` convention used by the random-matrix API.
+
+The `unit` field keeps every net point on the sphere, while `cover` gives a net
+point within squared Euclidean distance `eps ^ 2` of each unit vector. Radius
+sign conditions are intentionally left to consuming theorems. -/
+structure IsUnitSphereNet {n : Nat} (N : Finset (Fin n -> Real)) (eps : Real) : Prop where
+  unit : ∀ v ∈ N, IsUnitVector v
+  cover : ∀ x, IsUnitVector x -> ∃ v ∈ N, vectorSqNorm (x - v) <= eps ^ 2
+
 end
 
 end HighDimProb
