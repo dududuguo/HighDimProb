@@ -37,6 +37,7 @@
     "HighDimProbJudge/RandomMatrix/SampleCovarianceUse.lean": "277ce0b0295fe5e35005a0fba13732f8aca11ab07189ca9e6bf09563f6372c90",
     "HighDimProbJudge/RandomMatrix/SpectralUse.lean": "8c017fd9388377b957c627a19e58b418dc852eda24b2a9a0bc69211afe2909e0",
     "HighDimProbJudge/RandomMatrix/StatementUse.lean": "17eaf8375d0ea066c1347db87f4bbdecd822acd025d77188c13784fc6eebe584",
+    "HighDimProbJudge/RandomMatrix/SubGaussianUse.lean": "6aa580ea52e0d1c3c77e68b5c6357195844ad6da9e00ac2899b4b412beb483bc",
     "HighDimProbJudge/RandomMatrix/TailEventDominationProviderUse.lean": "05a04b0395285e5b7157bd13d2a1030b5945c2828c19d064690a6285af4dce0e",
     "HighDimProbJudge/RandomMatrix/TailEventNaturalStateBridgeProviderUse.lean": "cce7a0d721aabbbec0c206f1c11da8b69bd0322dc082de94e90b1b561231de91",
     "HighDimProbJudge/RandomMatrix/TailEventProviderAssumptionBridgeProviderUse.lean": "45de2210f3a35f556bfdb6a0e6600959f504c23db566e6b6a61c3971cff9e99d",

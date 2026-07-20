@@ -103,6 +103,23 @@ whose exact import set is validated against the ledger.
   negative exact-row variance-proxy provider visibility, and their main
   structural/analytic dependencies.
 
+## Matrix Sub-Gaussian Judge Boundary
+
+The focused compile-time check is
+`HighDimProbTest/SubGaussianMatrixAPI.lean`. It imports only
+`HighDimProb.RandomMatrix.Concentration` and checks the four public
+declarations `MatrixSubGaussianMGF`, `MatrixSubGaussianMGF.neg`,
+`traceMGFVarianceProxyBound_of_matrixSubGaussian_under_troppPrimitive`, and
+`subGaussian_quadraticFormUpperTail_under_troppPrimitive`. The predicate is
+only a conditional Loewner MGF contract; any downstream finite-family or tail
+example must keep the Tropp comparison, random/self-adjoint/independence,
+variance-proxy self-adjointness, and unbounded matrix/trace-exponential
+integrability assumptions visible; a tail example must additionally keep the
+aggregate proxy spectral bound and optimizer-time premises visible. The
+append-only downstream consumer is
+`HighDimProbJudge/RandomMatrix/SubGaussianUse.lean`; it exercises the exact
+optimizer-time premises through the stable facade.
+
 ## How It Differs From Normal Tests
 
 `HighDimProbTest` is the regular regression suite. It checks many internal API

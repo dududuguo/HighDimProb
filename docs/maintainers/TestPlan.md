@@ -54,6 +54,14 @@ git diff --check
   public facade `HighDimProb.RandomMatrix.Concentration`, so it detects public
   visibility regressions without relying on implementation-oriented provider
   imports.
+- Focused conditional matrix sub-Gaussian API check:
+  `HighDimProbTest/SubGaussianMatrixAPI.lean`; run
+  `lake build HighDimProbTest.SubGaussianMatrixAPI`. It checks the four
+  declarations exported through `HighDimProb.RandomMatrix.Concentration` and
+  keeps the Tropp, random/self-adjoint/independence, variance-proxy, and
+  unbounded exponential-integrability premises explicit. The append-only
+  downstream consumer is
+  `HighDimProbJudge/RandomMatrix/SubGaussianUse.lean`.
 - RandomMatrix bookkeeping checks: trace-exp endpoint wrappers and the
   natural-state TraceExp route are covered in
   `HighDimProbTest/RandomMatrixTraceExpAPI.lean` and

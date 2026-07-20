@@ -45,3 +45,4 @@ import HighDimProbJudge.Analysis.SumIntegralD2Use
 import HighDimProbJudge.Concentration.SubGaussianMaxD2D3Use
 import HighDimProbJudge.Analysis.CompactApproximationUse
 import HighDimProbJudge.Concentration.HansonWrightUse
+import HighDimProbJudge.RandomMatrix.SubGaussianUse

@@ -33,6 +33,18 @@ those hypotheses are discharged automatically.
   `MatrixBernstein.optimized_of_primitives` and
   `MatrixBernstein.highProbability_of_primitives` are the compact generic
   endpoints under explicit finite-family Bernstein primitives.
+- The focused matrix sub-Gaussian surface exports
+  `MatrixSubGaussianMGF`, `MatrixSubGaussianMGF.neg`,
+  `traceMGFVarianceProxyBound_of_matrixSubGaussian_under_troppPrimitive`, and
+  `subGaussian_quadraticFormUpperTail_under_troppPrimitive` through
+  `HighDimProb.RandomMatrix.Concentration`. The predicate states only a
+  conditional Loewner MGF inequality; it does not bundle centeredness, PSD,
+  self-adjointness, measurability, integrability, or probability. Its
+  finite-family and tail consumers retain the explicit Tropp comparison,
+  random/self-adjoint/independence, proxy self-adjointness, and unbounded
+  matrix/trace-exponential integrability premises; the tail endpoint additionally
+  retains the aggregate proxy spectral bound and uses those integrability
+  premises at `theta = t / sigmaSq`.
 - Exact-row centered-rank-one and sample-covariance endpoints are also proved,
   including the normalized high-probability specialization. Their contracts
   keep matrix measurability, coordinate moment assumptions, row bounds,
@@ -74,6 +86,8 @@ constitute an unconditional concentration theorem.
 The current supported surface does not claim:
 
 - infinite-dimensional matrix concentration;
+- an unconditional Matrix Chernoff result, full Tropp theorem, or infinite-dimensional
+  extension of the conditional matrix sub-Gaussian route;
 - an unconditional full Matrix Bernstein theorem or the older
   arbitrary-denominator chain;
 - an automatic Tropp chain for arbitrary external or larger history

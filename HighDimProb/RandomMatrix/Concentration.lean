@@ -1,4 +1,5 @@
 import HighDimProb.RandomMatrix.Provider.Concentration
+import HighDimProb.RandomMatrix.SubGaussian
 
 /-!
 # Matrix concentration

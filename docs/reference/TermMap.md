@@ -39,6 +39,7 @@ proved/open status in [`TheoremAtlas.md`](TheoremAtlas.md).
 | ENat covering-number bridge | `coveringNumber_le_card_of_isInternalEpsilonNet`, `exists_nat_eq_coveringNumber_of_isInternalEpsilonNet`, `exists_finset_isInternalEpsilonNet_of_totallyBounded`, `exists_parentMap_of_subset_of_isInternalEpsilonNet`, `exists_finset_parentMap_of_internalLevels`, `exists_finset_parentMap_of_internalRadiusLevels`, `exists_finset_path_of_parentMap`, `exists_finset_internalNetFamily_parentMap_path_of_totallyBounded`, `dyadicRadius`, `tendsto_dyadicRadius_atTop`, `tendsto_intervalIntegral_dyadicRadius_atTop` | [`HighDimProb/MetricEntropy.lean`](../../HighDimProb/MetricEntropy.lean) |
 | Random matrices | random matrix families, self-adjointness, sums, operator norm, spectral events, ordered spectral endpoints (`lambdaMaxOrdered`, `lambdaMinOrdered`) | [`HighDimProb/RandomMatrix`](../../HighDimProb/RandomMatrix) |
 | Matrix concentration | public trace-MGF, tail, Matrix Bernstein, and sample-covariance facade | [`HighDimProb.RandomMatrix.Concentration`](../../HighDimProb/RandomMatrix/Concentration.lean) |
+| Matrix sub-Gaussian route | `MatrixSubGaussianMGF`, `MatrixSubGaussianMGF.neg`, `traceMGFVarianceProxyBound_of_matrixSubGaussian_under_troppPrimitive`, `subGaussian_quadraticFormUpperTail_under_troppPrimitive` | [`HighDimProb.RandomMatrix.Concentration`](../../HighDimProb/RandomMatrix/Concentration.lean), [`SubGaussian.lean`](../../HighDimProb/RandomMatrix/SubGaussian.lean), [`SubGaussianMatrixAPI.lean`](../../HighDimProbTest/SubGaussianMatrixAPI.lean) |
 | Matrix analysis providers | matrix exponential/logarithm calculus, resolvents, relative entropy, Lieb/Epstein, Golden--Thompson | [`Provider.Analysis`](../../HighDimProb/RandomMatrix/Provider/Analysis.lean) |
 | Matrix conditioning providers | kernels, frozen-parameter conditional expectation, natural histories | [`Provider.Conditioning`](../../HighDimProb/RandomMatrix/Provider/Conditioning.lean) |
 | Matrix concentration providers (internal/expert) | integrability compression, trace-MGF, tails, scoped Matrix Bernstein | [`Provider.Concentration`](../../HighDimProb/RandomMatrix/Provider/Concentration.lean) |
@@ -46,6 +47,15 @@ proved/open status in [`TheoremAtlas.md`](TheoremAtlas.md).
 | Matrix Bernstein | trace-MGF/Tropp bundles, scalar threshold inversion, `MatrixBernstein.*_of_primitives` optimized/operator-norm/high-probability facades, Bernstein CFC hardbone, variance-proxy bridges, centered-square exact-row adapters, support/effective-rank trace bridges, prefix/reindex/negative adapters, and compact sample-covariance contracts | [`RandomMatrixAPI.md`](../user/RandomMatrixAPI.md) |
 | PrecisionDA applications | deterministic column-sample covariance, leave-one-out covariance, shrinkage resolvents, rank-one/Woodbury identities, Frobenius trace-expansion wrappers, and H1/H2/Theorem 1 provider-contract vocabulary | [`HighDimProb/Applications/PrecisionDA`](../../HighDimProb/Applications/PrecisionDA.lean) |
 | Examples | compact statement-route index plus representative sample covariance, random-feature, gradient, NTK, LoRA, attention, Fisher, natural-Tropp, and PrecisionDA routes | [`HighDimProb/Examples`](../../HighDimProb/Examples.lean) |
+
+The matrix sub-Gaussian predicate is only a conditional Loewner MGF contract.
+The finite-family and tail declarations retain the Tropp comparison,
+random/self-adjoint/independence, variance-proxy self-adjointness, and
+unbounded matrix/trace-exponential integrability assumptions; the tail endpoint
+additionally retains the aggregate proxy spectral bound at
+`theta = t / sigmaSq`. They do not bundle centeredness, PSD, or probability,
+and do not assert unconditional Matrix Chernoff, full Tropp, or
+infinite-dimensional results.
 
 ## Lookup Rule
 

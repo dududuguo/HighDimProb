@@ -151,6 +151,23 @@ is its scalar-threshold consumer. The generated-history proof is now exposed by
 
 Exact endpoint names and caller assumptions are listed in
 [`RandomMatrixAPI.md`](../user/RandomMatrixAPI.md).
+
+### Matrix Sub-Gaussian Route
+
+The focused route has a four-declaration public surface:
+`MatrixSubGaussianMGF`, `MatrixSubGaussianMGF.neg`,
+`traceMGFVarianceProxyBound_of_matrixSubGaussian_under_troppPrimitive`, and
+`subGaussian_quadraticFormUpperTail_under_troppPrimitive`. The predicate is
+only a conditional Loewner MGF inequality; centeredness, PSD,
+self-adjointness, measurability, integrability, and probability are not bundled.
+The finite-family trace-MGF and tail consumers retain the explicit Tropp
+comparison, random/self-adjoint/independence, variance-proxy
+self-adjointness, and unbounded matrix/trace-exponential integrability
+assumptions; the tail endpoint additionally retains the aggregate proxy
+spectral bound, with its integrability premises required at the optimizer.
+This is not unconditional Matrix Chernoff or full Tropp, and there is no
+infinite-dimensional result.
+
 The hardbone statement atlas in
 [`HardboneStatements.lean`](../../HighDimProb/RandomMatrix/HardboneStatements.lean)
 names CFC, log/order, Tropp/Lieb, conditioning, integrability,
