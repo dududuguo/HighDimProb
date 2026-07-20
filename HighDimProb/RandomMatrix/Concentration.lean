@@ -1,6 +1,7 @@
 import HighDimProb.RandomMatrix.Provider.Concentration
 import HighDimProb.RandomMatrix.SubGaussian
 import HighDimProb.RandomMatrix.DirectionalSubGaussian
+import HighDimProb.RandomMatrix.DirectionalOperatorNorm
 
 /-!
 # Matrix concentration
