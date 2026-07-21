@@ -5,3 +5,14 @@ import HighDimProb.RandomMatrix.Concentration
 #check HighDimProb.MatrixBernstein.centeredRankOneExactRow
 #check HighDimProb.MatrixBernstein.centeredRankOneExactRowHighProbability
 #check HighDimProb.MatrixBernstein.sampleCovarianceExactRowHighProbability
+#check HighDimProb.MatrixBernstein.CenteredRankOneInputs.ofIIndepFun
+#check HighDimProb.MatrixBernstein.CenteredRankOneExactRowInputs.ofIIndepFun
+#check HighDimProb.upperTailProb_operatorNorm_smul_one_div_natCast
+#check HighDimProb.MatrixBernstein.CenteredSelfAdjointObservationInputs
+#check HighDimProb.MatrixBernstein.CenteredSelfAdjointObservationInputs.ofIIndepFun
+#check HighDimProb.MatrixBernstein.centeredSelfAdjointObservations
+#check HighDimProb.MatrixBernstein.centeredSelfAdjointObservationsHighProbability
+#check HighDimProb.FeatureGramOperator.Inputs
+#check HighDimProb.FeatureGramOperator.empirical
+#check HighDimProb.FeatureGramOperator.highProbability
+#check HighDimProb.FeatureGramOperator.matrixLESandwich

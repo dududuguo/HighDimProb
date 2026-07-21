@@ -1,6 +1,7 @@
 import HighDimProb.Analysis.RealInequalities
 import HighDimProb.Analysis.LogSumExp
 import HighDimProb.Analysis.DenseSup
+import HighDimProb.Analysis.Softmax
 
 /-!
 # Analysis helper branch

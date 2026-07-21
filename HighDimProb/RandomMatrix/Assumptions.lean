@@ -109,6 +109,43 @@ theorem iIndepFun_centeredRankOne
   rw [hEq] at hComp
   exact hComp
 
+/-- Independence is preserved when a random-matrix family is centered by its
+entrywise expectation. The centering shift is deterministic in the sample, so
+this is the general analog of `iIndepFun_centeredRankOne` for arbitrary
+self-adjoint (or general) observations. -/
+theorem iIndepFun_centeredRandomMatrix
+    {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} {I : Type*} {m n : Nat}
+    (A : I -> RandomMatrix Omega m n)
+    (hIndep : ProbabilityTheory.iIndepFun A P) :
+    IndependentRandomMatrices P (centeredRandomMatrixFamily P A) := by
+  have hg : forall i, Measurable
+      (fun (M : Matrix (Fin m) (Fin n) Real) => M - matrixExpect P (A i)) := by
+    intro i
+    apply measurable_pi_lambda
+    intro r
+    apply measurable_pi_lambda
+    intro c
+    have hr : Measurable (fun M : Matrix (Fin m) (Fin n) Real => M r) :=
+      measurable_pi_apply r
+    have hc : Measurable (fun v : Fin n -> Real => v c) :=
+      measurable_pi_apply c
+    exact (hc.comp hr).sub measurable_const
+  have hComp :=
+    hIndep.comp
+      (fun i (M : Matrix (Fin m) (Fin n) Real) => M - matrixExpect P (A i)) hg
+  have hEq :
+      (fun i =>
+          Function.comp
+            (fun (M : Matrix (Fin m) (Fin n) Real) =>
+              M - matrixExpect P (A i))
+            (A i)) =
+        centeredRandomMatrixFamily P A := by
+    funext i omega r c
+    rfl
+  rw [hEq] at hComp
+  exact hComp
+
 /-- A finite or indexed family of random self-adjoint square matrices. -/
 def SelfAdjointRandomMatrixFamily {Omega : Type*} [MeasurableSpace Omega]
     {I : Type*} {n : Nat} (P : Measure Omega)

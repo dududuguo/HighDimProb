@@ -87,10 +87,48 @@ Risk gates:
   `MatrixBernstein.sampleCovarianceExactRow` now close the generated-history
   exact-row tail route, while
   `MatrixBernstein.sampleCovarianceExactRowHighProbability` closes its
-  normalized `1 - delta` specialization. Use `iIndepFun_centeredRankOne`
-  when raw random-vector independence is available. The next safe task is a
-  reader-facing exact-row application or a Loewner/spectral corollary; keep the
-  older Tropp bundles as compatibility surfaces.
+  normalized `1 - delta` specialization. Prefer the
+  `CenteredRankOneInputs.ofIIndepFun` /
+  `CenteredRankOneExactRowInputs.ofIIndepFun` constructors (backed by
+  `iIndepFun_centeredRankOne`) so callers state only vector-level `iIndepFun`.
+  The LoRA and NTK Gram examples now both use this exact-row + vector-independence
+  route with normalized, high-probability, and Loewner-sandwich endpoints via the
+  shared `upperTailProb_operatorNorm_smul_one_div_natCast` scaling helper. The
+  generic `MatrixBernstein.CenteredSelfAdjointObservationInputs` /
+  `centeredSelfAdjointObservations` route now lifts self-adjoint observations to
+  the optimized tail under explicit centered-square-integrability, centered
+  operator-norm, and variance-proxy obligations. `.ofIIndepFun` discharges only
+  the centered independence obligation from observation-level `iIndepFun` via
+  `iIndepFun_centeredRandomMatrix`, so this is a conditional facade, not an
+  unconditional integrable/self-adjoint Bernstein theorem;
+  `CenteredSelfAdjointClosureUsage` is its thin end-to-end consumer. The
+  Attention feature-Gram example now uses the same exact-row + vector-independence
+  route (`AttentionGramInputs.ofIIndepFun`, normalized/high-probability/sandwich),
+  so the rewritten LoRA / NTK / Attention examples no longer expose
+  provider/Tropp interfaces; the sample-covariance, empirical-Fisher, and
+  random-feature-kernel examples still use explicit Tropp bundles and remain the
+  next alignment candidates. Keep the older Tropp bundles in core as
+  compatibility surfaces.
+- Application-naming and constant-sharpness follow-ups (from a math review): the
+  LoRA example controls the uncentered second moment `(1/m) sum x x^T`, not the
+  gradient covariance; identifiers keep the legacy `Covariance` label pending a
+  decision to rename to `SecondMoment`/`Gram`. The centered rank-one exact-row
+  radius `2 R` and proxy `sum Rvar_i^2` are valid but non-optimal; the sharp
+  rank-one providers (radius `R` from `0 <= B, M <= R I`, and variance bound
+  `(1/4) sum r_i^2` from `E[Y^2] <= r_i M_i - M_i^2 <= (r_i^2 / 4) I`) are not yet
+  formalized. The deterministic Loewner-sandwich endpoints are vacuous at zero
+  sample count (documented in their docstrings); the tail/high-probability
+  endpoints already require a positive count.
+- Softmax-attention v1 is closed at a positive temperature: the public interface
+  `attentionSoftmaxFeatures` / `attentionSoftmaxGramInputs` /
+  `attentionSoftmaxGram_highProbability` takes `tau : {t : Real // 0 < t}` and
+  turns independent measurable random logits into bounded (`vectorSqNorm <= 1`)
+  attention-weight probability features that close the centered rank-one Bernstein
+  consumer with radius and variance radii `1`. The general all-real object is the
+  core `HighDimProb.expNormalized` (exponential/Gibbs normalization). Deferred: the
+  softmax Jacobian / `1 / (2 tau)` Lipschitz layer (which genuinely needs
+  `tau > 0`) and the shared-random-input (conditional) self-attention case, which
+  the current unconditional Bernstein API cannot express.
 - S16 now has `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
   as the provider-compressed natural-state tail wrapper. Future work should
   compress only genuinely provider-dischargeable assumptions and keep

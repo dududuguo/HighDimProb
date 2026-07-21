@@ -37,6 +37,28 @@ those hypotheses are discharged automatically.
   including the normalized high-probability specialization. Their contracts
   keep matrix measurability, coordinate moment assumptions, row bounds,
   independence, and parameter-domain conditions explicit.
+- The `MatrixBernstein.CenteredRankOneInputs.ofIIndepFun` and
+  `CenteredRankOneExactRowInputs.ofIIndepFun` constructors let callers supply
+  independence at the underlying random-vector level via Mathlib `iIndepFun`;
+  the matrix-family independence obligation is discharged internally.
+- A generic centered self-adjoint observation route
+  (`MatrixBernstein.CenteredSelfAdjointObservationInputs`,
+  `centeredSelfAdjointObservations`, and its high-probability specialization)
+  lifts self-adjoint observations to the optimized operator-norm tail under
+  explicit centered-square-integrability, centered operator-norm, and
+  variance-proxy assumptions. Only centeredness, self-adjointness, and centered
+  entrywise integrability are derived from the uncentered family;
+  `CenteredSelfAdjointObservationInputs.ofIIndepFun` additionally discharges the
+  centered independence obligation from observation-level `iIndepFun` via
+  `iIndepFun_centeredRandomMatrix`. It is a conditional facade, not an
+  unconditional integrable/self-adjoint Bernstein theorem.
+- The Attention feature-Gram example includes a positive-temperature
+  softmax-attention closure: with `tau : {t : Real // 0 < t}`, softmax of
+  independent measurable logits yields bounded attention-weight probability
+  features (`vectorSqNorm <= 1`) that feed the centered rank-one endpoints with
+  radius and variance radii `1`; the general all-real object is the core
+  `HighDimProb.expNormalized`. The softmax Jacobian / Lipschitz layer and the
+  shared-input conditional-dependence case are not formalized.
 
 Across these results, theorem statements may require centeredness,
 self-adjointness, independence, measurability, matrix/trace-exponential

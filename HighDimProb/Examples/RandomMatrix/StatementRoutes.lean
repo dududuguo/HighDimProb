@@ -1,5 +1,8 @@
 import HighDimProb.Examples.RandomMatrix.AttentionFeatureGramOperatorNormUsage
+import HighDimProb.Examples.RandomMatrix.CenteredRankOneCovarianceAdapterUsage
+import HighDimProb.Examples.RandomMatrix.CenteredSelfAdjointClosureUsage
 import HighDimProb.Examples.RandomMatrix.EmpiricalFisherOperatorNormUsage
+import HighDimProb.Examples.RandomMatrix.GradientNormToOperatorBoundUsage
 import HighDimProb.Examples.RandomMatrix.LoRAAdapterSubspaceCovarianceUsage
 import HighDimProb.Examples.RandomMatrix.NTKGramUsage
 import HighDimProb.Examples.RandomMatrix.NaturalTroppPipelineUsage
@@ -29,6 +32,10 @@ open HighDimProb.Examples.RandomMatrix.RankOneMatrixBernsteinPipelineUsage
 open HighDimProb.Examples.RandomMatrix.AttentionFeatureGramOperatorNormUsage
 open HighDimProb.Examples.RandomMatrix.LoRAAdapterSubspaceCovarianceUsage
 open HighDimProb.Examples.RandomMatrix.NaturalTroppPipelineUsage
+open HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
+open HighDimProb.Examples.RandomMatrix.CenteredRankOneCovarianceAdapterUsage
+open HighDimProb.Examples.RandomMatrix.CenteredSelfAdjointClosureUsage
+open HighDimProb.Examples.RandomMatrix.GradientNormToOperatorBoundUsage
 
 /-!
 ## Sample covariance
@@ -51,9 +58,22 @@ reusable matrix facts stay in core.
 -/
 
 #check RankOneMatrixBernsteinPipelineUsage.rankOne_operatorNormTail
+#check LoRACovarianceInputs.ofIIndepFun
 #check loraCovariance_normalizedTail
 #check loraCovariance_highProbability
 #check loraCovariance_matrixLESandwich
+#check NTKGramInputs.ofIIndepFun
+#check ntkGram_operatorNormTail
+#check ntkGram_normalizedTail
+#check ntkGram_highProbability
+#check ntkGram_matrixLESandwich
+#check AttentionGramInputs.ofIIndepFun
+#check attentionGram_operatorNormTail
+#check attentionGram_normalizedTail
+#check attentionGram_highProbability
+#check attentionGram_matrixLESandwich
+#check attentionSoftmaxGramInputs
+#check attentionSoftmaxGram_highProbability
 
 /-!
 ## Structured covariance operator-norm routes
@@ -75,6 +95,27 @@ Bernstein.
 
 #check naturalTropp_traceState_zero_usage
 #check arbitraryHistory_quadraticForm_tail_usage
+
+/-!
+## Structural rank-one, centered closure, and gradient operator-norm routes
+
+These examples were previously outside the example build closure. They index
+the deterministic rank-one PSD facts, the centered self-adjoint closure
+predicates, the centered rank-one covariance adapter, and the gradient-norm to
+operator-norm bridges. They add no new assumptions and no new mathematical
+facts; they only keep these route names build-checked and discoverable.
+-/
+
+#check rankOneOuter_psd
+#check gradientCovarianceContribution_psd
+#check centeredRankOneCovariance_family_centeredSelfAdjoint
+#check centeredSelfAdjointFamily_of_closure_assumptions
+#check centeredRandomMatrix_family_centeredSelfAdjoint_example
+#check uncenteredGradientCovariance_pointwiseOperatorNormBound
+#check centeredGradientCovariance_pointwiseOperatorNormBound
+#check observationSum_operatorNormTail_example
+#check observationSum_highProbability_example
+#check observationSum_matrixLESandwich_example
 
 
 end HighDimProb.Examples.RandomMatrix.StatementRoutes

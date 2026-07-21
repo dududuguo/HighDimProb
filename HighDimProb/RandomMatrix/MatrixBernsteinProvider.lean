@@ -357,6 +357,28 @@ theorem matrixBernsteinSelfAdjointHighProbabilityStatement_generatedHistory_of_b
         (mOmega := mOmega) (P := P) X sigmaSq R
         (matrixBernsteinHighProbabilityThreshold n sigmaSq R delta))
 
+/-- Normalizing a random matrix by `1 / m` rescales its operator-norm upper
+tail: the normalized matrix exceeds `epsilon` exactly when the unnormalized
+matrix exceeds `m * epsilon`. This is the reusable scaling step shared by the
+normalized empirical-covariance and NTK Gram endpoints. -/
+theorem upperTailProb_operatorNorm_smul_one_div_natCast
+    {Omega : Type*} [MeasurableSpace Omega] {P : Measure Omega} {p q : Nat}
+    (A : RandomMatrix Omega p q) (m : Nat) (hm : 0 < m) (epsilon : Real) :
+    upperTailProb P
+        (operatorNorm (fun omega => (1 / (m : Real)) • A omega)) epsilon =
+      upperTailProb P (operatorNorm A) ((m : Real) * epsilon) := by
+  have hmReal : 0 < (m : Real) := by exact_mod_cast hm
+  unfold upperTailProb upperTailEvent
+  congr 1
+  ext omega
+  simp only [operatorNorm_apply, Set.mem_setOf_eq]
+  rw [norm_smul, Real.norm_eq_abs, abs_of_pos (one_div_pos.mpr hmReal),
+    one_div, inv_mul_eq_div]
+  simpa only [mul_comm] using
+    (le_div_iff₀ hmReal :
+      epsilon <= ‖A omega‖ / (m : Real) ↔
+        epsilon * (m : Real) <= ‖A omega‖)
+
 namespace MatrixBernstein
 
 /-- Minimal inputs for optimized Matrix Bernstein on a centered rank-one
@@ -384,8 +406,9 @@ structure CenteredRankOneInputs
 /-- Row-specific inputs for optimized Matrix Bernstein on centered rank-one
 random-vector families.
 
-The uniform radius controls summand norms, while `Rvar` gives the sharper
-row-specific variance proxy. -/
+The uniform radius controls summand norms, while `Rvar` gives the row-specific
+variance proxy `sum of Rvar_i^2`. Both the `2 * R` radius and this proxy are
+valid upper bounds, not the optimal rank-one constants. -/
 structure CenteredRankOneExactRowInputs
     {Omega : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} [IsProbabilityMeasure P]
@@ -394,6 +417,184 @@ structure CenteredRankOneExactRowInputs
     extends CenteredRankOneInputs (P := P) X R where
   varianceSqNormBound : forall i omega, vectorSqNorm (X i omega) <= Rvar i
   varianceRadiiNonneg : forall i, 0 <= Rvar i
+
+/-- Build `CenteredRankOneInputs` from vector-level independence.
+
+This is the natural downstream entry point. The caller supplies independence of
+the underlying random vectors through Mathlib `iIndepFun`, and this constructor
+discharges the matrix-level `IndependentSelfAdjointRandomMatrices` obligation
+with `iIndepFun_centeredRankOne` and the centered self-adjoint closure. A
+downstream application never needs to state independence at the centered
+self-adjoint matrix-family level. -/
+theorem CenteredRankOneInputs.ofIIndepFun
+    {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    {X : I -> RandomVector Omega n} {R : Real}
+    (randomVector : forall i, IsRandomVector P (X i))
+    (coordinateMemLpTwo :
+      forall i, forall j : Fin n, MemLpRealRandomVariable P (coord (X i) j) 2)
+    (sqNormBound : forall i omega, vectorSqNorm (X i omega) <= R)
+    (hIndep : ProbabilityTheory.iIndepFun X P)
+    (radiusNonneg : 0 <= R) :
+    CenteredRankOneInputs (P := P) X R :=
+  { randomVector := randomVector
+    coordinateMemLpTwo := coordinateMemLpTwo
+    sqNormBound := sqNormBound
+    independentSelfAdjoint :=
+      ⟨(centeredRankOneRandomMatrix_centeredSelfAdjoint_of_memLp_two
+          (P := P) (X := X) randomVector coordinateMemLpTwo).1,
+        iIndepFun_centeredRankOne X hIndep⟩
+    radiusNonneg := radiusNonneg }
+
+/-- Build `CenteredRankOneExactRowInputs` from vector-level independence.
+
+This mirrors `CenteredRankOneInputs.ofIIndepFun` and additionally records the
+row-specific squared-norm bounds used by the row-specific variance proxy. -/
+theorem CenteredRankOneExactRowInputs.ofIIndepFun
+    {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    {X : I -> RandomVector Omega n} {R : Real} {Rvar : I -> Real}
+    (randomVector : forall i, IsRandomVector P (X i))
+    (coordinateMemLpTwo :
+      forall i, forall j : Fin n, MemLpRealRandomVariable P (coord (X i) j) 2)
+    (sqNormBound : forall i omega, vectorSqNorm (X i omega) <= R)
+    (hIndep : ProbabilityTheory.iIndepFun X P)
+    (radiusNonneg : 0 <= R)
+    (varianceSqNormBound : forall i omega, vectorSqNorm (X i omega) <= Rvar i)
+    (varianceRadiiNonneg : forall i, 0 <= Rvar i) :
+    CenteredRankOneExactRowInputs (P := P) X R Rvar :=
+  { toCenteredRankOneInputs :=
+      CenteredRankOneInputs.ofIIndepFun randomVector coordinateMemLpTwo
+        sqNormBound hIndep radiusNonneg
+    varianceSqNormBound := varianceSqNormBound
+    varianceRadiiNonneg := varianceRadiiNonneg }
+
+/-- Minimal inputs for optimized Matrix Bernstein on centered self-adjoint
+observations.
+
+The observations `X i` are self-adjoint and integrable; centeredness,
+self-adjointness, and integrability of the centered summands `X i - E[X i]` are
+derived internally. The centered square-integrability, independence,
+operator-norm, and variance-proxy fields are the residual proof obligations. -/
+structure CenteredSelfAdjointObservationInputs
+    {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    (X : I -> RandomMatrix Omega n n) (R sigmaSq : Real) : Prop where
+  selfAdjoint : SelfAdjointRandomMatrixFamily P X
+  integrable : forall i, IntegrableRandomMatrix P (X i)
+  centeredSquareIntegrable :
+    forall i,
+      IntegrableRandomMatrix P
+        (randomMatrixSquare (centeredRandomMatrixFamily P X i))
+  independentCentered :
+    IndependentSelfAdjointRandomMatrices P (centeredRandomMatrixFamily P X)
+  centeredOperatorNormBound :
+    PointwiseOperatorNormBound (centeredRandomMatrixFamily P X) R
+  centeredVarianceProxyBound :
+    MatrixVarianceProxyNormBound P (centeredRandomMatrixFamily P X) sigmaSq
+  radiusNonneg : 0 <= R
+  varianceNonneg : 0 <= sigmaSq
+
+/-- Build centered self-adjoint observation inputs from matrix-family
+independence of the raw observations. The caller states only `iIndepFun` of the
+observations; the centered self-adjoint independence bundle is discharged with
+`iIndepFun_centeredRandomMatrix` and the self-adjoint centering closure. -/
+theorem CenteredSelfAdjointObservationInputs.ofIIndepFun
+    {Omega : Type*} [MeasurableSpace Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    {X : I -> RandomMatrix Omega n n} {R sigmaSq : Real}
+    (selfAdjoint : SelfAdjointRandomMatrixFamily P X)
+    (integrable : forall i, IntegrableRandomMatrix P (X i))
+    (centeredSquareIntegrable :
+      forall i,
+        IntegrableRandomMatrix P
+          (randomMatrixSquare (centeredRandomMatrixFamily P X i)))
+    (hIndep : ProbabilityTheory.iIndepFun X P)
+    (centeredOperatorNormBound :
+      PointwiseOperatorNormBound (centeredRandomMatrixFamily P X) R)
+    (centeredVarianceProxyBound :
+      MatrixVarianceProxyNormBound P (centeredRandomMatrixFamily P X) sigmaSq)
+    (radiusNonneg : 0 <= R) (varianceNonneg : 0 <= sigmaSq) :
+    CenteredSelfAdjointObservationInputs (P := P) X R sigmaSq :=
+  { selfAdjoint := selfAdjoint
+    integrable := integrable
+    centeredSquareIntegrable := centeredSquareIntegrable
+    independentCentered :=
+      ⟨selfAdjointRandomMatrixFamily_centeredRandomMatrixFamily selfAdjoint,
+        iIndepFun_centeredRandomMatrix X hIndep⟩
+    centeredOperatorNormBound := centeredOperatorNormBound
+    centeredVarianceProxyBound := centeredVarianceProxyBound
+    radiusNonneg := radiusNonneg
+    varianceNonneg := varianceNonneg }
+
+/-- Optimized operator-norm tail for centered self-adjoint observation sums.
+
+This is the reusable application endpoint behind empirical Hessian, empirical
+Fisher, kernel-slice, and general random PSD observation averages. It generates
+the centeredness, self-adjointness, and centered-summand integrability premises
+from the uncentered self-adjoint family. -/
+theorem centeredSelfAdjointObservations
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (X : I -> RandomMatrix Omega n n) (R sigmaSq t : Real)
+    (hn : 0 < n)
+    (h : CenteredSelfAdjointObservationInputs (P := P) X R sigmaSq)
+    (ht : 0 <= t) :
+    upperTailProb P
+        (operatorNorm
+          (randomMatrixSum (centeredRandomMatrixFamily P X))) t <=
+      matrixBernsteinTwoSidedOptimizedScalarTailRHS n R R t sigmaSq sigmaSq := by
+  have hCentered :
+      CenteredSelfAdjointRandomMatrixFamily P
+        (centeredRandomMatrixFamily P X) :=
+    centeredSelfAdjointRandomMatrixFamily_centeredRandomMatrixFamily
+      h.selfAdjoint h.integrable
+  have hInt :
+      forall i,
+        IntegrableRandomMatrix P (centeredRandomMatrixFamily P X i) := by
+    intro i
+    simpa [centeredRandomMatrixFamily] using
+      integrableRandomMatrix_centeredRandomMatrix (h.integrable i)
+  exact
+    matrixBernsteinSelfAdjointOptimizedStatement_generatedHistory_of_bernsteinPrimitives
+      (mOmega := mOmega) (P := P)
+      (centeredRandomMatrixFamily P X) sigmaSq R t hn
+      hInt h.centeredSquareIntegrable hCentered h.independentCentered
+      h.centeredOperatorNormBound h.centeredVarianceProxyBound
+      h.varianceNonneg h.radiusNonneg ht
+
+/-- High-probability optimized tail for centered self-adjoint observation sums. -/
+theorem centeredSelfAdjointObservationsHighProbability
+    {Omega : Type*} [mOmega : MeasurableSpace Omega] [Nonempty Omega]
+    {P : Measure Omega} [IsProbabilityMeasure P]
+    {I : Type*} [Fintype I] {n : Nat}
+    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
+    (X : I -> RandomMatrix Omega n n) (R sigmaSq delta : Real)
+    (hn : 0 < n)
+    (h : CenteredSelfAdjointObservationInputs (P := P) X R sigmaSq)
+    (hNondegenerate : Or (0 < sigmaSq) (0 < R))
+    (hDelta : 0 < delta) (hDeltaOne : delta <= 1) :
+    upperTailProb P
+        (operatorNorm
+          (randomMatrixSum (centeredRandomMatrixFamily P X)))
+        (matrixBernsteinHighProbabilityThreshold n sigmaSq R delta) <=
+      ENNReal.ofReal delta := by
+  have hThreshold :
+      0 <= matrixBernsteinHighProbabilityThreshold n sigmaSq R delta :=
+    matrixBernsteinHighProbabilityThreshold_nonneg
+      hn h.radiusNonneg hDelta hDeltaOne
+  have hTail :=
+    centeredSelfAdjointObservations X R sigmaSq
+      (matrixBernsteinHighProbabilityThreshold n sigmaSq R delta) hn h hThreshold
+  refine hTail.trans_eq ?_
+  exact matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold
+    hn h.varianceNonneg h.radiusNonneg hNondegenerate hDelta hDeltaOne
 
 /-- Optimized operator-norm tail for centered rank-one random-vector sums.
 

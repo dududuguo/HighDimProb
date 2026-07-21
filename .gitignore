@@ -20,6 +20,9 @@ scripts/*
 .codebase-memory/cache/
 .codebase-memory/*.bak
 .codex-manual-cache/
+.claude/
+.qoder/
+.vscode/
 tools/cc.exe
 tools/node_modules/
 tools/package.json

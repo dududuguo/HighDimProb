@@ -50,8 +50,12 @@ are defined in [`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchi
 - `sampleCovarianceTailTheta`
 - `sampleCovarianceQuadraticFormTailRHS`
 - `rowSqNormVarianceProxyNormRHS`
+- `upperTailProb_operatorNorm_smul_one_div_natCast`
 
 Use these helpers in examples and tests instead of copying RHS formulas.
+`upperTailProb_operatorNorm_smul_one_div_natCast` is the shared normalized
+operator-norm tail-scaling step reused by the normalized empirical-covariance
+and NTK Gram endpoints.
 
 Expectation / integrability bridges:
 
@@ -147,12 +151,21 @@ has probability zero. They do not supply the positive-variance Tropp branch.
 - `MatrixBernstein.operatorNormUpperTail_of_primitives`
 - `MatrixBernstein.optimized_of_primitives`
 - `MatrixBernstein.CenteredRankOneInputs`
+- `MatrixBernstein.CenteredRankOneInputs.ofIIndepFun`
 - `MatrixBernstein.CenteredRankOneExactRowInputs`
+- `MatrixBernstein.CenteredRankOneExactRowInputs.ofIIndepFun`
 - `MatrixBernstein.centeredRankOne`
 - `MatrixBernstein.centeredRankOneExactRow`
+- `MatrixBernstein.centeredRankOneExactRowHighProbability`
 - `MatrixBernstein.sampleCovarianceExactRow`
 - `MatrixBernstein.sampleCovarianceExactRowHighProbability`
 - `MatrixBernstein.highProbability_of_primitives`
+- `MatrixBernstein.CenteredSelfAdjointObservationInputs`
+- `MatrixBernstein.CenteredSelfAdjointObservationInputs.ofIIndepFun`
+- `MatrixBernstein.centeredSelfAdjointObservations`
+- `MatrixBernstein.centeredSelfAdjointObservationsHighProbability`
+- `iIndepFun_centeredRankOne`
+- `iIndepFun_centeredRandomMatrix`
 - `matrixBernsteinSelfAdjointOptimizedStatement`
 - `matrixBernsteinTraceMGFWithBernsteinCoeff_under_primitives`
 - `TraceExpConditioning.bernsteinInputs_of_primitives`
@@ -559,32 +572,40 @@ and they are not tail wrappers by themselves.
 - `MatrixVarianceProxyNormBound_centeredSampleCovarianceRowRankOneFamily_of_rowSqNorm_bound`
 - `sampleCovarianceCenteredRankOneVarianceProxyBound`
 
-## LoRA Covariance Application Surface
+## LoRA Adapter-Gradient Second-Moment Application Surface
 
 The focused import
-`HighDimProb.Examples.RandomMatrix.LoRAAdapterSubspaceCovarianceUsage` exposes:
+`HighDimProb.Examples.RandomMatrix.LoRAAdapterSubspaceCovarianceUsage` controls
+the uncentered second moment (Gram / empirical-Fisher-style outer product)
+`(1 / m) * sum_b x_b x_b^T` of the adapter-coordinate gradients, not the gradient
+covariance (they agree only when `E[x_b] = 0`). The `Covariance` in the
+identifier names below is a legacy label. It exposes:
 
 - `loraEmpiricalCovariance`
 - `loraMeanCovariance`
 - `loraCovarianceDeviation`
-- `loraEmpiricalCovariance`_sub_mean
+- `loraEmpiricalCovariance_sub_mean`
+- `LoRACovarianceInputs` / `LoRACovarianceInputs.ofIIndepFun`
+- `loraCovariance_operatorNormTail`
 - `loraCovariance_normalizedTail`
 - `loraCovarianceRadius`
 - `loraCovariance_highProbability`
 - `loraCovariance_matrixLESandwich`
 
-For a positive batch size m, adapter dimension r + 1, squared-norm radius R,
-and epsilon >= 0, the normalized tail wrapper states
+The normalized tail is stated in the reusable
+`matrixBernsteinTwoSidedOptimizedScalarTailRHS` form with the row-specific
+variance proxy `rowSqNormVarianceProxyNormRHS Rvar = sum_b Rvar_b^2`.
+Instantiated with a uniform `Rvar_b = R` (proxy `m R^2`) it reads
 
-    P(||SigmaHat_Q - SigmaBar_Q|| >= epsilon)
-      <= 2 (r + 1) exp(-m epsilon^2 / (8 R^2 + (4/3) R epsilon)).
+    P(||Mhat_Q - Mbar_Q|| >= epsilon)
+      <= 2 (r + 1) exp(-m epsilon^2 / (2 R^2 + (4/3) R epsilon)),
 
-This is the exact consequence of the generic centered rank-one variance
-proxy `4 m R^2`. It gives the expected
-R * (sqrt(log((r + 1)/delta) / m) + log((r + 1)/delta) / m) rate and the
-Loewner sandwich around `loraMeanCovariance`. It does not claim the sharper
-`m R^2` rank-one proxy; that separate improvement is required to match the
-smaller square-root constant.
+together with the high-probability radius and the Loewner sandwich around
+`loraMeanCovariance`. The centered summand radius `2 R` and the proxy
+`sum_b Rvar_b^2` are valid upper bounds, not the optimal rank-one constants:
+the PSD structure gives the sharp radius `R` and variance bound
+`(1/4) sum_b r_b^2`. Formalizing those sharper providers is tracked in
+[`TODO.md`](../maintainers/TODO.md).
 
 ## Example Style
 

@@ -1,4 +1,4 @@
-import HighDimProb.RandomMatrix.Provider.Concentration
+import HighDimProb.RandomMatrix.FeatureGramOperator
 
 /-!
 # Matrix concentration

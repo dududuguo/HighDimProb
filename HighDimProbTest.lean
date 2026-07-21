@@ -8,6 +8,7 @@ import HighDimProbTest.TailProofsAPI
 import HighDimProbTest.LpMomentAPI
 import HighDimProbTest.RealInequalitiesAPI
 import HighDimProbTest.LogSumExpAPI
+import HighDimProbTest.SoftmaxAPI
 import HighDimProbTest.OrliczAPI
 import HighDimProbTest.SubGaussianAPI
 import HighDimProbTest.SubExponentialAPI
@@ -55,6 +56,7 @@ import HighDimProbTest.RandomMatrixStatementsAPI
 import HighDimProbTest.RandomMatrixConcentrationAPI
 import HighDimProbTest.RandomMatrixConditioningHistoryClosureProviderAPI
 import HighDimProbTest.RandomMatrixMatrixBernsteinProviderAPI
+import HighDimProbTest.RandomMatrixFeatureGramOperatorAPI
 import HighDimProbTest.RandomMatrixLiebProviderAPI
 import HighDimProbTest.RandomMatrix.Provider.AnalysisAPI
 import HighDimProbTest.RandomMatrix.Provider.ConditioningAPI
