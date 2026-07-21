@@ -12,6 +12,7 @@ open probability or concentration routes.
 -/
 
 import HighDimProb.Examples.BasicUsage
+import HighDimProb.Examples.DudleyUsage
 import HighDimProb.Examples.EmpiricalProcessNetUsage
 import HighDimProb.Examples.NetsUsage
 import HighDimProb.Examples.OrliczFeatureUsage

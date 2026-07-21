@@ -31,6 +31,7 @@ import HighDimProbTest.RandomFamilyAPI
 import HighDimProbTest.ChainingAPI
 import HighDimProbTest.FiniteMaxAPI
 import HighDimProbTest.SubGaussianMaxAPI
+import HighDimProbTest.DudleyAPI
 import HighDimProbTest.RandomVectorAPI
 import HighDimProbTest.CovarianceAPI
 import HighDimProbTest.CovarianceProofsAPI

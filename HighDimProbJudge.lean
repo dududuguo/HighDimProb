@@ -40,5 +40,6 @@ import HighDimProbJudge.RandomMatrix.CFCLogResolventKernelProviderUse
 import HighDimProbJudge.PrecisionDA.CovarianceTraceExpansionUse
 import HighDimProbJudge.Concentration.SubGaussianProcessUse
 import HighDimProbJudge.Concentration.MetricEntropyUse
+import HighDimProbJudge.Concentration.DudleyUse
 import HighDimProbJudge.Analysis.DenseSupUse
 import HighDimProbJudge.Analysis.SoftmaxUse

@@ -109,6 +109,86 @@ theorem integrable_processSup {Ω T : Type*} [MeasurableSpace Ω]
   · intro t ht
     exact hX t ht
 
+/-- For a terminal point of a finite level family whose base level is rooted at
+`t0`, the endpoint difference is bounded pointwise by the sum of the per-level
+parent-increment suprema. The bound is uniform in the terminal point, which is
+what allows taking the terminal-net supremum afterwards. -/
+theorem abs_sub_root_le_sum_level_sup_of_mem_terminal
+    {α : Type*} {L : ℕ}
+    (levels : Fin (L + 1) → Finset α) (parent : Fin L → α → α)
+    (f : α → ℝ) (t₀ : α)
+    (hroot : ∀ y ∈ levels 0, y = t₀)
+    (hparent_mem : ∀ k x, x ∈ levels (Fin.succ k) →
+      parent k x ∈ levels (Fin.castSucc k))
+    (hne : ∀ k : Fin L, (levels (Fin.succ k)).Nonempty)
+    {x : α} (hx : x ∈ levels (Fin.last L)) :
+    |f x - f t₀| ≤
+      Finset.univ.sum (fun k : Fin L =>
+        (levels (Fin.succ k)).sup' (hne k)
+          (fun y => |f y - f (parent k y)|)) := by
+  let path : Fin (L + 1) → α :=
+    Fin.reverseInduction x (fun i yi => parent i yi)
+  have hpath_mem : ∀ i : Fin (L + 1), path i ∈ levels i := by
+    intro i
+    induction i using Fin.reverseInduction with
+    | last => simpa [path] using hx
+    | cast i ih =>
+        simpa [path] using hparent_mem i (path i.succ) ih
+  have hpath_parent : ∀ k : Fin L,
+      path (Fin.castSucc k) = parent k (path (Fin.succ k)) := by
+    intro k
+    simp [path]
+  have hpath_last : path (Fin.last L) = x := by simp [path]
+  have hpath_zero : path 0 = t₀ := hroot (path 0) (hpath_mem 0)
+  let gamma : ℕ → α := fun n =>
+    if h : n ≤ L then path ⟨n, Nat.lt_succ_of_le h⟩ else path (Fin.last L)
+  have hgamma (n : ℕ) (hn : n ≤ L) :
+      gamma n = path ⟨n, Nat.lt_succ_of_le hn⟩ := by
+    simp [gamma, hn]
+  have hgamma_zero : gamma 0 = path 0 := by
+    simpa using hgamma 0 (by omega)
+  have hgamma_last : gamma L = path (Fin.last L) := by
+    simpa using hgamma L (by omega)
+  have hgamma_mem : ∀ k : Fin L,
+      gamma ((k : ℕ) + 1) ∈ levels (Fin.succ k) := by
+    intro k
+    rw [show gamma ((k : ℕ) + 1) = path (Fin.succ k) by
+      simpa using hgamma ((k : ℕ) + 1) (by omega)]
+    exact hpath_mem _
+  have hgamma_parent : ∀ k : Fin L,
+      gamma (k : ℕ) = parent k (gamma ((k : ℕ) + 1)) := by
+    intro k
+    rw [show gamma (k : ℕ) = path (Fin.castSucc k) by
+        simpa using hgamma (k : ℕ) (Nat.le_of_lt k.isLt),
+      show gamma ((k : ℕ) + 1) = path (Fin.succ k) by
+        simpa using hgamma ((k : ℕ) + 1) (by omega)]
+    exact hpath_parent k
+  have hchain := norm_sub_chain_le_sum_of_level_sup gamma f L
+    (fun k => levels (Fin.succ k)) parent hgamma_mem hgamma_parent
+  rw [hgamma_last, hpath_last, hgamma_zero, hpath_zero] at hchain
+  simpa only [Real.norm_eq_abs] using hchain
+
+/-- Pointwise terminal-net supremum chaining with a fixed root: the supremum of
+the endpoint differences over the terminal net is bounded by the sum of the
+per-level parent-increment suprema, uniformly over the terminal points. -/
+theorem sup'_abs_sub_root_le_sum_level_sup
+    {α : Type*} {L : ℕ}
+    (levels : Fin (L + 1) → Finset α) (parent : Fin L → α → α)
+    (f : α → ℝ) (t₀ : α)
+    (hroot : ∀ y ∈ levels 0, y = t₀)
+    (hparent_mem : ∀ k x, x ∈ levels (Fin.succ k) →
+      parent k x ∈ levels (Fin.castSucc k))
+    (hne : ∀ k : Fin L, (levels (Fin.succ k)).Nonempty)
+    (hT : (levels (Fin.last L)).Nonempty) :
+    (levels (Fin.last L)).sup' hT (fun x => |f x - f t₀|) ≤
+      Finset.univ.sum (fun k : Fin L =>
+        (levels (Fin.succ k)).sup' (hne k)
+          (fun y => |f y - f (parent k y)|)) := by
+  apply Finset.sup'_le
+  intro x hx
+  exact abs_sub_root_le_sum_level_sup_of_mem_terminal levels parent f t₀
+    hroot hparent_mem hne hx
+
 /-- The expected endpoint difference is bounded by the expected sum of level suprema. -/
 theorem expect_abs_sub_chain_le_sum_of_level_sup
     {Ω α : Type*} [MeasurableSpace Ω]
