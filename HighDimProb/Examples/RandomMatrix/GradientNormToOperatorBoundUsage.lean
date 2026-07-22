@@ -1,5 +1,4 @@
 import HighDimProb.Examples.RandomMatrix.GradientCovarianceUsage
-import HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
 
 /-!
 # Gradient norm to operator-bound usage example
@@ -17,7 +16,6 @@ namespace HighDimProb.Examples.RandomMatrix.GradientNormToOperatorBoundUsage
 open MeasureTheory
 open scoped BigOperators
 open HighDimProb.Examples.RandomMatrix.GradientCovarianceUsage
-open HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
 
 noncomputable section
 
@@ -129,7 +127,8 @@ operator-norm part is separate from this PSD fact. -/
 theorem gradientCovarianceContribution_structural_psd {batch n : Nat}
     (G : GradientTable batch n) (b : Fin batch) :
     IsPSDMatrix (gradientCovarianceContribution G b) := by
-  exact gradientCovarianceContribution_psd G b
+  simpa [gradientCovarianceContribution, gradientOuter] using
+    isPSDMatrix_rankOneMatrix (G b)
 
 end
 

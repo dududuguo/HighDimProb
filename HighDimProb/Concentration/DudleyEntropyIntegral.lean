@@ -17,6 +17,8 @@ set_option autoImplicit false
 
 noncomputable section
 
+namespace Dudley
+
 /-- The covering-number integrand in the Dudley entropy integral.
 
 The full Dudley theorem uses this only for a totally bounded set and positive
@@ -24,28 +26,30 @@ radii, where `coveringNumber K t` is finite. At radius zero, `ENat.toNat`
 totalizes a possibly infinite covering number; that endpoint does not affect
 the Lebesgue interval integral. This real-valued definition is not an extended
 entropy integral for arbitrary non-totally-bounded sets. -/
-def dudleyEntropyIntegrand {alpha : Type*} [PseudoMetricSpace alpha]
+def entropyIntegrand {alpha : Type*} [PseudoMetricSpace alpha]
     (K : Set alpha) (t : Real) : Real :=
   Real.sqrt (2 * Real.log (2 * ((coveringNumber K t).toNat : Real)))
 
 /-- The full interval Dudley entropy integral at base radius `R`. -/
-def dudleyEntropyIntegral {alpha : Type*} [PseudoMetricSpace alpha]
+def entropyIntegral {alpha : Type*} [PseudoMetricSpace alpha]
     (K : Set alpha) (R : Real) : Real :=
-  ∫ t in 0..R, dudleyEntropyIntegrand K t
+  ∫ t in 0..R, entropyIntegrand K t
+
+namespace Internal
 
 /-- The Dudley entropy integrand is pointwise nonnegative. -/
-theorem dudleyEntropyIntegrand_nonneg {alpha : Type*} [PseudoMetricSpace alpha]
+theorem entropyIntegrand_nonneg {alpha : Type*} [PseudoMetricSpace alpha]
     (K : Set alpha) (t : Real) :
-    0 <= dudleyEntropyIntegrand K t := by
+    0 <= entropyIntegrand K t := by
   exact Real.sqrt_nonneg _
 
 /-- Every positive dyadic truncation is bounded by the full entropy integral. -/
-theorem truncatedDudleyEntropyIntegral_le_dudleyEntropyIntegral
+theorem truncatedEntropyIntegral_le_entropyIntegral
     {alpha : Type*} [PseudoMetricSpace alpha]
     {K : Set alpha} {R : Real} (L : Nat) (hR : 0 < R)
-    (hInt : IntervalIntegrable (dudleyEntropyIntegrand K) volume 0 R) :
-    (∫ t in dyadicRadius R (L + 1)..R, dudleyEntropyIntegrand K t) <=
-      dudleyEntropyIntegral K R := by
+    (hInt : IntervalIntegrable (entropyIntegrand K) volume 0 R) :
+    (∫ t in dyadicRadius R (L + 1)..R, entropyIntegrand K t) <=
+      entropyIntegral K R := by
   have hRadius : forall {i j : Nat}, i <= j ->
       dyadicRadius R j <= dyadicRadius R i := by
     intro i j hij
@@ -57,27 +61,27 @@ theorem truncatedDudleyEntropyIntegral_le_dudleyEntropyIntegral
     simpa [dyadicRadius] using h
   have ha : 0 <= dyadicRadius R (L + 1) :=
     (dyadicRadius_pos hR (L + 1)).le
-  have h0a : IntervalIntegrable (dudleyEntropyIntegrand K) volume 0
+  have h0a : IntervalIntegrable (entropyIntegrand K) volume 0
       (dyadicRadius R (L + 1)) :=
     hInt.mono_set (by
       rw [Set.uIcc_of_le ha, Set.uIcc_of_le hR.le]
       exact Set.Icc_subset_Icc le_rfl haR)
-  have haR' : IntervalIntegrable (dudleyEntropyIntegrand K) volume
+  have haR' : IntervalIntegrable (entropyIntegrand K) volume
       (dyadicRadius R (L + 1)) R :=
     hInt.mono_set (by
       rw [Set.uIcc_of_le haR, Set.uIcc_of_le hR.le]
       exact Set.Icc_subset_Icc ha le_rfl)
   have h0a_nonneg :
-      0 <= ∫ t in 0..dyadicRadius R (L + 1), dudleyEntropyIntegrand K t :=
-    intervalIntegral.integral_nonneg ha (fun t _ => dudleyEntropyIntegrand_nonneg K t)
+      0 <= ∫ t in 0..dyadicRadius R (L + 1), entropyIntegrand K t :=
+    intervalIntegral.integral_nonneg ha (fun t _ => entropyIntegrand_nonneg K t)
   have hadd := intervalIntegral.integral_add_adjacent_intervals h0a haR'
   calc
-    (∫ t in dyadicRadius R (L + 1)..R, dudleyEntropyIntegrand K t) <=
-        (∫ t in 0..dyadicRadius R (L + 1), dudleyEntropyIntegrand K t) +
-          (∫ t in dyadicRadius R (L + 1)..R, dudleyEntropyIntegrand K t) := by
+    (∫ t in dyadicRadius R (L + 1)..R, entropyIntegrand K t) <=
+        (∫ t in 0..dyadicRadius R (L + 1), entropyIntegrand K t) +
+          (∫ t in dyadicRadius R (L + 1)..R, entropyIntegrand K t) := by
       linarith
-    _ = ∫ t in 0..R, dudleyEntropyIntegrand K t := hadd
-    _ = dudleyEntropyIntegral K R := by
+    _ = ∫ t in 0..R, entropyIntegrand K t := hadd
+    _ = entropyIntegral K R := by
       rfl
 
 /-- The dyadic radii converge to zero, for every real base radius. -/
@@ -94,22 +98,9 @@ theorem dyadicRadius_tendsto_zero {R : Real} :
     tendsto_const_nhds.mul hpow
   simpa [dyadicRadius, div_eq_mul_inv, inv_pow] using hmul
 
-/-- The full Dudley entropy integral is nonnegative when it is interval-integrable. -/
-theorem dudleyEntropyIntegral_nonneg {alpha : Type*} [PseudoMetricSpace alpha]
-    (K : Set alpha) {R : Real} (hR : 0 <= R)
-    (_hInt : IntervalIntegrable (dudleyEntropyIntegrand K) volume 0 R) :
-    0 <= dudleyEntropyIntegral K R := by
-  exact intervalIntegral.integral_nonneg hR
-    (fun t _ => dudleyEntropyIntegrand_nonneg K t)
+end Internal
 
-/-- A nonnegative scalar preserves nonnegativity of an integrable Dudley integral. -/
-theorem four_mul_sigma_mul_dudleyEntropyIntegral_nonneg
-    {alpha : Type*} [PseudoMetricSpace alpha] (K : Set alpha)
-    {R sigma : Real} (hR : 0 <= R) (hsigma : 0 <= sigma)
-    (hInt : IntervalIntegrable (dudleyEntropyIntegrand K) volume 0 R) :
-    0 <= 4 * sigma * dudleyEntropyIntegral K R := by
-  exact mul_nonneg (mul_nonneg (by norm_num) hsigma)
-    (dudleyEntropyIntegral_nonneg K hR hInt)
+end Dudley
 
 end
 

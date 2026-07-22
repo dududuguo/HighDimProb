@@ -21,6 +21,9 @@ proved/open status in [`TheoremAtlas.md`](TheoremAtlas.md).
 | Sum/integral comparison | `sum_mul_sub_le_intervalIntegral_of_antitoneOn` | [`HighDimProb/Analysis/SumIntegral.lean`](../../HighDimProb/Analysis/SumIntegral.lean) |
 | Random families/processes | `RandomFamily`, `RealRandomFamily`, `IsRandomFamily`, `familyAt`, `mapRandomFamily`, `RandomProcess`, `IsRandomProcess`, `processAt`, `RandomSample`, `IsRandomSample`, `sampleEvaluation` | [`HighDimProb/Process.lean`](../../HighDimProb/Process.lean) |
 | SubGaussian process increments | `HasSubGaussianMGFIncrements`, `hasSubgaussianMGF_mono`, `HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le` | [`HighDimProb/SubGaussianProcess.lean`](../../HighDimProb/SubGaussianProcess.lean) and [`HighDimProb/SubGaussian.lean`](../../HighDimProb/SubGaussian.lean) |
+| Random-process path regularity | `HasUniformlyContinuousSamplePathsOn`, finite-net supremum convergence | [`HighDimProb/RandomProcess/PathRegularity.lean`](../../HighDimProb/RandomProcess/PathRegularity.lean) |
+| Full Dudley | `Dudley.supremum`, `Dudley.entropyIntegrand`, `Dudley.entropyIntegral`, `Dudley.Inputs`, `Dudley.fullBound`, `Dudley.Inputs.bound`; finite support consumer `Dudley.truncatedBound` | [`HighDimProb/Concentration.lean`](../../HighDimProb/Concentration.lean) |
+| Gaussian functional foundations | standard-Gaussian integration by parts; affine/product Gaussian stability, integral transport, and OU specialization | [`IntegrationByParts.lean`](../../HighDimProb/GaussianFunctional/IntegrationByParts.lean) and [`AffineStability.lean`](../../HighDimProb/GaussianFunctional/AffineStability.lean) |
 | Random vectors | random-vector, covariance, isotropic, subGaussian-vector vocabulary | [`HighDimProb/Vector.lean`](../../HighDimProb/Vector.lean) |
 | Geometry | nets, metric entropy, Gaussian width vocabulary | [`HighDimProb/Geometry.lean`](../../HighDimProb/Geometry.lean) |
 | Finite process supremum | `processSup`, `isRandomVariable_processSup`, `integrable_processSup` | [`HighDimProb/Chaining.lean`](../../HighDimProb/Chaining.lean) |
@@ -29,13 +32,11 @@ proved/open status in [`TheoremAtlas.md`](TheoremAtlas.md).
 | Deterministic finite LogSumExp | `sum_exp_pos`, `exp_mul_sup'_le_sum_exp`, `sup'_le_log_sum_exp_div`, `log_sum_exp_le_log_card_add` | [`HighDimProb/Analysis/LogSumExp.lean`](../../HighDimProb/Analysis/LogSumExp.lean) |
 | Fixed-CGF finite maximum | `expect_processSup_le_of_cgf_bound_at` | [`HighDimProb/Concentration/FiniteMax.lean`](../../HighDimProb/Concentration/FiniteMax.lean) |
 | Optimized subGaussian maxima | `CenteredSubGaussianMGF.neg`, `expect_processSup_le_of_centeredSubGaussianMGF`, `expect_finset_sup'_abs_le_of_centeredSubGaussianMGF` | [`HighDimProb/SubGaussian.lean`](../../HighDimProb/SubGaussian.lean) and [`HighDimProb/Concentration/SubGaussianMax.lean`](../../HighDimProb/Concentration/SubGaussianMax.lean) |
-| Finite subGaussian chaining | `finiteEntropySum`, `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF`, `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le`, `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`, `expect_abs_sub_chain_le_finiteEntropySum`, `expect_abs_sub_chain_le_finiteEntropySum_of_path`, `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`, `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber` | [`HighDimProb/MetricEntropy.lean`](../../HighDimProb/MetricEntropy.lean) and [`HighDimProb/Concentration/SubGaussianMax.lean`](../../HighDimProb/Concentration/SubGaussianMax.lean) |
+| Manual finite subGaussian chaining (expert/support) | `finiteEntropySum`, `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF`, `expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le`, `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`, `expect_abs_sub_chain_le_finiteEntropySum`, `expect_abs_sub_chain_le_finiteEntropySum_of_path`, `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`, `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber` | [`HighDimProb/MetricEntropy.lean`](../../HighDimProb/MetricEntropy.lean) and [`HighDimProb/Concentration/SubGaussianMax.lean`](../../HighDimProb/Concentration/SubGaussianMax.lean) |
 | ENat covering-number bridge | `coveringNumber_le_card_of_isInternalEpsilonNet`, `exists_nat_eq_coveringNumber_of_isInternalEpsilonNet`, `exists_finset_isInternalEpsilonNet_of_totallyBounded`, `exists_parentMap_of_subset_of_isInternalEpsilonNet`, `exists_finset_parentMap_of_internalLevels`, `exists_finset_parentMap_of_internalRadiusLevels`, `exists_finset_path_of_parentMap`, `exists_finset_internalNetFamily_parentMap_path_of_totallyBounded`, `dyadicRadius` | [`HighDimProb/MetricEntropy.lean`](../../HighDimProb/MetricEntropy.lean) |
 | Random matrices | random matrix families, self-adjointness, sums, operator norm, spectral events, ordered spectral endpoints (`lambdaMaxOrdered`, `lambdaMinOrdered`) | [`HighDimProb/RandomMatrix`](../../HighDimProb/RandomMatrix) |
 | Matrix concentration | public trace-MGF, tail, Matrix Bernstein, and sample-covariance facade | [`HighDimProb.RandomMatrix.Concentration`](../../HighDimProb/RandomMatrix/Concentration.lean) |
-| Matrix analysis providers | matrix exponential/logarithm calculus, resolvents, relative entropy, Lieb/Epstein, Golden--Thompson | [`Provider.Analysis`](../../HighDimProb/RandomMatrix/Provider/Analysis.lean) |
-| Matrix conditioning providers | kernels, frozen-parameter conditional expectation, natural histories | [`Provider.Conditioning`](../../HighDimProb/RandomMatrix/Provider/Conditioning.lean) |
-| Matrix concentration providers (internal/expert) | integrability compression, trace-MGF, tails, scoped Matrix Bernstein | [`Provider.Concentration`](../../HighDimProb/RandomMatrix/Provider/Concentration.lean) |
+| Random-matrix implementation internals | analysis, conditioning, and concentration assembly ownership | [`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md) |
 | Matrix zero variance | zero variance proxy, almost-everywhere zero summands and sums, null positive operator-norm tails | [`HighDimProb/RandomMatrix/VarianceZero.lean`](../../HighDimProb/RandomMatrix/VarianceZero.lean) |
 | Matrix Bernstein | trace-MGF/Tropp bundles, scalar threshold inversion, `MatrixBernstein.*_of_primitives` optimized/operator-norm/high-probability facades, Bernstein CFC hardbone, variance-proxy bridges, centered-square exact-row adapters, support/effective-rank trace bridges, prefix/reindex/negative adapters, and compact sample-covariance contracts | [`RandomMatrixAPI.md`](../user/RandomMatrixAPI.md) |
 | PrecisionDA applications | deterministic column-sample covariance, leave-one-out covariance, shrinkage resolvents, rank-one/Woodbury identities, Frobenius trace-expansion wrappers, and H1/H2/Theorem 1 provider-contract vocabulary | [`HighDimProb/Applications/PrecisionDA`](../../HighDimProb/Applications/PrecisionDA.lean) |
@@ -47,17 +48,12 @@ Use this file for orientation only. For exact declarations, use doc-gen output,
 `#check`, or source search. Keep new entries short and link to the source rather
 than copying full theorem signatures.
 
-## Public And Expert RandomMatrix Terms
+## Public And Internal RandomMatrix Terms
 
 Use `HighDimProb.RandomMatrix.Concentration` for downstream
-matrix-concentration results. The `HighDimProb.RandomMatrix.Provider.Analysis`,
-`.Conditioning`, and `.Concentration` imports are internal/expert proof
-boundaries; use the narrowest provider layer needed according to the dependency
-ownership documented in
-[`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md). The broad expert
-`HighDimProb.RandomMatrix.Provider` facade imports all three.
-`HighDimProb.RandomMatrix.LiebProvider` remains a compatibility import and
-should not own new declarations.
+matrix-concentration results. Provider modules are internal proof-ownership
+boundaries, not downstream imports. Their exact dependency map is maintained in
+[`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md).
 
 The analysis layer contains ambient and self-adjoint carrier matrix-exp Frechet
 derivative primitives, the scalar divided-difference coefficient

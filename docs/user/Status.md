@@ -68,23 +68,11 @@ requirements; they do not erase them.
 
 ## Provider Boundary
 
-`HighDimProb.RandomMatrix.Concentration` is the downstream API. The provider
-hierarchy is the implementation and expert-proof boundary:
-
-- `HighDimProb.RandomMatrix.Provider.Analysis` owns deterministic matrix
-  analysis, CFC/resolvent, relative-entropy, Lieb/Epstein, and
-  Golden--Thompson infrastructure.
-- `HighDimProb.RandomMatrix.Provider.Conditioning` owns kernels, conditional
-  expectation, frozen-parameter, and natural-history infrastructure.
-- `HighDimProb.RandomMatrix.Provider.Concentration` owns trace-MGF, tail, and
-  Matrix Bernstein assembly re-exported by the public facade.
-- `HighDimProb.RandomMatrix.Provider` is the broad expert facade. Normal
-  downstream code should prefer `HighDimProb.RandomMatrix.Concentration`;
-  expert proofs should import the narrowest provider layer they need.
-
-`HighDimProb.RandomMatrix.LiebProvider` is a compatibility import, not a new
-ownership layer. Provider facades expose explicit proof ingredients and do not
-constitute an unconditional concentration theorem.
+`HighDimProb.RandomMatrix.Concentration` is the supported downstream API.
+Provider modules are implementation details and are not part of the downstream
+import contract. Their ownership, dependency direction, and proof-development
+workflow are documented in
+[`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md).
 
 ## Unsupported Boundaries
 
@@ -106,17 +94,26 @@ The current supported surface does not claim:
   targets remain specifications until backed by a theorem.
 
 Outside RandomMatrix, the random-family layer remains vocabulary rather than a
-filtration/martingale framework. The metric-entropy route now includes the full
-Dudley endpoint: under a probability measure, for totally bounded `K`, a root
-`t0 ∈ K`, coordinate measurability, subGaussian MGF increments, `0 < R`,
-`0 < sigma`, and `dist t t0 ≤ R` on `K`, together with every-sample
-uniformly continuous paths and the explicit
-`IntervalIntegrable (dudleyEntropyIntegrand K) volume 0 R`,
-`dudley_full_supremum_bound` proves that the actual set supremum
-`dudleySupremum` is measurable and `Integrable`, with
-`E sup ≤ 4 * sigma * ∫_0^R sqrt(2 * log(2 * N(K,t))) dt`.
-This statement does not remove the entropy-integrability premise or claim an
-a.e.-only path or separable-modification weakening.
+filtration/martingale framework. The scalar concentration facade exposes the
+full Dudley endpoint through `Dudley.Inputs`: callers provide total boundedness,
+an anchor and radius, coordinate measurability, subGaussian MGF increments,
+every-sample uniform path continuity, and
+`IntervalIntegrable (Dudley.entropyIntegrand K) volume 0 R`. Then
+`Dudley.Inputs.bound` proves that `Dudley.supremum X K t0` is measurable and
+`Integrable`, with
+`E sup ≤ 4 * sigma * ∫_0^R sqrt(2 * log(2 * N(K,t))) dt`. The explicit
+`Dudley.fullBound` theorem exposes the same mathematics without bundling.
+`Dudley.truncatedBound` is the lower-level finite-terminal-net consumer.
+
+The focused Gaussian-functional modules currently prove standard-Gaussian
+integration by parts for `C^1` compactly supported real functions, arbitrary
+two-variable Gaussian linear-combination stability (including zero variance),
+measurable/integrable integral transport, and the Ornstein--Uhlenbeck
+coefficient specialization. They do not yet claim Gaussian Poincare,
+log-Sobolev, or Lipschitz-concentration inequalities.
+
+The full Dudley statement does not remove the entropy-integrability premise or
+claim an a.e.-only path or separable-modification weakening.
 
 ## Canonical References
 

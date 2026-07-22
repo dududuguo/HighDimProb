@@ -18,10 +18,9 @@ import HighDimProb.RandomMatrix.Concentration
 ```
 
 The public `HighDimProb.RandomMatrix.Concentration` facade is the downstream
-caller endpoint. The `HighDimProb.RandomMatrix.Provider.*` modules are
-internal/expert proof boundaries; use the narrowest provider import only when
-developing or auditing provider proofs. Their ownership and dependency rules
-are defined in [`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md).
+caller endpoint. Provider modules are implementation details and are not part
+of this caller contract. Their ownership and dependency rules are defined in
+[`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md).
 
 ## Core Modules
 
@@ -237,11 +236,11 @@ consumer surface is the
 `*_of_troppAssumptions` family, which uses
 `MatrixBernsteinPositiveSideTroppAssumptions` and
 `MatrixBernsteinNegativeSideTroppAssumptions` to expose Tropp/Lieb and
-bookkeeping assumptions without a user-supplied CFC field. The older
-`*_of_assumptions` and `_under_primitives` names remain compatibility surfaces.
-The generated-history Bernstein wrappers live behind
-`HighDimProb.RandomMatrix.Provider.Concentration` and are re-exported by the
-public `HighDimProb.RandomMatrix.Concentration` facade; they derive current-step
+bookkeeping assumptions without a user-supplied CFC field. Older compatibility
+names may still exist, but they are not the recommended downstream surface.
+The generated-history Bernstein wrappers are assembled internally and
+re-exported by the public `HighDimProb.RandomMatrix.Concentration` facade;
+they derive current-step
 exponential-mean self-adjointness and strict positivity from centered
 self-adjoint bounded summands. The base quadratic-form tail wrapper keeps tail
 measurability explicit, while `MatrixBernstein.operatorNormUpperTail_of_primitives`,
@@ -621,293 +620,15 @@ the PSD structure gives the sharp radius `R` and variance bound
   API, not as separate theorem machinery.
 - Use `StatementRoutes` first. Low-level prefix/state, reindex, and negative-family bridge APIs are covered by source, tests, and judge files rather than separate reader-facing examples.
 
-## Expert And Internal Provider Layers
+## Internal Implementation Boundary
 
-The public concentration facade is the caller endpoint and re-exports the
-provider concentration assembly:
+Downstream code should use only:
 
 ```lean
 import HighDimProb.RandomMatrix.Concentration
 ```
 
-Import the following implementation layers only for provider-proof development:
-
-```lean
-import HighDimProb.RandomMatrix.Provider.Analysis
-import HighDimProb.RandomMatrix.Provider.Conditioning
-import HighDimProb.RandomMatrix.Provider.Concentration
-```
-
-Import the narrowest provider layer needed by the proof. The broad
-`HighDimProb.RandomMatrix.Provider` facade imports all three;
-`HighDimProb.RandomMatrix.LiebProvider` remains a compatibility import. The
-full ownership and dependency contract is in
-[`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md).
-
-The analysis layer exposes ambient and self-adjoint
-matrix-exp derivatives, first-order strictly-positive `CFC.log` affine-line
-APIs, short inverse/trace-resolvent derivatives, finite-cutoff log-resolvent
-identities, inverse-convexity segment/`MatrixLE` identities, full-matrix-Klein
-relative-entropy APIs, the fixed-`t` left/right relative-entropy integrand
-joint-convexity leaf, the left/right scalar, quadratic, spectral-overlap,
-density, and integral-representation route to relative-entropy joint convexity
-and Lieb/Epstein facades, the exact `goldenThompsonTraceExp` endpoint,
-conditional relative-entropy/Gibbs bridges, derivative-level Epstein consumers,
-trace-exp domain positivity, CFC-log resolvent cutoff/remainder bridges, and
-fixed-numerator trace-resolvent convexity.
-
-The conditioning layer exposes frozen-parameter conditional expectation,
-independent-step trace-exponential conditioning, and natural-history
-measurability and independence bridges. The concentration provider assembles
-the conditional and left/right Tropp/Lieb bridges, integrability compression,
-generated-history Bernstein finite-family/trace-MGF/tail wrappers, canonical
-operator-norm/high-probability endpoints, support-to-excess compression, and
-tail-event subset-discharge wrappers. These implementation surfaces are
-re-exported for downstream use by `HighDimProb.RandomMatrix.Concentration`.
-
-Matrix-exp and divided-difference API:
-
-- `matrixExpFDeriv`
-- `hasFDerivAt_matrix_exp`
-- `hasStrictFDerivAt_matrix_exp`
-- `hasFDerivAt_matrix_exp_trunc`
-- `matrixExpSelfAdjoint`
-- `matrixExpFDerivSelfAdjoint`
-- `matrixExpFDerivSelfAdjoint_spectral_equiv`
-- `hasFDerivAt_matrix_exp_selfAdjoint`
-- `hasStrictFDerivAt_matrix_exp_selfAdjoint`
-- `matrixExpDividedDifferenceSeries`
-- `matrixExpDividedDifferenceSeries_pos`
-- `matrixExpDividedDifferenceSeries_ne_zero`
-- `matrixQuadraticForm_integrable_of_integrableRandomMatrix`
-- `matrixQuadraticForm_eq_star_dotProduct_mulVec`
-- `matrixExp_isStrictlyPositive_of_selfAdjoint`
-- `isStrictlyPositive_matrixExpect_matrixExp_of_randomSelfAdjoint`
-
-Preferred spectral adapter aliases:
-
-- `MatrixExpFDeriv.conjDiagonalSymmTraceSum`
-
-Backing low-level theorem names, kept for exact proof work and compatibility:
-
-- `matrixExpFDerivSelfAdjoint_diagonal_symm_entry_mul`
-- `trace_mul_matrixExpFDerivSelfAdjoint_conj_diagonal_symm_eq_sum`
-
-Strictly-positive `CFC.log` derivative API:
-
-- `cfcLogSelfAdjoint`
-- `CFCLog.Carrier`
-- `CFCLog.DerivOp`
-- `CFCLog.derivSAAt`
-- `CFCLog.hasStrictFDerivAt_derivSAAt`
-- `CFCLog.lineDeriv`
-- `CFCLog.lineDeriv_one_zero`
-- `CFCLog.hasDerivAt_line`
-- `exists_hasDerivAt_cfcLog_affineLine_of_strictlyPositive`
-- `hasDerivAt_cfcLog_affineLine_of_strictlyPositive`
-
-Preferred diagonal and trace-paired spectral adapter aliases:
-
-- `CFCLog.diagonalDerivEntryMul`
-- `CFCLog.diagonalLineDerivEntryMul`
-- `CFCLog.diagonalLineDerivTraceSum`
-
-Backing low-level theorem names, kept for exact proof work and compatibility:
-
-- `CFCLog.derivSAAt_matrixExpSelfAdjoint_diagonal_entry_mul`
-- `CFCLog.lineDerivSA_matrixExpSelfAdjoint_diagonal_entry_mul`
-- `CFCLog.trace_mul_lineDerivSA_matrixExpSelfAdjoint_diagonal_eq_sum`
-
-Resolvent and finite-cutoff log-resolvent API:
-
-- `hasDerivAt_inverse_affineLine`
-- `hasDerivAt_inverse_affineLine_of_strictlyPositive`
-- `trace_resolvent_derivative_cycle`
-- `neg_trace_resolvent_derivative_cycle`
-- `hasDerivAt_trace_mul_inverse_affineLine_general`
-- `hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle`
-- `hasDerivAt_trace_mul_inverse_affineLine_general_of_strictlyPositive`
-- `hasDerivAt_trace_mul_inverse_affineLine_general_neg_cycle_of_strictlyPositive`
-- `hasDerivAt_trace_mul_inverse_affineLine`
-- `hasDerivAt_trace_mul_inverse_affineLine_of_strictlyPositive`
-- `LogResolvent.kernelFixedSum`
-- `LogResolvent.kernelCutoffSum`
-- `LogResolvent.shiftedInvTraceSum`
-- `LogResolvent.identityCutoffSum`
-- `LogResolvent.identityCutoffTraceLogSub`
-- `LogResolvent.weightedCutoffSum`
-- `LogResolvent.weightedCutoffTraceLogSub`
-- `LogResolvent.weightedTraceLogEqShiftSubCutoff`
-- `LogResolvent.weightedShiftTraceLogSubScalarLog_tendsto_zero`
-- `LogResolvent.weightedCutoffSubScalarLog_tendsto_negTraceLog`
-- `LogResolvent.weightedShiftRemainderTendstoZero`
-- `LogResolvent.weightedCutoffRenormTendstoNegTraceLog`
-- `LogResolvent.SameEigenbasisDiagonal`
-- `LogResolvent.scalarSquareKernelIntegral`
-- `LogResolvent.scalarSquareKernelRemainderTendstoZero`
-- `LogResolvent.sameEigenbasisCutoffRemainderTendstoZero`
-
-The `SameEigenbasisDiagonal` predicate packages the repeated conjugation-to-diagonal
-hypothesis. The final cutoff-removal theorem removes the explicit cutoff only for
-that same-eigenbasis diagonal remainder exposed by
-`CFCLogResolventRemainderProvider`; it does not prove the general two-index
-weighted cutoff limit.
-
-Inverse-convexity positive-definite segment API:
-
-- `inv_quadraticForm_affine_le_of_posDef`
-- `inv_quadraticForm_iSup_affine_of_posDef`
-- `convexCombo_posDef_of_posDef`
-- `inv_quadraticForm_convex_combo_le_of_posDef`
-- `inv_matrixLE_convex_combo_le_of_posDef`
-
-These are quadratic-form variational and segment identities for positive
-definite matrices, including the explicit `MatrixLE` packaging. They do not
-prove full operator convexity of inverse or relative-entropy joint convexity.
-
-Relative-entropy route API:
-
-- `inversePerspectiveBlock_posSemidef`
-- `inversePerspective_jointConvex`
-- `trace_inversePerspective_jointConvex`
-- `RelativeEntropy.tracePairedInversePerspectiveIntegrand`
-- `RelativeEntropy.tracePairedInversePerspectiveIntegrand_jointConvex`
-- `RelativeEntropy.leftRightDenominatorMatrix`
-- `RelativeEntropy.leftRightDenominatorMatrix_posDef`
-- `RelativeEntropy.leftRightDenominatorMatrix_affine`
-- `RelativeEntropy.leftRightRelativeEntropyIntegrand`
-- `RelativeEntropy.leftRightRelativeEntropyIntegrand_jointConvex`
-- `RelativeEntropy.real_log_perspective_integral`
-- `RelativeEntropy.real_relativeEntropy_integral_representation`
-- `RelativeEntropy.real_relativeEntropy_integral_representation_density`
-- `RelativeEntropy.real_relativeEntropy_integrand_integrableOn`
-- `RelativeEntropy.rowMatrixOfVec`
-- `RelativeEntropy.trace_rowMatrixOfVec_mul_mul_conjTranspose`
-- `RelativeEntropy.leftRightRelativeEntropyIntegrand_eq_rowTrace`
-- `RelativeEntropy.leftRightRelativeEntropyIntegrand_eq_quadratic`
-- `RelativeEntropy.leftRightRelativeEntropyIntegrand_posDef_spectral`
-- `RelativeEntropy.posDef_spectral_difference_twoSided_entries`
-- `RelativeEntropy.leftRightRelativeEntropyIntegrand_posDef_spectral_overlap`
-- `RelativeEntropy.traceMatrixRelativeEntropyPlain`
-- `RelativeEntropy.relativeEntropyUnnormalized_eq_traceMatrixRelativeEntropyPlain`
-- `TraceMatrixRelativeEntropyPlainJointConvexity`
-- `relativeEntropyJointConvexity_of_traceMatrixRelativeEntropyPlain_jointConvex`
-- `LeftRightRelativeEntropyIntegrandDensityIntegrable`
-- `TraceMatrixRelativeEntropyPlainLeftRightIntegralRepresentation`
-- `leftRightRelativeEntropyIntegrandDensityIntegrable`
-- `traceMatrixRelativeEntropyPlainLeftRightIntegralRepresentation`
-- `traceMatrixRelativeEntropyPlain_jointConvex_of_leftRight_density_integral_representation`
-- `relativeEntropyJointConvexity_of_leftRight_density_integral_representation`
-- `traceMatrixRelativeEntropyPlain_jointConvex_of_leftRight`
-- `relativeEntropyJointConvexity_of_leftRight`
-- `RelativeEntropy.fullKlein_liebCarrierConcavity_of_leftRight_density_integral_representation`
-- `RelativeEntropy.fullKlein_liebConcavity_of_leftRight_density_integral_representation`
-- `RelativeEntropy.fullKlein_epsteinConcavity_of_leftRight_density_integral_representation`
-- `liebTraceExpConcavity_statement_of_leftRight_density_integral_representation`
-- `epsteinAffineLineConcavity_of_leftRight_density_integral_representation`
-- `RelativeEntropy.fullKlein_liebCarrierConcavity_of_leftRight`
-- `RelativeEntropy.fullKlein_liebConcavity_of_leftRight`
-- `RelativeEntropy.fullKlein_epsteinConcavity_of_leftRight`
-- `liebTraceExpConcavity_statement_of_leftRight`
-- `epsteinAffineLineConcavity_of_leftRight`
-- `RelativeEntropy.scalarTerm`
-- `RelativeEntropy.diagonalTerm`
-- `RelativeEntropy.diagonalMatrixTerm`
-- `RelativeEntropy.diagonalMatrixTerm_cfcLog_nonneg`
-- `RelativeEntropy.weightedSpectralKlein_nonneg`
-- `RelativeEntropy.fullMatrixKlein_nonneg_of_isHermitian_of_strictlyPositive`
-- `RelativeEntropy.kleinInequality_relativeEntropy_nonneg`
-- `kleinInequality_relativeEntropy_nonneg`
-- `RelativeEntropy.logShift`
-- `RelativeEntropy.expLogMatrix`
-- `RelativeEntropy.carrierGibbs_le_traceMatrixExp_of_kleinPremise`
-- `RelativeEntropy.carrierGibbs_eq_traceMatrixExp_at_matrixExp_logPoint`
-- `RelativeEntropyJointConvexity`
-- `GibbsKleinPremise`
-- `gibbsVariationalUpperBoundPremise_of_fullMatrixKlein`
-- `RelativeEntropy.fullKlein_liebCarrierConcavity`
-- `RelativeEntropy.fullKlein_liebConcavity`
-- `RelativeEntropy.fullKlein_epsteinConcavity`
-- `epsteinAffineLineConcavity_of_liebTraceExpConcavity_selfAdjointCarrier`
-
-These expose the finite-dimensional inverse-perspective leaf behind the
-fixed-`t` left/right relative-entropy integrand, scalar/diagonal Klein
-nonnegativity, full finite-dimensional matrix Klein under Hermitian
-strictly-positive hypotheses, Gibbs/full-Klein bridge adapters, the proved
-left/right density/integral representation, unconditional relative-entropy
-joint convexity, and the resulting Lieb/Epstein facades. Tropp one-step
-wrappers are exposed below. The separate identity-tangent consumer now proves
-Golden--Thompson; the conditional-expectation step for arbitrary larger
-histories, automatic variance-proxy normalization, tail-event domination, and
-unconditional full Matrix Bernstein remain separate.
-
-Golden--Thompson endpoint:
-
-- `CFCLog.lineDeriv_one_zero`
-- `goldenThompsonTraceExp`
-
-Epstein/Tropp conditional consumers and support APIs:
-
-- `cfcLogLineDerivTraceSecond`
-- `EpsteinLine.traceSlope`
-- `EpsteinLine.traceSecond`
-- `EpsteinLine.hasDerivAt_traceSlope_of_lineDerivSA`
-- `EpsteinLine.hasDerivAt_traceSlope_of_hasDerivAt_eval`
-- `EpsteinLine.concavity_of_traceSecond_nonpos_of_lineDerivSA`
-- `EpsteinLine.concavity_of_traceSecond_nonpos_of_eval`
-- `matrixLog_le_of_le_matrixExp_of_providerLogMonotone`
-- `troppLogExpComparisonToK_of_providerLogOrder`
-- `EpsteinAffineLineConcavity`
-- `liebTraceExpConcavity_of_epsteinAffineLine`
-- `liebJensenTraceExp_statement_of_epsteinAffineLine`
-- `troppMasterTraceMGFStep_of_epsteinAffineLine`
-- `troppMasterTraceMGFStep_trace_bound_of_epsteinAffineLine_and_providerLogOrder`
-- `troppMasterTraceMGFStep_of_leftRight`
-- `troppLiebJensenChain_of_leftRight` (legacy compatibility)
-- `troppMasterTraceMGFStep_trace_bound_of_leftRight_and_providerLogOrder`
-- `TroppNaturalHistory.suffixMeasurable`
-- `TroppNaturalHistory.historyStepIndependent`
-- `troppNaturalHistoryMeasurable_of_suffix_entry_measurable`
-- `troppHistoryStepIndependent_of_iIndepFun_of_measurable`
-- `TraceExpTroppFrozenBoundInputs`
-- `TraceExpConditioning.troppStep_of_history_le`
-- `TraceExpConditioning.condExpStep_of_history_le`
-- `TraceExpConditioning.bernsteinInputs_of_primitives`
-- `TraceExpConditioning.bernsteinStep_of_history_le`
-- `matrixExpScaledIntegrable_of_provider_finiteMeasure`
-- `isSelfAdjointMatrix_matrixExpect_matrixExp_troppCurrentRandomStep_of_centeredSelfAdjoint`
-- `isStrictlyPositive_matrixExpect_matrixExp_troppCurrentRandomStep_of_centeredSelfAdjoint`
-- `traceExpIntegrable_troppStateHistory_add_step_of_operatorNormBounds_finiteMeasure`
-- `traceExpIntegrable_troppStateHistory_add_K_of_operatorNormBounds_finiteMeasure`
-- `troppCurrentRandomStep_operatorNorm_le_of_summand_bound`
-- `troppStateHistory_operatorNorm_le_of_summand_and_comparison_bounds`
-- `traceExpIntegrable_troppStateHistory_add_step_of_summand_and_comparison_bounds_finiteMeasure`
-- `traceExpIntegrable_troppStateHistory_add_K_of_summand_and_comparison_bounds_finiteMeasure`
-- `traceExpIntegrable_randomMatrixSum_of_operatorNormBounds_finiteMeasure`
-- `lambdaMaxOrdered_le_of_matrixLE_selfAdjoint`
-- `lambdaMinOrdered_le_of_matrixLE_selfAdjoint`
-- `traceMGFBernsteinVarianceProxyBoundLIntegral_of_real`
-- `matrixBernsteinTraceMGFToLaplaceContract`
-- `matrixBernsteinTraceMGFToLaplaceContract_under_primitives`
-- `MatrixBernsteinConditioningTraceMGFProviderAssumptions`
-- `MatrixBernsteinConditioningTraceMGFProviderAssumptions.toTailAssumptions`
-- `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFProviderAssumptions`
-- `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
-
-Interface audit: `CFCLog.DerivOp` is pointwise derivative bookkeeping only, not a
-stable second-level Frechet codomain. The inverse-convexity API now includes
-positive-definite segment and `MatrixLE` packaging, and the relative-entropy
-route includes fixed-`t` left/right integrand joint convexity, full matrix
-Klein, the proved density/integral representation, unconditional
-relative-entropy joint convexity, unconditional Lieb/Epstein facades, and the
-left/right Tropp one-step wrappers. The
-`LogResolvent` layer gives spectral sum, CFC-log cutoff, and renormalized
-cutoff-limit handles; it does not yet give a weighted `CFCLog.lineDeriv` /
-`CFCLog.derivSAAt` resolvent-kernel adapter or the alternative Epstein sign
-proof. The provider layer now closes Golden--Thompson through
-`goldenThompsonTraceExp`; exact conditioning expectation for arbitrary
-larger histories, automatic variance-proxy normalization, and unconditional
-full Matrix Bernstein remain open. Self-adjoint quadratic-form tail subset
-discharge is available through the TailEvent provider wrappers.
-It is intentionally separate from reader-facing examples and the core
-`HighDimProb.RandomMatrix` aggregate.
+Provider module names and proof leaves are intentionally omitted from this
+caller guide. Contributors working on those internals should use
+[`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md),
+the focused provider API tests, and source-level `#check` output.

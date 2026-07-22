@@ -25,7 +25,7 @@ The chain of arguments is:
   comparison.
 
 The high-level consumer
-`exists_terminal_net_expect_sup'_abs_sub_le_truncatedEntropyIntegral` only asks
+`Dudley.truncatedBound` only asks
 for the metric hypotheses on `K`, `t₀`, `R`, the subGaussian increment scale,
 and measurability; the nets, parent maps, covering-number equalities, and
 finiteness facts are constructed internally.
@@ -36,6 +36,10 @@ namespace HighDimProb
 open MeasureTheory
 
 noncomputable section
+
+namespace Dudley
+
+namespace Internal
 
 /-- Expectation of the terminal-net supremum is bounded by the sum of the
 expected per-level parent-increment suprema, with the fixed common root `t₀`.
@@ -179,6 +183,8 @@ theorem expect_sup'_abs_sub_root_le_finiteEntropySum
     _ = finiteEntropySum rho (fun k => (levels (Fin.succ k)).card) σ := by
       rfl
 
+end Internal
+
 /-- Truncated Dudley inequality for a finite terminal net with a fixed root.
 
 From totally bounded `K`, a root `t₀ ∈ K` within radius `R` of every point of
@@ -192,7 +198,7 @@ internal `R`-net of `K` by the radius hypothesis), the finer levels are minimal
 internal dyadic nets (so their cardinalities equal the covering numbers), and
 the parent maps point into the previous level. The caller supplies no paths,
 parents, level cardinalities, or finiteness facts. -/
-theorem exists_terminal_net_expect_sup'_abs_sub_le_truncatedEntropyIntegral
+theorem truncatedBound
     {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
     {P : Measure Ω} [IsProbabilityMeasure P]
     {X : RandomProcess Ω α ℝ}
@@ -287,7 +293,7 @@ theorem exists_terminal_net_expect_sup'_abs_sub_le_truncatedEntropyIntegral
           ≤ finiteEntropySum
             (fun i : Fin (L + 1) => dyadicRadius R (i : Nat))
             (fun k => (levels (Fin.succ k)).card) σ :=
-        expect_sup'_abs_sub_root_le_finiteEntropySum
+        Internal.expect_sup'_abs_sub_root_le_finiteEntropySum
           (P := P) (X := X) (σ := σ)
           (rho := fun i : Fin (L + 1) => dyadicRadius R (i : Nat))
           hroot hparent_mem hparent_dist
@@ -299,6 +305,8 @@ theorem exists_terminal_net_expect_sup'_abs_sub_le_truncatedEntropyIntegral
         finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber
           (K := K) (R := R) (sigma := σ) hR (le_of_lt hσ)
           (fun k => (levels (Fin.succ k)).card) hN hfinite
+
+end Dudley
 
 end
 

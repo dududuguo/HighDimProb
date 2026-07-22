@@ -1,4 +1,4 @@
-import HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
+import HighDimProb.RandomMatrix.Assumptions
 import HighDimProb.RandomMatrix.VarianceProxy
 
 /-!
@@ -19,13 +19,12 @@ structural predicates.
 namespace HighDimProb.Examples.RandomMatrix.CenteredRankOneCovarianceAdapterUsage
 
 open MeasureTheory
-open HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
 
 noncomputable section
 
 /-- A random vector used to form a rank-one covariance contribution. -/
 abbrev RandomRankOneVector (Omega : Type*) [MeasurableSpace Omega] (n : Nat) :=
-  Omega -> RankOneVector n
+  RandomVector Omega (n + 1)
 
 /-- Uncentered rank-one covariance contribution `x x^T`. -/
 def rankOneCovarianceContribution {Omega : Type*} [MeasurableSpace Omega]

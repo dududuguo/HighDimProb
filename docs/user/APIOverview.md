@@ -21,23 +21,15 @@ import HighDimProb.Concentration
 import HighDimProb.SubGaussianProcess
   metric subGaussian increment vocabulary
 
+import HighDimProb.GaussianFunctional.IntegrationByParts
+import HighDimProb.GaussianFunctional.AffineStability
+  focused Gaussian-functional foundations
+
 import HighDimProb.RandomMatrix
   supported finite-dimensional random-matrix base and statement surface
 
 import HighDimProb.RandomMatrix.Concentration
   public trace-MGF, tail, Matrix Bernstein, and sample-covariance surface
-
-import HighDimProb.RandomMatrix.Provider.Analysis
-  expert deterministic matrix analysis and Lieb/Epstein proof infrastructure
-
-import HighDimProb.RandomMatrix.Provider.Conditioning
-  expert conditional-expectation and natural-history proof infrastructure
-
-import HighDimProb.RandomMatrix.Provider.Concentration
-  internal concentration assembly re-exported by RandomMatrix.Concentration
-
-import HighDimProb.RandomMatrix.Provider
-  broad expert provider facade; prefer a narrower layer when possible
 
 import HighDimProb.Experimental
   broad work-in-progress aggregate beyond the supported focused scopes
@@ -48,9 +40,10 @@ import HighDimProb.Examples
 
 The root import is intentionally narrow. A focused module may have a supported
 theorem contract while remaining outside `import HighDimProb`. Downstream
-matrix-concentration users should normally import the public facade
-`HighDimProb.RandomMatrix.Concentration`; the `Provider.*` imports are expert
-implementation boundaries for provider development. Experimental status is
+matrix-concentration users should import the public facade
+`HighDimProb.RandomMatrix.Concentration`. Provider modules are internal
+implementation boundaries, not downstream import surfaces; their ownership is
+documented in `RandomMatrixArchitecture.md`. Experimental status is
 reserved for unfinished surfaces beyond the documented assumptions and module
 boundaries. The public facade does not erase hypotheses: primitive,
 measurability, integrability, independence, radius, variance-proxy, and
@@ -69,10 +62,10 @@ flowchart TD
 
   RM["RandomMatrix"] --> RMObj["Random matrix objects, sums, algebra"]
   RMObj --> Det["Deterministic order / spectral / trace helpers"]
-  Det --> Analytic["Provider.Analysis (expert)"]
-  RMObj --> Cond["Provider.Conditioning (expert)"]
+  Det --> Analytic["Internal analysis layer"]
+  RMObj --> Cond["Internal conditioning layer"]
   Det --> VP["Variance-proxy bridge chain"]
-  Analytic --> MB["Provider.Concentration (implementation)"]
+  Analytic --> MB["Internal concentration assembly"]
   Cond --> MB
   VP --> MB
   MB --> PublicConc["RandomMatrix.Concentration (public facade)"]
@@ -99,10 +92,11 @@ conceptual, while exact declarations are checked by the Lean compiler.
 |---|---|---|---|
 | Stable scalar objects | `HighDimProb` | [`ModuleTree.md`](../architecture/ModuleTree.md) | smoke/API tests |
 | Scalar concentration | `HighDimProb.Concentration` | source modules, tests, and judge files | concentration tests/judge |
+| Full Dudley | `HighDimProb.Concentration` | [`TheoremAtlas.md`](../reference/TheoremAtlas.md) | `DudleyUsage` and `DudleyUse` |
+| Gaussian-functional foundations | focused direct imports | [`TheoremAtlas.md`](../reference/TheoremAtlas.md) | focused API tests |
 | Random matrices | `HighDimProb.RandomMatrix` | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | `HighDimProb/Examples/RandomMatrix` |
 | Matrix concentration | `HighDimProb.RandomMatrix.Concentration` | [`TheoremAtlas.md`](../reference/TheoremAtlas.md) and [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | tests and judge files |
 | Sample covariance routes | `HighDimProb.RandomMatrix.Concentration` | [`RandomMatrixAPI.md`](RandomMatrixAPI.md) | `SampleCovarianceTailUsage` |
-| Expert provider development | narrow `HighDimProb.RandomMatrix.Provider.*` import | [`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md) | provider API tests |
 | External-facing checks | `HighDimProbJudge` | [`JudgeSystem.md`](../maintainers/JudgeSystem.md) | judge files |
 
 ## RandomMatrix Route Map
@@ -132,14 +126,9 @@ HardboneStatements
 ConcentrationStatements
   Matrix Bernstein and sample-covariance wrappers under explicit primitives
 
-Provider.Analysis (expert/internal)
-  deterministic calculus, resolvents, relative entropy, Lieb/Epstein, Golden--Thompson
-
-Provider.Conditioning (expert/internal)
-  kernels, conditional expectation, and natural-history bridges
-
-Provider.Concentration (expert/internal implementation)
-  integrability, trace-MGF, tail, and Matrix Bernstein assembly
+Internal proof layers
+  deterministic analysis, conditioning, integrability, trace-MGF, and
+  Matrix Bernstein assembly; not downstream import surfaces
 
 RandomMatrix.Concentration
   public facade over the documented matrix-concentration theorem surface
@@ -159,6 +148,9 @@ For downstream matrix-concentration use, begin with
 | Generic operator-norm Matrix Bernstein | `matrixBernsteinOpNormTail_opt_of_tropp` | positive threshold, positive/negative Tropp primitives, variance proxies |
 | Sample covariance quadratic-form tail | `SampleCovarianceTailUsage.sampleCovariance_quadraticForm_tail_usage` | independence, integrability, Tropp primitive |
 | Sample covariance operator-norm tail | `SampleCovarianceTailUsage.sampleCovariance_operatorNorm_tail_usage` | positive/negative primitive assumptions |
+| LoRA adapter Gram concentration | `LoRACovarianceInputs.ofIIndepFun`, `loraCovariance_highProbability` | compressed-feature measurability, boundedness, independence, and confidence domain |
+| NTK Gram concentration | `NTKGramInputs.ofIIndepFun`, `ntkGram_highProbability` | feature measurability, boundedness, independence, width, and confidence domain |
+| Softmax Attention Gram concentration | `attentionSoftmaxGramInputs`, `attentionSoftmaxGram_highProbability` | positive temperature, measurable independent logits/heads, head count, and confidence domain |
 | Generated-history exact-row sample covariance | `MatrixBernstein.sampleCovarianceExactRow` / `MatrixBernstein.sampleCovarianceExactRowHighProbability` | matrix measurability, coordinate `MemLp 2`, uniform and row-specific squared-norm bounds, independence, and parameter-domain hypotheses |
 | Lower-level exact-row positive-side route | `sampleCovariance_quadraticForm_tail_optimized_under_exactRowSqNorm_bound_of_troppPrimitive` | hardbone sharp-chain premise, Tropp primitive, integrability |
 | Bridge-layer exact-row centered-square route | `SampleCovarianceExactRowCenteredSquareTroppAssumptions` and `SampleCovarianceExactRowCenteredSquareTwoSidedTroppAssumptions` | centered-square-chain provider premises, negative-side adapters, Tropp primitives, integrability |

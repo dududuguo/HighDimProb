@@ -43,35 +43,40 @@ monotonicity bridge `hasSubgaussianMGF_mono` from `HighDimProb.SubGaussian`.
 
 ## Proved Metric-Entropy Surface
 
-The proved surface consists of:
+The proved surface consists of three deliberately separated layers:
 
-- finite chaining: `chain_sub_eq_sum_range`,
-  `expect_abs_sub_chain_le_sum_of_level_sup`, and
-  `expect_abs_sub_chain_le_sum_of_level_sup_of_subGaussianMGFIncrements`;
-- minimal-cover adapter: `exists_finset_isInternalEpsilonNet_of_totallyBounded`;
-- finite entropy sums: `finiteEntropySum`,
-  `expect_abs_sub_chain_le_finiteEntropySum`, and
-  `expect_abs_sub_chain_le_finiteEntropySum_of_path`;
-- truncated entropy-integral comparison:
-  `sum_mul_sub_le_intervalIntegral_of_antitoneOn`,
-  `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber`, and
-  `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`;
-- deterministic dense-sup bridge: `HighDimProb.ciSup_eq_ciSup_of_denseRange`;
-- full Dudley endpoint: under a probability measure,
-  `dudleySupremum` is the actual set supremum
-  `sSup (|X t omega - X t0 omega| '' K)`, and
-  `dudley_full_supremum_bound` proves the endpoint for totally bounded `K`.
-  Its contract keeps coordinate measurability, subGaussian MGF increments,
-  `t0 ∈ K`, `0 < R`, `0 < sigma`, `dist t t0 ≤ R` on `K`, every-sample
-  uniformly continuous paths, and the explicit premise
-  `IntervalIntegrable (dudleyEntropyIntegrand K) volume 0 R`. The conclusion
-  gives a measurable, `Integrable` supremum and
-  `E sup ≤ 4 * sigma * ∫_0^R sqrt(2 * log(2 * N(K,t))) dt`, where `N(K,t)`
-  is the covering number used by `dudleyEntropyIntegrand`.
+- manual finite certificates (expert/support): `SubGaussianMax` retains the
+  path, parent-map, level-cardinality, finite-entropy-sum, and truncated
+  entropy-integral theorems for callers that need a custom chain;
+- finite-net consumer: `Dudley.truncatedBound` constructs the internal dyadic
+  nets and parent maps from total boundedness and returns a terminal-net
+  supremum bound without asking the caller for certificate data;
+- full consumer: `Dudley.supremum` is the actual set supremum
+  `sSup (|X t omega - X t0 omega| '' K)`, while `Dudley.fullBound` proves
+  measurability, integrability, and
+  `E sup ≤ 4 * sigma * ∫_0^R sqrt(2 * log(2 * N(K,t))) dt`.
+  `Dudley.Inputs` bundles the geometry, increment, path-regularity, and entropy
+  assumptions, and `Dudley.Inputs.bound` is the preferred downstream call.
 
+`Dudley.entropyIntegrand` and `Dudley.entropyIntegral` name the real-valued
+covering-number entropy expression. `ENat.toNat` totalizes an infinite
+covering number, so this definition is used by the full theorem only with a
+totally bounded set at positive radii; it is not an extended-valued entropy
+definition for arbitrary sets.
 The full endpoint uses the explicit every-sample path contract and entropy
 integrability premise. It does not claim an a.e.-only path weakening,
 separable modifications, or removal of the entropy-integrability assumption.
+
+## Gaussian Functional Foundations
+
+`HighDimProb.GaussianFunctional.IntegrationByParts` proves
+`integral_id_mul_eq_integral_deriv_of_gaussianReal_zero_one` for real `C^1`,
+compactly supported functions. `HighDimProb.GaussianFunctional.AffineStability`
+proves `gaussianReal_prod_map_add_linear`, its zero-variance and unit-variance
+specializations, measurable/integrable integral transport, and
+`gaussianReal_prod_map_ouLinear` for nonnegative time. Gaussian Poincare,
+log-Sobolev, and Lipschitz-concentration inequalities remain outside this
+proved surface.
 
 ## RandomMatrix
 

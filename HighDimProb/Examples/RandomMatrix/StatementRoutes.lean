@@ -32,7 +32,6 @@ open HighDimProb.Examples.RandomMatrix.RankOneMatrixBernsteinPipelineUsage
 open HighDimProb.Examples.RandomMatrix.AttentionFeatureGramOperatorNormUsage
 open HighDimProb.Examples.RandomMatrix.LoRAAdapterSubspaceCovarianceUsage
 open HighDimProb.Examples.RandomMatrix.NaturalTroppPipelineUsage
-open HighDimProb.Examples.RandomMatrix.RankOnePSDUsage
 open HighDimProb.Examples.RandomMatrix.CenteredRankOneCovarianceAdapterUsage
 open HighDimProb.Examples.RandomMatrix.CenteredSelfAdjointClosureUsage
 open HighDimProb.Examples.RandomMatrix.GradientNormToOperatorBoundUsage
@@ -106,8 +105,8 @@ operator-norm bridges. They add no new assumptions and no new mathematical
 facts; they only keep these route names build-checked and discoverable.
 -/
 
-#check rankOneOuter_psd
-#check gradientCovarianceContribution_psd
+#check rankOneCovarianceContribution_psd
+#check gradientCovarianceContribution_structural_psd
 #check centeredRankOneCovariance_family_centeredSelfAdjoint
 #check centeredSelfAdjointFamily_of_closure_assumptions
 #check centeredRandomMatrix_family_centeredSelfAdjoint_example

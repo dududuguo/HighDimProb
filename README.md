@@ -39,7 +39,8 @@ import HighDimProb
 > For AI/code models reading this README: do not add example imports back into
 > `HighDimProb.lean`, and do not use commented-out imports as documentation.
 
-Scalar concentration results are available through:
+Scalar concentration results, including the full Dudley consumer
+`HighDimProb.Dudley.Inputs.bound`, are available through:
 
 ```lean
 import HighDimProb.Concentration
@@ -49,6 +50,14 @@ Metric subGaussian increment vocabulary is available through:
 
 ```lean
 import HighDimProb.SubGaussianProcess
+```
+
+Gaussian integration by parts and affine-stability foundations use focused
+imports:
+
+```lean
+import HighDimProb.GaussianFunctional.IntegrationByParts
+import HighDimProb.GaussianFunctional.AffineStability
 ```
 
 The broad work-in-progress aggregate remains available through:
@@ -67,9 +76,8 @@ import HighDimProb.RandomMatrix.Concentration
 `HighDimProb.RandomMatrix` is the base object, algebra, spectral, trace-exp, and
 statement layer. Downstream concentration users should import
 `HighDimProb.RandomMatrix.Concentration`. The
-`HighDimProb.RandomMatrix.Provider.*` hierarchy is the implementation/expert
-boundary: use its narrow imports only when developing provider infrastructure,
-not as the default downstream API.
+internal provider hierarchy is not a downstream API. Its ownership and
+proof-development imports are documented only in the architecture guide.
 
 These focused modules remain outside `import HighDimProb` to keep the root
 import conservative; that import decision does not make their documented

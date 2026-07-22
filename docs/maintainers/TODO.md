@@ -24,12 +24,12 @@ The exact full Dudley facade is complete. The proved route is:
 - [x] **D3 actual set-supremum passage.** Independent finite nets converge
   pointwise to the actual `sSup` over a totally bounded `K`; the finite-limit
   API proves measurability and integrability of the limit.
-- [x] **D4 exact full Dudley facade.** `dudley_full_supremum_bound` proves the
+- [x] **D4 exact full Dudley facade.** `Dudley.fullBound` / `Dudley.Inputs.bound` proves the
   measurable, `Integrable` supremum and
   `E sup ≤ 4 * sigma * ∫_0^R sqrt(2 * log(2 * N(K,t))) dt` under explicit
   probability, geometry, coordinate-measurability, subGaussian-increment,
   every-sample-uniform-continuity, and
-  `IntervalIntegrable (dudleyEntropyIntegrand K) volume 0 R` assumptions.
+  `IntervalIntegrable (Dudley.entropyIntegrand K) volume 0 R` assumptions.
 
 Optional future work, not an incompleteness of the current theorem:
 

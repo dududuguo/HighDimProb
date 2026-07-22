@@ -26,10 +26,20 @@ git diff --check
 
 - Root import smoke tests: `HighDimProbTest/Smoke.lean`, `PublicImports.lean`, `BranchImports.lean`, `ExperimentalImports.lean`.
 - Scalar API tests: probability, tail, Lp/moment, Orlicz, subGaussian, subExponential, real-inequality helpers, and scalar concentration files under `HighDimProbTest`.
-- Random-family and process API checks: `HighDimProbTest/RandomFamilyAPI.lean` plus `BranchImports.lean` and `ExperimentalImports.lean`.
-- Focused subGaussian-process API check: `HighDimProbTest/SubGaussianProcessAPI.lean`; run `lake build HighDimProbTest.SubGaussianProcessAPI` when changing `HighDimProb.SubGaussianProcess` or its public names.
-- Focused SubGaussian maximum/chaining API check: `HighDimProbTest/SubGaussianMaxAPI.lean`; it covers `finiteEntropySum`, `expect_abs_sub_chain_le_finiteEntropySum`, the `Fin`-indexed `expect_abs_sub_chain_le_finiteEntropySum_of_path`, and the geometry-package composition example. Run `lake build HighDimProbTest.SubGaussianMaxAPI` when changing `HighDimProb.Concentration.SubGaussianMax` or its public names.
-- Focused finite-chaining and metric-entropy API checks: `HighDimProbTest/ChainingAPI.lean`, `HighDimProbTest/NetsMetricEntropyAPI.lean`, `HighDimProbTest/SumIntegralAPI.lean`, `HighDimProbTest/MetricEntropyAPI.lean`, and `HighDimProbTest/SubGaussianProcessAPI.lean`; they cover internal-net parent maps, finite endpoint paths, positive-radius net families, explicit `Nat` cardinality data, the generic arbitrary-partition sum/integral adapter, and the truncated dyadic entropy comparison. Run `lake build HighDimProbTest.SubGaussianMaxAPI HighDimProbTest.ChainingAPI HighDimProbTest.NetsMetricEntropyAPI HighDimProbTest.SumIntegralAPI HighDimProbTest.MetricEntropyAPI HighDimProbTest.SubGaussianProcessAPI HighDimProbJudge.Concentration.SubGaussianProcessUse` after changing these public surfaces. The `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral` judge check covers the supplied finite path/certificate composition, exact level-cardinality equalities, and terminal non-top boundary; open coverage follows [`TODO.md`](TODO.md).
+- Random-family and process API checks: `RandomFamilyAPI`,
+  `SubGaussianProcessAPI`, and `RandomProcessPathRegularityAPI`.
+- Manual chaining support checks: `ChainingAPI`, `NetsMetricEntropyAPI`,
+  `SumIntegralAPI`, `MetricEntropyAPI`, `SubGaussianMaxAPI`, and
+  `DudleySupportAPI`. These cover caller-supplied path/cardinality certificates
+  and the internally constructed finite terminal-net consumer.
+- Full Dudley checks: `DudleyEntropyIntegralAPI`, `NetSupremumAPI`,
+  `NonnegativeExpectationLimitAPI`, `RandomProcessPathRegularityAPI`,
+  `DudleyFullAPI`, and `HighDimProbJudge/Concentration/DudleyUse.lean`.
+  The judge imports only `HighDimProb.Concentration` and exercises
+  `Dudley.Inputs.bound`.
+- Gaussian-functional checks: `GaussianIntegrationByPartsAPI` and
+  `GaussianAffineStabilityAPI`. These are focused direct-import tests; there is
+  no broad Gaussian-functional aggregate yet.
 - Focused deterministic dense-sup checks: `HighDimProbTest/DenseSupAPI.lean` and `HighDimProbJudge/Analysis/DenseSupUse.lean`; run `lake build HighDimProb.Analysis.DenseSup`, `lake build HighDimProbTest.DenseSupAPI`, and `lake build HighDimProbJudge.Analysis.DenseSupUse`. The theorem is a supplied dense-sequence, continuous, real-valued, explicitly bounded-above deterministic bridge only; open coverage follows [`TODO.md`](TODO.md).
 - PrecisionDA application checks: `HighDimProbTest/PrecisionDAAPI.lean` covers
   the deterministic PrecisionDA object/provider surface, `HighDimProbTest/ExamplesAPI.lean`

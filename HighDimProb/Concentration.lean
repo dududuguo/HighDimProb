@@ -20,7 +20,7 @@ import HighDimProb.Concentration.DudleyFull
 /-!
 # Concentration branch
 
-Experimental aggregate for scalar tail concentration foundations.
+Public aggregate for scalar concentration, finite maxima, and the full Dudley consumer.
 
 Verified Wikipedia reference:
 * Concentration inequality:
