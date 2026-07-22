@@ -17,7 +17,13 @@ set_option autoImplicit false
 
 noncomputable section
 
-/-- The covering-number integrand in the Dudley entropy integral. -/
+/-- The covering-number integrand in the Dudley entropy integral.
+
+The full Dudley theorem uses this only for a totally bounded set and positive
+radii, where `coveringNumber K t` is finite. At radius zero, `ENat.toNat`
+totalizes a possibly infinite covering number; that endpoint does not affect
+the Lebesgue interval integral. This real-valued definition is not an extended
+entropy integral for arbitrary non-totally-bounded sets. -/
 def dudleyEntropyIntegrand {alpha : Type*} [PseudoMetricSpace alpha]
     (K : Set alpha) (t : Real) : Real :=
   Real.sqrt (2 * Real.log (2 * ((coveringNumber K t).toNat : Real)))
@@ -88,20 +94,22 @@ theorem dyadicRadius_tendsto_zero {R : Real} :
     tendsto_const_nhds.mul hpow
   simpa [dyadicRadius, div_eq_mul_inv, inv_pow] using hmul
 
-/-- The full Dudley entropy integral is nonnegative for a nonnegative radius. -/
+/-- The full Dudley entropy integral is nonnegative when it is interval-integrable. -/
 theorem dudleyEntropyIntegral_nonneg {alpha : Type*} [PseudoMetricSpace alpha]
-    (K : Set alpha) {R : Real} (hR : 0 <= R) :
+    (K : Set alpha) {R : Real} (hR : 0 <= R)
+    (_hInt : IntervalIntegrable (dudleyEntropyIntegrand K) volume 0 R) :
     0 <= dudleyEntropyIntegral K R := by
   exact intervalIntegral.integral_nonneg hR
     (fun t _ => dudleyEntropyIntegrand_nonneg K t)
 
-/-- A nonnegative scalar preserves nonnegativity of the full Dudley integral. -/
+/-- A nonnegative scalar preserves nonnegativity of an integrable Dudley integral. -/
 theorem four_mul_sigma_mul_dudleyEntropyIntegral_nonneg
     {alpha : Type*} [PseudoMetricSpace alpha] (K : Set alpha)
-    {R sigma : Real} (hR : 0 <= R) (hsigma : 0 <= sigma) :
+    {R sigma : Real} (hR : 0 <= R) (hsigma : 0 <= sigma)
+    (hInt : IntervalIntegrable (dudleyEntropyIntegrand K) volume 0 R) :
     0 <= 4 * sigma * dudleyEntropyIntegral K R := by
   exact mul_nonneg (mul_nonneg (by norm_num) hsigma)
-    (dudleyEntropyIntegral_nonneg K hR)
+    (dudleyEntropyIntegral_nonneg K hR hInt)
 
 end
 

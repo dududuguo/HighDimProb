@@ -32,13 +32,15 @@ example {R : Real} :
   dyadicRadius_tendsto_zero
 
 example {alpha : Type*} [PseudoMetricSpace alpha]
-    {K : Set alpha} {R : Real} (hR : 0 <= R) :
+    {K : Set alpha} {R : Real} (hR : 0 <= R)
+    (hInt : IntervalIntegrable (dudleyEntropyIntegrand K) volume 0 R) :
     0 <= dudleyEntropyIntegral K R :=
-  dudleyEntropyIntegral_nonneg K hR
+  dudleyEntropyIntegral_nonneg K hR hInt
 
 example {alpha : Type*} [PseudoMetricSpace alpha]
-    {K : Set alpha} {R sigma : Real} (hR : 0 <= R) (hsigma : 0 <= sigma) :
+    {K : Set alpha} {R sigma : Real} (hR : 0 <= R) (hsigma : 0 <= sigma)
+    (hInt : IntervalIntegrable (dudleyEntropyIntegrand K) volume 0 R) :
     0 <= 4 * sigma * dudleyEntropyIntegral K R :=
-  four_mul_sigma_mul_dudleyEntropyIntegral_nonneg K hR hsigma
+  four_mul_sigma_mul_dudleyEntropyIntegral_nonneg K hR hsigma hInt
 
 end HighDimProbTest
