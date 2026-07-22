@@ -108,8 +108,6 @@ facts; they only keep these route names build-checked and discoverable.
 #check rankOneCovarianceContribution_psd
 #check gradientCovarianceContribution_structural_psd
 #check centeredRankOneCovariance_family_centeredSelfAdjoint
-#check centeredSelfAdjointFamily_of_closure_assumptions
-#check centeredRandomMatrix_family_centeredSelfAdjoint_example
 #check uncenteredGradientCovariance_pointwiseOperatorNormBound
 #check centeredGradientCovariance_pointwiseOperatorNormBound
 #check observationSum_operatorNormTail_example

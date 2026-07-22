@@ -25,27 +25,6 @@ abbrev AttentionFeatureTable (numHeads numTokens : Nat) :=
 abbrev RandomAttentionFeatureTable (Omega : Type*) [MeasurableSpace Omega]
     (numHeads numTokens : Nat) := Omega -> AttentionFeatureTable numHeads numTokens
 
-def attentionFeatureGramContribution {numHeads numTokens : Nat}
-    (Phi : AttentionFeatureTable numHeads numTokens) (h : Fin numHeads) :
-    Matrix (Fin (numTokens + 1)) (Fin (numTokens + 1)) Real :=
-  rankOneMatrix (Phi h)
-
-@[simp] theorem attentionFeatureGramContribution_apply {numHeads numTokens : Nat}
-    (Phi : AttentionFeatureTable numHeads numTokens) (h : Fin numHeads)
-    (i j : Fin (numTokens + 1)) :
-    attentionFeatureGramContribution Phi h i j = Phi h i * Phi h j := by rfl
-
-def empiricalAttentionFeatureGram {numHeads numTokens : Nat}
-    (Phi : AttentionFeatureTable numHeads numTokens) :
-    Matrix (Fin (numTokens + 1)) (Fin (numTokens + 1)) Real :=
-  fun i j => Finset.univ.sum fun h : Fin numHeads => Phi h i * Phi h j
-
-@[simp] theorem empiricalAttentionFeatureGram_apply {numHeads numTokens : Nat}
-    (Phi : AttentionFeatureTable numHeads numTokens)
-    (i j : Fin (numTokens + 1)) :
-    empiricalAttentionFeatureGram Phi i j =
-      Finset.univ.sum fun h : Fin numHeads => Phi h i * Phi h j := by rfl
-
 abbrev randomAttentionFeatureVector {Omega : Type*} [MeasurableSpace Omega]
     {numHeads numTokens : Nat}
     (Phi : RandomAttentionFeatureTable Omega numHeads numTokens)

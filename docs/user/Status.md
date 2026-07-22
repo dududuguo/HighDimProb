@@ -57,26 +57,37 @@ those hypotheses are discharged automatically.
   including the normalized high-probability specialization. Their contracts
   keep matrix measurability, coordinate moment assumptions, row bounds,
   independence, and parameter-domain conditions explicit.
-- `MatrixBernstein.CenteredRankOneInputs.ofIIndepFun` and
-  `CenteredRankOneExactRowInputs.ofIIndepFun` accept independence at the
-  underlying random-vector level and discharge matrix-family independence
-  internally.
-- The generic `CenteredSelfAdjointObservationInputs` route lifts independent
-  self-adjoint observations to optimized centered-sum tails while keeping
-  centered-square integrability, operator-norm bounds, and variance-proxy
-  bounds explicit.
-- `FeatureGramOperator` packages normalized empirical/population Gram
-  deviations and is reused by the NTK, LoRA, and softmax-attention examples.
-  Positive-temperature softmax of independent measurable logits supplies
-  bounded probability-vector features; shared-input conditional dependence and
-  softmax Lipschitz/Jacobian theory are not formalized.
 - The finite-dimensional Hanson-Wright endpoint
   `HighDimProb.HansonWright.hanson_wright_inequality_hdp_explicit_constant`
   is proved for finite real matrices and finite coordinate families under
   explicit `K > 0`, `iIndepFun`, and coordinate `HasSubgaussianMGF`
-  assumptions at `K^2`. Its public `hansonWrightUniversalConstant` is
-  independent of those parameters. It has no matrix symmetry premise and makes
-  no infinite-dimensional claim.
+  assumptions at `K^2`. The public `hansonWrightUniversalConstant` is
+  independent of the matrix, coordinate family, and sub-Gaussian scale; the
+  existential `hanson_wright_inequality_hdp` remains a compatibility wrapper.
+  Neither endpoint requires matrix symmetry or claims an infinite-dimensional
+  extension.
+- The `MatrixBernstein.CenteredRankOneInputs.ofIIndepFun` and
+  `CenteredRankOneExactRowInputs.ofIIndepFun` constructors let callers supply
+  independence at the underlying random-vector level via Mathlib `iIndepFun`;
+  the matrix-family independence obligation is discharged internally.
+- A generic centered self-adjoint observation route
+  (`MatrixBernstein.CenteredSelfAdjointObservationInputs`,
+  `centeredSelfAdjointObservations`, and its high-probability specialization)
+  lifts self-adjoint observations to the optimized operator-norm tail under
+  explicit centered-square-integrability, centered operator-norm, and
+  variance-proxy assumptions. Only centeredness, self-adjointness, and centered
+  entrywise integrability are derived from the uncentered family;
+  `CenteredSelfAdjointObservationInputs.ofIIndepFun` additionally discharges the
+  centered independence obligation from observation-level `iIndepFun` via
+  `iIndepFun_centeredRandomMatrix`. It is a conditional facade, not an
+  unconditional integrable/self-adjoint Bernstein theorem.
+- The Attention feature-Gram example includes a positive-temperature
+  softmax-attention closure: with `tau : {t : Real // 0 < t}`, softmax of
+  independent measurable logits yields bounded attention-weight probability
+  features (`vectorSqNorm <= 1`) that feed the centered rank-one endpoints with
+  radius and variance radii `1`; the general all-real object is the core
+  `HighDimProb.expNormalized`. The softmax Jacobian / Lipschitz layer and the
+  shared-input conditional-dependence case are not formalized.
 
 Across these results, theorem statements may require centeredness,
 self-adjointness, independence, measurability, matrix/trace-exponential
@@ -86,23 +97,11 @@ requirements; they do not erase them.
 
 ## Provider Boundary
 
-`HighDimProb.RandomMatrix.Concentration` is the downstream API. The provider
-hierarchy is the implementation and expert-proof boundary:
-
-- `HighDimProb.RandomMatrix.Provider.Analysis` owns deterministic matrix
-  analysis, CFC/resolvent, relative-entropy, Lieb/Epstein, and
-  Golden--Thompson infrastructure.
-- `HighDimProb.RandomMatrix.Provider.Conditioning` owns kernels, conditional
-  expectation, frozen-parameter, and natural-history infrastructure.
-- `HighDimProb.RandomMatrix.Provider.Concentration` owns trace-MGF, tail, and
-  Matrix Bernstein assembly re-exported by the public facade.
-- `HighDimProb.RandomMatrix.Provider` is the broad expert facade. Normal
-  downstream code should prefer `HighDimProb.RandomMatrix.Concentration`;
-  expert proofs should import the narrowest provider layer they need.
-
-`HighDimProb.RandomMatrix.LiebProvider` is a compatibility import, not a new
-ownership layer. Provider facades expose explicit proof ingredients and do not
-constitute an unconditional concentration theorem.
+`HighDimProb.RandomMatrix.Concentration` is the supported downstream API.
+Provider modules are implementation details and are not part of the downstream
+import contract. Their ownership, dependency direction, and proof-development
+workflow are documented in
+[`RandomMatrixArchitecture.md`](../architecture/RandomMatrixArchitecture.md).
 
 ## Unsupported Boundaries
 
@@ -127,25 +126,23 @@ The current supported surface does not claim:
   targets remain specifications until backed by a theorem.
 
 Outside RandomMatrix, the random-family layer remains vocabulary rather than a
-filtration/martingale framework. The scalar concentration facade exposes the
-full Dudley endpoint through `Dudley.Inputs`: callers provide total
-boundedness, an anchor-radius bound, coordinate measurability, sub-Gaussian MGF
-increments, uniformly continuous sample paths, and interval integrability of
-the entropy integrand. `Dudley.Inputs.bound` constructs the finite nets and
-derives measurability and integrability of `Dudley.supremum`, with
-`E sup <= 4 * sigma * Dudley.entropyIntegral K R`.
-
-The supplied dense-sequence D2/D3 bridges and compact residual lemmas remain
-reusable lower-level interfaces, but they are not caller obligations of the
-default bundled consumer. The full theorem does not remove the
-entropy-integrability premise or claim an a.e.-only path/separable-modification
-weakening.
-
-The focused Gaussian-functional modules prove standard-Gaussian integration by
-parts for compactly supported `C^1` functions, arbitrary two-variable Gaussian
-linear-combination stability including zero variance, integral transport, and
-the Ornstein-Uhlenbeck coefficient specialization. They do not yet claim
-Gaussian Poincare, log-Sobolev, Herbst, or Lipschitz concentration.
+filtration/martingale framework. The metric-entropy route now proves the finite
+D1 anchored supremum bound under a supplied common-anchor path family, shared
+finite level data, and an explicit integrable terminal-residual envelope. Its
+compact residual bridges and D2 integral limit inequality are proved under
+explicit compactness, mapping, convergence, and interval-integrability inputs.
+The D3 bridge `expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound` and
+the D2-to-D3 assembly bridge
+`expect_iSup_abs_sub_anchor_le_mul_intervalIntegral_of_denseRange_of_prefix_bound`
+remain reusable supplied-bound interfaces. The public
+`dudleyEntropyIntegral` theorem now closes the anchored Dudley endpoint over a
+totally bounded subtype `K`: it constructs the dyadic finite geometry, controls
+the finite-prefix residual by the finite subGaussian maximum bound, and invokes
+the existing D2-to-D3 passage. The theorem explicitly assumes a dense sequence
+in `K`, a singleton anchor `R`-net, measurable subGaussian increments, positive
+parameters, continuous and bounded sample paths on `K`, integrability of the
+full anchored supremum, and interval integrability of the entropy integrand at
+zero. It does not derive those regularity or integrability assumptions.
 
 The finite-dimensional covering surface is also proved and publicly imported by
 `HighDimProb.Geometry`: `l1Ball` and the internal `ENat` bounds
@@ -156,6 +153,26 @@ volumetric route through `B1 ⊆ B2` (`l1Ball` inside the Euclidean closed ball)
 and Mathlib subset comparison, not the sharper Maurey estimate. The existing
 `exists_finset_isInternalEpsilonNet_of_totallyBounded` supplies the exact finite
 internal-net facade; no duplicate constructor was added.
+The scalar concentration facade also exposes the
+full Dudley endpoint through `Dudley.Inputs`: callers provide total boundedness,
+an anchor and radius, coordinate measurability, subGaussian MGF increments,
+every-sample uniform path continuity, and
+`IntervalIntegrable (Dudley.entropyIntegrand K) volume 0 R`. Then
+`Dudley.Inputs.bound` proves that `Dudley.supremum X K t0` is measurable and
+`Integrable`, with
+`E sup ≤ 4 * sigma * ∫_0^R sqrt(2 * log(2 * N(K,t))) dt`. The explicit
+`Dudley.fullBound` theorem exposes the same mathematics without bundling.
+`Dudley.truncatedBound` is the lower-level finite-terminal-net consumer.
+
+The focused Gaussian-functional modules currently prove standard-Gaussian
+integration by parts for `C^1` compactly supported real functions, arbitrary
+two-variable Gaussian linear-combination stability (including zero variance),
+measurable/integrable integral transport, and the Ornstein--Uhlenbeck
+coefficient specialization. They do not yet claim Gaussian Poincare,
+log-Sobolev, or Lipschitz-concentration inequalities.
+
+The full Dudley statement does not remove the entropy-integrability premise or
+claim an a.e.-only path or separable-modification weakening.
 
 ## Canonical References
 

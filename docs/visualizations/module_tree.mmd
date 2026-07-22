@@ -4,6 +4,8 @@ flowchart TD
   Scalar["Scalar<br/>stable branch"]
   Statements["Statements<br/>stable typed statement layer"]
   Experimental["Experimental<br/>experimental aggregate"]
+  Concentration["Concentration<br/>public focused aggregate"]
+  RandomMatrix["RandomMatrix<br/>supported focused branch"]
 
   Root --> Init
   Root --> Scalar
@@ -23,10 +25,10 @@ flowchart TD
   Scalar --> ScalarPreds["Orlicz / SubGaussian / SubExponential<br/>stable predicates"]
   Scalar --> ScalarCenter["Scalar.Centering / Scalar.Variance<br/>stable helper layer"]
 
-  Concentration --> CBasic["Basic / Markov / Chebyshev / LayerCake<br/>supported leaves"]
-  Concentration --> CImp["OrliczToTail / TailToOrlicz / MomentImplications / MGF / Implications<br/>supported proof spine"]
+  Concentration --> CBasic["Basic / Markov / Chebyshev / LayerCake<br/>supported proved leaves"]
+  Concentration --> CImp["OrliczToTail / TailToOrlicz / MomentImplications / MGF / Implications<br/>supported implication spine"]
   Concentration --> CSums["SubGaussianSums / SubExponentialSums / RademacherSums<br/>supported sum infrastructure"]
-  Concentration --> CTheorems["Hoeffding / Bernstein / Dudley / Hanson-Wright<br/>supported theorem leaves"]
+  Concentration --> CTheorems["Hoeffding / Bernstein / finite maxima / Dudley / Hanson--Wright<br/>supported theorem leaves"]
 
   Distributions --> DRad["Rademacher / RademacherFamily<br/>experimental atoms"]
   Vector --> VLeaves["RandomVector / Covariance / Isotropic / SubGaussianVector<br/>experimental"]
@@ -39,10 +41,12 @@ flowchart TD
 
   classDef stable fill:#e7f5e9,stroke:#2e7d32,color:#123;
   classDef experimental fill:#fff8e1,stroke:#f9a825,color:#332;
+  classDef public fill:#e8f1fb,stroke:#2767a5,color:#123;
   classDef statement fill:#e3f2fd,stroke:#1565c0,color:#123;
   classDef helper fill:#f5f5f5,stroke:#616161,color:#111;
 
-  class Root,Init,Scalar,Statements,ScalarBasic,ScalarAnalysis,ScalarPreds,ScalarCenter,Concentration stable;
-  class Experimental,Vector,Geometry,Distributions,RandomMatrix,LimitTheorems,Process,SignalRecovery,Tactic,DRad,VLeaves,GLeaves,LLN,Proc experimental;
+  class Root,Init,Scalar,Statements,ScalarBasic,ScalarAnalysis,ScalarPreds,ScalarCenter stable;
+  class Experimental,Vector,Geometry,Distributions,LimitTheorems,Process,SignalRecovery,Tactic,DRad,VLeaves,GLeaves,LLN,Proc experimental;
+  class Concentration,RandomMatrix,CBasic,CImp,CSums,CTheorems public;
   class RMStatements,Statements statement;
-  class RMLeaves,RMProofs,CBasic,CImp,CSums,CTheorems helper;
+  class RMLeaves,RMProofs helper;

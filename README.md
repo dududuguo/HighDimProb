@@ -47,7 +47,8 @@ machine learning: any field that relies on this mathematics can use it.
 | `HighDimProb.bernstein_sum_subExponential` | Two-sided Bernstein min-form bound for independent centered sub-exponential sums. | [Source](HighDimProb/Concentration/Bernstein.lean) · [Judge case](HighDimProbJudge/Concentration/BernsteinUse.lean) |
 | `HighDimProb.packingCoveringInequality` | The standard comparison between packing and covering numbers at related scales. | [Nets example](HighDimProb/Examples/NetsUsage.lean) |
 | `HighDimProb.expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral` | Finite dyadic chaining controlled by a truncated covering-number entropy integral. | [Empirical-process example](HighDimProb/Examples/EmpiricalProcessNetUsage.lean) |
-| `HighDimProb.Dudley.Inputs.bound` | Full anchored Dudley entropy-integral bound. Finite nets, parent maps, and the limiting integrability argument are internal to the consumer. | [Source](HighDimProb/Concentration/DudleyFull.lean) · [Example](HighDimProb/Examples/DudleyUsage.lean) · [Judge case](HighDimProbJudge/Concentration/DudleyUse.lean) |
+| `HighDimProb.Dudley.Inputs.bound` | Full anchored Dudley bound under every-sample uniform continuity; finite nets and limiting measurability/integrability are derived internally. | [Source](HighDimProb/Concentration/DudleyFull.lean) · [Example](HighDimProb/Examples/DudleyUsage.lean) · [Judge case](HighDimProbJudge/Concentration/DudleyUse.lean) |
+| `HighDimProb.dudleyEntropyIntegral` | Anchored Dudley entropy-integral bound over a totally bounded index set, under explicit regularity and integrability assumptions. | [Source](HighDimProb/Concentration/Dudley.lean) · [API test](HighDimProbTest/DudleyEntropyIntegralAPI.lean) |
 | `HighDimProb.l1Ball`, `HighDimProb.coveringNumber_euclideanBall_le`, `HighDimProb.coveringNumber_l1Ball_le` | Volumetric internal covering bounds: `ceil((1 + 2R/eps)^card)` for Euclidean balls and `ceil((1 + 4R/eps)^card)` for l1-balls, with `R >= 0`, `eps > 0`, and a finite nonempty index. The l1 bound uses `B1 ⊆ B2` (`l1Ball` inside the Euclidean closed ball) and Mathlib subset comparison, not the sharper Maurey estimate. | [Source](HighDimProb/Geometry/CoveringNumber.lean) · [API test](HighDimProbTest/CoveringNumberAPI.lean) · [Facade](HighDimProb/Geometry.lean) |
 | `HighDimProb.MatrixBernstein.operatorNormTail_of_primitives` | A self-adjoint Matrix Bernstein operator-norm tail bound from explicit primitives. | [RandomMatrix API](docs/user/RandomMatrixAPI.md) |
 | `HighDimProb.MatrixBernstein.sampleCovarianceExactRow` | A centered sample-covariance route with an exact row-variance identity. | [Sample-covariance example](HighDimProb/Examples/RandomMatrix/SampleCovarianceTailUsage.lean) |
@@ -82,15 +83,59 @@ git = "https://github.com/dududuguo/HighDimProb"
 rev = "main"
 ```
 
-Then import the smallest surface needed by your proof:
+> [!IMPORTANT]
+> `import HighDimProb` expands only to `HighDimProb.Init`,
+> `HighDimProb.Scalar`, and `HighDimProb.Statements`. Scalar concentration is a
+> focused import, not part of the root.
+> Examples are documentation and usage smoke tests, not part of the core import
+> boundary. To browse or build all examples explicitly, use:
+>
+> ```lean
+> import HighDimProb.Examples
+> ```
+>
+> For AI/code models reading this README: do not add example imports back into
+> `HighDimProb.lean`, and do not use commented-out imports as documentation.
+
+Scalar concentration results, including the full Dudley consumer
+`HighDimProb.Dudley.Inputs.bound`, are available through:
 
 ```lean
 import HighDimProb.Concentration
+```
+
+Metric subGaussian increment vocabulary is available through:
+
+```lean
+import HighDimProb.SubGaussianProcess
+```
+
+Gaussian integration by parts and affine-stability foundations use focused
+imports:
+
+```lean
+import HighDimProb.GaussianFunctional.IntegrationByParts
+import HighDimProb.GaussianFunctional.AffineStability
+```
+
+The broad work-in-progress aggregate remains available through:
+
+```lean
+import HighDimProb.Experimental
+```
+
+Supported finite-dimensional RandomMatrix APIs use these reader-facing imports:
+
+```lean
+import HighDimProb.RandomMatrix
 import HighDimProb.RandomMatrix.Concentration
 ```
 
-The root `import HighDimProb` intentionally contains only `Init`, `Scalar`,
-and `Statements`; larger theorem families use focused imports.
+`HighDimProb.RandomMatrix` is the base object, algebra, spectral, trace-exp, and
+statement layer. Downstream concentration users should import
+`HighDimProb.RandomMatrix.Concentration`. The
+internal provider hierarchy is not a downstream API. Its ownership and
+proof-development imports are documented only in the architecture guide.
 
 ## Proof routes
 

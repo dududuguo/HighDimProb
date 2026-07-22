@@ -14,7 +14,7 @@ whose exact import set is validated against the ledger.
 ## What It Checks
 
 - Stable root imports through `import HighDimProb`.
-- Experimental branch imports such as `import HighDimProb.Concentration` and
+- Focused branch imports such as `import HighDimProb.Concentration` and
   `import HighDimProb.RandomMatrix`.
 - Public theorem names for basic scalar concentration, Orlicz/tail bridges,
   moment bridges, Rademacher, finite sums, Hoeffding, Bernstein, random-matrix
@@ -58,6 +58,8 @@ whose exact import set is validated against the ledger.
   full integral under explicit interval integrability.
 - `HighDimProbJudge/Analysis/CompactApproximationUse.lean`: compact residual
   bridge visibility for uniform and `toReal` uniform-function distances.
+- `HighDimProbJudge/Analysis/SoftmaxUse.lean`: finite softmax measurability,
+  probability-vector bounds, and squared-norm control.
 - `HighDimProbJudge/Concentration/SubGaussianMaxD2D3Use.lean`: the D2-to-D3
   assembly bridge under supplied prefix bounds and supplied residual expectation
   convergence.
@@ -66,6 +68,8 @@ whose exact import set is validated against the ledger.
   dominated-convergence call is covered by a focused `HighDimProbTest` API
   check without a duplicate project wrapper. These surfaces do not establish
   full D2 or D4.
+- `HighDimProbJudge/Concentration/DudleyUse.lean`: the public
+  `Dudley.Inputs.bound` consumer through `HighDimProb.Concentration`.
 - `HighDimProbJudge/RandomMatrix/OperatorNormUse.lean`: operator-norm
   measurability.
 - `HighDimProbJudge/RandomMatrix/StatementUse.lean`: matrix Bernstein typed
@@ -102,12 +106,18 @@ whose exact import set is validated against the ledger.
   `matrixBernsteinTraceMGF_statement`, sample-covariance exact-row centered-square-chain wrapper and assumption-bundle visibility,
   negative exact-row variance-proxy provider visibility, and their main
   structural/analytic dependencies.
-- `HighDimProbJudge/RandomMatrix/MatrixBernsteinConsumersUse.lean`: append-only
+- `HighDimProbJudge/RandomMatrix/MatrixBernsteinConsumersUse.lean`: immutable
   checks for vector-level independence constructors and the generic centered
   self-adjoint observation consumer through the public concentration facade.
-- `HighDimProbJudge/Concentration/HansonWrightExplicitUse.lean`: append-only
+- `HighDimProbJudge/Concentration/HansonWrightExplicitUse.lean`: immutable
   downstream check for the named universal constant and explicit-constant
   finite Hanson-Wright endpoint.
+- `HighDimProbJudge/GaussianFunctional/GaussianAffineStabilityUse.lean`:
+  product-Gaussian affine stability, integral transport, and the OU
+  specialization.
+- `HighDimProbJudge/GaussianFunctional/GaussianIntegrationByPartsUse.lean`:
+  the compactly supported `C^1` standard-Gaussian integration-by-parts
+  endpoint.
 
 ## Matrix Sub-Gaussian Judge Boundary
 

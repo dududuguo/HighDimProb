@@ -61,7 +61,9 @@ variance-proxy bounds, and operator-norm bridge assumptions.
 ## Branch Modules
 
 - `HighDimProb.Scalar`: one-dimensional probability infrastructure, including scalar centering and variance leaves.
-- `HighDimProb.Concentration`: public focused scalar-concentration facade, including the implication spine, finite maxima, full Dudley consumer, and finite Hanson-Wright endpoint.
+- `HighDimProb.Concentration`: public focused aggregate for scalar concentration,
+  finite maxima, the two documented Dudley consumers, and finite-dimensional
+  Hanson--Wright.
 - `HighDimProb.Vector`: finite-dimensional random-vector infrastructure.
 - `HighDimProb.Geometry`: nets, metric entropy, covering/packing statements, and Gaussian-width vocabulary.
 - `HighDimProb.RandomMatrix`: supported finite-dimensional random-matrix base.
@@ -80,7 +82,7 @@ variance-proxy bounds, and operator-norm bridge assumptions.
 HighDimProb
 - Init (stable)
 - Scalar (stable)
-- Concentration (public focused facade)
+- Concentration (public focused import)
 - Vector (experimental)
 - Geometry (experimental)
 - RandomMatrix (supported finite-dimensional focused branch)
@@ -102,12 +104,14 @@ Stage V1 adds human/agent-facing diagrams for this tree in
 `docs/visualizations/module_tree.mmd`, and the generated Lean import graph in
 `docs/visualizations/lake_import_graph.dot`.
 
-## Concentration Import Decision
+## Stage SC-final Import Decision
 
-`HighDimProb.Concentration` is a supported focused import and remains outside
-the intentionally small `import HighDimProb` root. Focused-import placement is
-an import-cost decision, not an experimental-status marker. Unfinished
-extensions remain excluded from the claims of the facade.
+`HighDimProb.Concentration` is a supported focused aggregate and remains
+outside the stable root import. Its documented endpoints include scalar
+concentration, finite maxima, the dense-sequence and uniform-continuity Dudley
+consumers, and finite-dimensional Hanson--Wright. Stable-root promotion remains
+separate from endpoint support; unfinished equivalence packaging or alternate
+hypothesis variants do not make the documented contracts experimental.
 
 ## Leaf Declaration Policy
 

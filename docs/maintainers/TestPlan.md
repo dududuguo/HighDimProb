@@ -28,27 +28,29 @@ git diff --check
 
 - Root import smoke tests: `HighDimProbTest/Smoke.lean`, `PublicImports.lean`, `BranchImports.lean`, `ExperimentalImports.lean`.
 - Scalar API tests: probability, tail, Lp/moment, Orlicz, subGaussian, subExponential, real-inequality helpers, and scalar concentration files under `HighDimProbTest`.
-- Focused Hanson-Wright checks: `HighDimProbTest/HansonWrightAPI.lean` and
-  `HighDimProbJudge/Concentration/HansonWrightExplicitUse.lean`; run
-  `lake build HighDimProb.Concentration.HansonWright`,
-  `lake build HighDimProbTest.HansonWrightAPI`, and the focused Judge target
-  when changing the finite real-matrix endpoint, its public constant, or names.
+- Focused Hanson-Wright API check: `HighDimProbTest/HansonWrightAPI.lean`; it checks the public universal constant, explicit-constant endpoint, and existential compatibility wrapper. Run `lake build HighDimProb.Concentration.HansonWright` and `lake build HighDimProbTest.HansonWrightAPI` when changing the finite real-matrix endpoint or its public names.
 - Random-family and process API checks: `HighDimProbTest/RandomFamilyAPI.lean` plus `BranchImports.lean` and `ExperimentalImports.lean`.
 - Focused subGaussian-process API check: `HighDimProbTest/SubGaussianProcessAPI.lean`; run `lake build HighDimProbTest.SubGaussianProcessAPI` when changing `HighDimProb.SubGaussianProcess` or its public names.
 - Focused SubGaussian maximum/chaining API check: `HighDimProbTest/SubGaussianMaxAPI.lean`; it covers `finiteEntropySum`, the `Fin`-indexed single-path bounds, the D1 finite anchored supremum bound with a supplied common-anchor path family and explicit integrable terminal-residual envelope, the D3 supplied dense-sequence/full-supremum expectation passage, and the D2-to-D3 assembly bridge under supplied prefix bounds and supplied residual expectation convergence. Run `lake build HighDimProbTest.SubGaussianMaxAPI` when changing `HighDimProb.Concentration.SubGaussianMax` or its public names.
-- Focused full Dudley checks: `DudleySupportAPI`,
-  `DudleyEntropyIntegralAPI`, `DudleyFullAPI`, and `DudleyAPI`.
-  The last two consume `Dudley.fullBound` and `Dudley.Inputs.bound` through
-  `HighDimProb.Concentration`; `HighDimProbJudge/Concentration/DudleyUse.lean`
-  is the append-only downstream case.
+- Focused dense-sequence Dudley API check: `HighDimProbTest/DudleyEntropyIntegralAPI.lean`; it consumes `dudleyEntropyIntegral` through the public signature. Run `lake build HighDimProb.Concentration.Dudley` and then `lake build HighDimProbTest.DudleyEntropyIntegralAPI` when changing this endpoint.
+- Focused uniform-continuity Dudley API checks: `HighDimProbTest/DudleyAPI.lean` and `HighDimProbTest/DudleyFullAPI.lean`; they consume `Dudley.Inputs.bound` and `Dudley.fullBound` through `HighDimProb.Concentration`.
 - Focused covering-number API check: `HighDimProbTest/CoveringNumberAPI.lean`; it imports the public facade `HighDimProb.Geometry` and checks `l1Ball`, the Euclidean and l1 volumetric internal `ENat` bounds, and the existing totally-bounded-to-exact-finite internal-net facade. Run `lake build HighDimProb.Geometry.CoveringNumber` and then `lake build HighDimProbTest.CoveringNumberAPI` when changing this surface.
 - Focused finite-chaining and metric-entropy API checks: `HighDimProbTest/ChainingAPI.lean`, `HighDimProbTest/NetsMetricEntropyAPI.lean`, `HighDimProbTest/SumIntegralAPI.lean`, `HighDimProbTest/MetricEntropyAPI.lean`, and `HighDimProbTest/SubGaussianProcessAPI.lean`; they cover internal-net parent maps, finite endpoint paths, common-anchor residual/step-bound composition including the zero-level boundary, positive-radius net families, explicit `Nat` cardinality data, the generic arbitrary-partition sum/integral adapter, the truncated dyadic entropy comparison, the D2 deterministic lower-endpoint/full-integral convergence bridge and supplied residual-limit inequality, and the D3 passage from uniformly bounded dense-sequence prefixes to the full anchored supremum. Run `lake build HighDimProbTest.DudleyAPI HighDimProbTest.SubGaussianMaxAPI HighDimProbTest.ChainingAPI HighDimProbTest.NetsMetricEntropyAPI HighDimProbTest.SumIntegralAPI HighDimProbTest.MetricEntropyAPI HighDimProbTest.SubGaussianProcessAPI HighDimProbJudge.Analysis.SumIntegralD2Use HighDimProbJudge.Analysis.CompactApproximationUse HighDimProbJudge.Concentration.SubGaussianProcessUse HighDimProbJudge.Concentration.SubGaussianMaxD2D3Use` after changing these public surfaces. Existing immutable Judge leaves cover D1-D3 contracts; `DudleyAPI.lean` covers the assembled endpoint.
 - Focused compact-residual and expectation-convergence API checks: `HighDimProbTest/CompactApproximationAPI.lean` checks the three compact residual bridges, while `HighDimProbTest/ExpectationConvergenceAPI.lean` checks `MeasureTheory.tendsto_integral_filter_of_dominated_convergence` directly without a duplicate project wrapper. Run `lake build HighDimProb.Analysis.CompactApproximation HighDimProbTest.CompactApproximationAPI HighDimProbTest.ExpectationConvergenceAPI` after changing these surfaces.
+- Random-family and process API checks: `RandomFamilyAPI`,
+  `SubGaussianProcessAPI`, and `RandomProcessPathRegularityAPI`.
+- Manual chaining support checks: `ChainingAPI`, `NetsMetricEntropyAPI`,
+  `SumIntegralAPI`, `MetricEntropyAPI`, `SubGaussianMaxAPI`, and
+  `DudleySupportAPI`. These cover caller-supplied path/cardinality certificates
+  and the internally constructed finite terminal-net consumer.
+- Full Dudley checks: `DudleyEntropyIntegralAPI`, `NetSupremumAPI`,
+  `NonnegativeExpectationLimitAPI`, `RandomProcessPathRegularityAPI`,
+  `DudleyFullAPI`, and `HighDimProbJudge/Concentration/DudleyUse.lean`.
+  The judge imports only `HighDimProb.Concentration` and exercises
+  `Dudley.Inputs.bound`.
 - Gaussian-functional checks: `GaussianIntegrationByPartsAPI` and
-  `GaussianAffineStabilityAPI`, with matching append-only Judge leaves.
-- Feature-Gram and softmax checks: `RandomMatrixFeatureGramOperatorAPI`,
-  `SoftmaxAPI`, and `ExamplesAPI`; the examples must consume public
-  concentration abstractions and must not import provider modules directly.
+  `GaussianAffineStabilityAPI`. These are focused direct-import tests; there is
+  no broad Gaussian-functional aggregate yet.
 - Focused deterministic dense-sup checks: `HighDimProbTest/DenseSupAPI.lean` and `HighDimProbJudge/Analysis/DenseSupUse.lean`; run `lake build HighDimProb.Analysis.DenseSup`, `lake build HighDimProbTest.DenseSupAPI`, and `lake build HighDimProbJudge.Analysis.DenseSupUse`. The theorem is a supplied dense-sequence, continuous, real-valued, explicitly bounded-above deterministic bridge only; open coverage follows [`TODO.md`](TODO.md).
 - PrecisionDA application checks: `HighDimProbTest/PrecisionDAAPI.lean` covers
   the deterministic PrecisionDA object/provider surface, `HighDimProbTest/ExamplesAPI.lean`
@@ -112,10 +114,6 @@ git diff --check
   `HighDimProbTest/RandomMatrixConcentrationAPI.lean`,
   `HighDimProbTest/ExamplesAPI.lean`, and
   `HighDimProbJudge/RandomMatrix/MatrixBernsteinUse.lean`.
-- Vector-level independence constructors and the generic centered self-adjoint
-  observation consumer are covered in
-  `HighDimProbTest/RandomMatrixPublicConcentrationAPI.lean` and the append-only
-  `HighDimProbJudge/RandomMatrix/MatrixBernsteinConsumersUse.lean`.
 - Variance-proxy and hardbone API coverage includes the centered second-moment
   comparison, rank-one second-moment consumer, exact row second-moment hardbone
   consumer, deterministic variance-proxy norm subadditivity, exact rank-one

@@ -13,25 +13,26 @@ history for exact old wording.
   adaptedness, martingales, and independence conditioning to later contracts.
 - Next random-object task: `RP-API-random-family-downstream-consumer-contract`.
 
-### Dudley Status
+### Dudley Closure Roadmap
 
-The Dudley route is closed. The public consumer is
-`Dudley.Inputs.bound`: it constructs finite dyadic nets internally and uses
-uniformly continuous sample paths plus a nonnegative Fatou argument to derive
-measurability and integrability of the full anchored supremum. Callers retain
-the total-boundedness, anchor-radius, coordinate-measurability, sub-Gaussian
-increment, uniform path-regularity, and entropy-integrability obligations.
+#### Dense-sequence endpoint
+
+The Dudley route is closed under explicit boundary conditions. D1 supplies the
+finite anchored entropy bound, D2/D3 supply the residual/integral and dense-sup
+passages, and `dudleyEntropyIntegral` constructs the dyadic finite geometry and
+controls its terminal residual by the finite subGaussian maximum theorem. The
+endpoint retains explicit dense-sequence, singleton-anchor-net,
+total-boundedness, sample regularity, full-supremum integrability, and entropy
+interval-integrability assumptions.
 
 - [x] **D1 finite anchored supremum.** The finite anchored process supremum is
   bounded by the truncated entropy integral plus an explicit integrable
   terminal-residual envelope, under a supplied common-anchor compatible path
   family and shared finite level data.
-- [x] **D2 small-scale/full-integral passage.** The public consumer takes
-  arbitrary internal nets at vanishing dyadic radii and proves convergence of
-  their finite suprema to the full supremum. The nonnegative expectation-limit
-  layer transfers the uniform finite-net bounds and derives integrability. The
-  alternative deterministic compact bridges
-  `tendstoUniformlyOn_abs_sub_of_isCompact`,
+- [x] **D2 small-scale/full-integral passage.** The finite-prefix residual in
+  `dudleyEntropyIntegral` tends to `0` by a finite subGaussian maximum estimate;
+  no dominated-convergence adapter is needed for this endpoint. The deterministic
+  compact bridges `tendstoUniformlyOn_abs_sub_of_isCompact`,
   `tendsto_edist_uniformFun_abs_sub_of_isCompact`, and
   `tendsto_toReal_edist_uniformFun_abs_sub_of_isCompact` are proved under their
   explicit compactness, continuity, uniform-approximation, and mapping inputs;
@@ -52,16 +53,41 @@ increment, uniform path-regularity, and entropy-integrability obligations.
   is also proved, but only from supplied prefix bounds and supplied residual
   expectation convergence. A separable-space consumer may supply Mathlib's
   `denseSeq`.
-- [x] **D4 full Dudley facade.** `Dudley.fullBound` proves the explicit
-  theorem and `Dudley.Inputs.bound` packages its downstream assumptions.
+- [x] **D4 exact full Dudley facade.** `dudleyEntropyIntegral` proves the
+  anchored expected-supremum entropy-integral bound under explicit probability,
+  geometry, increment, regularity, and entropy-integrability assumptions.
 
-No active Dudley closure leaf remains. A future theorem may weaken uniform path
-continuity to a carefully stated separable-modification or a.e. regularity
-contract, but must remain a separate proved endpoint.
+No active Dudley closure leaf remains. A future API refinement may weaken or
+derive the explicit full-supremum integrability assumption, but must not replace
+the current theorem with a stronger unproved claim.
 
 - Optional/nonblocking covering refinement: prove the sharper Maurey l1 bound
   `(2d + 1)^ceil(R^2 / eps^2)`; the current volumetric covering bounds are
   proved and supported.
+#### Uniform-continuity endpoint
+
+The exact full Dudley facade is complete. The proved route is:
+
+- [x] **D1 finite anchored supremum.** Finite terminal nets are bounded by the
+  truncated entropy integral with a fixed anchor.
+- [x] **D2 small-scale/full-integral passage.** Dyadic radii tend to zero and
+  the explicit interval-integrable entropy integrand bounds every truncation.
+- [x] **D3 actual set-supremum passage.** Independent finite nets converge
+  pointwise to the actual `sSup` over a totally bounded `K`; the finite-limit
+  API proves measurability and integrability of the limit.
+- [x] **D4 exact full Dudley facade.** `Dudley.fullBound` / `Dudley.Inputs.bound` proves the
+  measurable, `Integrable` supremum and
+  `E sup ≤ 4 * sigma * ∫_0^R sqrt(2 * log(2 * N(K,t))) dt` under explicit
+  probability, geometry, coordinate-measurability, subGaussian-increment,
+  every-sample-uniform-continuity, and
+  `IntervalIntegrable (Dudley.entropyIntegrand K) volume 0 R` assumptions.
+
+Optional future work, not an incompleteness of the current theorem:
+
+- [ ] Investigate an a.e.-only sample-path regularity contract or a separable
+  modification when a downstream application needs a weaker hypothesis.
+- [ ] Add alternate entropy representations for settings where an extended
+  (`ENNReal`) entropy object is preferable to the current real-valued API.
 
 Do not build:
 
@@ -82,9 +108,11 @@ Risk gates:
 ## Active RandomMatrix Work
 
 - Hanson-Wright is closed at the stable finite real-matrix endpoint
-  `HighDimProb.HansonWright.hanson_wright_inequality_hdp`; no Hanson-Wright task
-  remains active. Keep any extension separate from this finite-coordinate,
-  no-symmetry contract.
+  `HighDimProb.HansonWright.hanson_wright_inequality_hdp_explicit_constant`,
+  with public `hansonWrightUniversalConstant` and existential compatibility
+  wrapper `hanson_wright_inequality_hdp`; no Hanson-Wright task remains
+  active. Keep any extension separate from this finite-coordinate, no-symmetry
+  contract.
 - Keep the Matrix Bernstein API boundary honest: the generated-history
   `MatrixBernstein.*_of_primitives` facades close the canonical optimized and
   high-probability statements, but do not provide automatic variance-proxy
@@ -117,10 +145,48 @@ Risk gates:
   `MatrixBernstein.sampleCovarianceExactRow` now close the generated-history
   exact-row tail route, while
   `MatrixBernstein.sampleCovarianceExactRowHighProbability` closes its
-  normalized `1 - delta` specialization. Use `iIndepFun_centeredRankOne`
-  when raw random-vector independence is available. The next safe task is a
-  reader-facing exact-row application or a Loewner/spectral corollary; keep the
-  older Tropp bundles as compatibility surfaces.
+  normalized `1 - delta` specialization. Prefer the
+  `CenteredRankOneInputs.ofIIndepFun` /
+  `CenteredRankOneExactRowInputs.ofIIndepFun` constructors (backed by
+  `iIndepFun_centeredRankOne`) so callers state only vector-level `iIndepFun`.
+  The LoRA and NTK Gram examples now both use this exact-row + vector-independence
+  route with normalized, high-probability, and Loewner-sandwich endpoints via the
+  shared `upperTailProb_operatorNorm_smul_one_div_natCast` scaling helper. The
+  generic `MatrixBernstein.CenteredSelfAdjointObservationInputs` /
+  `centeredSelfAdjointObservations` route now lifts self-adjoint observations to
+  the optimized tail under explicit centered-square-integrability, centered
+  operator-norm, and variance-proxy obligations. `.ofIIndepFun` discharges only
+  the centered independence obligation from observation-level `iIndepFun` via
+  `iIndepFun_centeredRandomMatrix`, so this is a conditional facade, not an
+  unconditional integrable/self-adjoint Bernstein theorem;
+  `CenteredSelfAdjointClosureUsage` is its thin end-to-end consumer. The
+  Attention feature-Gram example now uses the same exact-row + vector-independence
+  route (`AttentionGramInputs.ofIIndepFun`, normalized/high-probability/sandwich),
+  so the rewritten LoRA / NTK / Attention examples no longer expose
+  provider/Tropp interfaces; the sample-covariance, empirical-Fisher, and
+  random-feature-kernel examples still use explicit Tropp bundles and remain the
+  next alignment candidates. Keep the older Tropp bundles in core as
+  compatibility surfaces.
+- Application-naming and constant-sharpness follow-ups (from a math review): the
+  LoRA example controls the uncentered second moment `(1/m) sum x x^T`, not the
+  gradient covariance; identifiers keep the legacy `Covariance` label pending a
+  decision to rename to `SecondMoment`/`Gram`. The centered rank-one exact-row
+  radius `2 R` and proxy `sum Rvar_i^2` are valid but non-optimal; the sharp
+  rank-one providers (radius `R` from `0 <= B, M <= R I`, and variance bound
+  `(1/4) sum r_i^2` from `E[Y^2] <= r_i M_i - M_i^2 <= (r_i^2 / 4) I`) are not yet
+  formalized. The deterministic Loewner-sandwich endpoints are vacuous at zero
+  sample count (documented in their docstrings); the tail/high-probability
+  endpoints already require a positive count.
+- Softmax-attention v1 is closed at a positive temperature: the public interface
+  `attentionSoftmaxFeatures` / `attentionSoftmaxGramInputs` /
+  `attentionSoftmaxGram_highProbability` takes `tau : {t : Real // 0 < t}` and
+  turns independent measurable random logits into bounded (`vectorSqNorm <= 1`)
+  attention-weight probability features that close the centered rank-one Bernstein
+  consumer with radius and variance radii `1`. The general all-real object is the
+  core `HighDimProb.expNormalized` (exponential/Gibbs normalization). Deferred: the
+  softmax Jacobian / `1 / (2 tau)` Lipschitz layer (which genuinely needs
+  `tau > 0`) and the shared-random-input (conditional) self-attention case, which
+  the current unconditional Bernstein API cannot express.
 - S16 now has `matrixBernsteinQuadraticFormUpperTail_of_naturalStateProviderAssumptions`
   as the provider-compressed natural-state tail wrapper. Future work should
   compress only genuinely provider-dischargeable assumptions and keep

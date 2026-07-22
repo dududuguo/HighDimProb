@@ -43,7 +43,7 @@ monotonicity bridge `hasSubgaussianMGF_mono` from `HighDimProb.SubGaussian`.
 
 ## Proved Metric-Entropy Surface
 
-The proved surface consists of:
+The proved surface consists of three deliberately separated layers:
 
 - finite chaining: `chain_sub_eq_sum_range`,
   `expect_abs_sub_chain_le_sum_of_level_sup`, and
@@ -93,45 +93,69 @@ The proved surface consists of:
   is proved only under supplied prefix bounds and supplied residual expectation
   convergence;
 - full anchored Dudley endpoint:
-  `Dudley.fullBound` constructs arbitrary finite internal nets at dyadic
-  radii, proves their suprema converge under uniformly continuous sample paths,
-  and uses the nonnegative expectation-limit layer to derive measurability and
-  integrability of `Dudley.supremum`. `Dudley.Inputs.bound` is the bundled
-  downstream contract. It retains total boundedness, an anchor-radius bound,
-  coordinate measurability, sub-Gaussian increments, uniform path continuity,
-  and entropy `IntervalIntegrable`.
+  `dudleyEntropyIntegral` constructs dyadic internal nets and compatible paths,
+  makes the finite-prefix residual vanish through the finite subGaussian
+  maximum estimate, and applies the D2-to-D3 assembly theorem. It retains
+  explicit dense-sequence, singleton-anchor-net, total-boundedness,
+  measurability, increment, continuity, boundedness, full-supremum
+  integrability, and entropy `IntervalIntegrable` hypotheses.
 
 Thus the Dudley endpoint is proved under its stated boundary conditions. The
-theorem does not manufacture sample regularity or entropy integrability from
-the increment MGF assumption alone. The supplied dense-sequence D2/D3 bridges
-remain available as lower-level alternatives; they are not obligations of the
-default consumer.
+theorem does not manufacture sample regularity, full-supremum integrability, or
+entropy integrability from the increment MGF assumption alone. Direct Mathlib
+dominated-convergence use remains tested independently without a duplicate
+project wrapper.
 Current prioritization is tracked in [`TODO.md`](../maintainers/TODO.md).
-
-## Gaussian Functional Foundations
-
-`GaussianFunctional.IntegrationByParts` proves the standard-Gaussian Stein
-identity for compactly supported `C^1` real functions, with both integrability
-obligations explicit. `GaussianFunctional.AffineStability` proves arbitrary
-two-variable Gaussian linear-combination stability, including zero variance,
-integral transport, and the Ornstein-Uhlenbeck coefficient specialization.
-Poincare, log-Sobolev, Herbst, and Lipschitz concentration are not yet claimed.
 
 ## Hanson-Wright
 
 The finite-dimensional Hanson-Wright endpoint is `proven` through
 `HighDimProb.HansonWright.hanson_wright_inequality_hdp_explicit_constant`.
-For a finite real matrix `A` and finite coordinate family `X` on a probability
-space, it assumes `K > 0`, `iIndepFun X μ`, and coordinate
-`HasSubgaussianMGF` bounds at `K^2`. It returns a centered quadratic-form
+For a finite real matrix `A` and finite coordinate family `X` on a
+probability space, it assumes `K > 0`, `iIndepFun X μ`, and coordinate
+`HasSubgaussianMGF` bounds at `K^2`. It returns the centered quadratic-form
 two-sided tail at rate
 `min(t^2 / (K^4 * Frobenius^2), t / (K^2 * operator))` with the public,
-parameter-independent `hansonWrightUniversalConstant`, definitionally
-`1 / (256 * exp(1)^2)`. The older existential endpoint
-`hanson_wright_inequality_hdp` is retained as a wrapper. No matrix symmetry
-premise or infinite-dimensional extension is claimed. The source and
+parameter-independent `hansonWrightUniversalConstant`. The existential
+`hanson_wright_inequality_hdp` remains a compatibility wrapper. No matrix
+symmetry premise or infinite-dimensional extension is claimed. The source and
 focused consumer are [`HansonWright.lean`](../../HighDimProb/Concentration/HansonWright.lean)
 and [`HansonWrightAPI.lean`](../../HighDimProbTest/HansonWrightAPI.lean).
+
+## Uniform-Continuity Dudley Consumer
+
+- manual finite certificates (expert/support): `SubGaussianMax` retains the
+  path, parent-map, level-cardinality, finite-entropy-sum, and truncated
+  entropy-integral theorems for callers that need a custom chain;
+- finite-net consumer: `Dudley.truncatedBound` constructs the internal dyadic
+  nets and parent maps from total boundedness and returns a terminal-net
+  supremum bound without asking the caller for certificate data;
+- full consumer: `Dudley.supremum` is the actual set supremum
+  `sSup (|X t omega - X t0 omega| '' K)`, while `Dudley.fullBound` proves
+  measurability, integrability, and
+  `E sup ≤ 4 * sigma * ∫_0^R sqrt(2 * log(2 * N(K,t))) dt`.
+  `Dudley.Inputs` bundles the geometry, increment, path-regularity, and entropy
+  assumptions, and `Dudley.Inputs.bound` is the preferred downstream call.
+
+`Dudley.entropyIntegrand` and `Dudley.entropyIntegral` name the real-valued
+covering-number entropy expression. `ENat.toNat` totalizes an infinite
+covering number, so this definition is used by the full theorem only with a
+totally bounded set at positive radii; it is not an extended-valued entropy
+definition for arbitrary sets.
+The full endpoint uses the explicit every-sample path contract and entropy
+integrability premise. It does not claim an a.e.-only path weakening,
+separable modifications, or removal of the entropy-integrability assumption.
+
+## Gaussian Functional Foundations
+
+`HighDimProb.GaussianFunctional.IntegrationByParts` proves
+`integral_id_mul_eq_integral_deriv_of_gaussianReal_zero_one` for real `C^1`,
+compactly supported functions. `HighDimProb.GaussianFunctional.AffineStability`
+proves `gaussianReal_prod_map_add_linear`, its zero-variance and unit-variance
+specializations, measurable/integrable integral transport, and
+`gaussianReal_prod_map_ouLinear` for nonnegative time. Gaussian Poincare,
+log-Sobolev, and Lipschitz-concentration inequalities remain outside this
+proved surface.
 
 ## RandomMatrix
 
@@ -234,7 +258,7 @@ supplies it from coordinate `MemLp 4` assumptions via Mathlib Holder product
 APIs. The bounded-row provider
 `integrableRandomMatrix_randomMatrixSquare_rankOneRandomMatrix_of_sqNorm_bound_memLp_two`
 supplies it from coordinate `MemLp 2` plus pointwise `vectorSqNorm <= R`.
-Centered rank-one square-integrability providers are proved for coordinate `MemLp 4` and bounded-row `MemLp 2` routes. The direct row-specific provider `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_rowSqNorm_bound_memLp_two` supplies `rowSqNormVarianceProxyNormRHS R` without an abstract sharp-chain premise. Positive and negative sample-covariance adapters expose the same bound, and `MatrixBernstein.centeredRankOneExactRow` / `MatrixBernstein.sampleCovarianceExactRow` compose it with generated-history Matrix Bernstein. `MatrixBernstein.centeredRankOneExactRowHighProbability` closes the centered rank-one scalar-threshold specialization, while `MatrixBernstein.sampleCovarianceExactRowHighProbability` closes the normalized sample-covariance endpoint. Both high-probability endpoints are exported through the public import `HighDimProb.RandomMatrix.Concentration`; their input bundles and scalar-side conditions remain explicit, so these are not unconditional Matrix Bernstein results. `iIndepFun_centeredRankOne` transports raw vector-family independence. The deterministic PSD Loewner-to-operator-norm bridge remains `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE`. Generic variance sharpening outside the centered rank-one setting and unconditional Matrix Bernstein remain open.
+Centered rank-one square-integrability providers are proved for coordinate `MemLp 4` and bounded-row `MemLp 2` routes. The direct row-specific provider `MatrixVarianceProxyNormBound_centeredRankOneRandomMatrixFamily_of_rowSqNorm_bound_memLp_two` supplies `rowSqNormVarianceProxyNormRHS R` without an abstract sharp-chain premise. Positive and negative sample-covariance adapters expose the same bound, and `MatrixBernstein.centeredRankOneExactRow` / `MatrixBernstein.sampleCovarianceExactRow` compose it with generated-history Matrix Bernstein. `MatrixBernstein.centeredRankOneExactRowHighProbability` closes the centered rank-one scalar-threshold specialization, while `MatrixBernstein.sampleCovarianceExactRowHighProbability` closes the normalized sample-covariance endpoint. Both high-probability endpoints are exported through the public import `HighDimProb.RandomMatrix.Concentration`; their input bundles and scalar-side conditions remain explicit, so these are not unconditional Matrix Bernstein results. `iIndepFun_centeredRankOne` transports raw vector-family independence, and the `CenteredRankOneInputs.ofIIndepFun` / `CenteredRankOneExactRowInputs.ofIIndepFun` constructors package it so callers state only vector-level `iIndepFun`. The general centering-independence bridge `iIndepFun_centeredRandomMatrix` and the `MatrixBernstein.CenteredSelfAdjointObservationInputs` / `centeredSelfAdjointObservations` route extend the same pattern to self-adjoint observations under explicit centered-square-integrability, centered operator-norm, and variance-proxy assumptions; centeredness, self-adjointness, and centered entrywise integrability are derived from the uncentered family, while `ofIIndepFun` discharges only the centered independence obligation. This is a conditional facade, not an unconditional integrable/self-adjoint Bernstein theorem. The deterministic PSD Loewner-to-operator-norm bridge remains `deterministicMatrixVarianceProxyNorm_mono_of_matrixLE`. Generic variance sharpening outside the centered rank-one setting and unconditional Matrix Bernstein remain open.
 The rank/support trace-bound bridge is proved by
 `traceMatrixExp_le_trace_support_exp_lambdaMax_of_supportDomination`,
 with rank/support consumers for the hardbone targets. Deterministic trace/rank

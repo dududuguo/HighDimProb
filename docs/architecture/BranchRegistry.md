@@ -7,7 +7,7 @@ into [`archive.md`](../archive/README.md); use git history for exact old wording
 |---|---|---|---|
 | Scalar | `HighDimProb.Scalar` | stable | One-dimensional probability vocabulary and scalar objects. |
 | Analysis | `HighDimProb.Analysis` | helper | Deterministic real inequalities used by proof layers. |
-| Concentration | `HighDimProb.Concentration` | public, focused | Scalar concentration, full Dudley, finite Hanson-Wright, and supporting implication routes. |
+| Concentration | `HighDimProb.Concentration` | public, focused import | Scalar concentration, finite maxima, Dudley, and Hanson--Wright theorem families. |
 | Distributions | `HighDimProb.Distributions` | experimental | Concrete distribution atoms such as Rademacher families. |
 | Vector | `HighDimProb.Vector` | experimental | Finite-dimensional random-vector vocabulary. |
 | Geometry | `HighDimProb.Geometry` | experimental | Metric entropy and geometric vocabulary. |
