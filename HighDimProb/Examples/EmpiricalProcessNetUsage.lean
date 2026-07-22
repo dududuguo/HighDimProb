@@ -1,13 +1,29 @@
-import HighDimProb.EmpiricalProcess
-import HighDimProb.MetricEntropy
+import HighDimProb.Concentration.SubGaussianMax
 
 /-!
-# Empirical process net usage example
+# Empirical-process nets and finite chaining
 
-This examples-only file records a conservative finite-net workflow for
-empirical-process style arguments. It demonstrates set-level event transfer and
-covering-number bookkeeping, while leaving probabilistic finite-net deviation
-control as an explicit local assumption.
+The metric-entropy API now supplies the finite nets, their exact covering-number
+cardinalities, parent maps, and compatible paths.  Consequently an empirical-
+process argument can start at the level of a sub-Gaussian increment hypothesis
+and feed those objects directly into the finite-chaining bound.
+
+TODO: start this example from a `RandomSample` once the main library provides
+the missing empirical-process bridge.  In particular, `HighDimProb` still
+needs:
+
+* empirical-mean and centered empirical-process constructors built from
+  `sampleEvaluation`;
+* measurability, integrability, and pointwise expansion lemmas for those
+  constructors;
+* transport of sample independence through evaluation, subtraction,
+  centering, finite summation, and normalization; and
+* a theorem deriving `HasSubGaussianMGFIncrements` for the centered empirical
+  process from standard bounded-difference or Lipschitz assumptions on the
+  function class.
+
+Once these APIs exist, the resulting process can replace the abstract `X`
+below and use the metric-entropy/chaining part of this example unchanged.
 -/
 
 namespace HighDimProb.Examples.EmpiricalProcessNetUsage
@@ -16,76 +32,61 @@ open MeasureTheory
 
 noncomputable section
 
-/-- Deviation event for a process over a class `F`. -/
-def uniformDeviationEvent {Omega T : Type*} [MeasurableSpace Omega]
-    (Z : RandomProcess Omega T Real) (F : Set T) (t : Real) : Set Omega :=
-  {omega | exists f, F f /\ t <= abs (Z f omega)}
+/-- At dyadic scales the metric-entropy API produces all data needed for chaining:
+optimal finite levels, adjacent parent maps, and a path from every terminal
+net point back through the coarser levels. -/
+example {T : Type*} [PseudoMetricSpace T] {F : Set T} {L : ℕ} {R : ℝ}
+    (hR : 0 < R) (hF : TotallyBounded F) :
+    ∃ levels : Fin (L + 1) → Finset T,
+      ∃ parent : Fin L → T → T,
+        (∀ i, IsInternalEpsilonNet F (levels i : Set T)
+          (dyadicRadius R (i : ℕ))) ∧
+        (∀ i : Fin (L + 1), coveringNumber F (dyadicRadius R (i : ℕ)) =
+          ((levels i).card : ENat)) ∧
+        (∀ x, x ∈ levels (Fin.last L) →
+          ∃ path : Fin (L + 1) → T,
+            path (Fin.last L) = x ∧
+            (∀ j, path j ∈ levels j) ∧
+            (∀ k : Fin L,
+              path (Fin.castSucc k) = parent k (path (Fin.succ k)) ∧
+              dist (path (Fin.succ k))
+                (parent k (path (Fin.succ k))) ≤
+                  dyadicRadius R (Fin.castSucc k : ℕ))) := by
+  obtain ⟨levels, parent, hnet, hcard, _, _, _, hpath⟩ :=
+    exists_finset_internalNetFamily_parentMap_path_of_totallyBounded
+      (fun i => dyadicRadius_pos hR i) hF
+  exact ⟨levels, parent, hnet, hcard, hpath⟩
 
-/-- Finite-net transfer assumption: every large deviation over `F` produces a
-large deviation on the chosen net `N`. -/
-def FiniteNetDeviationTransfer {Omega T : Type*} [MeasurableSpace Omega]
-    (Z : RandomProcess Omega T Real) (F N : Set T) (t netLevel : Real) : Prop :=
-  forall omega,
-    uniformDeviationEvent Z F t omega ->
-      uniformDeviationEvent Z N netLevel omega
-
-/-- Pointwise event inclusion supplied by a finite-net transfer assumption. -/
-theorem uniformDeviationEvent_subset_net {Omega T : Type*}
-    [MeasurableSpace Omega]
-    (Z : RandomProcess Omega T Real) (F N : Set T)
-    (t netLevel : Real)
-    (hTransfer : FiniteNetDeviationTransfer Z F N t netLevel) :
-    Set.Subset (uniformDeviationEvent Z F t)
-      (uniformDeviationEvent Z N netLevel) := by
-  intro omega homega
-  exact hTransfer omega homega
-
-/-- Measure-level reduction from a class to its net. -/
-theorem measure_uniformDeviationEvent_le_net {Omega T : Type*}
-    [MeasurableSpace Omega]
-    (P : Measure Omega) (Z : RandomProcess Omega T Real) (F N : Set T)
-    (t netLevel : Real)
-    (hTransfer : FiniteNetDeviationTransfer Z F N t netLevel) :
-    P (uniformDeviationEvent Z F t) <=
-      P (uniformDeviationEvent Z N netLevel) := by
-  exact measure_mono
-    (uniformDeviationEvent_subset_net Z F N t netLevel hTransfer)
-
-/-- Local assumption for finite-net probabilistic control. -/
-def FiniteNetDeviationBound {Omega T : Type*} [MeasurableSpace Omega]
-    (P : Measure Omega) (Z : RandomProcess Omega T Real)
-    (N : Set T) (netLevel : Real) (rhs : ENNReal) : Prop :=
-  P (uniformDeviationEvent Z N netLevel) <= rhs
-
-/-- Finite-net control plus transfer gives uniform control over the full
-function class. -/
-theorem uniformDeviationBound_of_finiteNet {Omega T : Type*}
-    [MeasurableSpace Omega]
-    (P : Measure Omega) (Z : RandomProcess Omega T Real)
-    (F N : Set T) (t netLevel : Real) (rhs : ENNReal)
-    (hTransfer : FiniteNetDeviationTransfer Z F N t netLevel)
-    (hNet : FiniteNetDeviationBound P Z N netLevel rhs) :
-    P (uniformDeviationEvent Z F t) <= rhs := by
-  exact (measure_uniformDeviationEvent_le_net P Z F N t netLevel hTransfer).trans hNet
-
-/-- Existing metric entropy API: a finite internal epsilon-net bounds the
-covering number by the net cardinality. -/
-theorem coveringNumber_le_card_of_finite_internal_net {T : Type*}
-    [PseudoMetricSpace T] {F N : Set T} {eps : Real}
-    (hNet : IsInternalEpsilonNet F N eps)
-    (hFinite : N.Finite) :
-    coveringNumber F eps <= (N.ncard : ENat) := by
-  exact coveringNumber_le_card_of_isInternalEpsilonNet hNet hFinite
-
-/-- A maximal separated set gives an internal net, hence a covering-number
-bound when it is finite. -/
-theorem coveringNumber_le_card_of_maximal_separated {T : Type*}
-    [PseudoMetricSpace T] {F N : Set T} {eps : Real}
-    (hMax : MaximalEpsilonSeparatedIn F N eps)
-    (hFinite : N.Finite) :
-    coveringNumber F eps <= (N.ncard : ENat) := by
-  exact coveringNumber_le_card_of_finite_internal_net
-    (isInternalEpsilonNet_of_maximalEpsilonSeparatedIn hMax) hFinite
+/-- Once a compatible dyadic path is chosen, the sub-Gaussian maximum API
+turns its increments directly into the truncated covering-number entropy
+integral. -/
+example {Ω T : Type*} [MeasurableSpace Ω] [PseudoMetricSpace T]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RandomProcess Ω T ℝ} {F : Set T} {L : ℕ} {R σ : ℝ}
+    (path : Fin (L + 1) → T)
+    (nextLevel : Fin L → Finset T)
+    (parent : Fin L → T → T)
+    (hmem : ∀ k : Fin L, path (Fin.succ k) ∈ nextLevel k)
+    (hparent : ∀ k : Fin L,
+      path (Fin.castSucc k) = parent k (path (Fin.succ k)))
+    (hMeas : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      Measurable (fun ω => X x ω - X (parent k x) ω))
+    (hX : HasSubGaussianMGFIncrements P X σ)
+    (hσ : 0 < σ) (hR : 0 < R)
+    (hdist : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      dist x (parent k x) ≤ dyadicRadius R (Fin.castSucc k : ℕ))
+    (hcard : ∀ k : Fin L,
+      coveringNumber F (dyadicRadius R ((k : ℕ) + 1)) =
+        ((nextLevel k).card : ENat))
+    (hfinite : coveringNumber F (dyadicRadius R (L + 1)) ≠ ⊤) :
+    expect P (fun ω =>
+        |X (path (Fin.last L)) ω - X (path 0) ω|) ≤
+      4 * σ *
+        (∫ t in dyadicRadius R (L + 1)..R,
+          Real.sqrt (2 * Real.log
+            (2 * ((coveringNumber F t).toNat : ℝ)))) := by
+  exact expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral
+    path nextLevel parent hmem hparent hMeas hX hσ hR hdist hcard hfinite
 
 end
 

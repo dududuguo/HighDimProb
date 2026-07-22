@@ -1,7 +1,10 @@
 import HighDimProb.Concentration.FiniteMax
+import HighDimProb.Analysis.DenseSup
 import HighDimProb.MetricEntropy
 import HighDimProb.SubGaussian
 import HighDimProb.SubGaussianProcess
+import Mathlib.Order.PartialSups
+import Mathlib.Topology.Order.MonotoneConvergence
 
 /-!
 # Finite maxima of centered subGaussian processes
@@ -406,6 +409,205 @@ theorem expect_abs_sub_chain_le_finiteEntropySum_of_path
     hXMeas hX hσ hρ hdist hcard
   simpa [hgamma_zero, hgamma_last] using hBound
 
+/-- Expected finite anchored supremum bound with an explicit terminal residual. -/
+theorem expect_finset_sup'_abs_sub_anchor_le_finiteEntropySum
+    {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RandomProcess Ω α ℝ}
+    {L : Nat}
+    (s : Finset α) (hs : s.Nonempty)
+    (path : α → Fin (L + 1) → α)
+    (nextLevel : Fin L → Finset α)
+    (parent : Fin L → α → α)
+    (anchor : α)
+    (residual : RealRandomVariable Ω)
+    (σ : ℝ) (rho : Fin (L + 1) → ℝ)
+    (hmem : ∀ x ∈ s, ∀ k : Fin L,
+      path x (Fin.succ k) ∈ nextLevel k)
+    (hparent : ∀ x ∈ s, ∀ k : Fin L,
+      path x (Fin.castSucc k) = parent k (path x (Fin.succ k)))
+    (hresidual : ∀ x ∈ s, ∀ ω : Ω,
+      |X x ω - X (path x (Fin.last L)) ω| ≤ residual ω)
+    (hanchor : ∀ x ∈ s, path x 0 = anchor)
+    (hXMeas : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      Measurable (fun ω => X x ω - X (parent k x) ω))
+    (hX : HasSubGaussianMGFIncrements P X σ)
+    (hσ : 0 < σ)
+    (hρ : ∀ j : Fin (L + 1), 0 < rho j)
+    (hdist : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      dist x (parent k x) ≤ rho (Fin.castSucc k))
+    (hresidualIntegrable : IntegrableRealRandomVariable P residual) :
+    expect P (fun ω => s.sup' hs (fun x => |X x ω - X anchor ω|)) ≤
+      expect P residual +
+        finiteEntropySum rho (fun k : Fin L => (nextLevel k).card) σ := by
+  let x₀ : α := Classical.choose hs
+  have hx₀ : x₀ ∈ s := Classical.choose_spec hs
+  have hNextLevel : ∀ k : Fin L, (nextLevel k).Nonempty := by
+    intro k
+    exact ⟨path x₀ (Fin.succ k), hmem x₀ hx₀ k⟩
+  let stepBound : Fin L → RealRandomVariable Ω := fun k ω =>
+    Finset.sup' (nextLevel k) (hNextLevel k)
+      (fun x => |X x ω - X (parent k x) ω|)
+  have hstep : ∀ x ∈ s, ∀ k : Fin L, ∀ ω : Ω,
+      |X (path x (Fin.succ k)) ω - X (path x (Fin.castSucc k)) ω| ≤
+        stepBound k ω := by
+    intro x hx k ω
+    rw [hparent x hx k]
+    exact Finset.le_sup' (fun y => |X y ω - X (parent k y) ω|)
+      (hmem x hx k)
+  have hXSG : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      CenteredSubGaussianMGF P
+        (fun ω => X x ω - X (parent k x) ω)
+        (σ * rho (Fin.castSucc k)) := by
+    intro k x hx
+    exact HasSubGaussianMGFIncrements.centeredSubGaussianMGF_of_dist_le
+      hX hσ (hρ (Fin.castSucc k)) (hdist k x hx)
+  have hstepIntegrable : ∀ k : Fin L,
+      IntegrableRealRandomVariable P (stepBound k) := by
+    intro k
+    let Y : RandomProcess Ω α ℝ := fun x ω =>
+      |X x ω - X (parent k x) ω|
+    have hYIntegrable : ∀ x ∈ nextLevel k,
+        IntegrableRealRandomVariable P (Y x) := by
+      intro x hx
+      simpa only [Y] using (hXSG k x hx).2.integrable.abs
+    have hSup := integrable_processSup
+      (P := P) (X := Y) (s := nextLevel k) (hNextLevel k) hYIntegrable
+    change IntegrableRealRandomVariable P
+      (fun ω => Finset.sup' (nextLevel k) (hNextLevel k)
+        (fun x => |X x ω - X (parent k x) ω|))
+    convert hSup using 1
+    funext ω
+    simp only [processSup, Finset.sup'_apply, Y]
+  have hLevelBound : ∀ k : Fin L,
+      expect P (stepBound k) ≤
+        (σ * rho (Fin.castSucc k)) * Real.sqrt
+          (2 * Real.log (2 * ((nextLevel k).card : ℝ))) := by
+    intro k
+    exact expect_finset_sup'_abs_le_of_centeredSubGaussianMGF
+      (P := P)
+      (X := fun x ω => X x ω - X (parent k x) ω)
+      (s := nextLevel k) (hNextLevel k)
+      (fun x hx => hXMeas k x hx)
+      (fun x hx => hXSG k x hx)
+  have hBound :=
+    expect_finset_sup'_abs_sub_anchor_le_residual_add_sum_of_step_bound
+      (P := P) (X := X) (s := s) (hs := hs) (path := path)
+      (anchor := anchor) (residual := residual) (stepBound := stepBound)
+      (hresidual := hresidual) (hanchor := hanchor) (hstep := hstep)
+      (hresidualIntegrable := hresidualIntegrable)
+      (hstepIntegrable := hstepIntegrable)
+  calc
+    expect P (fun ω => s.sup' hs (fun x => |X x ω - X anchor ω|)) ≤
+        expect P residual + ∑ k : Fin L, expect P (stepBound k) := hBound
+    _ ≤ expect P residual + ∑ k : Fin L,
+        (σ * rho (Fin.castSucc k)) * Real.sqrt
+          (2 * Real.log (2 * ((nextLevel k).card : ℝ))) := by
+      calc
+        expect P residual + ∑ k : Fin L, expect P (stepBound k) =
+            (∑ k : Fin L, expect P (stepBound k)) + expect P residual :=
+          add_comm _ _
+        _ ≤ (∑ k : Fin L,
+            (σ * rho (Fin.castSucc k)) * Real.sqrt
+              (2 * Real.log (2 * ((nextLevel k).card : ℝ)))) +
+            expect P residual :=
+          add_le_add_left
+            (Finset.sum_le_sum (s := (Finset.univ : Finset (Fin L)))
+              (fun k _hk => hLevelBound k)) _
+        _ = expect P residual + ∑ k : Fin L,
+            (σ * rho (Fin.castSucc k)) * Real.sqrt
+              (2 * Real.log (2 * ((nextLevel k).card : ℝ))) :=
+          add_comm _ _
+    _ = expect P residual +
+        finiteEntropySum rho (fun k : Fin L => (nextLevel k).card) σ := by
+      rfl
+
+/-- Expected finite anchored supremum bound by a truncated entropy integral and
+an explicit terminal residual. -/
+theorem expect_finset_sup'_abs_sub_anchor_le_truncatedEntropyIntegral
+    {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RandomProcess Ω α ℝ}
+    {K : Set α} {L : Nat} {R σ : ℝ}
+    (s : Finset α) (hs : s.Nonempty)
+    (path : α → Fin (L + 1) → α)
+    (nextLevel : Fin L → Finset α)
+    (parent : Fin L → α → α)
+    (anchor : α)
+    (residual : RealRandomVariable Ω)
+    (hmem : ∀ x ∈ s, ∀ k : Fin L,
+      path x (Fin.succ k) ∈ nextLevel k)
+    (hparent : ∀ x ∈ s, ∀ k : Fin L,
+      path x (Fin.castSucc k) = parent k (path x (Fin.succ k)))
+    (hresidual : ∀ x ∈ s, ∀ ω : Ω,
+      |X x ω - X (path x (Fin.last L)) ω| ≤ residual ω)
+    (hanchor : ∀ x ∈ s, path x 0 = anchor)
+    (hXMeas : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      Measurable (fun ω => X x ω - X (parent k x) ω))
+    (hX : HasSubGaussianMGFIncrements P X σ)
+    (hσ : 0 < σ)
+    (hR : 0 < R)
+    (hdist : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      dist x (parent k x) ≤ dyadicRadius R (Fin.castSucc k : Nat))
+    (hN : ∀ k : Fin L,
+      coveringNumber K (dyadicRadius R ((k : Nat) + 1)) =
+        ((nextLevel k).card : ENat))
+    (hfinite : coveringNumber K (dyadicRadius R (L + 1)) ≠ ⊤)
+    (hresidualIntegrable : IntegrableRealRandomVariable P residual) :
+    expect P (fun ω => s.sup' hs (fun x => |X x ω - X anchor ω|)) ≤
+      expect P residual +
+        4 * σ *
+          (∫ t in dyadicRadius R (L + 1)..R,
+            Real.sqrt (2 * Real.log
+              (2 * ((coveringNumber K t).toNat : ℝ)))) := by
+  have hFinite :=
+    expect_finset_sup'_abs_sub_anchor_le_finiteEntropySum
+      (P := P) (X := X) (s := s) (hs := hs) (path := path)
+      (nextLevel := nextLevel) (parent := parent) (anchor := anchor)
+      (residual := residual) (σ := σ)
+      (rho := fun i : Fin (L + 1) => dyadicRadius R (i : Nat))
+      (hmem := hmem) (hparent := hparent) (hresidual := hresidual)
+      (hanchor := hanchor) (hXMeas := hXMeas) (hX := hX) (hσ := hσ)
+      (hρ := fun i => dyadicRadius_pos hR i) (hdist := hdist)
+      (hresidualIntegrable := hresidualIntegrable)
+  have hEntropy :=
+    finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber
+      (K := K) (R := R) (sigma := σ)
+      hR (le_of_lt hσ) (fun k : Fin L => (nextLevel k).card) hN hfinite
+  calc
+    expect P (fun ω => s.sup' hs (fun x => |X x ω - X anchor ω|)) ≤
+        expect P residual +
+          finiteEntropySum
+            (fun i : Fin (L + 1) => dyadicRadius R (i : Nat))
+            (fun k : Fin L => (nextLevel k).card) σ := hFinite
+    _ ≤ expect P residual +
+        4 * σ *
+          (∫ t in dyadicRadius R (L + 1)..R,
+            Real.sqrt (2 * Real.log
+              (2 * ((coveringNumber K t).toNat : ℝ)))) := by
+      calc
+        expect P residual +
+            finiteEntropySum
+              (fun i : Fin (L + 1) => dyadicRadius R (i : Nat))
+              (fun k : Fin L => (nextLevel k).card) σ =
+            finiteEntropySum
+              (fun i : Fin (L + 1) => dyadicRadius R (i : Nat))
+              (fun k : Fin L => (nextLevel k).card) σ + expect P residual :=
+          add_comm _ _
+        _ ≤
+            4 * σ *
+                (∫ t in dyadicRadius R (L + 1)..R,
+                  Real.sqrt (2 * Real.log
+                    (2 * ((coveringNumber K t).toNat : ℝ)))) +
+              expect P residual :=
+          add_le_add_left hEntropy _
+        _ = expect P residual +
+            4 * σ *
+                (∫ t in dyadicRadius R (L + 1)..R,
+                  Real.sqrt (2 * Real.log
+                  (2 * ((coveringNumber K t).toNat : ℝ)))) :=
+          add_comm _ _
+
 /-- Finite dyadic chaining bound by the truncated covering-number entropy integral. -/
 theorem expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral
     {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
@@ -447,6 +649,202 @@ theorem expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral
     (finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber
       (K := K) (R := R) (sigma := σ) hR (le_of_lt hσ)
       (fun k : Fin L => (nextLevel k).card) hN hfinite)
+
+/-- Expected full anchored supremum from uniformly bounded finite prefixes.
+Continuity and boundedness identify the dense-sequence supremum, while monotone convergence
+passes the uniform prefix bound to the full expectation. -/
+theorem expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound
+    {Ω α : Type*} [MeasurableSpace Ω] [TopologicalSpace α]
+    {P : Measure Ω}
+    {X : RandomProcess Ω α ℝ}
+    (u : ℕ → α) (hu : DenseRange u) (anchor : α) (C : ℝ)
+    (hAnchorMeas : Measurable (X anchor))
+    (hUmeas : ∀ n : ℕ, Measurable (X (u n)))
+    (hPathCont : ∀ ω : Ω, Continuous
+      (fun x => |X x ω - X anchor ω|))
+    (hPathBdd : ∀ ω : Ω, BddAbove
+      (Set.range (fun x => |X x ω - X anchor ω|)))
+    (hFullIntegrable : IntegrableRealRandomVariable P
+      (fun ω => ⨆ x : α, |X x ω - X anchor ω|))
+    (hPrefixBound : ∀ n : ℕ,
+      expect P (fun ω =>
+        (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+          (fun k => |X (u k) ω - X anchor ω|)) ≤ C) :
+    expect P (fun ω => ⨆ x : α, |X x ω - X anchor ω|) ≤ C := by
+  let f : α → Ω → ℝ := fun x ω => |X x ω - X anchor ω|
+  let a : ℕ → Ω → ℝ := fun n ω => f (u n) ω
+  let g : ℕ → Ω → ℝ := fun n ω => partialSups (fun k => a k ω) n
+  let F : Ω → ℝ := fun ω => ⨆ x : α, f x ω
+  have haMeas : ∀ n : ℕ, Measurable (a n) := by
+    intro n
+    dsimp [a, f]
+    exact ((hUmeas n).sub hAnchorMeas).abs
+  have hgMeas : ∀ n : ℕ, Measurable (g n) := by
+    intro n
+    dsimp [g]
+    simpa only [partialSups_eq_sup'_range] using
+      (Finset.measurable_range_sup'' (f := a) (n := n)
+        (fun k _hk => haMeas k))
+  have hFullInt : IntegrableRealRandomVariable P F := by
+    change IntegrableRealRandomVariable P (fun ω => ⨆ x : α, f x ω)
+    simpa only [f] using hFullIntegrable
+  have hDense : ∀ ω : Ω, F ω = ⨆ n : ℕ, a n ω := by
+    intro ω
+    dsimp [F, a]
+    apply ciSup_eq_ciSup_of_denseRange u hu (fun x => f x ω)
+    · simpa [f] using hPathCont ω
+    · simpa [f] using hPathBdd ω
+  have haBdd : ∀ ω : Ω, BddAbove (Set.range (fun n => a n ω)) := by
+    intro ω
+    have hBdd : BddAbove (Set.range (fun x : α => f x ω)) := by
+      simpa [f] using hPathBdd ω
+    rcases hBdd with ⟨b, hb⟩
+    refine ⟨b, ?_⟩
+    rintro _ ⟨n, rfl⟩
+    exact hb ⟨u n, rfl⟩
+  have hPartialBdd : ∀ ω : Ω, BddAbove (Set.range (fun n => g n ω)) := by
+    intro ω
+    have hBdd := bddAbove_range_partialSups.mpr (haBdd ω)
+    simpa [g] using hBdd
+  have hPrefixLeFull : ∀ n : ℕ, ∀ ω : Ω, g n ω ≤ F ω := by
+    intro n ω
+    change partialSups (fun k => a k ω) n ≤ ⨆ x : α, f x ω
+    rw [partialSups_eq_sup'_range]
+    apply Finset.sup'_le Finset.nonempty_range_add_one
+    intro k hk
+    have hBdd : BddAbove (Set.range (fun x : α => f x ω)) := by
+      simpa [f] using hPathBdd ω
+    change f (u k) ω ≤ ⨆ x : α, f x ω
+    exact le_ciSup hBdd (u k)
+  have hgNonneg : ∀ n : ℕ, ∀ ω : Ω, 0 ≤ g n ω := by
+    intro n ω
+    change 0 ≤ partialSups (fun k => a k ω) n
+    rw [partialSups_eq_sup'_range]
+    calc
+      0 ≤ a 0 ω := by
+        dsimp [a, f]
+        exact abs_nonneg _
+      _ ≤ (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+          (fun k => a k ω) :=
+        Finset.le_sup' (fun k => a k ω) (by simp)
+  have hgInt : ∀ n : ℕ, IntegrableRealRandomVariable P (g n) := by
+    intro n
+    exact hFullInt.mono' (hgMeas n).aestronglyMeasurable
+      (Filter.Eventually.of_forall (fun ω => by
+        rw [Real.norm_eq_abs, abs_of_nonneg (hgNonneg n ω)]
+        exact hPrefixLeFull n ω))
+  have hgPrefix : ∀ n : ℕ, expect P (g n) ≤ C := by
+    intro n
+    simpa [g, a, f, partialSups_eq_sup'_range] using hPrefixBound n
+  have hgMonotone : ∀ ω : Ω, Monotone (fun n : ℕ => g n ω) := by
+    intro ω
+    simpa [g] using partialSups_monotone (fun k => a k ω)
+  have hgTendsto : ∀ ω : Ω,
+      Filter.Tendsto (fun n : ℕ => g n ω) Filter.atTop (nhds (F ω)) := by
+    intro ω
+    have h := tendsto_atTop_ciSup (hgMonotone ω) (hPartialBdd ω)
+    have hSup : (⨆ n : ℕ, g n ω) = F ω := by
+      change (⨆ n : ℕ, partialSups (fun k => a k ω) n) =
+        ⨆ x : α, f x ω
+      rw [ciSup_partialSups_eq (haBdd ω)]
+      exact (hDense ω).symm
+    rw [← hSup]
+    exact h
+  have hIntegralTendsto :=
+    MeasureTheory.integral_tendsto_of_tendsto_of_monotone
+      (μ := P) hgInt hFullInt
+      (Filter.Eventually.of_forall hgMonotone)
+      (Filter.Eventually.of_forall hgTendsto)
+  have hLimit : expect P F ≤ C := by
+    apply le_of_tendsto hIntegralTendsto
+    exact Filter.Eventually.of_forall hgPrefix
+  simpa [F, f] using hLimit
+
+/-- The full anchored supremum is bounded by the limiting integral when finite
+prefixes have a vanishing residual and a dyadic truncated-integral bound. -/
+theorem expect_iSup_abs_sub_anchor_le_mul_intervalIntegral_of_denseRange_of_prefix_bound
+    {Ω α : Type*} [MeasurableSpace Ω] [TopologicalSpace α]
+    {P : Measure Ω}
+    {X : RandomProcess Ω α ℝ}
+    (u : ℕ → α) (hu : DenseRange u) (anchor : α)
+    (c R : ℝ) (f : ℝ → ℝ) (residual : ℕ → ℕ → ℝ)
+    (hAnchorMeas : Measurable (X anchor))
+    (hUmeas : ∀ n : ℕ, Measurable (X (u n)))
+    (hPathCont : ∀ ω : Ω, Continuous
+      (fun x => |X x ω - X anchor ω|))
+    (hPathBdd : ∀ ω : Ω, BddAbove
+      (Set.range (fun x => |X x ω - X anchor ω|)))
+    (hFullIntegrable : IntegrableRealRandomVariable P
+      (fun ω => ⨆ x : α, |X x ω - X anchor ω|))
+    (hR : 0 ≤ R)
+    (hf : IntervalIntegrable f volume 0 R)
+    (hResidualTendsto : ∀ n : ℕ,
+      Filter.Tendsto (residual n) Filter.atTop (nhds 0))
+    (hPrefixBound : ∀ n m : ℕ,
+      expect P (fun ω =>
+        (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+          (fun k => |X (u k) ω - X anchor ω|)) ≤
+        residual n m + c *
+          (∫ t in dyadicRadius R (m + 1)..R, f t)) :
+    expect P (fun ω => ⨆ x : α, |X x ω - X anchor ω|) ≤
+      c * (∫ t in (0 : ℝ)..R, f t) := by
+  have hScaledIntegrable :
+      IntervalIntegrable (fun t => c * f t) volume 0 R :=
+    hf.const_mul c
+  have hDyadicNonneg : ∀ n : ℕ, 0 ≤ dyadicRadius R (n + 1) := by
+    intro n
+    unfold dyadicRadius
+    exact div_nonneg hR (by positivity)
+  have hDyadicLe : ∀ n : ℕ, dyadicRadius R (n + 1) ≤ R := by
+    intro n
+    unfold dyadicRadius
+    exact div_le_self hR (one_le_pow₀ (by norm_num : (1 : ℝ) ≤ 2))
+  have hDyadicTendsto :
+      Filter.Tendsto (fun n : ℕ => dyadicRadius R (n + 1))
+        Filter.atTop (nhds 0) := by
+    exact (tendsto_dyadicRadius_atTop R).comp
+      (Filter.tendsto_add_atTop_nat 1)
+  have hPrefixUniform : ∀ n : ℕ,
+      expect P (fun ω =>
+        (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+          (fun k => |X (u k) ω - X anchor ω|)) ≤
+        c * (∫ t in (0 : ℝ)..R, f t) := by
+    intro n
+    have hPrefixLimit :
+        expect P (fun ω =>
+          (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+            (fun k => |X (u k) ω - X anchor ω|)) ≤
+          ∫ t in (0 : ℝ)..R, c * f t := by
+      apply le_intervalIntegral_of_le_residual_add_of_tendsto_zero
+        (f := fun t => c * f t)
+        (a := fun m : ℕ => dyadicRadius R (m + 1))
+        (residual := residual n)
+        (B := expect P (fun ω =>
+          (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+            (fun k => |X (u k) ω - X anchor ω|)))
+        hR hDyadicNonneg hDyadicLe hDyadicTendsto hScaledIntegrable
+        (hResidualTendsto n)
+      intro m
+      calc
+        expect P (fun ω =>
+            (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+              (fun k => |X (u k) ω - X anchor ω|)) ≤
+            residual n m + c *
+              (∫ t in dyadicRadius R (m + 1)..R, f t) :=
+          hPrefixBound n m
+        _ = residual n m +
+            ∫ t in dyadicRadius R (m + 1)..R, c * f t := by
+          rw [intervalIntegral.integral_const_mul]
+    calc
+      expect P (fun ω =>
+          (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+            (fun k => |X (u k) ω - X anchor ω|)) ≤
+          ∫ t in (0 : ℝ)..R, c * f t := hPrefixLimit
+      _ = c * (∫ t in (0 : ℝ)..R, f t) := by
+        rw [intervalIntegral.integral_const_mul]
+  exact expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound
+    u hu anchor (c * (∫ t in (0 : ℝ)..R, f t)) hAnchorMeas hUmeas
+    hPathCont hPathBdd hFullIntegrable hPrefixUniform
 
 end
 

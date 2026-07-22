@@ -61,7 +61,7 @@ variance-proxy bounds, and operator-norm bridge assumptions.
 ## Branch Modules
 
 - `HighDimProb.Scalar`: one-dimensional probability infrastructure, including scalar centering and variance leaves.
-- `HighDimProb.Concentration`: experimental scalar concentration proof spine, including `Basic`, `Markov`, `Chebyshev`, `LayerCake`, `OrliczToTail`, `TailToOrlicz`, `MomentImplications`, `MGF`, `Implications`, `SubGaussianSums`, `RademacherSums`, `Hoeffding`, `MaxScale`, `SubExponentialSums`, and `Bernstein`.
+- `HighDimProb.Concentration`: public focused scalar-concentration facade, including the implication spine, finite maxima, full Dudley consumer, and finite Hanson-Wright endpoint.
 - `HighDimProb.Vector`: finite-dimensional random-vector infrastructure.
 - `HighDimProb.Geometry`: nets, metric entropy, covering/packing statements, and Gaussian-width vocabulary.
 - `HighDimProb.RandomMatrix`: supported finite-dimensional random-matrix base.
@@ -80,7 +80,7 @@ variance-proxy bounds, and operator-norm bridge assumptions.
 HighDimProb
 - Init (stable)
 - Scalar (stable)
-- Concentration (experimental)
+- Concentration (public focused facade)
 - Vector (experimental)
 - Geometry (experimental)
 - RandomMatrix (supported finite-dimensional focused branch)
@@ -102,14 +102,12 @@ Stage V1 adds human/agent-facing diagrams for this tree in
 `docs/visualizations/module_tree.mmd`, and the generated Lean import graph in
 `docs/visualizations/lake_import_graph.dot`.
 
-## Stage SC-final Import Decision
+## Concentration Import Decision
 
-`HighDimProb.Concentration` remains experimental after scalar concentration
-closure. The theorem-family surface is indexed and tested, but stable-root
-promotion is deferred because reverse/source MGF links, finite-gauge variants,
-full equivalence packaging, and the raw-predicate Bernstein bridge remain
-incomplete. The fixed-scale subGaussian and subExponential full moment bridges
-are proved.
+`HighDimProb.Concentration` is a supported focused import and remains outside
+the intentionally small `import HighDimProb` root. Focused-import placement is
+an import-cost decision, not an experimental-status marker. Unfinished
+extensions remain excluded from the claims of the facade.
 
 ## Leaf Declaration Policy
 

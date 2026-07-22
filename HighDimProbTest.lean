@@ -14,6 +14,7 @@ import HighDimProbTest.OrliczAPI
 import HighDimProbTest.SubGaussianAPI
 import HighDimProbTest.SubExponentialAPI
 import HighDimProbTest.ConcentrationAPI
+import HighDimProbTest.HansonWrightAPI
 import HighDimProbTest.LayerCakeAPI
 import HighDimProbTest.OrliczToTailAPI
 import HighDimProbTest.TailToOrliczAPI
@@ -58,6 +59,9 @@ import HighDimProbTest.RandomMatrixSpectralAPI
 import HighDimProbTest.RandomMatrixTraceExpAPI
 import HighDimProbTest.RandomMatrixLaplaceAPI
 import HighDimProbTest.RandomMatrixVarianceProxyAPI
+import HighDimProbTest.SubGaussianMatrixAPI
+import HighDimProbTest.DirectionalSubGaussianMatrixAPI
+import HighDimProbTest.DirectionalOperatorNormMatrixAPI
 import HighDimProbTest.RandomMatrixMatrixExpDerivativeProviderAPI
 import HighDimProbTest.RandomMatrixInverseConvexityProviderAPI
 import HighDimProbTest.RandomMatrixRelativeEntropyProviderAPI
@@ -101,4 +105,8 @@ import HighDimProbTest.ExamplesAPI
 import HighDimProbTest.PrecisionDAAPI
 import HighDimProbTest.SubGaussianProcessAPI
 import HighDimProbTest.MetricEntropyAPI
+import HighDimProbTest.CoveringNumberAPI
 import HighDimProbTest.DenseSupAPI
+import HighDimProbTest.CompactApproximationAPI
+import HighDimProbTest.ExpectationConvergenceAPI
+import HighDimProbTest.DudleyAPI

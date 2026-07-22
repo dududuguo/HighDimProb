@@ -11,7 +11,7 @@ flowchart TD
   Local["local Bernstein<br/>proven"]
   Full["full scalar Bernstein min-form<br/>proven"]
   Weighted["weighted Bernstein<br/>proven"]
-  MatrixTODO["matrix Bernstein<br/>TODO"]
+  MatrixBernstein["matrix Bernstein consumers<br/>proved under explicit inputs"]
 
   Psi1 -- "matching scale" --> Tail
   Tail -- "scale loss 3*K" --> Psi1
@@ -25,7 +25,7 @@ flowchart TD
   MaxScale --> Local
   VarianceProxy --> Local
   Local --> Full --> Weighted
-  Weighted -. "separate branch prerequisite" .-> MatrixTODO
+  Weighted -. "separate matrix branch" .-> MatrixBernstein
 
   classDef proven fill:#e7f5e9,stroke:#2e7d32,color:#123;
   classDef local fill:#fff8e1,stroke:#f9a825,color:#332;
@@ -37,4 +37,4 @@ flowchart TD
   class RawMGF partial;
   class Local local;
   class Weighted weighted;
-  class MatrixTODO todo;
+  class MatrixBernstein proven;

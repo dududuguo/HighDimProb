@@ -82,6 +82,155 @@ theorem norm_sub_chain_le_sum_of_level_sup
           (fun x => ‖f x - f (parent k x)‖)) := by
       rfl
 
+/-- A finite family of paths is bounded from a common anchor by a terminal
+residual and supplied per-level step bounds. -/
+theorem finset_sup'_norm_sub_anchor_le_residual_add_sum_of_step_bound
+    {α E : Type*} [SeminormedAddCommGroup E]
+    {L : ℕ}
+    (s : Finset α)
+    (hs : s.Nonempty)
+    (path : α → Fin (L + 1) → α)
+    (anchor : α)
+    (f : α → E)
+    (residual : ℝ)
+    (stepBound : Fin L → ℝ)
+    (hresidual : ∀ x ∈ s,
+      ‖f x - f (path x (Fin.last L))‖ ≤ residual)
+    (hanchor : ∀ x ∈ s, path x 0 = anchor)
+    (hstep : ∀ x ∈ s, ∀ k : Fin L,
+      ‖f (path x (Fin.succ k)) - f (path x (Fin.castSucc k))‖ ≤ stepBound k) :
+    s.sup' hs (fun x => ‖f x - f anchor‖) ≤
+      residual + ∑ k : Fin L, stepBound k := by
+  have hchain : ∀ x ∈ s,
+      ‖f (path x (Fin.last L)) - f anchor‖ ≤
+        ∑ k : Fin L, stepBound k := by
+    intro x hx
+    let gamma : ℕ → α := fun n =>
+      if hn : n ≤ L then path x ⟨n, Nat.lt_succ_of_le hn⟩
+      else path x (Fin.last L)
+    have hgamma (n : ℕ) (hn : n ≤ L) :
+        gamma n = path x ⟨n, Nat.lt_succ_of_le hn⟩ := by
+      simp [gamma, hn]
+    have hgamma_last : gamma L = path x (Fin.last L) := by
+      rw [hgamma L le_rfl]
+      apply congrArg (path x)
+      apply Fin.ext
+      rfl
+    have hgamma_zero : gamma 0 = path x 0 := by
+      rw [hgamma 0 (Nat.zero_le L)]
+      apply congrArg (path x)
+      apply Fin.ext
+      rfl
+    let b : ℕ → ℝ := fun k =>
+      if hk : k < L then stepBound ⟨k, hk⟩ else 0
+    have hstep' : ∀ k ∈ Finset.range L,
+        ‖f (gamma (k + 1)) - f (gamma k)‖ ≤ b k := by
+      intro k hk
+      have hkL : k < L := Finset.mem_range.mp hk
+      let kFin : Fin L := ⟨k, hkL⟩
+      calc
+        ‖f (gamma (k + 1)) - f (gamma k)‖ =
+            ‖f (path x (Fin.succ kFin)) -
+              f (path x (Fin.castSucc kFin))‖ := by
+          rw [show gamma (k + 1) = path x (Fin.succ kFin) by
+            simpa using hgamma (k + 1) (Nat.succ_le_of_lt hkL)]
+          rw [show gamma k = path x (Fin.castSucc kFin) by
+            simpa using hgamma k (Nat.le_of_lt hkL)]
+        _ ≤ stepBound kFin := hstep x hx kFin
+        _ = b k := by
+          simp only [b, dif_pos hkL]
+          apply congrArg stepBound
+          apply Fin.ext
+          rfl
+    have h := norm_sub_chain_le_sum_of_step_bound gamma f L b hstep'
+    calc
+      ‖f (path x (Fin.last L)) - f anchor‖ =
+          ‖f (gamma L) - f (gamma 0)‖ := by
+            rw [hgamma_last, hgamma_zero, hanchor x hx]
+      _ ≤ Finset.sum (Finset.range L) b := h
+      _ = ∑ k : Fin L, stepBound k := by
+        rw [Finset.sum_fin_eq_sum_range]
+  apply Finset.sup'_le hs
+  intro x hx
+  calc
+    ‖f x - f anchor‖ =
+        ‖(f x - f (path x (Fin.last L))) +
+          (f (path x (Fin.last L)) - f anchor)‖ := by
+      rw [sub_add_sub_cancel]
+    _ ≤ ‖f x - f (path x (Fin.last L))‖ +
+          ‖f (path x (Fin.last L)) - f anchor‖ := norm_add_le _ _
+    _ ≤ residual + ∑ k : Fin L, stepBound k :=
+      add_le_add (hresidual x hx) (hchain x hx)
+
+/-- The expected finite anchored supremum is bounded by an expected terminal
+residual and the expected sum of supplied per-level step bounds. -/
+theorem expect_finset_sup'_abs_sub_anchor_le_residual_add_sum_of_step_bound
+    {Ω α : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω}
+    {L : ℕ}
+    {X : RandomProcess Ω α ℝ}
+    (s : Finset α)
+    (hs : s.Nonempty)
+    (path : α → Fin (L + 1) → α)
+    (anchor : α)
+    (residual : RealRandomVariable Ω)
+    (stepBound : Fin L → RealRandomVariable Ω)
+    (hresidual : ∀ x ∈ s, ∀ ω : Ω,
+      |X x ω - X (path x (Fin.last L)) ω| ≤ residual ω)
+    (hanchor : ∀ x ∈ s, path x 0 = anchor)
+    (hstep : ∀ x ∈ s, ∀ k : Fin L, ∀ ω : Ω,
+      |X (path x (Fin.succ k)) ω - X (path x (Fin.castSucc k)) ω| ≤
+        stepBound k ω)
+    (hresidualIntegrable : IntegrableRealRandomVariable P residual)
+    (hstepIntegrable : ∀ k : Fin L,
+      IntegrableRealRandomVariable P (stepBound k)) :
+    expect P (fun ω => s.sup' hs (fun x => |X x ω - X anchor ω|)) ≤
+      expect P residual + ∑ k : Fin L, expect P (stepBound k) := by
+  have hsum : IntegrableRealRandomVariable P
+      (fun ω => ∑ k : Fin L, stepBound k ω) := by
+    unfold IntegrableRealRandomVariable IntegrableRandomVariable
+    exact MeasureTheory.integrable_finset_sum Finset.univ
+      (fun k _hk => hstepIntegrable k)
+  have hupper : IntegrableRealRandomVariable P
+      (fun ω => residual ω + ∑ k : Fin L, stepBound k ω) :=
+    hresidualIntegrable.add hsum
+  have hpointwise : ∀ ω : Ω,
+      s.sup' hs (fun x => |X x ω - X anchor ω|) ≤
+        residual ω + ∑ k : Fin L, stepBound k ω := by
+    intro ω
+    simpa only [Real.norm_eq_abs] using
+      (finset_sup'_norm_sub_anchor_le_residual_add_sum_of_step_bound
+        s hs path anchor (fun t => X t ω) (residual ω)
+        (fun k => stepBound k ω)
+        (fun x hx => hresidual x hx ω)
+        hanchor
+        (fun x hx k => hstep x hx k ω))
+  have hnonneg : ∀ ω : Ω,
+      0 ≤ s.sup' hs (fun x => |X x ω - X anchor ω|) := by
+    intro ω
+    obtain ⟨x, hx⟩ := hs
+    exact (abs_nonneg _).trans
+      (Finset.le_sup' (fun x => |X x ω - X anchor ω|) hx)
+  have hIntegral :
+      expect P (fun ω =>
+        s.sup' hs (fun x => |X x ω - X anchor ω|)) ≤
+        expect P (fun ω => residual ω + ∑ k : Fin L, stepBound k ω) := by
+    rw [expect_def, expect_def]
+    exact MeasureTheory.integral_mono_of_nonneg
+      (Filter.Eventually.of_forall hnonneg)
+      hupper
+      (Filter.Eventually.of_forall hpointwise)
+  calc
+    expect P (fun ω =>
+        s.sup' hs (fun x => |X x ω - X anchor ω|)) ≤
+        expect P (fun ω => residual ω + ∑ k : Fin L, stepBound k ω) := hIntegral
+    _ = expect P residual +
+        expect P (fun ω => ∑ k : Fin L, stepBound k ω) := by
+      rw [expect_def, expect_def, expect_def]
+      exact MeasureTheory.integral_add hresidualIntegrable hsum
+    _ = expect P residual + ∑ k : Fin L, expect P (stepBound k) := by
+      rw [expect_finset_sum (fun k _hk => hstepIntegrable k)]
+
 /-- Pointwise supremum of a real-valued random process over a nonempty finite set. -/
 def processSup {Ω T : Type*} [MeasurableSpace Ω]
     (X : RandomProcess Ω T ℝ) (s : Finset T) (hs : s.Nonempty) :

@@ -1,5 +1,6 @@
 import HighDimProb.Nets
 import HighDimProb.MetricEntropy
+import HighDimProb.Geometry.CoveringNumber
 import HighDimProb.MetricEntropyStatements
 import HighDimProb.GaussianWidth
 

@@ -1364,22 +1364,21 @@ var NODES = [
     "style": {
       "x": 2320,
       "y": 112.0,
-      "fill": "#E8E8E8",
-      "stroke": "#BFBFBF"
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
     },
     "data": {
       "label": "hanson-wright",
-      "title": "Hanson-Wright statement / proof route",
-      "status": "pending",
-      "lean_module": "docs/archive/LeafPlan.md; HighDimProb/RandomMatrix/Statements.lean",
+      "title": "有限实矩阵 Hanson-Wright 中心二次型双侧尾界",
+      "status": "integrated",
+      "lean_module": "HighDimProb/Concentration/HansonWright.lean; HighDimProbTest/HansonWrightAPI.lean",
       "depth": 8,
       "index": 55,
       "deps": [
-        "full-matrix-bernstein",
         "subgaussian-vector"
       ],
-      "fill": "#E8E8E8",
-      "stroke": "#BFBFBF"
+      "fill": "#52C41A",
+      "stroke": "#389E0D"
     }
   },
   {
@@ -1876,11 +1875,6 @@ var EDGES = [
     "id": "e79",
     "source": "tail-event-domination",
     "target": "full-matrix-bernstein"
-  },
-  {
-    "id": "e80",
-    "source": "full-matrix-bernstein",
-    "target": "hanson-wright"
   },
   {
     "id": "e81",

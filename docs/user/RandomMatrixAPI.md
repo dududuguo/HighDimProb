@@ -1,4 +1,4 @@
-# RandomMatrix Matrix Bernstein API
+# RandomMatrix Concentration API
 
 This is the caller-facing endpoint, import, and assumption guide for the
 RandomMatrix concentration API. Use it to choose public theorem endpoints,
@@ -35,6 +35,8 @@ of this caller contract. Their ownership and dependency rules are defined in
 - [`HardboneStatements.lean`](../../HighDimProb/RandomMatrix/HardboneStatements.lean)
 - [`CStarBridge.lean`](../../HighDimProb/RandomMatrix/CStarBridge.lean)
 - [`VarianceProxy.lean`](../../HighDimProb/RandomMatrix/VarianceProxy.lean)
+- [`DirectionalSubGaussian.lean`](../../HighDimProb/RandomMatrix/DirectionalSubGaussian.lean)
+- [`DirectionalOperatorNorm.lean`](../../HighDimProb/RandomMatrix/DirectionalOperatorNorm.lean)
 - [`ConcentrationStatements.lean`](../../HighDimProb/RandomMatrix/ConcentrationStatements.lean)
 
 ## Shared Helpers
@@ -92,6 +94,26 @@ Spectral endpoints:
 
 These wrappers keep the legacy `lambdaMax` / `lambdaMin` names while exposing
 the canonical ordered `eigenvalues₀` endpoints.
+
+## Directional Sub-Gaussian Surface
+
+- `DirectionallySubGaussianSelfAdjointMatrix`
+- `matrixQuadraticForm_centeredRandomMatrix`
+- `directionallySubGaussianSelfAdjointMatrix_sum_of_iIndepFun`
+- `IsUnitSphereNet`
+- `deterministicOperatorNorm_le_of_isUnitSphereNet`
+- `directionallySubGaussianSelfAdjointMatrix_operatorNorm_netTail`
+- `directionallySubGaussianSelfAdjointMatrix_operatorNorm_netTail_sum_of_iIndepFun`
+
+This is the finite-dimensional fixed-direction route. It packages scalar
+sub-Gaussian control of every fixed unit-vector quadratic form, closes the
+predicate under independent finite sums, and converts it to an operator-norm
+tail using an explicit finite unit-sphere net. The tail prefactor is
+`2 * N.card`; the API does not yet construct `N` or replace its cardinality by
+a dimension-only bound. The tail theorems use `Fin (n + 1)`, require
+`0 <= eps < 1 / 2`, `0 <= t`, a probability measure, and explicit entrywise
+integrability. This route does not imply `MatrixSubGaussianMGF`, a Loewner MGF
+bound, or an `n`-prefactor trace-MGF theorem.
 
 
 CStar representation bridge:
@@ -266,6 +288,38 @@ Matrix Bernstein theorem. The raw conditioning-to-tail wrapper
 `matrixBernsteinQuadraticFormUpperTail_of_conditioningTraceMGFBridge` is a thin
 composition from the S9 conditioning trace-MGF consumer to the existing
 quadratic-form Laplace route under an explicit tail-event subset assumption.
+
+## Matrix Sub-Gaussian Surface
+
+The focused public matrix sub-Gaussian surface is exported by the same facade:
+
+```lean
+import HighDimProb.RandomMatrix.Concentration
+```
+
+It contains exactly these four declarations:
+
+- `MatrixSubGaussianMGF`
+- `MatrixSubGaussianMGF.neg`
+- `traceMGFVarianceProxyBound_of_matrixSubGaussian_under_troppPrimitive`
+- `subGaussian_quadraticFormUpperTail_under_troppPrimitive`
+
+`MatrixSubGaussianMGF` states only a conditional Loewner matrix-MGF inequality.
+It does not bundle centeredness, self-adjointness, positive semidefiniteness,
+measurability, integrability, or a probability-measure assumption. The
+finite-family trace-MGF and quadratic-form tail declarations still require an
+explicit finite-family Tropp comparison primitive, random-matrix,
+self-adjointness, and independence assumptions, self-adjoint variance proxies,
+and matrix/trace-exponential integrability for the unbounded summands. The tail
+declaration additionally requires the aggregate proxy spectral bound and uses
+the optimizer `theta = t / sigmaSq`, with those integrability premises required
+at that value. This surface is not unconditional Matrix Chernoff or full
+Tropp, and it makes no infinite-dimensional claim.
+
+The focused compile-time consumer is
+[`SubGaussianMatrixAPI.lean`](../../HighDimProbTest/SubGaussianMatrixAPI.lean).
+The append-only downstream consumer is
+`HighDimProbJudge/RandomMatrix/SubGaussianUse.lean`.
 
 ## Hardbone Statement Targets
 

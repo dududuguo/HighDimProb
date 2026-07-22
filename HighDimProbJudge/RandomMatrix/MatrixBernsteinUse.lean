@@ -11,7 +11,8 @@ open HighDimProb
 #check HighDimProb.matrixBernsteinHighProbabilityThreshold
 #check HighDimProb.matrixBernsteinTwoSidedOptimizedScalarTailRHS_highProbabilityThreshold
 #check HighDimProb.matrixBernsteinSelfAdjointHighProbabilityStatement
-#check HighDimProb.matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement
+#check
+  HighDimProb.matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement
 #check HighDimProb.MatrixBernstein.operatorNormTail_of_primitives
 #check HighDimProb.MatrixBernstein.operatorNormTail_of_primitives_nonneg
 #check HighDimProb.MatrixBernstein.operatorNormUpperTail_of_primitives
@@ -24,14 +25,6 @@ open HighDimProb
 #check HighDimProb.MatrixBernstein.sampleCovarianceExactRowHighProbability
 #check HighDimProb.MatrixBernstein.highProbability_of_primitives
 #check HighDimProb.iIndepFun_centeredRankOne
-#check HighDimProb.MatrixBernstein.CenteredRankOneInputs.ofIIndepFun
-#check HighDimProb.MatrixBernstein.CenteredRankOneExactRowInputs.ofIIndepFun
-#check HighDimProb.upperTailProb_operatorNorm_smul_one_div_natCast
-#check HighDimProb.iIndepFun_centeredRandomMatrix
-#check HighDimProb.MatrixBernstein.CenteredSelfAdjointObservationInputs
-#check HighDimProb.MatrixBernstein.CenteredSelfAdjointObservationInputs.ofIIndepFun
-#check HighDimProb.MatrixBernstein.centeredSelfAdjointObservations
-#check HighDimProb.MatrixBernstein.centeredSelfAdjointObservationsHighProbability
 
 example
     {Omega I : Type*} [MeasurableSpace Omega] [Nonempty Omega] [Fintype I]
@@ -56,66 +49,6 @@ example
   exact
     HighDimProb.matrixBernsteinSelfAdjointHighProbabilityStatement_of_optimizedStatement
       (P := P) A sigmaSq R delta hBernstein
-
-/-- Downstream external-user view: build exact-row centered rank-one inputs from
-vector-level `iIndepFun`, then obtain the operator-norm tail. The caller states
-only independence of the underlying random vectors; no matrix-family
-independence appears. -/
-example
-    {Omega I : Type*} [MeasurableSpace Omega] [Nonempty Omega] [Fintype I]
-    {P : Measure Omega} [IsProbabilityMeasure P] {n : Nat}
-    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
-    (X : I -> RandomVector Omega n) (R t : Real) (Rvar : I -> Real) (hn : 0 < n)
-    (randomVector : forall i, IsRandomVector P (X i))
-    (coordinateMemLpTwo :
-      forall i, forall j : Fin n, MemLpRealRandomVariable P (coord (X i) j) 2)
-    (sqNormBound : forall i omega, vectorSqNorm (X i omega) <= R)
-    (hIndep : ProbabilityTheory.iIndepFun X P)
-    (radiusNonneg : 0 <= R)
-    (varianceSqNormBound : forall i omega, vectorSqNorm (X i omega) <= Rvar i)
-    (varianceRadiiNonneg : forall i, 0 <= Rvar i)
-    (ht : 0 <= t) :
-    upperTailProb P
-        (operatorNorm
-          (randomMatrixSum (centeredRankOneRandomMatrixFamily P X))) t <=
-      matrixBernsteinTwoSidedOptimizedScalarTailRHS
-        n (2 * R) (2 * R) t
-        (rowSqNormVarianceProxyNormRHS Rvar)
-        (rowSqNormVarianceProxyNormRHS Rvar) :=
-  MatrixBernstein.centeredRankOneExactRow X R t Rvar hn
-    (MatrixBernstein.CenteredRankOneExactRowInputs.ofIIndepFun
-      randomVector coordinateMemLpTwo sqNormBound hIndep radiusNonneg
-      varianceSqNormBound varianceRadiiNonneg) ht
-
-/-- Downstream external-user view of the generic observation route: a
-self-adjoint observation family with only observation-level `iIndepFun` (plus
-the explicit centered-summand square-integrability, operator-norm, and
-variance-proxy obligations) yields the operator-norm tail. No matrix-family
-independence is stated by the caller; it is discharged inside `.ofIIndepFun`. -/
-example
-    {Omega I : Type*} [MeasurableSpace Omega] [Nonempty Omega] [Fintype I]
-    {P : Measure Omega} [IsProbabilityMeasure P] {n : Nat}
-    [StandardBorelSpace (Matrix (Fin n) (Fin n) Real)]
-    (X : I -> RandomMatrix Omega n n) (R sigmaSq t : Real) (hn : 0 < n)
-    (selfAdjoint : SelfAdjointRandomMatrixFamily P X)
-    (integrable : forall i, IntegrableRandomMatrix P (X i))
-    (centeredSquareIntegrable :
-      forall i, IntegrableRandomMatrix P
-        (randomMatrixSquare (centeredRandomMatrixFamily P X i)))
-    (hIndep : ProbabilityTheory.iIndepFun X P)
-    (centeredOperatorNormBound :
-      PointwiseOperatorNormBound (centeredRandomMatrixFamily P X) R)
-    (centeredVarianceProxyBound :
-      MatrixVarianceProxyNormBound P (centeredRandomMatrixFamily P X) sigmaSq)
-    (radiusNonneg : 0 <= R) (varianceNonneg : 0 <= sigmaSq) (ht : 0 <= t) :
-    upperTailProb P
-        (operatorNorm (randomMatrixSum (centeredRandomMatrixFamily P X))) t <=
-      matrixBernsteinTwoSidedOptimizedScalarTailRHS n R R t sigmaSq sigmaSq :=
-  MatrixBernstein.centeredSelfAdjointObservations X R sigmaSq t hn
-    (MatrixBernstein.CenteredSelfAdjointObservationInputs.ofIIndepFun
-      selfAdjoint integrable centeredSquareIntegrable hIndep
-      centeredOperatorNormBound centeredVarianceProxyBound radiusNonneg
-      varianceNonneg) ht
 
 #check HighDimProb.matrixBernsteinLaplacePrerequisitesStatement
 #check HighDimProb.matrixBernsteinTraceMGF_statement

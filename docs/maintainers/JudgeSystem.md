@@ -4,6 +4,13 @@ The HighDimProb judge suite is a lightweight compile-time OJ-style layer. It
 checks that downstream users can import selected public APIs and apply important
 theorems or typed statements without relying on local test internals.
 
+It is public and append-only. Every file recorded in
+`.github/judge-lock.json` is frozen byte-for-byte by its SHA-256 digest. Git
+history anchors the previous ledger in CI, so deleting, renaming, editing, or
+re-hashing an existing case fails. New mathematical coverage is added only as a
+new Judge file. `HighDimProbJudge.lean` remains an import-only aggregate index
+whose exact import set is validated against the ledger.
+
 ## What It Checks
 
 - Stable root imports through `import HighDimProb`.
@@ -21,6 +28,10 @@ theorems or typed statements without relying on local test internals.
   anonymous negated random-matrix families in checked public signatures.
   Introduce a named `def` or `abbrev` before exposing such a family in a theorem,
   structure field, test surface, judge surface, or downstream-facing adapter.
+- Monotone coverage through `scripts/judge_append_only_check.py`: every Judge
+  leaf is registered, frozen files match their digests, the aggregate imports
+  exactly the registered modules, and a branch may only add entries relative
+  to its Git base.
 
 ## Current Coverage
 
@@ -42,6 +53,19 @@ theorems or typed statements without relying on local test internals.
   Bernstein min-form public theorem applications.
 - `HighDimProbJudge/Concentration/SubGaussianUse.lean`: subGaussian moment and
   MGF-to-tail public theorem applications.
+- `HighDimProbJudge/Analysis/SumIntegralD2Use.lean`: generic left-endpoint and
+  dyadic lower-endpoint convergence from truncated interval integrals to the
+  full integral under explicit interval integrability.
+- `HighDimProbJudge/Analysis/CompactApproximationUse.lean`: compact residual
+  bridge visibility for uniform and `toReal` uniform-function distances.
+- `HighDimProbJudge/Concentration/SubGaussianMaxD2D3Use.lean`: the D2-to-D3
+  assembly bridge under supplied prefix bounds and supplied residual expectation
+  convergence.
+- `HighDimProbJudge/Concentration/SubGaussianProcessUse.lean`: supplied
+  dense-sequence finite-prefix to full-supremum passage. The direct Mathlib
+  dominated-convergence call is covered by a focused `HighDimProbTest` API
+  check without a duplicate project wrapper. These surfaces do not establish
+  full D2 or D4.
 - `HighDimProbJudge/RandomMatrix/OperatorNormUse.lean`: operator-norm
   measurability.
 - `HighDimProbJudge/RandomMatrix/StatementUse.lean`: matrix Bernstein typed
@@ -78,6 +102,29 @@ theorems or typed statements without relying on local test internals.
   `matrixBernsteinTraceMGF_statement`, sample-covariance exact-row centered-square-chain wrapper and assumption-bundle visibility,
   negative exact-row variance-proxy provider visibility, and their main
   structural/analytic dependencies.
+- `HighDimProbJudge/RandomMatrix/MatrixBernsteinConsumersUse.lean`: append-only
+  checks for vector-level independence constructors and the generic centered
+  self-adjoint observation consumer through the public concentration facade.
+- `HighDimProbJudge/Concentration/HansonWrightExplicitUse.lean`: append-only
+  downstream check for the named universal constant and explicit-constant
+  finite Hanson-Wright endpoint.
+
+## Matrix Sub-Gaussian Judge Boundary
+
+The focused compile-time check is
+`HighDimProbTest/SubGaussianMatrixAPI.lean`. It imports only
+`HighDimProb.RandomMatrix.Concentration` and checks the four public
+declarations `MatrixSubGaussianMGF`, `MatrixSubGaussianMGF.neg`,
+`traceMGFVarianceProxyBound_of_matrixSubGaussian_under_troppPrimitive`, and
+`subGaussian_quadraticFormUpperTail_under_troppPrimitive`. The predicate is
+only a conditional Loewner MGF contract; any downstream finite-family or tail
+example must keep the Tropp comparison, random/self-adjoint/independence,
+variance-proxy self-adjointness, and unbounded matrix/trace-exponential
+integrability assumptions visible; a tail example must additionally keep the
+aggregate proxy spectral bound and optimizer-time premises visible. The
+append-only downstream consumer is
+`HighDimProbJudge/RandomMatrix/SubGaussianUse.lean`; it exercises the exact
+optimizer-time premises through the stable facade.
 
 ## How It Differs From Normal Tests
 
@@ -99,21 +146,33 @@ level 3 examples for large concentration theorems.
 
 ## Adding A Judge Case
 
-1. Add a focused file under `HighDimProbJudge/`.
-2. Import only the public module a downstream user should import.
-3. Add one or more level 1 checks.
-4. Add a level 2 type assertion or level 3 application example.
-5. Import the new file from `HighDimProbJudge.lean`.
-6. Do not import `HighDimProb.Experimental` from ordinary judge files.
-7. Run the commands below.
+1. Do not edit, delete, rename, move, or re-hash an existing registered Judge
+   file. If an API is renamed, keep the old API as a compatible alias.
+2. Add one focused new file under `HighDimProbJudge/`; use one new file per
+   proof/API leaf.
+3. Import only the public module a downstream user should import.
+4. Add one or more level 1 checks.
+5. Add a level 2 type assertion or level 3 application example.
+6. Do not edit the lock or aggregate import manually. Run
+   `python3 scripts/judge_append_only_check.py --add <new-file>` to register the
+   file and append its root import.
+7. Do not import `HighDimProb.Experimental` from ordinary judge files.
+8. Run the commands below.
 
 ## Commands
 
 ```bash
+python3 scripts/judge_append_only_check.py
+python3 -m unittest scripts.test_judge_append_only_check
+python3 scripts/judge_policy_check.py
 lake build HighDimProbJudge
 lake test
-python scripts/judge_policy_check.py
 ```
+
+`--bootstrap` exists only for the initial repository migration and refuses to
+refresh an existing ledger. `--add` refuses registered paths and modified old
+files. CI additionally runs `--base <target-sha>`, making Git history rather
+than the editable working tree the authority for old hashes.
 
 MB-S9-tropp-shape-refactor adds focused judge coverage for
 `HighDimProb.troppMasterTraceMGFFiniteFamily_statement` in

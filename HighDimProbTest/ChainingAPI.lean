@@ -20,6 +20,37 @@ variable (X : RandomProcess Ω T ℝ)
 #check chain_sub_eq_sum_range
 #check norm_sub_chain_le_sum_of_step_bound
 #check norm_sub_chain_le_sum_of_level_sup
+#check finset_sup'_norm_sub_anchor_le_residual_add_sum_of_step_bound
+#check expect_finset_sup'_abs_sub_anchor_le_residual_add_sum_of_step_bound
+
+example {α E : Type*} [SeminormedAddCommGroup E]
+    (a : α) (f : α → E) :
+    ({a} : Finset α).sup' ⟨a, by simp⟩ (fun x => ‖f x - f a‖) ≤ 0 := by
+  let path : α → Fin 1 → α := fun _ _ => a
+  have h := finset_sup'_norm_sub_anchor_le_residual_add_sum_of_step_bound
+    ({a} : Finset α) ⟨a, by simp⟩ path a f 0 (fun k : Fin 0 => 0)
+    (by intro x hx; rcases Finset.mem_singleton.mp hx with rfl; simp [path])
+    (by intro x hx; simp [path])
+    (by intro x hx k; exact Fin.elim0 k)
+  simp at h ⊢
+
+example {Ω α : Type*} [MeasurableSpace Ω]
+    {P : Measure Ω} {X : RandomProcess Ω α ℝ}
+    (a : α) :
+    expect P (fun ω =>
+      ({a} : Finset α).sup' ⟨a, by simp⟩
+        (fun x => |X x ω - X a ω|)) ≤ 0 := by
+  let path : α → Fin 1 → α := fun _ _ => a
+  have h := expect_finset_sup'_abs_sub_anchor_le_residual_add_sum_of_step_bound
+    (P := P) (X := X)
+    ({a} : Finset α) ⟨a, by simp⟩ path a
+    (fun _ : Ω => 0) (fun k : Fin 0 => Fin.elim0 k)
+    (by intro x hx ω; rcases Finset.mem_singleton.mp hx with rfl; simp [path])
+    (by intro x hx; simp [path])
+    (by intro x hx k ω; exact Fin.elim0 k)
+    (by simp)
+    (by intro k; exact Fin.elim0 k)
+  simp at h ⊢
 
 example {Ω α : Type*} [MeasurableSpace Ω]
     {P : Measure Ω}

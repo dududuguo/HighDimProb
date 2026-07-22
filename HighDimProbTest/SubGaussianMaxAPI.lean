@@ -23,12 +23,17 @@ example {Omega T : Type*} [MeasurableSpace Omega]
 
 #check expect_finset_sup'_abs_le_of_centeredSubGaussianMGF
 
+#check expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound
+#check expect_iSup_abs_sub_anchor_le_mul_intervalIntegral_of_denseRange_of_prefix_bound
+
 #check expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF
 
 #check expect_abs_sub_chain_le_sum_of_level_sup_of_centeredSubGaussianMGF_of_card_le
 #check expect_abs_sub_chain_le_finiteEntropySum
 #check expect_abs_sub_chain_le_finiteEntropySum_of_path
 #check expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral
+#check expect_finset_sup'_abs_sub_anchor_le_finiteEntropySum
+#check expect_finset_sup'_abs_sub_anchor_le_truncatedEntropyIntegral
 
 example
     {Ω α : Type*} [MeasurableSpace Ω]
@@ -173,6 +178,50 @@ example
   exact expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral
     path nextLevel parent hmem hparent hXMeas hX hσ hR hdist hN hfinite
 
+example
+    {Ω α : Type*} [MeasurableSpace Ω] [PseudoMetricSpace α]
+    {P : Measure Ω} [IsProbabilityMeasure P]
+    {X : RandomProcess Ω α ℝ}
+    {K : Set α} {L : Nat} {R σ : ℝ}
+    (s : Finset α) (hs : s.Nonempty)
+    (path : α → Fin (L + 1) → α)
+    (nextLevel : Fin L → Finset α)
+    (parent : Fin L → α → α)
+    (anchor : α)
+    (residual : RealRandomVariable Ω)
+    (hmem : ∀ x ∈ s, ∀ k : Fin L,
+      path x (Fin.succ k) ∈ nextLevel k)
+    (hparent : ∀ x ∈ s, ∀ k : Fin L,
+      path x (Fin.castSucc k) = parent k (path x (Fin.succ k)))
+    (hresidual : ∀ x ∈ s, ∀ ω : Ω,
+      |X x ω - X (path x (Fin.last L)) ω| ≤ residual ω)
+    (hanchor : ∀ x ∈ s, path x 0 = anchor)
+    (hXMeas : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      Measurable (fun ω => X x ω - X (parent k x) ω))
+    (hX : HasSubGaussianMGFIncrements P X σ)
+    (hσ : 0 < σ)
+    (hR : 0 < R)
+    (hdist : ∀ k : Fin L, ∀ x ∈ nextLevel k,
+      dist x (parent k x) ≤ dyadicRadius R (Fin.castSucc k : Nat))
+    (hN : ∀ k : Fin L,
+      coveringNumber K (dyadicRadius R ((k : Nat) + 1)) =
+        ((nextLevel k).card : ENat))
+    (hfinite : coveringNumber K (dyadicRadius R (L + 1)) ≠ ⊤)
+    (hresidualIntegrable : IntegrableRealRandomVariable P residual) :
+    expect P (fun ω => s.sup' hs (fun x => |X x ω - X anchor ω|)) ≤
+      expect P residual +
+        4 * σ *
+          (∫ t in dyadicRadius R (L + 1)..R,
+            Real.sqrt (2 * Real.log
+              (2 * ((coveringNumber K t).toNat : ℝ)))) := by
+  exact expect_finset_sup'_abs_sub_anchor_le_truncatedEntropyIntegral
+    (s := s) (hs := hs) (path := path) (nextLevel := nextLevel)
+    (parent := parent) (anchor := anchor) (residual := residual)
+    (hmem := hmem) (hparent := hparent) (hresidual := hresidual)
+    (hanchor := hanchor) (hXMeas := hXMeas) (hX := hX) (hσ := hσ)
+    (hR := hR) (hdist := hdist) (hN := hN) (hfinite := hfinite)
+    (hresidualIntegrable := hresidualIntegrable)
+
 example {Omega T : Type*} [MeasurableSpace Omega]
     {P : Measure Omega} [IsProbabilityMeasure P]
     {X : RandomProcess Omega T Real} {s : Finset T} (hs : s.Nonempty)
@@ -183,6 +232,56 @@ example {Omega T : Type*} [MeasurableSpace Omega]
       K * Real.sqrt (2 * Real.log (2 * (s.card : Real))) := by
   exact expect_finset_sup'_abs_le_of_centeredSubGaussianMGF
     hs hXMeas hXSG
+
+example {Ω α : Type*} [MeasurableSpace Ω] [TopologicalSpace α]
+    {P : Measure Ω}
+    {X : RandomProcess Ω α ℝ}
+    (u : ℕ → α) (hu : DenseRange u) (anchor : α) (C : ℝ)
+    (hAnchorMeas : Measurable (X anchor))
+    (hUmeas : ∀ n : ℕ, Measurable (X (u n)))
+    (hPathCont : ∀ ω : Ω, Continuous
+      (fun x => |X x ω - X anchor ω|))
+    (hPathBdd : ∀ ω : Ω, BddAbove
+      (Set.range (fun x => |X x ω - X anchor ω|)))
+    (hFullIntegrable : IntegrableRealRandomVariable P
+      (fun ω => ⨆ x : α, |X x ω - X anchor ω|))
+    (hPrefixBound : ∀ n : ℕ,
+      expect P (fun ω =>
+        (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+          (fun k => |X (u k) ω - X anchor ω|)) ≤ C) :
+    expect P (fun ω => ⨆ x : α, |X x ω - X anchor ω|) ≤ C := by
+  exact expect_iSup_abs_sub_anchor_le_of_denseRange_of_prefix_bound
+    u hu anchor C hAnchorMeas hUmeas hPathCont hPathBdd
+    hFullIntegrable hPrefixBound
+
+example {Ω α : Type*} [MeasurableSpace Ω] [TopologicalSpace α]
+    {P : Measure Ω}
+    {X : RandomProcess Ω α ℝ}
+    (u : ℕ → α) (hu : DenseRange u) (anchor : α)
+    (c R : ℝ) (f : ℝ → ℝ) (residual : ℕ → ℕ → ℝ)
+    (hAnchorMeas : Measurable (X anchor))
+    (hUmeas : ∀ n : ℕ, Measurable (X (u n)))
+    (hPathCont : ∀ ω : Ω, Continuous
+      (fun x => |X x ω - X anchor ω|))
+    (hPathBdd : ∀ ω : Ω, BddAbove
+      (Set.range (fun x => |X x ω - X anchor ω|)))
+    (hFullIntegrable : IntegrableRealRandomVariable P
+      (fun ω => ⨆ x : α, |X x ω - X anchor ω|))
+    (hR : 0 ≤ R)
+    (hf : IntervalIntegrable f volume 0 R)
+    (hResidualTendsto : ∀ n : ℕ,
+      Filter.Tendsto (residual n) Filter.atTop (nhds 0))
+    (hPrefixBound : ∀ n m : ℕ,
+      expect P (fun ω =>
+        (Finset.range (n + 1)).sup' Finset.nonempty_range_add_one
+          (fun k => |X (u k) ω - X anchor ω|)) ≤
+        residual n m + c *
+          (∫ t in dyadicRadius R (m + 1)..R, f t)) :
+    expect P (fun ω => ⨆ x : α, |X x ω - X anchor ω|) ≤
+      c * (∫ t in (0 : ℝ)..R, f t) := by
+  exact expect_iSup_abs_sub_anchor_le_mul_intervalIntegral_of_denseRange_of_prefix_bound
+    u hu anchor c R f residual hAnchorMeas hUmeas hPathCont hPathBdd
+    hFullIntegrable hR hf hResidualTendsto hPrefixBound
 
 end
 

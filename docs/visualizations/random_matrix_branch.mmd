@@ -21,9 +21,9 @@ flowchart TD
   SCPSD["sample covariance PSD<br/>proven"]
   NormBridge["operator norm bridge<br/>proven"]
   NormMeas["operator norm measurability<br/>proven"]
-  MBStmt["matrix Bernstein statement<br/>typed Prop"]
-  MBProof["matrix Bernstein proof<br/>TODO"]
-  HW["Hanson-Wright<br/>TODO"]
+  MBStmt["matrix Bernstein API<br/>proved"]
+  MBProof["matrix Bernstein consumers<br/>proved under explicit inputs"]
+  HW["Hanson-Wright<br/>proved"]
   PSDProxy["variance proxy PSD<br/>typed Prop only"]
 
   SampleCov --> SCPSD
@@ -40,5 +40,5 @@ flowchart TD
 
   class Basic,RowsCols,Action,Norms,Assumptions,SampleCov,Quadratic,Algebra,UnitSphere,OperatorNorm,MatrixOrder,SelfAdjoint,Expectation,Sums,VarianceProxy,Statements helper;
   class SCPSD,NormBridge,NormMeas proven;
-  class MBStmt,PSDProxy typed;
-  class MBProof,HW todo;
+  class PSDProxy typed;
+  class MBStmt,MBProof,HW proven;

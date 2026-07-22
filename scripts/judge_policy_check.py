@@ -7,6 +7,8 @@ import re
 import sys
 from pathlib import Path
 
+from judge_append_only_check import verify as verify_append_only_judge
+
 
 ROOT = Path(__file__).resolve().parents[1]
 LEAN_ROOTS = [
@@ -235,6 +237,7 @@ def main() -> int:
     errors.extend(check_stable_root_import())
     errors.extend(check_judge_import_policy(files))
     errors.extend(check_judge_root_imports())
+    errors.extend(verify_append_only_judge(ROOT, None))
 
     if errors:
         print("judge policy check failed")
@@ -247,6 +250,7 @@ def main() -> int:
     print("stable root import boundary: ok")
     print("judge experimental import boundary: ok")
     print("judge root imports: ok")
+    print("judge append-only ledger: ok")
     print("public negated-family signature policy: ok")
     return 0
 
