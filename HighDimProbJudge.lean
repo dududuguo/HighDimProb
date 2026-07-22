@@ -43,3 +43,5 @@ import HighDimProbJudge.Concentration.MetricEntropyUse
 import HighDimProbJudge.Concentration.DudleyUse
 import HighDimProbJudge.Analysis.DenseSupUse
 import HighDimProbJudge.Analysis.SoftmaxUse
+import HighDimProbJudge.GaussianFunctional.GaussianAffineStabilityUse
+import HighDimProbJudge.GaussianFunctional.GaussianIntegrationByPartsUse

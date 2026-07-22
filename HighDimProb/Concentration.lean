@@ -15,7 +15,7 @@ import HighDimProb.Concentration.RademacherSums
 import HighDimProb.Concentration.Hoeffding
 import HighDimProb.Concentration.FiniteMax
 import HighDimProb.Concentration.SubGaussianMax
-import HighDimProb.Concentration.Dudley
+import HighDimProb.Concentration.DudleyFull
 
 /-!
 # Concentration branch

@@ -15,32 +15,28 @@ history for exact old wording.
 
 ### Dudley Closure Roadmap
 
-Proved baseline: finite chaining/net/cardinality/finite entropy sum,
-`expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`, and
-`ciSup_eq_ciSup_of_denseRange`.
-No full entropy-integral or Dudley endpoint is proved.
+The exact full Dudley facade is complete. The proved route is:
 
-After D1, D2 and D3 may proceed in parallel.
+- [x] **D1 finite anchored supremum.** Finite terminal nets are bounded by the
+  truncated entropy integral with a fixed anchor.
+- [x] **D2 small-scale/full-integral passage.** Dyadic radii tend to zero and
+  the explicit interval-integrable entropy integrand bounds every truncation.
+- [x] **D3 actual set-supremum passage.** Independent finite nets converge
+  pointwise to the actual `sSup` over a totally bounded `K`; the finite-limit
+  API proves measurability and integrability of the limit.
+- [x] **D4 exact full Dudley facade.** `dudley_full_supremum_bound` proves the
+  measurable, `Integrable` supremum and
+  `E sup ≤ 4 * sigma * ∫_0^R sqrt(2 * log(2 * N(K,t))) dt` under explicit
+  probability, geometry, coordinate-measurability, subGaussian-increment,
+  every-sample-uniform-continuity, and
+  `IntervalIntegrable (dudleyEntropyIntegrand K) volume 0 R` assumptions.
 
-- [ ] **D1 finite anchored supremum.** Fix a common anchor, a compatible path
-  family, and an explicit terminal residual. Done criterion: prove that the
-  finite anchored process supremum is bounded by the truncated entropy
-  integral plus that residual. Reuse existing net/cardinality/single-path
-  APIs.
-- [ ] **D2 small-scale/full-integral passage.** Show the small-scale residual
-  tends to `0` under an explicit compact-index/continuous-sample-path,
-  uniform-continuity, or separable-modification contract. Show the lower
-  endpoints tend to `0` and the interval integrals converge to the interval
-  integral over `[0, R]`. Reuse Mathlib integral convergence.
-- [ ] **D3 countable/full supremum passage.** Instantiate Mathlib's existing
-  set-level separability and dense-sequence APIs, then use `Measurable.iSup`
-  and monotone convergence.
-  Use `ENNReal` internally for the nonnegative supremum, then recover real
-  expectation under finiteness/integrability. Add only thin HighDimProb
-  `expect` wrappers.
-- [ ] **D4 exact full Dudley facade.** Assemble the anchored expected-supremum
-  conclusion under explicit probability, geometry, increment, regularity, and
-  entropy-finiteness assumptions; make no claim until the facade compiles.
+Optional future work, not an incompleteness of the current theorem:
+
+- [ ] Investigate an a.e.-only sample-path regularity contract or a separable
+  modification when a downstream application needs a weaker hypothesis.
+- [ ] Add alternate entropy representations for settings where an extended
+  (`ENNReal`) entropy object is preferable to the current real-valued API.
 
 Do not build:
 

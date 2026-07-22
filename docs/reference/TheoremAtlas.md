@@ -56,12 +56,22 @@ The proved surface consists of:
   `sum_mul_sub_le_intervalIntegral_of_antitoneOn`,
   `finiteEntropySum_dyadic_le_four_mul_intervalIntegral_coveringNumber`, and
   `expect_abs_sub_dyadic_path_le_truncatedEntropyIntegral`;
-- deterministic dense-sup bridge: `HighDimProb.ciSup_eq_ciSup_of_denseRange`.
+- deterministic dense-sup bridge: `HighDimProb.ciSup_eq_ciSup_of_denseRange`;
+- full Dudley endpoint: under a probability measure,
+  `dudleySupremum` is the actual set supremum
+  `sSup (|X t omega - X t0 omega| '' K)`, and
+  `dudley_full_supremum_bound` proves the endpoint for totally bounded `K`.
+  Its contract keeps coordinate measurability, subGaussian MGF increments,
+  `t0 ∈ K`, `0 < R`, `0 < sigma`, `dist t t0 ≤ R` on `K`, every-sample
+  uniformly continuous paths, and the explicit premise
+  `IntervalIntegrable (dudleyEntropyIntegrand K) volume 0 R`. The conclusion
+  gives a measurable, `Integrable` supremum and
+  `E sup ≤ 4 * sigma * ∫_0^R sqrt(2 * log(2 * N(K,t))) dt`, where `N(K,t)`
+  is the covering number used by `dudleyEntropyIntegrand`.
 
-No full entropy-integral endpoint or full Dudley theorem is proved.
-Countable/full supremum measurability, expectation limit/interchange, and the
-small-scale residual remain open dependencies. Current prioritization is tracked
-in [`TODO.md`](../maintainers/TODO.md).
+The full endpoint uses the explicit every-sample path contract and entropy
+integrability premise. It does not claim an a.e.-only path weakening,
+separable modifications, or removal of the entropy-integrability assumption.
 
 ## RandomMatrix
 

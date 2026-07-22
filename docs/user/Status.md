@@ -106,9 +106,17 @@ The current supported surface does not claim:
   targets remain specifications until backed by a theorem.
 
 Outside RandomMatrix, the random-family layer remains vocabulary rather than a
-filtration/martingale framework, and the metric-entropy route proves finite
-chaining and a truncated entropy-integral comparison, not a full Dudley
-theorem.
+filtration/martingale framework. The metric-entropy route now includes the full
+Dudley endpoint: under a probability measure, for totally bounded `K`, a root
+`t0 ∈ K`, coordinate measurability, subGaussian MGF increments, `0 < R`,
+`0 < sigma`, and `dist t t0 ≤ R` on `K`, together with every-sample
+uniformly continuous paths and the explicit
+`IntervalIntegrable (dudleyEntropyIntegrand K) volume 0 R`,
+`dudley_full_supremum_bound` proves that the actual set supremum
+`dudleySupremum` is measurable and `Integrable`, with
+`E sup ≤ 4 * sigma * ∫_0^R sqrt(2 * log(2 * N(K,t))) dt`.
+This statement does not remove the entropy-integrability premise or claim an
+a.e.-only path or separable-modification weakening.
 
 ## Canonical References
 
